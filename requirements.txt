@@ -1,0 +1,6 @@
+torch==1.5.1
+poutyne==0.8.2
+hydra-core==0.11.3
+pycountry==20.7.3
+bpemb==0.3.2
+numpy==1.19.1

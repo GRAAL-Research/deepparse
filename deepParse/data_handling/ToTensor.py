@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from data_handling.Vectorizer import Vectorizer
+
 
 class ToTensor:
     def __init__(self, embedding_size, vectorizer, padding_value, device, mask_value=-100):

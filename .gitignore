@@ -130,3 +130,9 @@ dmypy.json
 
 #VSCode
 .vscode
+
+# Ignore auto-generated Python version file
+deepParse/version.py
+
+#pycharm
+.idea/

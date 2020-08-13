@@ -1,8 +1,8 @@
 import torch
 import torch.nn as nn
-from model.Decoder import Decoder
-from model.Encoder import Encoder
-from model.EmbeddingNetwork import EmbeddingNetwork
+from deepParse.model import Decoder
+from deepParse.model import Encoder
+from deepParse.model.EmbeddingNetwork import EmbeddingNetwork
 import random
 
 

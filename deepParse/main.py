@@ -1,24 +1,10 @@
-import pickle
-import time
-import os
-
-from torch.utils.data import DataLoader
 from torch import cuda, device, load
-from torch.nn import NLLLoss
-from torch.optim import SGD
-from poutyne.framework import Model, Experiment
 from poutyne.utils import set_seeds
 import hydra
-import pycountry
 
-from data_handling.Vectorizer import Vectorizer
-from data_handling.Dataset import DatasetContainer
-from model.Seq2seq import Seq2seq
-from data_handling.DataLoadersGenerator import DataLoadersGenerator
-from data_handling.ToTensorOuputReuse import ToTensorOuputReuse
-from data_handling.ToTensorTeacerForcing import ToTensorTeacerForcing
-from metrics.loss import nll_loss_function
-from metrics.Accuracy import accuracy
+from deepParse.data_handling.Vectorizer import Vectorizer
+from deepParse.model import Seq2seq
+from deepParse.data_handling.ToTensorOuputReuse import ToTensorOuputReuse
 
 
 @hydra.main(config_path='conf/config.yaml')

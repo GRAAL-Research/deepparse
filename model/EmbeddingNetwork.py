@@ -28,21 +28,21 @@ class EmbeddingNetwork(nn.Module):
         else:
             self.hidden = self.__init_hidden(self.batch_size, self.hidden_size)
 
-        embeddings = torch.zeros(input_.size(1), input_.size(0), int(input_.size(3) / self.maxpool_kernel_size)).cuda(self.device)
+        embeddings = torch.zeros(input_.size(1), input_.size(0), int(input_.size(3) / self.maxpool_kernel_size)).to(self.device)
 
-        input_ = input_.transpose(0, 1).float().cuda(self.device)
+        input_ = input_.transpose(0, 1).float().to(self.device)
 
         for i in range(input_.size(0)):
             lengths = []
             for decomposition_length in decomposition_lengths:
                 lengths.append(decomposition_length[i])
-            packed_sequence = nn.utils.rnn.pack_padded_sequence(input_[i], torch.tensor(lengths).cuda(self.device), batch_first=True, enforce_sorted=False)
+            packed_sequence = nn.utils.rnn.pack_padded_sequence(input_[i], torch.tensor(lengths).to(self.device), batch_first=True, enforce_sorted=False)
 
             packed_output , hidden = self.model(packed_sequence, self.hidden)
             
             padded_output, padded_output_lengths = nn.utils.rnn.pad_packed_sequence(packed_output, batch_first=True, padding_value=-32)
 
-            word_context = torch.zeros(padded_output.size(0), padded_output.size(2)).cuda(self.device)
+            word_context = torch.zeros(padded_output.size(0), padded_output.size(2)).to(self.device)
             for j in range(padded_output_lengths.size(0)):
                 word_context[j] = padded_output[j, padded_output_lengths[j] - 1, :]
 
@@ -59,5 +59,5 @@ class EmbeddingNetwork(nn.Module):
         return embeddings.transpose(0, 1)
 
     def __init_hidden(self, batch_size, hidden_size):
-        return (torch.zeros(1*2, batch_size, hidden_size).cuda(self.device),
-                torch.zeros(1*2, batch_size, hidden_size).cuda(self.device))
+        return (torch.zeros(1*2, batch_size, hidden_size).to(self.device),
+                torch.zeros(1*2, batch_size, hidden_size).to(self.device))

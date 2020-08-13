@@ -26,7 +26,7 @@ class Encoder(nn.Module):
         return hidden
 
     def __init_hidden(self, batch_size, hidden_size):
-        return (torch.zeros(1, batch_size, hidden_size).cuda(self.device), 
-                torch.zeros(1, batch_size, hidden_size).cuda(self.device))
+        return (torch.zeros(1, batch_size, hidden_size).to(self.device), 
+                torch.zeros(1, batch_size, hidden_size).to(self.device))
 
 

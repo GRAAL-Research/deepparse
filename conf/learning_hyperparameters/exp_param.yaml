@@ -8,3 +8,4 @@ learning_hyperparameters:
   embedding_size: 300
   padding_value: -32
   num_dataloader_workers: 8
+  embeddings_path: ''

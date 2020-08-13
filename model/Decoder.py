@@ -22,7 +22,7 @@ class Decoder(nn.Module):
         return output, hidden
 
     def _init_hidden(self, hidden_size):
-        return (torch.zeros(1, self.batch_size, hidden_size).cuda(self.device), 
-                torch.zeros(1, self.batch_size, hidden_size).cuda(self.device))
+        return (torch.zeros(1, self.batch_size, hidden_size).to(self.device), 
+                torch.zeros(1, self.batch_size, hidden_size).to(self.device))
 
 

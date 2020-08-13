@@ -1,8 +1,7 @@
-![deepParse Logo](https://raw.githubusercontent.com/GRAAL-Research/poutyne/master/docs/source/_static/logos/poutyne-dark.png)
+![deepParse Logo](https://raw.githubusercontent.com/MAYS3/deepParse/master/docs/source/_static/logos/logo.png)
 
 [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](http://www.gnu.org/licenses/lgpl-3.0)
-[![Build Status](https://travis-ci.org/GRAAL-Research/poutyne.svg?branch=master)](https://travis-ci.org/GRAAL-Research/poutyne)
-# todo update build link
+[![Build Status](https://travis-ci.org/MAYS3/deepParse.svg?branch=master)](https://travis-ci.org/MAYS3/deepParse)
 
 ## Here is deepParse.
 

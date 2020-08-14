@@ -17,9 +17,22 @@ Read the documentation at [deepParse.org](https://deepparse.org).
 DeepParse is compatible with  the __latest version of PyTorch__ and  __Python >= 3.6__.
 
 ### Cite
+Use the following for the article;
+```
+@misc{yassine2020leveraging,
+    title={{Leveraging Subword Embeddings for Multinational Address Parsing}},
+    author={Marouane Yassine and David Beauchemin and François Laviolette and Luc Lamontagne},
+    year={2020},
+    eprint={2006.16152},
+    archivePrefix={arXiv}
+}
+```
+
+and this one for the package;
+
 ```
 @misc{deepParse,
-    author = {Yassine, Marouane and Beauchemin, David},
+    author = {Marouane Yassine and David Beauchemin},
     title  = {{DeepParse: A state-of-the-art multinational addresses parser}},
     year   = {2020},
     note   = {\url{https://deepparse.org}}

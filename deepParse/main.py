@@ -2,12 +2,12 @@ from torch import cuda, device, load
 from poutyne.utils import set_seeds
 import hydra
 
-from deepParse.data_handling.Vectorizer import Vectorizer
-from deepParse.model import Seq2seq
-from deepParse.data_handling.ToTensorOuputReuse import ToTensorOuputReuse
+from deepParse.vectorizer.vectorizer import Vectorizer
+from deepParse.model import seq2seq
+from deepParse.research_code.data_handling import ToTensorOuputReuse
 
 
-@hydra.main(config_path='conf/config.yaml')
+@hydra.main(config_path='research_code/conf/config.yaml')
 def main(cfg):
     set_seeds(cfg.learning_hyperparameters.seed)
 
@@ -33,8 +33,8 @@ def main(cfg):
     # tf_transform = to_tensor.get_teacher_forcing_from_batch()
     or_transform = to_tensor.transform_function() #to_tensor.get_output_reuse_from_batch()
 
-    model = Seq2seq(cfg.model.embedding_input_size, cfg.model.encoder_input_size, cfg.model.decoder_input_size, cfg.model.embedding_hidden_size, cfg.model.embedding_projection_size, 
-                    cfg.model.encoder_hidden_size, cfg.model.num_encoding_layers, cfg.model.decoder_hidden_size, cfg.model.num_decoding_layers, cfg.model.output_size, 
+    model = seq2seq(cfg.lstm.embedding_input_size, cfg.lstm.encoder_input_size, cfg.lstm.decoder_input_size, cfg.lstm.embedding_hidden_size, cfg.lstm.embedding_projection_size,
+                    cfg.lstm.encoder_hidden_size, cfg.lstm.num_encoding_layers, cfg.lstm.decoder_hidden_size, cfg.lstm.num_decoding_layers, cfg.lstm.output_size,
                     cfg.learning_hyperparameters.batch_size, EOS_token, train_device)
 
     model.load_state_dict(load('/Users/mayas/Desktop/Projects/Publications/Leveraging subword embeddings for multinational address parsing/deepParse/checkpoint_epoch_32.ckpt', map_location=train_device))

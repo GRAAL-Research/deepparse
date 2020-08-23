@@ -1,2 +1,2 @@
 # pylint: disable=wildcard-import
-from .AddressParser import *
+from .address_parser import *

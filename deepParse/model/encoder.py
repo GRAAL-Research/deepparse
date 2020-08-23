@@ -16,12 +16,12 @@ class Encoder(nn.Module):
         self.lstm.apply(weight_init)
 
     def forward(self, input_, lenghts_tensor):
-        if input_.size(0) < self.batch_size: # @Marouane à quoi cela sert-il ? On ne peut pas jsute le faire dans l'init ?
-            batch_size = 1
-            self.hidden = self.__init_hidden(batch_size, self.hidden_size)
-        else:
-            self.hidden = self.__init_hidden(self.batch_size, self.hidden_size)
-
+        if input_.size(0) < self.batch_size: # @Marouane à quoi cela sert-il ? On ne peut pas jsute le faire dans l'init ? 
+            batch_size = 1                  # C'est pour pouvoir gérer des batch sizes différents de façon dynamique (e.g: l'entrainement du modèle a été fait avec batch size de 2048)
+            self.hidden = self.__init_hidden(batch_size, self.hidden_size) # mais il y'a des pays qui ont moins que 2048 données au total (penses au pays zero shot) 
+        else:                                                               # donc si on fixe ça dans l'init ça plante
+            self.hidden = self.__init_hidden(self.batch_size, self.hidden_size) # Ça va être utile pour le parser aussi car je veux garder la possibilité de traitement en batch
+                                                                                # pendant l'inférence comme ça si un user a un grand nombre d'adresses on pourra optimiser
         packed_sequence = nn.utils.rnn.pack_padded_sequence(input_, lenghts_tensor, batch_first=True)
 
         _ , hidden = self.lstm(packed_sequence, self.hidden)

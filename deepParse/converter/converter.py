@@ -6,8 +6,8 @@ class TargetConverter:
     Class to define logic of tag to idx conversion
 
     Args:
-        tags_to_idx (Dict): A dictionary where the value are the tags (e.g. StreetNumber) and the value are
-            the idx (int) (e.g. 1).
+        tags_to_idx (Dict): A dictionary where the keys are the tags (e.g. StreetNumber) and the values are
+            the indexes (int) (e.g. 1).
     """
 
     def __init__(self, tags_to_idx: Dict) -> None:

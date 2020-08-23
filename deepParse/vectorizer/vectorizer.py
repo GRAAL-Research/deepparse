@@ -81,7 +81,7 @@ class FastTextVectorizer(Vectorizer):
             batch.append((input_sequence, target_sequence))
 
         return sorted(batch, key=lambda x: len(x[0]), reverse=True)  # @Marouane pourquoi on sort ici les elements ?
-
+                                                                        # On les sort car la fonction de transformation en tenseurs (ToTensor) prend un liste ordonnée
     def _vectorize_sequence(self, address: str) -> List:
         """
         Method to vectorize the address

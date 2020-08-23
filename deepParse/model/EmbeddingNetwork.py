@@ -38,7 +38,7 @@ class EmbeddingNetwork(nn.Module):
                 lengths.append(decomposition_length[i])
             packed_sequence = nn.utils.rnn.pack_padded_sequence(input_[i], torch.tensor(lengths).to(self.device), batch_first=True, enforce_sorted=False)
 
-            packed_output , hidden = self.model(packed_sequence, self.hidden)
+            packed_output, hidden = self.model(packed_sequence, self.hidden)
             
             padded_output, padded_output_lengths = nn.utils.rnn.pad_packed_sequence(packed_output, batch_first=True, padding_value=-32)
 

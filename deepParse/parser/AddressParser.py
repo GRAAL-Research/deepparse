@@ -8,7 +8,7 @@ from deepParse.tools import download_model
 from deepParse.vectorizer import FastTextVectorizer, BPEmbVectorizer
 
 
-class AddressTagger:
+class AddressParser:
     """
     **For fastText, will download data in deepParse_data first time not seen in user root.
     """

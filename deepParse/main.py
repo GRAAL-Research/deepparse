@@ -2,9 +2,9 @@ from torch import cuda, device, load
 from poutyne.utils import set_seeds
 import hydra
 
-from deepParse.vectorizer.vectorizer import Vectorizer
+from deepParse.vectorizer.Vectorizer import Vectorizer
 from deepParse.model import seq2seq
-from deepParse.research_code.data_handling import ToTensorOuputReuse
+from deepParse.collate_fn import ToTensorOuputReuse
 
 
 @hydra.main(config_path='research_code/conf/config.yaml')

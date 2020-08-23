@@ -1,8 +1,10 @@
+from abc import ABC, abstractmethod
+
 import torch
 import torch.nn as nn
 
 
-class ToTensor:
+class ToTensor(ABC):
     def __init__(self, embedding_size, vectorizer, padding_value, device, mask_value=-100):
         self.embedding_size = embedding_size
         self.device = device
@@ -27,5 +29,6 @@ class ToTensor:
 
         return bpe_input_tensor, decomposition_lengths, lengths_tensor, target_tensor
 
+    @abstractmethod
     def transform_function(self):
-        raise NotImplementedError("This method is abstract, please use one of the children's implementation")
+        pass

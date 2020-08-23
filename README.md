@@ -1,7 +1,7 @@
 ![deepParse Logo](https://raw.githubusercontent.com/MAYS3/deepParse/master/docs/source/_static/logos/logo.png)
 
 [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](http://www.gnu.org/licenses/lgpl-3.0)
-[![Build Status](https://travis-ci.org/MAYS3/deepParse.svg?branch=master)](https://travis-ci.org/MAYS3/deepParse)
+[![Build Status](https://travis-ci.com/MAYAS3/deepParse.svg?token=Zv4ryhyUzUhyJBqsdjui&branch=master)](https://travis-ci.com/MAYAS3/deepParse)
 
 ## Here is deepParse.
 

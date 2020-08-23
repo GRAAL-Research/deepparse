@@ -2,7 +2,7 @@ import os
 from json import load
 
 from deepParse.converter.converter import TargetConverter
-from deepParse.embeddings_model import FastTextEmbeddingsModel, BPEmbEmbeddingsModel
+from deepParse.embeddings_model import FastTextEmbeddingsModel, bp_embeddings_model
 from deepParse.model import FastTextAddressSeq2SeqModel, BPEmbAddressSeq2SeqModel
 from deepParse.tools import download_model
 from deepParse.vectorizer import FastTextVectorizer, BPEmbVectorizer
@@ -29,7 +29,7 @@ class AddressParser:
             self.pre_trained_model = FastTextAddressSeq2SeqModel()
 
         elif model == "bpemb":
-            embeddings_model = BPEmbEmbeddingsModel(lang="multi", vs=100000, dim=300)
+            embeddings_model = bp_embeddings_model(lang="multi", vs=100000, dim=300)
             self.vectorizer = BPEmbVectorizer(embeddings_model=embeddings_model, target_converter=target_converter)
 
             self.pre_trained_model = BPEmbAddressSeq2SeqModel()

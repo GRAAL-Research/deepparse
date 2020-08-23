@@ -1,3 +1,3 @@
 # pylint: disable=wildcard-import
-from .EmbeddingsModel import *
-from .FastTextEmbeddingsModel import *
+from .embeddings_model import *
+from .fast_text_embeddings_model import *

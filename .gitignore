@@ -136,3 +136,9 @@ deepParse/version.py
 
 #pycharm
 .idea/
+
+#main
+*/main.py
+
+#ckpt
+*.ckpt

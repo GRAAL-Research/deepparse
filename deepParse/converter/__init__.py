@@ -1,2 +1,2 @@
 # pylint: disable=wildcard-import
-from .Converter import *
+from .converter import *

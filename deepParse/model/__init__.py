@@ -1,5 +1,5 @@
 # pylint: disable=wildcard-import
-from .Decoder import *
+from .decoder import *
 from .EmbeddingNetwork import *
-from .Encoder import *
-from .Seq2seq import *
+from .encoder import *
+from .seq2seq import *

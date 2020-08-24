@@ -1,71 +1,61 @@
 import random
+from abc import ABC, abstractmethod
+from typing import Union
 
 import torch
 import torch.nn as nn
 
 from deepParse.model import Decoder
-from deepParse.model import EmbeddingNetwork
 from deepParse.model import Encoder
+from deepParse.model.embedding_network import EmbeddingNetwork
 
 
-class FastTextAddressSeq2SeqModel(nn.Module):
-    def __init__(self, encoder_input_size, decoder_input_size, encoder_hidden_size, num_encoding_layers,
-                 decoder_hidden_size, num_decoding_layers, output_size, batch_size, EOS_token, device):
+class PretrainedSeq2SeqModel(ABC, nn.Module):
+    """
+    Abstract class for callable #todo .
+    """
+
+    def __init__(self, device: Union[int, str], batch_size: Union[int, None] = None) -> None:
         super().__init__()
-        self.output_size = output_size
-        self.batch_size = batch_size
-        self.device = device
+        self.device = "cuda:%d" % str(device)
+        self.batch_size = 1 if batch_size is None else batch_size
 
-        self.encoder = Encoder(encoder_input_size, encoder_hidden_size, num_encoding_layers, self.batch_size, device)
-        self.encoder.cuda(device)
+        self.output_size = 1  # todo use pre trained size
 
-        self.decoder = Decoder(decoder_input_size, decoder_hidden_size, num_decoding_layers, output_size,
-                               self.batch_size, device)
-        self.decoder.cuda(device)
+        self.encoder = Encoder(1, 1, 1, self.batch_size)
+        self.encoder.to(device)
 
-        self.EOS_token = EOS_token
+        self.decoder = Decoder(1, 1, 1, 1)
+        self.decoder.to(device)
 
-    def forward(self, input_, lenghts_tensor, target=None):
-        if input_.size(0) < self.batch_size:
-            batch_size = 1
-        else:
-            batch_size = self.batch_size
+    @abstractmethod
+    def __call__(self, to_predict, lenghts_tensor):
+        pass
 
-        encoder_outputs, encoder_hidden = self.encoder(input_, lenghts_tensor)
+    def _get_dynamic_batch(self, input_):
+        return 1 if input_.size(0) < self.batch_size else self.batch_size
 
-        decoder_hidden = encoder_hidden
-        max_length = lenghts_tensor[0].item()
 
-        output_sequence = torch.zeros(max_length + 1, batch_size, self.output_size).cuda(self.device)
+# pretrained class
+class FastTextAddressSeq2SeqModel(PretrainedSeq2SeqModel):
+    def __init__(self, device: Union[int, str], batch_size: Union[int, None] = None) -> None:
+        super().__init__(device, batch_size)
 
-        BOS_token = -1
-        decoder_input = torch.zeros(1, batch_size, 1).cuda(self.device).new_full((1, batch_size, 1), BOS_token)
+    def __call__(self, to_predict, lenghts_tensor):
+        batch_size = self._get_dynamic_batch(to_predict)
 
-        decoder_output, decoder_hidden = self.decoder(decoder_input, decoder_hidden, encoder_outputs, lenghts_tensor)
+        decoder_input, decoder_hidden = self._encoder_step(to_predict, lenghts_tensor, batch_size)
 
-        output_sequence[0] = decoder_output
+        decoder_output, _ = self.decoder(decoder_input, decoder_hidden)
 
-        _, decoder_input = decoder_output.topk(1)
+        return decoder_output
 
-        if not target is None and random.random() < 0.5:
-            target = target.transpose(0, 1)
-            for idx in range(max_length):
-                decoder_input = target[idx].view(1, batch_size, 1)
-                decoder_output, decoder_hidden = self.decoder(decoder_input, decoder_hidden, encoder_outputs,
-                                                              lenghts_tensor)
+    def _encoder_step(self, input_, lenghts_tensor, batch_size):
+        decoder_hidden = self.encoder(input_, lenghts_tensor)
 
-                output_sequence[idx + 1] = decoder_output
-
-        else:
-            for idx in range(max_length):
-                decoder_output, decoder_hidden = self.decoder(decoder_input.view(1, batch_size, 1), decoder_hidden,
-                                                              encoder_outputs, lenghts_tensor)
-
-                output_sequence[idx + 1] = decoder_output
-
-                _, decoder_input = decoder_output.topk(1)
-
-        return output_sequence
+        # -1 for BOS token
+        decoder_input = torch.zeros(1, batch_size, 1).cuda(self.device).new_full((1, batch_size, 1), -1)
+        return decoder_input, decoder_hidden
 
 
 class BPEmbAddressSeq2SeqModel(nn.Module):

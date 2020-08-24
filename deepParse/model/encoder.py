@@ -6,11 +6,10 @@ from deepParse.tools import weight_init
 
 
 class Encoder(nn.Module):
-    def __init__(self, input_size, hidden_size, num_layers, batch_size, device):
+    def __init__(self, input_size, hidden_size, num_layers, batch_size):
         super().__init__()
 
         self.batch_size = batch_size
-        self.device = device
         self.hidden_size = hidden_size
 
         self.lstm = nn.LSTM(input_size, hidden_size, num_layers=num_layers, batch_first=True)

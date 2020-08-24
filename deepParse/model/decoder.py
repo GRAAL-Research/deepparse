@@ -4,12 +4,8 @@ from deepParse.tools import weight_init
 
 
 class Decoder(nn.Module):
-    def __init__(self, input_size, hidden_size, num_layers, output_size, batch_size, device):
+    def __init__(self, input_size, hidden_size, num_layers, output_size):
         super().__init__()
-
-        self.batch_size = batch_size
-        self.device = device
-
         self.lstm = nn.LSTM(input_size, hidden_size, num_layers=num_layers)
         self.lstm.apply(weight_init)
 

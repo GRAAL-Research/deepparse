@@ -7,7 +7,7 @@ import torch.nn.init as init
 from fasttext.util.util import valid_lang_ids, _download_gz_model
 
 
-def download_model(lang_id: str, saving_dir: str) -> str:
+def download_fasttext_model(lang_id: str, saving_dir: str) -> str:
     """
     The source code of this function was copied from the fastText project, and has been modified.
 
@@ -71,7 +71,6 @@ def weight_init(m):
     Usage:
         model = Model()
         model.apply(weight_init)
-    This
     """
     if isinstance(m, nn.Conv1d):
         init.normal_(m.weight.data)

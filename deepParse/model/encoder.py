@@ -20,7 +20,7 @@ class Encoder(nn.Module):
         self.lstm = nn.LSTM(input_size, hidden_size, num_layers=num_layers, batch_first=True)
         self.lstm.apply(weight_init)
 
-    def forward(self, to_predict, lenghts_tensor):  # todo validate input/output type
+    def __call__(self, to_predict, lenghts_tensor):  # todo validate input/output type
         """
 
         """
@@ -29,3 +29,9 @@ class Encoder(nn.Module):
         _, hidden = self.lstm(packed_sequence, self.hidden)
 
         return hidden
+
+    def eval(self) -> None:
+        """
+        To put the network in eval mode (no weights update).
+        """
+        self.lstm.eval()

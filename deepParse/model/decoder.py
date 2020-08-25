@@ -25,7 +25,7 @@ class Decoder(nn.Module):
 
         self.softmax = nn.LogSoftmax(dim=1)
 
-    def forward(self, to_predict, hidden): # todo validate input/output type
+    def __call__(self, to_predict, hidden):  # todo validate input/output type
         """
 
         Return:
@@ -37,3 +37,10 @@ class Decoder(nn.Module):
         output_prob = self.softmax(self.linear(output[0]))
 
         return output_prob
+
+    def eval(self) -> None:
+        """
+        To put the network in eval mode (no weights update).
+        """
+        self.lstm.eval()
+        self.linear.eval()

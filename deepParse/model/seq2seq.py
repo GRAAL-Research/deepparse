@@ -42,6 +42,13 @@ class PretrainedSeq2SeqModel(ABC, nn.Module):
         decoder_input = torch.zeros(1, batch_size, 1).to(self.device).new_full((1, batch_size, 1), -1)
         return decoder_input, decoder_hidden
 
+    def eval(self) -> None:
+        """
+        To put the network in eval mode (no weights update).
+        """
+        self.encoder.eval()
+        self.decoder.eval()
+
 
 # pretrained class
 class PretrainedFastTextSeq2SeqModel(PretrainedSeq2SeqModel):
@@ -92,3 +99,10 @@ class PretrainedBPEmbSeq2SeqModel(PretrainedSeq2SeqModel):
         decoder_predict = self.decoder(decoder_input, decoder_hidden)
 
         return decoder_predict
+
+    def eval(self) -> None:
+        """
+        To put the network in eval mode (no weights update).
+        """
+        self.embedding_network.eval()
+        self.eval()

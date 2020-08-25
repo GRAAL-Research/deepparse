@@ -40,3 +40,9 @@ class EmbeddingNetwork(nn.Module):
             embeddings[i] = word_batch_embedding
 
         return embeddings.transpose(0, 1)
+
+    def eval(self) -> None:
+        """
+        To put the network in eval mode (no weights update).
+        """
+        self.model.eval()

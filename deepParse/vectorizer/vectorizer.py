@@ -3,85 +3,50 @@ from typing import List, Tuple
 
 import numpy as np
 
-from deepParse.converter.converter import TargetConverter
 from deepParse.embeddings_model.embeddings_model import EmbeddingsModel
 
 
 class Vectorizer(ABC):
     """
-    Vectorizer abstract class to vectorize a pair (Address, [Target]) into a pair ([embeddings], [tags idx])
+    Vectorizer abstract class to vectorize an address into a [embeddings]
 
     Args:
         embeddings_model (~deepParse.embeddings_model.EmbeddingsModel): A callable embeddings model.
-        target_converter (~deepParse.converter.TargetConverter): A target converter that convert from a string to a
-            predefine idx.
         eos_token (int): The end of sentence token to use.
 
     """
 
-    def __init__(self, embeddings_model: EmbeddingsModel, target_converter: TargetConverter, eos_token: int) -> None:
+    def __init__(self, embeddings_model: EmbeddingsModel, eos_token: int) -> None:
         self.embeddings_model = embeddings_model
-        self.target_converter = target_converter
         self.eos_token = eos_token
 
     @abstractmethod
-    def __call__(self, pairs_batch):
-        pass
-
-    def _convert_target(self, target_tags: List) -> List:
+    def __call__(self, addresses):
         """
-        Method to convert the target tags into a target idx.
-
+        Method to vectorizer addresses.
         Args:
-            target_tags (List): A list of string tags to be converted.
+            addresses (List[str]): The addresses to vectorize.
 
         Return:
-            A list of idx associated with the target tags.
+            The addresses elements (components) embeddings vector.
         """
-        target_sequence = []
-        for target_tag in target_tags:
-            target_sequence.append(self.target_converter(target_tag))
 
-        target_sequence.append(self.eos_token)
-        return target_sequence
+        pass
 
 
 class FastTextVectorizer(Vectorizer):
     """
-    FastText vectorizer to convert a pair (Address, [Target]) into a pair ([embeddings], [tags idx])
-
-    Args:
-        embeddings_model (~deepParse.embeddings_model.EmbeddingsModel): A callable embeddings model.
-        target_converter (~deepParse.converter.TargetConverter): A target converter that convert from a string to a
-            predefine idx.
-        eos_token (int): The end of sentence token to use. Default is 8.
-
+    FastText vectorizer to convert an address into fastText embeddings.
     """
 
-    def __init__(self, embeddings_model: EmbeddingsModel, target_converter: TargetConverter, eos_token: int = 8):
-        super().__init__(embeddings_model, target_converter, eos_token)
-
-    def __call__(self, pairs_batch):  # todo format of input and output
-        """
-        Method to call the vectorizer over a pairs of batch elements where the first one is the address and the second
-        is a list of target tags.
-        Args:
-            pairs_batch (): The paired elements to vectorize.
-
-        Return:
-            The sorted element converter into either embeddings vector or target idx.
-        """
+    def __call__(self, addresses: List[str]) -> List:
         batch = []
 
-        for pair in pairs_batch:
-            input_sequence = self._vectorize_sequence(pair[0])
+        for address in addresses:
+            batch.append(self._vectorize_sequence(address))
 
-            target_sequence = self._convert_target(pair[1])
+        return batch
 
-            batch.append((input_sequence, target_sequence))
-
-        return sorted(batch, key=lambda x: len(x[0]), reverse=True)  # @Marouane pourquoi on sort ici les elements ?
-                                                                        # On les sort car la fonction de transformation en tenseurs (ToTensor) prend un liste ordonnée
     def _vectorize_sequence(self, address: str) -> List:
         """
         Method to vectorize the address
@@ -103,42 +68,17 @@ class FastTextVectorizer(Vectorizer):
 
 class BPEmbVectorizer(Vectorizer):
     """
-    BPEmb vectorizer to convert a pair (Address, [Target]) into a pair ([embeddings], [tags idx])
-
-    Args:
-        embeddings_model (~deepParse.embeddings_model.EmbeddingsModel): A callable embeddings model.
-        target_converter (~deepParse.converter.TargetConverter): A target converter that convert from a string to a
-            predefine idx.
-        eos_token (int): The end of sentence token to use. Default is 8.
-        padding_value (int): The padding value to use for padding the sequence. Default is -100.
-
+    BPEmb vectorizer to convert an address into BPEmb embeddings.
     """
 
-    def __init__(self, embeddings_model: EmbeddingsModel, target_converter: TargetConverter, eos_token: int = 8,
-                 padding_value: int = -100) -> None:
-        super().__init__(embeddings_model, target_converter, eos_token)
-
-        self.padding_value = padding_value
-
-    def __call__(self, pairs_batch):
-        """
-        Method to call the vectorizer over a pairs of batch elements where the first one is the address and the second
-        is a list of target tags.
-        Args:
-            pairs_batch (): The paired elements to vectorize.
-
-        Return:
-            The sorted element converter into either embeddings vector or target idx.
-        """
+    def __call__(self, addresses: List[str]) -> List[Tuple]:
         batch = []
         self._max_length = 0
 
-        for pair in pairs_batch:
-            input_sequence, word_decomposition_lengths = self._vectorize_sequence(pair[0])
+        for address in addresses:
+            input_sequence, word_decomposition_lengths = self._vectorize_sequence(address)
 
-            target_sequence = self._convert_target(pair[1])
-
-            batch.append((input_sequence, word_decomposition_lengths, target_sequence))
+            batch.append((input_sequence, word_decomposition_lengths))
 
         # todo in a method
         for decomposed_sequence, _, _ in batch:
@@ -146,9 +86,9 @@ class BPEmbVectorizer(Vectorizer):
                 if len(decomposition) != self._max_length:
                     for i in range(self._max_length - len(decomposition)):
                         decomposition.append(
-                            np.ones(self.embeddings_model.dim) * self.padding_value)  # todo validate if the dim is ok
+                            np.ones(self.embeddings_model.dim) * 0)  # todo validate if the dim is ok
 
-        return sorted(batch, key=lambda x: len(x[0]), reverse=True)
+        return batch
 
     def _vectorize_sequence(self, address: str) -> Tuple[List, List]:
         """

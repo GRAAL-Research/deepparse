@@ -1,7 +1,7 @@
 from deepParse.research_code.data_handling import ToTensor
 
 class ToTensorTeacerForcing(ToTensor):
-    def __init__(self, embedding_size, vectorizer, padding_value, device, mask_value=-100):
+    def __init__(self, embedding_size, vectorizer, padding_value, device):
         super().__init__(embedding_size, vectorizer, padding_value, device, mask_value=-100)
 
     def _teacher_forcing_transform(self, pairs_batch):

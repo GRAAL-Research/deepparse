@@ -1,4 +1,5 @@
-from deepParse.research_code.data_handling import ToTensor
+from deepParse.research_code.collate_fn.ToTensor import ToTensor
+
 
 class ToTensorOuputReuse(ToTensor):
     def __init__(self, embedding_size, vectorizer, padding_value, device, mask_value=-100):

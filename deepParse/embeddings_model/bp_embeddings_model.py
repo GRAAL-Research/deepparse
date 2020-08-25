@@ -1,6 +1,6 @@
 from bpemb import BPEmb
 
-from deepParse.embeddings_model import EmbeddingsModel
+from deepParse.embeddings_model import EmbeddingsModel, ndarray
 
 
 class BPEmbEmbeddingsModel(EmbeddingsModel):
@@ -13,12 +13,15 @@ class BPEmbEmbeddingsModel(EmbeddingsModel):
     def __init__(self, **kwargs):
         self.model = BPEmb(**kwargs)
 
-    def __call__(self, word: str):
+    def __call__(self, word: str) -> ndarray:
         """
         Callable method to get a word vector.
 
         Args:
             word (str): Word to get vector.
+
+        Return:
+            The BP embedding for a word.
         """
         return self.model.embed(word)
 

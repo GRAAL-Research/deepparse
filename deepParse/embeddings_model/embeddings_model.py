@@ -1,11 +1,13 @@
 from abc import ABC, abstractmethod
 
+from numpy.core.multiarray import ndarray
+
 
 class EmbeddingsModel(ABC):
     """
-    Abstract class for callable embeddings model.
+    Abstract (wrapper) class for callable embeddings model.
     """
 
     @abstractmethod
-    def __call__(self, pairs_batch):
+    def __call__(self, word: str) -> ndarray:
         pass

@@ -15,8 +15,8 @@ class Decoder(nn.Module):
         self.softmax = nn.LogSoftmax(dim=1)
 
     def forward(self, input_, hidden):
-        output, hidden = self.lstm(input_.float(), hidden)
+        output, _ = self.lstm(input_.float(), hidden)
 
-        output = self.softmax(self.linear(output[0]))
+        output_prob = self.softmax(self.linear(output[0]))
 
-        return output, hidden
+        return output_prob

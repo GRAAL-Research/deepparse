@@ -8,22 +8,22 @@ from deepParse.embeddings_model.embeddings_model import EmbeddingsModel
 
 class Vectorizer(ABC):
     """
-    Vectorizer abstract class to vectorize an address into a [embeddings]
+    Vectorizer abstract class to vectorize an address into a list of embeddings.
 
     Args:
         embeddings_model (~deepParse.embeddings_model.EmbeddingsModel): A callable embeddings model.
-        eos_token (int): The end of sentence token to use.
 
     """
 
-    def __init__(self, embeddings_model: EmbeddingsModel, eos_token: int) -> None:
+    def __init__(self, embeddings_model: EmbeddingsModel) -> None:
         self.embeddings_model = embeddings_model
-        self.eos_token = eos_token
+        self.eos_token = 8
 
     @abstractmethod
     def __call__(self, addresses):
         """
         Method to vectorizer addresses.
+
         Args:
             addresses (List[str]): The addresses to vectorize.
 
@@ -40,6 +40,15 @@ class FastTextVectorizer(Vectorizer):
     """
 
     def __call__(self, addresses: List[str]) -> List:
+        """
+        Method to vectorizer addresses.
+
+        Args:
+            addresses (List[str]): The addresses to vectorize.
+
+        Return:
+            The addresses elements (components) embeddings vector.
+        """
         batch = []
 
         for address in addresses:
@@ -69,9 +78,28 @@ class FastTextVectorizer(Vectorizer):
 class BPEmbVectorizer(Vectorizer):
     """
     BPEmb vectorizer to convert an address into BPEmb embeddings.
+
+    Args:
+        embeddings_model (~deepParse.embeddings_model.EmbeddingsModel): A callable embeddings model.
+
     """
 
+    def __init__(self, embeddings_model: EmbeddingsModel):
+        super().__init__(embeddings_model)
+
+        self.padding_value = 0
+
     def __call__(self, addresses: List[str]) -> List[Tuple]:
+        """
+        Method to vectorizer addresses.
+
+        Args:
+            addresses (List[str]): The addresses to vectorize.
+
+        Return:
+            A tuple of the addresses elements (components) embeddings vector and the word decomposition lengths.
+        """
+
         batch = []
         self._max_length = 0
 
@@ -80,13 +108,7 @@ class BPEmbVectorizer(Vectorizer):
 
             batch.append((input_sequence, word_decomposition_lengths))
 
-        # todo in a method
-        for decomposed_sequence, _, _ in batch:
-            for decomposition in decomposed_sequence:
-                if len(decomposition) != self._max_length:
-                    for i in range(self._max_length - len(decomposition)):
-                        decomposition.append(
-                            np.ones(self.embeddings_model.dim) * 0)  # todo validate if the dim is ok
+        self._decomposed_sequence_padding(batch)
 
         return batch
 
@@ -116,3 +138,15 @@ class BPEmbVectorizer(Vectorizer):
                 self._max_length = len(decomposition)
 
         return input_sequence, word_decomposition_lengths
+
+    def _decomposed_sequence_padding(self, batch: List[Tuple]) -> None:
+        """
+        Method to add padding to the decomposed sequence
+        """
+        for decomposed_sequence, _ in batch:
+            for decomposition in decomposed_sequence:
+                if len(decomposition) != self._max_length:
+                    for i in range(self._max_length - len(decomposition)):
+                        decomposition.append(
+                            np.ones(
+                                self.embeddings_model.dim) * self.padding_value)  # todo validate property is working

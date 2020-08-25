@@ -1,5 +1,4 @@
 import os
-from json import load
 from typing import List, Union
 
 from deepParse.converter import TagsConverter, data_padding
@@ -10,6 +9,17 @@ from deepParse.model import PretrainedFastTextSeq2SeqModel, PretrainedBPEmbSeq2S
 from deepParse.tools import download_fasttext_model
 from deepParse.vectorizer import FastTextVectorizer, BPEmbVectorizer
 
+_pre_trained_tags_to_idx = {
+    "StreetNumber": 0,
+    "StreetName": 1,
+    "Unit": 2,
+    "Municipality": 3,
+    "Province": 4,
+    "PostalCode": 5,
+    "Orientation": 6,
+    "GeneralDelivery": 7
+}
+
 
 class AddressParser:
     """
@@ -17,9 +27,9 @@ class AddressParser:
     """
 
     def __init__(self, model: str, device: Union[int, str]):
-        self.device = "cuda:%d" % str(device)
+        self.device = "cuda:%d" % int(device)
 
-        self.tags_converter = TagsConverter(load(open("pre_trained_tags_to_idx.json", "r")))
+        self.tags_converter = TagsConverter(_pre_trained_tags_to_idx)
 
         if model == "fasttext" or model == "lightest":
             path = os.path.join(os.path.expanduser('~'), "deepParse_data")

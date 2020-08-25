@@ -22,7 +22,14 @@ class Encoder(nn.Module):
 
     def __call__(self, to_predict, lenghts_tensor):  # todo validate input/output type
         """
+            Callable method to encode the components of an address.
 
+            Args:
+                to_predict ():
+                lenghts_tensor () :
+
+            Return:
+                The address components encoding.
         """
         packed_sequence = pack_padded_sequence(to_predict, lenghts_tensor, batch_first=True)
 

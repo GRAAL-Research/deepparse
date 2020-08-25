@@ -27,9 +27,14 @@ class Decoder(nn.Module):
 
     def __call__(self, to_predict, hidden):  # todo validate input/output type
         """
+            Callable method to decode the components of an address.
 
-        Return:
-            The prediction vector.
+            Args:
+                to_predict ():
+                hidden () :
+
+            Return:
+                The address components tags predictions.
 
         """
         output, _ = self.lstm(to_predict.float(), hidden)

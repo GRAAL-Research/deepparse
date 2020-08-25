@@ -29,13 +29,29 @@ class PretrainedSeq2SeqModel(ABC, nn.Module):
 
         self.decoder = Decoder(input_size=1, hidden_size=600, num_layers=1, output_size=9)
 
-    def _load_pre_trained_weights(self, model_type: str):  # todo
-        # todo get input and output
+    def _load_pre_trained_weights(self, model_type: str) -> None:
+        """
+        Method to resolved the loading of the pretrained weights 
+        Args:
+            model_type (str): The model pretrained weights to load. 
+        """
+        # todo
         path = os.path.join(os.path.expanduser('~'), "deepParse_data")
         os.makedirs(path, exist_ok=True)
         pass
 
     def _encoder_step(self, to_predict, lenghts_tensor, batch_size):  # todo get input and output
+        """
+        Step of the encoder.
+        
+        Args:
+            to_predict: 
+            lenghts_tensor: 
+            batch_size: 
+        
+        Return:
+            ...
+        """
         decoder_hidden = self.encoder(to_predict, lenghts_tensor)
 
         # -1 for BOS token
@@ -64,7 +80,17 @@ class PretrainedFastTextSeq2SeqModel(PretrainedSeq2SeqModel):
 
         self._load_pre_trained_weights("FastText")
 
-    def __call__(self, to_predict, lenghts_tensor):
+    def __call__(self, to_predict, lenghts_tensor):  # todo get input and output
+        """
+            Callable method to get tags prediction over the components of an address.
+
+            Args:
+                to_predict (): 
+                lenghts_tensor () :
+
+            Return:
+                The address components tags predictions.
+        """
         batch_size = to_predict.size(0)
 
         decoder_input, decoder_hidden = self._encoder_step(to_predict, lenghts_tensor, batch_size)
@@ -89,7 +115,18 @@ class PretrainedBPEmbSeq2SeqModel(PretrainedSeq2SeqModel):
 
         self._load_pre_trained_weights("BPEmb")
 
-    def __call__(self, to_predict, lenghts_tensor, decomposition_lengths):
+    def __call__(self, to_predict, lenghts_tensor, decomposition_lengths):  # todo get input and output
+        """
+            Callable method to get tags prediction over the components of an address.
+
+            Args:
+                to_predict (): 
+                lenghts_tensor () :
+                decomposition_lengths () :
+
+            Return:
+                The address components tags predictions.
+        """
         batch_size = to_predict.size(0)
 
         embedded_output = self.embedding_network(to_predict, decomposition_lengths)

@@ -5,8 +5,8 @@ from deepParse.converter import TagsConverter, data_padding
 from deepParse.converter.data_padding import bpemb_data_padding
 from deepParse.embeddings_model import FastTextEmbeddingsModel
 from deepParse.embeddings_model.bp_embeddings_model import BPEmbEmbeddingsModel
+from deepParse.fasttest_tools import download_fasttext_model
 from deepParse.model import PretrainedFastTextSeq2SeqModel, PretrainedBPEmbSeq2SeqModel
-from deepParse.tools import download_fasttext_model
 from deepParse.vectorizer import FastTextVectorizer, BPEmbVectorizer
 
 _pre_trained_tags_to_idx = {

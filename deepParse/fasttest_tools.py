@@ -51,31 +51,24 @@ def download_fasttext_model(lang_id: str, saving_dir: str) -> str:
     file_name = "cc.%s.300.bin" % lang_id
     gz_file_name = "%s.gz" % file_name
 
-    saving_dir = os.path.join(saving_dir, gz_file_name)
-
-    if os.path.isfile(file_name):
+    file_name_path = os.path.join(saving_dir, file_name)
+    if os.path.isfile(file_name_path):
         if if_exists == 'ignore':
-            return file_name
+            return file_name_path  # return the full path to the fastText embeddings
 
-    if _download_gz_model(gz_file_name, saving_dir, if_exists):
-        with gzip.open(gz_file_name, 'rb') as f:
-            with open(file_name, 'wb') as f_out:
+    saving_file_path = os.path.join(saving_dir, gz_file_name)
+
+    if _download_gz_model(gz_file_name, saving_file_path, if_exists):
+        with gzip.open(os.path.join(saving_dir, gz_file_name), 'rb') as f:
+            with open(os.path.join(saving_dir, file_name), 'wb') as f_out:
                 shutil.copyfileobj(f, f_out)
+        os.remove(os.path.join(saving_dir, gz_file_name))
 
-    return file_name
+    return file_name_path  # return the full path to the fastText embeddings
 
 
-def _download_gz_model(gz_file_name, saving_dir, if_exists):  # now use a saving dir
-    if os.path.isfile(gz_file_name):
-        if if_exists == 'ignore':
-            return True
-        elif if_exists == 'strict':
-            print("gzip File exists. Use --overwrite to download anyway.")
-            return False
-        elif if_exists == 'overwrite':
-            pass
-
+def _download_gz_model(gz_file_name, saving_path, if_exists):  # now use a saving dir
     url = "https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/%s" % gz_file_name
-    _download_file(url, saving_dir)
+    _download_file(url, saving_path)
 
     return True

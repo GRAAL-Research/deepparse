@@ -43,8 +43,8 @@ def bpemb_data_padding(batch: List[Tuple]) -> Tuple:
     """
 
     sequences_vectors, decomp_len, lengths = zip(
-        *[(torch.tensor(vectors), word_decomposition_len, len(vectors)) for vectors, word_decomposition_len in
-          sorted(batch, key=lambda x: len(x[0]), reverse=True)])
+        *[(torch.tensor(vectors), word_decomposition_len, len(vectors))
+          for vectors, word_decomposition_len in sorted(batch, key=lambda x: len(x[0]), reverse=True)])
 
     lengths = torch.tensor(lengths)
 

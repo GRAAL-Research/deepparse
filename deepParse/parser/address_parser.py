@@ -122,8 +122,8 @@ class AddressParser:
         """
         tagged_addresses_components = {}
 
-        for idx, (address_to_parse, tags_prediction, tags_prediction_prob) in enumerate(
-                zip(addresses_to_parse, tags_predictions, tags_predictions_prob)):
+        for idx, (address_to_parse, tags_prediction,
+                  tags_prediction_prob) in enumerate(zip(addresses_to_parse, tags_predictions, tags_predictions_prob)):
             tagged_address_components = {}
             for word, predicted_idx_tag, tag_proba in zip(address_to_parse.split(), tags_prediction,
                                                           tags_prediction_prob):

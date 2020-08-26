@@ -17,7 +17,7 @@ class PreTrainedSeq2SeqModel(ABC, nn.Module):
     decoder:
 
         - Encoder: ``input_size = 300``, ``hidden_size = 1024`` and ``num_layers = 1``
-        - Decoder: ``input_size = 1``, ``hidden_size = 1024``, ``num_layers = 1`` and ``output_size = 9`` (the number of tags)
+        - Decoder: ``input_size = 1``, ``hidden_size = 1024``, ``num_layers = 1`` and ``output_size = 9``
 
      Args:
         device (str): The device tu use for the prediction, can either be a ``GPU`` or a ``CPU``.
@@ -60,7 +60,8 @@ class PreTrainedSeq2SeqModel(ABC, nn.Module):
             batch_size (int): The number of element in the batch.
 
         Return:
-            A tuple (``x``, ``y``) where ``x`` is the decoder input (a zeros tensor) and ``y`` is the decoder hidden states.
+            A tuple (``x``, ``y``) where ``x`` is the decoder input (a zeros tensor) and ``y`` is the decoder
+            hidden states.
         """
         decoder_hidden = self.encoder(to_predict, lengths_tensor)
 

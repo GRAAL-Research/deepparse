@@ -89,8 +89,8 @@ class AddressParser:
         Return:
             A dictionary where the keys are the parsed address and the values dictionary. For the second
             dictionary: the key are the address components (e.g. a street number such as 305) and the value are
-            either the tag of the components (e.g. StreetName) or a tuple (``x``, ``y``) where ``x`` is the tag and ``y`` is the
-            probability (e.g. 0.9981).
+            either the tag of the components (e.g. StreetName) or a tuple (``x``, ``y``) where ``x`` is the tag and
+            ``y`` is the probability (e.g. 0.9981).
 
         """
         if isinstance(addresses_to_parse, str):

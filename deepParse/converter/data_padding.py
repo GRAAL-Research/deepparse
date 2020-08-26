@@ -6,10 +6,8 @@ from typing import List, Tuple
 import torch
 from torch.nn.utils.rnn import pad_sequence
 
-from deepParse.torch_tuple import TorchTuple
 
-
-def data_padding(batch: List) -> TorchTuple:
+def data_padding(batch: List) -> Tuple:
     """
     Function that add padding to the sequences so all can have the same length as the longest one.
 
@@ -27,10 +25,10 @@ def data_padding(batch: List) -> TorchTuple:
 
     padded_sequences_vectors = pad_sequence(sequences_vectors, batch_first=True)
 
-    return TorchTuple((padded_sequences_vectors, lengths))
+    return padded_sequences_vectors, lengths
 
 
-def bpemb_data_padding(batch: List[Tuple]) -> TorchTuple:
+def bpemb_data_padding(batch: List[Tuple]) -> Tuple:
     """
     Function that add padding to the sequences and to the decomposition lengths so all can have the same length as
     the longest one.
@@ -58,4 +56,4 @@ def bpemb_data_padding(batch: List[Tuple]) -> TorchTuple:
         if len(decomposition_length) < max_sequence_length:
             decomposition_length.extend([1] * (max_sequence_length - len(decomposition_length)))
 
-    return TorchTuple((padded_sequences_vectors, decomposition_lengths, lengths))
+    return padded_sequences_vectors, decomposition_lengths, lengths

@@ -1,6 +1,7 @@
 import os
 
 import requests
+import torch
 import torch.nn as nn
 import torch.nn.init as init
 
@@ -22,6 +23,14 @@ def download_weights(model_type: str, saving_dir: str) -> None:
     os.makedirs(saving_dir, exist_ok=True)
 
     open(os.path.join(saving_dir, f"{model_type}.ckpt"), 'wb').write(r.content)
+
+
+def load_tuple_to_device(padded_address, device):
+    """
+    Function to load the torch components of a tuple to a device. Since tuple are immutable we return a new tuple with
+    the tensor loaded to the device.
+    """
+    return tuple([element.to(device) if isinstance(element, torch.Tensor) else element for element in padded_address])
 
 
 def weight_init(m):

@@ -1,5 +1,3 @@
-from typing import Union
-
 import torch
 
 from .pre_trained_seq2seq import PretrainedSeq2SeqModel

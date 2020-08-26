@@ -65,7 +65,13 @@ def download_fasttext_model(lang_id: str, saving_dir: str) -> str:
     return file_name_path  # return the full path to the fastText embeddings
 
 
-def _download_gz_model(gz_file_name, saving_path):  # now use a saving dir
+def _download_gz_model(gz_file_name, saving_path):  # now use a saving path
+    """
+        Simpler version of the _download_gz_model function from fastText to download pre-trained common-crawl
+        vectors from fastText's website https://fasttext.cc/docs/en/crawl-vectors.html and save it in the
+        saving directory (saving_path).
+    """
+
     url = "https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/%s" % gz_file_name
     _download_file(url, saving_path)
 

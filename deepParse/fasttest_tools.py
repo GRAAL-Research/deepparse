@@ -43,7 +43,6 @@ def download_fasttext_model(lang_id: str, saving_dir: str) -> str:
         vectors from fastText's website https://fasttext.cc/docs/en/crawl-vectors.html and save it in the
         saving directory (saving_dir).
     """
-    if_exists = 'ignore'
     if lang_id not in valid_lang_ids:
         raise Exception("Invalid lang id. Please select among %s" %
                         repr(valid_lang_ids))
@@ -53,12 +52,11 @@ def download_fasttext_model(lang_id: str, saving_dir: str) -> str:
 
     file_name_path = os.path.join(saving_dir, file_name)
     if os.path.isfile(file_name_path):
-        if if_exists == 'ignore':
-            return file_name_path  # return the full path to the fastText embeddings
+        return file_name_path  # return the full path to the fastText embeddings
 
     saving_file_path = os.path.join(saving_dir, gz_file_name)
 
-    if _download_gz_model(gz_file_name, saving_file_path, if_exists):
+    if _download_gz_model(gz_file_name, saving_file_path):
         with gzip.open(os.path.join(saving_dir, gz_file_name), 'rb') as f:
             with open(os.path.join(saving_dir, file_name), 'wb') as f_out:
                 shutil.copyfileobj(f, f_out)
@@ -67,7 +65,7 @@ def download_fasttext_model(lang_id: str, saving_dir: str) -> str:
     return file_name_path  # return the full path to the fastText embeddings
 
 
-def _download_gz_model(gz_file_name, saving_path, if_exists):  # now use a saving dir
+def _download_gz_model(gz_file_name, saving_path):  # now use a saving dir
     url = "https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/%s" % gz_file_name
     _download_file(url, saving_path)
 

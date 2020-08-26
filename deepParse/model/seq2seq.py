@@ -6,9 +6,9 @@ import torch
 import torch.nn as nn
 from torch import load
 
-from .model import Decoder
-from .model import Encoder
-from .model.embedding_network import EmbeddingNetwork
+from .decoder import Decoder
+from .embedding_network import EmbeddingNetwork
+from .encoder import Encoder
 from ..tools import download_weights
 
 

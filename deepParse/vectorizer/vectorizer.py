@@ -18,7 +18,7 @@ class Vectorizer(ABC):
         self.eos_token = 8
 
     @abstractmethod
-    def __call__(self, addresses):
+    def __call__(self, addresses: List[str]) -> List:
         """
         Method to vectorizer addresses.
 

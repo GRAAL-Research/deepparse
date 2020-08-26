@@ -1,3 +1,6 @@
+from typing import Tuple
+
+import torch
 import torch.nn as nn
 from torch.nn.utils.rnn import pack_padded_sequence
 
@@ -20,18 +23,19 @@ class Encoder(nn.Module):
         self.lstm = nn.LSTM(input_size, hidden_size, num_layers=num_layers, batch_first=True)
         self.lstm.apply(weight_init)
 
-    def __call__(self, to_predict, lenghts_tensor):  # todo validate input/output type
+    def forward(self, to_predict: torch.Tensor, lengths_tensor: torch.Tensor) -> Tuple:
         """
             Callable method to encode the components of an address.
 
-            Args:
-                to_predict ():
-                lenghts_tensor () :
+            rgs:
+                to_predict (~torch.Tensor): The elements to predict the tags.
+                lengths_tensor (~torch.Tensor): The lengths of the batch elements (since packed).
 
             Return:
-                The address components encoding.
+                A tuple of the address components encoding.
         """
-        packed_sequence = pack_padded_sequence(to_predict, lenghts_tensor, batch_first=True)
+
+        packed_sequence = pack_padded_sequence(to_predict, lengths_tensor, batch_first=True)
 
         _, hidden = self.lstm(packed_sequence, self.hidden)
 

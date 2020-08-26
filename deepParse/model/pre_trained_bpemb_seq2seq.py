@@ -1,4 +1,6 @@
-from typing import Union
+from typing import Union, List
+
+import torch
 
 from .embedding_network import EmbeddingNetwork
 from .pre_trained_seq2seq import PretrainedSeq2SeqModel
@@ -19,23 +21,24 @@ class PretrainedBPEmbSeq2SeqModel(PretrainedSeq2SeqModel):
 
         self._load_pre_trained_weights("bpemb")
 
-    def __call__(self, to_predict, lenghts_tensor, decomposition_lengths):  # todo get input and output
+    def __call__(self, to_predict: torch.Tensor, lengths_tensor: torch.Tensor,
+                 decomposition_lengths: List) -> torch.Tensor:
         """
             Callable method to get tags prediction over the components of an address.
 
             Args:
-                to_predict ():
-                lenghts_tensor () :
-                decomposition_lengths () :
+                to_predict (~torch.Tensor): The elements to predict the tags.
+                lengths_tensor (~torch.Tensor) : The lengths of the batch elements (since packed).
+                decomposition_lengths (List) : The lengths of the decomposed words of the batch elements (since packed).
 
             Return:
-                The address components tags predictions.
+                The tensor of the address components tags predictions.
         """
         batch_size = to_predict.size(0)
 
         embedded_output = self.embedding_network(to_predict, decomposition_lengths)
 
-        decoder_input, decoder_hidden = self._encoder_step(embedded_output, lenghts_tensor, batch_size)
+        decoder_input, decoder_hidden = self._encoder_step(embedded_output, lengths_tensor, batch_size)
 
         decoder_predict = self.decoder(decoder_input, decoder_hidden)
 

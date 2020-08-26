@@ -1,5 +1,6 @@
 import os
 from abc import ABC
+from typing import Tuple
 
 import torch
 import torch.nn as nn
@@ -31,11 +32,12 @@ class PretrainedSeq2SeqModel(ABC, nn.Module):
 
     def _load_pre_trained_weights(self, model_type: str) -> None:
         """
-        Method to resolved the loading of the pretrained weights 
+        Method to resolved the loading of the pretrained weights.
+
         Args:
-            model_type (str): The model pretrained weights to load. 
+            model_type (str): The model pretrained weights to load.
         """
-        root_path = os.path.join(os.path.expanduser('~'), f".cache/deepParse")
+        root_path = os.path.join(os.path.expanduser('~'), ".cache/deepParse")
         model_path = os.path.join(root_path, f"{model_type}.ckpt")
 
         if not os.path.isfile(model_path):
@@ -65,19 +67,19 @@ class PretrainedSeq2SeqModel(ABC, nn.Module):
 
         pass
 
-    def _encoder_step(self, to_predict, lenghts_tensor, batch_size):  # todo get input and output
+    def _encoder_step(self, to_predict: torch.Tensor, lengths_tensor: torch.Tensor, batch_size: int) -> Tuple:
         """
         Step of the encoder.
-        
+
         Args:
-            to_predict: 
-            lenghts_tensor: 
-            batch_size: 
-        
+            to_predict (~torch.Tensor): The elements to predict the tags.
+            lengths_tensor (~torch.Tensor): The lengths of the batch elements (since packed).
+            batch_size (int): The number of element in the batch.
+
         Return:
-            ...
+            A tuple (x, y) where x is the decoder input (a zeros tensor) and y is the decoder hidden states.
         """
-        decoder_hidden = self.encoder(to_predict, lenghts_tensor)
+        decoder_hidden = self.encoder(to_predict, lengths_tensor)
 
         # -1 for BOS token
         decoder_input = torch.zeros(1, batch_size, 1).to(self.device).new_full((1, batch_size, 1), -1)

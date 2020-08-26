@@ -45,7 +45,7 @@ class BPEmbVectorizer(Vectorizer):
 
     def _vectorize_sequence(self, address: str) -> Tuple[List, List]:
         """
-        Method to vectorize the address
+        Method to vectorize the address.
 
         Args:
             address (str): Address to vectorize using BPEmb.
@@ -72,12 +72,10 @@ class BPEmbVectorizer(Vectorizer):
 
     def _decomposed_sequence_padding(self, batch: List[Tuple]) -> None:
         """
-        Method to add padding to the decomposed sequence
+        Method to add padding to the decomposed sequence.
         """
         for decomposed_sequence, _ in batch:
             for decomposition in decomposed_sequence:
                 if len(decomposition) != self._max_length:
-                    for i in range(self._max_length - len(decomposition)):
-                        decomposition.append(
-                            np.ones(
-                                self.embeddings_model.dim) * self.padding_value)  # todo validate property is working
+                    decomposition.extend([np.ones(self.embeddings_model.dim) * [self.padding_value]] *
+                                         (self._max_length - len(decomposition)))

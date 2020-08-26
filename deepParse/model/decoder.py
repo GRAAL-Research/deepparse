@@ -1,3 +1,4 @@
+import torch
 import torch.nn as nn
 
 from ..tools import weight_init
@@ -25,13 +26,13 @@ class Decoder(nn.Module):
 
         self.softmax = nn.LogSoftmax(dim=1)
 
-    def __call__(self, to_predict, hidden):  # todo validate input/output type
+    def forward(self, to_predict: torch.Tensor, hidden: torch.Tensor) -> torch.Tensor:
         """
             Callable method to decode the components of an address.
 
             Args:
-                to_predict ():
-                hidden () :
+                to_predict (~torch.Tensor): The elements to predict the tags.
+                hidden (~torch.Tensor): The hidden state of the decoder.
 
             Return:
                 The address components tags predictions.

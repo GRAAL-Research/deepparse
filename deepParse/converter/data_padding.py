@@ -1,3 +1,6 @@
+# Bug with PyTorch source code makes torch.tensor as not callable for pylint.
+# pylint: disable=not-callable
+
 from typing import List, Tuple
 
 import torch
@@ -15,8 +18,8 @@ def data_padding(batch: List) -> Tuple:
         A tuple (x, y). The element x is a tensor of padded word vectors and their respective lengths of the sequences.
     """
 
-    sequences_vectors, lengths = zip(
-        *[(torch.FloatTensor(seq_vectors), len(seq_vectors)) for seq_vectors in sorted(batch, reverse=True)])
+    sequences_vectors, lengths = zip(*[(torch.FloatTensor(seq_vectors), len(seq_vectors))
+                                       for seq_vectors in sorted(batch, reverse=True)])
 
     lengths = torch.LongTensor(lengths)
 
@@ -39,9 +42,9 @@ def bpemb_data_padding(batch: List[Tuple]) -> Tuple:
         and z is their respective lengths of the sequences.
     """
 
-    sequence_bpe_tensors, decomposition_lengths, lengths = zip(
-        *[(torch.tensor(bpe_vector), word_decomposition_lengths, len(bpe_vector)) for
-          bpe_vector, word_decomposition_lengths in batch])
+    sequence_bpe_tensors, decomposition_lengths, lengths = zip(*[(torch.tensor(bpe_vector), word_decomposition_lengths,
+                                                                  len(bpe_vector))
+                                                                 for bpe_vector, word_decomposition_lengths in batch])
 
     lengths = torch.tensor(lengths)
 

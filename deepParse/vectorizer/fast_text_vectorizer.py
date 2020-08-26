@@ -27,7 +27,7 @@ class FastTextVectorizer(Vectorizer):
 
     def _vectorize_sequence(self, address: str) -> List:
         """
-        Method to vectorize the address
+        Method to vectorize the address.
 
         Args:
             address (str): Address to vectorize using fastText.

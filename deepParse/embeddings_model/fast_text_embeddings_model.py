@@ -7,7 +7,8 @@ from .embeddings_model import EmbeddingsModel
 
 class FastTextEmbeddingsModel(EmbeddingsModel):
     """
-    FastText embeddings model from `Enriching Word Vectors with Subword Information <https://arxiv.org/abs/1607.04606>`_.
+    FastText embeddings model from `Enriching Word Vectors with Subword Information
+    <https://arxiv.org/abs/1607.04606>`_.
 
     Args:
        embeddings_path (str): Path to the bin embeddings vector (.bin).

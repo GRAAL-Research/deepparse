@@ -1,3 +1,6 @@
+# Bug with PyTorch source code makes torch.tensor as not callable for pylint.
+# pylint: disable=not-callable
+
 from typing import Tuple, List
 
 import torch
@@ -21,9 +24,9 @@ class EmbeddingNetwork(nn.Module):
         self.hidden_size = hidden_size
         self.model = nn.LSTM(input_size, self.hidden_size, num_layers=num_layers, batch_first=True, bidirectional=True)
 
-    def __call__(self, to_predict: torch.Tensor, decomposition_lengths: Tuple[List]) -> torch.Tensor:
+    def forward(self, to_predict: torch.Tensor, decomposition_lengths: Tuple[List]) -> torch.Tensor:
         """
-            Callable method to .
+            Callable method to aggregate the byte-pair embeddings from decompose words.
 
             Args:
                 to_predict (~torch.Tensor): The address to extract the embedding on.
@@ -47,8 +50,10 @@ class EmbeddingNetwork(nn.Module):
             for decomposition_length in decomposition_lengths:
                 lengths.append(decomposition_length[i])
 
-            packed_sequence = pack_padded_sequence(to_predict[i], torch.tensor(lengths),
-                                                   batch_first=True, enforce_sorted=False)
+            packed_sequence = pack_padded_sequence(to_predict[i],
+                                                   torch.tensor(lengths),
+                                                   batch_first=True,
+                                                   enforce_sorted=False)
 
             _, hidden = self.model(packed_sequence, self.hidden)
             encoding = hidden[0].transpose(0, 1)

@@ -18,7 +18,6 @@ class TagsConverter:
         """
         If str convert from a tag to idx and if int convert from a idx to a tag using the convert table.
         """
-        if isinstance(str, key):
+        if isinstance(key, str):
             return self.tags_to_idx[key]
-        else:
-            return self.idx_to_tags[key]
+        return self.idx_to_tags[key]

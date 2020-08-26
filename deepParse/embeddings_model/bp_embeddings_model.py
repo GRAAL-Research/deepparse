@@ -1,5 +1,5 @@
-from bpemb import BPEmb
 from numpy.core.multiarray import ndarray
+from bpemb import BPEmb
 
 from .embeddings_model import EmbeddingsModel
 

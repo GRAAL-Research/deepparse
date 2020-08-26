@@ -22,15 +22,15 @@ class PretrainedBPEmbSeq2SeqModel(PretrainedSeq2SeqModel):
 
         self._load_pre_trained_weights("bpemb")
 
-    def __call__(self, to_predict: torch.Tensor, lengths_tensor: torch.Tensor,
-                 decomposition_lengths: List) -> torch.Tensor:
+    def __call__(self, to_predict: torch.Tensor, decomposition_lengths: List,
+                 lengths_tensor: torch.Tensor) -> torch.Tensor:
         """
             Callable method to get tags prediction over the components of an address.
 
             Args:
                 to_predict (~torch.Tensor): The elements to predict the tags.
-                lengths_tensor (~torch.Tensor) : The lengths of the batch elements (since packed).
                 decomposition_lengths (List) : The lengths of the decomposed words of the batch elements (since packed).
+                lengths_tensor (~torch.Tensor) : The lengths of the batch elements (since packed).
 
             Return:
                 The tensor of the address components tags predictions.

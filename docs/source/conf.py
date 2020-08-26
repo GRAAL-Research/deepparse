@@ -18,13 +18,13 @@ import sys
 
 sys.path.insert(0, os.path.abspath('../..'))
 
-from deepParse import __version__ as version
+from deepparse import __version__ as version
 
 year = str(datetime.datetime.now().year)
 
 # -- Project information -----------------------------------------------------
 
-project = 'deepParse'
+project = 'deepparse'
 copyright = '2020-' + year + ', Marouane Yassine & David Beauchemin'
 author = 'Marouane Yassine & David Beauchemin'
 
@@ -138,14 +138,14 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'deepParse.tex', 'deepParse Documentation', 'Marouane Yassine & David Beauchemin', 'manual'),
+    (master_doc, 'deepparse.tex', 'deepparse Documentation', 'Marouane Yassine & David Beauchemin', 'manual'),
 ]
 
 # -- Options for manual page output ------------------------------------------
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [(master_doc, 'deepParse', 'deepParse Documentation', [author], 1)]
+man_pages = [(master_doc, 'deepparse', 'deepparse Documentation', [author], 1)]
 
 # -- Options for Texinfo output ----------------------------------------------
 
@@ -153,7 +153,7 @@ man_pages = [(master_doc, 'deepParse', 'deepParse Documentation', [author], 1)]
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'deepParse', 'deepParse Documentation', author, 'deepParse', 'One line description of project.',
+    (master_doc, 'deepparse', 'deepparse Documentation', author, 'deepparse', 'One line description of project.',
      'Miscellaneous'),
 ]
 

@@ -13,13 +13,14 @@ from ..tools import download_weights
 
 class PreTrainedSeq2SeqModel(ABC, nn.Module):
     """
-    Abstract class for callable pre-trained Seq2Seq model. The model use the pre-trained config for the encoder and
+    Abstract class for callable pre-trained Seq2Seq network. The network use the pre-trained config for the encoder and
     decoder:
-        - Encoder: `input_size = 300`, `hidden_size = 1024` and `num_layers = 1`
-        - Decoder: `input_size = 1`, `hidden_size = 1024`, `num_layers = 1` and `output_size = 9` (the number of tags)
+
+        - Encoder: ``input_size = 300``, ``hidden_size = 1024`` and ``num_layers = 1``
+        - Decoder: ``input_size = 1``, ``hidden_size = 1024``, ``num_layers = 1`` and ``output_size = 9`` (the number of tags)
 
      Args:
-        device (str): The device tu use for the prediction, can either be a GPU or a CPU.
+        device (str): The device tu use for the prediction, can either be a ``GPU`` or a ``CPU``.
     """
 
     def __init__(self, device: str) -> None:
@@ -34,12 +35,12 @@ class PreTrainedSeq2SeqModel(ABC, nn.Module):
 
     def _load_pre_trained_weights(self, model_type: str) -> None:
         """
-        Method to download and resolved the loading (into the model) of the pre-trained weights.
+        Method to download and resolved the loading (into the network) of the pre-trained weights.
 
         Args:
-            model_type (str): The model pre-trained weights to load.
+            model_type (str): The network pre-trained weights to load.
         """
-        root_path = os.path.join(os.path.expanduser('~'), ".cache/deepParse")
+        root_path = os.path.join(os.path.expanduser('~'), ".cache/deepparse")
         model_path = os.path.join(root_path, f"{model_type}.ckpt")
 
         if not os.path.isfile(model_path):
@@ -59,7 +60,7 @@ class PreTrainedSeq2SeqModel(ABC, nn.Module):
             batch_size (int): The number of element in the batch.
 
         Return:
-            A tuple (x, y) where x is the decoder input (a zeros tensor) and y is the decoder hidden states.
+            A tuple (``x``, ``y``) where ``x`` is the decoder input (a zeros tensor) and ``y`` is the decoder hidden states.
         """
         decoder_hidden = self.encoder(to_predict, lengths_tensor)
 

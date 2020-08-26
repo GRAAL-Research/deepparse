@@ -6,9 +6,12 @@ from .embeddings_model import EmbeddingsModel
 
 class BPEmbEmbeddingsModel(EmbeddingsModel):
     """
-    BPEmb embeddings model from `BPEmb: Tokenization-free Pre-trained Subword Embeddings in 275 Languages
+    BPEmb embeddings network from `BPEmb: Tokenization-free Pre-trained Subword Embeddings in 275 Languages
     <https://www.aclweb.org/anthology/L18-1473/>`_. The arguments are the same as the
     `BPEmb class <https://github.com/bheinzerling/bpemb/blob/master/bpemb/bpemb.py>`_
+
+    Params:
+        kwargs: Same as the :class:`~bpemb.BPEmb` class.
     """
 
     def __init__(self, **kwargs) -> None:

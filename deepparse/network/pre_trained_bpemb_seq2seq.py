@@ -8,10 +8,10 @@ from .pre_trained_seq2seq import PreTrainedSeq2SeqModel
 
 class PreTrainedBPEmbSeq2SeqModel(PreTrainedSeq2SeqModel):
     """
-    BPEmb pre-trained Seq2Seq model, the best of the two, but take the more GPU/CPU resources.
+    BPEmb pre-trained Seq2Seq network, the best of the two, but take the more ``GPU``/``CPU`` resources.
 
      Args:
-        device (str): The device tu use for the prediction, can either be a GPU or a CPU.
+        device (str): The device tu use for the prediction, can either be a ``GPU`` or a ``CPU``.
     """
 
     def __init__(self, device: str) -> None:
@@ -30,7 +30,7 @@ class PreTrainedBPEmbSeq2SeqModel(PreTrainedSeq2SeqModel):
 
             Args:
                 to_predict (~torch.Tensor): The elements to predict the tags.
-                decomposition_lengths (List) : The lengths of the decomposed words of the batch elements (since packed).
+                decomposition_lengths (list) : The lengths of the decomposed words of the batch elements (since packed).
                 lengths_tensor (~torch.Tensor) : The lengths of the batch elements (since packed).
 
             Return:

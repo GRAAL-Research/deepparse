@@ -27,7 +27,7 @@ class Encoder(nn.Module):
         """
             Callable method to encode the components of an address.
 
-            rgs:
+            Args:
                 to_predict (~torch.Tensor): The elements to predict the tags.
                 lengths_tensor (~torch.Tensor): The lengths of the batch elements (since packed).
 

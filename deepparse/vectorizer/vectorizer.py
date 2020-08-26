@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from ..embeddings_model.embeddings_model import EmbeddingsModel
+from ..embeddings_models.embeddings_model import EmbeddingsModel
 
 
 class Vectorizer(ABC):
@@ -9,7 +9,7 @@ class Vectorizer(ABC):
     Vectorizer abstract class to vectorize an address into a list of embeddings.
 
     Args:
-        embeddings_model (~deepParse.embeddings_model.EmbeddingsModel): A callable embeddings model.
+        embeddings_model (~deepparse.embeddings_models.EmbeddingsModel): A callable embeddings network.
 
     """
 
@@ -23,7 +23,7 @@ class Vectorizer(ABC):
         Method to vectorizer addresses.
 
         Args:
-            addresses (List[str]): The addresses to vectorize.
+            addresses (list[str]): The addresses to vectorize.
 
         Return:
             The addresses elements (components) embeddings vector.

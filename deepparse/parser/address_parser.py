@@ -7,11 +7,11 @@ from numpy.core.multiarray import ndarray
 from .. import load_tuple_to_device
 from ..converter import TagsConverter, data_padding
 from ..converter.data_padding import bpemb_data_padding
-from ..embeddings_model import FastTextEmbeddingsModel
-from ..embeddings_model.bp_embeddings_model import BPEmbEmbeddingsModel
+from ..embeddings_models import FastTextEmbeddingsModel
+from ..embeddings_models.bp_embeddings_model import BPEmbEmbeddingsModel
 from ..fasttest_tools import download_fasttext_model
-from ..model.pre_trained_bpemb_seq2seq import PreTrainedBPEmbSeq2SeqModel
-from ..model.pre_trained_fasttext_seq2seq import PreTrainedFastTextSeq2SeqModel
+from ..network.pre_trained_bpemb_seq2seq import PreTrainedBPEmbSeq2SeqModel
+from ..network.pre_trained_fasttext_seq2seq import PreTrainedFastTextSeq2SeqModel
 from ..vectorizer import FastTextVectorizer, BPEmbVectorizer
 
 _pre_trained_tags_to_idx = {
@@ -29,18 +29,18 @@ _pre_trained_tags_to_idx = {
 
 class AddressParser:
     """
-    Address parser to parse an address or a list of address using one of the seq2seq pre-trained model:
+    Address parser to parse an address or a list of address using one of the seq2seq pre-trained network:
     fastText or BPEmb.
 
     Args:
-        model (str): The model name to use, can be either fasttext, bpemb, lightest (equivalent to fasttext) or
+        model (str): The network name to use, can be either fasttext, bpemb, lightest (equivalent to fasttext) or
             best (equivalent to bpemb).
-        device (Union[int, str]): The device to use can be either a GPU index (e.g. 0) in int format or string format or
-            'cpu'.
+        device (Union[int, str]): The device to use can be either a ``GPU`` index (e.g. 0) in int format or string
+            format or ``'CPU'``.
         rounding (int): The rounding to use when asking the probability of the tags. The default value is 4 digits.
 
     Note:
-        For both the model, we will download the pre-trained weights and embeddings in the .cache directory of the
+        For both the network, we will download the pre-trained weights and embeddings in the ``.cache`` directory of the
         user root.
     """
 
@@ -54,7 +54,7 @@ class AddressParser:
         self.tags_converter = TagsConverter(_pre_trained_tags_to_idx)
 
         if model in "fasttext" or model in "lightest":
-            path = os.path.join(os.path.expanduser('~'), ".cache/deepParse")
+            path = os.path.join(os.path.expanduser('~'), ".cache/deepparse")
             os.makedirs(path, exist_ok=True)
 
             file_name = download_fasttext_model("fr", saving_dir=path)
@@ -73,24 +73,24 @@ class AddressParser:
 
             self.pre_trained_model = PreTrainedBPEmbSeq2SeqModel(self.device)
         else:
-            raise NotImplementedError(f"There is no {model} model implemented. Value can be: "
+            raise NotImplementedError(f"There is no {model} network implemented. Value can be: "
                                       f"fasttext, bpemb, lightest (fastext) or best (bpemb).")
 
     def __call__(self, addresses_to_parse: Union[List[str], str], with_prob: bool = False) -> Dict:
         """
-            Callable method to parse the components of an address or a list of address.
+        Callable method to parse the components of an address or a list of address.
 
-            Args:
-                addresses_to_parse (Union[List[str], str]): The addresses to be parse, can be either a single address
-                    (when using str) or a list of address.
-                with_prob (bool): Either or not to return the probability of all the tags with a the specified
-                    rounding.
+        Args:
+            addresses_to_parse (Union[list[str], str]): The addresses to be parse, can be either a single address
+                (when using str) or a list of address.
+            with_prob (bool): Either or not to return the probability of all the tags with a the specified
+                rounding.
 
-            Return:
-                A dictionary where the keys are the parsed address and the values dictionary. For the second
-                dictionary: the key are the address components (e.g. a street number such as 305) and the value are
-                either the tag of the components (e.g. StreetName) or a tuple (x, y) where x is the tag and y is the
-                probability (e.g. 0.9981).
+        Return:
+            A dictionary where the keys are the parsed address and the values dictionary. For the second
+            dictionary: the key are the address components (e.g. a street number such as 305) and the value are
+            either the tag of the components (e.g. StreetName) or a tuple (``x``, ``y``) where ``x`` is the tag and ``y`` is the
+            probability (e.g. 0.9981).
 
         """
         if isinstance(addresses_to_parse, str):

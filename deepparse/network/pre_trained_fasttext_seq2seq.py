@@ -5,10 +5,10 @@ from .pre_trained_seq2seq import PreTrainedSeq2SeqModel
 
 class PreTrainedFastTextSeq2SeqModel(PreTrainedSeq2SeqModel):
     """
-    FastText pre-trained Seq2Seq model, the lightest of the two (in GPU/CPU consumption) for a little less accuracy.
+    FastText pre-trained Seq2Seq network, the lightest of the two (in ``GPU``/``CPU`` consumption) for a little less accuracy.
 
      Args:
-        device (str): The device tu use for the prediction, can either be a GPU or a CPU.
+        device (str): The device tu use for the prediction, can either be a ``GPU`` or a ``CPU``.
     """
 
     def __init__(self, device: str) -> None:

@@ -3,16 +3,12 @@ from typing import List, Tuple
 import numpy as np
 
 from .vectorizer import Vectorizer
-from ..embeddings_model.embeddings_model import EmbeddingsModel
+from ..embeddings_models.embeddings_model import EmbeddingsModel
 
 
 class BPEmbVectorizer(Vectorizer):
     """
     BPEmb vectorizer to convert an address into BPEmb embeddings.
-
-    Args:
-        embeddings_model (~deepParse.embeddings_model.EmbeddingsModel): A callable embeddings model.
-
     """
 
     def __init__(self, embeddings_model: EmbeddingsModel) -> None:
@@ -25,7 +21,7 @@ class BPEmbVectorizer(Vectorizer):
         Method to vectorizer addresses.
 
         Args:
-            addresses (List[str]): The addresses to vectorize.
+            addresses (list[str]): The addresses to vectorize.
 
         Return:
             A tuple of the addresses elements (components) embeddings vector and the word decomposition lengths.

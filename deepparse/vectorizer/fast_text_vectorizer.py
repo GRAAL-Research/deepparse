@@ -13,7 +13,7 @@ class FastTextVectorizer(Vectorizer):
         Method to vectorizer addresses.
 
         Args:
-            addresses (List[str]): The addresses to vectorize.
+            addresses (list[str]): The addresses to vectorize.
 
         Return:
             The addresses elements (components) embeddings vector.

@@ -9,8 +9,6 @@ DeepParse is a state-of-the-art library for parsing multinational street address
 
 Use deepParse to:
 - Use the pre-trained models to parse multinational addresses.
-- Train your own model.
-- Retrain our models.
 
 Read the documentation at [deepParse.org](https://deepparse.org).
 
@@ -44,6 +42,20 @@ and this one for the package;
 
 ## Getting started: 
 
+```python
+from deepparse.parser import AddressParser
+
+address_parser = AddressParser(model="bpemb", device=0)
+
+# you can parse one address
+parsed_address = address_parser("350 rue des Lilas Ouest Québec Québec G1L 1B6")
+
+# or multiple addresses
+parsed_address = address_parser(["350 rue des Lilas Ouest Québec Québec G1L 1B6", "350 rue des Lilas Ouest Québec Québec G1L 1B6"])
+
+# you can also get the probability of the predicted tags
+parsed_address = address_parser("350 rue des Lilas Ouest Québec Québec G1L 1B6", with_prob=True)
+```
 
 ------------------
 
@@ -51,13 +63,13 @@ and this one for the package;
 
 Before installing deepParse, you must have the latest version of [PyTorch](https://pytorch.org/) in your environment.
 
-- **Install the stable version of Poutyne:**
+- **Install the stable version of deepParse:**
 
 ```sh
-pip install deepParse
+pip install deepparse
 ```
 
-- **Install the latest development version of Poutyne:**
+- **Install the latest development version of deepParse:**
 
 ```sh
 pip install -U git+https://github.com/MAYAS3/deepParse.git@dev

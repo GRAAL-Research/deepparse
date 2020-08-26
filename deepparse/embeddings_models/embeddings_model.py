@@ -5,7 +5,7 @@ from numpy.core.multiarray import ndarray
 
 class EmbeddingsModel(ABC):
     """
-    Abstract (wrapper) class for callable embeddings model.
+    Abstract (wrapper) class for callable embeddings network.
     """
 
     def __init__(self) -> None:

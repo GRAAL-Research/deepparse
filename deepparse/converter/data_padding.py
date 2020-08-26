@@ -15,7 +15,8 @@ def data_padding(batch: List) -> Tuple:
         batch (List): The vectorize batch data.
 
     Returns:
-        A tuple (x, y). The element x is a tensor of padded word vectors and their respective lengths of the sequences.
+        A tuple (``x`` , ``y`` ). The element ``x``  is a tensor of padded word vectors and ``y``  is their respective lengths of
+        the sequences.
     """
 
     sequences_vectors, lengths = zip(*[(torch.FloatTensor(seq_vectors), len(seq_vectors))
@@ -34,12 +35,12 @@ def bpemb_data_padding(batch: List[Tuple]) -> Tuple:
     the longest one.
 
     Args:
-        batch (List[Tuple]): The list of vectorize tupled batch data where the first element is the address embeddings
-        and the second is the word decomposition lengths.
+        batch (list[tuple]): The list of vectorize tupled batch data where the first element is the address embeddings
+            and the second is the word decomposition lengths.
 
     Returns:
-        A tuple (x, y, z). The element x is a tensor of padded word vectors, y is the padded decomposition lengths,
-        and z is their respective lengths of the sequences.
+        A tuple (``x`` , ``y`` , ``z`` ). The element ``x``  is a tensor of padded word vectors, ``y``  is the padded decomposition lengths,
+        and ``z``  is their respective lengths of the sequences.
     """
 
     sequences_vectors, decomp_len, lengths = zip(

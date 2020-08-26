@@ -43,7 +43,7 @@ class EmbeddingNetwork(nn.Module):
 
             Args:
                 to_predict (~torch.Tensor): The address to extract the embedding on.
-                decomposition_lengths (Tuple[List]) : The decomposition lengths of the address components.
+                decomposition_lengths (tuple[list]) : The decomposition lengths of the address components.
 
             Return:
                 The embedded address vector tensor.

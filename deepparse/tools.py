@@ -11,10 +11,10 @@ def download_weights(model_type: str, saving_dir: str) -> None:
     Function to download the pre-trained weights of the models.
 
     Args:
-        model_type: The model type (i.e. fasttest or bpemb).
+        model_type: The network type (i.e. fasttest or bpemb).
         saving_dir: The path to the saving directory.
     """
-    print("Downloading the weights for the model", model_type)
+    print("Downloading the weights for the network", model_type)
     base_url = "https://davebulaval.github.io/deepParse-external-assets/{}.ckpt"
 
     url = base_url.format(model_type)
@@ -38,8 +38,8 @@ def weight_init(m):
     """
     Function to initialize the weight of a layer.
     Usage:
-        model = Model()
-        model.apply(weight_init)
+        network = Model()
+        network.apply(weight_init)
     """
     if isinstance(m, nn.Conv1d):
         init.normal_(m.weight.data)

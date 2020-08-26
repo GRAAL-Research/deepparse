@@ -42,18 +42,18 @@ def bpemb_data_padding(batch: List[Tuple]) -> Tuple:
         and z is their respective lengths of the sequences.
     """
 
-    sequence_bpe_tensors, decomposition_lengths, lengths = zip(*[(torch.tensor(bpe_vector), word_decomposition_lengths,
-                                                                  len(bpe_vector))
-                                                                 for bpe_vector, word_decomposition_lengths in batch])
+    sequences_vectors, decomp_len, lengths = zip(
+        *[(torch.tensor(vectors), word_decomposition_len, len(vectors)) for vectors, word_decomposition_len in
+          sorted(batch, key=lambda x: len(x[0]), reverse=True)])
 
     lengths = torch.tensor(lengths)
 
-    padded_sequences_vectors = pad_sequence(sequence_bpe_tensors, batch_first=True)
+    padded_sequences_vectors = pad_sequence(sequences_vectors, batch_first=True)
 
     # pad decomposition length
     max_sequence_length = lengths.max()
-    for decomposition_length in decomposition_lengths:
+    for decomposition_length in decomp_len:
         if len(decomposition_length) < max_sequence_length:
             decomposition_length.extend([1] * (max_sequence_length - len(decomposition_length)))
 
-    return padded_sequences_vectors, decomposition_lengths, lengths
+    return padded_sequences_vectors, decomp_len, lengths

@@ -4,10 +4,12 @@ from typing import Union
 
 import torch
 import torch.nn as nn
+from torch import load
 
 from deepParse.model import Decoder
 from deepParse.model import Encoder
 from deepParse.model.embedding_network import EmbeddingNetwork
+from deepParse.tools import download_weights
 
 
 class PretrainedSeq2SeqModel(ABC, nn.Module):
@@ -35,9 +37,34 @@ class PretrainedSeq2SeqModel(ABC, nn.Module):
         Args:
             model_type (str): The model pretrained weights to load. 
         """
-        # todo
-        path = os.path.join(os.path.expanduser('~'), "deepParse_data")
-        os.makedirs(path, exist_ok=True)
+        root_path = os.path.join(os.path.expanduser('~'), f".cache/deepParse")
+        model_path = os.path.join(root_path, f"{model_type}.ckpt")
+
+        if not os.path.isfile(model_path):
+            download_weights(model_type, root_path)
+
+        all_layers_params = load(model_path, map_location=self.device)
+
+        # if model_type == "fasttext":
+        #     pass
+        # elif model_type == "bpemb":
+        #     embedding_network = OrderedDict(
+        #         [(key, value) for key, value in all_layers_params.items() if key.startswith("embedding_network")])
+        #     self.embedding_network.load_state_dict(embedding_network)
+        #     encoder = OrderedDict(
+        #         [(key, value) for key, value in all_layers_params.items() if key.startswith("encoder")])
+        #     self.encoder.load_state_dict(encoder)
+        #     decoder = OrderedDict(
+        #         [(key, value) for key, value in all_layers_params.items() if key.startswith("decoder")])
+        #     self.decoder.load_state_dict(decoder)
+        # else:
+        #     pass  # raise exception
+
+        self.load_state_dict(all_layers_params)
+        print("a")
+
+        # load weights
+
         pass
 
     def _encoder_step(self, to_predict, lenghts_tensor, batch_size):  # todo get input and output
@@ -78,7 +105,7 @@ class PretrainedFastTextSeq2SeqModel(PretrainedSeq2SeqModel):
     def __init__(self, device: Union[int, str]) -> None:
         super().__init__(device)
 
-        self._load_pre_trained_weights("FastText")
+        self._load_pre_trained_weights("fasttext")
 
     def __call__(self, to_predict, lenghts_tensor):  # todo get input and output
         """
@@ -113,7 +140,7 @@ class PretrainedBPEmbSeq2SeqModel(PretrainedSeq2SeqModel):
 
         self.embedding_network = EmbeddingNetwork(input_size=300, hidden_size=300)
 
-        self._load_pre_trained_weights("BPEmb")
+        self._load_pre_trained_weights("bpemb")
 
     def __call__(self, to_predict, lenghts_tensor, decomposition_lengths):  # todo get input and output
         """

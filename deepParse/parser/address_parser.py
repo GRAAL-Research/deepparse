@@ -32,7 +32,7 @@ class AddressParser:
         self.tags_converter = TagsConverter(_pre_trained_tags_to_idx)
 
         if model == "fasttext" or model == "lightest":
-            path = os.path.join(os.path.expanduser('~'), "deepParse_data")
+            path = os.path.join(os.path.expanduser('~'), ".cache/deepParse")
             os.makedirs(path, exist_ok=True)
 
             file_name = download_fasttext_model("fr", saving_dir=path)
@@ -42,14 +42,14 @@ class AddressParser:
 
             self.data_converter = data_padding
 
-            self.pre_trained_model = PretrainedFastTextSeq2SeqModel(device)
+            self.pre_trained_model = PretrainedFastTextSeq2SeqModel(self.device)
 
         elif model == "bpemb":
             self.vectorizer = BPEmbVectorizer(embeddings_model=BPEmbEmbeddingsModel(lang="multi", vs=100000, dim=300))
 
             self.data_converter = bpemb_data_padding
 
-            self.pre_trained_model = PretrainedBPEmbSeq2SeqModel(device)
+            self.pre_trained_model = PretrainedBPEmbSeq2SeqModel(self.device)
 
         elif model == "fasttext-att":
             pass

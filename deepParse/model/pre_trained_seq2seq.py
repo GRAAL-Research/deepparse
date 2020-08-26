@@ -67,6 +67,32 @@ class PretrainedSeq2SeqModel(ABC, nn.Module):
         decoder_input = torch.zeros(1, batch_size, 1).to(self.device).new_full((1, batch_size, 1), -1)
         return decoder_input, decoder_hidden
 
+    def _decoder_steps(self, decoder_input: torch.Tensor, decoder_hidden: torch.Tensor, max_length: int,
+                       batch_size: int) -> torch.Tensor:
+        # The empty prediction sequence
+        # +1 for the EOS
+        # 9 for the output size (9 tokens)
+        prediction_sequence = torch.zeros(max_length + 1, batch_size, 9).cuda(self.device)
+
+        # we decode the first token
+        decoder_output, decoder_hidden = self.decoder(decoder_input, decoder_hidden)
+
+        # we fill the first token prediction
+        prediction_sequence[0] = decoder_output
+
+        # the decoder next step input (the predicted idx of the previous token)
+        _, decoder_input = decoder_output.topk(1)
+
+        # we loop the same steps for the rest of the sequence
+        for idx in range(max_length):
+            decoder_output, decoder_hidden = self.decoder(decoder_input.view(1, batch_size, 1), decoder_hidden)
+
+            prediction_sequence[idx + 1] = decoder_output
+
+            _, decoder_input = decoder_output.topk(1)
+
+        return prediction_sequence  # the sequence is now fully parse
+
     def eval(self) -> None:
         """
         To put the network in eval mode (no weights update).

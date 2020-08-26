@@ -42,9 +42,10 @@ class PretrainedBPEmbSeq2SeqModel(PretrainedSeq2SeqModel):
 
         decoder_input, decoder_hidden = self._encoder_step(embedded_output, lengths_tensor, batch_size)
 
-        decoder_predict = self.decoder(decoder_input, decoder_hidden)
+        max_length = lengths_tensor[0].item()
+        prediction_sequence = self._decoder_steps(decoder_input, decoder_hidden, max_length, batch_size)
 
-        return decoder_predict
+        return prediction_sequence
 
     def eval(self) -> None:
         """

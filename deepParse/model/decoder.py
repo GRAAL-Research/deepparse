@@ -1,3 +1,5 @@
+from typing import Tuple
+
 import torch
 import torch.nn as nn
 
@@ -26,7 +28,7 @@ class Decoder(nn.Module):
 
         self.softmax = nn.LogSoftmax(dim=1)
 
-    def forward(self, to_predict: torch.Tensor, hidden: torch.Tensor) -> torch.Tensor:
+    def forward(self, to_predict: torch.Tensor, hidden: torch.Tensor) -> Tuple:
         """
             Callable method to decode the components of an address.
 
@@ -35,14 +37,14 @@ class Decoder(nn.Module):
                 hidden (~torch.Tensor): The hidden state of the decoder.
 
             Return:
-                The address components tags predictions.
+                A tuple (x, y) where x is the address components tags predictions and y is the hidden states.
 
         """
-        output, _ = self.lstm(to_predict.float(), hidden)
+        output, hidden = self.lstm(to_predict.float(), hidden)
 
         output_prob = self.softmax(self.linear(output[0]))
 
-        return output_prob
+        return output_prob, hidden
 
     def eval(self) -> None:
         """

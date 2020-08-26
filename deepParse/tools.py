@@ -1,5 +1,28 @@
+import os
+
+import requests
 import torch.nn as nn
 import torch.nn.init as init
+
+
+def download_weights(model_type: str, saving_dir: str):
+    """
+    Function to download the pre trained weights of the models.
+
+    Args:
+        model_type: The model type (i.e. fasttest or bpemb).
+        saving_dir: The path to the saving directory.
+
+    """
+
+    base_url = "https://davebulaval.github.io/deepParse-external-assets/{}.ckpt"
+
+    url = base_url.format(model_type)
+    r = requests.get(url)
+
+    os.makedirs(saving_dir, exist_ok=True)
+
+    open(os.path.join(saving_dir, f"{model_type}.ckpt"), 'wb').write(r.content)
 
 
 def weight_init(m):

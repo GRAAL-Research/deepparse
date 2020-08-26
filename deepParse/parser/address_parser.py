@@ -1,6 +1,10 @@
 import os
-from typing import List, Union
+from typing import List, Union, Dict
 
+import torch
+from numpy.core.multiarray import ndarray
+
+from .. import load_tuple_to_device
 from ..converter import TagsConverter, data_padding
 from ..converter.data_padding import bpemb_data_padding
 from ..embeddings_model import FastTextEmbeddingsModel
@@ -18,17 +22,34 @@ _pre_trained_tags_to_idx = {
     "Province": 4,
     "PostalCode": 5,
     "Orientation": 6,
-    "GeneralDelivery": 7
-}  # the 9th is the EOS with idx 8
+    "GeneralDelivery": 7,
+    "EOS": 8  # the 9th is the EOS with idx 8
+}
 
 
 class AddressParser:
     """
-    **For fastText, will download data in deepParse_data first time not seen in user root.
+    Address parser to parse an address or a list of address using one of the seq2seq pre trained model:
+    fastText or BPEmb.
+
+    Args:
+        model (str): The model name to use, can be either fasttext, bpemb, lightest (equivalent to fasttext) or
+            best (equivalent to bpemb).
+        device (Union[int, str]): The device to use can be either a GPU index (e.g. 0) in int format or string format or
+            'cpu'.
+        rounding (int): The rounding to use when asking the probability of the tags. The default value is 4 digits.
+
+    Note:
+        For both the model, we will download the pre trained weights and embeddings in the .cache directory of the
+        user root.
     """
 
-    def __init__(self, model: str, device: Union[int, str]) -> None:
-        self.device = "cuda:%d" % int(device)
+    def __init__(self, model: str, device: Union[int, str], rounding: int = 4) -> None:
+        if device in "cpu":
+            self.device = device
+        else:
+            self.device = "cuda:%d" % int(device)
+        self.rounding = rounding
 
         self.tags_converter = TagsConverter(_pre_trained_tags_to_idx)
 
@@ -55,19 +76,61 @@ class AddressParser:
             raise NotImplementedError(f"There is no {model} model implemented. Value can be: "
                                       f"fasttext, bpemb, lightest (fastext) or best (bpemb).")
 
-    def __call__(self, address_to_parse: Union[List[str], str]):
-        if isinstance(str, address_to_parse):
-            address_to_parse = list(address_to_parse)
-        # convertir en tensor
+    def __call__(self, addresses_to_parse: Union[List[str], str], with_prob: bool = False) -> Dict:
+        """
+            Callable method to parse the components of an address or a list of address.
 
-        # send to device
+            Args:
+                addresses_to_parse (Union[List[str], str]): The addresses to be parse, can be either a single address
+                    (when using str) or a list of address.
+                with_prob (bool): Either or not to return the probability of all the tags with a the specified
+                    rounding.
 
-        self.vectorizer(address_to_parse)  # input must be a list
+            Return:
+                A dictionary where the keys are the parsed address and the values dictionary. For the second
+                dictionary: the key are the address components (e.g. a street number such as 305) and the value are
+                either the tag of the components (e.g. StreetName) or a tuple (x, y) where x is the tag and y is the
+                probability (e.g. 0.9981).
 
-        # step pour convertir pour la "forward pass"
-        # self.data_converter()
+        """
+        if isinstance(addresses_to_parse, str):
+            addresses_to_parse = [addresses_to_parse]
 
-        # prediction = self.pre_trained_model(...)
+        # since training data is lowercase
+        lower_cased_addresses_to_parse = [address.lower() for address in addresses_to_parse]
 
-        # get max prob
-        # convert to tag
+        vectorize_address = self.vectorizer(lower_cased_addresses_to_parse)
+
+        padded_address = self.data_converter(vectorize_address)
+        padded_address = load_tuple_to_device(padded_address, self.device)
+
+        predictions = self.pre_trained_model(*padded_address)
+
+        tags_predictions = predictions.max(2)[1].transpose(0, 1).cpu().numpy()
+        tags_predictions_prob = torch.exp(predictions.max(2)[0]).transpose(0, 1).detach().cpu().numpy()
+
+        tagged_addresses_components = self._fill_tagged_addresses_components(tags_predictions, tags_predictions_prob,
+                                                                             addresses_to_parse, with_prob)
+
+        return tagged_addresses_components
+
+    def _fill_tagged_addresses_components(self, tags_predictions: ndarray, tags_predictions_prob: ndarray,
+                                          addresses_to_parse: List[str], with_prob: bool) -> Dict:
+        """
+        Method to fill the mapping for every address between a address components and is associated predicted tag (or
+        tag and prob).
+        """
+        tagged_addresses_components = {}
+
+        for idx, (address_to_parse, tags_prediction, tags_prediction_prob) in enumerate(
+                zip(addresses_to_parse, tags_predictions, tags_predictions_prob)):
+            tagged_address_components = {}
+            for word, predicted_idx_tag, tag_proba in zip(address_to_parse.split(), tags_prediction,
+                                                          tags_prediction_prob):
+                tag = self.tags_converter(predicted_idx_tag)
+                if with_prob:
+                    tag = (tag, round(tag_proba, self.rounding))
+                tagged_address_components[word] = tag
+            tagged_addresses_components[addresses_to_parse[idx]] = tagged_address_components
+
+        return tagged_addresses_components

@@ -11,7 +11,7 @@ class BPEmbEmbeddingsModel(EmbeddingsModel):
     `BPEmb class <https://github.com/bheinzerling/bpemb/blob/master/bpemb/bpemb.py>`_
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         super().__init__()
         self.model = BPEmb(**kwargs)
 

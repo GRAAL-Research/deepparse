@@ -17,7 +17,7 @@ class Encoder(nn.Module):
         num_layers (int): The number of layer to the decoder.
     """
 
-    def __init__(self, input_size, hidden_size, num_layers):
+    def __init__(self, input_size, hidden_size, num_layers) -> None:
         super().__init__()
 
         self.lstm = nn.LSTM(input_size, hidden_size, num_layers=num_layers, batch_first=True)

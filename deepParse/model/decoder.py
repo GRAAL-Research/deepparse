@@ -16,7 +16,7 @@ class Decoder(nn.Module):
         output_size (int): The output size of the decoder (i.e. the number of tags to predict on).
     """
 
-    def __init__(self, input_size: int, hidden_size: int, num_layers: int, output_size: int):
+    def __init__(self, input_size: int, hidden_size: int, num_layers: int, output_size: int) -> None:
         super().__init__()
         self.lstm = nn.LSTM(input_size, hidden_size, num_layers=num_layers)
         self.lstm.apply(weight_init)

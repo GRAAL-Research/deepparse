@@ -32,7 +32,7 @@ class PretrainedSeq2SeqModel(ABC, nn.Module):
 
     def _load_pre_trained_weights(self, model_type: str) -> None:
         """
-        Method to resolved the loading of the pretrained weights.
+        Method to download and resolved the loading (into the model) of the pretrained weights.
 
         Args:
             model_type (str): The model pretrained weights to load.
@@ -45,27 +45,7 @@ class PretrainedSeq2SeqModel(ABC, nn.Module):
 
         all_layers_params = load(model_path, map_location=self.device)
 
-        # if model_type == "fasttext":
-        #     pass
-        # elif model_type == "bpemb":
-        #     embedding_network = OrderedDict(
-        #         [(key, value) for key, value in all_layers_params.items() if key.startswith("embedding_network")])
-        #     self.embedding_network.load_state_dict(embedding_network)
-        #     encoder = OrderedDict(
-        #         [(key, value) for key, value in all_layers_params.items() if key.startswith("encoder")])
-        #     self.encoder.load_state_dict(encoder)
-        #     decoder = OrderedDict(
-        #         [(key, value) for key, value in all_layers_params.items() if key.startswith("decoder")])
-        #     self.decoder.load_state_dict(decoder)
-        # else:
-        #     pass  # raise exception
-
         self.load_state_dict(all_layers_params)
-        print("a")
-
-        # load weights
-
-        pass
 
     def _encoder_step(self, to_predict: torch.Tensor, lengths_tensor: torch.Tensor, batch_size: int) -> Tuple:
         """

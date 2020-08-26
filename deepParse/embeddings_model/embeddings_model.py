@@ -8,7 +8,7 @@ class EmbeddingsModel(ABC):
     Abstract (wrapper) class for callable embeddings model.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.model = None
 
     @abstractmethod

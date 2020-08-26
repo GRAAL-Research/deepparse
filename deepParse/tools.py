@@ -13,7 +13,7 @@ def download_weights(model_type: str, saving_dir: str) -> None:
         model_type: The model type (i.e. fasttest or bpemb).
         saving_dir: The path to the saving directory.
     """
-
+    print("Downloading the weights for the model", model_type)
     base_url = "https://davebulaval.github.io/deepParse-external-assets/{}.ckpt"
 
     url = base_url.format(model_type)

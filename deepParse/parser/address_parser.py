@@ -27,7 +27,7 @@ class AddressParser:
     **For fastText, will download data in deepParse_data first time not seen in user root.
     """
 
-    def __init__(self, model: str, device: Union[int, str]):
+    def __init__(self, model: str, device: Union[int, str]) -> None:
         self.device = "cuda:%d" % int(device)
 
         self.tags_converter = TagsConverter(_pre_trained_tags_to_idx)

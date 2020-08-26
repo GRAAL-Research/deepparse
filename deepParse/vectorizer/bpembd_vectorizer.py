@@ -15,7 +15,7 @@ class BPEmbVectorizer(Vectorizer):
 
     """
 
-    def __init__(self, embeddings_model: EmbeddingsModel):
+    def __init__(self, embeddings_model: EmbeddingsModel) -> None:
         super().__init__(embeddings_model)
 
         self.padding_value = 0

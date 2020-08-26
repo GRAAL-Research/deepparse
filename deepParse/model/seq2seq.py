@@ -6,18 +6,18 @@ import torch
 import torch.nn as nn
 from torch import load
 
-from deepParse.model import Decoder
-from deepParse.model import Encoder
-from deepParse.model.embedding_network import EmbeddingNetwork
-from deepParse.tools import download_weights
+from .model import Decoder
+from .model import Encoder
+from .model.embedding_network import EmbeddingNetwork
+from ..tools import download_weights
 
 
 class PretrainedSeq2SeqModel(ABC, nn.Module):
     """
     Abstract class for callable pre trained Seq2Seq model. The model use the pre trained config for the encoder and
     decoder:
-        - Encoder: `input_size = 600`, `hidden_size = 600` and `num_layers = 1`
-        - Decoder: `input_size = 1`, `hidden_size = 600`, `num_layers = 1` and `output_size = 9` (the number of tags)
+        - Encoder: `input_size = 300`, `hidden_size = 1024` and `num_layers = 1`
+        - Decoder: `input_size = 1`, `hidden_size = 1024`, `num_layers = 1` and `output_size = 9` (the number of tags)
 
      Args:
         device (str): The device tu use for the prediction, can either be a GPU or a CPU.
@@ -27,9 +27,9 @@ class PretrainedSeq2SeqModel(ABC, nn.Module):
         super().__init__()
         self.device = device
 
-        self.encoder = Encoder(input_size=600, hidden_size=600, num_layers=1)
+        self.encoder = Encoder(input_size=300, hidden_size=1024, num_layers=1)
 
-        self.decoder = Decoder(input_size=1, hidden_size=600, num_layers=1, output_size=9)
+        self.decoder = Decoder(input_size=1, hidden_size=1024, num_layers=1, output_size=9)
 
     def _load_pre_trained_weights(self, model_type: str) -> None:
         """

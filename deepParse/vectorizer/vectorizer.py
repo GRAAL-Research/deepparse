@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from deepParse.embeddings_model.embeddings_model import EmbeddingsModel
+from ..embeddings_model.embeddings_model import EmbeddingsModel
 
 
 class Vectorizer(ABC):

@@ -1,7 +1,7 @@
 import torch.nn as nn
 from torch.nn.utils.rnn import pack_padded_sequence
 
-from deepParse.tools import weight_init
+from ..tools import weight_init
 
 
 class Encoder(nn.Module):

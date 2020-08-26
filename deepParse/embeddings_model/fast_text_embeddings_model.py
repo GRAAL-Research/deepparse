@@ -2,7 +2,7 @@ import fasttext
 import fasttext.util
 from numpy.core.multiarray import ndarray
 
-from deepParse.embeddings_model import EmbeddingsModel
+from .embeddings_model import EmbeddingsModel
 
 
 class FastTextEmbeddingsModel(EmbeddingsModel):

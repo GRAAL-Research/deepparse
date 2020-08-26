@@ -1,6 +1,6 @@
 import torch.nn as nn
 
-from deepParse.tools import weight_init
+from ..tools import weight_init
 
 
 class Decoder(nn.Module):

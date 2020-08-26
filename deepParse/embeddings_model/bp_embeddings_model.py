@@ -1,6 +1,7 @@
 from bpemb import BPEmb
+from numpy.core.multiarray import ndarray
 
-from deepParse.embeddings_model import EmbeddingsModel, ndarray
+from .embeddings_model import EmbeddingsModel
 
 
 class BPEmbEmbeddingsModel(EmbeddingsModel):

@@ -2,8 +2,8 @@ from typing import List, Tuple
 
 import numpy as np
 
-from deepParse.embeddings_model.embeddings_model import EmbeddingsModel
-from deepParse.vectorizer import Vectorizer
+from .vectorizer import Vectorizer
+from ..embeddings_model.embeddings_model import EmbeddingsModel
 
 
 class BPEmbVectorizer(Vectorizer):

@@ -1,13 +1,13 @@
 import os
 from typing import List, Union
 
-from deepParse.converter import TagsConverter, data_padding
-from deepParse.converter.data_padding import bpemb_data_padding
-from deepParse.embeddings_model import FastTextEmbeddingsModel
-from deepParse.embeddings_model.bp_embeddings_model import BPEmbEmbeddingsModel
-from deepParse.fasttest_tools import download_fasttext_model
-from deepParse.model import PretrainedFastTextSeq2SeqModel, PretrainedBPEmbSeq2SeqModel
-from deepParse.vectorizer import FastTextVectorizer, BPEmbVectorizer
+from ..converter import TagsConverter, data_padding
+from ..converter.data_padding import bpemb_data_padding
+from ..embeddings_model import FastTextEmbeddingsModel
+from ..embeddings_model.bp_embeddings_model import BPEmbEmbeddingsModel
+from ..fasttest_tools import download_fasttext_model
+from ..model import PretrainedFastTextSeq2SeqModel, PretrainedBPEmbSeq2SeqModel
+from ..vectorizer import FastTextVectorizer, BPEmbVectorizer
 
 _pre_trained_tags_to_idx = {
     "StreetNumber": 0,
@@ -18,7 +18,7 @@ _pre_trained_tags_to_idx = {
     "PostalCode": 5,
     "Orientation": 6,
     "GeneralDelivery": 7
-}
+}  # the 9th is the EOS with idx 8
 
 
 class AddressParser:
@@ -56,8 +56,6 @@ class AddressParser:
         elif model == "bpemb-att":
             pass
         elif model == "best":
-            pass
-        elif model == "lightest":
             pass
 
     def __call__(self, address_to_parse: Union[List[str], str]):

@@ -1,6 +1,6 @@
 from typing import List
 
-from deepParse.vectorizer import Vectorizer
+from .vectorizer import Vectorizer
 
 
 class FastTextVectorizer(Vectorizer):

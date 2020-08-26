@@ -14,7 +14,7 @@ class PretrainedBPEmbSeq2SeqModel(PretrainedSeq2SeqModel):
         device (str): The device tu use for the prediction, can either be a GPU or a CPU.
     """
 
-    def __init__(self, device: Union[int, str]) -> None:
+    def __init__(self, device: str) -> None:
         super().__init__(device)
 
         # pre trained params (the 300)

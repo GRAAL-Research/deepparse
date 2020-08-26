@@ -11,9 +11,9 @@ from .encoder import Encoder
 from ..tools import download_weights
 
 
-class PretrainedSeq2SeqModel(ABC, nn.Module):
+class PreTrainedSeq2SeqModel(ABC, nn.Module):
     """
-    Abstract class for callable pre trained Seq2Seq model. The model use the pre trained config for the encoder and
+    Abstract class for callable pre-trained Seq2Seq model. The model use the pre-trained config for the encoder and
     decoder:
         - Encoder: `input_size = 300`, `hidden_size = 1024` and `num_layers = 1`
         - Decoder: `input_size = 1`, `hidden_size = 1024`, `num_layers = 1` and `output_size = 9` (the number of tags)
@@ -34,10 +34,10 @@ class PretrainedSeq2SeqModel(ABC, nn.Module):
 
     def _load_pre_trained_weights(self, model_type: str) -> None:
         """
-        Method to download and resolved the loading (into the model) of the pretrained weights.
+        Method to download and resolved the loading (into the model) of the pre-trained weights.
 
         Args:
-            model_type (str): The model pretrained weights to load.
+            model_type (str): The model pre-trained weights to load.
         """
         root_path = os.path.join(os.path.expanduser('~'), ".cache/deepParse")
         model_path = os.path.join(root_path, f"{model_type}.ckpt")

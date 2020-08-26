@@ -10,8 +10,8 @@ from ..converter.data_padding import bpemb_data_padding
 from ..embeddings_model import FastTextEmbeddingsModel
 from ..embeddings_model.bp_embeddings_model import BPEmbEmbeddingsModel
 from ..fasttest_tools import download_fasttext_model
-from ..model.pre_trained_bpemb_seq2seq import PretrainedBPEmbSeq2SeqModel
-from ..model.pre_trained_fasttext_seq2seq import PretrainedFastTextSeq2SeqModel
+from ..model.pre_trained_bpemb_seq2seq import PreTrainedBPEmbSeq2SeqModel
+from ..model.pre_trained_fasttext_seq2seq import PreTrainedFastTextSeq2SeqModel
 from ..vectorizer import FastTextVectorizer, BPEmbVectorizer
 
 _pre_trained_tags_to_idx = {
@@ -29,7 +29,7 @@ _pre_trained_tags_to_idx = {
 
 class AddressParser:
     """
-    Address parser to parse an address or a list of address using one of the seq2seq pre trained model:
+    Address parser to parse an address or a list of address using one of the seq2seq pre-trained model:
     fastText or BPEmb.
 
     Args:
@@ -40,7 +40,7 @@ class AddressParser:
         rounding (int): The rounding to use when asking the probability of the tags. The default value is 4 digits.
 
     Note:
-        For both the model, we will download the pre trained weights and embeddings in the .cache directory of the
+        For both the model, we will download the pre-trained weights and embeddings in the .cache directory of the
         user root.
     """
 
@@ -64,14 +64,14 @@ class AddressParser:
 
             self.data_converter = data_padding
 
-            self.pre_trained_model = PretrainedFastTextSeq2SeqModel(self.device)
+            self.pre_trained_model = PreTrainedFastTextSeq2SeqModel(self.device)
 
         elif model in "bpemb" or model in "best":
             self.vectorizer = BPEmbVectorizer(embeddings_model=BPEmbEmbeddingsModel(lang="multi", vs=100000, dim=300))
 
             self.data_converter = bpemb_data_padding
 
-            self.pre_trained_model = PretrainedBPEmbSeq2SeqModel(self.device)
+            self.pre_trained_model = PreTrainedBPEmbSeq2SeqModel(self.device)
         else:
             raise NotImplementedError(f"There is no {model} model implemented. Value can be: "
                                       f"fasttext, bpemb, lightest (fastext) or best (bpemb).")

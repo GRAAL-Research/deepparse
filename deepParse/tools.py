@@ -8,7 +8,7 @@ import torch.nn.init as init
 
 def download_weights(model_type: str, saving_dir: str) -> None:
     """
-    Function to download the pre trained weights of the models.
+    Function to download the pre-trained weights of the models.
 
     Args:
         model_type: The model type (i.e. fasttest or bpemb).

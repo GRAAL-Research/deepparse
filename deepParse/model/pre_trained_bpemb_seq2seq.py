@@ -3,12 +3,12 @@ from typing import List
 import torch
 
 from .embedding_network import EmbeddingNetwork
-from .pre_trained_seq2seq import PretrainedSeq2SeqModel
+from .pre_trained_seq2seq import PreTrainedSeq2SeqModel
 
 
-class PretrainedBPEmbSeq2SeqModel(PretrainedSeq2SeqModel):
+class PreTrainedBPEmbSeq2SeqModel(PreTrainedSeq2SeqModel):
     """
-    BPEmb pre trained Seq2Seq model, the best of the two, but take the more GPU/CPU resources.
+    BPEmb pre-trained Seq2Seq model, the best of the two, but take the more GPU/CPU resources.
 
      Args:
         device (str): The device tu use for the prediction, can either be a GPU or a CPU.
@@ -17,7 +17,7 @@ class PretrainedBPEmbSeq2SeqModel(PretrainedSeq2SeqModel):
     def __init__(self, device: str) -> None:
         super().__init__(device)
 
-        # pre trained params (the 300)
+        # pre-trained params (the 300)
         self.embedding_network = EmbeddingNetwork(input_size=300, hidden_size=300, projection_size=300)
         self.embedding_network.to(self.device)
 

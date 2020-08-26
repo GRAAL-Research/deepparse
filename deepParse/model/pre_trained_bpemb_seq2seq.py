@@ -19,6 +19,7 @@ class PretrainedBPEmbSeq2SeqModel(PretrainedSeq2SeqModel):
 
         # pre trained params (the 300)
         self.embedding_network = EmbeddingNetwork(input_size=300, hidden_size=300, projection_size=300)
+        self.embedding_network.to(self.device)
 
         self._load_pre_trained_weights("bpemb")
 

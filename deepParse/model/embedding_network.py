@@ -69,13 +69,13 @@ class EmbeddingNetwork(nn.Module):
                                                    batch_first=True,
                                                    enforce_sorted=False)
 
-            packed_output, _ = self.model(packed_sequence, self.hidden)
+            packed_output, _ = self.model(packed_sequence)
 
             # pad packed the output to be applied later on in the projection layer
             padded_output, padded_output_lengths = pad_packed_sequence(packed_output, batch_first=True)
 
             # filling the embedding by idx
-            word_context = torch.zeros(padded_output.size(0), padded_output.size(2)).to(self.device)
+            word_context = torch.zeros(padded_output.size(0), padded_output.size(2)).to(device)
             for j in range(batch_size):
                 word_context[j] = padded_output[j, padded_output_lengths[j] - 1, :]
 

@@ -27,8 +27,10 @@ class PretrainedSeq2SeqModel(ABC, nn.Module):
         self.device = device
 
         self.encoder = Encoder(input_size=300, hidden_size=1024, num_layers=1)
+        self.encoder.to(self.device)
 
         self.decoder = Decoder(input_size=1, hidden_size=1024, num_layers=1, output_size=9)
+        self.decoder.to(self.device)
 
     def _load_pre_trained_weights(self, model_type: str) -> None:
         """

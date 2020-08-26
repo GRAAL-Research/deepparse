@@ -37,7 +37,7 @@ class Encoder(nn.Module):
 
         packed_sequence = pack_padded_sequence(to_predict, lengths_tensor, batch_first=True)
 
-        _, hidden = self.lstm(packed_sequence, self.hidden)
+        _, hidden = self.lstm(packed_sequence)
 
         return hidden
 

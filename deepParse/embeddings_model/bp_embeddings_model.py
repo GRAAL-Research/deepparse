@@ -12,6 +12,7 @@ class BPEmbEmbeddingsModel(EmbeddingsModel):
     """
 
     def __init__(self, **kwargs):
+        super().__init__()
         self.model = BPEmb(**kwargs)
 
     def __call__(self, word: str) -> ndarray:
@@ -25,7 +26,3 @@ class BPEmbEmbeddingsModel(EmbeddingsModel):
             The BP embedding for a word.
         """
         return self.model.embed(word)
-
-    @property
-    def dim(self):
-        return self.model.dim

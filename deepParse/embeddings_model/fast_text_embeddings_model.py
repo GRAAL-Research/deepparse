@@ -14,6 +14,7 @@ class FastTextEmbeddingsModel(EmbeddingsModel):
     """
 
     def __init__(self, embeddings_path: str) -> None:
+        super().__init__()
         self.model = fasttext.load_model(embeddings_path)
 
     def __call__(self, word: str) -> ndarray:
@@ -26,4 +27,4 @@ class FastTextEmbeddingsModel(EmbeddingsModel):
         Return:
             The fastText embedding for a word.
         """
-        return self.model[word]  # verify output format
+        return self.model[word]

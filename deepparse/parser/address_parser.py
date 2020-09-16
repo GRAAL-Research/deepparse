@@ -29,8 +29,8 @@ _pre_trained_tags_to_idx = {
 
 class AddressParser:
     """
-    Address parser to parse an address or a list of address using one of the seq2seq pre-trained network:
-    fastText or BPEmb.
+    Address parser to parse an address or a list of address using one of the seq2seq pre-trained
+    networks either with fastText or BPEmb.
 
     Args:
         model (str): The network name to use, can be either fasttext, bpemb, lightest (equivalent to fasttext) or

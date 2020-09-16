@@ -74,7 +74,7 @@ class PreTrainedSeq2SeqModel(ABC, nn.Module):
         # The empty prediction sequence
         # +1 for the EOS
         # 9 for the output size (9 tokens)
-        prediction_sequence = torch.zeros(max_length + 1, batch_size, 9).cuda(self.device)
+        prediction_sequence = torch.zeros(max_length + 1, batch_size, 9).to(self.device)
 
         # we decode the first token
         decoder_output, decoder_hidden = self.decoder(decoder_input, decoder_hidden)

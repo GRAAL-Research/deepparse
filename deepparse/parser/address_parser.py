@@ -83,7 +83,7 @@ class AddressParser:
         Args:
             addresses_to_parse (Union[list[str], str]): The addresses to be parse, can be either a single address
                 (when using str) or a list of address.
-            with_prob (bool): Either or not to return the probability of all the tags with a the specified
+            with_prob (bool): If true, return the probability of all the tags with the specified
                 rounding.
 
         Return:

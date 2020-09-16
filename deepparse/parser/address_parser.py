@@ -9,7 +9,7 @@ from ..converter import TagsConverter, data_padding
 from ..converter.data_padding import bpemb_data_padding
 from ..embeddings_models import FastTextEmbeddingsModel
 from ..embeddings_models.bp_embeddings_model import BPEmbEmbeddingsModel
-from ..fasttest_tools import download_fasttext_model
+from ..fasttext_tools import download_fasttext_model
 from ..network.pre_trained_bpemb_seq2seq import PreTrainedBPEmbSeq2SeqModel
 from ..network.pre_trained_fasttext_seq2seq import PreTrainedFastTextSeq2SeqModel
 from ..vectorizer import FastTextVectorizer, BPEmbVectorizer

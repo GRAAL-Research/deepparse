@@ -40,8 +40,8 @@ class AddressParser:
         rounding (int): The rounding to use when asking the probability of the tags. The default value is 4 digits.
 
     Note:
-        For both the network, we will download the pre-trained weights and embeddings in the ``.cache`` directory of the
-        user root.
+        For both the networks, we will download the pre-trained weights and embeddings in the ``.cache`` directory
+        for the root user.
     """
 
     def __init__(self, model: str, device: Union[int, str], rounding: int = 4) -> None:

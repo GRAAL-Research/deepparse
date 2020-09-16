@@ -16,7 +16,7 @@ class FastTextVectorizer(Vectorizer):
             addresses (list[str]): The addresses to vectorize.
 
         Return:
-            The addresses elements (components) embeddings vector.
+            A list of embeddings corresponding to the addresses' elements.
         """
         batch = []
 

@@ -9,7 +9,7 @@ from torch.nn.utils.rnn import pad_sequence
 
 def data_padding(batch: List) -> Tuple:
     """
-    Function that add padding to the sequences so all can have the same length as the longest one.
+    Function that adds padding to the sequences so all can have the same length as the longest one.
 
     Args:
         batch (List): The vectorized batch data.

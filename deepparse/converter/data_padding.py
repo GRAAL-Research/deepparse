@@ -12,7 +12,7 @@ def data_padding(batch: List) -> Tuple:
     Function that add padding to the sequences so all can have the same length as the longest one.
 
     Args:
-        batch (List): The vectorize batch data.
+        batch (List): The vectorized batch data.
 
     Returns:
         A tuple (``x`` , ``y`` ). The element ``x``  is a tensor of padded word vectors and ``y``  is their respective

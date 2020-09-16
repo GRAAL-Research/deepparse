@@ -24,7 +24,7 @@ class BPEmbVectorizer(Vectorizer):
             addresses (list[str]): The addresses to vectorize.
 
         Return:
-            A tuple of the addresses elements (components) embeddings vector and the word decomposition lengths.
+            A tuple of the addresses elements (components) embedding vectosr and the word decomposition lengths.
         """
 
         batch = []

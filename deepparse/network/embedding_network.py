@@ -93,10 +93,9 @@ class EmbeddingNetwork(nn.Module):
         """
         Max pooling the projection output of the projection layer.
         """
-        if self.maxpooling_layer is not None:
-            pooled_output = self.maxpooling_layer(
-                projection_output.view(1, projection_output.size(0), projection_output.size(1)))
-            projection_output = pooled_output.view(pooled_output.size(1), pooled_output.size(2))
+        pooled_output = self.maxpooling_layer(
+            projection_output.view(1, projection_output.size(0), projection_output.size(1)))
+        projection_output = pooled_output.view(pooled_output.size(1), pooled_output.size(2))
 
         return projection_output
 

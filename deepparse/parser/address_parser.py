@@ -45,7 +45,7 @@ class AddressParser:
     """
 
     def __init__(self, model: str, device: Union[int, str], rounding: int = 4) -> None:
-        if device in "cpu":
+        if device == "cpu":
             self.device = device
         else:
             self.device = "cuda:%d" % int(device)

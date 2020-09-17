@@ -40,7 +40,7 @@ def bpemb_data_padding(batch: List[Tuple]) -> Tuple:
 
     Returns:
         A tuple (``x`` , ``y`` , ``z`` ). The element ``x``  is a tensor of padded word vectors, ``y``  is the padded
-        decomposition lengths, and ``z``  is their respective lengths of the sequences.
+        decomposition lengths, and ``z``  is the original lengths of the sequences before padding.
     """
 
     sequences_vectors, decomp_len, lengths = zip(

@@ -3,7 +3,7 @@ from typing import Dict, Union
 
 class TagsConverter:
     """
-    Class to define logic of tag to idx conversion in both ways.
+    Class to define logic of tag to idx conversion and vice versa.
 
     Args:
         tags_to_idx (Dict): A dictionary where the keys are the tags (e.g. StreetNumber) and the values are

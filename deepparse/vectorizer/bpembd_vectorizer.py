@@ -8,7 +8,8 @@ from ..embeddings_models.embeddings_model import EmbeddingsModel
 
 class BPEmbVectorizer(Vectorizer):
     """
-    BPEmb vectorizer to convert an address into BPEmb embedding where each word is decomposed into subword units that are in turn embedded as a vector
+    BPEmb vectorizer to convert an address into BPEmb embedding where each word is decomposed into subword units that
+    are in turn embedded as a vector
     """
 
     def __init__(self, embeddings_model: EmbeddingsModel) -> None:

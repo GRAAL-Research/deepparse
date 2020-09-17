@@ -12,9 +12,9 @@ class Encoder(nn.Module):
     Encoder module that use a LSTM to encode a sequence.
 
     Args:
-        input_size (int): The input size of the decoder.
-        hidden_size (int): The hidden size of the decoder.
-        num_layers (int): The number of layer to the decoder.
+        input_size (int): The input size of the encoder.
+        hidden_size (int): The hidden size of the encoder.
+        num_layers (int): The number of layer to the encoder.
     """
 
     def __init__(self, input_size, hidden_size, num_layers) -> None:

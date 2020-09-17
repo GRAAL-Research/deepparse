@@ -16,6 +16,8 @@ class EmbeddingNetwork(nn.Module):
         input_size (int): The input size of the LSTM.
         hidden_size (int): The hidden size of the LSTM.
         num_layers (int): The number of layer of the LSTM. Default is one (1) layer.
+        maxpool (bool): Either or not to add a maximum pooling layer after the embedding composition. Default is false.
+        maxpool_kernel_size (int): The kernel size of the maximum pooling layer. Default is three (3).
     """
 
     def __init__(self,

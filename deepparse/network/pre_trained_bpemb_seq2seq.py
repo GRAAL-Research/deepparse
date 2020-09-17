@@ -8,7 +8,7 @@ from .pre_trained_seq2seq import PreTrainedSeq2SeqModel
 
 class PreTrainedBPEmbSeq2SeqModel(PreTrainedSeq2SeqModel):
     """
-    BPEmb pre-trained Seq2Seq network, the best of the two, but take the more ``GPU``/``CPU`` resources.
+    BPEmb pre-trained Seq2Seq network, the best of the two, but takes more ``GPU``/``CPU`` resources.
 
      Args:
         device (str): The device tu use for the prediction, can either be a ``GPU`` or a ``CPU``.

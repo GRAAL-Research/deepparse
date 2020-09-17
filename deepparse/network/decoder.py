@@ -37,7 +37,7 @@ class Decoder(nn.Module):
                 hidden (~torch.Tensor): The hidden state of the decoder.
 
             Return:
-                A tuple (``x``, y) where ``x`` is the address components tags predictions and y is the hidden states.
+                A tuple (``x``, ``y``) where ``x`` is the address components tags predictions and y is the hidden states.
 
         """
         output, hidden = self.lstm(to_predict.float(), hidden)

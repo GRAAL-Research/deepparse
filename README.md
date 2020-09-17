@@ -1,16 +1,16 @@
-![deepParse Logo](https://raw.githubusercontent.com/MAYS3/deepParse/master/docs/source/_static/logos/logo.png)
+![deepparse Logo](https://raw.githubusercontent.com/MAYS3/deepparse/master/docs/source/_static/logos/logo.png)
 
 [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](http://www.gnu.org/licenses/lgpl-3.0)
-[![Build Status](https://travis-ci.com/MAYAS3/deepParse.svg?token=Zv4ryhyUzUhyJBqsdjui&branch=master)](https://travis-ci.com/MAYAS3/deepParse)
+[![Build Status](https://travis-ci.com/MAYAS3/deepparse.svg?token=Zv4ryhyUzUhyJBqsdjui&branch=master)](https://travis-ci.com/MAYAS3/deepparse)
 
-## Here is deepParse.
+## Here is deepparse.
 
 DeepParse is a state-of-the-art library for parsing multinational street addresses using deep learning.
 
-Use deepParse to:
+Use deepparse to:
 - Use the pre-trained models to parse multinational addresses.
 
-Read the documentation at [deepParse.org](https://deepparse.org).
+Read the documentation at [deepparse.org](https://deepparse.org).
 
 DeepParse is compatible with  the __latest version of PyTorch__ and  __Python >= 3.6__.
 
@@ -29,7 +29,7 @@ Use the following for the article;
 and this one for the package;
 
 ```
-@misc{deepParse,
+@misc{deepparse,
     author = {Marouane Yassine and David Beauchemin},
     title  = {{DeepParse: A state-of-the-art multinational addresses parser}},
     year   = {2020},
@@ -61,22 +61,22 @@ parsed_address = address_parser("350 rue des Lilas Ouest Québec Québec G1L 1B6
 
 ## Installation
 
-Before installing deepParse, you must have the latest version of [PyTorch](https://pytorch.org/) in your environment.
+Before installing deepparse, you must have the latest version of [PyTorch](https://pytorch.org/) in your environment.
 
-- **Install the stable version of deepParse:**
+- **Install the stable version of deepparse:**
 
 ```sh
 pip install deepparse
 ```
 
-- **Install the latest development version of deepParse:**
+- **Install the latest development version of deepparse:**
 
 ```sh
-pip install -U git+https://github.com/MAYAS3/deepParse.git@dev
+pip install -U git+https://github.com/MAYAS3/deepparse.git@dev
 ```
 
 ## License
 
-deepParse is LGPLv3 licensed, as found in the [LICENSE file](https://github.com/MAYAS3/deepParse/blob/master/LICENSE).
+deepparse is LGPLv3 licensed, as found in the [LICENSE file](https://github.com/MAYAS3/deepparse/blob/master/LICENSE).
 
 ------------------

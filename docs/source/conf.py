@@ -112,7 +112,7 @@ html_logo = '_static/logos/logo.png'
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'deepParsedoc'
+htmlhelp_basename = 'deepparsedoc'
 
 # -- Options for LaTeX output ------------------------------------------------
 

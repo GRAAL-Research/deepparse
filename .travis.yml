@@ -13,8 +13,8 @@ install:
     fi
   - python setup.py develop
 script:
-  - yapf --diff --recursive deepParse/
-  - pylint deepParse/
+  - yapf --diff --recursive deepparse/
+  - pylint deepparse/
   - cd docs
   - ./rebuild_html_doc.sh
   - cd ..

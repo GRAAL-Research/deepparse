@@ -41,7 +41,7 @@ class EmbeddingNetwork(nn.Module):
     def forward(self, to_predict: torch.Tensor, decomposition_lengths: Tuple[List]) -> torch.Tensor:
         # pylint: disable=too-many-locals
         """
-            Callable method to aggregate the byte-pair embeddings from decompose words.
+            Callable method to aggregate the byte-pair embeddings from decomposed words.
 
             Args:
                 to_predict (~torch.Tensor): The address to extract the embedding on.

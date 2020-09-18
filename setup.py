@@ -49,7 +49,7 @@ def main():
         author='Marouane Yassine & David Beauchemin',
         author_email='marouane.yassine.1@ulaval.ca, david.beauchemin.5@ulaval.ca',
         url='#todo',
-        download_url='https://github.com/MAYAS3/deepParse/archive/v' + version + '.zip',
+        download_url='https://github.com/MAYAS3/deepparse/archive/v' + version + '.zip',
         license='LGPLv3',
         classifiers=[
             'Development Status :: 3 - Alpha',

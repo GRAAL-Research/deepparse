@@ -1,26 +1,26 @@
-.. Poutyne documentation master file, created by
+.. deepparse documentation master file, created by
    sphinx-quickstart on Sat Feb 17 12:19:43 2018.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-:github_url: https://github.com/GRAAL-Research/poutyne
+:github_url: https://github.com/MAYAS3/deepparse
 
 .. meta::
-  :description: Poutyne is a Keras-like framework for PyTorch and handles much of the boilerplating code needed to train neural networks.
-  :keywords: poutyne, poutine, deep learning, pytorch, neural network, keras, machine learning, data science, python
+  :description: deepparse is a state-of-the-art library for parsing multinational street addresses using deep learning
+  :keywords: deepparse, deep learning, pytorch, neural network, machine learning, natural language processing, parsing, data science, python
   :author: Marouane Yassine & David Beauchemin
-  :property="og:image": https://poutyne.org/_static/logos/logo.png
+  :property="og:image": https://deepparse.org/_static/logos/logo.png
 
-Here is deepParse
+Here is deepparse
 =================
 
 DeepParse is a state-of-the-art library for parsing multinational street addresses using deep learning.
 
-Use deepParse to:
+Use deepparse to:
 
 - Use the pre-trained models to parse multinational addresses.
 
-Read the documentation at `deepParse.org <https://deepparse.org>`_.
+Read the documentation at `deepparse.org <https://deepparse.org>`_.
 
 DeepParse is compatible with the **latest version of PyTorch** and  **Python >= 3.6**.
 
@@ -40,7 +40,7 @@ and this one for the package;
 
 .. code-block:: bib
 
-   @misc{deepParse,
+   @misc{deepparse,
        author = {Marouane Yassine and David Beauchemin},
        title  = {{DeepParse: A state-of-the-art multinational addresses parser}},
        year   = {2020},
@@ -69,25 +69,25 @@ Getting started
 Installation
 ============
 
-Before installing deepParse, you must have the latest version of `PyTorch <https://pytorch.org/>`_ in your environment.
+Before installing deepparse, you must have the latest version of `PyTorch <https://pytorch.org/>`_ in your environment.
 
-- **Install the stable version of deepParse:**
+- **Install the stable version of deepparse:**
 
   .. code-block:: sh
 
    pip install deepparse
 
-- **Install the latest development version of deepParse:**
+- **Install the latest development version of deepparse:**
 
   .. code-block:: sh
 
-    pip install -U git+https://github.com/MAYAS3/deepParse.git@dev
+    pip install -U git+https://github.com/MAYAS3/deepparse.git@dev
 
 
 License
 =======
 
-deepParse is LGPLv3 licensed, as found in the `LICENSE file <https://github.com/GRAAL-Research/poutyne/blob/master/LICENSE>`_.
+deepparse is LGPLv3 licensed, as found in the `LICENSE file <https://github.com/MAYAS3/deepparse/blob/master/LICENSE>`_.
 
 API Reference
 =============

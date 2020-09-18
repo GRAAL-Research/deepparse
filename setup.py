@@ -65,7 +65,7 @@ def main():
             'Topic :: Software Development :: Libraries :: Python Modules'
         ],
         packages=packages,
-        install_requires=['numpy', 'torch'],
+        install_requires=['numpy', 'torch', 'bpemb', 'fasttext', 'requests'],
         python_requires='>=3.6.1',
         description='A library for parsing multinational street addresses using deep learning.',
         long_description=readme,

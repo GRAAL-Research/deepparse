@@ -1,5 +1,4 @@
 torch~=1.5.0
-pycountry==20.7.3
 bpemb~=0.3.0
 numpy~=1.18.5
 setuptools~=47.3.0.post20200616

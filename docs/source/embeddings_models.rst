@@ -4,7 +4,6 @@
 Embeddings Models
 =================
 
-.. automodule:: deepparse
 .. currentmodule:: deepparse.embeddings_models
 
 Interface

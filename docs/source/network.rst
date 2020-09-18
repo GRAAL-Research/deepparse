@@ -4,7 +4,6 @@
 Network
 =======
 
-.. automodule:: deepparse
 .. currentmodule:: deepparse.network
 
 Pre-trained Seq2Seq model interface
@@ -37,4 +36,3 @@ Seq2Seq components
 
 .. autoclass:: EmbeddingNetwork
     :members:
-

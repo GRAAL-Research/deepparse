@@ -97,10 +97,6 @@ API Reference
   :caption: API
 
   parser
-  vectorizer
-  converter
-  network
-  embeddings_models
 
 Indices and tables
 ==================

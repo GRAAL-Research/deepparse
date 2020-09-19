@@ -4,7 +4,6 @@
 Vectorizer
 ==========
 
-.. automodule:: deepparse
 .. currentmodule:: deepparse.vectorizer
 
 Vectorizer interface
@@ -25,5 +24,3 @@ Specific vectorizer
     :members:
 
     .. automethod:: __call__
-
-

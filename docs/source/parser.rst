@@ -4,7 +4,6 @@
 Parser
 ======
 
-.. automodule:: deepparse
 .. currentmodule:: deepparse.parser
 
 Pre-trained complete model
@@ -17,7 +16,3 @@ of any address.
     :members:
 
     .. automethod:: __call__
-
-
-
-

@@ -1,9 +1,10 @@
 import os
-from typing import List, Union, Dict
+from typing import List, Union
 
 import torch
 from numpy.core.multiarray import ndarray
 
+from .parsed_address import ParsedAddress
 from .. import load_tuple_to_device
 from ..converter import TagsConverter, data_padding
 from ..converter.data_padding import bpemb_data_padding
@@ -76,7 +77,7 @@ class AddressParser:
             raise NotImplementedError(f"There is no {model} network implemented. Value can be: "
                                       f"fasttext, bpemb, lightest (fastext) or best (bpemb).")
 
-    def __call__(self, addresses_to_parse: Union[List[str], str], with_prob: bool = False) -> Dict:
+    def __call__(self, addresses_to_parse: Union[List[str], str], with_prob: bool = False) -> List[ParsedAddress]:
         """
         Callable method to parse the components of an address or a list of address.
 
@@ -87,10 +88,7 @@ class AddressParser:
                 rounding.
 
         Return:
-            A dictionary where the keys are the parsed addresses and the values a dictionary. For the second
-            dictionary: the key are the address components (e.g. a street number such as 305) and the value are
-            either the tag of the components (e.g. StreetName) or a tuple (``x``, ``y``) where ``x`` is the tag and
-            ``y`` is the probability (e.g. 0.9981).
+            A list of ~deepparse.parsed_address.ParsedAddress.
 
         """
         if isinstance(addresses_to_parse, str):
@@ -115,12 +113,12 @@ class AddressParser:
         return tagged_addresses_components
 
     def _fill_tagged_addresses_components(self, tags_predictions: ndarray, tags_predictions_prob: ndarray,
-                                          addresses_to_parse: List[str], with_prob: bool) -> Dict:
+                                          addresses_to_parse: List[str], with_prob: bool) -> List[ParsedAddress]:
         """
         Method to fill the mapping for every address between a address components and is associated predicted tag (or
         tag and prob).
         """
-        tagged_addresses_components = {}
+        tagged_addresses_components = []
 
         for address_to_parse, tags_prediction, tags_prediction_prob in zip(addresses_to_parse, tags_predictions,
                                                                            tags_predictions_prob):
@@ -131,6 +129,6 @@ class AddressParser:
                 if with_prob:
                     tag = (tag, round(tag_proba, self.rounding))
                 tagged_address_components[word] = tag
-            tagged_addresses_components[address_to_parse] = tagged_address_components
+            tagged_addresses_components.append(ParsedAddress({address_to_parse: tagged_address_components}))
 
         return tagged_addresses_components

@@ -16,3 +16,7 @@ of any address.
     :members:
 
     .. automethod:: __call__
+
+
+.. autoclass:: ParsedAddress
+    :members:

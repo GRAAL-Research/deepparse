@@ -35,9 +35,9 @@ class AddressParser:
 
     Args:
         model (str): The network name to use, can be either fasttext, bpemb, lightest (equivalent to fasttext) or
-            best (equivalent to bpemb).
+            best (equivalent to bpemb). The default value is 'best' for the most accurate model.
         device (Union[int, str]): The device to use can be either a ``GPU`` index (e.g. 0) in int format or string
-            format or ``'CPU'``.
+            format or ``CPU``. The default value is GPU with the index 0 if it exist, otherwise the value is ``CPU``.
         rounding (int): The rounding to use when asking the probability of the tags. The default value is 4 digits.
 
     Note:
@@ -52,11 +52,12 @@ class AddressParser:
                 parse_address = address_parser('350 rue des Lilas Ouest Quebec city Quebec G1L 1B6')
     """
 
-    def __init__(self, model: str, device: Union[int, str], rounding: int = 4) -> None:
+    def __init__(self, model: str = 'best', device: Union[int, str] = 0, rounding: int = 4) -> None:
         if device == "cpu":
             self.device = device
         else:
-            self.device = "cuda:%d" % int(device)
+            self.device = "cuda:%d" % int(device) if torch.cuda.is_available() else "cpu"
+
         self.rounding = rounding
 
         self.tags_converter = TagsConverter(_pre_trained_tags_to_idx)

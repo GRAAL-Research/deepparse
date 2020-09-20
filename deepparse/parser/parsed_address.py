@@ -3,7 +3,7 @@ from typing import Dict
 
 class ParsedAddress:
     """
-    An parsed address as commonly know.
+    An parsed address as commonly known.
 
     Args:
         address: A dictionary where the key is an address, and the value is another dictionary where the keys are

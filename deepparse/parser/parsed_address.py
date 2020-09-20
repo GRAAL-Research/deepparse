@@ -3,17 +3,11 @@ from typing import Dict
 
 class ParsedAddress:
     """
-    An parsed address as commonly known.
-
-    Args:
-        address: A dictionary where the key is an address, and the value is another dictionary where the keys are
-            address components, and the values are the parsed address value. Also, the second dictionary's
-            address value can either be the tag of the components (e.g. StreetName) or a tuple (``x``, ``y``)
-            where ``x`` is the tag and ``y`` is the probability (e.g. 0.9981) of the model prediction.
+    An parsed address as commonly known returned by an address parser.
 
     Note:
         Since an address component can be composed of multiple elements (e.g. Wolfe street), when the probability
-        values are given with the tag, the address components don't keep it. It's only available through the
+        values are asked to the address parser, the address components don't keep it. It's only available through the
         ``address_parsed_dict`` attribute.
 
     Attributes:
@@ -24,10 +18,29 @@ class ParsedAddress:
         unit: The street unit component.
         street_name: The street name.
         orientation: The street orientation.
+        municipality: The city.
+        province: The province (sometime known as district or local region).
         postal_code: The street postal code.
+        general_delivery: Additional delivery information.
+
+    Example:
+
+        .. code-block:: python
+
+                address_parser = AddressParser()
+                parse_address = address_parser('350 rue des Lilas Ouest Quebec city Quebec G1L 1B6')
+                print(parse_address.street_number) #350
+                print(parse_address.postal_code) # G1L 1B6
     """
 
     def __init__(self, address: Dict):
+        """
+        Args:
+            address: A dictionary where the key is an address, and the value is another dictionary where the keys are
+                address components, and the values are the parsed address value. Also, the second dictionary's
+                address value can either be the tag of the components (e.g. StreetName) or a tuple (``x``, ``y``)
+                where ``x`` is the tag and ``y`` is the probability (e.g. 0.9981) of the model prediction.
+        """
         self.raw_address = list(address.keys())[0]
         self.address_parsed_dict = address[self.raw_address]
 
@@ -35,7 +48,10 @@ class ParsedAddress:
         self.unit = None
         self.street_name = None
         self.orientation = None
+        self.municipality = None
+        self.province = None
         self.postal_code = None
+        self.general_delivery = None
 
         self._resolve_tagged_affectation(self.address_parsed_dict)
 
@@ -63,8 +79,17 @@ class ParsedAddress:
             elif tag == 'Orientation':
                 self.orientation = address_component if self.orientation is None else " ".join(
                     [self.orientation, address_component])
+            elif tag == 'Municipality':
+                self.municipality = address_component if self.municipality is None else " ".join(
+                    [self.municipality, address_component])
+            elif tag == 'Province':
+                self.province = address_component if self.province is None else " ".join(
+                    [self.province, address_component])
             elif tag == 'PostalCode':
                 self.postal_code = address_component if self.postal_code is None else " ".join(
                     [self.postal_code, address_component])
+            elif tag == 'GeneralDelivery':
+                self.general_delivery = address_component if self.general_delivery is None else " ".join(
+                    [self.general_delivery, address_component])
 
     __repr__ = __str__  # to call __str__ when list of address

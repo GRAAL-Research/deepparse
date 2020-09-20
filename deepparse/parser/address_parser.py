@@ -43,6 +43,13 @@ class AddressParser:
     Note:
         For both the networks, we will download the pre-trained weights and embeddings in the ``.cache`` directory
         for the root user.
+
+    Example:
+
+        .. code-block:: python
+
+                address_parser = AddressParser()
+                parse_address = address_parser('350 rue des Lilas Ouest Quebec city Quebec G1L 1B6')
     """
 
     def __init__(self, model: str, device: Union[int, str], rounding: int = 4) -> None:

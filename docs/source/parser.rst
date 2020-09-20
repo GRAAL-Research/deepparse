@@ -4,7 +4,6 @@
 Parser
 ======
 
-.. automodule:: deepparse
 .. currentmodule:: deepparse.parser
 
 Pre-trained complete model

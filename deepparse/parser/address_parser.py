@@ -96,7 +96,7 @@ class AddressParser:
                 rounding.
 
         Return:
-            A list of ~deepparse.parsed_address.ParsedAddress.
+            A list of :class:`~deepparse.parsed_address.ParsedAddress`.
 
         """
         if isinstance(addresses_to_parse, str):

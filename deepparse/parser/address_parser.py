@@ -34,7 +34,7 @@ class AddressParser:
 
     Args:
         model (str): The network name to use, can be either fasttext, bpemb, lightest (equivalent to fasttext) or
-            best (equivalent to bpemb). The default value is 'best' for the best performance.
+            best (equivalent to bpemb). The default value is 'best' for the most accurate model.
         device (Union[int, str]): The device to use can be either a ``GPU`` index (e.g. 0) in int format or string
             format or ``CPU``. The default value is GPU with the index 0 if it exist, otherwise the value is ``CPU``.
         rounding (int): The rounding to use when asking the probability of the tags. The default value is 4 digits.

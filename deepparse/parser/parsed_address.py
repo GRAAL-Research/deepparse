@@ -12,8 +12,7 @@ class ParsedAddress:
 
     Attributes:
         raw_address: The raw address (not parsed).
-        address_parsed_dict: The parsed address in a dictionary where the keys are the address parsed
-            and the values is a dictionary of the parsed components.
+        address_parsed_dict: The parsed address in a dictionary where the keys are the address components and the values are the tags
         street_number: The street number.
         unit: The street unit component.
         street_name: The street name.

@@ -30,7 +30,7 @@ def get_version():
 
 
 def write_version_python_file(version):
-    version_python_file = os.path.join(current_file_path, 'deepparse/version.py')
+    version_python_file = os.path.join(current_file_path, 'deepparse', 'version.py')
     with open(version_python_file, 'w', encoding='utf-8') as f:
         f.write(f"__version__ = {repr(version)}\n")
 

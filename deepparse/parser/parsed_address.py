@@ -3,7 +3,7 @@ from typing import Dict
 
 class ParsedAddress:
     """
-    An parsed address as commonly known returned by an address parser.
+    A parsed address as commonly known returned by an address parser.
 
     Note:
         Since an address component can be composed of multiple elements (e.g. Wolfe street), when the probability

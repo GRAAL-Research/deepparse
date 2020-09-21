@@ -7,7 +7,7 @@ class ParsedAddress:
 
     Note:
         Since an address component can be composed of multiple elements (e.g. Wolfe street), when the probability
-        values are asked to the address parser, the address components don't keep it. It's only available through the
+        values are asked of the address parser, the address components don't keep it. It's only available through the
         ``address_parsed_dict`` attribute.
 
     Attributes:

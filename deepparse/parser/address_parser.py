@@ -85,7 +85,8 @@ class AddressParser:
             raise NotImplementedError(f"There is no {model} network implemented. Value can be: "
                                       f"fasttext, bpemb, lightest (fastext) or best (bpemb).")
 
-    def __call__(self, addresses_to_parse: Union[List[str], str], with_prob: bool = False) -> List[ParsedAddress]:
+    def __call__(self, addresses_to_parse: Union[List[str], str], with_prob: bool = False) -> Union[
+        ParsedAddress, List[ParsedAddress]]:
         """
         Callable method to parse the components of an address or a list of address.
 
@@ -96,7 +97,8 @@ class AddressParser:
                 rounding.
 
         Return:
-            A list of :class:`~deepparse.parsed_address.ParsedAddress`.
+            Either a ParsedAddress or a list of :class:`~deepparse.parsed_address.ParsedAddress` when given more than
+            one address.
 
         """
         if isinstance(addresses_to_parse, str):
@@ -121,7 +123,8 @@ class AddressParser:
         return tagged_addresses_components
 
     def _fill_tagged_addresses_components(self, tags_predictions: ndarray, tags_predictions_prob: ndarray,
-                                          addresses_to_parse: List[str], with_prob: bool) -> List[ParsedAddress]:
+                                          addresses_to_parse: List[str], with_prob: bool) -> Union[
+        ParsedAddress, List[ParsedAddress]]:
         """
         Method to fill the mapping for every address between a address components and is associated predicted tag (or
         tag and prob).
@@ -139,4 +142,6 @@ class AddressParser:
                 tagged_address_components[word] = tag
             tagged_addresses_components.append(ParsedAddress({address_to_parse: tagged_address_components}))
 
+        if len(tagged_addresses_components) == 1:
+            return tagged_addresses_components[0]
         return tagged_addresses_components

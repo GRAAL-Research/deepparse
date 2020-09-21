@@ -63,7 +63,7 @@ class AddressParser:
         self.tags_converter = TagsConverter(_pre_trained_tags_to_idx)
 
         if model in "fasttext" or model in "lightest":
-            path = os.path.join(os.path.expanduser('~'), ".cache/deepparse")
+            path = os.path.join(os.path.expanduser('~'), ".cache", "deepparse")
             os.makedirs(path, exist_ok=True)
 
             file_name = download_fasttext_model("fr", saving_dir=path)

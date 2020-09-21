@@ -24,3 +24,7 @@ so BPEmb gives the best results than fastText.
     :members:
 
     .. automethod:: __call__
+
+
+.. autoclass:: ParsedAddress
+    :members:

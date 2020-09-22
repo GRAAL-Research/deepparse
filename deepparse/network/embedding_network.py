@@ -100,10 +100,3 @@ class EmbeddingNetwork(nn.Module):
         projection_output = pooled_output.view(pooled_output.size(1), pooled_output.size(2))
 
         return projection_output
-
-    def eval(self) -> None:
-        """
-        To put the network in eval mode (no weights update).
-        """
-        self.model.eval()
-        self.projection_layer.eval()

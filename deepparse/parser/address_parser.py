@@ -93,6 +93,8 @@ class AddressParser:
             raise NotImplementedError(f"There is no {model} network implemented. Value can be: "
                                       f"fasttext, bpemb, lightest (fastext) or best (bpemb).")
 
+        self.pre_trained_model.eval()
+
     def __call__(self,
                  addresses_to_parse: Union[List[str], str],
                  with_prob: bool = False) -> Union[ParsedAddress, List[ParsedAddress]]:

@@ -46,10 +46,3 @@ class PreTrainedBPEmbSeq2SeqModel(PreTrainedSeq2SeqModel):
         prediction_sequence = self._decoder_steps(decoder_input, decoder_hidden, max_length, batch_size)
 
         return prediction_sequence
-
-    def eval(self) -> None:
-        """
-        To put the network in eval mode (no weights update).
-        """
-        self.embedding_network.eval()
-        self.eval()

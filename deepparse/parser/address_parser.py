@@ -94,8 +94,9 @@ class AddressParser:
             raise NotImplementedError(f"There is no {model} network implemented. Value can be: "
                                       f"fasttext, bpemb, lightest (fastext) or best (bpemb).")
 
-    def __call__(self, addresses_to_parse: Union[List[str], str], with_prob: bool = False) -> Union[
-        ParsedAddress, List[ParsedAddress]]:
+    def __call__(self,
+                 addresses_to_parse: Union[List[str], str],
+                 with_prob: bool = False) -> Union[ParsedAddress, List[ParsedAddress]]:
         """
         Callable method to parse the components of an address or a list of address.
 
@@ -141,8 +142,8 @@ class AddressParser:
         return tagged_addresses_components
 
     def _fill_tagged_addresses_components(self, tags_predictions: ndarray, tags_predictions_prob: ndarray,
-                                          addresses_to_parse: List[str], with_prob: bool) -> Union[
-        ParsedAddress, List[ParsedAddress]]:
+                                          addresses_to_parse: List[str],
+                                          with_prob: bool) -> Union[ParsedAddress, List[ParsedAddress]]:
         """
         Method to fill the mapping for every address between a address components and is associated predicted tag (or
         tag and prob).
@@ -173,7 +174,7 @@ class AddressParser:
         if isinstance(device, torch.device):
             self.device = device
         elif isinstance(device, str):
-            if re.fullmatch('cpu|cuda:\d+', device.lower()):
+            if re.fullmatch(r'cpu|cuda:\d+', device.lower()):
                 self.device = torch.device(device)
             else:
                 raise ValueError("String value should be 'cpu' or follow the pattern 'cuda:[int]'.")

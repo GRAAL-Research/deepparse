@@ -12,7 +12,8 @@ class ParsedAddress:
 
     Attributes:
         raw_address: The raw address (not parsed).
-        address_parsed_dict: The parsed address in a dictionary where the keys are the address components and the values are the tags
+        address_parsed_dict: The parsed address in a dictionary where the keys are the address components and
+            the values are the tags.
         street_number: The street number.
         unit: The street unit component.
         street_name: The street name.
@@ -70,8 +71,7 @@ class ParsedAddress:
                 self.street_number = address_component if self.street_number is None else " ".join(
                     [self.street_number, address_component])
             elif tag == "Unit":
-                self.unit = address_component if self.unit is None else " ".join(
-                    [self.unit, address_component])
+                self.unit = address_component if self.unit is None else " ".join([self.unit, address_component])
             elif tag == "StreetName":
                 self.street_name = address_component if self.street_name is None else " ".join(
                     [self.street_name, address_component])

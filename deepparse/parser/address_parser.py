@@ -48,20 +48,23 @@ class AddressParser:
 
         .. code-block:: python
 
-                address_parser = AddressParser()
+                address_parser = AddressParser(device='0')
                 parse_address = address_parser('350 rue des Lilas Ouest Quebec city Quebec G1L 1B6')
     """
 
     def __init__(self, model: str = 'best', device: Union[int, str] = 0, rounding: int = 4) -> None:
-        if device == "cpu":
+        if device.lower() == "cpu":
             self.device = device
         else:
-            self.device = "cuda:%d" % int(device) if torch.cuda.is_available() else "cpu"
+            device = int(device)
+            assert device >= 0
+            self.device = "cuda:%d" % device if torch.cuda.is_available() else "cpu"
 
         self.rounding = rounding
 
         self.tags_converter = TagsConverter(_pre_trained_tags_to_idx)
 
+        model = model.lower()
         if model in "fasttext" or model in "lightest":
             path = os.path.join(os.path.expanduser('~'), ".cache", "deepparse")
             os.makedirs(path, exist_ok=True)

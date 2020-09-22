@@ -27,17 +27,9 @@ class BPEmbVectorizer(Vectorizer):
         Return:
             A tuple of the addresses elements (components) embedding vectosr and the word decomposition lengths.
         """
-
-        batch = []
         self._max_length = 0
-
-        for address in addresses:
-            input_sequence, word_decomposition_lengths = self._vectorize_sequence(address)
-
-            batch.append((input_sequence, word_decomposition_lengths))
-
+        batch = [self._vectorize_sequence(address) for address in addresses]
         self._decomposed_sequence_padding(batch)
-
         return batch
 
     def _vectorize_sequence(self, address: str) -> Tuple[List, List]:
@@ -54,16 +46,11 @@ class BPEmbVectorizer(Vectorizer):
         word_decomposition_lengths = []
 
         for word in address.split():
-            word_decomposition = []
             bpe_decomposition = self.embeddings_model(word)
             word_decomposition_lengths.append(len(bpe_decomposition))
-            for i in range(bpe_decomposition.shape[0]):
-                word_decomposition.append(bpe_decomposition[i])
-            input_sequence.append(word_decomposition)
+            input_sequence.append(list(bpe_decomposition))
 
-        for decomposition in input_sequence:
-            if len(decomposition) > self._max_length:
-                self._max_length = len(decomposition)
+        self._max_length = max(self._max_length, max(word_decomposition_lengths))
 
         return input_sequence, word_decomposition_lengths
 

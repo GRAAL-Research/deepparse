@@ -34,6 +34,7 @@ import gzip
 import os
 import shutil
 
+from fasttext.FastText import _FastText
 from fasttext.util.util import valid_lang_ids, _download_file
 
 
@@ -75,3 +76,9 @@ def _download_gz_model(gz_file_name: str, saving_path: str) -> bool:  # now use 
     _download_file(url, saving_path)
 
     return True
+
+
+# The difference with the original code is the removal of the print warning.
+def load_model(path):
+    """Load a model given a filepath and return a model object."""
+    return _FastText(model_path=path)

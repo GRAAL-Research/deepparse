@@ -1,8 +1,7 @@
-import fasttext
-import fasttext.util
 from numpy.core.multiarray import ndarray
 
 from .embeddings_model import EmbeddingsModel
+from .. import load_model
 
 
 class FastTextEmbeddingsModel(EmbeddingsModel):
@@ -16,7 +15,7 @@ class FastTextEmbeddingsModel(EmbeddingsModel):
 
     def __init__(self, embeddings_path: str) -> None:
         super().__init__()
-        self.model = fasttext.load_model(embeddings_path)
+        self.model = load_model(embeddings_path)
         self.model.dim = 300  # fastText is only in 300d
 
     def __call__(self, word: str) -> ndarray:

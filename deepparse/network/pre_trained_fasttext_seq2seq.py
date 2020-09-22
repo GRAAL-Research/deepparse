@@ -9,10 +9,10 @@ class PreTrainedFastTextSeq2SeqModel(PreTrainedSeq2SeqModel):
     accuracy.
 
      Args:
-        device (str): The device tu use for the prediction, can either be a ``GPU`` or a ``CPU``.
+        device (~torch.device): The device tu use for the prediction.
     """
 
-    def __init__(self, device: str) -> None:
+    def __init__(self, device: torch.device) -> None:
         super().__init__(device)
 
         self._load_pre_trained_weights("fasttext")

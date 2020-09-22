@@ -11,10 +11,10 @@ class PreTrainedBPEmbSeq2SeqModel(PreTrainedSeq2SeqModel):
     BPEmb pre-trained Seq2Seq network, the best of the two, but takes more ``GPU``/``CPU`` resources.
 
      Args:
-        device (str): The device tu use for the prediction, can either be a ``GPU`` or a ``CPU``.
+        device (~torch.device): The device tu use for the prediction.
     """
 
-    def __init__(self, device: str) -> None:
+    def __init__(self, device: torch.device) -> None:
         super().__init__(device)
 
         # pre-trained params (the 300)

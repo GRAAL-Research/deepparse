@@ -20,10 +20,10 @@ class PreTrainedSeq2SeqModel(ABC, nn.Module):
         - Decoder: ``input_size = 1``, ``hidden_size = 1024``, ``num_layers = 1`` and ``output_size = 9``
 
      Args:
-        device (str): The device tu use for the prediction, can either be a ``GPU`` or a ``CPU``.
+        device (~torch.device): The device tu use for the prediction.
     """
 
-    def __init__(self, device: str) -> None:
+    def __init__(self, device: torch.device) -> None:
         super().__init__()
         self.device = device
 

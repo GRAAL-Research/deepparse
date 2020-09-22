@@ -1,4 +1,5 @@
 import os
+import re
 from typing import List, Union
 
 import torch
@@ -36,8 +37,15 @@ class AddressParser:
     Args:
         model (str): The network name to use, can be either fasttext, bpemb, lightest (equivalent to fasttext) or
             best (equivalent to bpemb). The default value is 'best' for the most accurate model.
-        device (Union[int, str]): The device to use can be either a ``GPU`` index (e.g. 0) in int format or string
-            format or ``CPU``. The default value is GPU with the index 0 if it exist, otherwise the value is ``CPU``.
+        device (Union[int, str, torch.device]): The device to use can be either:
+
+            - a ``GPU`` index in int format (e.g. ``0``);
+            - a ``GPU`` index in string format (e.g. ``'0'``);
+            - a complete device name in a string format (e.g. ``'cuda:0'``);
+            - a :class:`~torch.torch.device` object;
+            - ``'cpu'`` for a  ``CPU`` use.
+
+            The default value is GPU with the index ``0`` if it exist, otherwise the value is ``CPU``.
         rounding (int): The rounding to use when asking the probability of the tags. The default value is 4 digits.
 
     Note:
@@ -48,17 +56,15 @@ class AddressParser:
 
         .. code-block:: python
 
-                address_parser = AddressParser(device='0')
+                address_parser = AddressParser(device=0) #on gpu device 0
+                parse_address = address_parser('350 rue des Lilas Ouest Quebec city Quebec G1L 1B6')
+
+                address_parser = AddressParser(model='fasttext', device='cpu') # fasttext model on cpu
                 parse_address = address_parser('350 rue des Lilas Ouest Quebec city Quebec G1L 1B6')
     """
 
-    def __init__(self, model: str = 'best', device: Union[int, str] = 0, rounding: int = 4) -> None:
-        if device.lower() == "cpu":
-            self.device = device
-        else:
-            device = int(device)
-            assert device >= 0
-            self.device = "cuda:%d" % device if torch.cuda.is_available() else "cpu"
+    def __init__(self, model: str = 'best', device: Union[int, str, torch.device] = 0, rounding: int = 4) -> None:
+        self.device = self._process_device(device)
 
         self.rounding = rounding
 
@@ -148,3 +154,24 @@ class AddressParser:
         if len(tagged_addresses_components) == 1:
             return tagged_addresses_components[0]
         return tagged_addresses_components
+
+    def _process_device(self, device: Union[int, str, torch.device]):
+        """
+        Function to process the device depending of the argument type.
+
+        Set the device as a torch device object.
+        """
+        if isinstance(device, torch.device):
+            self.device = device
+        elif isinstance(device, str):
+            if re.fullmatch('cpu|cuda:\d+', device.lower()):
+                self.device = torch.device(device)
+            else:
+                raise ValueError("String value should be 'cpu' or follow the pattern 'cuda:[int]'.")
+        elif isinstance(device, int):
+            if device >= 0:
+                self.device = torch.device("cuda:%d" % device if torch.cuda.is_available() else "cpu")
+            else:
+                raise ValueError("Device should not be a negative number.")
+        else:
+            raise ValueError("Device should be a string, an int or a torch device.")

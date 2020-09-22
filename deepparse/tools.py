@@ -1,5 +1,4 @@
 import os
-import warnings
 
 import requests
 import torch
@@ -40,7 +39,7 @@ def download_weights(model_type: str, saving_dir: str) -> None:
         model_type: The network type (i.e. fasttext or bpemb).
         saving_dir: The path to the saving directory.
     """
-    warnings.warn(f"Downloading the weights for the network {model_type}.")
+    print(f"Downloading the weights for the network {model_type}.")
     download_from_url(model_type, saving_dir, 'ckpt')
     download_from_url(model_type, saving_dir, 'version')
 

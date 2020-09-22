@@ -1,9 +1,10 @@
 import argparse
 import os
+import warnings
 
 from bpemb import BPEmb
 
-from deepparse import download_fasttext_model, verify_latest_version, warnings, download_weights
+from deepparse import download_fasttext_model, verify_latest_version, download_weights
 
 
 def main(args: argparse.Namespace) -> None:

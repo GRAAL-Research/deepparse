@@ -106,8 +106,17 @@ class AddressParser:
                 rounding.
 
         Return:
-            Either a ParsedAddress or a list of :class:`~deepparse.parsed_address.ParsedAddress` when given more than
-            one address.
+            Either a :class:`~deepparse.deepparse.parsed_address.ParsedAddress` or a list of
+            :class:`~deepparse.deepparse.parsed_address.ParsedAddress` when given more than one address.
+
+
+        Example:
+
+            .. code-block:: python
+
+                    address_parser = AddressParser(device=0) #on gpu device 0
+                    parse_address = address_parser('350 rue des Lilas Ouest Quebec city Quebec G1L 1B6')
+                    parse_address = address_parser('350 rue des Lilas Ouest Quebec city Quebec G1L 1B6', with_prob=True)
 
         """
         if isinstance(addresses_to_parse, str):

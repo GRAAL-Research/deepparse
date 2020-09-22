@@ -18,12 +18,7 @@ class FastTextVectorizer(Vectorizer):
         Return:
             A list of embeddings corresponding to the addresses' elements.
         """
-        batch = []
-
-        for address in addresses:
-            batch.append(self._vectorize_sequence(address))
-
-        return batch
+        return [self._vectorize_sequence(address) for address in addresses]
 
     def _vectorize_sequence(self, address: str) -> List:
         """
@@ -36,9 +31,4 @@ class FastTextVectorizer(Vectorizer):
             A list of word vector.
         """
 
-        input_sequence = []
-
-        for word in address.split():
-            embedding = self.embeddings_model(word)
-            input_sequence.append(embedding)
-        return input_sequence
+        return [self.embeddings_model(word) for word in address.split()]

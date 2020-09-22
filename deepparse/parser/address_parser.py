@@ -35,8 +35,15 @@ class AddressParser:
     networks either with fastText or BPEmb.
 
     Args:
-        model (str): The network name to use, can be either fasttext, bpemb, lightest (equivalent to fasttext) or
-            best (equivalent to bpemb). The default value is 'best' for the most accurate model.
+        model (str): The network name to use, can be either:
+
+            - fasttext;
+            - bpemb;
+            - lightest (less memory usage) (equivalent to bpemb);
+            - fastest (quicker to process one address in mean) (equivalent to fasttext);
+            - best (best accuracy performance) (equivalent to bpemb).
+
+            The default value is 'best' for the most accurate model.
         device (Union[int, str, torch.device]): The device to use can be either:
 
             - a ``GPU`` index in int format (e.g. ``0``);
@@ -70,7 +77,7 @@ class AddressParser:
         self.tags_converter = TagsConverter(_pre_trained_tags_to_idx)
 
         model = model.lower()
-        if model in "fasttext" or model in "lightest":
+        if model in "fasttext" or model in "fastest":
             path = os.path.join(os.path.expanduser('~'), ".cache", "deepparse")
             os.makedirs(path, exist_ok=True)
 
@@ -83,7 +90,7 @@ class AddressParser:
 
             self.pre_trained_model = PreTrainedFastTextSeq2SeqModel(self.device)
 
-        elif model in "bpemb" or model in "best":
+        elif model in "bpemb" or model in "best" or model in "lightest":
             self.vectorizer = BPEmbVectorizer(embeddings_model=BPEmbEmbeddingsModel(lang="multi", vs=100000, dim=300))
 
             self.data_converter = bpemb_data_padding
@@ -91,7 +98,7 @@ class AddressParser:
             self.pre_trained_model = PreTrainedBPEmbSeq2SeqModel(self.device)
         else:
             raise NotImplementedError(f"There is no {model} network implemented. Value can be: "
-                                      f"fasttext, bpemb, lightest (fastext) or best (bpemb).")
+                                      f"fasttext, bpemb, lightest (bpemb), fastest (fasttext) or best (bpemb).")
 
         self.pre_trained_model.eval()
 

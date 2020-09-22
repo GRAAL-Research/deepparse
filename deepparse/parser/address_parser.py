@@ -49,7 +49,9 @@ class AddressParser:
 
     Note:
         For both the networks, we will download the pre-trained weights and embeddings in the ``.cache`` directory
-        for the root user.
+        for the root user. Also, one can download all the dependencies of our pre-trained model using the
+        `deepparse.download` module (e.g. python -m deepparse.download fasttext) before sending it to a node without
+        access to Internet.
 
     Example:
 

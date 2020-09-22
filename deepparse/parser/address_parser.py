@@ -40,7 +40,6 @@ class AddressParser:
         device (Union[int, str, torch.device]): The device to use can be either:
 
             - a ``GPU`` index in int format (e.g. ``0``);
-            - a ``GPU`` index in string format (e.g. ``'0'``);
             - a complete device name in a string format (e.g. ``'cuda:0'``);
             - a :class:`~torch.torch.device` object;
             - ``'cpu'`` for a  ``CPU`` use.

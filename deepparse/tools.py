@@ -5,24 +5,33 @@ import torch
 import torch.nn as nn
 import torch.nn.init as init
 
+base_url = "https://davebulaval.github.io/deepparse-external-assets/"
+
 
 def download_weights(model_type: str, saving_dir: str) -> None:
     """
     Function to download the pre-trained weights of the models.
 
     Args:
-        model_type: The network type (i.e. fasttest or bpemb).
+        model_type: The network type (i.e. fasttext or bpemb).
         saving_dir: The path to the saving directory.
     """
     print("Downloading the weights for the network", model_type)
-    base_url = "https://davebulaval.github.io/deepparse-external-assets/{}.ckpt"
-
-    url = base_url.format(model_type)
+    model_url = base_url + "{}.ckpt"
+    url = model_url.format(model_type)
     r = requests.get(url)
 
     os.makedirs(saving_dir, exist_ok=True)
 
     open(os.path.join(saving_dir, f"{model_type}.ckpt"), 'wb').write(r.content)
+
+    model_version_url = base_url + "{}.version"
+    url = model_version_url.format(model_type)
+    r = requests.get(url)
+
+    os.makedirs(saving_dir, exist_ok=True)
+
+    open(os.path.join(saving_dir, f"{model_type}.version"), 'wb').write(r.content)
 
 
 def load_tuple_to_device(padded_address, device):

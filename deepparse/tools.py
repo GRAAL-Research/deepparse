@@ -15,7 +15,7 @@ def download_weights(model_type: str, saving_dir: str) -> None:
         saving_dir: The path to the saving directory.
     """
     print("Downloading the weights for the network", model_type)
-    base_url = "https://davebulaval.github.io/deepParse-external-assets/{}.ckpt"
+    base_url = "https://davebulaval.github.io/deepparse-external-assets/{}.ckpt"
 
     url = base_url.format(model_type)
     r = requests.get(url)

@@ -33,6 +33,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 import gzip
 import os
 import shutil
+import sys
+import warnings
+from urllib.request import urlopen
 
 from fasttext.FastText import _FastText
 from fasttext.util.util import valid_lang_ids, _download_file
@@ -57,8 +60,8 @@ def download_fasttext_model(lang_id: str, saving_dir: str) -> str:
     saving_file_path = os.path.join(saving_dir, gz_file_name)
 
     if _download_gz_model(gz_file_name, saving_file_path):
-        with gzip.open(os.path.join(saving_dir, gz_file_name), 'rb') as f:
-            with open(os.path.join(saving_dir, file_name), 'wb') as f_out:
+        with gzip.open(os.path.join(saving_dir, gz_file_name), "rb") as f:
+            with open(os.path.join(saving_dir, file_name), "wb") as f_out:
                 shutil.copyfileobj(f, f_out)
         os.remove(os.path.join(saving_dir, gz_file_name))
 
@@ -73,9 +76,48 @@ def _download_gz_model(gz_file_name: str, saving_path: str) -> bool:  # now use 
     """
 
     url = "https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/%s" % gz_file_name
+    warnings.warn("The fastText pre-trained word embeddings will be download, this process will take several minutes.")
     _download_file(url, saving_path)
 
     return True
+
+
+# No modification, we just need to call our _print_progress function
+def _download_file(url, write_file_name, chunk_size=2**13):
+    print("Downloading %s" % url)
+    response = urlopen(url)
+    if hasattr(response, "getheader"):
+        file_size = int(response.getheader("Content-Length").strip())
+    else:
+        file_size = int(response.info().getheader("Content-Length").strip())
+    downloaded = 0
+    download_file_name = write_file_name + ".part"
+    with open(download_file_name, "wb") as f:
+        while True:
+            chunk = response.read(chunk_size)
+            downloaded += len(chunk)
+            if not chunk:
+                break
+            f.write(chunk)
+            _print_progress(downloaded, file_size)
+
+    os.rename(download_file_name, write_file_name)
+
+
+# Better print formatting for some shell that don"t update properly.
+def _print_progress(downloaded_bytes, total_size):
+    percent = float(downloaded_bytes) / total_size
+    bar_size = 50
+    progress_bar = int(percent * bar_size)
+    percent = round(percent * 100, 2)
+    bar_print = "=" * progress_bar + ">" + " " * (bar_size - progress_bar)
+    update = f"\r(%0.2f%%) [{bar_print}]" % percent
+
+    sys.stdout.write(update)
+    sys.stdout.flush()
+
+    if downloaded_bytes >= total_size:
+        sys.stdout.write("\n")
 
 
 # The difference with the original code is the removal of the print warning.

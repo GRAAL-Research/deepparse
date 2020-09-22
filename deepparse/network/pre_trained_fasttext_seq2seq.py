@@ -17,9 +17,10 @@ class PreTrainedFastTextSeq2SeqModel(PreTrainedSeq2SeqModel):
 
         self._load_pre_trained_weights("fasttext")
 
-    def __call__(self, to_predict: torch.Tensor, lengths_tensor: torch.Tensor) -> torch.Tensor:
+    def forward(self, to_predict: torch.Tensor, lengths_tensor: torch.Tensor) -> torch.Tensor:
         """
-            Callable method to get tags prediction over the components of an address.
+            Callable method as per PyTorch forward method to get tags prediction over the components of
+            an address.
 
             Args:
                 to_predict (~torch.Tensor): The elements to predict the tags.

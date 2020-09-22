@@ -94,10 +94,3 @@ class PreTrainedSeq2SeqModel(ABC, nn.Module):
             _, decoder_input = decoder_output.topk(1)
 
         return prediction_sequence  # the sequence is now fully parse
-
-    def eval(self) -> None:
-        """
-        To put the network in eval mode (no weights update).
-        """
-        self.encoder.eval()
-        self.decoder.eval()

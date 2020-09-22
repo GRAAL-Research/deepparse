@@ -40,9 +40,3 @@ class Encoder(nn.Module):
         _, hidden = self.lstm(packed_sequence)
 
         return hidden
-
-    def eval(self) -> None:
-        """
-        To put the network in eval mode (no weights update).
-        """
-        self.lstm.eval()

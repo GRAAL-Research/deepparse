@@ -28,7 +28,6 @@ class PreTrainedBPEmbSeq2SeqModel(PreTrainedSeq2SeqModel):
         """
             Callable method as per PyTorch forward method to get tags prediction over the components of
             an address.
-            
             Args:
                 to_predict (~torch.Tensor): The elements to predict the tags.
                 decomposition_lengths (list) : The lengths of the decomposed words of the batch elements (since packed).

@@ -64,7 +64,7 @@ class AddressParser:
     """
 
     def __init__(self, model: str = 'best', device: Union[int, str, torch.device] = 0, rounding: int = 4) -> None:
-        self.device = self._process_device(device)
+        self._process_device(device)
 
         self.rounding = rounding
 

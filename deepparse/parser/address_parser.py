@@ -51,6 +51,10 @@ class AddressParser:
         For both the networks, we will download the pre-trained weights and embeddings in the ``.cache`` directory
         for the root user.
 
+    Note:
+        Also note that the first time the fastText model is instantiated on a computer, we download the fastText
+        pre-trained embeddings of 6.8 GO, and this process can be quite long (a couple of minutes).
+
     Example:
 
         .. code-block:: python

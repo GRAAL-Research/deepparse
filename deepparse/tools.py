@@ -5,24 +5,43 @@ import torch
 import torch.nn as nn
 import torch.nn.init as init
 
+base_url = "https://davebulaval.github.io/deepparse-external-assets/"
+
+
+def verify_latest_version(model_type: str, root_path: str) -> bool:
+    """
+    Verify if the local model is the latest.
+    """
+    local_model_hash_version = open(os.path.join(root_path, model_type + ".version")).readline()
+    download_from_url(model_type, root_path, 'version')
+    remote_model_hash_version = open(os.path.join(root_path, model_type + ".version")).readline()
+    return local_model_hash_version != remote_model_hash_version
+
+
+def download_from_url(model_type: str, saving_dir: str, data_type: str):
+    """
+    Simple function to download the content of a file from a distant repository.
+    """
+    model_url = base_url + "{}." + data_type
+    url = model_url.format(model_type)
+    r = requests.get(url)
+
+    os.makedirs(saving_dir, exist_ok=True)
+
+    open(os.path.join(saving_dir, f"{model_type}.{data_type}"), 'wb').write(r.content)
+
 
 def download_weights(model_type: str, saving_dir: str) -> None:
     """
     Function to download the pre-trained weights of the models.
 
     Args:
-        model_type: The network type (i.e. fasttest or bpemb).
+        model_type: The network type (i.e. fasttext or bpemb).
         saving_dir: The path to the saving directory.
     """
-    print("Downloading the weights for the network", model_type)
-    base_url = "https://davebulaval.github.io/deepparse-external-assets/{}.ckpt"
-
-    url = base_url.format(model_type)
-    r = requests.get(url)
-
-    os.makedirs(saving_dir, exist_ok=True)
-
-    open(os.path.join(saving_dir, f"{model_type}.ckpt"), 'wb').write(r.content)
+    print(f"Downloading the weights for the network {model_type}.")
+    download_from_url(model_type, saving_dir, 'ckpt')
+    download_from_url(model_type, saving_dir, 'version')
 
 
 def load_tuple_to_device(padded_address, device):

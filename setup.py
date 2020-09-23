@@ -30,7 +30,7 @@ def get_version():
 
 
 def write_version_python_file(version):
-    version_python_file = os.path.join(current_file_path, 'deepparse/version.py')
+    version_python_file = os.path.join(current_file_path, 'deepparse', 'version.py')
     with open(version_python_file, 'w', encoding='utf-8') as f:
         f.write(f"__version__ = {repr(version)}\n")
 
@@ -49,7 +49,7 @@ def main():
         author='Marouane Yassine & David Beauchemin',
         author_email='marouane.yassine.1@ulaval.ca, david.beauchemin.5@ulaval.ca',
         url='#todo',
-        download_url='https://github.com/MAYAS3/deepParse/archive/v' + version + '.zip',
+        download_url='https://github.com/MAYAS3/deepparse/archive/v' + version + '.zip',
         license='LGPLv3',
         classifiers=[
             'Development Status :: 3 - Alpha',
@@ -65,7 +65,7 @@ def main():
             'Topic :: Software Development :: Libraries :: Python Modules'
         ],
         packages=packages,
-        install_requires=['numpy', 'torch'],
+        install_requires=['numpy', 'torch', 'bpemb', 'fasttext', 'requests'],
         python_requires='>=3.6.1',
         description='A library for parsing multinational street addresses using deep learning.',
         long_description=readme,

@@ -20,10 +20,10 @@ class PreTrainedSeq2SeqModel(ABC, nn.Module):
         - Decoder: ``input_size = 1``, ``hidden_size = 1024``, ``num_layers = 1`` and ``output_size = 9``
 
      Args:
-        device (str): The device tu use for the prediction, can either be a ``GPU`` or a ``CPU``.
+        device (~torch.device): The device tu use for the prediction.
     """
 
-    def __init__(self, device: str) -> None:
+    def __init__(self, device: torch.device) -> None:
         super().__init__()
         self.device = device
 
@@ -40,7 +40,7 @@ class PreTrainedSeq2SeqModel(ABC, nn.Module):
         Args:
             model_type (str): The network pre-trained weights to load.
         """
-        root_path = os.path.join(os.path.expanduser('~'), ".cache/deepparse")
+        root_path = os.path.join(os.path.expanduser('~'), ".cache", "deepparse")
         model_path = os.path.join(root_path, f"{model_type}.ckpt")
 
         if not os.path.isfile(model_path):
@@ -94,10 +94,3 @@ class PreTrainedSeq2SeqModel(ABC, nn.Module):
             _, decoder_input = decoder_output.topk(1)
 
         return prediction_sequence  # the sequence is now fully parse
-
-    def eval(self) -> None:
-        """
-        To put the network in eval mode (no weights update).
-        """
-        self.encoder.eval()
-        self.decoder.eval()

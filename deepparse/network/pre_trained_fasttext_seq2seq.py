@@ -9,17 +9,18 @@ class PreTrainedFastTextSeq2SeqModel(PreTrainedSeq2SeqModel):
     accuracy.
 
      Args:
-        device (str): The device tu use for the prediction, can either be a ``GPU`` or a ``CPU``.
+        device (~torch.device): The device tu use for the prediction.
     """
 
-    def __init__(self, device: str) -> None:
+    def __init__(self, device: torch.device) -> None:
         super().__init__(device)
 
         self._load_pre_trained_weights("fasttext")
 
-    def __call__(self, to_predict: torch.Tensor, lengths_tensor: torch.Tensor) -> torch.Tensor:
+    def forward(self, to_predict: torch.Tensor, lengths_tensor: torch.Tensor) -> torch.Tensor:
         """
-            Callable method to get tags prediction over the components of an address.
+            Callable method as per PyTorch forward method to get tags prediction over the components of
+            an address.
 
             Args:
                 to_predict (~torch.Tensor): The elements to predict the tags.
@@ -32,6 +33,7 @@ class PreTrainedFastTextSeq2SeqModel(PreTrainedSeq2SeqModel):
 
         decoder_input, decoder_hidden = self._encoder_step(to_predict, lengths_tensor, batch_size)
 
-        decoder_predict = self.decoder(decoder_input, decoder_hidden)
+        max_length = lengths_tensor[0].item()
+        decoder_predict = self._decoder_steps(decoder_input, decoder_hidden, max_length, batch_size)
 
         return decoder_predict

@@ -1,9 +1,11 @@
 import os
-from typing import List, Union, Dict
+import re
+from typing import List, Union
 
 import torch
 from numpy.core.multiarray import ndarray
 
+from .parsed_address import ParsedAddress
 from .. import load_tuple_to_device
 from ..converter import TagsConverter, data_padding
 from ..converter.data_padding import bpemb_data_padding
@@ -34,27 +36,42 @@ class AddressParser:
 
     Args:
         model (str): The network name to use, can be either fasttext, bpemb, lightest (equivalent to fasttext) or
-            best (equivalent to bpemb).
-        device (Union[int, str]): The device to use can be either a ``GPU`` index (e.g. 0) in int format or string
-            format or ``'CPU'``.
+            best (equivalent to bpemb). The default value is 'best' for the most accurate model.
+        device (Union[int, str, torch.device]): The device to use can be either:
+
+            - a ``GPU`` index in int format (e.g. ``0``);
+            - a complete device name in a string format (e.g. ``'cuda:0'``);
+            - a :class:`~torch.torch.device` object;
+            - ``'cpu'`` for a  ``CPU`` use.
+
+            The default value is GPU with the index ``0`` if it exist, otherwise the value is ``CPU``.
         rounding (int): The rounding to use when asking the probability of the tags. The default value is 4 digits.
 
     Note:
         For both the networks, we will download the pre-trained weights and embeddings in the ``.cache`` directory
         for the root user.
+
+    Example:
+
+        .. code-block:: python
+
+                address_parser = AddressParser(device=0) #on gpu device 0
+                parse_address = address_parser('350 rue des Lilas Ouest Quebec city Quebec G1L 1B6')
+
+                address_parser = AddressParser(model='fasttext', device='cpu') # fasttext model on cpu
+                parse_address = address_parser('350 rue des Lilas Ouest Quebec city Quebec G1L 1B6')
     """
 
-    def __init__(self, model: str, device: Union[int, str], rounding: int = 4) -> None:
-        if device == "cpu":
-            self.device = device
-        else:
-            self.device = "cuda:%d" % int(device)
+    def __init__(self, model: str = 'best', device: Union[int, str, torch.device] = 0, rounding: int = 4) -> None:
+        self._process_device(device)
+
         self.rounding = rounding
 
         self.tags_converter = TagsConverter(_pre_trained_tags_to_idx)
 
+        model = model.lower()
         if model in "fasttext" or model in "lightest":
-            path = os.path.join(os.path.expanduser('~'), ".cache/deepparse")
+            path = os.path.join(os.path.expanduser('~'), ".cache", "deepparse")
             os.makedirs(path, exist_ok=True)
 
             file_name = download_fasttext_model("fr", saving_dir=path)
@@ -76,7 +93,11 @@ class AddressParser:
             raise NotImplementedError(f"There is no {model} network implemented. Value can be: "
                                       f"fasttext, bpemb, lightest (fastext) or best (bpemb).")
 
-    def __call__(self, addresses_to_parse: Union[List[str], str], with_prob: bool = False) -> Dict:
+        self.pre_trained_model.eval()
+
+    def __call__(self,
+                 addresses_to_parse: Union[List[str], str],
+                 with_prob: bool = False) -> Union[ParsedAddress, List[ParsedAddress]]:
         """
         Callable method to parse the components of an address or a list of address.
 
@@ -87,10 +108,17 @@ class AddressParser:
                 rounding.
 
         Return:
-            A dictionary where the keys are the parsed addresses and the values a dictionary. For the second
-            dictionary: the key are the address components (e.g. a street number such as 305) and the value are
-            either the tag of the components (e.g. StreetName) or a tuple (``x``, ``y``) where ``x`` is the tag and
-            ``y`` is the probability (e.g. 0.9981).
+            Either a :class:`~deepparse.deepparse.parsed_address.ParsedAddress` or a list of
+            :class:`~deepparse.deepparse.parsed_address.ParsedAddress` when given more than one address.
+
+
+        Example:
+
+            .. code-block:: python
+
+                    address_parser = AddressParser(device=0) #on gpu device 0
+                    parse_address = address_parser('350 rue des Lilas Ouest Quebec city Quebec G1L 1B6')
+                    parse_address = address_parser('350 rue des Lilas Ouest Quebec city Quebec G1L 1B6', with_prob=True)
 
         """
         if isinstance(addresses_to_parse, str):
@@ -115,12 +143,13 @@ class AddressParser:
         return tagged_addresses_components
 
     def _fill_tagged_addresses_components(self, tags_predictions: ndarray, tags_predictions_prob: ndarray,
-                                          addresses_to_parse: List[str], with_prob: bool) -> Dict:
+                                          addresses_to_parse: List[str],
+                                          with_prob: bool) -> Union[ParsedAddress, List[ParsedAddress]]:
         """
         Method to fill the mapping for every address between a address components and is associated predicted tag (or
         tag and prob).
         """
-        tagged_addresses_components = {}
+        tagged_addresses_components = []
 
         for address_to_parse, tags_prediction, tags_prediction_prob in zip(addresses_to_parse, tags_predictions,
                                                                            tags_predictions_prob):
@@ -131,6 +160,29 @@ class AddressParser:
                 if with_prob:
                     tag = (tag, round(tag_proba, self.rounding))
                 tagged_address_components[word] = tag
-            tagged_addresses_components[address_to_parse] = tagged_address_components
+            tagged_addresses_components.append(ParsedAddress({address_to_parse: tagged_address_components}))
 
+        if len(tagged_addresses_components) == 1:
+            return tagged_addresses_components[0]
         return tagged_addresses_components
+
+    def _process_device(self, device: Union[int, str, torch.device]):
+        """
+        Function to process the device depending of the argument type.
+
+        Set the device as a torch device object.
+        """
+        if isinstance(device, torch.device):
+            self.device = device
+        elif isinstance(device, str):
+            if re.fullmatch(r'cpu|cuda:\d+', device.lower()):
+                self.device = torch.device(device)
+            else:
+                raise ValueError("String value should be 'cpu' or follow the pattern 'cuda:[int]'.")
+        elif isinstance(device, int):
+            if device >= 0:
+                self.device = torch.device("cuda:%d" % device if torch.cuda.is_available() else "cpu")
+            else:
+                raise ValueError("Device should not be a negative number.")
+        else:
+            raise ValueError("Device should be a string, an int or a torch device.")

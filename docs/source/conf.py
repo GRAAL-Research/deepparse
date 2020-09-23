@@ -112,7 +112,7 @@ html_logo = '_static/logos/logo.png'
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'deepParsedoc'
+htmlhelp_basename = 'deepparsedoc'
 
 # -- Options for LaTeX output ------------------------------------------------
 
@@ -161,9 +161,7 @@ texinfo_documents = [
 
 intersphinx_mapping = {
     'PyTorch': ('https://pytorch.org/docs/master/', None),
-    'python': ('https://docs.python.org/3', None),
-    'numpy': ('http://docs.scipy.org/doc/numpy/', None),
-    'matplotlib': ('https://matplotlib.org/', None)
+    'python': ('https://docs.python.org/3', None)
 }
 
 # -- Extension configuration -------------------------------------------------

@@ -46,10 +46,3 @@ class Decoder(nn.Module):
         output_prob = self.softmax(self.linear(output[0]))
 
         return output_prob, hidden
-
-    def eval(self) -> None:
-        """
-        To put the network in eval mode (no weights update).
-        """
-        self.lstm.eval()
-        self.linear.eval()

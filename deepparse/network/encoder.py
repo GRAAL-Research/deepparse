@@ -35,7 +35,7 @@ class Encoder(nn.Module):
                 A tuple of the address components encoding.
         """
 
-        packed_sequence = pack_padded_sequence(to_predict, lengths_tensor, batch_first=True)
+        packed_sequence = pack_padded_sequence(to_predict, lengths_tensor, batch_first=True, enforce_sorted=False)
 
         _, hidden = self.lstm(packed_sequence)
 

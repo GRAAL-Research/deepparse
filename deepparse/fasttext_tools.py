@@ -41,7 +41,7 @@ from fasttext.FastText import _FastText
 from fasttext.util.util import valid_lang_ids, _download_file
 
 
-def download_fasttext_model(lang_id: str, saving_dir: str) -> str:
+def download_fasttext_embeddings(lang_id: str, saving_dir: str) -> str:
     """
         Simpler version of the download_model function from fastText to download pre-trained common-crawl
         vectors from fastText's website https://fasttext.cc/docs/en/crawl-vectors.html and save it in the
@@ -122,6 +122,6 @@ def _print_progress(downloaded_bytes, total_size):
 
 
 # The difference with the original code is the removal of the print warning.
-def load_model(path):
+def load_fasttext_embeddings(path):
     """Load a model given a filepath and return a model object."""
     return _FastText(model_path=path)

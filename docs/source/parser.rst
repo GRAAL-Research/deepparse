@@ -23,7 +23,7 @@ Memory Usage and Time Performance
 *********************************
 
 We have conducted an experiment, and we report the results in the next two tables. In each table, we report the RAM usage,
-and in table I, we also report the GPU's memory usage. Also, for both table, we report the mean-time of execution
+and in the first table, we also report the GPU memory usage. Also, for both table, we report the mean-time of execution
 that was obtained by processing ~183,000 address using different batch size (2^0, ..., 2^9)
 (i.e. :math:`\frac{\text{Total time to process all addresses}}{~183,000} = \text{time per address}`).
 

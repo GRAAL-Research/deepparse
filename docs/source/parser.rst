@@ -31,8 +31,8 @@ that was obtained by processing ~183,000 address using different batch size (2^0
         :header-rows: 1
 
         *   -
-            - Memory usage GPU (GO)
-            - Memory usage RAM (GO)
+            - Memory usage GPU (GB)
+            - Memory usage RAM (GB)
             - Mean time of execution (batch of 1) (s)
             - Mean time of execution (batch of more than 1) (s)
         *   - fastText

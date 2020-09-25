@@ -65,7 +65,7 @@ that was obtained by processing ~183,000 address using different batch size (2^0
 The two tables highlight that the batch size (number of address in the list to be parsed) influence the processing time.
 Thus, the more there is address, the faster processing each address can be. However, note that at some point, this
 'improvement' of performance decrease. We found that fastText and BPEmb obtain their best performance using a batch
-size of 256, beyond that performance decrease. But, these results were not rigorously tested. For example, using
+size of 256, beyond that performance decrease. For example, using
 the fastText model, our test shown that parsing a single address (batch of 1 element) takes around 0.003 seconds.
 This time can be reduced to 0.00033 seconds per address when using a batch of 256, but using 512 take 0.0035 seconds.
 

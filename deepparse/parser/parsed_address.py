@@ -91,4 +91,22 @@ class ParsedAddress:
                 self.general_delivery = address_component if self.general_delivery is None else " ".join(
                     [self.general_delivery, address_component])
 
-    __repr__ = __str__  # to call __str__ when list of address
+    def _get_attr_repr(self, name):
+        value = getattr(self, name)
+        if value is not None:
+            return name + '=' + repr(getattr(self, name))
+        return ''
+
+    def __repr__(self):
+        values = [
+            self._get_attr_repr('street_number'),
+            self._get_attr_repr('unit'),
+            self._get_attr_repr('street_name'),
+            self._get_attr_repr('orientation'),
+            self._get_attr_repr('municipality'),
+            self._get_attr_repr('province'),
+            self._get_attr_repr('postal_code'),
+            self._get_attr_repr('general_delivery')
+        ]
+        joined_values = ', '.join(v for v in values if v != '')
+        return self.__class__.__name__ + '<' + joined_values + '>'

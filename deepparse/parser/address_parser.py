@@ -11,7 +11,7 @@ from ..converter import TagsConverter, data_padding
 from ..converter.data_padding import bpemb_data_padding
 from ..embeddings_models import FastTextEmbeddingsModel
 from ..embeddings_models.bp_embeddings_model import BPEmbEmbeddingsModel
-from ..fasttext_tools import download_fasttext_model
+from ..fasttext_tools import download_fasttext_embeddings
 from ..network.pre_trained_bpemb_seq2seq import PreTrainedBPEmbSeq2SeqModel
 from ..network.pre_trained_fasttext_seq2seq import PreTrainedFastTextSeq2SeqModel
 from ..vectorizer import FastTextVectorizer, BPEmbVectorizer
@@ -87,7 +87,7 @@ class AddressParser:
             path = os.path.join(os.path.expanduser('~'), ".cache", "deepparse")
             os.makedirs(path, exist_ok=True)
 
-            file_name = download_fasttext_model("fr", saving_dir=path)
+            file_name = download_fasttext_embeddings("fr", saving_dir=path)
             embeddings_model = FastTextEmbeddingsModel(file_name)
 
             self.vectorizer = FastTextVectorizer(embeddings_model=embeddings_model)

@@ -8,40 +8,40 @@ import torch.nn.init as init
 base_url = "https://davebulaval.github.io/deepparse-external-assets/"
 
 
-def verify_latest_version(model_type: str, root_path: str) -> bool:
+def verify_latest_version(model: str, root_path: str) -> bool:
     """
     Verify if the local model is the latest.
     """
-    local_model_hash_version = open(os.path.join(root_path, model_type + ".version")).readline()
-    download_from_url(model_type, root_path, 'version')
-    remote_model_hash_version = open(os.path.join(root_path, model_type + ".version")).readline()
+    local_model_hash_version = open(os.path.join(root_path, model + ".version")).readline()
+    download_from_url(model, root_path, 'version')
+    remote_model_hash_version = open(os.path.join(root_path, model + ".version")).readline()
     return local_model_hash_version != remote_model_hash_version
 
 
-def download_from_url(model_type: str, saving_dir: str, data_type: str):
+def download_from_url(model: str, saving_dir: str, extension: str):
     """
     Simple function to download the content of a file from a distant repository.
     """
-    model_url = base_url + "{}." + data_type
-    url = model_url.format(model_type)
+    model_url = base_url + "{}." + extension
+    url = model_url.format(model)
     r = requests.get(url)
 
     os.makedirs(saving_dir, exist_ok=True)
 
-    open(os.path.join(saving_dir, f"{model_type}.{data_type}"), 'wb').write(r.content)
+    open(os.path.join(saving_dir, f"{model}.{extension}"), 'wb').write(r.content)
 
 
-def download_weights(model_type: str, saving_dir: str) -> None:
+def download_weights(model: str, saving_dir: str) -> None:
     """
     Function to download the pre-trained weights of the models.
 
     Args:
-        model_type: The network type (i.e. fasttext or bpemb).
+        model: The network type (i.e. fasttext or bpemb).
         saving_dir: The path to the saving directory.
     """
-    print(f"Downloading the weights for the network {model_type}.")
-    download_from_url(model_type, saving_dir, 'ckpt')
-    download_from_url(model_type, saving_dir, 'version')
+    print(f"Downloading the weights for the network {model}.")
+    download_from_url(model, saving_dir, 'ckpt')
+    download_from_url(model, saving_dir, 'version')
 
 
 def load_tuple_to_device(padded_address, device):

@@ -52,9 +52,9 @@ def bpemb_data_padding(batch: List[Tuple]) -> Tuple:
     padded_sequences_vectors = pad_sequence(sequences_vectors, batch_first=True)
 
     # pad decomposition length
-    max_sequence_length = lengths.max()
+    max_sequence_length = lengths.max().item()
     for decomposition_length in decomp_len:
         if len(decomposition_length) < max_sequence_length:
             decomposition_length.extend([1] * (max_sequence_length - len(decomposition_length)))
 
-    return padded_sequences_vectors, decomp_len, lengths
+    return padded_sequences_vectors, list(decomp_len), lengths

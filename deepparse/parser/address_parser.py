@@ -11,7 +11,7 @@ from ..converter import TagsConverter, data_padding
 from ..converter.data_padding import bpemb_data_padding
 from ..embeddings_models import FastTextEmbeddingsModel
 from ..embeddings_models.bp_embeddings_model import BPEmbEmbeddingsModel
-from ..fasttext_tools import download_fasttext_model
+from ..fasttext_tools import download_fasttext_embeddings
 from ..network.pre_trained_bpemb_seq2seq import PreTrainedBPEmbSeq2SeqModel
 from ..network.pre_trained_fasttext_seq2seq import PreTrainedFastTextSeq2SeqModel
 from ..vectorizer import FastTextVectorizer, BPEmbVectorizer
@@ -35,8 +35,15 @@ class AddressParser:
     networks either with fastText or BPEmb.
 
     Args:
-        model (str): The network name to use, can be either fasttext, bpemb, lightest (equivalent to fasttext) or
-            best (equivalent to bpemb). The default value is 'best' for the most accurate model.
+        model (str): The network name to use, can be either:
+
+            - fasttext (need ~9 GO of RAM to be used);
+            - bpemb (need ~2 GO of RAM to be used);
+            - lightest (less RAM usage) (equivalent to bpemb);
+            - fastest (quicker to process one address) (equivalent to fasttext);
+            - best (best accuracy performance) (equivalent to bpemb).
+
+            The default value is 'best' for the most accurate model.
         device (Union[int, str, torch.device]): The device to use can be either:
 
             - a ``GPU`` index in int format (e.g. ``0``);
@@ -49,7 +56,13 @@ class AddressParser:
 
     Note:
         For both the networks, we will download the pre-trained weights and embeddings in the ``.cache`` directory
-        for the root user.
+        for the root user. Also, one can download all the dependencies of our pre-trained model using the
+        `deepparse.download` module (e.g. python -m deepparse.download fasttext) before sending it to a node without
+        access to Internet.
+
+    Note:
+        Also note that the first time the fastText model is instantiated on a computer, we download the fastText
+        pre-trained embeddings of 6.8 GO, and this process can be quite long (a couple of minutes).
 
     Example:
 
@@ -70,11 +83,11 @@ class AddressParser:
         self.tags_converter = TagsConverter(_pre_trained_tags_to_idx)
 
         model = model.lower()
-        if model in "fasttext" or model in "lightest":
+        if model in "fasttext" or model in "fastest":
             path = os.path.join(os.path.expanduser('~'), ".cache", "deepparse")
             os.makedirs(path, exist_ok=True)
 
-            file_name = download_fasttext_model("fr", saving_dir=path)
+            file_name = download_fasttext_embeddings("fr", saving_dir=path)
             embeddings_model = FastTextEmbeddingsModel(file_name)
 
             self.vectorizer = FastTextVectorizer(embeddings_model=embeddings_model)
@@ -83,7 +96,7 @@ class AddressParser:
 
             self.pre_trained_model = PreTrainedFastTextSeq2SeqModel(self.device)
 
-        elif model in "bpemb" or model in "best":
+        elif model in "bpemb" or model in "best" or model in "lightest":
             self.vectorizer = BPEmbVectorizer(embeddings_model=BPEmbEmbeddingsModel(lang="multi", vs=100000, dim=300))
 
             self.data_converter = bpemb_data_padding
@@ -91,7 +104,7 @@ class AddressParser:
             self.pre_trained_model = PreTrainedBPEmbSeq2SeqModel(self.device)
         else:
             raise NotImplementedError(f"There is no {model} network implemented. Value can be: "
-                                      f"fasttext, bpemb, lightest (fastext) or best (bpemb).")
+                                      f"fasttext, bpemb, lightest (bpemb), fastest (fasttext) or best (bpemb).")
 
         self.pre_trained_model.eval()
 
@@ -103,7 +116,11 @@ class AddressParser:
 
         Args:
             addresses_to_parse (Union[list[str], str]): The addresses to be parse, can be either a single address
-                (when using str) or a list of address.
+                (when using str) or a list of address. When using a list of addresses, the addresses are processed in
+                batch, allowing a faster process. For example, using fastText model, a single address takes around
+                0.003 seconds to be parsed using a batch of 1 (1 element at the time is processed).
+                This time can be reduced to 0.00035 seconds per address when using a batch of 128
+                (128 elements at the time are processed).
             with_prob (bool): If true, return the probability of all the tags with the specified
                 rounding.
 

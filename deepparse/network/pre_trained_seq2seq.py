@@ -1,4 +1,5 @@
 import os
+import warnings
 from abc import ABC
 from typing import Tuple
 
@@ -8,7 +9,7 @@ from torch import load
 
 from .decoder import Decoder
 from .encoder import Encoder
-from ..tools import download_weights
+from ..tools import download_weights, verify_latest_version
 
 
 class PreTrainedSeq2SeqModel(ABC, nn.Module):
@@ -44,6 +45,9 @@ class PreTrainedSeq2SeqModel(ABC, nn.Module):
         model_path = os.path.join(root_path, f"{model_type}.ckpt")
 
         if not os.path.isfile(model_path):
+            download_weights(model_type, root_path)
+        elif verify_latest_version(model_type, root_path):
+            warnings.warn("A new version of the pre-trained model is available. The newest model will be downloaded.")
             download_weights(model_type, root_path)
 
         all_layers_params = load(model_path, map_location=self.device)

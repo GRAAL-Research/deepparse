@@ -10,7 +10,7 @@ from .. import load_tuple_to_device
 from ..converter import TagsConverter, data_padding
 from ..converter.data_padding import bpemb_data_padding
 from ..embeddings_models import FastTextEmbeddingsModel
-from ..embeddings_models.bp_embeddings_model import BPEmbEmbeddingsModel
+from ..embeddings_models import BPEmbEmbeddingsModel
 from ..fasttext_tools import download_fasttext_embeddings
 from ..network.pre_trained_bpemb_seq2seq import PreTrainedBPEmbSeq2SeqModel
 from ..network.pre_trained_fasttext_seq2seq import PreTrainedFastTextSeq2SeqModel

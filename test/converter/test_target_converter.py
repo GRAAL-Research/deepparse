@@ -1,7 +1,7 @@
 import unittest
 from unittest import TestCase
 
-from deepparse.converter.target_converter import TagsConverter
+from deepparse.converter import TagsConverter
 
 
 class TargetConverterTest(TestCase):

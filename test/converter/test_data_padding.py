@@ -3,7 +3,7 @@ from unittest import TestCase
 import numpy as np
 import torch
 
-from deepparse.converter.data_padding import data_padding, bpemb_data_padding
+from deepparse.converter import data_padding, bpemb_data_padding
 
 
 class DataPaddingTest(TestCase):

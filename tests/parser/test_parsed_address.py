@@ -8,28 +8,28 @@ class ParsedAddressTest(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.A_ADDRESS_STR = '3 test road'
-        cls.A_PARSED_ADDRESS = {'3': 'StreetNumber', 'test': 'StreetName', 'road': 'StreetName'}
-        cls.A_ADDRESS = {cls.A_ADDRESS_STR: cls.A_PARSED_ADDRESS}
-        cls.A_EXISTING_TAG = '3'
+        cls.a_address_str = '3 test road'
+        cls.a_parsed_address = {'3': 'StreetNumber', 'test': 'StreetName', 'road': 'StreetName'}
+        cls.a_address = {cls.a_address_str: cls.a_parsed_address}
+        cls.a_existing_tag = '3'
 
     def setUp(self):
-        self.parsed_address = ParsedAddress(self.A_ADDRESS)
+        self.parsed_address = ParsedAddress(self.a_address)
 
     def test_whenInstanciatedWithAddress_thenShouldReturnCorrectRawAddress(self):
         address = self.parsed_address.raw_address
 
-        self.assertEqual(address, self.A_ADDRESS_STR)
+        self.assertEqual(address, self.a_address_str)
 
     def test_whenInstanciatedWithAddress_thenShouldReturnCorrectParsedAddress(self):
         parsed_address = self.parsed_address.address_parsed_dict
 
-        self.assertEqual(parsed_address, self.A_PARSED_ADDRESS)
+        self.assertEqual(parsed_address, self.a_parsed_address)
 
     def test_whenInstanciatedWithAddress_thenShouldReturnCorrectTagIfExists(self):
         street_number = self.parsed_address.street_number
 
-        self.assertEqual(street_number, self.A_EXISTING_TAG)
+        self.assertEqual(street_number, self.a_existing_tag)
 
     def test_whenInstanciatedWithAddress_thenShouldReturnNoneIfTagDoesntExist(self):
         unit = self.parsed_address.unit

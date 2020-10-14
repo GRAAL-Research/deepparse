@@ -9,8 +9,7 @@ class BPEmbEmbeddingsModelTest(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.A_PATH = '.'
-        cls.A_WORD = 'test'
+        cls.a_word = 'test'
 
     def setUp(self):
         self.model = Mock()
@@ -26,9 +25,9 @@ class BPEmbEmbeddingsModelTest(TestCase):
         with patch('deepparse.embeddings_models.bpemb_embeddings_model.BPEmb', return_value=self.model) as loader:
             self.embeddings_model = BPEmbEmbeddingsModel(lang="multi", vs=100000, dim=300)
 
-            self.embeddings_model(self.A_WORD)
+            self.embeddings_model(self.a_word)
 
-            self.model.embed.assert_called_with(self.A_WORD)
+            self.model.embed.assert_called_with(self.a_word)
 
 
 if __name__ == '__main__':

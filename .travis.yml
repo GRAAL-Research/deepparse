@@ -15,6 +15,7 @@ install:
 script:
   - yapf --diff --recursive deepparse/
   - pylint deepparse/
+  - python3 -m unittest discover -s ./tests
   - cd docs
   - ./rebuild_html_doc.sh
   - cd ..

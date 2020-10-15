@@ -5,7 +5,7 @@ import torch
 import torch.nn as nn
 import torch.nn.init as init
 
-base_url = "https://davebulaval.github.io/deepparse-external-assets/"
+base_url = "https://graal-research.github.io/deepparse-external-assets/"
 
 
 def verify_latest_version(model: str, root_path: str) -> bool:

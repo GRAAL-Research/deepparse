@@ -10,7 +10,7 @@ from .. import load_tuple_to_device
 from ..converter import TagsConverter, data_padding
 from ..converter.data_padding import bpemb_data_padding
 from ..embeddings_models import FastTextEmbeddingsModel
-from ..embeddings_models.bp_embeddings_model import BPEmbEmbeddingsModel
+from ..embeddings_models import BPEmbEmbeddingsModel
 from ..fasttext_tools import download_fasttext_embeddings
 from ..network.pre_trained_bpemb_seq2seq import PreTrainedBPEmbSeq2SeqModel
 from ..network.pre_trained_fasttext_seq2seq import PreTrainedFastTextSeq2SeqModel
@@ -83,7 +83,7 @@ class AddressParser:
         self.tags_converter = TagsConverter(_pre_trained_tags_to_idx)
 
         model = model.lower()
-        if model in "fasttext" or model in "fastest":
+        if model == "fasttext" or model == "fastest":
             path = os.path.join(os.path.expanduser('~'), ".cache", "deepparse")
             os.makedirs(path, exist_ok=True)
 
@@ -96,7 +96,7 @@ class AddressParser:
 
             self.pre_trained_model = PreTrainedFastTextSeq2SeqModel(self.device)
 
-        elif model in "bpemb" or model in "best" or model in "lightest":
+        elif model == "bpemb" or model in "best" or model == "lightest":
             self.vectorizer = BPEmbVectorizer(embeddings_model=BPEmbEmbeddingsModel(lang="multi", vs=100000, dim=300))
 
             self.data_converter = bpemb_data_padding

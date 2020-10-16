@@ -14,7 +14,7 @@
 Here is deepparse
 =================
 
-deepparse is a state-of-the-art library for parsing multinational street addresses using deep learning.
+Deepparse is a state-of-the-art library for parsing multinational street addresses using deep learning.
 
 Use deepparse to:
 
@@ -22,7 +22,7 @@ Use deepparse to:
 
 Read the documentation at `deepparse.org <https://deepparse.org>`_.
 
-deepparse is compatible with the **latest version of PyTorch** and  **Python >= 3.6**.
+Deepparse is compatible with the **latest version of PyTorch** and  **Python >= 3.6**.
 
 Cite
 ----

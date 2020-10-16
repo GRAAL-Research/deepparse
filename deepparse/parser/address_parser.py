@@ -108,7 +108,8 @@ class AddressParser:
 
         self.pre_trained_model.eval()
 
-    def __call__(self, addresses_to_parse: Union[List[str], str],
+    def __call__(self,
+                 addresses_to_parse: Union[List[str], str],
                  with_prob: bool = False) -> Union[ParsedAddress, List[ParsedAddress]]:
         """
         Callable method to parse the components of an address or a list of address.

@@ -12,7 +12,7 @@ Use deepparse to:
 
 Read the documentation at [deepparse.org](https://deepparse.org).
 
-DeepParse is compatible with  the __latest version of PyTorch__ and  __Python >= 3.6__.
+Deepparse is compatible with  the __latest version of PyTorch__ and  __Python >= 3.6__.
 
 ### Cite
 Use the following for the article;
@@ -31,7 +31,7 @@ and this one for the package;
 ```
 @misc{deepparse,
     author = {Marouane Yassine and David Beauchemin},
-    title  = {{DeepParse: A state-of-the-art multinational addresses parser}},
+    title  = {{Deepparse: A state-of-the-art multinational addresses parser}},
     year   = {2020},
     note   = {\url{https://deepparse.org}}
 }

@@ -5,7 +5,7 @@
 
 ## Here is deepparse.
 
-DeepParse is a state-of-the-art library for parsing multinational street addresses using deep learning.
+Deepparse is a state-of-the-art library for parsing multinational street addresses using deep learning.
 
 Use deepparse to:
 - Use the pre-trained models to parse multinational addresses.

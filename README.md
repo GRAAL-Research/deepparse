@@ -1,18 +1,18 @@
-![deepparse Logo](https://raw.githubusercontent.com/MAYS3/deepparse/master/docs/source/_static/logos/logo.png)
+<img src="https://raw.githubusercontent.com/GRAAL-Research/deepparse/master/docs/source/_static/logos/logo.png" width="150" height="135"/>
 
 [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](http://www.gnu.org/licenses/lgpl-3.0)
-[![Build Status](https://travis-ci.com/MAYAS3/deepparse.svg?token=Zv4ryhyUzUhyJBqsdjui&branch=master)](https://travis-ci.com/MAYAS3/deepparse)
+[![Build Status](https://travis-ci.com/GRAAL-Research/deepparse.svg?token=Zv4ryhyUzUhyJBqsdjui&branch=master)](https://travis-ci.com/GRAAL-Research/deepparse)
 
 ## Here is deepparse.
 
-DeepParse is a state-of-the-art library for parsing multinational street addresses using deep learning.
+Deepparse is a state-of-the-art library for parsing multinational street addresses using deep learning.
 
 Use deepparse to:
 - Use the pre-trained models to parse multinational addresses.
 
 Read the documentation at [deepparse.org](https://deepparse.org).
 
-DeepParse is compatible with  the __latest version of PyTorch__ and  __Python >= 3.6__.
+Deepparse is compatible with  the __latest version of PyTorch__ and  __Python >= 3.6__.
 
 ### Cite
 Use the following for the article;
@@ -31,7 +31,7 @@ and this one for the package;
 ```
 @misc{deepparse,
     author = {Marouane Yassine and David Beauchemin},
-    title  = {{DeepParse: A state-of-the-art multinational addresses parser}},
+    title  = {{deepparse: A state-of-the-art deep learning multinational addresses parser}},
     year   = {2020},
     note   = {\url{https://deepparse.org}}
 }
@@ -77,6 +77,6 @@ pip install -U git+https://github.com/MAYAS3/deepparse.git@dev
 
 ## License
 
-deepparse is LGPLv3 licensed, as found in the [LICENSE file](https://github.com/MAYAS3/deepparse/blob/master/LICENSE).
+deepparse is LGPLv3 licensed, as found in the [LICENSE file](https://github.com/GRAAL-Research/deepparse/blob/master/LICENSE).
 
 ------------------

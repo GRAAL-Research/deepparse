@@ -31,8 +31,7 @@ def main(args: argparse.Namespace) -> None:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("model", choices=['fasttext', 'bpemb'],
-                        help="The model type to download.")
+    parser.add_argument("model", choices=['fasttext', 'bpemb'], help="The model type to download.")
 
     args_parser = parser.parse_args()
 

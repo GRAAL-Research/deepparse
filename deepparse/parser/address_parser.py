@@ -108,8 +108,7 @@ class AddressParser:
 
         self.pre_trained_model.eval()
 
-    def __call__(self,
-                 addresses_to_parse: Union[List[str], str],
+    def __call__(self, addresses_to_parse: Union[List[str], str],
                  with_prob: bool = False) -> Union[ParsedAddress, List[ParsedAddress]]:
         """
         Callable method to parse the components of an address or a list of address.
@@ -170,13 +169,13 @@ class AddressParser:
 
         for address_to_parse, tags_prediction, tags_prediction_prob in zip(addresses_to_parse, tags_predictions,
                                                                            tags_predictions_prob):
-            tagged_address_components = {}
+            tagged_address_components = []
             for word, predicted_idx_tag, tag_proba in zip(address_to_parse.split(), tags_prediction,
                                                           tags_prediction_prob):
                 tag = self.tags_converter(predicted_idx_tag)
                 if with_prob:
                     tag = (tag, round(tag_proba, self.rounding))
-                tagged_address_components[word] = tag
+                tagged_address_components.append((word, tag))
             tagged_addresses_components.append(ParsedAddress({address_to_parse: tagged_address_components}))
 
         if len(tagged_addresses_components) == 1:

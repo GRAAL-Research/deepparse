@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, List, Tuple
 
 
 class ParsedAddress:
@@ -8,12 +8,12 @@ class ParsedAddress:
     Note:
         Since an address component can be composed of multiple elements (e.g. Wolfe street), when the probability
         values are asked of the address parser, the address components don't keep it. It's only available through the
-        ``address_parsed_dict`` attribute.
+        ``address_parsed_components`` attribute.
 
     Attributes:
         raw_address: The raw address (not parsed).
-        address_parsed_dict: The parsed address in a dictionary where the keys are the address components and
-            the values are the tags.
+        address_parsed_components: The parsed address in a list of tuples where the first elements
+            are the address components and the second elements are the tags.
         street_number: The street number.
         unit: The street unit component.
         street_name: The street name.
@@ -36,13 +36,14 @@ class ParsedAddress:
     def __init__(self, address: Dict):
         """
         Args:
-            address: A dictionary where the key is an address, and the value is another dictionary where the keys are
-                address components, and the values are the parsed address value. Also, the second dictionary's
-                address value can either be the tag of the components (e.g. StreetName) or a tuple (``x``, ``y``)
-                where ``x`` is the tag and ``y`` is the probability (e.g. 0.9981) of the model prediction.
+            address: A dictionary where the key is an address, and the value is a list of tuples where
+            the first elements are address components, and the second elements are the parsed address
+            value. Also, the second tuple's address value can either be the tag of the components
+            (e.g. StreetName) or a tuple (``x``, ``y``) where ``x`` is the tag and ``y`` is the
+            probability (e.g. 0.9981) of the model prediction.
         """
         self.raw_address = list(address.keys())[0]
-        self.address_parsed_dict = address[self.raw_address]
+        self.address_parsed_components = address[self.raw_address]
 
         self.street_number = None
         self.unit = None
@@ -53,18 +54,18 @@ class ParsedAddress:
         self.postal_code = None
         self.general_delivery = None
 
-        self._resolve_tagged_affectation(self.address_parsed_dict)
+        self._resolve_tagged_affectation(self.address_parsed_components)
 
     def __str__(self) -> str:
         return self.raw_address
 
-    def _resolve_tagged_affectation(self, tagged_address: Dict) -> None:
+    def _resolve_tagged_affectation(self, tagged_address: List[Tuple]) -> None:
         """
         Private method to resolve the parsing of the tagged address.
         :param tagged_address: The tagged address where the keys are the address component and the values are the
         associated tag.
         """
-        for address_component, tag in tagged_address.items():
+        for address_component, tag in tagged_address:
             if isinstance(tag, tuple):  # when tag is also the tag and the probability of the tag
                 tag = tag[0]
             if tag == "StreetNumber":

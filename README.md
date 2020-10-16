@@ -1,4 +1,4 @@
-<img src="https://github.com/GRAAL-Research/deepparse/blob/master/docs/source/_static/logos/logo.png" width="210" height="200"/>
+<img src="https://raw.githubusercontent.com/GRAAL-Research/deepparse/master/docs/source/_static/logos/logo.png" width="150" height="135"/>
 
 [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](http://www.gnu.org/licenses/lgpl-3.0)
 [![Build Status](https://travis-ci.com/GRAAL-Research/deepparse.svg?token=Zv4ryhyUzUhyJBqsdjui&branch=master)](https://travis-ci.com/GRAAL-Research/deepparse)

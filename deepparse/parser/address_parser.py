@@ -6,12 +6,11 @@ import torch
 from numpy.core.multiarray import ndarray
 
 from .parsed_address import ParsedAddress
-from .. import load_tuple_to_device
+from .. import load_tuple_to_device, download_fasttext_embeddings, download_fasttext_magnitude_embeddings
 from ..converter import TagsConverter, data_padding
 from ..converter.data_padding import bpemb_data_padding
 from ..embeddings_models import BPEmbEmbeddingsModel
 from ..embeddings_models import FastTextEmbeddingsModel
-from ..fasttext_tools import download_fasttext_embeddings
 from ..network.pre_trained_bpemb_seq2seq import PreTrainedBPEmbSeq2SeqModel
 from ..network.pre_trained_fasttext_seq2seq import PreTrainedFastTextSeq2SeqModel
 from ..vectorizer import FastTextVectorizer, BPEmbVectorizer
@@ -38,8 +37,8 @@ class AddressParser:
         model (str): The network name to use, can be either:
 
             - fasttext (need ~9 GO of RAM to be used);
+            - fasttext-light (need ~2 GO of RAM to be used, but slower than fasttext version);
             - bpemb (need ~2 GO of RAM to be used);
-            - lightest (less RAM usage) (equivalent to bpemb);
             - fastest (quicker to process one address) (equivalent to fasttext);
             - best (best accuracy performance) (equivalent to bpemb).
 
@@ -83,12 +82,17 @@ class AddressParser:
         self.tags_converter = TagsConverter(_pre_trained_tags_to_idx)
 
         model = model.lower()
-        if model in ("fasttext", "fastest"):
+        if model in ("fasttext", "fastest", "fasttext-light"):
             path = os.path.join(os.path.expanduser('~'), ".cache", "deepparse")
             os.makedirs(path, exist_ok=True)
 
-            file_name = download_fasttext_embeddings("fr", saving_dir=path)
-            embeddings_model = FastTextEmbeddingsModel(file_name)
+            if model == "fasttext-light":
+                file_name = download_fasttext_magnitude_embeddings(saving_dir=path)
+                magnitude = True
+            else:
+                file_name = download_fasttext_embeddings("fr", saving_dir=path)
+                magnitude = False
+            embeddings_model = FastTextEmbeddingsModel(file_name, magnitude=magnitude)
 
             self.vectorizer = FastTextVectorizer(embeddings_model=embeddings_model)
 
@@ -96,7 +100,7 @@ class AddressParser:
 
             self.pre_trained_model = PreTrainedFastTextSeq2SeqModel(self.device)
 
-        elif model in ("bpemb", "best", "lightest"):
+        elif model in ("bpemb", "best"):
             self.vectorizer = BPEmbVectorizer(embeddings_model=BPEmbEmbeddingsModel(lang="multi", vs=100000, dim=300))
 
             self.data_converter = bpemb_data_padding

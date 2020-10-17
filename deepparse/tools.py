@@ -13,7 +13,7 @@ def verify_latest_version(model: str, root_path: str) -> bool:
     Verify if the local model is the latest.
     """
     local_model_hash_version = open(os.path.join(root_path, model + ".version")).readline()
-    download_from_url(model, root_path, 'version')
+    download_from_url(model, root_path, "version")
     remote_model_hash_version = open(os.path.join(root_path, model + ".version")).readline()
     return local_model_hash_version != remote_model_hash_version
 
@@ -27,8 +27,9 @@ def download_from_url(model: str, saving_dir: str, extension: str):
     r = requests.get(url)
 
     os.makedirs(saving_dir, exist_ok=True)
-
-    open(os.path.join(saving_dir, f"{model}.{extension}"), 'wb').write(r.content)
+    filename = os.path.join(saving_dir, f"{model}.{extension}")
+    open(filename, "wb").write(r.content)
+    return filename
 
 
 def download_weights(model: str, saving_dir: str) -> None:
@@ -40,8 +41,16 @@ def download_weights(model: str, saving_dir: str) -> None:
         saving_dir: The path to the saving directory.
     """
     print(f"Downloading the weights for the network {model}.")
-    download_from_url(model, saving_dir, 'ckpt')
-    download_from_url(model, saving_dir, 'version')
+    download_from_url(model, saving_dir, "ckpt")
+    download_from_url(model, saving_dir, "version")
+
+
+def download_fasttext_magnitude_embeddings(saving_dir):
+    """
+    Function to download the magnitude pre-trained fastText model.
+    """
+    filename = download_from_url(model="fasttext", saving_dir=saving_dir, extension=".magnitude")
+    return filename
 
 
 def load_tuple_to_device(padded_address, device):

@@ -39,6 +39,11 @@ that was obtained by processing ~183,000 address using different batch size (2^0
             - ~9
             - ~0.0037
             - ~0.0007
+        *   - fastText-light
+            - ~0.885
+            - ~2
+            - ~0.0062
+            - ~0.0029
         *   - BPEmb
             - ~0.885
             - ~2
@@ -54,6 +59,10 @@ that was obtained by processing ~183,000 address using different batch size (2^0
             - Mean time of execution (batch of more than 1) (s)
         *   - fastText
             - ~9
+            - ~0.0216
+            - ~0.0032
+        *   - fastText
+            - ~2
             - ~0.0216
             - ~0.0032
         *   - BPEmb

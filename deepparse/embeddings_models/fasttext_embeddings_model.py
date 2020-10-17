@@ -1,6 +1,7 @@
 from numpy.core.multiarray import ndarray
 
 from .embeddings_model import EmbeddingsModel
+from .magnitude_wrapper import MagnitudeWrapper
 from .. import load_fasttext_embeddings
 
 
@@ -13,9 +14,13 @@ class FastTextEmbeddingsModel(EmbeddingsModel):
        embeddings_path (str): Path to the bin embeddings vector (.bin).
     """
 
-    def __init__(self, embeddings_path: str) -> None:
+    def __init__(self, embeddings_path: str, magnitude: bool) -> None:
         super().__init__()
-        self.model = load_fasttext_embeddings(embeddings_path)
+        if magnitude:
+            self.model = MagnitudeWrapper(embeddings_path)
+        else:
+            self.model = load_fasttext_embeddings(embeddings_path)
+
         self.model.dim = 300  # fastText is only in 300d
 
     def __call__(self, word: str) -> ndarray:

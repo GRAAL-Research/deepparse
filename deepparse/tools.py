@@ -5,7 +5,7 @@ import torch
 import torch.nn as nn
 import torch.nn.init as init
 
-base_url = "https://graal-research.github.io/deepparse-external-assets/"
+base_url = "https://graal.ift.ulaval.ca/public/deepparse/"
 
 
 def verify_latest_version(model: str, root_path: str) -> bool:
@@ -43,14 +43,6 @@ def download_weights(model: str, saving_dir: str) -> None:
     print(f"Downloading the weights for the network {model}.")
     download_from_url(model, saving_dir, "ckpt")
     download_from_url(model, saving_dir, "version")
-
-
-def download_fasttext_magnitude_embeddings(saving_dir):
-    """
-    Function to download the magnitude pre-trained fastText model.
-    """
-    filename = download_from_url(model="fasttext", saving_dir=saving_dir, extension=".magnitude")
-    return filename
 
 
 def load_tuple_to_device(padded_address, device):

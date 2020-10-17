@@ -40,6 +40,8 @@ from urllib.request import urlopen
 from fasttext.FastText import _FastText
 from fasttext.util.util import valid_lang_ids, _download_file
 
+from deepparse import download_from_url
+
 
 def download_fasttext_embeddings(lang_id: str, saving_dir: str) -> str:
     """
@@ -68,6 +70,20 @@ def download_fasttext_embeddings(lang_id: str, saving_dir: str) -> str:
     return file_name_path  # return the full path to the fastText embeddings
 
 
+def download_fasttext_magnitude_embeddings(saving_dir):
+    """
+    Function to download the magnitude pre-trained fastText model.
+    """
+    file_name = download_from_url(model="fasttext", saving_dir=saving_dir, extension=".magnitude.gz")
+    gz_file_name = file_name
+    file_name = file_name.strip(".gz")
+    with gzip.open(os.path.join(saving_dir, gz_file_name), "rb") as f:
+        with open(os.path.join(saving_dir, file_name), "wb") as f_out:
+            shutil.copyfileobj(f, f_out)
+    os.remove(os.path.join(saving_dir, gz_file_name))
+    return file_name
+
+
 def _download_gz_model(gz_file_name: str, saving_path: str) -> bool:  # now use a saving path
     """
         Simpler version of the _download_gz_model function from fastText to download pre-trained common-crawl
@@ -84,7 +100,7 @@ def _download_gz_model(gz_file_name: str, saving_path: str) -> bool:  # now use 
 
 
 # No modification, we just need to call our _print_progress function
-def _download_file(url, write_file_name, chunk_size=2**13):
+def _download_file(url, write_file_name, chunk_size=2 ** 13):
     print("Downloading %s" % url)
     response = urlopen(url)
     if hasattr(response, "getheader"):

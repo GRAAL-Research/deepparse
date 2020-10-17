@@ -46,9 +46,9 @@ class AddressParser:
         device (Union[int, str, torch.device]): The device to use can be either:
 
             - a ``GPU`` index in int format (e.g. ``0``);
-            - a complete device name in a string format (e.g. ``"cuda:0"``);
+            - a complete device name in a string format (e.g. ``'cuda:0'``);
             - a :class:`~torch.torch.device` object;
-            - ``"cpu"`` for a  ``CPU`` use.
+            - ``'cpu'`` for a  ``CPU`` use.
 
             The default value is GPU with the index ``0`` if it exist, otherwise the value is ``CPU``.
         rounding (int): The rounding to use when asking the probability of the tags. The default value is 4 digits.
@@ -199,7 +199,7 @@ class AddressParser:
             if re.fullmatch(r"cpu|cuda:\d+", device.lower()):
                 self.device = torch.device(device)
             else:
-                raise ValueError("String value should be "cpu" or follow the pattern "cuda:[int]".")
+                raise ValueError("String value should be 'cpu' or follow the pattern 'cuda:[int]'.")
         elif isinstance(device, int):
             if device >= 0:
                 self.device = torch.device("cuda:%d" % device if torch.cuda.is_available() else "cpu")

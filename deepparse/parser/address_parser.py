@@ -55,7 +55,10 @@ class AddressParser:
 
     Note:
         For both the networks, we will download the pre-trained weights and embeddings in the ``.cache`` directory
-        for the root user. Also, one can download all the dependencies of our pre-trained model using the
+        for the root user. The pre-trained weights take at most 44 MB. The fastText embeddings take 6.8 GO,
+        the fastText-light embeddings take 3.3 GO and bpemb take 116 MB (in .cache/bpemb).
+
+        Also, one can download all the dependencies of our pre-trained model using the
         `deepparse.download` module (e.g. python -m deepparse.download fasttext) before sending it to a node without
         access to Internet.
 

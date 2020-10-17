@@ -27,9 +27,7 @@ def download_from_url(model: str, saving_dir: str, extension: str):
     r = requests.get(url)
 
     os.makedirs(saving_dir, exist_ok=True)
-    filename = os.path.join(saving_dir, f"{model}.{extension}")
-    open(filename, "wb").write(r.content)
-    return filename
+    open(os.path.join(saving_dir, f"{model}.{extension}"), "wb").write(r.content)
 
 
 def download_weights(model: str, saving_dir: str) -> None:

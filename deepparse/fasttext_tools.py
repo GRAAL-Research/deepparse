@@ -75,14 +75,14 @@ def download_fasttext_magnitude_embeddings(saving_dir):
     Function to download the magnitude pre-trained fastText model.
     """
     model = "fasttext"
-    extension = "magnitude.gz"
+    extension = "magnitude"
     file_name = os.path.join(saving_dir, f"{model}.{extension}")
-    if not os.path.isfile(file_name.strip(".gz")):
+    if not os.path.isfile(file_name):
         warnings.warn("The fastText pre-trained word embeddings will be download in magnitude format (2.3 GO), "
                       "this process will take several minutes.")
+        extension = extension + ".gz"
         download_from_url(model=model, saving_dir=saving_dir, extension=extension)
-        gz_file_name = file_name
-        file_name = file_name.strip(".gz")
+        gz_file_name = file_name + ".gz"
         with gzip.open(os.path.join(saving_dir, gz_file_name), "rb") as f:
             with open(os.path.join(saving_dir, file_name), "wb") as f_out:
                 shutil.copyfileobj(f, f_out)

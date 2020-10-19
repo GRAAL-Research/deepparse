@@ -72,7 +72,7 @@ pip install deepparse
 - **Install the latest development version of deepparse:**
 
 ```sh
-pip install -U git+https://github.com/MAYAS3/deepparse.git@dev
+pip install -U git+https://github.com/GRAAL-Research/deepparse.git@dev
 ```
 
 ## License

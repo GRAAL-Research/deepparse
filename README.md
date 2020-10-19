@@ -31,7 +31,7 @@ and this one for the package;
 ```
 @misc{deepparse,
     author = {Marouane Yassine and David Beauchemin},
-    title  = {{deepparse: A state-of-the-art deep learning multinational addresses parser}},
+    title  = {{Deepparse: A state-of-the-art deep learning multinational addresses parser}},
     year   = {2020},
     note   = {\url{https://deepparse.org}}
 }

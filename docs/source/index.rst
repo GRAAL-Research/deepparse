@@ -3,7 +3,9 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+
 :github_url: https://github.com/GRAAL-Research/deepparse
+
 
 .. meta::
   :description: deepparse is a state-of-the-art library for parsing multinational street addresses using deep learning
@@ -21,6 +23,7 @@ Use deepparse to:
 - Use the pre-trained models to parse multinational addresses.
 
 Read the documentation at `deepparse.org <https://deepparse.org>`_.
+
 
 Deepparse is compatible with the **latest version of PyTorch** and  **Python >= 3.6**.
 
@@ -42,7 +45,7 @@ and this one for the package;
 
    @misc{deepparse,
        author = {Marouane Yassine and David Beauchemin},
-       title  = {{deepparse: A state-of-the-art deep learning multinational addresses parser}},
+       title  = {{Deepparse: A state-of-the-art deep learning multinational addresses parser}},
        year   = {2020},
        note   = {\url{https://deepparse.org}}
    }
@@ -84,10 +87,11 @@ Before installing deepparse, you must have the latest version of `PyTorch <https
     pip install -U git+https://github.com/GRAAL-Research/deepparse.git@dev
 
 
+
 License
 =======
+Deepparse is LGPLv3 licensed, as found in the `LICENSE file <https://github.com/GRAAL-Research/deepparse/blob/master/LICENSE>`_.
 
-deepparse is LGPLv3 licensed, as found in the `LICENSE file <https://github.com/GRAAL-Research/deepparse/blob/master/LICENSE>`_.
 
 API Reference
 =============

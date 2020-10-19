@@ -46,7 +46,7 @@ def main():
     setup(
         name='deepparse',
         version=version,
-        author='Marouane Yassine & David Beauchemin',
+        author='Marouane Yassine, David Beauchemin',
         author_email='marouane.yassine.1@ulaval.ca, david.beauchemin.5@ulaval.ca',
         url='https://deepparse.org/',
         download_url='https://github.com/GRAAL-Research/deepparse/archive/v' + version + '.zip',

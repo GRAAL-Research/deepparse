@@ -44,6 +44,11 @@ that was obtained by processing ~183,000 address using different batch size (2^0
             - ~2
             - ~0.0062
             - ~0.0029
+        *   - fastText-light-gpu
+            - ~1
+            - ~2
+            - ~0.0062
+            - ~0.0029
         *   - BPEmb
             - ~0.885
             - ~2
@@ -61,10 +66,10 @@ that was obtained by processing ~183,000 address using different batch size (2^0
             - ~9
             - ~0.0216
             - ~0.0032
-        *   - fastText
+        *   - fastText-light
             - ~2
-            - ~0.0216
-            - ~0.0032
+            - ~0.0234
+            - ~0.0064
         *   - BPEmb
             - ~2
             - ~0.0309

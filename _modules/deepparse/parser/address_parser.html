@@ -1,0 +1,411 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>deepparse.parser.address_parser &mdash; deepparse 0.1.2 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html">
+          
+
+          
+            
+            <img src="../../../_static/logo.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../parser.html">Parser</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">deepparse</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>deepparse.parser.address_parser</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for deepparse.parser.address_parser</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">numpy.core.multiarray</span> <span class="kn">import</span> <span class="n">ndarray</span>
+
+<span class="kn">from</span> <span class="nn">.parsed_address</span> <span class="kn">import</span> <span class="n">ParsedAddress</span>
+<span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">load_tuple_to_device</span>
+<span class="kn">from</span> <span class="nn">..converter</span> <span class="kn">import</span> <span class="n">TagsConverter</span><span class="p">,</span> <span class="n">data_padding</span>
+<span class="kn">from</span> <span class="nn">..converter.data_padding</span> <span class="kn">import</span> <span class="n">bpemb_data_padding</span>
+<span class="kn">from</span> <span class="nn">..embeddings_models</span> <span class="kn">import</span> <span class="n">BPEmbEmbeddingsModel</span>
+<span class="kn">from</span> <span class="nn">..embeddings_models</span> <span class="kn">import</span> <span class="n">FastTextEmbeddingsModel</span>
+<span class="kn">from</span> <span class="nn">..fasttext_tools</span> <span class="kn">import</span> <span class="n">download_fasttext_embeddings</span>
+<span class="kn">from</span> <span class="nn">..network.pre_trained_bpemb_seq2seq</span> <span class="kn">import</span> <span class="n">PreTrainedBPEmbSeq2SeqModel</span>
+<span class="kn">from</span> <span class="nn">..network.pre_trained_fasttext_seq2seq</span> <span class="kn">import</span> <span class="n">PreTrainedFastTextSeq2SeqModel</span>
+<span class="kn">from</span> <span class="nn">..vectorizer</span> <span class="kn">import</span> <span class="n">FastTextVectorizer</span><span class="p">,</span> <span class="n">BPEmbVectorizer</span>
+
+<span class="n">_pre_trained_tags_to_idx</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;StreetNumber&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;StreetName&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;Unit&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s2">&quot;Municipality&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="s2">&quot;Province&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="s2">&quot;PostalCode&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="s2">&quot;Orientation&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+    <span class="s2">&quot;GeneralDelivery&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
+    <span class="s2">&quot;EOS&quot;</span><span class="p">:</span> <span class="mi">8</span>  <span class="c1"># the 9th is the EOS with idx 8</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="AddressParser"><a class="viewcode-back" href="../../../parser.html#deepparse.parser.AddressParser">[docs]</a><span class="k">class</span> <span class="nc">AddressParser</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Address parser to parse an address or a list of address using one of the seq2seq pre-trained</span>
+<span class="sd">    networks either with fastText or BPEmb.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        model (str): The network name to use, can be either:</span>
+
+<span class="sd">            - fasttext (need ~9 GO of RAM to be used);</span>
+<span class="sd">            - bpemb (need ~2 GO of RAM to be used);</span>
+<span class="sd">            - lightest (less RAM usage) (equivalent to bpemb);</span>
+<span class="sd">            - fastest (quicker to process one address) (equivalent to fasttext);</span>
+<span class="sd">            - best (best accuracy performance) (equivalent to bpemb).</span>
+
+<span class="sd">            The default value is &#39;best&#39; for the most accurate model.</span>
+<span class="sd">        device (Union[int, str, torch.device]): The device to use can be either:</span>
+
+<span class="sd">            - a ``GPU`` index in int format (e.g. ``0``);</span>
+<span class="sd">            - a complete device name in a string format (e.g. ``&#39;cuda:0&#39;``);</span>
+<span class="sd">            - a :class:`~torch.torch.device` object;</span>
+<span class="sd">            - ``&#39;cpu&#39;`` for a  ``CPU`` use.</span>
+
+<span class="sd">            The default value is GPU with the index ``0`` if it exist, otherwise the value is ``CPU``.</span>
+<span class="sd">        rounding (int): The rounding to use when asking the probability of the tags. The default value is 4 digits.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        For both the networks, we will download the pre-trained weights and embeddings in the ``.cache`` directory</span>
+<span class="sd">        for the root user. Also, one can download all the dependencies of our pre-trained model using the</span>
+<span class="sd">        `deepparse.download` module (e.g. python -m deepparse.download fasttext) before sending it to a node without</span>
+<span class="sd">        access to Internet.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        Also note that the first time the fastText model is instantiated on a computer, we download the fastText</span>
+<span class="sd">        pre-trained embeddings of 6.8 GO, and this process can be quite long (a couple of minutes).</span>
+
+<span class="sd">    Example:</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">                address_parser = AddressParser(device=0) #on gpu device 0</span>
+<span class="sd">                parse_address = address_parser(&#39;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&#39;)</span>
+
+<span class="sd">                address_parser = AddressParser(model=&#39;fasttext&#39;, device=&#39;cpu&#39;) # fasttext model on cpu</span>
+<span class="sd">                parse_address = address_parser(&#39;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&#39;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;best&#39;</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">rounding</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_process_device</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">rounding</span> <span class="o">=</span> <span class="n">rounding</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">tags_converter</span> <span class="o">=</span> <span class="n">TagsConverter</span><span class="p">(</span><span class="n">_pre_trained_tags_to_idx</span><span class="p">)</span>
+
+        <span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">model</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;fasttext&quot;</span><span class="p">,</span> <span class="s2">&quot;fastest&quot;</span><span class="p">):</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s1">&#39;~&#39;</span><span class="p">),</span> <span class="s2">&quot;.cache&quot;</span><span class="p">,</span> <span class="s2">&quot;deepparse&quot;</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+            <span class="n">file_name</span> <span class="o">=</span> <span class="n">download_fasttext_embeddings</span><span class="p">(</span><span class="s2">&quot;fr&quot;</span><span class="p">,</span> <span class="n">saving_dir</span><span class="o">=</span><span class="n">path</span><span class="p">)</span>
+            <span class="n">embeddings_model</span> <span class="o">=</span> <span class="n">FastTextEmbeddingsModel</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">vectorizer</span> <span class="o">=</span> <span class="n">FastTextVectorizer</span><span class="p">(</span><span class="n">embeddings_model</span><span class="o">=</span><span class="n">embeddings_model</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_converter</span> <span class="o">=</span> <span class="n">data_padding</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">pre_trained_model</span> <span class="o">=</span> <span class="n">PreTrainedFastTextSeq2SeqModel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">model</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;bpemb&quot;</span><span class="p">,</span> <span class="s2">&quot;best&quot;</span><span class="p">,</span> <span class="s2">&quot;lightest&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vectorizer</span> <span class="o">=</span> <span class="n">BPEmbVectorizer</span><span class="p">(</span><span class="n">embeddings_model</span><span class="o">=</span><span class="n">BPEmbEmbeddingsModel</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;multi&quot;</span><span class="p">,</span> <span class="n">vs</span><span class="o">=</span><span class="mi">100000</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">300</span><span class="p">))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_converter</span> <span class="o">=</span> <span class="n">bpemb_data_padding</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">pre_trained_model</span> <span class="o">=</span> <span class="n">PreTrainedBPEmbSeq2SeqModel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;There is no </span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2"> network implemented. Value can be: &quot;</span>
+                                      <span class="sa">f</span><span class="s2">&quot;fasttext, bpemb, lightest (bpemb), fastest (fasttext) or best (bpemb).&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">pre_trained_model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+
+<div class="viewcode-block" id="AddressParser.__call__"><a class="viewcode-back" href="../../../parser.html#deepparse.parser.AddressParser.__call__">[docs]</a>    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">addresses_to_parse</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">],</span>
+                 <span class="n">with_prob</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">ParsedAddress</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">ParsedAddress</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Callable method to parse the components of an address or a list of address.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            addresses_to_parse (Union[list[str], str]): The addresses to be parse, can be either a single address</span>
+<span class="sd">                (when using str) or a list of address. When using a list of addresses, the addresses are processed in</span>
+<span class="sd">                batch, allowing a faster process. For example, using fastText model, a single address takes around</span>
+<span class="sd">                0.003 seconds to be parsed using a batch of 1 (1 element at the time is processed).</span>
+<span class="sd">                This time can be reduced to 0.00035 seconds per address when using a batch of 128</span>
+<span class="sd">                (128 elements at the time are processed).</span>
+<span class="sd">            with_prob (bool): If true, return the probability of all the tags with the specified</span>
+<span class="sd">                rounding.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            Either a :class:`~deepparse.deepparse.parsed_address.ParsedAddress` or a list of</span>
+<span class="sd">            :class:`~deepparse.deepparse.parsed_address.ParsedAddress` when given more than one address.</span>
+
+
+<span class="sd">        Example:</span>
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                    address_parser = AddressParser(device=0) #on gpu device 0</span>
+<span class="sd">                    parse_address = address_parser(&#39;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&#39;)</span>
+<span class="sd">                    parse_address = address_parser(&#39;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&#39;, with_prob=True)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">addresses_to_parse</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">addresses_to_parse</span> <span class="o">=</span> <span class="p">[</span><span class="n">addresses_to_parse</span><span class="p">]</span>
+
+        <span class="c1"># since training data is lowercase</span>
+        <span class="n">lower_cased_addresses_to_parse</span> <span class="o">=</span> <span class="p">[</span><span class="n">address</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">address</span> <span class="ow">in</span> <span class="n">addresses_to_parse</span><span class="p">]</span>
+
+        <span class="n">vectorize_address</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vectorizer</span><span class="p">(</span><span class="n">lower_cased_addresses_to_parse</span><span class="p">)</span>
+
+        <span class="n">padded_address</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_converter</span><span class="p">(</span><span class="n">vectorize_address</span><span class="p">)</span>
+        <span class="n">padded_address</span> <span class="o">=</span> <span class="n">load_tuple_to_device</span><span class="p">(</span><span class="n">padded_address</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="n">predictions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pre_trained_model</span><span class="p">(</span><span class="o">*</span><span class="n">padded_address</span><span class="p">)</span>
+
+        <span class="n">tags_predictions</span> <span class="o">=</span> <span class="n">predictions</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="mi">2</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+        <span class="n">tags_predictions_prob</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">predictions</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="mi">2</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+
+        <span class="n">tagged_addresses_components</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fill_tagged_addresses_components</span><span class="p">(</span><span class="n">tags_predictions</span><span class="p">,</span> <span class="n">tags_predictions_prob</span><span class="p">,</span>
+                                                                             <span class="n">addresses_to_parse</span><span class="p">,</span> <span class="n">with_prob</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">tagged_addresses_components</span></div>
+
+    <span class="k">def</span> <span class="nf">_fill_tagged_addresses_components</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tags_predictions</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">,</span> <span class="n">tags_predictions_prob</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">,</span>
+                                          <span class="n">addresses_to_parse</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+                                          <span class="n">with_prob</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">ParsedAddress</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">ParsedAddress</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to fill the mapping for every address between a address components and is associated predicted tag (or</span>
+<span class="sd">        tag and prob).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tagged_addresses_components</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">address_to_parse</span><span class="p">,</span> <span class="n">tags_prediction</span><span class="p">,</span> <span class="n">tags_prediction_prob</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">addresses_to_parse</span><span class="p">,</span> <span class="n">tags_predictions</span><span class="p">,</span>
+                                                                           <span class="n">tags_predictions_prob</span><span class="p">):</span>
+            <span class="n">tagged_address_components</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">word</span><span class="p">,</span> <span class="n">predicted_idx_tag</span><span class="p">,</span> <span class="n">tag_proba</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">address_to_parse</span><span class="o">.</span><span class="n">split</span><span class="p">(),</span> <span class="n">tags_prediction</span><span class="p">,</span>
+                                                          <span class="n">tags_prediction_prob</span><span class="p">):</span>
+                <span class="n">tag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tags_converter</span><span class="p">(</span><span class="n">predicted_idx_tag</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">with_prob</span><span class="p">:</span>
+                    <span class="n">tag</span> <span class="o">=</span> <span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">tag_proba</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rounding</span><span class="p">))</span>
+                <span class="n">tagged_address_components</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">word</span><span class="p">,</span> <span class="n">tag</span><span class="p">))</span>
+            <span class="n">tagged_addresses_components</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ParsedAddress</span><span class="p">({</span><span class="n">address_to_parse</span><span class="p">:</span> <span class="n">tagged_address_components</span><span class="p">}))</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tagged_addresses_components</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">tagged_addresses_components</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">tagged_addresses_components</span>
+
+    <span class="k">def</span> <span class="nf">_process_device</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">]):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function to process the device depending of the argument type.</span>
+
+<span class="sd">        Set the device as a torch device object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;cpu|cuda:\d+&#39;</span><span class="p">,</span> <span class="n">device</span><span class="o">.</span><span class="n">lower</span><span class="p">()):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;String value should be &#39;cpu&#39; or follow the pattern &#39;cuda:[int]&#39;.&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">device</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda:</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">device</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Device should not be a negative number.&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Device should be a string, an int or a torch device.&quot;</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020-2020, Marouane Yassine &amp; David Beauchemin
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

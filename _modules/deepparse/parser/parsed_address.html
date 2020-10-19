@@ -1,0 +1,319 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>deepparse.parser.parsed_address &mdash; deepparse 0.1.2 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html">
+          
+
+          
+            
+            <img src="../../../_static/logo.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../parser.html">Parser</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">deepparse</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>deepparse.parser.parsed_address</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for deepparse.parser.parsed_address</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+
+
+<div class="viewcode-block" id="ParsedAddress"><a class="viewcode-back" href="../../../parser.html#deepparse.parser.ParsedAddress">[docs]</a><span class="k">class</span> <span class="nc">ParsedAddress</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A parsed address as commonly known returned by an address parser.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        Since an address component can be composed of multiple elements (e.g. Wolfe street), when the probability</span>
+<span class="sd">        values are asked of the address parser, the address components don&#39;t keep it. It&#39;s only available through the</span>
+<span class="sd">        ``address_parsed_components`` attribute.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        raw_address: The raw address (not parsed).</span>
+<span class="sd">        address_parsed_components: The parsed address in a list of tuples where the first elements</span>
+<span class="sd">            are the address components and the second elements are the tags.</span>
+<span class="sd">        street_number: The street number.</span>
+<span class="sd">        unit: The street unit component.</span>
+<span class="sd">        street_name: The street name.</span>
+<span class="sd">        orientation: The street orientation.</span>
+<span class="sd">        municipality: The city.</span>
+<span class="sd">        province: The province (sometime known as district or local region).</span>
+<span class="sd">        postal_code: The street postal code.</span>
+<span class="sd">        general_delivery: Additional delivery information.</span>
+
+<span class="sd">    Example:</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">                address_parser = AddressParser()</span>
+<span class="sd">                parse_address = address_parser(&#39;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&#39;)</span>
+<span class="sd">                print(parse_address.street_number) #350</span>
+<span class="sd">                print(parse_address.postal_code) # G1L 1B6</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">Dict</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            address: A dictionary where the key is an address, and the value is a list of tuples where</span>
+<span class="sd">            the first elements are address components, and the second elements are the parsed address</span>
+<span class="sd">            value. Also, the second tuple&#39;s address value can either be the tag of the components</span>
+<span class="sd">            (e.g. StreetName) or a tuple (``x``, ``y``) where ``x`` is the tag and ``y`` is the</span>
+<span class="sd">            probability (e.g. 0.9981) of the model prediction.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">raw_address</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">address</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">address_parsed_components</span> <span class="o">=</span> <span class="n">address</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">raw_address</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">street_number</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">unit</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">street_name</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">orientation</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">municipality</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">province</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">postal_code</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">general_delivery</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_tagged_affectation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">address_parsed_components</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw_address</span>
+
+    <span class="k">def</span> <span class="nf">_resolve_tagged_affectation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tagged_address</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Private method to resolve the parsing of the tagged address.</span>
+<span class="sd">        :param tagged_address: The tagged address where the keys are the address component and the values are the</span>
+<span class="sd">        associated tag.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">address_component</span><span class="p">,</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tagged_address</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>  <span class="c1"># when tag is also the tag and the probability of the tag</span>
+                <span class="n">tag</span> <span class="o">=</span> <span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">tag</span> <span class="o">==</span> <span class="s2">&quot;StreetNumber&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">street_number</span> <span class="o">=</span> <span class="n">address_component</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">street_number</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                    <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">street_number</span><span class="p">,</span> <span class="n">address_component</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">tag</span> <span class="o">==</span> <span class="s2">&quot;Unit&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">unit</span> <span class="o">=</span> <span class="n">address_component</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">unit</span><span class="p">,</span> <span class="n">address_component</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">tag</span> <span class="o">==</span> <span class="s2">&quot;StreetName&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">street_name</span> <span class="o">=</span> <span class="n">address_component</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">street_name</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                    <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">street_name</span><span class="p">,</span> <span class="n">address_component</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">tag</span> <span class="o">==</span> <span class="s1">&#39;Orientation&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">orientation</span> <span class="o">=</span> <span class="n">address_component</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">orientation</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                    <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">orientation</span><span class="p">,</span> <span class="n">address_component</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">tag</span> <span class="o">==</span> <span class="s1">&#39;Municipality&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">municipality</span> <span class="o">=</span> <span class="n">address_component</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">municipality</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                    <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">municipality</span><span class="p">,</span> <span class="n">address_component</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">tag</span> <span class="o">==</span> <span class="s1">&#39;Province&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">province</span> <span class="o">=</span> <span class="n">address_component</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">province</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                    <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">province</span><span class="p">,</span> <span class="n">address_component</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">tag</span> <span class="o">==</span> <span class="s1">&#39;PostalCode&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">postal_code</span> <span class="o">=</span> <span class="n">address_component</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">postal_code</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                    <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">postal_code</span><span class="p">,</span> <span class="n">address_component</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">tag</span> <span class="o">==</span> <span class="s1">&#39;GeneralDelivery&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">general_delivery</span> <span class="o">=</span> <span class="n">address_component</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">general_delivery</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                    <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">general_delivery</span><span class="p">,</span> <span class="n">address_component</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">_get_attr_repr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;=&#39;</span> <span class="o">+</span> <span class="nb">repr</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
+        <span class="k">return</span> <span class="s1">&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_get_attr_repr</span><span class="p">(</span><span class="s1">&#39;street_number&#39;</span><span class="p">),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_get_attr_repr</span><span class="p">(</span><span class="s1">&#39;unit&#39;</span><span class="p">),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_get_attr_repr</span><span class="p">(</span><span class="s1">&#39;street_name&#39;</span><span class="p">),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_get_attr_repr</span><span class="p">(</span><span class="s1">&#39;orientation&#39;</span><span class="p">),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_get_attr_repr</span><span class="p">(</span><span class="s1">&#39;municipality&#39;</span><span class="p">),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_get_attr_repr</span><span class="p">(</span><span class="s1">&#39;province&#39;</span><span class="p">),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_get_attr_repr</span><span class="p">(</span><span class="s1">&#39;postal_code&#39;</span><span class="p">),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_get_attr_repr</span><span class="p">(</span><span class="s1">&#39;general_delivery&#39;</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="n">joined_values</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span> <span class="k">if</span> <span class="n">v</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s1">&#39;&lt;&#39;</span> <span class="o">+</span> <span class="n">joined_values</span> <span class="o">+</span> <span class="s1">&#39;&gt;&#39;</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020-2020, Marouane Yassine &amp; David Beauchemin
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

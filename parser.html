@@ -1,0 +1,468 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Parser &mdash; deepparse 0.1.2 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Here is deepparse" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html">
+          
+
+          
+            
+            <img src="_static/logo.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Parser</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#pre-trained-complete-model">Pre-trained complete model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#memory-usage-and-time-performance">Memory Usage and Time Performance</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">deepparse</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Parser</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/parser.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="parser">
+<h1>Parser<a class="headerlink" href="#parser" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="pre-trained-complete-model">
+<h2>Pre-trained complete model<a class="headerlink" href="#pre-trained-complete-model" title="Permalink to this headline">¶</a></h2>
+<p>This is the complete pre-trained address parser model. This model allows using the pre-trained weights to predict the
+tags of any address.</p>
+<p>We offer, for now, only two pre-trained models, FastText and BPEmb. The first one relies on
+<a class="reference external" href="https://fasttext.cc/">fastText</a> French pre-trained embeddings to parse the address and the second use
+the <a class="reference external" href="https://nlp.h-its.org/bpemb/">byte-pair multilingual subword</a> pre-trained embeddings. In both cases,
+the architecture is similar, and performances are comparable; our results are available in this
+<a class="reference external" href="https://arxiv.org/abs/2006.16152">article</a>.</p>
+<div class="section" id="memory-usage-and-time-performance">
+<h3>Memory Usage and Time Performance<a class="headerlink" href="#memory-usage-and-time-performance" title="Permalink to this headline">¶</a></h3>
+<p>We have conducted an experiment, and we report the results in the next two tables. In each table, we report the RAM usage,
+and in the first table, we also report the GPU memory usage. Also, for both table, we report the mean-time of execution
+that was obtained by processing ~183,000 address using different batch size (2^0, …, 2^9)
+(i.e. <span class="math notranslate nohighlight">\(\frac{\text{Total time to process all addresses}}{~183,000} = \text{time per address}\)</span>).</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head"><p>Memory usage GPU (GB)</p></th>
+<th class="head"><p>Memory usage RAM (GB)</p></th>
+<th class="head"><p>Mean time of execution (batch of 1) (s)</p></th>
+<th class="head"><p>Mean time of execution (batch of more than 1) (s)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>fastText</p></td>
+<td><p>~0.885</p></td>
+<td><p>~9</p></td>
+<td><p>~0.0037</p></td>
+<td><p>~0.0007</p></td>
+</tr>
+<tr class="row-odd"><td><p>BPEmb</p></td>
+<td><p>~0.885</p></td>
+<td><p>~2</p></td>
+<td><p>~0.0097</p></td>
+<td><p>~0.0045</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head"><p>Memory usage RAM (GB)</p></th>
+<th class="head"><p>Mean time of execution (batch of 1) (s)</p></th>
+<th class="head"><p>Mean time of execution (batch of more than 1) (s)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>fastText</p></td>
+<td><p>~9</p></td>
+<td><p>~0.0216</p></td>
+<td><p>~0.0032</p></td>
+</tr>
+<tr class="row-odd"><td><p>BPEmb</p></td>
+<td><p>~2</p></td>
+<td><p>~0.0309</p></td>
+<td><p>~0.0075</p></td>
+</tr>
+</tbody>
+</table>
+<p>The two tables highlight that the batch size (number of address in the list to be parsed) influence the processing time.
+Thus, the more there is address, the faster processing each address can be. However, note that at some point, this
+‘improvement’ of performance decrease. We found that fastText and BPEmb obtain their best performance using a batch
+size of 256, beyond that performance decrease. For example, using the fastText model, our test has shown that parsing a
+single address (batch of 1 element) takes around 0.003 seconds. This time can be reduced to 0.00033 seconds per
+address when using a batch of 256, but using 512 take 0.0035 seconds.</p>
+<dl class="py class">
+<dt id="deepparse.parser.AddressParser">
+<em class="property">class </em><code class="sig-prename descclassname">deepparse.parser.</code><code class="sig-name descname">AddressParser</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span> <span class="o">=</span> <span class="default_value">'best'</span></em>, <em class="sig-param"><span class="n">device</span><span class="p">:</span> <span class="n">Union<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a><span class="p">, </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">, </span>torch.device<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">0</span></em>, <em class="sig-param"><span class="n">rounding</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a></span> <span class="o">=</span> <span class="default_value">4</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deepparse/parser/address_parser.html#AddressParser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepparse.parser.AddressParser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Address parser to parse an address or a list of address using one of the seq2seq pre-trained
+networks either with fastText or BPEmb.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – <p>The network name to use, can be either:</p>
+<ul>
+<li><p>fasttext (need ~9 GO of RAM to be used);</p></li>
+<li><p>bpemb (need ~2 GO of RAM to be used);</p></li>
+<li><p>lightest (less RAM usage) (equivalent to bpemb);</p></li>
+<li><p>fastest (quicker to process one address) (equivalent to fasttext);</p></li>
+<li><p>best (best accuracy performance) (equivalent to bpemb).</p></li>
+</ul>
+<p>The default value is ‘best’ for the most accurate model.</p>
+</p></li>
+<li><p><strong>device</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>torch.device</em><em>]</em>) – <p>The device to use can be either:</p>
+<ul>
+<li><p>a <code class="docutils literal notranslate"><span class="pre">GPU</span></code> index in int format (e.g. <code class="docutils literal notranslate"><span class="pre">0</span></code>);</p></li>
+<li><p>a complete device name in a string format (e.g. <code class="docutils literal notranslate"><span class="pre">'cuda:0'</span></code>);</p></li>
+<li><p>a <a class="reference external" href="https://pytorch.org/docs/master/tensor_attributes.html#torch.torch.device" title="(in PyTorch vmaster (1.8.0a0+3292b9e ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">device</span></code></a> object;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'cpu'</span></code> for a  <code class="docutils literal notranslate"><span class="pre">CPU</span></code> use.</p></li>
+</ul>
+<p>The default value is GPU with the index <code class="docutils literal notranslate"><span class="pre">0</span></code> if it exist, otherwise the value is <code class="docutils literal notranslate"><span class="pre">CPU</span></code>.</p>
+</p></li>
+<li><p><strong>rounding</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – The rounding to use when asking the probability of the tags. The default value is 4 digits.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For both the networks, we will download the pre-trained weights and embeddings in the <code class="docutils literal notranslate"><span class="pre">.cache</span></code> directory
+for the root user. Also, one can download all the dependencies of our pre-trained model using the
+<cite>deepparse.download</cite> module (e.g. python -m deepparse.download fasttext) before sending it to a node without
+access to Internet.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Also note that the first time the fastText model is instantiated on a computer, we download the fastText
+pre-trained embeddings of 6.8 GO, and this process can be quite long (a couple of minutes).</p>
+</div>
+<p class="rubric">Example</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="c1">#on gpu device 0</span>
+<span class="n">parse_address</span> <span class="o">=</span> <span class="n">address_parser</span><span class="p">(</span><span class="s1">&#39;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&#39;</span><span class="p">)</span>
+
+<span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s1">&#39;fasttext&#39;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cpu&#39;</span><span class="p">)</span> <span class="c1"># fasttext model on cpu</span>
+<span class="n">parse_address</span> <span class="o">=</span> <span class="n">address_parser</span><span class="p">(</span><span class="s1">&#39;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt id="deepparse.parser.AddressParser.__call__">
+<code class="sig-name descname">__call__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">addresses_to_parse</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>List<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span><span class="p">, </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">with_prob</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">False</span></em><span class="sig-paren">)</span> &#x2192; Union<span class="p">[</span>deepparse.parser.parsed_address.ParsedAddress<span class="p">, </span>List<span class="p">[</span>deepparse.parser.parsed_address.ParsedAddress<span class="p">]</span><span class="p">]</span><a class="reference internal" href="_modules/deepparse/parser/address_parser.html#AddressParser.__call__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepparse.parser.AddressParser.__call__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Callable method to parse the components of an address or a list of address.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>addresses_to_parse</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) – The addresses to be parse, can be either a single address
+(when using str) or a list of address. When using a list of addresses, the addresses are processed in
+batch, allowing a faster process. For example, using fastText model, a single address takes around
+0.003 seconds to be parsed using a batch of 1 (1 element at the time is processed).
+This time can be reduced to 0.00035 seconds per address when using a batch of 128
+(128 elements at the time are processed).</p></li>
+<li><p><strong>with_prob</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If true, return the probability of all the tags with the specified
+rounding.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Either a <code class="xref py py-class docutils literal notranslate"><span class="pre">ParsedAddress</span></code> or a list of
+<code class="xref py py-class docutils literal notranslate"><span class="pre">ParsedAddress</span></code> when given more than one address.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="c1">#on gpu device 0</span>
+<span class="n">parse_address</span> <span class="o">=</span> <span class="n">address_parser</span><span class="p">(</span><span class="s1">&#39;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&#39;</span><span class="p">)</span>
+<span class="n">parse_address</span> <span class="o">=</span> <span class="n">address_parser</span><span class="p">(</span><span class="s1">&#39;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&#39;</span><span class="p">,</span> <span class="n">with_prob</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="deepparse.parser.ParsedAddress">
+<em class="property">class </em><code class="sig-prename descclassname">deepparse.parser.</code><code class="sig-name descname">ParsedAddress</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">address</span><span class="p">:</span> <span class="n">Dict</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deepparse/parser/parsed_address.html#ParsedAddress"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepparse.parser.ParsedAddress" title="Permalink to this definition">¶</a></dt>
+<dd><p>A parsed address as commonly known returned by an address parser.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Since an address component can be composed of multiple elements (e.g. Wolfe street), when the probability
+values are asked of the address parser, the address components don’t keep it. It’s only available through the
+<code class="docutils literal notranslate"><span class="pre">address_parsed_components</span></code> attribute.</p>
+</div>
+<dl class="py attribute">
+<dt id="deepparse.parser.ParsedAddress.raw_address">
+<code class="sig-name descname">raw_address</code><a class="headerlink" href="#deepparse.parser.ParsedAddress.raw_address" title="Permalink to this definition">¶</a></dt>
+<dd><p>The raw address (not parsed).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="deepparse.parser.ParsedAddress.address_parsed_components">
+<code class="sig-name descname">address_parsed_components</code><a class="headerlink" href="#deepparse.parser.ParsedAddress.address_parsed_components" title="Permalink to this definition">¶</a></dt>
+<dd><p>The parsed address in a list of tuples where the first elements
+are the address components and the second elements are the tags.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="deepparse.parser.ParsedAddress.street_number">
+<code class="sig-name descname">street_number</code><a class="headerlink" href="#deepparse.parser.ParsedAddress.street_number" title="Permalink to this definition">¶</a></dt>
+<dd><p>The street number.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="deepparse.parser.ParsedAddress.unit">
+<code class="sig-name descname">unit</code><a class="headerlink" href="#deepparse.parser.ParsedAddress.unit" title="Permalink to this definition">¶</a></dt>
+<dd><p>The street unit component.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="deepparse.parser.ParsedAddress.street_name">
+<code class="sig-name descname">street_name</code><a class="headerlink" href="#deepparse.parser.ParsedAddress.street_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The street name.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="deepparse.parser.ParsedAddress.orientation">
+<code class="sig-name descname">orientation</code><a class="headerlink" href="#deepparse.parser.ParsedAddress.orientation" title="Permalink to this definition">¶</a></dt>
+<dd><p>The street orientation.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="deepparse.parser.ParsedAddress.municipality">
+<code class="sig-name descname">municipality</code><a class="headerlink" href="#deepparse.parser.ParsedAddress.municipality" title="Permalink to this definition">¶</a></dt>
+<dd><p>The city.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="deepparse.parser.ParsedAddress.province">
+<code class="sig-name descname">province</code><a class="headerlink" href="#deepparse.parser.ParsedAddress.province" title="Permalink to this definition">¶</a></dt>
+<dd><p>The province (sometime known as district or local region).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="deepparse.parser.ParsedAddress.postal_code">
+<code class="sig-name descname">postal_code</code><a class="headerlink" href="#deepparse.parser.ParsedAddress.postal_code" title="Permalink to this definition">¶</a></dt>
+<dd><p>The street postal code.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="deepparse.parser.ParsedAddress.general_delivery">
+<code class="sig-name descname">general_delivery</code><a class="headerlink" href="#deepparse.parser.ParsedAddress.general_delivery" title="Permalink to this definition">¶</a></dt>
+<dd><p>Additional delivery information.</p>
+</dd></dl>
+
+<p class="rubric">Example</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">()</span>
+<span class="n">parse_address</span> <span class="o">=</span> <span class="n">address_parser</span><span class="p">(</span><span class="s1">&#39;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">parse_address</span><span class="o">.</span><span class="n">street_number</span><span class="p">)</span> <span class="c1">#350</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">parse_address</span><span class="o">.</span><span class="n">postal_code</span><span class="p">)</span> <span class="c1"># G1L 1B6</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Here is deepparse" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020-2020, Marouane Yassine &amp; David Beauchemin
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

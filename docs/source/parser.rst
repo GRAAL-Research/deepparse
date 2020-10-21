@@ -24,7 +24,11 @@ Memory Usage and Time Performance
 We have conducted an experiment, and we report the results in the next two tables. In each table, we report the RAM usage,
 and in the first table, we also report the GPU memory usage. Also, for both table, we report the mean-time of execution
 that was obtained by processing ~183,000 address using different batch size (2^0, ..., 2^9)
-(i.e. :math:`\frac{\text{Total time to process all addresses}}{~183,000} = \text{time per address}`).
+(i.e. :math:`\frac{\text{Total time to process all addresses}}{~183,000} = \text{time per address}`). In addition, we
+proposed a lighter version (fastText-light) of our fastText model using
+`Magnitude embeddings mapping <https://github.com/plasticityai/magnitude>`_. Fot this lighter model, in average results
+are a little bit lower on trained country (around ~2%) but are similar on zero-shot country
+(see our `article <https://arxiv.org/abs/2006.16152>`_ for more details).
 
 .. list-table::
         :header-rows: 1
@@ -41,11 +45,6 @@ that was obtained by processing ~183,000 address using different batch size (2^0
             - ~0.0007
         *   - fastText-light
             - ~0.885
-            - ~2
-            - ~0.0062
-            - ~0.0029
-        *   - fastText-light-gpu
-            - ~1
             - ~2
             - ~0.0062
             - ~0.0029

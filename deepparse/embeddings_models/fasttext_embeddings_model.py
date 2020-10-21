@@ -12,6 +12,8 @@ class FastTextEmbeddingsModel(EmbeddingsModel):
 
     Args:
        embeddings_path (str): Path to the bin embeddings vector (.bin).
+       magnitude (bool): Either or not to use a magnitude mapping (<https://github.com/plasticityai/magnitude>`_),
+            which reduce memory footprint.
     """
 
     def __init__(self, embeddings_path: str, magnitude: bool) -> None:

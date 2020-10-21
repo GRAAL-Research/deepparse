@@ -10,4 +10,7 @@ class MagnitudeWrapper(Magnitude):
         super().__init__(path)
 
     def __getitem__(self, item):
+        """
+        Overload the getitem method since magnitude model use query instead of [] like fastText "normal" model.
+        """
         return self.query(item)

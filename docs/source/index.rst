@@ -3,11 +3,9 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-<<<<<<< HEAD
-:github_url: https://github.com/MAYAS3/deepparse
-=======
+
 :github_url: https://github.com/GRAAL-Research/deepparse
->>>>>>> 6e5d1d47b1a8f85fbc94a3c325a5178d15b4b489
+
 
 .. meta::
   :description: deepparse is a state-of-the-art library for parsing multinational street addresses using deep learning
@@ -18,11 +16,7 @@
 Here is deepparse
 =================
 
-<<<<<<< HEAD
-DeepParse is a state-of-the-art library for parsing multinational street addresses using deep learning.
-=======
 Deepparse is a state-of-the-art library for parsing multinational street addresses using deep learning.
->>>>>>> 6e5d1d47b1a8f85fbc94a3c325a5178d15b4b489
 
 Use deepparse to:
 
@@ -30,11 +24,8 @@ Use deepparse to:
 
 Read the documentation at `deepparse.org <https://deepparse.org>`_.
 
-<<<<<<< HEAD
-DeepParse is compatible with the **latest version of PyTorch** and  **Python >= 3.6**.
-=======
+
 Deepparse is compatible with the **latest version of PyTorch** and  **Python >= 3.6**.
->>>>>>> 6e5d1d47b1a8f85fbc94a3c325a5178d15b4b489
 
 Cite
 ----
@@ -54,11 +45,7 @@ and this one for the package;
 
    @misc{deepparse,
        author = {Marouane Yassine and David Beauchemin},
-<<<<<<< HEAD
-       title  = {{DeepParse: A state-of-the-art multinational addresses parser}},
-=======
-       title  = {{deepparse: A state-of-the-art deep learning multinational addresses parser}},
->>>>>>> 6e5d1d47b1a8f85fbc94a3c325a5178d15b4b489
+       title  = {{Deepparse: A state-of-the-art deep learning multinational addresses parser}},
        year   = {2020},
        note   = {\url{https://deepparse.org}}
    }
@@ -97,21 +84,14 @@ Before installing deepparse, you must have the latest version of `PyTorch <https
 
   .. code-block:: sh
 
-<<<<<<< HEAD
-    pip install -U git+https://github.com/MAYAS3/deepparse.git@dev
-=======
     pip install -U git+https://github.com/GRAAL-Research/deepparse.git@dev
->>>>>>> 6e5d1d47b1a8f85fbc94a3c325a5178d15b4b489
+
 
 
 License
 =======
+Deepparse is LGPLv3 licensed, as found in the `LICENSE file <https://github.com/GRAAL-Research/deepparse/blob/master/LICENSE>`_.
 
-<<<<<<< HEAD
-deepparse is LGPLv3 licensed, as found in the `LICENSE file <https://github.com/MAYAS3/deepparse/blob/master/LICENSE>`_.
-=======
-deepparse is LGPLv3 licensed, as found in the `LICENSE file <https://github.com/GRAAL-Research/deepparse/blob/master/LICENSE>`_.
->>>>>>> 6e5d1d47b1a8f85fbc94a3c325a5178d15b4b489
 
 API Reference
 =============

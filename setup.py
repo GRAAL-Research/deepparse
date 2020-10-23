@@ -69,7 +69,9 @@ def main():
         python_requires='>=3.6.1',
         description='A library for parsing multinational street addresses using deep learning.',
         long_description=readme,
-        long_description_content_type='text/markdown'
+        long_description_content_type='text/markdown',
+        extras_require={"pymagnitude": "pymagnitude>=0.1.143"}
+
     )
 
 

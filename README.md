@@ -75,6 +75,12 @@ pip install deepparse
 pip install -U git+https://github.com/GRAAL-Research/deepparse.git@dev
 ```
 
+------------------
+
+## Contributing to Deepparse
+
+We welcome user input, whether it is regarding bugs found in the library or feature propositions ! Make sure to have a look at our [contributing guidelines](https://github.com/GRAAL-Research/deepparse/blob/master/CONTRIBUTING.md) for more details on this matter.
+
 ## License
 
 deepparse is LGPLv3 licensed, as found in the [LICENSE file](https://github.com/GRAAL-Research/deepparse/blob/master/LICENSE).

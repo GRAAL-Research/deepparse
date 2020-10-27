@@ -4,6 +4,8 @@ from typing import List, Union
 
 import torch
 from numpy.core.multiarray import ndarray
+from poutyne.framework import Experiment
+from torch.optim import SGD
 
 from .parsed_address import ParsedAddress
 from .. import load_tuple_to_device
@@ -12,6 +14,8 @@ from ..converter.data_padding import bpemb_data_padding
 from ..embeddings_models import BPEmbEmbeddingsModel
 from ..embeddings_models import FastTextEmbeddingsModel
 from ..fasttext_tools import download_fasttext_embeddings
+from ..metrics.accuracy import accuracy
+from ..metrics.nll_loss import nll_loss_function
 from ..network.pre_trained_bpemb_seq2seq import PreTrainedBPEmbSeq2SeqModel
 from ..network.pre_trained_fasttext_seq2seq import PreTrainedFastTextSeq2SeqModel
 from ..vectorizer import FastTextVectorizer, BPEmbVectorizer
@@ -158,6 +162,31 @@ class AddressParser:
                                                                              addresses_to_parse, with_prob)
 
         return tagged_addresses_components
+
+    def retrain(self, train_generator, valid_generator, epochs, learning_rate=0.1, callbacks=[], seed=42,
+                logging_path="./chekpoints"):
+        optimizer = SGD(self.pre_trained_model.parameters(), learning_rate)
+
+        loss_fn = nll_loss_function
+        accuracy_fn = accuracy
+
+        exp = Experiment(logging_path, self.pre_trained_model, device=self.device, optimizer=optimizer,
+                         loss_function=loss_fn,
+                         batch_metrics=[accuracy_fn])
+
+        train_res = exp.train(train_generator, valid_generator=valid_generator, epochs=epochs, seed=seed,
+                              callbacks=callbacks)
+        return train_res
+
+    def test(self, test_generator, callbacks=[], seed=42, logging_path="./chekpoints"):
+        loss_fn = nll_loss_function
+        accuracy_fn = accuracy
+
+        exp = Experiment(logging_path, self.pre_trained_model, device=self.device, loss_function=loss_fn,
+                         batch_metrics=[accuracy_fn])
+
+        test_res = exp.test(test_generator, seed=seed, callbacks=callbacks)
+        return test_res
 
     def _fill_tagged_addresses_components(self, tags_predictions: ndarray, tags_predictions_prob: ndarray,
                                           addresses_to_parse: List[str],

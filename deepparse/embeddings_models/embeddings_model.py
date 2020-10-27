@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import List, Union
 
 from numpy.core.multiarray import ndarray
 
@@ -12,7 +13,7 @@ class EmbeddingsModel(ABC):
         self.model = None
 
     @abstractmethod
-    def __call__(self, word: str) -> ndarray:
+    def __call__(self, word: Union[str, List[str]]) -> Union[ndarray, List[ndarray]]:
         pass
 
     @property

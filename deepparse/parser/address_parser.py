@@ -9,11 +9,12 @@ from .parsed_address import ParsedAddress
 from .. import load_tuple_to_device, download_fasttext_embeddings, download_fasttext_magnitude_embeddings
 from ..converter import TagsConverter, data_padding
 from ..converter.data_padding import bpemb_data_padding
-from ..embeddings_models import BPEmbEmbeddingsModel
+from ..embeddings_models import BPEmbEmbeddingsModel, MagnitudeEmbeddingsModel
 from ..embeddings_models import FastTextEmbeddingsModel
 from ..network.pre_trained_bpemb_seq2seq import PreTrainedBPEmbSeq2SeqModel
 from ..network.pre_trained_fasttext_seq2seq import PreTrainedFastTextSeq2SeqModel
 from ..vectorizer import FastTextVectorizer, BPEmbVectorizer
+from ..vectorizer.magnitude_vectorizer import MagnitudeVectorizer
 
 _pre_trained_tags_to_idx = {
     "StreetNumber": 0,
@@ -91,13 +92,12 @@ class AddressParser:
 
             if model == "fasttext-light":
                 file_name = download_fasttext_magnitude_embeddings(saving_dir=path)
-                magnitude = True
+                embeddings_model = MagnitudeEmbeddingsModel(file_name)
+                self.vectorizer = MagnitudeVectorizer(embeddings_model=embeddings_model)
             else:
                 file_name = download_fasttext_embeddings("fr", saving_dir=path)
-                magnitude = False
-            embeddings_model = FastTextEmbeddingsModel(file_name, magnitude=magnitude)
-
-            self.vectorizer = FastTextVectorizer(embeddings_model=embeddings_model)
+                embeddings_model = FastTextEmbeddingsModel(file_name)
+                self.vectorizer = FastTextVectorizer(embeddings_model=embeddings_model)
 
             self.data_converter = data_padding
 

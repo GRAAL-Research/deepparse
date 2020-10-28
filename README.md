@@ -31,7 +31,7 @@ and this one for the package;
 ```
 @misc{deepparse,
     author = {Marouane Yassine and David Beauchemin},
-    title  = {{deepparse: A state-of-the-art deep learning multinational addresses parser}},
+    title  = {{Deepparse: A state-of-the-art deep learning multinational addresses parser}},
     year   = {2020},
     note   = {\url{https://deepparse.org}}
 }
@@ -74,6 +74,12 @@ pip install deepparse
 ```sh
 pip install -U git+https://github.com/GRAAL-Research/deepparse.git@dev
 ```
+
+------------------
+
+## Contributing to Deepparse
+
+We welcome user input, whether it is regarding bugs found in the library or feature propositions ! Make sure to have a look at our [contributing guidelines](https://github.com/GRAAL-Research/deepparse/blob/master/CONTRIBUTING.md) for more details on this matter.
 
 ## License
 

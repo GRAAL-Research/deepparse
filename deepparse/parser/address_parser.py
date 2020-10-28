@@ -64,6 +64,18 @@ class AddressParser:
         Also note that the first time the fastText model is instantiated on a computer, we download the fastText
         pre-trained embeddings of 6.8 GO, and this process can be quite long (a couple of minutes).
 
+    Note:
+        The predictions tags are the following
+
+            - "StreetNumber": for the street number
+            - "StreetName": for the name of the street
+            - "Unit": for the unit (such as apartment)
+            - "Municipality": for the municipality
+            - "Province": for the province or local region
+            - "PostalCode": for the postal code
+            - "Orientation": for the street orientation (e.g. west, east)
+            - "GeneralDelivery": for other delivery information
+
     Example:
 
         .. code-block:: python

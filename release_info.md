@@ -12,3 +12,5 @@ Fixed authors in setup
 
 ## dev
 Added "contributing to"
+Added fix for comma problem (#56)
+added content in Address Parser doc for tags definition 

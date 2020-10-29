@@ -58,3 +58,62 @@ def bpemb_data_padding(batch: List[Tuple]) -> Tuple:
             decomposition_length.extend([1] * (max_sequence_length - len(decomposition_length)))
 
     return padded_sequences_vectors, list(decomp_len), lengths
+
+
+def data_padding_teacher_forcing(batch: List) -> Tuple:
+    """
+    Function that adds padding to the sequences so all can have the same length as the longest one.
+
+    Args:
+        batch (List): The vectorized batch data.
+
+    Returns:
+        A tuple (``x`` , ``y``). The element ``x``  is a tensor of padded word vectors and ``y``  is their respective
+        lengths of the sequences.
+    """
+
+    sequences_vectors, target_vectors, lengths = zip(
+        *[(torch.FloatTensor(seq_vectors), torch.tensor(target_vector), len(seq_vectors))
+          for seq_vectors, target_vector in
+          sorted(batch, key=lambda x: len(x[0]), reverse=True)])
+
+    lengths = torch.tensor(lengths)
+
+    padded_sequences_vectors = pad_sequence(sequences_vectors, batch_first=True)
+    padded_target_vectors = pad_sequence(target_vectors, batch_first=True)
+
+    return (padded_sequences_vectors, lengths, padded_target_vectors), padded_target_vectors
+
+
+def bpemb_data_padding_teacher_forcing(batch: List[Tuple]) -> Tuple:
+    """
+    Function that add padding to the sequences and to the decomposition lengths so all can have the same length as
+    the longest one.
+
+    Args:
+        batch (list[tuple]): The list of vectorize tupled batch data where the first element is the address embeddings
+            and the second is the word decomposition lengths.
+
+    Returns:
+        A tuple (``x`` , ``y`` , ``z``). The element ``x``  is a tensor of padded word vectors, ``y``  is the padded
+        decomposition lengths, and ``z``  is the original lengths of the sequences before padding.
+    """
+
+    sequences_vectors, decomp_len, target_vector, lengths = zip(
+        *[(torch.tensor(vectors), word_decomposition_len, torch.tensor(target_vector), len(vectors))
+          for (vectors, word_decomposition_len), target_vector in sorted(batch, key=lambda x: len(x[0][1]), reverse=True)])
+
+    for (vectors, word_decomposition_len), target_vector in sorted(batch, key=lambda x: len(x[0][1]), reverse=True):
+        torch.tensor(vectors), word_decomposition_len, torch.tensor(target_vector), len(vectors)
+
+    lengths = torch.tensor(lengths)
+
+    padded_sequences_vectors = pad_sequence(sequences_vectors, batch_first=True)
+
+    # pad decomposition length
+    max_sequence_length = lengths.max().item()
+    for decomposition_length in decomp_len:
+        if len(decomposition_length) < max_sequence_length:
+            decomposition_length.extend([1] * (max_sequence_length - len(decomposition_length)))
+
+    return padded_sequences_vectors, list(decomp_len), lengths

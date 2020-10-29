@@ -21,6 +21,7 @@ from ..metrics.nll_loss import nll_loss_function
 from ..network.pre_trained_bpemb_seq2seq import PreTrainedBPEmbSeq2SeqModel
 from ..network.pre_trained_fasttext_seq2seq import PreTrainedFastTextSeq2SeqModel
 from ..vectorizer import FastTextVectorizer, BPEmbVectorizer
+from ..vectorizer.train_vectorizer import TrainVectorizer
 
 _pre_trained_tags_to_idx = {
     "StreetNumber": 0,
@@ -179,7 +180,8 @@ class AddressParser:
 
     def retrain(self, dataset_container, train_ratio, valid_ratio, epochs, learning_rate=0.1, callbacks=[], seed=42,
                 logging_path="./chekpoints"):
-        to_tensor = ToTensor(self.vectorizer, self.device)
+        train_vectorizer = TrainVectorizer(self.vectorizer, self.tags_converter)
+        to_tensor = ToTensor(train_vectorizer, self.device)
 
         tf_transform = to_tensor.get_teacher_forcing_from_batch()
         or_transform = to_tensor.get_output_reuse_from_batch()
@@ -190,7 +192,7 @@ class AddressParser:
         for pair in dataset_container[0:int(size * train_ratio)]:
             train_dataset.append((pair[0], pair[1]))
 
-        train_generator = DataLoader(train_dataset, collate_fn=tf_transform)
+        train_generator = DataLoader(train_dataset, collate_fn=tf_transform, batch_size=2)
 
         valid_dataset = []
         for pair in dataset_container[int(size * train_ratio):int(size * train_ratio) + int(

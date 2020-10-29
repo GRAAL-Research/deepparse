@@ -73,8 +73,19 @@ class PreTrainedSeq2SeqModel(ABC, nn.Module):
         decoder_input = torch.zeros(1, batch_size, 1).to(self.device).new_full((1, batch_size, 1), -1)
         return decoder_input, decoder_hidden
 
-    def _decoder_steps(self, decoder_input: torch.Tensor, decoder_hidden: torch.Tensor, max_length: int,
-                       batch_size: int) -> torch.Tensor:
+    def _decoder_steps(self, decoder_input: torch.Tensor, decoder_hidden: torch.Tensor, target: torch.Tensor,
+                       max_length: int, batch_size: int) -> torch.Tensor:
+        """
+        Step of the encoder.
+
+        Args:
+            #todo update doc
+
+        Return:
+            A tuple (``x``, ``y``) where ``x`` is the decoder input (a zeros tensor) and ``y`` is the decoder
+            hidden states.
+        """
+
         # The empty prediction sequence
         # +1 for the EOS
         # 9 for the output size (9 tokens)
@@ -90,11 +101,20 @@ class PreTrainedSeq2SeqModel(ABC, nn.Module):
         _, decoder_input = decoder_output.topk(1)
 
         # we loop the same steps for the rest of the sequence
-        for idx in range(max_length):
-            decoder_output, decoder_hidden = self.decoder(decoder_input.view(1, batch_size, 1), decoder_hidden)
 
-            prediction_sequence[idx + 1] = decoder_output
+        if target is not None:
+            # force the real target value instead of the predicted one to help learning
+            for idx in range(max_length):
+                decoder_input = target[idx].view(1, batch_size, 1)
+                decoder_output, decoder_hidden = self.decoder(decoder_input, decoder_hidden)
 
-            _, decoder_input = decoder_output.topk(1)
+                prediction_sequence[idx + 1] = decoder_output
+        else:
+            for idx in range(max_length):
+                decoder_output, decoder_hidden = self.decoder(decoder_input.view(1, batch_size, 1), decoder_hidden)
+
+                prediction_sequence[idx + 1] = decoder_output
+
+                _, decoder_input = decoder_output.topk(1)
 
         return prediction_sequence  # the sequence is now fully parse

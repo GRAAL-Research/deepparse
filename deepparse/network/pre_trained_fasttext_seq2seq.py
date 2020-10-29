@@ -17,8 +17,10 @@ class PreTrainedFastTextSeq2SeqModel(PreTrainedSeq2SeqModel):
 
         self._load_pre_trained_weights("fasttext")
 
-    def forward(self, to_predict: torch.Tensor, lengths_tensor: torch.Tensor) -> torch.Tensor:
+    def forward(self, to_predict: torch.Tensor, lengths_tensor: torch.Tensor,
+                target: torch.Tensor = None) -> torch.Tensor:
         """
+            #todo update doc
             Callable method as per PyTorch forward method to get tags prediction over the components of
             an address.
 
@@ -34,6 +36,6 @@ class PreTrainedFastTextSeq2SeqModel(PreTrainedSeq2SeqModel):
         decoder_input, decoder_hidden = self._encoder_step(to_predict, lengths_tensor, batch_size)
 
         max_length = lengths_tensor[0].item()
-        decoder_predict = self._decoder_steps(decoder_input, decoder_hidden, max_length, batch_size)
+        decoder_predict = self._decoder_steps(decoder_input, decoder_hidden, target, max_length, batch_size)
 
         return decoder_predict

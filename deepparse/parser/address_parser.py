@@ -6,11 +6,13 @@ import torch
 from numpy.core.multiarray import ndarray
 from poutyne.framework import Experiment
 from torch.optim import SGD
+from torch.utils.data import DataLoader
 
 from .parsed_address import ParsedAddress
 from .. import load_tuple_to_device
 from ..converter import TagsConverter, data_padding
 from ..converter.data_padding import bpemb_data_padding
+from ..converter.tensor_converter import ToTensor
 from ..embeddings_models import BPEmbEmbeddingsModel
 from ..embeddings_models import FastTextEmbeddingsModel
 from ..fasttext_tools import download_fasttext_embeddings
@@ -163,8 +165,28 @@ class AddressParser:
 
         return tagged_addresses_components
 
-    def retrain(self, train_generator, valid_generator, epochs, learning_rate=0.1, callbacks=[], seed=42,
+    def retrain(self, dataset_container, train_ratio, valid_ratio, epochs, learning_rate=0.1, callbacks=[], seed=42,
                 logging_path="./chekpoints"):
+        to_tensor = ToTensor(self.vectorizer, self.device)
+
+        tf_transform = to_tensor.get_teacher_forcing_from_batch()
+        or_transform = to_tensor.get_output_reuse_from_batch()
+
+        size = len(dataset_container)
+
+        train_dataset = []
+        for pair in dataset_container[0:int(size * train_ratio)]:
+            train_dataset.append((pair[0], pair[1]))
+
+        train_generator = DataLoader(train_dataset, collate_fn=tf_transform)
+
+        valid_dataset = []
+        for pair in dataset_container[int(size * train_ratio):int(size * train_ratio) + int(
+                size * valid_ratio)]:
+            valid_dataset.append((pair[0], pair[1]))
+
+        valid_generator = DataLoader(valid_dataset, collate_fn=or_transform)
+
         optimizer = SGD(self.pre_trained_model.parameters(), learning_rate)
 
         loss_fn = nll_loss_function

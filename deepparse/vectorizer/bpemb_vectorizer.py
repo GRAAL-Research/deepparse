@@ -33,7 +33,6 @@ class BPEmbVectorizer(Vectorizer):
         return batch
 
     def _vectorize_sequence(self, address: str) -> Tuple[List, List]:
-        # todo passer en batch ici sinon le max_length se set pas comme il faut!
         """
         Method to vectorize the address.
 

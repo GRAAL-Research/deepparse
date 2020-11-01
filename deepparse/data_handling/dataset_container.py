@@ -1,8 +1,13 @@
-from torch.utils.data import Dataset
 from pickle import load
+
+from torch.utils.data import Dataset
 
 
 class DatasetContainer(Dataset):
+    """
+    # todo doc
+    """
+
     def __init__(self, data_path):
         self.data = load(open(data_path, 'rb'))
 

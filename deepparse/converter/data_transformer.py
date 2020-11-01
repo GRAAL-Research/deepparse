@@ -9,9 +9,10 @@ from deepparse.vectorizer import TrainVectorizer
 class DataTransform:
     """
     Data transformer to vectorize the data and prepare it for training.
+
     Args:
-        vectorizer (~deepparse.deepparse.train_vectorizer.TrainVectorizer): Vectorizer to vectorize the data 
-            (i.e. transform into word embedding and tag idx).
+        vectorizer (~deepparse.deepparse.train_vectorizer.TrainVectorizer): Vectorizer to vectorize the data
+         (i.e. transform into word embedding and tag idx).
         model_type (str): The model type.
     """
 

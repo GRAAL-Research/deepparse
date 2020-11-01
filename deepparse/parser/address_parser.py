@@ -1,6 +1,6 @@
 import os
 import re
-from typing import List, Union
+from typing import List, Union, Dict
 
 import torch
 from numpy.core.multiarray import ndarray
@@ -12,6 +12,7 @@ from .parsed_address import ParsedAddress
 from .. import load_tuple_to_device
 from ..converter import TagsConverter, fasttext_data_padding, DataTransform
 from ..converter.data_padding import bpemb_data_padding
+from ..data_handling import DatasetContainer
 from ..embeddings_models import BPEmbEmbeddingsModel
 from ..embeddings_models import FastTextEmbeddingsModel
 from ..fasttext_tools import download_fasttext_embeddings
@@ -176,10 +177,20 @@ class AddressParser:
 
         return tagged_addresses_components
 
-    def retrain(self, dataset_container, train_ratio, valid_ratio, batch_size, epochs, learning_rate=0.1, callbacks=[],
-                seed=42, logging_path="./chekpoints"):
+    def retrain(self,
+                dataset_container: DatasetContainer,
+                train_ratio: float,
+                valid_ratio: float,
+                batch_size: int,
+                epochs: int,
+                learning_rate: float = 0.1,
+                callbacks: Union[List, None] = None,
+                seed: int = 42,
+                logging_path: str = "./chekpoints") -> List[Dict]:
+        # pylint: disable=too-many-arguments
+        # pylint: disable=too-many-locals
         """
-        todo doc
+        # todo doc
         """
         train_vectorizer = TrainVectorizer(self.vectorizer, self.tags_converter)  # vectorize to provide also the target
         data_transform = DataTransform(train_vectorizer, self.model)  # use for transforming the data prior to training
@@ -190,12 +201,12 @@ class AddressParser:
         for pair in dataset_container[0:int(size * train_ratio)]:
             train_dataset.append((pair[0], pair[1]))
 
-        train_generator = DataLoader(train_dataset, collate_fn=data_transform.teacher_forcing_transform,
+        train_generator = DataLoader(train_dataset,
+                                     collate_fn=data_transform.teacher_forcing_transform,
                                      batch_size=batch_size)
 
         valid_dataset = []
-        for pair in dataset_container[int(size * train_ratio):int(size * train_ratio) + int(
-                size * valid_ratio)]:
+        for pair in dataset_container[int(size * train_ratio):int(size * train_ratio) + int(size * valid_ratio)]:
             valid_dataset.append((pair[0], pair[1]))
 
         valid_generator = DataLoader(valid_dataset, collate_fn=data_transform.output_transform)
@@ -205,21 +216,35 @@ class AddressParser:
         loss_fn = nll_loss_function
         accuracy_fn = accuracy
 
-        exp = Experiment(logging_path, self.pre_trained_model, device=self.device, optimizer=optimizer,
-                         loss_function=loss_fn, batch_metrics=[accuracy_fn])
+        exp = Experiment(logging_path,
+                         self.pre_trained_model,
+                         device=self.device,
+                         optimizer=optimizer,
+                         loss_function=loss_fn,
+                         batch_metrics=[accuracy_fn])
 
-        train_res = exp.train(train_generator, valid_generator=valid_generator, epochs=epochs, seed=seed,
+        train_res = exp.train(train_generator,
+                              valid_generator=valid_generator,
+                              epochs=epochs,
+                              seed=seed,
                               callbacks=callbacks)
         return train_res
 
-    def test(self, test_generator, callbacks=[], seed=42, logging_path="./chekpoints"):
+    def test(self,
+             test_generator,
+             callbacks: Union[List, None] = None,
+             seed: int = 42,
+             logging_path: str = "./chekpoints"):
         """
         todo doc
         """
         loss_fn = nll_loss_function
         accuracy_fn = accuracy
 
-        exp = Experiment(logging_path, self.pre_trained_model, device=self.device, loss_function=loss_fn,
+        exp = Experiment(logging_path,
+                         self.pre_trained_model,
+                         device=self.device,
+                         loss_function=loss_fn,
                          batch_metrics=[accuracy_fn])
 
         test_res = exp.test(test_generator, seed=seed, callbacks=callbacks)

@@ -23,7 +23,9 @@ class PreTrainedBPEmbSeq2SeqModel(PreTrainedSeq2SeqModel):
 
         self._load_pre_trained_weights("bpemb")
 
-    def forward(self, to_predict: torch.Tensor, decomposition_lengths: List,
+    def forward(self,
+                to_predict: torch.Tensor,
+                decomposition_lengths: List,
                 lengths_tensor: torch.Tensor,
                 target: torch.Tensor = None) -> torch.Tensor:
         """

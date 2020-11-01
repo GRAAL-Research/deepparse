@@ -17,7 +17,9 @@ class PreTrainedFastTextSeq2SeqModel(PreTrainedSeq2SeqModel):
 
         self._load_pre_trained_weights("fasttext")
 
-    def forward(self, to_predict: torch.Tensor, lengths_tensor: torch.Tensor,
+    def forward(self,
+                to_predict: torch.Tensor,
+                lengths_tensor: torch.Tensor,
                 target: torch.Tensor = None) -> torch.Tensor:
         """
         Callable method as per PyTorch forward method to get tags prediction over the components of

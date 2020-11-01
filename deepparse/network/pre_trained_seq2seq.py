@@ -76,6 +76,7 @@ class PreTrainedSeq2SeqModel(ABC, nn.Module):
 
     def _decoder_steps(self, decoder_input: torch.Tensor, decoder_hidden: torch.Tensor, target: torch.Tensor,
                        max_length: int, batch_size: int) -> torch.Tensor:
+        # pylint: disable=too-many-arguments
         """
         Step of the encoder.
 

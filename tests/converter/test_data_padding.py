@@ -64,7 +64,6 @@ class DataPaddingTest(TestCase):
 
         self.assertTrue(torch.all(lengths.eq(self.a_non_padded_subword_embedding_batch_lenght_list)))
 
-    
     def test_givenbatch_whenbpembpadding_thenshouldreturnrightdecomposition_lengths(self):
         _, decomposition_lengths, _ = self.bpemb_data_padding(self.a_non_padded_subword_embedding_batch)
 

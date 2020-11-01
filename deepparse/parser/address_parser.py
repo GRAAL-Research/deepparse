@@ -1,18 +1,20 @@
+import math
 import os
 import re
 from typing import List, Union, Dict
 
+import numpy as np
 import torch
 from numpy.core.multiarray import ndarray
 from poutyne.framework import Experiment
 from torch.optim import SGD
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, Subset
 
 from .parsed_address import ParsedAddress
 from .. import load_tuple_to_device
 from ..converter import TagsConverter, fasttext_data_padding, DataTransform
 from ..converter.data_padding import bpemb_data_padding
-from ..data_handling import DatasetContainer
+from ..dataset_container import DatasetContainerInterface
 from ..embeddings_models import BPEmbEmbeddingsModel
 from ..embeddings_models import FastTextEmbeddingsModel
 from ..fasttext_tools import download_fasttext_embeddings
@@ -178,11 +180,11 @@ class AddressParser:
         return tagged_addresses_components
 
     def retrain(self,
-                dataset_container: DatasetContainer,
+                dataset_container: DatasetContainerInterface,
                 train_ratio: float,
-                valid_ratio: float,
                 batch_size: int,
                 epochs: int,
+                num_workers: int = 1,
                 learning_rate: float = 0.1,
                 callbacks: Union[List, None] = None,
                 seed: int = 42,
@@ -190,26 +192,51 @@ class AddressParser:
         # pylint: disable=too-many-arguments
         # pylint: disable=too-many-locals
         """
-        # todo doc
+        Method to retrain our pre-trained model using a dataset with the same tags. We train using
+        `experiment <https://poutyne.org/experiment.html>`_ from `poutyne <https://poutyne.org/index.html>`_
+        framework. The experiment module allow us to save checkpoint ``ckpt`` (pickle format) and a log.tsv were
+        the best epochs can be found (the best epoch is use in test).
+
+        Args:
+            dataset_container (~deepparse.deepparse.dataset_container.dataset_container.DatasetContainerInterface): The
+                dataset container of the data to use.
+            train_ratio (float): The ratio to use of the dataset for the training. The rest of the data is use for valid
+                (e.g. a train ratio of 0.8 mean a 80-20 train-valid split).
+            batch_size (int): The size of the batch.
+            epochs (int): number of training epoch.
+            num_workers (int): Number of worker to use for the data loader (default is 1 worker).
+            learning_rate (float): The learning rate to use for training. One can also use
+                `learning rate callback <https://poutyne.org/callbacks.html#lr-schedulers>`_ to modify the learning
+                rate during training.
+            callbacks (Union[List, None]): List of callback to use during training.
+                See `poutyne <https://poutyne.org/callbacks.html#callback-class>`_ framework for information. By default
+                we set no callback.
+            seed (int): Seed to use (by default 42).
+            logging_path (str): The logging path for the checkpoints. By default the path is ``./chekpoints``.
+
+        Return:
+            A list of dictionary with the best epoch stats (see poutyne for example).
+
+        Note:
+            We use SGD optimizer, NLL loss and accuracy as in the `article <https://arxiv.org/abs/2006.16152>`_.
+            The data are shuffled.
+            We use teacher forcing during training (with a prob of 0.5).
+
+        Example:
+
+            .. code-block:: python
+
+                    address_parser = AddressParser(device=0) #on gpu device 0
+                    data_path = 'path_to_a_pickle_dataset.p'
+
+                    container = PickleDatasetContainer(data_path)
+
+                    address_parser.retrain(container, 0.8, epochs=1, batch_size=128)
+
         """
-        train_vectorizer = TrainVectorizer(self.vectorizer, self.tags_converter)  # vectorize to provide also the target
-        data_transform = DataTransform(train_vectorizer, self.model)  # use for transforming the data prior to training
-
-        size = len(dataset_container)
-
-        train_dataset = []
-        for pair in dataset_container[0:int(size * train_ratio)]:
-            train_dataset.append((pair[0], pair[1]))
-
-        train_generator = DataLoader(train_dataset,
-                                     collate_fn=data_transform.teacher_forcing_transform,
-                                     batch_size=batch_size)
-
-        valid_dataset = []
-        for pair in dataset_container[int(size * train_ratio):int(size * train_ratio) + int(size * valid_ratio)]:
-            valid_dataset.append((pair[0], pair[1]))
-
-        valid_generator = DataLoader(valid_dataset, collate_fn=data_transform.output_transform)
+        callbacks = [] if callbacks is None else callbacks
+        train_generator, valid_generator = self._create_training_data_generator(dataset_container, train_ratio,
+                                                                                batch_size, num_workers)
 
         optimizer = SGD(self.pre_trained_model.parameters(), learning_rate)
 
@@ -231,13 +258,55 @@ class AddressParser:
         return train_res
 
     def test(self,
-             test_generator,
+             test_dataset_container: DatasetContainerInterface,
+             batch_size: int,
+             num_workers: int = 1,
              callbacks: Union[List, None] = None,
              seed: int = 42,
-             logging_path: str = "./chekpoints"):
+             logging_path: str = "./chekpoints",
+             checkpoint: Union[str, int] = "best") -> Dict:
         """
-        todo doc
+        Method to test a retrained or a pre-trained model using a dataset with the same tags. We train using
+        `experiment <https://poutyne.org/experiment.html>`_ from `poutyne <https://poutyne.org/index.html>`_
+        framework. The experiment module allow us to save checkpoint ``ckpt`` (pickle format) and a log.tsv were
+        the best epochs can be found (the best epoch is use in test).
+
+        Args:
+            test_dataset_container (~deepparse.deepparse.dataset_container.dataset_container.DatasetContainerInterface): The
+                test dataset container of the data to use.
+            callbacks (Union[List, None]): List of callback to use during training.
+                See `poutyne <https://poutyne.org/callbacks.html#callback-class>`_ framework for information. By default
+                we set no callback.
+            seed (int): Seed to use (by default 42).
+            logging_path (str): The logging path for the checkpoints. By default the path is ``./chekpoints``.
+            checkpoint (Union[str, int]): Checkpoint to use for the test. If 'best', will load the best weights.
+                If 'last', will load the last model checkpoint. If int, will load the checkpoint of the specified epoch.
+                Meaning that the API restrict that your model to load must have a name following format
+                ``checkpoint_epoch_<int>.ckpt`` due to framework constraint. (Default value = 'best')
+        Return:
+            A dictionary with the best epoch stats (see poutyne for example).
+
+        Note:
+            We use NLL loss and accuracy as in the `article <https://arxiv.org/abs/2006.16152>`_.
+
+        Example:
+
+            .. code-block:: python
+
+                    address_parser = AddressParser(device=0) #on gpu device 0
+                    data_path = 'path_to_a_pickle_test_dataset.p'
+
+                    test_container = PickleDatasetContainer(data_path)
+
+                    address_parser.test(test_container) # using the default best epoch
+                    address_parser.test(test_container, checkpoint='last') # using the last epoch
+                    address_parser.test(test_container, checkpoint=5) # using the epoch 5 model
         """
+        callbacks = [] if callbacks is None else callbacks
+        data_transform = self._set_data_transformer()
+
+        test_generator = DataLoader(test_dataset_container, collate_fn=data_transform.output_transform,
+                                    batch_size=batch_size, num_workers=num_workers)
         loss_fn = nll_loss_function
         accuracy_fn = accuracy
 
@@ -294,3 +363,37 @@ class AddressParser:
                 raise ValueError("Device should not be a negative number.")
         else:
             raise ValueError("Device should be a string, an int or a torch device.")
+
+    def _set_data_transformer(self):
+        train_vectorizer = TrainVectorizer(self.vectorizer, self.tags_converter)  # vectorize to provide also the target
+        data_transform = DataTransform(train_vectorizer, self.model)  # use for transforming the data prior to training
+        return data_transform
+
+    def _create_training_data_generator(self, dataset_container: DatasetContainerInterface,
+                                        train_ratio: float,
+                                        batch_size: int,
+                                        num_workers: int):
+        data_transform = self._set_data_transformer()
+
+        num_data = len(dataset_container)
+        indices = list(range(num_data))
+        np.random.shuffle(indices)
+
+        split = math.floor(train_ratio * num_data)
+
+        train_indices = indices[:split]
+        train_dataset = Subset(dataset_container, train_indices)
+
+        valid_indices = indices[split:]
+        valid_dataset = Subset(dataset_container, valid_indices)
+
+        train_generator = DataLoader(train_dataset,
+                                     collate_fn=data_transform.teacher_forcing_transform,
+                                     batch_size=batch_size,
+                                     num_workers=num_workers,
+                                     shuffle=True)
+
+        valid_generator = DataLoader(valid_dataset, collate_fn=data_transform.output_transform, batch_size=batch_size,
+                                     num_workers=num_workers)
+
+        return train_generator, valid_generator

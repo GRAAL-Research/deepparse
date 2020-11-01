@@ -8,7 +8,7 @@ class PreTrainedFastTextSeq2SeqModel(PreTrainedSeq2SeqModel):
     FastText pre-trained Seq2Seq network, the lightest of the two (in ``GPU``/``CPU`` consumption) for a little less
     accuracy.
 
-     Args:
+    Args:
         device (~torch.device): The device tu use for the prediction.
     """
 
@@ -20,16 +20,18 @@ class PreTrainedFastTextSeq2SeqModel(PreTrainedSeq2SeqModel):
     def forward(self, to_predict: torch.Tensor, lengths_tensor: torch.Tensor,
                 target: torch.Tensor = None) -> torch.Tensor:
         """
-            #todo update doc
-            Callable method as per PyTorch forward method to get tags prediction over the components of
-            an address.
+        Callable method as per PyTorch forward method to get tags prediction over the components of
+        an address.
 
-            Args:
-                to_predict (~torch.Tensor): The elements to predict the tags.
-                lengths_tensor (~torch.Tensor) : The lengths of the batch elements (since packed).
+        Args:
+            to_predict (~torch.Tensor): The elements to predict the tags.
+            lengths_tensor (~torch.Tensor) : The lengths of the batch elements (since packed).
+            target (~torch.Tensor) : The target of the batch element, use only when we retrain the model since we do
+                `teacher forcing <https://machinelearningmastery.com/teacher-forcing-for-recurrent-neural-networks/>`_.
+                Default value is None since we mostly don't have the target except for retrain.
 
-            Return:
-                The tensor of the address components tags predictions.
+        Return:
+            The tensor of the address components tags predictions.
         """
         batch_size = to_predict.size(0)
 

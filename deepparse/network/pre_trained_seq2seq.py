@@ -1,4 +1,5 @@
 import os
+import random
 import warnings
 from abc import ABC
 from typing import Tuple
@@ -79,7 +80,13 @@ class PreTrainedSeq2SeqModel(ABC, nn.Module):
         Step of the encoder.
 
         Args:
-            #todo update doc
+            decoder_input (~torch.Tensor): The decoder input (so the encode output).
+            decoder_hidden (~torch.Tensor): The encoder hidden state (so the encode hidden state).
+            target (~torch.Tensor) : The target of the batch element, use only when we retrain the model since we do
+                `teacher forcing <https://machinelearningmastery.com/teacher-forcing-for-recurrent-neural-networks/>`_.
+                Default value is None since we mostly don't have the target except for retrain.
+            max_length (int): The max length of the sequence.
+            batch_size (int): Number of element in the batch.
 
         Return:
             A tuple (``x``, ``y``) where ``x`` is the decoder input (a zeros tensor) and ``y`` is the decoder
@@ -102,8 +109,9 @@ class PreTrainedSeq2SeqModel(ABC, nn.Module):
 
         # we loop the same steps for the rest of the sequence
 
-        if target is not None:
+        if target is not None and random.random() < 0.5:
             # force the real target value instead of the predicted one to help learning
+            target = target.transpose(0, 1)
             for idx in range(max_length):
                 decoder_input = target[idx].view(1, batch_size, 1)
                 decoder_output, decoder_hidden = self.decoder(decoder_input, decoder_hidden)

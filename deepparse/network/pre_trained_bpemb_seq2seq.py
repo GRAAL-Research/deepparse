@@ -24,17 +24,20 @@ class PreTrainedBPEmbSeq2SeqModel(PreTrainedSeq2SeqModel):
         self._load_pre_trained_weights("bpemb")
 
     def forward(self, to_predict: torch.Tensor, decomposition_lengths: List,
-                lengths_tensor: torch.Tensor) -> torch.Tensor:
+                lengths_tensor: torch.Tensor,
+                target: torch.Tensor = None) -> torch.Tensor:
         """
-            Callable method as per PyTorch forward method to get tags prediction over the components of
-            an address.
-            Args:
-                to_predict (~torch.Tensor): The elements to predict the tags.
-                decomposition_lengths (list) : The lengths of the decomposed words of the batch elements (since packed).
-                lengths_tensor (~torch.Tensor) : The lengths of the batch elements (since packed).
-
-            Return:
-                The tensor of the address components tags predictions.
+        Callable method as per PyTorch forward method to get tags prediction over the components of
+        an address.
+        Args:
+            to_predict (~torch.Tensor): The elements to predict the tags.
+            decomposition_lengths (list) : The lengths of the decomposed words of the batch elements (since packed).
+            lengths_tensor (~torch.Tensor) : The lengths of the batch elements (since packed).
+            target (~torch.Tensor) : The target of the batch element, use only when we retrain the model since we do
+                `teacher forcing <https://machinelearningmastery.com/teacher-forcing-for-recurrent-neural-networks/>`_.
+                Default value is None since we mostly don't have the target except for retrain.
+        Return:
+            The tensor of the address components tags predictions.
         """
         batch_size = to_predict.size(0)
 
@@ -43,6 +46,6 @@ class PreTrainedBPEmbSeq2SeqModel(PreTrainedSeq2SeqModel):
         decoder_input, decoder_hidden = self._encoder_step(embedded_output, lengths_tensor, batch_size)
 
         max_length = lengths_tensor[0].item()
-        prediction_sequence = self._decoder_steps(decoder_input, decoder_hidden, max_length, batch_size)
+        prediction_sequence = self._decoder_steps(decoder_input, decoder_hidden, target, max_length, batch_size)
 
         return prediction_sequence

@@ -3,7 +3,7 @@ from unittest import TestCase
 import numpy as np
 import torch
 
-from deepparse.converter import data_padding, bpemb_data_padding
+from deepparse.converter import fasttext_data_padding, bpemb_data_padding
 
 
 class DataPaddingTest(TestCase):
@@ -41,7 +41,7 @@ class DataPaddingTest(TestCase):
                                                    [[0, 0], [0, 0], [0, 0]]]])
         self.a_non_padded_subword_embedding_batch_decomposition_lenght_list = [[2, 3, 1], [2, 2, 1], [3, 1, 1]]
 
-        self.fasttext_data_padding = data_padding
+        self.fasttext_data_padding = fasttext_data_padding
         self.bpemb_data_padding = bpemb_data_padding
 
     def test_givenbatch_whenfasttextpadding_thenshouldreturnrightlengths(self):

@@ -10,9 +10,9 @@ from torch.utils.data import DataLoader
 
 from .parsed_address import ParsedAddress
 from .. import load_tuple_to_device
-from ..converter import TagsConverter, data_padding
+from ..converter import TagsConverter, fasttext_data_padding
 from ..converter.data_padding import bpemb_data_padding
-from ..converter.tensor_converter import ToTensor
+from ..converter.data_transformer import DataTransform
 from ..embeddings_models import BPEmbEmbeddingsModel
 from ..embeddings_models import FastTextEmbeddingsModel
 from ..fasttext_tools import download_fasttext_embeddings
@@ -101,8 +101,9 @@ class AddressParser:
 
         self.tags_converter = TagsConverter(_pre_trained_tags_to_idx)
 
-        model = model.lower()
-        if model in ("fasttext", "fastest"):
+        self.model = model.lower()
+        # model factory
+        if self.model in ("fasttext", "fastest"):
             path = os.path.join(os.path.expanduser('~'), ".cache", "deepparse")
             os.makedirs(path, exist_ok=True)
 
@@ -111,11 +112,11 @@ class AddressParser:
 
             self.vectorizer = FastTextVectorizer(embeddings_model=embeddings_model)
 
-            self.data_converter = data_padding
+            self.data_converter = fasttext_data_padding
 
             self.pre_trained_model = PreTrainedFastTextSeq2SeqModel(self.device)
 
-        elif model in ("bpemb", "best", "lightest"):
+        elif self.model in ("bpemb", "best", "lightest"):
             self.vectorizer = BPEmbVectorizer(embeddings_model=BPEmbEmbeddingsModel(lang="multi", vs=100000, dim=300))
 
             self.data_converter = bpemb_data_padding
@@ -178,13 +179,13 @@ class AddressParser:
 
         return tagged_addresses_components
 
-    def retrain(self, dataset_container, train_ratio, valid_ratio, epochs, learning_rate=0.1, callbacks=[], seed=42,
-                logging_path="./chekpoints"):
-        train_vectorizer = TrainVectorizer(self.vectorizer, self.tags_converter)
-        to_tensor = ToTensor(train_vectorizer, self.device)
-
-        tf_transform = to_tensor.get_teacher_forcing_from_batch()
-        or_transform = to_tensor.get_output_reuse_from_batch()
+    def retrain(self, dataset_container, train_ratio, valid_ratio, batch_size, epochs, learning_rate=0.1, callbacks=[],
+                seed=42, logging_path="./chekpoints"):
+        """
+        todo doc
+        """
+        train_vectorizer = TrainVectorizer(self.vectorizer, self.tags_converter)  # vectorize to provide also the target
+        data_transform = DataTransform(train_vectorizer, self.model)  # use for transforming the data prior to training
 
         size = len(dataset_container)
 
@@ -192,14 +193,15 @@ class AddressParser:
         for pair in dataset_container[0:int(size * train_ratio)]:
             train_dataset.append((pair[0], pair[1]))
 
-        train_generator = DataLoader(train_dataset, collate_fn=tf_transform, batch_size=2)
+        train_generator = DataLoader(train_dataset, collate_fn=data_transform.teacher_forcing_transform,
+                                     batch_size=batch_size)
 
         valid_dataset = []
         for pair in dataset_container[int(size * train_ratio):int(size * train_ratio) + int(
                 size * valid_ratio)]:
             valid_dataset.append((pair[0], pair[1]))
 
-        valid_generator = DataLoader(valid_dataset, collate_fn=or_transform)
+        valid_generator = DataLoader(valid_dataset, collate_fn=data_transform.output_transform)
 
         optimizer = SGD(self.pre_trained_model.parameters(), learning_rate)
 
@@ -207,14 +209,16 @@ class AddressParser:
         accuracy_fn = accuracy
 
         exp = Experiment(logging_path, self.pre_trained_model, device=self.device, optimizer=optimizer,
-                         loss_function=loss_fn,
-                         batch_metrics=[accuracy_fn])
+                         loss_function=loss_fn, batch_metrics=[accuracy_fn])
 
         train_res = exp.train(train_generator, valid_generator=valid_generator, epochs=epochs, seed=seed,
                               callbacks=callbacks)
         return train_res
 
     def test(self, test_generator, callbacks=[], seed=42, logging_path="./chekpoints"):
+        """
+        todo doc
+        """
         loss_fn = nll_loss_function
         accuracy_fn = accuracy
 

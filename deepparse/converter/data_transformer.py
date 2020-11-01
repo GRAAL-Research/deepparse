@@ -3,7 +3,7 @@ from typing import Tuple
 from deepparse.converter import fasttext_data_padding_teacher_forcing, bpemb_data_padding_teacher_forcing, \
     bpemb_data_padding, \
     fasttext_data_padding
-from deepparse.vectorizer.train_vectorizer import TrainVectorizer
+from deepparse.vectorizer import TrainVectorizer
 
 
 class DataTransform:

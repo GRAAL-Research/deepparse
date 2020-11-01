@@ -10,18 +10,15 @@ from torch.utils.data import DataLoader
 
 from .parsed_address import ParsedAddress
 from .. import load_tuple_to_device
-from ..converter import TagsConverter, fasttext_data_padding
+from ..converter import TagsConverter, fasttext_data_padding, DataTransform
 from ..converter.data_padding import bpemb_data_padding
-from ..converter.data_transformer import DataTransform
 from ..embeddings_models import BPEmbEmbeddingsModel
 from ..embeddings_models import FastTextEmbeddingsModel
 from ..fasttext_tools import download_fasttext_embeddings
-from ..metrics.accuracy import accuracy
-from ..metrics.nll_loss import nll_loss_function
+from ..metrics import nll_loss_function, accuracy
 from ..network.pre_trained_bpemb_seq2seq import PreTrainedBPEmbSeq2SeqModel
 from ..network.pre_trained_fasttext_seq2seq import PreTrainedFastTextSeq2SeqModel
-from ..vectorizer import FastTextVectorizer, BPEmbVectorizer
-from ..vectorizer.train_vectorizer import TrainVectorizer
+from ..vectorizer import FastTextVectorizer, BPEmbVectorizer, TrainVectorizer
 
 _pre_trained_tags_to_idx = {
     "StreetNumber": 0,

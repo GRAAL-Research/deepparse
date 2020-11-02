@@ -28,7 +28,7 @@ class ParsedAddress:
         .. code-block:: python
 
                 address_parser = AddressParser()
-                parse_address = address_parser('350 rue des Lilas Ouest Quebec city Quebec G1L 1B6')
+                parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
                 print(parse_address.street_number) #350
                 print(parse_address.postal_code) # G1L 1B6
     """
@@ -76,38 +76,38 @@ class ParsedAddress:
             elif tag == "StreetName":
                 self.street_name = address_component if self.street_name is None else " ".join(
                     [self.street_name, address_component])
-            elif tag == 'Orientation':
+            elif tag == "Orientation":
                 self.orientation = address_component if self.orientation is None else " ".join(
                     [self.orientation, address_component])
-            elif tag == 'Municipality':
+            elif tag == "Municipality":
                 self.municipality = address_component if self.municipality is None else " ".join(
                     [self.municipality, address_component])
-            elif tag == 'Province':
+            elif tag == "Province":
                 self.province = address_component if self.province is None else " ".join(
                     [self.province, address_component])
-            elif tag == 'PostalCode':
+            elif tag == "PostalCode":
                 self.postal_code = address_component if self.postal_code is None else " ".join(
                     [self.postal_code, address_component])
-            elif tag == 'GeneralDelivery':
+            elif tag == "GeneralDelivery":
                 self.general_delivery = address_component if self.general_delivery is None else " ".join(
                     [self.general_delivery, address_component])
 
     def _get_attr_repr(self, name):
         value = getattr(self, name)
         if value is not None:
-            return name + '=' + repr(getattr(self, name))
-        return ''
+            return name + "=" + repr(getattr(self, name))
+        return ""
 
     def __repr__(self):
         values = [
-            self._get_attr_repr('street_number'),
-            self._get_attr_repr('unit'),
-            self._get_attr_repr('street_name'),
-            self._get_attr_repr('orientation'),
-            self._get_attr_repr('municipality'),
-            self._get_attr_repr('province'),
-            self._get_attr_repr('postal_code'),
-            self._get_attr_repr('general_delivery')
+            self._get_attr_repr("street_number"),
+            self._get_attr_repr("unit"),
+            self._get_attr_repr("street_name"),
+            self._get_attr_repr("orientation"),
+            self._get_attr_repr("municipality"),
+            self._get_attr_repr("province"),
+            self._get_attr_repr("postal_code"),
+            self._get_attr_repr("general_delivery")
         ]
-        joined_values = ', '.join(v for v in values if v != '')
-        return self.__class__.__name__ + '<' + joined_values + '>'
+        joined_values = ", ".join(v for v in values if v != "")
+        return self.__class__.__name__ + "<" + joined_values + ">"

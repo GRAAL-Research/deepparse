@@ -41,7 +41,7 @@ class PreTrainedSeq2SeqModel(ABC, nn.Module):
         Args:
             model_type (str): The network pre-trained weights to load.
         """
-        root_path = os.path.join(os.path.expanduser('~'), ".cache", "deepparse")
+        root_path = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
         model_path = os.path.join(root_path, f"{model_type}.ckpt")
 
         if not os.path.isfile(model_path):

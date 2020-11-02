@@ -265,6 +265,7 @@ class AddressParser:
              seed: int = 42,
              logging_path: str = "./chekpoints",
              checkpoint: Union[str, int] = "best") -> Dict:
+        # pylint: disable=too-many-arguments
         """
         Method to test a retrained or a pre-trained model using a dataset with the same tags. We train using
         `experiment <https://poutyne.org/experiment.html>`_ from `poutyne <https://poutyne.org/index.html>`_
@@ -272,8 +273,8 @@ class AddressParser:
         the best epochs can be found (the best epoch is use in test).
 
         Args:
-            test_dataset_container (~deepparse.deepparse.dataset_container.dataset_container.DatasetContainerInterface): The
-                test dataset container of the data to use.
+            test_dataset_container (~deepparse.deepparse.dataset_container.dataset_container.DatasetContainerInterface):
+                The test dataset container of the data to use.
             callbacks (Union[List, None]): List of callback to use during training.
                 See `poutyne <https://poutyne.org/callbacks.html#callback-class>`_ framework for information. By default
                 we set no callback.
@@ -318,7 +319,7 @@ class AddressParser:
                          loss_function=loss_fn,
                          batch_metrics=[accuracy_fn])
 
-        test_res = exp.test(test_generator, seed=seed, callbacks=callbacks)
+        test_res = exp.test(test_generator, seed=seed, callbacks=callbacks, checkpoint=checkpoint)
         return test_res
 
     def _fill_tagged_addresses_components(self, tags_predictions: ndarray, tags_predictions_prob: ndarray,

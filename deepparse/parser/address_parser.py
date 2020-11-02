@@ -245,6 +245,8 @@ class AddressParser:
                     lr_scheduler = poutyne.StepLR(step_size=1, gamma=0.1) # reduce LR by a factor of 10 each epoch
                     address_parser.retrain(container, 0.8, epochs=5, batch_size=128, callbacks=[lr_scheduler])
 
+        See `this <https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py>`_ for a fine
+        tuning example.
         """
         callbacks = [] if callbacks is None else callbacks
         train_generator, valid_generator = self._create_training_data_generator(dataset_container, train_ratio,

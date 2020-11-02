@@ -88,13 +88,13 @@ class AddressParser:
         .. code-block:: python
 
                 address_parser = AddressParser(device=0) #on gpu device 0
-                parse_address = address_parser('350 rue des Lilas Ouest Quebec city Quebec G1L 1B6')
+                parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
 
-                address_parser = AddressParser(model='fasttext', device='cpu') # fasttext model on cpu
-                parse_address = address_parser('350 rue des Lilas Ouest Quebec city Quebec G1L 1B6')
+                address_parser = AddressParser(model="fasttext", device="cpu") # fasttext model on cpu
+                parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
     """
 
-    def __init__(self, model: str = 'best', device: Union[int, str, torch.device] = 0, rounding: int = 4) -> None:
+    def __init__(self, model: str = "best", device: Union[int, str, torch.device] = 0, rounding: int = 4) -> None:
         self._process_device(device)
 
         self.rounding = rounding
@@ -103,8 +103,8 @@ class AddressParser:
 
         self.model = model.lower()
         # model factory
-        if self.model in ("fasttext", "fastest"):
-            path = os.path.join(os.path.expanduser('~'), ".cache", "deepparse")
+        if model in ("fasttext", "fastest"):
+            path = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
             os.makedirs(path, exist_ok=True)
 
             file_name = download_fasttext_embeddings("fr", saving_dir=path)
@@ -154,8 +154,8 @@ class AddressParser:
             .. code-block:: python
 
                     address_parser = AddressParser(device=0) #on gpu device 0
-                    parse_address = address_parser('350 rue des Lilas Ouest Quebec city Quebec G1L 1B6')
-                    parse_address = address_parser('350 rue des Lilas Ouest Quebec city Quebec G1L 1B6', with_prob=True)
+                    parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
+                    parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6", with_prob=True)
 
         """
         if isinstance(addresses_to_parse, str):
@@ -355,7 +355,7 @@ class AddressParser:
         if isinstance(device, torch.device):
             self.device = device
         elif isinstance(device, str):
-            if re.fullmatch(r'cpu|cuda:\d+', device.lower()):
+            if re.fullmatch(r"cpu|cuda:\d+", device.lower()):
                 self.device = torch.device(device)
             else:
                 raise ValueError("String value should be 'cpu' or follow the pattern 'cuda:[int]'.")

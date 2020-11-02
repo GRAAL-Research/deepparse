@@ -185,7 +185,7 @@ class AddressParser:
                 batch_size: int,
                 epochs: int,
                 num_workers: int = 1,
-                learning_rate: float = 0.1,
+                learning_rate: float = 0.01,
                 callbacks: Union[List, None] = None,
                 seed: int = 42,
                 logging_path: str = "./chekpoints") -> List[Dict]:
@@ -205,9 +205,9 @@ class AddressParser:
             batch_size (int): The size of the batch.
             epochs (int): number of training epoch.
             num_workers (int): Number of worker to use for the data loader (default is 1 worker).
-            learning_rate (float): The learning rate to use for training. One can also use
-                `learning rate callback <https://poutyne.org/callbacks.html#lr-schedulers>`_ to modify the learning
-                rate during training.
+            learning_rate (float): The learning rate (LR) to use for training (default 0.01). To reduce the LR during
+                training, use `Poutyne learning rate scheduler callback
+                <https://github.com/GRAAL-Research/poutyne/blob/master/poutyne/framework/callbacks/lr_scheduler.py>`_.
             callbacks (Union[List, None]): List of callback to use during training.
                 See `poutyne <https://poutyne.org/callbacks.html#callback-class>`_ framework for information. By default
                 we set no callback.
@@ -232,6 +232,18 @@ class AddressParser:
                     container = PickleDatasetContainer(data_path)
 
                     address_parser.retrain(container, 0.8, epochs=1, batch_size=128)
+
+            Using learning rate scheduler callback.
+            .. code-block:: python
+                    import poutyne
+
+                    address_parser = AddressParser(device=0)
+                    data_path = 'path_to_a_pickle_dataset.p'
+
+                    container = PickleDatasetContainer(data_path)
+
+                    lr_scheduler = poutyne.StepLR(step_size=1, gamma=0.1) # reduce LR by a factor of 10 each epoch
+                    address_parser.retrain(container, 0.8, epochs=5, batch_size=128, callbacks=[lr_scheduler])
 
         """
         callbacks = [] if callbacks is None else callbacks

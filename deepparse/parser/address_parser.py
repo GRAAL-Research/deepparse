@@ -305,8 +305,10 @@ class AddressParser:
         callbacks = [] if callbacks is None else callbacks
         data_transform = self._set_data_transformer()
 
-        test_generator = DataLoader(test_dataset_container, collate_fn=data_transform.output_transform,
-                                    batch_size=batch_size, num_workers=num_workers)
+        test_generator = DataLoader(test_dataset_container,
+                                    collate_fn=data_transform.output_transform,
+                                    batch_size=batch_size,
+                                    num_workers=num_workers)
         loss_fn = nll_loss_function
         accuracy_fn = accuracy
 
@@ -369,10 +371,8 @@ class AddressParser:
         data_transform = DataTransform(train_vectorizer, self.model)  # use for transforming the data prior to training
         return data_transform
 
-    def _create_training_data_generator(self, dataset_container: DatasetContainerInterface,
-                                        train_ratio: float,
-                                        batch_size: int,
-                                        num_workers: int):
+    def _create_training_data_generator(self, dataset_container: DatasetContainerInterface, train_ratio: float,
+                                        batch_size: int, num_workers: int):
         data_transform = self._set_data_transformer()
 
         num_data = len(dataset_container)
@@ -393,7 +393,9 @@ class AddressParser:
                                      num_workers=num_workers,
                                      shuffle=True)
 
-        valid_generator = DataLoader(valid_dataset, collate_fn=data_transform.output_transform, batch_size=batch_size,
+        valid_generator = DataLoader(valid_dataset,
+                                     collate_fn=data_transform.output_transform,
+                                     batch_size=batch_size,
                                      num_workers=num_workers)
 
         return train_generator, valid_generator

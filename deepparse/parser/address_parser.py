@@ -209,18 +209,18 @@ class AddressParser:
                 training, use `Poutyne learning rate scheduler callback
                 <https://github.com/GRAAL-Research/poutyne/blob/master/poutyne/framework/callbacks/lr_scheduler.py>`_.
             callbacks (Union[List, None]): List of callback to use during training.
-                See `poutyne <https://poutyne.org/callbacks.html#callback-class>`_ framework for information. By default
+                See Poutyne `callback <https://poutyne.org/callbacks.html#callback-class>`_ for more information. By default
                 we set no callback.
             seed (int): Seed to use (by default 42).
             logging_path (str): The logging path for the checkpoints. By default the path is ``./chekpoints``.
 
         Return:
-            A list of dictionary with the best epoch stats (see poutyne for example).
+            A list of dictionary with the best epoch stats (see `Experiment class
+            <https://poutyne.org/experiment.html#poutyne.Experiment.train>`_ for details).
 
         Note:
-            We use SGD optimizer, NLL loss and accuracy as in the `article <https://arxiv.org/abs/2006.16152>`_.
-            The data are shuffled.
-            We use teacher forcing during training (with a prob of 0.5).
+            We use SGD optimizer, NLL loss and accuracy, the data are shuffled and we use teacher forcing during
+            training (with a prob of 0.5) as in the `article <https://arxiv.org/abs/2006.16152>`_.
 
         Example:
 
@@ -234,7 +234,9 @@ class AddressParser:
                     address_parser.retrain(container, 0.8, epochs=1, batch_size=128)
 
             Using learning rate scheduler callback.
+
             .. code-block:: python
+
                     import poutyne
 
                     address_parser = AddressParser(device=0)
@@ -290,8 +292,8 @@ class AddressParser:
             test_dataset_container (~deepparse.deepparse.dataset_container.dataset_container.DatasetContainerInterface):
                 The test dataset container of the data to use.
             callbacks (Union[List, None]): List of callback to use during training.
-                See `poutyne <https://poutyne.org/callbacks.html#callback-class>`_ framework for information. By default
-                we set no callback.
+                See Poutyne `callback <https://poutyne.org/callbacks.html#callback-class>`_ for more information.
+                By default we set no callback.
             seed (int): Seed to use (by default 42).
             logging_path (str): The logging path for the checkpoints. By default the path is ``./chekpoints``.
             checkpoint (Union[str, int]): Checkpoint to use for the test. If 'best', will load the best weights.
@@ -299,7 +301,8 @@ class AddressParser:
                 Meaning that the API restrict that your model to load must have a name following format
                 ``checkpoint_epoch_<int>.ckpt`` due to framework constraint. (Default value = 'best')
         Return:
-            A dictionary with the best epoch stats (see poutyne for example).
+            A dictionary with the best epoch stats (see `Experiment class
+            <https://poutyne.org/experiment.html#poutyne.Experiment.train>`_ for details).
 
         Note:
             We use NLL loss and accuracy as in the `article <https://arxiv.org/abs/2006.16152>`_.

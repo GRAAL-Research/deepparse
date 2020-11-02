@@ -15,3 +15,6 @@ Added "contributing to"
 Added fix for comma problem (#56)
 Added content in Address Parser doc for tags definition
 Fixed Pylint bug with PyTorch 1.6 
+Added finetuning API to allow finetuning of our model
+	Added metric, loss and dataset container to facilitate finetuning training
+

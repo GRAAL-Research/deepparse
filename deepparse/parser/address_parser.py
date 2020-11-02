@@ -1,7 +1,7 @@
 import math
 import os
 import re
-from typing import List, Union, Dict
+from typing import List, Union, Dict, Tuple
 
 import numpy as np
 import torch
@@ -373,7 +373,7 @@ class AddressParser:
         return data_transform
 
     def _create_training_data_generator(self, dataset_container: DatasetContainerInterface, train_ratio: float,
-                                        batch_size: int, num_workers: int):
+                                        batch_size: int, num_workers: int) -> Tuple:
         data_transform = self._set_data_transformer()
 
         num_data = len(dataset_container)

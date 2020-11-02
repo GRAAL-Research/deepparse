@@ -13,4 +13,5 @@ Fixed authors in setup
 ## dev
 Added "contributing to"
 Added fix for comma problem (#56)
-added content in Address Parser doc for tags definition 
+Added content in Address Parser doc for tags definition
+Fixed Pylint bug with PyTorch 1.6 

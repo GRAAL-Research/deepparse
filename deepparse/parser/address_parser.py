@@ -189,8 +189,7 @@ class AddressParser:
                 callbacks: Union[List, None] = None,
                 seed: int = 42,
                 logging_path: str = "./chekpoints") -> List[Dict]:
-        # pylint: disable=too-many-arguments
-        # pylint: disable=too-many-locals
+        # pylint: disable=too-many-arguments, line-too-long, too-many-locals
         """
         Method to retrain our pre-trained model using a dataset with the same tags. We train using
         `experiment <https://poutyne.org/experiment.html>`_ from `poutyne <https://poutyne.org/index.html>`_

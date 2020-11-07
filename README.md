@@ -83,6 +83,6 @@ We welcome user input, whether it is regarding bugs found in the library or feat
 
 ## License
 
-deepparse is LGPLv3 licensed, as found in the [LICENSE file](https://github.com/GRAAL-Research/deepparse/blob/master/LICENSE).
+Deepparse is LGPLv3 licensed, as found in the [LICENSE file](https://github.com/GRAAL-Research/deepparse/blob/master/LICENSE).
 
 ------------------

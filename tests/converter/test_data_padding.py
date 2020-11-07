@@ -1,6 +1,9 @@
+# Bug with PyTorch source code makes torch.tensor as not callable for pylint.
+# pylint: disable=not-callable
+
 import unittest
 from unittest import TestCase
-import numpy as np
+
 import torch
 
 from deepparse.converter import fasttext_data_padding, bpemb_data_padding

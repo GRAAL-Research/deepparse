@@ -4,8 +4,8 @@ from unittest.mock import Mock
 
 import numpy as np
 
-from deepparse.vectorizer import BPEmbVectorizer
 from deepparse.embeddings_models.embeddings_model import EmbeddingsModel
+from deepparse.vectorizer import BPEmbVectorizer
 
 
 class BpembVectorizerTest(TestCase):
@@ -18,13 +18,13 @@ class BpembVectorizerTest(TestCase):
                                                                            np.array([2, 2])], [np.array([0, 2])],
                                   [np.array([2, 1])], [np.array([2, 2]), np.array([3, 3])], [np.array([1, 2])],
                                   [np.array([2, 1])]]
-        cls.a_address = ['5 test street']
+        cls.a_address = ["5 test street"]
         cls.a_vectorized_address = [[np.array([0, 0]), np.array([1, 1]),
                                      np.zeros(2)], [np.array([0, 1]),
                                                     np.array([1, 2]),
                                                     np.array([2, 3])], [[1, 0], np.zeros(2),
                                                                         np.zeros(2)]]
-        cls.a_address_list = ['3 test way', '2 test road quebec']
+        cls.a_address_list = ["3 test way", "2 test road quebec"]
         cls.a_vectorized_address_list = [[[np.array([0, 0]), np.array([1, 1]),
                                            np.zeros(2)], [np.array([0, 1]),
                                                           np.array([1, 2]),
@@ -71,5 +71,5 @@ class BpembVectorizerTest(TestCase):
         return res
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

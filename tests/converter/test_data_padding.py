@@ -1,6 +1,9 @@
+# Bug with PyTorch source code makes torch.tensor as not callable for pylint.
+# pylint: disable=not-callable
+
 import unittest
 from unittest import TestCase
-import numpy as np
+
 import torch
 
 from deepparse.converter import data_padding, bpemb_data_padding
@@ -64,7 +67,6 @@ class DataPaddingTest(TestCase):
 
         self.assertTrue(torch.all(lengths.eq(self.a_non_padded_subword_embedding_batch_lenght_list)))
 
-    
     def test_givenbatch_whenbpembpadding_thenshouldreturnrightdecomposition_lengths(self):
         _, decomposition_lengths, _ = self.bpemb_data_padding(self.a_non_padded_subword_embedding_batch)
 

@@ -8,9 +8,9 @@ class TargetConverterTest(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.a_tag = 'first_tag'
+        cls.a_tag = "first_tag"
         cls.a_index = 1
-        cls.another_tag = 'second_tag'
+        cls.another_tag = "second_tag"
         cls.another_index = 2
 
         cls.tag_to_idx = {cls.a_tag: cls.a_index, cls.another_tag: cls.another_index}
@@ -29,5 +29,5 @@ class TargetConverterTest(TestCase):
         self.assertEqual(tag, self.another_tag)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

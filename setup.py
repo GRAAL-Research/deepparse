@@ -65,12 +65,11 @@ def main():
             'Topic :: Software Development :: Libraries :: Python Modules'
         ],
         packages=packages,
-        install_requires=['numpy', 'torch', 'bpemb', 'fasttext', 'requests'],
+        install_requires=['numpy', 'torch', 'bpemb', 'fasttext', 'requests', 'pymagnitude-light'],
         python_requires='>=3.6.1',
         description='A library for parsing multinational street addresses using deep learning.',
         long_description=readme,
-        long_description_content_type='text/markdown',
-        extras_require={"pymagnitude": "pymagnitude>=0.1.143"}
+        long_description_content_type='text/markdown'
 
     )
 

@@ -99,7 +99,7 @@ class AddressParser:
         self.tags_converter = TagsConverter(_pre_trained_tags_to_idx)
 
         model = model.lower()
-        if model in ("fasttext", "fastest"):
+        if model in ("fasttext", "fastest", "fasttext-light"):
             path = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
             os.makedirs(path, exist_ok=True)
 

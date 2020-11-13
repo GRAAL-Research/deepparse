@@ -9,8 +9,9 @@ from .parsed_address import ParsedAddress
 from .. import load_tuple_to_device, download_fasttext_embeddings, download_fasttext_magnitude_embeddings
 from ..converter import TagsConverter, data_padding
 from ..converter.data_padding import bpemb_data_padding
-from ..embeddings_models import BPEmbEmbeddingsModel, MagnitudeEmbeddingsModel
+from ..embeddings_models import BPEmbEmbeddingsModel
 from ..embeddings_models import FastTextEmbeddingsModel
+from ..embeddings_models.magnitude_embeddings_model import MagnitudeEmbeddingsModel
 from ..network.pre_trained_bpemb_seq2seq import PreTrainedBPEmbSeq2SeqModel
 from ..network.pre_trained_fasttext_seq2seq import PreTrainedFastTextSeq2SeqModel
 from ..vectorizer import FastTextVectorizer, BPEmbVectorizer
@@ -67,6 +68,18 @@ class AddressParser:
         Also note that the first time the fastText model is instantiated on a computer, we download the fastText
         pre-trained embeddings of 6.8 GO, and this process can be quite long (a couple of minutes).
 
+    Note:
+        The predictions tags are the following
+
+            - "StreetNumber": for the street number
+            - "StreetName": for the name of the street
+            - "Unit": for the unit (such as apartment)
+            - "Municipality": for the municipality
+            - "Province": for the province or local region
+            - "PostalCode": for the postal code
+            - "Orientation": for the street orientation (e.g. west, east)
+            - "GeneralDelivery": for other delivery information
+
     Example:
 
         .. code-block:: python
@@ -86,7 +99,7 @@ class AddressParser:
         self.tags_converter = TagsConverter(_pre_trained_tags_to_idx)
 
         model = model.lower()
-        if model in ("fasttext", "fastest", "fasttext-light"):
+        if model in ("fasttext", "fastest"):
             path = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
             os.makedirs(path, exist_ok=True)
 

@@ -1,6 +1,9 @@
 # Bug with PyTorch source code makes torch.tensor as not callable for pylint.
 # pylint: disable=not-callable
 
+# temporary fix for _forward_unimplemented for PyTorch 1.6 https://github.com/pytorch/pytorch/issues/42305
+# pylint: disable=W0223
+
 from typing import Tuple, List
 
 import torch
@@ -41,15 +44,14 @@ class EmbeddingNetwork(nn.Module):
     def forward(self, to_predict: torch.Tensor, decomposition_lengths: Tuple[List]) -> torch.Tensor:
         # pylint: disable=too-many-locals
         """
-            Callable method to aggregate the byte-pair embeddings from decomposed words.
+        Callable method to aggregate the byte-pair embeddings from decomposed words.
 
-            Args:
-                to_predict (~torch.Tensor): The address to extract the embedding on.
-                decomposition_lengths (tuple[list]) : The decomposition lengths of the address components.
+        Args:
+            to_predict (~torch.Tensor): The address to extract the embedding on.
+            decomposition_lengths (tuple[list]) : The decomposition lengths of the address components.
 
-            Return:
-                The embedded address vector tensor.
-
+        Return:
+            The embedded address vector tensor.
         """
         device = to_predict.device
         batch_size = to_predict.size(0)

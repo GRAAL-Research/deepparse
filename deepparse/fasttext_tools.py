@@ -92,9 +92,9 @@ def download_fasttext_magnitude_embeddings(saving_dir):
 
 def _download_gz_model(gz_file_name: str, saving_path: str) -> bool:  # now use a saving path
     """
-        Simpler version of the _download_gz_model function from fastText to download pre-trained common-crawl
-        vectors from fastText's website https://fasttext.cc/docs/en/crawl-vectors.html and save it in the
-        saving directory (saving_path).
+    Simpler version of the _download_gz_model function from fastText to download pre-trained common-crawl
+    vectors from fastText's website https://fasttext.cc/docs/en/crawl-vectors.html and save it in the
+    saving directory (saving_path).
     """
 
     url = "https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/%s" % gz_file_name
@@ -106,7 +106,7 @@ def _download_gz_model(gz_file_name: str, saving_path: str) -> bool:  # now use 
 
 
 # No modification, we just need to call our _print_progress function
-def _download_file(url, write_file_name, chunk_size=2 ** 13):
+def _download_file(url, write_file_name, chunk_size=2**13):
     print("Downloading %s" % url)
     response = urlopen(url)
     if hasattr(response, "getheader"):
@@ -145,5 +145,7 @@ def _print_progress(downloaded_bytes, total_size):
 
 # The difference with the original code is the removal of the print warning.
 def load_fasttext_embeddings(path):
-    """Load a model given a filepath and return a model object."""
+    """
+    Load a model given a filepath and return a model object.
+    """
     return _FastText(model_path=path)

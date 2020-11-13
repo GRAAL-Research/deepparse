@@ -8,10 +8,10 @@ class ParsedAddressTest(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.a_address_str = '3 test road'
-        cls.a_parsed_address = [('3', 'StreetNumber'), ('test', 'StreetName'), ('road', 'StreetName')]
+        cls.a_address_str = "3 test road"
+        cls.a_parsed_address = [("3", "StreetNumber"), ("test", "StreetName"), ("road", "StreetName")]
         cls.a_address = {cls.a_address_str: cls.a_parsed_address}
-        cls.a_existing_tag = '3'
+        cls.a_existing_tag = "3"
 
     def setUp(self):
         self.parsed_address = ParsedAddress(self.a_address)
@@ -37,5 +37,5 @@ class ParsedAddressTest(TestCase):
         self.assertIsNone(unit)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

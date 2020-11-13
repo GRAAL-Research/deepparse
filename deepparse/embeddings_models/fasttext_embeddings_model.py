@@ -1,7 +1,6 @@
 from numpy.core.multiarray import ndarray
 
 from .embeddings_model import EmbeddingsModel
-from .magnitude_embeddings_model import MagnitudeEmbeddingsModel
 from .. import load_fasttext_embeddings
 
 

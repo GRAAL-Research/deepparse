@@ -69,7 +69,7 @@ class EmbeddingNetwork(nn.Module):
                 lengths.append(decomposition_length[i])
 
             packed_sequence = pack_padded_sequence(to_predict[i],
-                                                   torch.tensor(lengths),
+                                                   torch.tensor(lengths).cpu(),
                                                    batch_first=True,
                                                    enforce_sorted=False)
 

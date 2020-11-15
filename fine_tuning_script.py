@@ -15,9 +15,9 @@ def main(args):
     lr_scheduler = ReduceLROnPlateau()
 
     address_parser.retrain(container, 0.8, epochs=50, batch_size=2048, num_workers=6,
-                           callbacks=[early_stopping, lr_scheduler])
+                           callbacks=[early_stopping, lr_scheduler], logging_path=f"./chekpoints/{args.model_type}")
 
-    address_parser.test(container, batch_size=2048, num_workers=3)
+    address_parser.test(container, batch_size=2048, num_workers=3, logging_path=f"./chekpoints/{args.model_type}")
 
 
 if __name__ == "__main__":

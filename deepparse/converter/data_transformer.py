@@ -1,8 +1,7 @@
 from typing import Tuple
 
 from deepparse.converter import fasttext_data_padding_teacher_forcing, bpemb_data_padding_teacher_forcing, \
-    bpemb_data_padding, \
-    fasttext_data_padding
+    bpemb_data_padding_with_target, fasttext_data_padding_with_target
 from deepparse.vectorizer import TrainVectorizer
 
 
@@ -20,10 +19,10 @@ class DataTransform:
         self.vectorizer = vectorizer
         if model_type in ("fasttext", "fastest"):
             self.teacher_forcing_data_padding_fn = fasttext_data_padding_teacher_forcing
-            self.output_transform_data_padding_fn = fasttext_data_padding
+            self.output_transform_data_padding_fn = fasttext_data_padding_with_target
         elif model_type in ("bpemb", "best", "lightest"):
             self.teacher_forcing_data_padding_fn = bpemb_data_padding_teacher_forcing
-            self.output_transform_data_padding_fn = bpemb_data_padding
+            self.output_transform_data_padding_fn = bpemb_data_padding_with_target
 
     def teacher_forcing_transform(self, batch_pairs: Tuple) -> Tuple:
         """

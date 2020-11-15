@@ -12,7 +12,7 @@ def main(args):
     container = PickleDatasetContainer(args.dataset_path)
 
     early_stopping = EarlyStopping(patience=10)
-    lr_scheduler = ReduceLROnPlateau()
+    lr_scheduler = ReduceLROnPlateau(patience=2)
 
     address_parser.retrain(container, 0.8, epochs=50, batch_size=1024, num_workers=6,
                            callbacks=[early_stopping, lr_scheduler], logging_path=f"./chekpoints/{args.model_type}")

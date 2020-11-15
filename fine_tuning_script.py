@@ -1,5 +1,7 @@
 import argparse
 
+from poutyne import ReduceLROnPlateau, EarlyStopping
+
 from deepparse.dataset_container import PickleDatasetContainer
 from deepparse.parser import AddressParser
 
@@ -9,11 +11,13 @@ def main(args):
 
     container = PickleDatasetContainer(args.dataset_path)
 
-    # address_parser.retrain(container, 0.8, epochs=1, batch_size=256, num_workers=2)
+    early_stopping = EarlyStopping(patience=10)
+    lr_scheduler = ReduceLROnPlateau()
 
-    address_parser.test(container, batch_size=256, num_workers=2,
-                        logging_path=f"/fast/deepparse/retrain-models/eval-before-fine-tuning/{args.model_type}",
-                        checkpoint=1)
+    address_parser.retrain(container, 0.8, epochs=50, batch_size=2048, num_workers=6,
+                           callbacks=[early_stopping, lr_scheduler])
+
+    address_parser.test(container, batch_size=2048, num_workers=3)
 
 
 if __name__ == "__main__":

@@ -5,7 +5,7 @@ import torch
 import torch.nn as nn
 import torch.nn.init as init
 
-base_url = "https://graal.ift.ulaval.ca/public/deepparse/"
+BASE_URL = "https://graal.ift.ulaval.ca/public/deepparse/"
 
 
 def verify_latest_version(model: str, root_path: str) -> bool:
@@ -22,7 +22,7 @@ def download_from_url(model: str, saving_dir: str, extension: str):
     """
     Simple function to download the content of a file from a distant repository.
     """
-    model_url = base_url + "{}." + extension
+    model_url = BASE_URL + "{}." + extension
     url = model_url.format(model)
     r = requests.get(url)
 

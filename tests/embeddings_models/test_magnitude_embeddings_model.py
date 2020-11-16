@@ -10,7 +10,7 @@ class MagnitudeEmbeddingsModelTest(TestCase):
     @classmethod
     def setUpClass(cls):
         cls.a_path = "."
-        cls.a_list_of_word = ["test", "test"]
+        cls.a_sentence_of_word = "a test sentence"
 
     def setUp(self):
         self.model = MagicMock()
@@ -27,9 +27,9 @@ class MagnitudeEmbeddingsModelTest(TestCase):
         with patch("deepparse.embeddings_models.magnitude_embeddings_model.Magnitude", return_value=self.model):
             self.embeddings_model = MagnitudeEmbeddingsModel(self.a_path)
 
-            self.embeddings_model(self.a_list_of_word)
+            self.embeddings_model(self.a_sentence_of_word)
 
-            self.model.query.assert_called_with(self.a_list_of_word)
+            self.model.query.assert_called_with(self.a_sentence_of_word.split())
 
 
 if __name__ == "__main__":

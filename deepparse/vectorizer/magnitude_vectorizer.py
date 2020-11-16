@@ -31,4 +31,4 @@ class MagnitudeVectorizer(Vectorizer):
             A list of word vector.
         """
         address = address.replace(",", "")  # see issue 56 https://github.com/GRAAL-Research/deepparse/issues/56
-        return [self.embeddings_model(word) for word in address.split()]
+        return self.embeddings_model(address)

@@ -18,14 +18,15 @@ class MagnitudeEmbeddingsModel(EmbeddingsModel):
 
         self.model.dim = 300  # fastText is only in 300d
 
-    def __call__(self, words: List[str]) -> List[ndarray]:
+    def __call__(self, words: str) -> List[ndarray]:
         """
-        Callable method to get word vector of a list of word.
+        Callable method to get word vector of a complete address.
 
         Args:
-            words (List[str]): Words to get vector.
+            words (str): Address to get vector for words.
 
         Return:
             The fastText embedding for a list of words.
         """
-        return self.model.query(words)
+        # we leverage the multiple word query which are faster than single word query
+        return self.model.query(words.split())

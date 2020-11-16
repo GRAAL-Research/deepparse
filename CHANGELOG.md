@@ -10,8 +10,11 @@ Fixed logo
 Fixed typo deepParse -> deepparse
 Fixed authors in setup
 
-## dev
+## 0.1.3
 Added "contributing to"
 Added fix for comma problem (#56)
 Added content in Address Parser doc for tags definition
 Fixed Pylint bug with PyTorch 1.6 
+Fixed `pack_padded` cpu error with PyTorch new release
+
+## dev

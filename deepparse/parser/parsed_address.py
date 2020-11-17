@@ -100,9 +100,14 @@ class ParsedAddress:
 
     def __repr__(self):
         values = [
-            self._get_attr_repr("street_number"), self._get_attr_repr("unit"), self._get_attr_repr("street_name"),
-            self._get_attr_repr("orientation"), self._get_attr_repr("municipality"), self._get_attr_repr("province"),
-            self._get_attr_repr("postal_code"), self._get_attr_repr("general_delivery")
+            self._get_attr_repr("street_number"),
+            self._get_attr_repr("unit"),
+            self._get_attr_repr("street_name"),
+            self._get_attr_repr("orientation"),
+            self._get_attr_repr("municipality"),
+            self._get_attr_repr("province"),
+            self._get_attr_repr("postal_code"),
+            self._get_attr_repr("general_delivery")
         ]
         joined_values = ", ".join(v for v in values if v != "")
         return self.__class__.__name__ + "<" + joined_values + ">"

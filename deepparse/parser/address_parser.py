@@ -100,10 +100,10 @@ class AddressParser:
     """
 
     def __init__(self,
-                 model: str="best",
-                 device: Union[int, str, torch.device]=0,
-                 rounding: int=4,
-                 verbose: bool=True) -> None:
+                 model: str = "best",
+                 device: Union[int, str, torch.device] = 0,
+                 rounding: int = 4,
+                 verbose: bool = True) -> None:
         self._process_device(device)
 
         self.rounding = rounding
@@ -145,7 +145,7 @@ class AddressParser:
 
     def __call__(self,
                  addresses_to_parse: Union[List[str], str],
-                 with_prob: bool=False) -> Union[ParsedAddress, List[ParsedAddress]]:
+                 with_prob: bool = False) -> Union[ParsedAddress, List[ParsedAddress]]:
         """
         Callable method to parse the components of an address or a list of address.
 
@@ -201,11 +201,11 @@ class AddressParser:
                 train_ratio: float,
                 batch_size: int,
                 epochs: int,
-                num_workers: int=1,
-                learning_rate: float=0.01,
-                callbacks: Union[List, None]=None,
-                seed: int=42,
-                logging_path: str="./chekpoints") -> List[Dict]:
+                num_workers: int = 1,
+                learning_rate: float = 0.01,
+                callbacks: Union[List, None] = None,
+                seed: int = 42,
+                logging_path: str = "./chekpoints") -> List[Dict]:
         # pylint: disable=too-many-arguments, line-too-long, too-many-locals
         """
         Method to retrain our pre-trained model using a dataset with the same tags. We train using
@@ -292,11 +292,11 @@ class AddressParser:
     def test(self,
              test_dataset_container: DatasetContainerInterface,
              batch_size: int,
-             num_workers: int=1,
-             callbacks: Union[List, None]=None,
-             seed: int=42,
-             logging_path: str="./chekpoints",
-             checkpoint: Union[str, int]="best") -> Dict:
+             num_workers: int = 1,
+             callbacks: Union[List, None] = None,
+             seed: int = 42,
+             logging_path: str = "./chekpoints",
+             checkpoint: Union[str, int] = "best") -> Dict:
         # pylint: disable=too-many-arguments
         """
         Method to test a retrained or a pre-trained model using a dataset with the same tags. We train using
@@ -356,8 +356,8 @@ class AddressParser:
         return test_res
 
     def _fill_tagged_addresses_components(self, tags_predictions: ndarray, tags_predictions_prob: ndarray,
-                                          addresses_to_parse: List[str], with_prob:
-                                          bool) -> Union[ParsedAddress, List[ParsedAddress]]:
+                                          addresses_to_parse: List[str],
+                                          with_prob: bool) -> Union[ParsedAddress, List[ParsedAddress]]:
         """
         Method to fill the mapping for every address between a address components and is associated predicted tag (or
         tag and prob).

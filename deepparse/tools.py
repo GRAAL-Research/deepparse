@@ -31,7 +31,7 @@ def download_from_url(model: str, saving_dir: str, extension: str):
     open(os.path.join(saving_dir, f"{model}.{extension}"), "wb").write(r.content)
 
 
-def download_weights(model: str, saving_dir: str, verbose: bool=True) -> None:
+def download_weights(model: str, saving_dir: str, verbose: bool = True) -> None:
     """
     Function to download the pre-trained weights of the models.
 

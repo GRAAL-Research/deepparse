@@ -111,7 +111,7 @@ class AddressParser:
 
             self.data_converter = data_padding
 
-            self.pre_trained_model = PreTrainedFastTextSeq2SeqModel(self.device)
+            self.pre_trained_model = PreTrainedFastTextSeq2SeqModel(self.device, verbose=self.verbose)
 
         elif model in ("bpemb", "best", "lightest"):
             if self.verbose:
@@ -120,7 +120,7 @@ class AddressParser:
 
             self.data_converter = bpemb_data_padding
 
-            self.pre_trained_model = PreTrainedBPEmbSeq2SeqModel(self.device)
+            self.pre_trained_model = PreTrainedBPEmbSeq2SeqModel(self.device, verbose=self.verbose)
         else:
             raise NotImplementedError(f"There is no {model} network implemented. Value can be: "
                                       f"fasttext, bpemb, lightest (bpemb), fastest (fasttext) or best (bpemb).")

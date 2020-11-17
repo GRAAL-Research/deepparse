@@ -173,9 +173,8 @@ def _convert_sequence_to_tensor(batch):
     """
     Sort and convert sequence into a tensor with target element
     """
-    return zip(
-        *[(torch.FloatTensor(seq_vectors), torch.tensor(target_vector), len(seq_vectors))
-          for seq_vectors, target_vector in sorted(batch, key=lambda x: len(x[0]), reverse=True)])
+    return zip(*[(torch.FloatTensor(seq_vectors), torch.tensor(target_vector), len(seq_vectors))
+                 for seq_vectors, target_vector in sorted(batch, key=lambda x: len(x[0]), reverse=True)])
 
 
 def _convert__bpemb_sequence_to_tensor(batch):

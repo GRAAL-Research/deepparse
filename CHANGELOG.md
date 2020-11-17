@@ -17,5 +17,7 @@ Fixed Pylint bug with PyTorch 1.6
 Fixed `pack_padded` cpu error with PyTorch new release
 
 ## dev
-Added finetuning API to allow finetuning of our model
+Added finetuning API to allow finetuning of our models (retrain)
+Added a method to test models (test)
 Added metric, loss and dataset container to facilitate finetuning training
+Added a example of finetuning

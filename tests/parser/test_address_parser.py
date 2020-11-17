@@ -21,6 +21,7 @@ class AddressParserTest(TestCase):
         cls.a_rounding = 5
         cls.a_device = "cpu"
         cls.a_torch_device = device(cls.a_device)
+        cls.verbose = True
 
         cls.BPEmb_embeddings_model_param = {"lang": "multi", "vs": 100000, "dim": 300}
         cls.fasttext_download_path = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
@@ -75,7 +76,7 @@ class AddressParserTest(TestCase):
         with patch("deepparse.parser.address_parser.PreTrainedBPEmbSeq2SeqModel") as model:
             self.address_parser = AddressParser(model=self.a_best_model_type, device=self.a_device)
 
-            model.assert_called_with(self.a_torch_device)
+            model.assert_called_with(self.a_torch_device, verbose=self.verbose)
 
     @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
     def test_givenABPEmbModelType_whenInstanciatingParser_thenInstanciatePretrainedModelWithCorrectParameters(
@@ -83,7 +84,7 @@ class AddressParserTest(TestCase):
         with patch("deepparse.parser.address_parser.PreTrainedBPEmbSeq2SeqModel") as model:
             self.address_parser = AddressParser(model=self.a_BPEmb_model_type, device=self.a_device)
 
-            model.assert_called_with(self.a_torch_device)
+            model.assert_called_with(self.a_torch_device, verbose=self.verbose)
 
     @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
     @patch("deepparse.parser.address_parser.PreTrainedFastTextSeq2SeqModel")
@@ -92,7 +93,7 @@ class AddressParserTest(TestCase):
         with patch("deepparse.parser.address_parser.download_fasttext_embeddings") as downloader:
             self.address_parser = AddressParser(model=self.a_fastest_model_type, device=self.a_device)
 
-            downloader.assert_called_with(self.a_language, saving_dir=self.fasttext_download_path)
+            downloader.assert_called_with(self.a_language, saving_dir=self.fasttext_download_path, verbose=self.verbose)
 
     @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
     @patch("deepparse.parser.address_parser.PreTrainedFastTextSeq2SeqModel")
@@ -101,7 +102,7 @@ class AddressParserTest(TestCase):
         with patch("deepparse.parser.address_parser.download_fasttext_embeddings") as downloader:
             self.address_parser = AddressParser(model=self.a_fasttext_model_type, device=self.a_device)
 
-            downloader.assert_called_with(self.a_language, saving_dir=self.fasttext_download_path)
+            downloader.assert_called_with(self.a_language, saving_dir=self.fasttext_download_path, verbose=self.verbose)
 
     @patch("deepparse.parser.address_parser.PreTrainedFastTextSeq2SeqModel")
     def test_givenAFastestModelType_whenInstanciatingParser_thenInstanciateModelWithCorrectPath(
@@ -148,7 +149,7 @@ class AddressParserTest(TestCase):
         with patch("deepparse.parser.address_parser.PreTrainedFastTextSeq2SeqModel") as model:
             self.address_parser = AddressParser(model=self.a_fastest_model_type, device=self.a_device)
 
-            model.assert_called_with(self.a_torch_device)
+            model.assert_called_with(self.a_torch_device, verbose=self.verbose)
 
     @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
     @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
@@ -157,4 +158,4 @@ class AddressParserTest(TestCase):
         with patch("deepparse.parser.address_parser.PreTrainedFastTextSeq2SeqModel") as model:
             self.address_parser = AddressParser(model=self.a_fasttext_model_type, device=self.a_device)
 
-            model.assert_called_with(self.a_torch_device)
+            model.assert_called_with(self.a_torch_device, verbose=self.verbose)

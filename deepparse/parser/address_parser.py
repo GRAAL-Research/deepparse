@@ -35,6 +35,10 @@ _pre_trained_tags_to_idx = {
     "EOS": 8  # the 9th is the EOS with idx 8
 }
 
+# this threshold represent at which point the prediction of the address takes enough time to
+# justify a predict verbosity.
+PREDICTION_TIME_PERFORMANCE_THRESHOLD = 64
+
 
 class AddressParser:
     """
@@ -60,6 +64,7 @@ class AddressParser:
 
             The default value is GPU with the index ``0`` if it exist, otherwise the value is ``CPU``.
         rounding (int): The rounding to use when asking the probability of the tags. The default value is 4 digits.
+        verbose (bool): Turn on/off the verbosity of the model weights download and loading. The default value is True.
 
     Note:
         For both the networks, we will download the pre-trained weights and embeddings in the ``.cache`` directory
@@ -94,34 +99,44 @@ class AddressParser:
                 parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
     """
 
-    def __init__(self, model: str = "best", device: Union[int, str, torch.device] = 0, rounding: int = 4) -> None:
+    def __init__(self,
+                 model: str = "best",
+                 device: Union[int, str, torch.device] = 0,
+                 rounding: int = 4,
+                 verbose: bool = True) -> None:
         self._process_device(device)
 
         self.rounding = rounding
+        self.verbose = verbose
 
         self.tags_converter = TagsConverter(_pre_trained_tags_to_idx)
 
         self.model = model.lower()
         # model factory
-        if model in ("fasttext", "fastest"):
+        if self.model in ("fasttext", "fastest"):
             path = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
             os.makedirs(path, exist_ok=True)
 
-            file_name = download_fasttext_embeddings("fr", saving_dir=path)
+            file_name = download_fasttext_embeddings("fr", saving_dir=path, verbose=self.verbose)
+            if self.verbose:
+                print("Loading the embeddings model")
             embeddings_model = FastTextEmbeddingsModel(file_name)
 
             self.vectorizer = FastTextVectorizer(embeddings_model=embeddings_model)
 
             self.data_converter = fasttext_data_padding
 
-            self.pre_trained_model = PreTrainedFastTextSeq2SeqModel(self.device)
+            self.pre_trained_model = PreTrainedFastTextSeq2SeqModel(self.device, verbose=self.verbose)
 
         elif self.model in ("bpemb", "best", "lightest"):
+            if self.verbose:
+                print("Loading the embeddings model")
+
             self.vectorizer = BPEmbVectorizer(embeddings_model=BPEmbEmbeddingsModel(lang="multi", vs=100000, dim=300))
 
             self.data_converter = bpemb_data_padding
 
-            self.pre_trained_model = PreTrainedBPEmbSeq2SeqModel(self.device)
+            self.pre_trained_model = PreTrainedBPEmbSeq2SeqModel(self.device, verbose=self.verbose)
         else:
             raise NotImplementedError(f"There is no {model} network implemented. Value can be: "
                                       f"fasttext, bpemb, lightest (bpemb), fastest (fasttext) or best (bpemb).")
@@ -164,6 +179,8 @@ class AddressParser:
         # since training data is lowercase
         lower_cased_addresses_to_parse = [address.lower() for address in addresses_to_parse]
 
+        if self.verbose and len(addresses_to_parse) > PREDICTION_TIME_PERFORMANCE_THRESHOLD:
+            print("Vectorizing the address")
         vectorize_address = self.vectorizer(lower_cased_addresses_to_parse)
 
         padded_address = self.data_converter(vectorize_address)

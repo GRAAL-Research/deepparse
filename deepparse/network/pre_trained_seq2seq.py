@@ -23,11 +23,13 @@ class PreTrainedSeq2SeqModel(ABC, nn.Module):
 
      Args:
         device (~torch.device): The device tu use for the prediction.
+        verbose (bool): Turn on/off the verbose of the model. The default value is True.
     """
 
-    def __init__(self, device: torch.device) -> None:
+    def __init__(self, device: torch.device, verbose: bool = True) -> None:
         super().__init__()
         self.device = device
+        self.verbose = verbose
 
         self.encoder = Encoder(input_size=300, hidden_size=1024, num_layers=1)
         self.encoder.to(self.device)
@@ -46,10 +48,12 @@ class PreTrainedSeq2SeqModel(ABC, nn.Module):
         model_path = os.path.join(root_path, f"{model_type}.ckpt")
 
         if not os.path.isfile(model_path):
-            download_weights(model_type, root_path)
+            download_weights(model_type, root_path, verbose=self.verbose)
         elif verify_latest_version(model_type, root_path):
-            warnings.warn("A new version of the pre-trained model is available. The newest model will be downloaded.")
-            download_weights(model_type, root_path)
+            if self.verbose:
+                warnings.warn("A new version of the pre-trained model is available. "
+                              "The newest model will be downloaded.")
+            download_weights(model_type, root_path, verbose=self.verbose)
 
         all_layers_params = load(model_path, map_location=self.device)
 

@@ -46,8 +46,8 @@ are a little bit lower on trained country (around ~2%) but are similar on zero-s
         *   - fastText-light
             - ~0.885
             - ~2
-            - ~0.0062
-            - ~0.0029
+            - ~
+            - ~
         *   - BPEmb
             - ~0.885
             - ~2
@@ -67,8 +67,8 @@ are a little bit lower on trained country (around ~2%) but are similar on zero-s
             - ~0.0032
         *   - fastText-light
             - ~2
-            - ~0.0234
-            - ~0.0064
+            - ~0.0177
+            - ~0.0036
         *   - BPEmb
             - ~2
             - ~0.0309

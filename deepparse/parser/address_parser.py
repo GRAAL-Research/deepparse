@@ -88,7 +88,10 @@ class AddressParser:
                 parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
     """
 
-    def __init__(self, model: str = "best", device: Union[int, str, torch.device] = 0, rounding: int = 4,
+    def __init__(self,
+                 model: str = "best",
+                 device: Union[int, str, torch.device] = 0,
+                 rounding: int = 4,
                  verbose: bool = True) -> None:
         self._process_device(device)
 

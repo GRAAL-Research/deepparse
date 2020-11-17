@@ -34,7 +34,6 @@ import gzip
 import os
 import shutil
 import sys
-import warnings
 from urllib.request import urlopen
 
 from fasttext.FastText import _FastText
@@ -59,7 +58,7 @@ def download_fasttext_embeddings(lang_id: str, saving_dir: str, verbose: bool = 
 
     saving_file_path = os.path.join(saving_dir, gz_file_name)
 
-    if _download_gz_model(gz_file_name, saving_file_path):
+    if _download_gz_model(gz_file_name, saving_file_path, verbose=verbose):
         with gzip.open(os.path.join(saving_dir, gz_file_name), "rb") as f:
             with open(os.path.join(saving_dir, file_name), "wb") as f_out:
                 shutil.copyfileobj(f, f_out)
@@ -79,13 +78,13 @@ def _download_gz_model(gz_file_name: str, saving_path: str, verbose: bool = True
     if verbose:
         print("The fastText pre-trained word embeddings will be download (6.8 GO), "
               "this process will take several minutes.")
-    _download_file(url, saving_path)
+    _download_file(url, saving_path, verbose=verbose)
 
     return True
 
 
 # No modification, we just need to call our _print_progress function
-def _download_file(url: str, write_file_name: str, chunk_size: int = 2 ** 13, verbose: bool = True):
+def _download_file(url: str, write_file_name: str, chunk_size: int = 2**13, verbose: bool = True):
     if verbose:
         print("Downloading %s" % url)
     response = urlopen(url)

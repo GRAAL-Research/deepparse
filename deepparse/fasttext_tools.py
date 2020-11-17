@@ -40,7 +40,7 @@ from fasttext.FastText import _FastText
 from fasttext.util.util import valid_lang_ids, _download_file
 
 
-def download_fasttext_embeddings(lang_id: str, saving_dir: str, verbose: bool = True) -> str:
+def download_fasttext_embeddings(lang_id: str, saving_dir: str, verbose: bool=True) -> str:
     """
         Simpler version of the download_model function from fastText to download pre-trained common-crawl
         vectors from fastText's website https://fasttext.cc/docs/en/crawl-vectors.html and save it in the
@@ -67,7 +67,7 @@ def download_fasttext_embeddings(lang_id: str, saving_dir: str, verbose: bool = 
     return file_name_path  # return the full path to the fastText embeddings
 
 
-def _download_gz_model(gz_file_name: str, saving_path: str, verbose: bool = True) -> bool:  # now use a saving path
+def _download_gz_model(gz_file_name: str, saving_path: str, verbose: bool=True) -> bool:  # now use a saving path
     """
     Simpler version of the _download_gz_model function from fastText to download pre-trained common-crawl
     vectors from fastText's website https://fasttext.cc/docs/en/crawl-vectors.html and save it in the
@@ -84,7 +84,7 @@ def _download_gz_model(gz_file_name: str, saving_path: str, verbose: bool = True
 
 
 # No modification, we just need to call our _print_progress function
-def _download_file(url: str, write_file_name: str, chunk_size: int = 2**13, verbose: bool = True):
+def _download_file(url: str, write_file_name: str, chunk_size: int=2 ** 13, verbose: bool=True):
     if verbose:
         print("Downloading %s" % url)
     response = urlopen(url)

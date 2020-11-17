@@ -13,7 +13,7 @@ class PreTrainedFastTextSeq2SeqModel(PreTrainedSeq2SeqModel):
         verbose (bool): Turn on/off the verbose of the model. The default value is True.
     """
 
-    def __init__(self, device: torch.device, verbose: bool = True) -> None:
+    def __init__(self, device: torch.device, verbose: bool=True) -> None:
         super().__init__(device, verbose)
 
         self._load_pre_trained_weights("fasttext")
@@ -21,7 +21,7 @@ class PreTrainedFastTextSeq2SeqModel(PreTrainedSeq2SeqModel):
     def forward(self,
                 to_predict: torch.Tensor,
                 lengths_tensor: torch.Tensor,
-                target: torch.Tensor = None) -> torch.Tensor:
+                target: torch.Tensor=None) -> torch.Tensor:
         """
         Callable method as per PyTorch forward method to get tags prediction over the components of
         an address.

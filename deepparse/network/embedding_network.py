@@ -27,7 +27,7 @@ class EmbeddingNetwork(nn.Module):
                  input_size: int,
                  hidden_size: int,
                  projection_size: int,
-                 num_layers: int = 1,
+                 num_layers: int=1,
                  maxpool=False,
                  maxpool_kernel_size=3) -> None:
         # pylint: disable=too-many-arguments

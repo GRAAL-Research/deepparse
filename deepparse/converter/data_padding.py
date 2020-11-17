@@ -20,7 +20,9 @@ def fasttext_data_padding(batch: List) -> Tuple:
     """
 
     sequences_vectors, lengths = zip(*[(torch.FloatTensor(seq_vectors), len(seq_vectors))
-                                       for seq_vectors in sorted(batch, key=lambda x: len(x[0]), reverse=True)])
+                                       for seq_vectors in sorted(batch,
+                                                                 key=lambda x: len(x[0]),
+                                                                 reverse=True)])
 
     lengths = torch.tensor(lengths)
 
@@ -45,7 +47,9 @@ def bpemb_data_padding(batch: List[Tuple]) -> Tuple:
 
     sequences_vectors, decomp_len, lengths = zip(
         *[(torch.tensor(vectors), word_decomposition_len, len(vectors))
-          for vectors, word_decomposition_len in sorted(batch, key=lambda x: len(x[0]), reverse=True)])
+          for vectors, word_decomposition_len in sorted(batch,
+                                                        key=lambda x: len(x[0]),
+                                                        reverse=True)])
 
     lengths = torch.tensor(lengths)
 
@@ -100,7 +104,7 @@ def bpemb_data_padding_teacher_forcing(batch: List[Tuple]) -> Tuple:
         training (``w``).
     """
 
-    sequences_vectors, decomp_len, target_vectors, lengths = _convert__bpemb_sequence_to_tensor(batch)
+    sequences_vectors, decomp_len, target_vectors, lengths = _convert_bpemb_sequence_to_tensor(batch)
 
     lengths = torch.tensor(lengths)
 
@@ -153,7 +157,7 @@ def bpemb_data_padding_with_target(batch: List[Tuple]) -> Tuple:
         ``w`` is a tensor of padded target idx.
     """
 
-    sequences_vectors, decomp_len, target_vectors, lengths = _convert__bpemb_sequence_to_tensor(batch)
+    sequences_vectors, decomp_len, target_vectors, lengths = _convert_bpemb_sequence_to_tensor(batch)
 
     lengths = torch.tensor(lengths)
 
@@ -174,14 +178,16 @@ def _convert_sequence_to_tensor(batch):
     Sort and convert sequence into a tensor with target element
     """
     return zip(*[(torch.FloatTensor(seq_vectors), torch.tensor(target_vector), len(seq_vectors))
-                 for seq_vectors, target_vector in sorted(batch, key=lambda x: len(x[0]), reverse=True)])
+                 for seq_vectors, target_vector in sorted(batch,
+                                                          key=lambda x: len(x[0]),
+                                                          reverse=True)])
 
 
-def _convert__bpemb_sequence_to_tensor(batch):
+def _convert_bpemb_sequence_to_tensor(batch):
     """
     Sort and convert a BPEmb sequence into a tensor with target element
     """
-    return zip(
-        *[(torch.tensor(vectors), word_decomposition_len, torch.tensor(target_vectors), len(vectors))
-          for (vectors,
-               word_decomposition_len), target_vectors in sorted(batch, key=lambda x: len(x[0][1]), reverse=True)])
+    return zip(*[(torch.tensor(vectors), word_decomposition_len, torch.tensor(target_vectors), len(vectors))
+                 for (vectors, word_decomposition_len), target_vectors in sorted(batch,
+                                                                                 key=lambda x: len(x[0][1]),
+                                                                                 reverse=True)])

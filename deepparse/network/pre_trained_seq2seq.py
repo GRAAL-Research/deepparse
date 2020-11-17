@@ -26,7 +26,7 @@ class PreTrainedSeq2SeqModel(ABC, nn.Module):
         verbose (bool): Turn on/off the verbose of the model. The default value is True.
     """
 
-    def __init__(self, device: torch.device, verbose: bool = True) -> None:
+    def __init__(self, device: torch.device, verbose: bool=True) -> None:
         super().__init__()
         self.device = device
         self.verbose = verbose

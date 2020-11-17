@@ -15,7 +15,7 @@ class PreTrainedBPEmbSeq2SeqModel(PreTrainedSeq2SeqModel):
         verbose (bool): Turn on/off the verbose of the model. The default value is True.
     """
 
-    def __init__(self, device: torch.device, verbose: bool = True) -> None:
+    def __init__(self, device: torch.device, verbose: bool=True) -> None:
         super().__init__(device, verbose)
 
         # pre-trained params (the 300)
@@ -28,7 +28,7 @@ class PreTrainedBPEmbSeq2SeqModel(PreTrainedSeq2SeqModel):
                 to_predict: torch.Tensor,
                 decomposition_lengths: List,
                 lengths_tensor: torch.Tensor,
-                target: torch.Tensor = None) -> torch.Tensor:
+                target: torch.Tensor=None) -> torch.Tensor:
         """
         Callable method as per PyTorch forward method to get tags prediction over the components of
         an address.

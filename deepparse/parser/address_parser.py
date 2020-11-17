@@ -28,6 +28,10 @@ _pre_trained_tags_to_idx = {
     "EOS": 8  # the 9th is the EOS with idx 8
 }
 
+# this threshold represent at which point the prediction of the address takes enough time to
+# justify a predict verbosity.
+PREDICTION_TIME_PERFORMANCE_THRESHOLD = 64
+
 
 class AddressParser:
     """
@@ -166,7 +170,7 @@ class AddressParser:
         # since training data is lowercase
         lower_cased_addresses_to_parse = [address.lower() for address in addresses_to_parse]
 
-        if self.verbose and len(addresses_to_parse) > 64:
+        if self.verbose and len(addresses_to_parse) > PREDICTION_TIME_PERFORMANCE_THRESHOLD:
             print("Vectorizing the address")
         vectorize_address = self.vectorizer(lower_cased_addresses_to_parse)
 

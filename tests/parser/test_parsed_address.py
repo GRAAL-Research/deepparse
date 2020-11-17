@@ -16,22 +16,22 @@ class ParsedAddressTest(TestCase):
     def setUp(self):
         self.parsed_address = ParsedAddress(self.a_address)
 
-    def test_whenInstanciatedWithAddress_thenShouldReturnCorrectRawAddress(self):
+    def test_whenInstantiatedWithAddress_thenShouldReturnCorrectRawAddress(self):
         address = self.parsed_address.raw_address
 
         self.assertEqual(address, self.a_address_str)
 
-    def test_whenInstanciatedWithAddress_thenShouldReturnCorrectParsedAddress(self):
+    def test_whenInstantiatedWithAddress_thenShouldReturnCorrectParsedAddress(self):
         parsed_address = self.parsed_address.address_parsed_components
 
         self.assertEqual(parsed_address, self.a_parsed_address)
 
-    def test_whenInstanciatedWithAddress_thenShouldReturnCorrectTagIfExists(self):
+    def test_whenInstantiatedWithAddress_thenShouldReturnCorrectTagIfExists(self):
         street_number = self.parsed_address.street_number
 
         self.assertEqual(street_number, self.a_existing_tag)
 
-    def test_whenInstanciatedWithAddress_thenShouldReturnNoneIfTagDoesntExist(self):
+    def test_whenInstantiatedWithAddress_thenShouldReturnNoneIfTagDoesntExist(self):
         unit = self.parsed_address.unit
 
         self.assertIsNone(unit)

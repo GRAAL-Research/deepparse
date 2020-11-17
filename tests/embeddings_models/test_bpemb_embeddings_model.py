@@ -15,7 +15,7 @@ class BPEmbEmbeddingsModelTest(TestCase):
         self.model = Mock()
         self.model.dim = 9
 
-    def test_whenInstanciatedWithPath_thenShouldLoadBPEmbModel(self):
+    def test_whenInstantiatedWithPath_thenShouldLoadBPEmbModel(self):
         with patch("deepparse.embeddings_models.bpemb_embeddings_model.BPEmb", return_value=self.model) as loader:
             self.embeddings_model = BPEmbEmbeddingsModel(lang="multi", vs=100000, dim=300)
 

@@ -53,7 +53,7 @@ class AddressParser:
 
             The default value is GPU with the index ``0`` if it exist, otherwise the value is ``CPU``.
         rounding (int): The rounding to use when asking the probability of the tags. The default value is 4 digits.
-        verbose (bool): Turn on/off the verbose of the model. The default value is True.
+        verbose (bool): Turn on/off the verbosity of the model weights download and loading. The default value is True.
 
     Note:
         For both the networks, we will download the pre-trained weights and embeddings in the ``.cache`` directory

@@ -18,3 +18,5 @@ Fixed Pylint bug with PyTorch 1.6
 Fixed `pack_padded` cpu error with PyTorch new release
 
 ## dev
+Added a verbose flag to trigger more message during embedding loading
+Added a verbose flag in model/embeddings download

@@ -12,10 +12,11 @@ class PreTrainedBPEmbSeq2SeqModel(PreTrainedSeq2SeqModel):
 
      Args:
         device (~torch.device): The device tu use for the prediction.
+        verbose (bool): Turn on/off the verbose of the model. The default value is True.
     """
 
-    def __init__(self, device: torch.device) -> None:
-        super().__init__(device)
+    def __init__(self, device: torch.device, verbose: bool = True) -> None:
+        super().__init__(device, verbose)
 
         # pre-trained params (the 300)
         self.embedding_network = EmbeddingNetwork(input_size=300, hidden_size=300, projection_size=300)

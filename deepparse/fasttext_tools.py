@@ -34,14 +34,13 @@ import gzip
 import os
 import shutil
 import sys
-import warnings
 from urllib.request import urlopen
 
 from fasttext.FastText import _FastText
 from fasttext.util.util import valid_lang_ids, _download_file
 
 
-def download_fasttext_embeddings(lang_id: str, saving_dir: str) -> str:
+def download_fasttext_embeddings(lang_id: str, saving_dir: str, verbose: bool = True) -> str:
     """
         Simpler version of the download_model function from fastText to download pre-trained common-crawl
         vectors from fastText's website https://fasttext.cc/docs/en/crawl-vectors.html and save it in the
@@ -59,7 +58,7 @@ def download_fasttext_embeddings(lang_id: str, saving_dir: str) -> str:
 
     saving_file_path = os.path.join(saving_dir, gz_file_name)
 
-    if _download_gz_model(gz_file_name, saving_file_path):
+    if _download_gz_model(gz_file_name, saving_file_path, verbose=verbose):
         with gzip.open(os.path.join(saving_dir, gz_file_name), "rb") as f:
             with open(os.path.join(saving_dir, file_name), "wb") as f_out:
                 shutil.copyfileobj(f, f_out)
@@ -68,7 +67,7 @@ def download_fasttext_embeddings(lang_id: str, saving_dir: str) -> str:
     return file_name_path  # return the full path to the fastText embeddings
 
 
-def _download_gz_model(gz_file_name: str, saving_path: str) -> bool:  # now use a saving path
+def _download_gz_model(gz_file_name: str, saving_path: str, verbose: bool = True) -> bool:  # now use a saving path
     """
     Simpler version of the _download_gz_model function from fastText to download pre-trained common-crawl
     vectors from fastText's website https://fasttext.cc/docs/en/crawl-vectors.html and save it in the
@@ -76,16 +75,18 @@ def _download_gz_model(gz_file_name: str, saving_path: str) -> bool:  # now use 
     """
 
     url = "https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/%s" % gz_file_name
-    warnings.warn("The fastText pre-trained word embeddings will be download (6.8 GO), "
-                  "this process will take several minutes.")
-    _download_file(url, saving_path)
+    if verbose:
+        print("The fastText pre-trained word embeddings will be downloaded (6.8 GO), "
+              "this process will take several minutes.")
+    _download_file(url, saving_path, verbose=verbose)
 
     return True
 
 
 # No modification, we just need to call our _print_progress function
-def _download_file(url, write_file_name, chunk_size=2**13):
-    print("Downloading %s" % url)
+def _download_file(url: str, write_file_name: str, chunk_size: int = 2**13, verbose: bool = True):
+    if verbose:
+        print("Downloading %s" % url)
     response = urlopen(url)
     if hasattr(response, "getheader"):
         file_size = int(response.getheader("Content-Length").strip())
@@ -100,7 +101,8 @@ def _download_file(url, write_file_name, chunk_size=2**13):
             if not chunk:
                 break
             f.write(chunk)
-            _print_progress(downloaded, file_size)
+            if verbose:
+                _print_progress(downloaded, file_size)
 
     os.rename(download_file_name, write_file_name)
 

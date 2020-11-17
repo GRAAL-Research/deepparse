@@ -124,7 +124,7 @@ class AddressParserTest(TestCase):
 
     @patch("deepparse.parser.address_parser.PreTrainedFastTextSeq2SeqModel")
     @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
-    def test_givenAFastestModelType__whenInstanciatingParser_thenInstanciateFasttextVectorizerWithCorrectParameters(
+    def test_givenAFastestModelType_whenInstanciatingParser_thenInstanciateFasttextVectorizerWithCorrectParameters(
             self, pretrained_model_mock, downloader_mock):
         with patch("deepparse.parser.address_parser.FastTextEmbeddingsModel", return_value=self.embeddings_model_mock):
             with patch("deepparse.parser.address_parser.FastTextVectorizer") as vectorizer:
@@ -134,7 +134,7 @@ class AddressParserTest(TestCase):
 
     @patch("deepparse.parser.address_parser.PreTrainedFastTextSeq2SeqModel")
     @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
-    def test_givenAFasttextModelType__whenInstanciatingParser_thenInstanciateFasttextVectorizerWithCorrectParameters(
+    def test_givenAFasttextModelType_whenInstanciatingParser_thenInstanciateFasttextVectorizerWithCorrectParameters(
             self, pretrained_model_mock, downloader_mock):
         with patch("deepparse.parser.address_parser.FastTextEmbeddingsModel", return_value=self.embeddings_model_mock):
             with patch("deepparse.parser.address_parser.FastTextVectorizer") as vectorizer:
@@ -144,7 +144,7 @@ class AddressParserTest(TestCase):
 
     @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
     @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
-    def test_givenAFastestModelType__whenInstanciatingParser_thenInstanciatePretrainedModelrWithCorrectParameters(
+    def test_givenAFastestModelType_whenInstanciatingParser_thenInstanciatePretrainedModelrWithCorrectParameters(
             self, pretrained_model_mock, embeddings_model_mock):
         with patch("deepparse.parser.address_parser.PreTrainedFastTextSeq2SeqModel") as model:
             self.address_parser = AddressParser(model=self.a_fastest_model_type, device=self.a_device)
@@ -153,7 +153,7 @@ class AddressParserTest(TestCase):
 
     @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
     @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
-    def test_givenAFasttextModelType__whenInstanciatingParser_thenInstanciatePretrainedModelrWithCorrectParameters(
+    def test_givenAFasttextModelType_whenInstanciatingParser_thenInstanciatePretrainedModelrWithCorrectParameters(
             self, pretrained_model_mock, embeddings_model_mock):
         with patch("deepparse.parser.address_parser.PreTrainedFastTextSeq2SeqModel") as model:
             self.address_parser = AddressParser(model=self.a_fasttext_model_type, device=self.a_device)

@@ -16,7 +16,7 @@ class FasttextEmbeddingsModelTest(TestCase):
         self.model = MagicMock()
         self.model.dim = 9
 
-    def test_whenInstanciatedWithPath_thenShouldLoadFasttextModel(self):
+    def test_whenInstantiatedWithPath_thenShouldLoadFasttextModel(self):
         with patch("deepparse.embeddings_models.fasttext_embeddings_model.load_fasttext_embeddings",
                    return_value=self.model) as loader:
             self.embeddings_model = FastTextEmbeddingsModel(self.a_path)

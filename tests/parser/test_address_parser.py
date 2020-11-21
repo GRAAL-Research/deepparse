@@ -6,8 +6,6 @@ from unittest.mock import patch, Mock
 
 from torch import device
 
-from deepparse import download_from_url
-from deepparse.dataset_container import PickleDatasetContainer
 from deepparse.parser.address_parser import AddressParser
 
 

@@ -1,4 +1,5 @@
 import os
+import random
 import warnings
 from abc import ABC
 from typing import Tuple
@@ -48,7 +49,7 @@ class Seq2SeqModel(ABC, nn.Module):
 
         if not os.path.isfile(model_path):
             download_weights(model_type, root_path, verbose=self.verbose)
-        elif verify_latest_version(model_type, root_path):
+        elif verify_latest_version(model_type):
             if self.verbose:
                 warnings.warn("A new version of the pre-trained model is available. "
                               "The newest model will be downloaded.")
@@ -88,8 +89,26 @@ class Seq2SeqModel(ABC, nn.Module):
         decoder_input = torch.zeros(1, batch_size, 1).to(self.device).new_full((1, batch_size, 1), -1)
         return decoder_input, decoder_hidden
 
-    def _decoder_steps(self, decoder_input: torch.Tensor, decoder_hidden: torch.Tensor, max_length: int,
-                       batch_size: int) -> torch.Tensor:
+    def _decoder_steps(self, decoder_input: torch.Tensor, decoder_hidden: torch.Tensor, target: torch.Tensor,
+                       max_length: int, batch_size: int) -> torch.Tensor:
+        # pylint: disable=too-many-arguments
+        """
+        Step of the encoder.
+
+        Args:
+            decoder_input (~torch.Tensor): The decoder input (so the encode output).
+            decoder_hidden (~torch.Tensor): The encoder hidden state (so the encode hidden state).
+            target (~torch.Tensor) : The target of the batch element, use only when we retrain the model since we do
+                `teacher forcing <https://machinelearningmastery.com/teacher-forcing-for-recurrent-neural-networks/>`_.
+                Default value is None since we mostly don't have the target except for retrain.
+            max_length (int): The max length of the sequence.
+            batch_size (int): Number of element in the batch.
+
+        Return:
+            A tuple (``x``, ``y``) where ``x`` is the decoder input (a zeros tensor) and ``y`` is the decoder
+            hidden states.
+        """
+
         # The empty prediction sequence
         # +1 for the EOS
         # 9 for the output size (9 tokens)
@@ -105,11 +124,21 @@ class Seq2SeqModel(ABC, nn.Module):
         _, decoder_input = decoder_output.topk(1)
 
         # we loop the same steps for the rest of the sequence
-        for idx in range(max_length):
-            decoder_output, decoder_hidden = self.decoder(decoder_input.view(1, batch_size, 1), decoder_hidden)
 
-            prediction_sequence[idx + 1] = decoder_output
+        if target is not None and random.random() < 0.5:
+            # force the real target value instead of the predicted one to help learning
+            target = target.transpose(0, 1)
+            for idx in range(max_length):
+                decoder_input = target[idx].view(1, batch_size, 1)
+                decoder_output, decoder_hidden = self.decoder(decoder_input, decoder_hidden)
 
-            _, decoder_input = decoder_output.topk(1)
+                prediction_sequence[idx + 1] = decoder_output
+        else:
+            for idx in range(max_length):
+                decoder_output, decoder_hidden = self.decoder(decoder_input.view(1, batch_size, 1), decoder_hidden)
+
+                prediction_sequence[idx + 1] = decoder_output
+
+                _, decoder_input = decoder_output.topk(1)
 
         return prediction_sequence  # the sequence is now fully parse

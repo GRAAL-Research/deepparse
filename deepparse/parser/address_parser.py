@@ -1,7 +1,6 @@
 import math
 import os
 import re
-import warnings
 from typing import List, Union, Dict, Tuple
 
 import numpy as np
@@ -12,7 +11,7 @@ from torch.optim import SGD
 from torch.utils.data import DataLoader, Subset
 
 from .parsed_address import ParsedAddress
-from .. import load_tuple_to_device, CACHE_PATH, verify_latest_version, handle_checkpoint
+from .. import load_tuple_to_device, CACHE_PATH, handle_checkpoint
 from ..converter import TagsConverter, fasttext_data_padding, DataTransform
 from ..converter.data_padding import bpemb_data_padding
 from ..dataset_container import DatasetContainerInterface
@@ -117,6 +116,7 @@ class AddressParser:
                  rounding: int = 4,
                  verbose: bool = True,
                  path_to_retrained_model: Union[str, None] = None) -> None:
+        # pylint: disable=too-many-arguments
         self._process_device(device)
 
         self.rounding = rounding
@@ -138,7 +138,8 @@ class AddressParser:
 
             self.data_converter = fasttext_data_padding
 
-            self.model = FastTextSeq2SeqModel(self.device, verbose=self.verbose,
+            self.model = FastTextSeq2SeqModel(self.device,
+                                              verbose=self.verbose,
                                               path_to_retrained_model=path_to_retrained_model)
 
         elif self.model_type in ("bpemb", "best", "lightest"):
@@ -149,14 +150,12 @@ class AddressParser:
 
             self.data_converter = bpemb_data_padding
 
-            self.model = BPEmbSeq2SeqModel(self.device, verbose=self.verbose,
+            self.model = BPEmbSeq2SeqModel(self.device,
+                                           verbose=self.verbose,
                                            path_to_retrained_model=path_to_retrained_model)
         else:
             raise NotImplementedError(f"There is no {model_type} network implemented. Value can be: "
                                       f"fasttext, bpemb, lightest (bpemb), fastest (fasttext) or best (bpemb).")
-
-        if path_to_retrained_model is not None:
-            self.model_type += "_fine_tuned"
         self.model.eval()
 
     def __str__(self) -> str:
@@ -306,7 +305,6 @@ class AddressParser:
                               epochs=epochs,
                               seed=seed,
                               callbacks=callbacks)
-        self.model_type += "_retrain"
         return train_res
 
     def test(self,

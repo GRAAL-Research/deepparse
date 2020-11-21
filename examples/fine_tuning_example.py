@@ -1,16 +1,18 @@
 import poutyne
 
-from deepparse import download_data
+from deepparse import download_from_url
 from deepparse.dataset_container import PickleDatasetContainer
 from deepparse.parser import AddressParser
 
-saving_dir = './data/'
+# First, let's download the train and test data from the public repository
+saving_dir = "./data/"
+file_extension = ".p"
 training_dataset_name = "sample_noisy_data"
 test_dataset_name = "test_sample_data"
-download_data(saving_dir, dataset_name=training_dataset_name)
-download_data(saving_dir, dataset_name=test_dataset_name)
+download_from_url(training_dataset_name, saving_dir, file_extension=file_extension)
+download_from_url(test_dataset_name, saving_dir, file_extension=file_extension)
 
-training_container = PickleDatasetContainer(saving_dir + training_dataset_name + ".p")
+training_container = PickleDatasetContainer(saving_dir + training_dataset_name + file_extension)
 
 address_parser = AddressParser(model="fasttext", device=0)
 

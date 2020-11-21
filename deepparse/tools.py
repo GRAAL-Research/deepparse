@@ -33,18 +33,18 @@ def verify_if_model_in_cache(model: str) -> bool:
         return False
 
 
-def download_from_url(model: str, saving_dir: str, extension: str):
+def download_from_url(file_name: str, saving_dir: str, file_extension: str):
     """
     Simple function to download the content of a file from a distant repository.
     """
-    model_url = BASE_URL + "{}." + extension
-    url = model_url.format(model)
+    model_url = BASE_URL + "{}." + file_extension
+    url = model_url.format(file_name)
     r = requests.get(url)
     r.raise_for_status()  # raise exception if 404 or other http error
 
     os.makedirs(saving_dir, exist_ok=True)
 
-    open(os.path.join(saving_dir, f"{model}.{extension}"), "wb").write(r.content)
+    open(os.path.join(saving_dir, f"{file_name}.{file_extension}"), "wb").write(r.content)
 
 
 def download_weights(model: str, saving_dir: str, verbose: bool = True) -> None:
@@ -67,21 +67,6 @@ def load_tuple_to_device(padded_address, device):
     the tensor loaded to the device.
     """
     return tuple([element.to(device) if isinstance(element, torch.Tensor) else element for element in padded_address])
-
-
-def download_data(saving_dir, dataset_name):
-    """
-    Function to download a dataset (dataset_name) from our public repository and save it into the saving_dir.
-    """
-    print(f"Download of dataset {dataset_name}")
-    dataset_name += ".p"
-    url = BASE_URL + dataset_name
-    r = requests.get(url)
-    r.raise_for_status()  # raise exception if 404 or other http error
-
-    os.makedirs(saving_dir, exist_ok=True)
-
-    open(os.path.join(saving_dir, f"{dataset_name}"), 'wb').write(r.content)
 
 
 def weight_init(m):

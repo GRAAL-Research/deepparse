@@ -23,9 +23,6 @@ class AddressParserTest(TestCase):
         cls.a_rounding = 5
         cls.a_device = "cpu"
         cls.a_torch_device = device(cls.a_device)
-        cls.a_train_ratio = 0.8
-        cls.a_batch_size = 8
-        cls.a_epochs_number = 1
         cls.verbose = True
 
         cls.BPEmb_embeddings_model_param = {"lang": "multi", "vs": 100000, "dim": 300}
@@ -33,13 +30,6 @@ class AddressParserTest(TestCase):
         os.makedirs(cls.fasttext_download_path, exist_ok=True)
         cls.a_language = "fr"
         cls.a_embeddings_path = "."
-
-        # Download the data for testing
-        cls.saving_dir = './data/'
-        cls.training_dataset_name = "sample_noisy_data-light"
-        cls.test_dataset_name = "test_sample_data-light"
-        download_from_url(cls.training_dataset_name, cls.saving_dir, file_extension="p")
-        download_from_url(cls.test_dataset_name, cls.saving_dir, file_extension="p")
 
     def setUp(self):
         self.address_parser = 0
@@ -171,14 +161,3 @@ class AddressParserTest(TestCase):
             self.address_parser = AddressParser(model_type=self.a_fasttext_model_type, device=self.a_device)
 
             model.assert_called_with(self.a_torch_device, verbose=self.verbose)
-
-    # def test_givenAFasttextModelType_whenRetrain_thenWeightsAreUpdated(self):
-    #     training_container = PickleDatasetContainer(self.saving_dir + self.training_dataset_name + ".p")
-    #
-    #     self.address_parser = AddressParser(model_type=self.a_fasttext_model_type, device=self.a_device)
-    #
-    #     weights_before_retrain = self.address_parser.model_type
-    #
-    #     self.address_parser.retrain(training_container, train_ratio=self.a_train_ratio, batch_size=self.a_batch_size,
-    #                                 epochs=self.a_epochs_number)
-

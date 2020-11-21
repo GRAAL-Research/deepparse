@@ -143,6 +143,9 @@ class AddressParser:
 
         self.model.eval()
 
+    def __str__(self) -> str:
+        return self.model_type
+
     def __call__(self,
                  addresses_to_parse: Union[List[str], str],
                  with_prob: bool = False) -> Union[ParsedAddress, List[ParsedAddress]]:

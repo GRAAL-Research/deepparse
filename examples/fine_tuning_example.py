@@ -1,26 +1,8 @@
-import os
-
 import poutyne
-import requests
 
-from deepparse import BASE_URL
+from deepparse import download_data
 from deepparse.dataset_container import PickleDatasetContainer
 from deepparse.parser import AddressParser
-
-
-# First, let's download a noisy dataset to retrain our model
-def download_data(saving_dir, dataset_name):
-    """
-    Function to download the dataset using data_type to specify if we want the train, valid or test.
-    """
-    print(f"Download of dataset {dataset_name}")
-    dataset_name += ".p"
-    url = BASE_URL + dataset_name
-    r = requests.get(url)
-    os.makedirs(saving_dir, exist_ok=True)
-
-    open(os.path.join(saving_dir, f"{dataset_name}"), 'wb').write(r.content)
-
 
 saving_dir = './data/'
 training_dataset_name = "sample_noisy_data"

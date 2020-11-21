@@ -68,6 +68,19 @@ def load_tuple_to_device(padded_address, device):
     return tuple([element.to(device) if isinstance(element, torch.Tensor) else element for element in padded_address])
 
 
+def download_data(saving_dir, dataset_name):
+    """
+    Function to download a dataset (dataset_name) from our public repository and save it into the saving_dir.
+    """
+    print(f"Download of dataset {dataset_name}")
+    dataset_name += ".p"
+    url = BASE_URL + dataset_name
+    r = requests.get(url)
+    os.makedirs(saving_dir, exist_ok=True)
+
+    open(os.path.join(saving_dir, f"{dataset_name}"), 'wb').write(r.content)
+
+
 def weight_init(m):
     # pylint: disable=too-many-branches, too-many-statements
     """

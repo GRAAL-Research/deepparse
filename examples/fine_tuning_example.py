@@ -14,7 +14,7 @@ download_from_url(test_dataset_name, saving_dir, file_extension=file_extension)
 
 training_container = PickleDatasetContainer(saving_dir + training_dataset_name + "." + file_extension)
 
-address_parser = AddressParser(model="fasttext", device=0)
+address_parser = AddressParser(model_type="fasttext", device=0)
 
 # now let's retrain for 5 epoch using a batch size of 8 since the data is really small for the example.
 # the starting default 0.01 learning rate, but using a learning rate scheduler to lower the learning rate as we progress.

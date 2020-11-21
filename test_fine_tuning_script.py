@@ -9,7 +9,7 @@ from deepparse.parser import AddressParser
 
 
 def main(args):
-    address_parser = AddressParser(model=args.model_type, device=0)
+    address_parser = AddressParser(model_type=args.model_type, device=0)
 
     test_container = PickleDatasetContainer(args.test_dataset_path)
 

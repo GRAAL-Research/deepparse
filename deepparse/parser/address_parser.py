@@ -47,7 +47,7 @@ class AddressParser:
     networks either with fastText or BPEmb.
 
     Args:
-        model (str): The network name to use, can be either:
+        model_type (str): The network name to use, can be either:
 
             - fasttext (need ~9 GO of RAM to be used);
             - bpemb (need ~2 GO of RAM to be used);
@@ -96,12 +96,12 @@ class AddressParser:
                 address_parser = AddressParser(device=0) #on gpu device 0
                 parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
 
-                address_parser = AddressParser(model="fasttext", device="cpu") # fasttext model on cpu
+                address_parser = AddressParser(model_type="fasttext", device="cpu") # fasttext model on cpu
                 parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
     """
 
     def __init__(self,
-                 model: str = "best",
+                 model_type: str = "best",
                  device: Union[int, str, torch.device] = 0,
                  rounding: int = 4,
                  verbose: bool = True) -> None:
@@ -112,9 +112,9 @@ class AddressParser:
 
         self.tags_converter = TagsConverter(_pre_trained_tags_to_idx)
 
-        self.model = model.lower()
+        self.model_type = model_type.lower()
         # model factory
-        if self.model in ("fasttext", "fastest"):
+        if self.model_type in ("fasttext", "fastest"):
             os.makedirs(CACHE_PATH, exist_ok=True)
 
             file_name = download_fasttext_embeddings("fr", saving_dir=CACHE_PATH, verbose=self.verbose)
@@ -126,9 +126,9 @@ class AddressParser:
 
             self.data_converter = fasttext_data_padding
 
-            self.pre_trained_model = PreTrainedFastTextSeq2SeqModel(self.device, verbose=self.verbose)
+            self.model = PreTrainedFastTextSeq2SeqModel(self.device, verbose=self.verbose)
 
-        elif self.model in ("bpemb", "best", "lightest"):
+        elif self.model_type in ("bpemb", "best", "lightest"):
             if self.verbose:
                 print("Loading the embeddings model")
 
@@ -136,12 +136,12 @@ class AddressParser:
 
             self.data_converter = bpemb_data_padding
 
-            self.pre_trained_model = PreTrainedBPEmbSeq2SeqModel(self.device, verbose=self.verbose)
+            self.model = PreTrainedBPEmbSeq2SeqModel(self.device, verbose=self.verbose)
         else:
-            raise NotImplementedError(f"There is no {model} network implemented. Value can be: "
+            raise NotImplementedError(f"There is no {model_type} network implemented. Value can be: "
                                       f"fasttext, bpemb, lightest (bpemb), fastest (fasttext) or best (bpemb).")
 
-        self.pre_trained_model.eval()
+        self.model.eval()
 
     def __call__(self,
                  addresses_to_parse: Union[List[str], str],
@@ -186,7 +186,7 @@ class AddressParser:
         padded_address = self.data_converter(vectorize_address)
         padded_address = load_tuple_to_device(padded_address, self.device)
 
-        predictions = self.pre_trained_model(*padded_address)
+        predictions = self.model(*padded_address)
 
         tags_predictions = predictions.max(2)[1].transpose(0, 1).cpu().numpy()
         tags_predictions_prob = torch.exp(predictions.max(2)[0]).transpose(0, 1).detach().cpu().numpy()
@@ -270,13 +270,13 @@ class AddressParser:
         train_generator, valid_generator = self._create_training_data_generator(dataset_container, train_ratio,
                                                                                 batch_size, num_workers)
 
-        optimizer = SGD(self.pre_trained_model.parameters(), learning_rate)
+        optimizer = SGD(self.model.parameters(), learning_rate)
 
         loss_fn = nll_loss_function
         accuracy_fn = accuracy
 
         exp = Experiment(logging_path,
-                         self.pre_trained_model,
+                         self.model,
                          device=self.device,
                          optimizer=optimizer,
                          loss_function=loss_fn,
@@ -349,7 +349,7 @@ class AddressParser:
         accuracy_fn = accuracy
 
         exp = Experiment(logging_path,
-                         self.pre_trained_model,
+                         self.model,
                          device=self.device,
                          loss_function=loss_fn,
                          batch_metrics=[accuracy_fn])
@@ -406,7 +406,7 @@ class AddressParser:
 
     def _set_data_transformer(self):
         train_vectorizer = TrainVectorizer(self.vectorizer, self.tags_converter)  # vectorize to provide also the target
-        data_transform = DataTransform(train_vectorizer, self.model)  # use for transforming the data prior to training
+        data_transform = DataTransform(train_vectorizer, self.model_type)  # use for transforming the data prior to training
         return data_transform
 
     def _create_training_data_generator(self, dataset_container: DatasetContainerInterface, train_ratio: float,

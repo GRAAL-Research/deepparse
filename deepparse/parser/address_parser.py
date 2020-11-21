@@ -12,7 +12,7 @@ from torch.optim import SGD
 from torch.utils.data import DataLoader, Subset
 
 from .parsed_address import ParsedAddress
-from .. import load_tuple_to_device, CACHE_PATH, verify_latest_version
+from .. import load_tuple_to_device, CACHE_PATH, verify_latest_version, handle_checkpoint
 from ..converter import TagsConverter, fasttext_data_padding, DataTransform
 from ..converter.data_padding import bpemb_data_padding
 from ..dataset_container import DatasetContainerInterface
@@ -354,7 +354,7 @@ class AddressParser:
                          loss_function=loss_fn,
                          batch_metrics=[accuracy_fn])
 
-        checkpoint = self._validate_checkpoint(checkpoint)
+        checkpoint = handle_checkpoint(checkpoint)
 
         test_res = exp.test(test_generator, seed=seed, callbacks=callbacks, checkpoint=checkpoint)
         return test_res
@@ -406,7 +406,8 @@ class AddressParser:
 
     def _set_data_transformer(self):
         train_vectorizer = TrainVectorizer(self.vectorizer, self.tags_converter)  # vectorize to provide also the target
-        data_transform = DataTransform(train_vectorizer, self.model_type)  # use for transforming the data prior to training
+        data_transform = DataTransform(train_vectorizer,
+                                       self.model_type)  # use for transforming the data prior to training
         return data_transform
 
     def _create_training_data_generator(self, dataset_container: DatasetContainerInterface, train_ratio: float,
@@ -437,21 +438,3 @@ class AddressParser:
                                      num_workers=num_workers)
 
         return train_generator, valid_generator
-
-    def _validate_checkpoint(self, checkpoint):
-        if checkpoint in ('best', 'last'):
-            pass
-        elif isinstance(checkpoint, int):
-            pass
-        elif checkpoint == 'fasttext':
-            if verify_latest_version("fasttext"):
-                warnings.warn("A newer model of fasttext is available, you can download it using the download script.")
-            checkpoint = os.path.join(CACHE_PATH, "fasttext.p")
-        elif checkpoint == 'bpemb':
-            if verify_latest_version("bpemb"):
-                warnings.warn("A newer model bpemb is available, you can download it using the download script.")
-            checkpoint = os.path.join(CACHE_PATH, "bpemb.p")
-        else:
-            raise ValueError("The checkpoint is not valid. Can be 'best', 'last', a int, 'fasttext' or 'bpemb'.")
-
-        return checkpoint

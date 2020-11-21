@@ -70,6 +70,28 @@ def load_tuple_to_device(padded_address, device):
     return tuple([element.to(device) if isinstance(element, torch.Tensor) else element for element in padded_address])
 
 
+def handle_checkpoint(checkpoint):
+    """
+    Handle the checkpoint format validity and path.
+    """
+    if checkpoint in ('best', 'last'):
+        pass
+    elif isinstance(checkpoint, int):
+        pass
+    elif checkpoint == 'fasttext':
+        if verify_latest_version("fasttext"):
+            warnings.warn("A newer model of fasttext is available, you can download it using the download script.")
+        checkpoint = os.path.join(CACHE_PATH, "fasttext.p")
+    elif checkpoint == 'bpemb':
+        if verify_latest_version("bpemb"):
+            warnings.warn("A newer model bpemb is available, you can download it using the download script.")
+        checkpoint = os.path.join(CACHE_PATH, "bpemb.p")
+    else:
+        raise ValueError("The checkpoint is not valid. Can be 'best', 'last', a int, 'fasttext' or 'bpemb'.")
+
+    return checkpoint
+
+
 def weight_init(m):
     # pylint: disable=too-many-branches, too-many-statements
     """

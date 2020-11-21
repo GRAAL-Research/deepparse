@@ -49,7 +49,7 @@ class PreTrainedSeq2SeqModel(ABC, nn.Module):
 
         if not os.path.isfile(model_path):
             download_weights(model_type, CACHE_PATH, verbose=self.verbose)
-        elif verify_latest_version(model_type, CACHE_PATH):
+        elif verify_latest_version(model_type):
             if self.verbose:
                 warnings.warn("A new version of the pre-trained model is available. "
                               "The newest model will be downloaded.")

@@ -23,7 +23,7 @@ def main(args: argparse.Namespace) -> None:
     version_path = os.path.join(CACHE_PATH, f"{model}.version")
     if not os.path.isfile(model_path) or not os.path.isfile(version_path):
         download_weights(model, CACHE_PATH)
-    elif verify_latest_version(model, CACHE_PATH):
+    elif verify_latest_version(model):
         warnings.warn("A new version of the pre-trained model is available. The newest model will be downloaded.")
         download_weights(model, CACHE_PATH)
 

@@ -1,6 +1,7 @@
 import math
 import os
 import re
+import warnings
 from typing import List, Union, Dict, Tuple
 
 import numpy as np
@@ -11,7 +12,7 @@ from torch.optim import SGD
 from torch.utils.data import DataLoader, Subset
 
 from .parsed_address import ParsedAddress
-from .. import load_tuple_to_device
+from .. import load_tuple_to_device, CACHE_PATH, verify_latest_version
 from ..converter import TagsConverter, fasttext_data_padding, DataTransform
 from ..converter.data_padding import bpemb_data_padding
 from ..dataset_container import DatasetContainerInterface
@@ -114,10 +115,9 @@ class AddressParser:
         self.model = model.lower()
         # model factory
         if self.model in ("fasttext", "fastest"):
-            path = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
-            os.makedirs(path, exist_ok=True)
+            os.makedirs(CACHE_PATH, exist_ok=True)
 
-            file_name = download_fasttext_embeddings("fr", saving_dir=path, verbose=self.verbose)
+            file_name = download_fasttext_embeddings("fr", saving_dir=CACHE_PATH, verbose=self.verbose)
             if self.verbose:
                 print("Loading the embeddings model")
             embeddings_model = FastTextEmbeddingsModel(file_name)
@@ -312,10 +312,12 @@ class AddressParser:
                 By default we set no callback.
             seed (int): Seed to use (by default 42).
             logging_path (str): The logging path for the checkpoints. By default the path is ``./chekpoints``.
-            checkpoint (Union[str, int]): Checkpoint to use for the test. If 'best', will load the best weights.
-                If 'last', will load the last model checkpoint. If int, will load the checkpoint of the specified epoch.
-                Meaning that the API restrict that your model to load must have a name following format
-                ``checkpoint_epoch_<int>.ckpt`` due to framework constraint. (Default value = 'best')
+            checkpoint (Union[str, int]): Checkpoint to use for the test.
+                - If 'best', will load the best weights.
+                - If 'last', will load the last model checkpoint.
+                - If int, will load a specific checkpoint (e.g. 3).
+                - If 'fasttext' will load our pre-trained fasttext model and test it on your data.
+                - If 'bpemb' will load our pre-trained bpemb model and test it on your data.
         Return:
             A dictionary with the best epoch stats (see `Experiment class
             <https://poutyne.org/experiment.html#poutyne.Experiment.train>`_ for details).
@@ -351,6 +353,8 @@ class AddressParser:
                          device=self.device,
                          loss_function=loss_fn,
                          batch_metrics=[accuracy_fn])
+
+        checkpoint = self._validate_checkpoint(checkpoint)
 
         test_res = exp.test(test_generator, seed=seed, callbacks=callbacks, checkpoint=checkpoint)
         return test_res
@@ -433,3 +437,21 @@ class AddressParser:
                                      num_workers=num_workers)
 
         return train_generator, valid_generator
+
+    def _validate_checkpoint(self, checkpoint):
+        if checkpoint in ('best', 'last'):
+            pass
+        elif isinstance(checkpoint, int):
+            pass
+        elif checkpoint == 'fasttext':
+            if verify_latest_version("fasttext"):
+                warnings.warn("A newer model of fasttext is available, you can download it using the download script.")
+            checkpoint = os.path.join(CACHE_PATH, "fasttext.p")
+        elif checkpoint == 'bpemb':
+            if verify_latest_version("bpemb"):
+                warnings.warn("A newer model bpemb is available, you can download it using the download script.")
+            checkpoint = os.path.join(CACHE_PATH, "bpemb.p")
+        else:
+            raise ValueError("The checkpoint is not valid. Can be 'best', 'last', a int, 'fasttext' or 'bpemb'.")
+
+        return checkpoint

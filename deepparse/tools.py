@@ -1,4 +1,5 @@
 import os
+import warnings
 
 import requests
 import torch
@@ -6,16 +7,30 @@ import torch.nn as nn
 import torch.nn.init as init
 
 BASE_URL = "https://graal.ift.ulaval.ca/public/deepparse/"
+CACHE_PATH = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
 
 
-def verify_latest_version(model: str, root_path: str) -> bool:
+def verify_latest_version(model: str) -> bool:
     """
     Verify if the local model is the latest.
     """
-    local_model_hash_version = open(os.path.join(root_path, model + ".version")).readline()
-    download_from_url(model, root_path, "version")
-    remote_model_hash_version = open(os.path.join(root_path, model + ".version")).readline()
+    local_model_hash_version = open(os.path.join(CACHE_PATH, model + ".version")).readline()
+    download_from_url(model, CACHE_PATH, "version")
+    remote_model_hash_version = open(os.path.join(CACHE_PATH, model + ".version")).readline()
     return local_model_hash_version != remote_model_hash_version
+
+
+def verify_if_model_in_cache(model: str) -> bool:
+    """
+    Verify if a model is in cache and give warning if not latest.
+    """
+    try:
+        open(os.path.join(CACHE_PATH, model + ".version"))
+        if verify_latest_version(model):
+            warnings.warn("A newer model is available, you can download it using the download script.")
+        return True
+    except FileNotFoundError:
+        return False
 
 
 def download_from_url(model: str, saving_dir: str, extension: str):

@@ -23,3 +23,4 @@ Added finetuning API to allow finetuning of our models (retrain)
 Added a method to test models (test)
 Added metric, loss and dataset container to facilitate finetuning training
 Added a example of finetuning
+Added way to load retrain model when instanciation of AddressParser

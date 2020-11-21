@@ -1,22 +1,29 @@
+from typing import Union
+
 import torch
 
-from .pre_trained_seq2seq import PreTrainedSeq2SeqModel
+from .seq2seq import Seq2SeqModel
 
 
-class PreTrainedFastTextSeq2SeqModel(PreTrainedSeq2SeqModel):
+class FastTextSeq2SeqModel(Seq2SeqModel):
     """
-    FastText pre-trained Seq2Seq network, the lightest of the two (in ``GPU``/``CPU`` consumption) for a little less
-    accuracy.
+    FastText Seq2Seq network, the lightest of the two model we propose (in ``GPU``/``CPU`` consumption) for a little
+    less accuracy.
 
     Args:
         device (~torch.device): The device tu use for the prediction.
         verbose (bool): Turn on/off the verbosity of the model. The default value is True.
+        path_to_retrained_model (Union[str, None]): The path to the retrained model to use for the seq2seq.
     """
 
-    def __init__(self, device: torch.device, verbose: bool = True) -> None:
+    def __init__(self, device: torch.device, verbose: bool = True,
+                 path_to_retrained_model: Union[str, None] = None) -> None:
         super().__init__(device, verbose)
 
-        self._load_pre_trained_weights("fasttext")
+        if path_to_retrained_model is not None:
+            self._load_weights(path_to_retrained_model)
+        else:
+            self._load_pre_trained_weights("fasttext")
 
     def forward(self,
                 to_predict: torch.Tensor,

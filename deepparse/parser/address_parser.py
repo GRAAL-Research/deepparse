@@ -20,8 +20,8 @@ from ..embeddings_models import BPEmbEmbeddingsModel
 from ..embeddings_models import FastTextEmbeddingsModel
 from ..fasttext_tools import download_fasttext_embeddings
 from ..metrics import nll_loss_function, accuracy
-from ..network.pre_trained_bpemb_seq2seq import PreTrainedBPEmbSeq2SeqModel
-from ..network.pre_trained_fasttext_seq2seq import PreTrainedFastTextSeq2SeqModel
+from ..network.bpemb_seq2seq import BPEmbSeq2SeqModel
+from ..network.fasttext_seq2seq import FastTextSeq2SeqModel
 from ..vectorizer import FastTextVectorizer, BPEmbVectorizer, TrainVectorizer
 
 _pre_trained_tags_to_idx = {
@@ -66,6 +66,11 @@ class AddressParser:
             The default value is GPU with the index ``0`` if it exist, otherwise the value is ``CPU``.
         rounding (int): The rounding to use when asking the probability of the tags. The default value is 4 digits.
         verbose (bool): Turn on/off the verbosity of the model weights download and loading. The default value is True.
+        path_to_retrained_model (Union[str, None]): The path to the retrained model to use for prediction. Be sure to
+            use the same model_type as the retrained model. For example, if you have use our pre-trained fasttext
+            model and fine-tuned it, model_type='fasttext' and path_to_retrained_model='/path/to/model/'.
+            Default is None, meaning we use our pre-trained model.
+
 
     Note:
         For both the networks, we will download the pre-trained weights and embeddings in the ``.cache`` directory
@@ -98,13 +103,20 @@ class AddressParser:
 
                 address_parser = AddressParser(model_type="fasttext", device="cpu") # fasttext model on cpu
                 parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
+
+        Using a retrain model
+
+        .. code-block:: python
+                address_parser = AddressParser(model_type="fasttext",
+                                               path_to_retrained_model='/path_to_a_retrain_fasttext_model')
     """
 
     def __init__(self,
                  model_type: str = "best",
                  device: Union[int, str, torch.device] = 0,
                  rounding: int = 4,
-                 verbose: bool = True) -> None:
+                 verbose: bool = True,
+                 path_to_retrained_model: Union[str, None] = None) -> None:
         self._process_device(device)
 
         self.rounding = rounding
@@ -126,7 +138,8 @@ class AddressParser:
 
             self.data_converter = fasttext_data_padding
 
-            self.model = PreTrainedFastTextSeq2SeqModel(self.device, verbose=self.verbose)
+            self.model = FastTextSeq2SeqModel(self.device, verbose=self.verbose,
+                                              path_to_retrained_model=path_to_retrained_model)
 
         elif self.model_type in ("bpemb", "best", "lightest"):
             if self.verbose:
@@ -136,11 +149,14 @@ class AddressParser:
 
             self.data_converter = bpemb_data_padding
 
-            self.model = PreTrainedBPEmbSeq2SeqModel(self.device, verbose=self.verbose)
+            self.model = BPEmbSeq2SeqModel(self.device, verbose=self.verbose,
+                                           path_to_retrained_model=path_to_retrained_model)
         else:
             raise NotImplementedError(f"There is no {model_type} network implemented. Value can be: "
                                       f"fasttext, bpemb, lightest (bpemb), fastest (fasttext) or best (bpemb).")
 
+        if path_to_retrained_model is not None:
+            self.model_type += "_fine_tuned"
         self.model.eval()
 
     def __str__(self) -> str:
@@ -290,6 +306,7 @@ class AddressParser:
                               epochs=epochs,
                               seed=seed,
                               callbacks=callbacks)
+        self.model_type += "_retrain"
         return train_res
 
     def test(self,

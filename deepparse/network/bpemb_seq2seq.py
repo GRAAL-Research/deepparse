@@ -1,28 +1,33 @@
-from typing import List
+from typing import List, Union
 
 import torch
 
 from .embedding_network import EmbeddingNetwork
-from .pre_trained_seq2seq import PreTrainedSeq2SeqModel
+from .seq2seq import Seq2SeqModel
 
 
-class PreTrainedBPEmbSeq2SeqModel(PreTrainedSeq2SeqModel):
+class BPEmbSeq2SeqModel(Seq2SeqModel):
     """
-    BPEmb pre-trained Seq2Seq network, the best of the two, but takes more ``GPU``/``CPU`` resources.
+    BPEmb Seq2Seq network, the best of the two model we propose, but takes more ``GPU``/``CPU`` resources.
 
      Args:
         device (~torch.device): The device tu use for the prediction.
         verbose (bool): Turn on/off the verbosity of the model. The default value is True.
+        path_to_retrained_model (Union[str, None]): The path to the retrained model to use for the seq2seq.
     """
 
-    def __init__(self, device: torch.device, verbose: bool = True) -> None:
+    def __init__(self, device: torch.device, verbose: bool = True,
+                 path_to_retrained_model: Union[str, None] = None) -> None:
         super().__init__(device, verbose)
 
-        # pre-trained params (the 300)
+        # design dimension params (the 300)
         self.embedding_network = EmbeddingNetwork(input_size=300, hidden_size=300, projection_size=300)
         self.embedding_network.to(self.device)
 
-        self._load_pre_trained_weights("bpemb")
+        if path_to_retrained_model is not None:
+            self._load_weights(path_to_retrained_model)
+        else:
+            self._load_pre_trained_weights("bpemb")
 
     def forward(self,
                 to_predict: torch.Tensor,

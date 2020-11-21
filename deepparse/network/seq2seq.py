@@ -1,5 +1,4 @@
 import os
-import random
 import warnings
 from abc import ABC
 from typing import Tuple
@@ -10,12 +9,12 @@ from torch import load
 
 from .decoder import Decoder
 from .encoder import Encoder
-from ..tools import download_weights, verify_latest_version, CACHE_PATH
+from ..tools import download_weights, verify_latest_version
 
 
-class PreTrainedSeq2SeqModel(ABC, nn.Module):
+class Seq2SeqModel(ABC, nn.Module):
     """
-    Abstract class for callable pre-trained Seq2Seq network. The network use the pre-trained config for the encoder and
+    Abstract class for Seq2Seq network. The network use the config as design in our article for the encoder and
     decoder:
 
         - Encoder: ``input_size = 300``, ``hidden_size = 1024`` and ``num_layers = 1``
@@ -44,18 +43,29 @@ class PreTrainedSeq2SeqModel(ABC, nn.Module):
         Args:
             model_type (str): The network pre-trained weights to load.
         """
-
-        model_path = os.path.join(CACHE_PATH, f"{model_type}.ckpt")
+        root_path = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
+        model_path = os.path.join(root_path, f"{model_type}.ckpt")
 
         if not os.path.isfile(model_path):
-            download_weights(model_type, CACHE_PATH, verbose=self.verbose)
-        elif verify_latest_version(model_type):
+            download_weights(model_type, root_path, verbose=self.verbose)
+        elif verify_latest_version(model_type, root_path):
             if self.verbose:
                 warnings.warn("A new version of the pre-trained model is available. "
                               "The newest model will be downloaded.")
-            download_weights(model_type, CACHE_PATH, verbose=self.verbose)
+            download_weights(model_type, root_path, verbose=self.verbose)
 
         all_layers_params = load(model_path, map_location=self.device)
+
+        self.load_state_dict(all_layers_params)
+
+    def _load_weights(self, path_to_retrained_model: str) -> None:
+        """
+        Method to load (into the network) the weights.
+
+        Args:
+            path_to_retrained_model (str): The path to the fine-tuned model.
+        """
+        all_layers_params = load(path_to_retrained_model, map_location=self.device)
 
         self.load_state_dict(all_layers_params)
 
@@ -78,26 +88,8 @@ class PreTrainedSeq2SeqModel(ABC, nn.Module):
         decoder_input = torch.zeros(1, batch_size, 1).to(self.device).new_full((1, batch_size, 1), -1)
         return decoder_input, decoder_hidden
 
-    def _decoder_steps(self, decoder_input: torch.Tensor, decoder_hidden: torch.Tensor, target: torch.Tensor,
-                       max_length: int, batch_size: int) -> torch.Tensor:
-        # pylint: disable=too-many-arguments
-        """
-        Step of the encoder.
-
-        Args:
-            decoder_input (~torch.Tensor): The decoder input (so the encode output).
-            decoder_hidden (~torch.Tensor): The encoder hidden state (so the encode hidden state).
-            target (~torch.Tensor) : The target of the batch element, use only when we retrain the model since we do
-                `teacher forcing <https://machinelearningmastery.com/teacher-forcing-for-recurrent-neural-networks/>`_.
-                Default value is None since we mostly don't have the target except for retrain.
-            max_length (int): The max length of the sequence.
-            batch_size (int): Number of element in the batch.
-
-        Return:
-            A tuple (``x``, ``y``) where ``x`` is the decoder input (a zeros tensor) and ``y`` is the decoder
-            hidden states.
-        """
-
+    def _decoder_steps(self, decoder_input: torch.Tensor, decoder_hidden: torch.Tensor, max_length: int,
+                       batch_size: int) -> torch.Tensor:
         # The empty prediction sequence
         # +1 for the EOS
         # 9 for the output size (9 tokens)
@@ -113,21 +105,11 @@ class PreTrainedSeq2SeqModel(ABC, nn.Module):
         _, decoder_input = decoder_output.topk(1)
 
         # we loop the same steps for the rest of the sequence
+        for idx in range(max_length):
+            decoder_output, decoder_hidden = self.decoder(decoder_input.view(1, batch_size, 1), decoder_hidden)
 
-        if target is not None and random.random() < 0.5:
-            # force the real target value instead of the predicted one to help learning
-            target = target.transpose(0, 1)
-            for idx in range(max_length):
-                decoder_input = target[idx].view(1, batch_size, 1)
-                decoder_output, decoder_hidden = self.decoder(decoder_input, decoder_hidden)
+            prediction_sequence[idx + 1] = decoder_output
 
-                prediction_sequence[idx + 1] = decoder_output
-        else:
-            for idx in range(max_length):
-                decoder_output, decoder_hidden = self.decoder(decoder_input.view(1, batch_size, 1), decoder_hidden)
-
-                prediction_sequence[idx + 1] = decoder_output
-
-                _, decoder_input = decoder_output.topk(1)
+            _, decoder_input = decoder_output.topk(1)
 
         return prediction_sequence  # the sequence is now fully parse

@@ -27,3 +27,4 @@ test_container = PickleDatasetContainer(saving_dir + test_dataset_name + "." + f
 
 # Now let's test our fine tuned model
 address_parser.test(test_container, batch_size=256)
+

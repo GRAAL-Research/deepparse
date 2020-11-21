@@ -65,12 +65,12 @@ def main():
             "Topic :: Software Development :: Libraries :: Python Modules"
         ],
         packages=packages,
-        install_requires=["numpy", "torch", "bpemb", "fasttext", "requests", "poutyne"],
+        install_requires=["numpy", "torch", "bpemb", "fasttext", "requests"],
         python_requires=">=3.6.1",
         description="A library for parsing multinational street addresses using deep learning.",
         long_description=readme,
         long_description_content_type="text/markdown",
-        extras_require={"colorama": "colorama>=0.4.3"}
+        extras_require={"colorama": "colorama>=0.4.3", "poutyne": "poutyne>=1.1"}
     )
 
 

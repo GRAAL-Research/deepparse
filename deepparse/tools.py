@@ -40,6 +40,7 @@ def download_from_url(model: str, saving_dir: str, extension: str):
     model_url = BASE_URL + "{}." + extension
     url = model_url.format(model)
     r = requests.get(url)
+    r.raise_for_status()  # raise exception if 404 or other http error
 
     os.makedirs(saving_dir, exist_ok=True)
 
@@ -76,6 +77,8 @@ def download_data(saving_dir, dataset_name):
     dataset_name += ".p"
     url = BASE_URL + dataset_name
     r = requests.get(url)
+    r.raise_for_status()  # raise exception if 404 or other http error
+
     os.makedirs(saving_dir, exist_ok=True)
 
     open(os.path.join(saving_dir, f"{dataset_name}"), 'wb').write(r.content)

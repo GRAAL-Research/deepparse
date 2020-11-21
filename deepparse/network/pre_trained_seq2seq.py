@@ -22,7 +22,7 @@ class PreTrainedSeq2SeqModel(ABC, nn.Module):
 
      Args:
         device (~torch.device): The device tu use for the prediction.
-        verbose (bool): Turn on/off the verbose of the model. The default value is True.
+        verbose (bool): Turn on/off the verbosity of the model. The default value is True.
     """
 
     def __init__(self, device: torch.device, verbose: bool = True) -> None:

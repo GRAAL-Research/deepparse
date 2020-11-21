@@ -38,6 +38,7 @@ def download_weights(model: str, saving_dir: str, verbose: bool = True) -> None:
     Args:
         model: The network type (i.e. fasttext or bpemb).
         saving_dir: The path to the saving directory.
+        verbose (bool): Turn on/off the verbosity of the model. The default value is True.
     """
     if verbose:
         print(f"Downloading the weights for the network {model}.")

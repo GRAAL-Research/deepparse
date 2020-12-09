@@ -31,15 +31,17 @@ def download_from_url(model: str, saving_dir: str, extension: str):
     open(os.path.join(saving_dir, f"{model}.{extension}"), "wb").write(r.content)
 
 
-def download_weights(model: str, saving_dir: str) -> None:
+def download_weights(model: str, saving_dir: str, verbose: bool = True) -> None:
     """
     Function to download the pre-trained weights of the models.
 
     Args:
         model: The network type (i.e. fasttext or bpemb).
         saving_dir: The path to the saving directory.
+        verbose (bool): Turn on/off the verbosity of the model. The default value is True.
     """
-    print(f"Downloading the weights for the network {model}.")
+    if verbose:
+        print(f"Downloading the weights for the network {model}.")
     download_from_url(model, saving_dir, "ckpt")
     download_from_url(model, saving_dir, "version")
 

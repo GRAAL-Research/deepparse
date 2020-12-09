@@ -10,10 +10,11 @@ class PreTrainedFastTextSeq2SeqModel(PreTrainedSeq2SeqModel):
 
      Args:
         device (~torch.device): The device tu use for the prediction.
+        verbose (bool): Turn on/off the verbosity of the model. The default value is True.
     """
 
-    def __init__(self, device: torch.device) -> None:
-        super().__init__(device)
+    def __init__(self, device: torch.device, verbose: bool = True) -> None:
+        super().__init__(device, verbose)
 
         self._load_pre_trained_weights("fasttext")
 

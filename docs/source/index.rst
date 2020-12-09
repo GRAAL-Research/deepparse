@@ -102,6 +102,12 @@ API Reference
   parser
   dataset_container
 
+.. toctree::
+  :glob:
+  :maxdepth: 1
+  :caption: Examples
+
+  examples/fine_tuning
 
 Indices and tables
 ==================

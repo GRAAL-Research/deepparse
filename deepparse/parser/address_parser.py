@@ -334,8 +334,10 @@ class AddressParser:
                 - If 'best', will load the best weights.
                 - If 'last', will load the last model checkpoint.
                 - If int, will load a specific checkpoint (e.g. 3).
-                - If 'fasttext' will load our pre-trained fasttext model and test it on your data.
-                - If 'bpemb' will load our pre-trained bpemb model and test it on your data.
+                - If 'str', will load a specific model (e.g. a retrained model), must be a path to a pickled format
+                    model i.e. ends with a '.p' extension (e.g. retrained_model.p).
+                - If 'fasttext', will load our pre-trained fasttext model and test it on your data.
+                - If 'bpemb', will load our pre-trained bpemb model and test it on your data.
         Return:
             A dictionary with the best epoch stats (see `Experiment class
             <https://poutyne.org/experiment.html#poutyne.Experiment.train>`_ for details).

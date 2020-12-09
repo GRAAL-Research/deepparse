@@ -108,7 +108,7 @@ def _download_gz_model(gz_file_name: str, saving_path: str, verbose: bool = True
 
 
 # No modification, we just need to call our _print_progress function
-def _download_file(url: str, write_file_name: str, chunk_size: int = 2 ** 13, verbose: bool = True):
+def _download_file(url: str, write_file_name: str, chunk_size: int = 2**13, verbose: bool = True):
     if verbose:
         print("Downloading %s" % url)
     response = urlopen(url)

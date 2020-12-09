@@ -46,6 +46,7 @@ class AddressParser:
             - fasttext-light (need ~2 GO of RAM to be used, but slower than fasttext version);
             - bpemb (need ~2 GO of RAM to be used);
             - fastest (quicker to process one address) (equivalent to fasttext);
+            - lightest (the one using the less RAM and GPU usage) (equivalent to fasttext-light);
             - best (best accuracy performance) (equivalent to bpemb).
 
             The default value is "best" for the most accurate model.
@@ -109,22 +110,24 @@ class AddressParser:
         self.tags_converter = TagsConverter(_pre_trained_tags_to_idx)
 
         model = model.lower()
-        if model in ("fasttext", "fastest", "fasttext-light"):
+        if model in ("fasttext", "fastest", "fasttext-light", "lightest"):
             path = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
             os.makedirs(path, exist_ok=True)
 
-            if model == "fasttext-light":
+            if model in ("fasttext-light", "lightest"):
                 file_name = download_fasttext_magnitude_embeddings(saving_dir=path, verbose=self.verbose)
+
+                if self.verbose:
+                    print("Loading the embeddings model")
                 embeddings_model = MagnitudeEmbeddingsModel(file_name)
                 self.vectorizer = MagnitudeVectorizer(embeddings_model=embeddings_model)
             else:
-                file_name = download_fasttext_embeddings("fr", saving_dir=path)
+                file_name = download_fasttext_embeddings("fr", saving_dir=path, verbose=self.verbose)
+
+                if self.verbose:
+                    print("Loading the embeddings model")
                 embeddings_model = FastTextEmbeddingsModel(file_name)
                 self.vectorizer = FastTextVectorizer(embeddings_model=embeddings_model)
-
-            if self.verbose:
-                print("Loading the embeddings model")
-            embeddings_model = FastTextEmbeddingsModel(file_name)
 
             self.vectorizer = FastTextVectorizer(embeddings_model=embeddings_model)
 
@@ -132,7 +135,7 @@ class AddressParser:
 
             self.pre_trained_model = PreTrainedFastTextSeq2SeqModel(self.device, verbose=self.verbose)
 
-        elif model in ("bpemb", "best", "lightest"):
+        elif model in ("bpemb", "best"):
             if self.verbose:
                 print("Loading the embeddings model")
 

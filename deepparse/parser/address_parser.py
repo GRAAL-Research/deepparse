@@ -109,44 +109,7 @@ class AddressParser:
 
         self.tags_converter = TagsConverter(_pre_trained_tags_to_idx)
 
-        model = model.lower()
-        if model in ("fasttext", "fastest", "fasttext-light", "lightest"):
-            path = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
-            os.makedirs(path, exist_ok=True)
-
-            if model in ("fasttext-light", "lightest"):
-                file_name = download_fasttext_magnitude_embeddings(saving_dir=path, verbose=self.verbose)
-
-                if self.verbose:
-                    print("Loading the embeddings model")
-                embeddings_model = MagnitudeEmbeddingsModel(file_name)
-                self.vectorizer = MagnitudeVectorizer(embeddings_model=embeddings_model)
-            else:
-                file_name = download_fasttext_embeddings("fr", saving_dir=path, verbose=self.verbose)
-
-                if self.verbose:
-                    print("Loading the embeddings model")
-                embeddings_model = FastTextEmbeddingsModel(file_name)
-                self.vectorizer = FastTextVectorizer(embeddings_model=embeddings_model)
-
-            self.vectorizer = FastTextVectorizer(embeddings_model=embeddings_model)
-
-            self.data_converter = data_padding
-
-            self.pre_trained_model = PreTrainedFastTextSeq2SeqModel(self.device, verbose=self.verbose)
-
-        elif model in ("bpemb", "best"):
-            if self.verbose:
-                print("Loading the embeddings model")
-
-            self.vectorizer = BPEmbVectorizer(embeddings_model=BPEmbEmbeddingsModel(lang="multi", vs=100000, dim=300))
-
-            self.data_converter = bpemb_data_padding
-
-            self.pre_trained_model = PreTrainedBPEmbSeq2SeqModel(self.device, verbose=self.verbose)
-        else:
-            raise NotImplementedError(f"There is no {model} network implemented. Value can be: "
-                                      f"fasttext, bpemb, lightest (bpemb), fastest (fasttext) or best (bpemb).")
+        self._model_factory(model)
 
         self.pre_trained_model.eval()
 
@@ -247,3 +210,41 @@ class AddressParser:
                 raise ValueError("Device should not be a negative number.")
         else:
             raise ValueError("Device should be a string, an int or a torch device.")
+
+    def _model_factory(self, model):
+        model = model.lower()
+        if model in ("fasttext", "fastest", "fasttext-light", "lightest"):
+            path = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
+            os.makedirs(path, exist_ok=True)
+
+            if model in ("fasttext-light", "lightest"):
+                file_name = download_fasttext_magnitude_embeddings(saving_dir=path, verbose=self.verbose)
+
+                if self.verbose:
+                    print("Loading the embeddings model")
+                embeddings_model = MagnitudeEmbeddingsModel(file_name)
+                self.vectorizer = MagnitudeVectorizer(embeddings_model=embeddings_model)
+            else:
+                file_name = download_fasttext_embeddings("fr", saving_dir=path, verbose=self.verbose)
+
+                if self.verbose:
+                    print("Loading the embeddings model")
+                embeddings_model = FastTextEmbeddingsModel(file_name)
+                self.vectorizer = FastTextVectorizer(embeddings_model=embeddings_model)
+
+            self.data_converter = data_padding
+
+            self.pre_trained_model = PreTrainedFastTextSeq2SeqModel(self.device, verbose=self.verbose)
+
+        elif model in ("bpemb", "best"):
+            if self.verbose:
+                print("Loading the embeddings model")
+
+            self.vectorizer = BPEmbVectorizer(embeddings_model=BPEmbEmbeddingsModel(lang="multi", vs=100000, dim=300))
+
+            self.data_converter = bpemb_data_padding
+
+            self.pre_trained_model = PreTrainedBPEmbSeq2SeqModel(self.device, verbose=self.verbose)
+        else:
+            raise NotImplementedError(f"There is no {model} network implemented. Value can be: "
+                                      f"fasttext, bpemb, lightest (bpemb), fastest (fasttext) or best (bpemb).")

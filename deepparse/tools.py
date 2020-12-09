@@ -14,9 +14,13 @@ def verify_latest_version(model: str) -> bool:
     """
     Verify if the local model is the latest.
     """
-    local_model_hash_version = open(os.path.join(CACHE_PATH, model + ".version")).readline()
+    local_model_hash_file = open(os.path.join(CACHE_PATH, model + ".version"))
+    local_model_hash_version = local_model_hash_file.readline()
+    local_model_hash_file.close()
     download_from_url(model, CACHE_PATH, "version")
-    remote_model_hash_version = open(os.path.join(CACHE_PATH, model + ".version")).readline()
+    remote_model_hash_file = open(os.path.join(CACHE_PATH, model + ".version"))
+    remote_model_hash_version = remote_model_hash_file.readline()
+    remote_model_hash_file.close()
     return local_model_hash_version != remote_model_hash_version
 
 
@@ -25,9 +29,10 @@ def verify_if_model_in_cache(model: str) -> bool:
     Verify if a model is in cache and give warning if not latest.
     """
     try:
-        open(os.path.join(CACHE_PATH, model + ".version"))
+        file = open(os.path.join(CACHE_PATH, model + ".version"))
         if verify_latest_version(model):
             warnings.warn("A newer model is available, you can download it using the download script.")
+            file.close()
         return True
     except FileNotFoundError:
         return False
@@ -44,7 +49,9 @@ def download_from_url(file_name: str, saving_dir: str, file_extension: str):
 
     os.makedirs(saving_dir, exist_ok=True)
 
-    open(os.path.join(saving_dir, f"{file_name}.{file_extension}"), "wb").write(r.content)
+    file = open(os.path.join(saving_dir, f"{file_name}.{file_extension}"), "wb")
+    file.write(r.content)
+    file.close()
 
 
 def download_weights(model: str, saving_dir: str, verbose: bool = True) -> None:

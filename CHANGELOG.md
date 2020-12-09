@@ -22,6 +22,8 @@ Beta version of the API
 
 - Added a verbose flag to trigger more message during embedding loading
 - Added a verbose flag in model/embeddings download
+
+## dev
 - Added finetuning API to allow finetuning of our models (retrain)
 - Added a method to test models (test)
 - Added metric, loss and dataset container to facilitate finetuning training

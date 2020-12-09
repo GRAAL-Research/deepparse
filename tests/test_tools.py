@@ -7,9 +7,13 @@ from deepparse import download_from_url
 
 
 class ToolsTests(TestCase):
+
     def setUp(self) -> None:
         self._a_saving_dir = "./tmp"
         self._a_file_extension = "version"
+
+    def test_verify_if_model_in_cache(self):
+
 
     def test_givenFasttextVersion_whenDownloadOk_thenDownloadIt(self):
         file_name = "fasttext"

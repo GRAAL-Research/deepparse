@@ -226,7 +226,7 @@ class AddressParser:
                 logging_path: str = "./chekpoints") -> List[Dict]:
         # pylint: disable=too-many-arguments, line-too-long, too-many-locals
         """
-        Method to retrain our pre-trained model using a dataset with the same tags. We train using
+        Method to retrain the address parser model using a dataset with the same tags. We train using
         `experiment <https://poutyne.org/experiment.html>`_ from `poutyne <https://poutyne.org/index.html>`_
         framework. The experiment module allow us to save checkpoint ``ckpt`` (pickle format) and a log.tsv were
         the best epochs can be found (the best epoch is use in test).

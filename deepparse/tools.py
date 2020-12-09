@@ -10,32 +10,18 @@ BASE_URL = "https://graal.ift.ulaval.ca/public/deepparse/"
 CACHE_PATH = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
 
 
-def verify_latest_version(model: str) -> bool:
+def latest_version(model: str, cache_path: str) -> bool:
     """
     Verify if the local model is the latest.
     """
-    local_model_hash_file = open(os.path.join(CACHE_PATH, model + ".version"))
+    local_model_hash_file = open(os.path.join(cache_path, model + ".version"))
     local_model_hash_version = local_model_hash_file.readline()
     local_model_hash_file.close()
-    download_from_url(model, CACHE_PATH, "version")
-    remote_model_hash_file = open(os.path.join(CACHE_PATH, model + ".version"))
+    download_from_url(model, cache_path, "version")
+    remote_model_hash_file = open(os.path.join(cache_path, model + ".version"))
     remote_model_hash_version = remote_model_hash_file.readline()
     remote_model_hash_file.close()
-    return local_model_hash_version != remote_model_hash_version
-
-
-def verify_if_model_in_cache(model: str) -> bool:
-    """
-    Verify if a model is in cache and give warning if not latest.
-    """
-    try:
-        file = open(os.path.join(CACHE_PATH, model + ".version"))
-        if verify_latest_version(model):
-            warnings.warn("A newer model is available, you can download it using the download script.")
-            file.close()
-        return True
-    except FileNotFoundError:
-        return False
+    return local_model_hash_version.strip() == remote_model_hash_version.strip()
 
 
 def download_from_url(file_name: str, saving_dir: str, file_extension: str):
@@ -86,11 +72,11 @@ def handle_checkpoint(checkpoint):
     elif isinstance(checkpoint, int):
         pass
     elif checkpoint == 'fasttext':
-        if verify_latest_version("fasttext"):
+        if not latest_version("fasttext", cache_path=CACHE_PATH):
             warnings.warn("A newer model of fasttext is available, you can download it using the download script.")
         checkpoint = os.path.join(CACHE_PATH, "fasttext.p")
     elif checkpoint == 'bpemb':
-        if verify_latest_version("bpemb"):
+        if not latest_version("bpemb", cache_path=CACHE_PATH):
             warnings.warn("A newer model bpemb is available, you can download it using the download script.")
         checkpoint = os.path.join(CACHE_PATH, "bpemb.p")
     else:

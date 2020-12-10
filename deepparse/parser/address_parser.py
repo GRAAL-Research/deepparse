@@ -220,16 +220,12 @@ class AddressParser:
             if model in ("fasttext-light", "lightest"):
                 file_name = download_fasttext_magnitude_embeddings(saving_dir=path, verbose=self.verbose)
 
-                if self.verbose:
-                    print("Loading the embeddings model")
-                embeddings_model = MagnitudeEmbeddingsModel(file_name)
+                embeddings_model = MagnitudeEmbeddingsModel(file_name, verbose=self.verbose)
                 self.vectorizer = MagnitudeVectorizer(embeddings_model=embeddings_model)
             else:
                 file_name = download_fasttext_embeddings("fr", saving_dir=path, verbose=self.verbose)
 
-                if self.verbose:
-                    print("Loading the embeddings model")
-                embeddings_model = FastTextEmbeddingsModel(file_name)
+                embeddings_model = FastTextEmbeddingsModel(file_name, verbose=self.verbose)
                 self.vectorizer = FastTextVectorizer(embeddings_model=embeddings_model)
 
             self.data_converter = data_padding
@@ -237,10 +233,8 @@ class AddressParser:
             self.pre_trained_model = PreTrainedFastTextSeq2SeqModel(self.device, verbose=self.verbose)
 
         elif model in ("bpemb", "best"):
-            if self.verbose:
-                print("Loading the embeddings model")
-
-            self.vectorizer = BPEmbVectorizer(embeddings_model=BPEmbEmbeddingsModel(lang="multi", vs=100000, dim=300))
+            self.vectorizer = BPEmbVectorizer(
+                embeddings_model=BPEmbEmbeddingsModel(verbose=self.verbose, lang="multi", vs=100000, dim=300))
 
             self.data_converter = bpemb_data_padding
 

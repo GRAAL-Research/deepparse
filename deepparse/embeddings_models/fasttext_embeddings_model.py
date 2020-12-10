@@ -11,10 +11,11 @@ class FastTextEmbeddingsModel(EmbeddingsModel):
 
     Args:
        embeddings_path (str): Path to the bin embeddings vector (.bin).
+       verbose (bool): Either or not to make the loading of the embeddings verbose.
     """
 
-    def __init__(self, embeddings_path: str) -> None:
-        super().__init__()
+    def __init__(self, embeddings_path: str, verbose: bool = True) -> None:
+        super().__init__(verbose=verbose)
 
         self.model = load_fasttext_embeddings(embeddings_path)
 

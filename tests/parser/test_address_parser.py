@@ -43,7 +43,7 @@ class AddressParserTest(TestCase):
         with patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel") as embeddings_model:
             self.address_parser = AddressParser(model=self.a_best_model_type, device=self.a_device)
 
-            embeddings_model.assert_called_with(**self.BPEmb_embeddings_model_param)
+            embeddings_model.assert_called_with(verbose=self.verbose, **self.BPEmb_embeddings_model_param)
 
     @patch("deepparse.parser.address_parser.PreTrainedBPEmbSeq2SeqModel")
     def test_givenABPEmbModelType_whenInstantiatingParser_thenInstantiateBPEmbEmbeddingsModelWithCorrectParameters(
@@ -51,7 +51,7 @@ class AddressParserTest(TestCase):
         with patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel") as embeddings_model:
             self.address_parser = AddressParser(model=self.a_BPEmb_model_type, device=self.a_device)
 
-            embeddings_model.assert_called_with(**self.BPEmb_embeddings_model_param)
+            embeddings_model.assert_called_with(verbose=self.verbose, **self.BPEmb_embeddings_model_param)
 
     @patch("deepparse.parser.address_parser.PreTrainedBPEmbSeq2SeqModel")
     def test_givenABestModelType_whenInstantiatingParser_thenInstantiateBPEmbVectorizerWithCorrectParameters(
@@ -121,7 +121,7 @@ class AddressParserTest(TestCase):
             with patch("deepparse.parser.address_parser.FastTextEmbeddingsModel") as embeddings_model:
                 self.address_parser = AddressParser(model=self.a_fastest_model_type, device=self.a_device)
 
-                embeddings_model.assert_called_with(self.a_embeddings_path)
+                embeddings_model.assert_called_with(self.a_embeddings_path, verbose=self.verbose)
 
     @patch("deepparse.parser.address_parser.PreTrainedFastTextSeq2SeqModel")
     def test_givenAFasttextModelType_whenInstantiatingParser_thenInstantiateModelWithCorrectPath(
@@ -130,7 +130,7 @@ class AddressParserTest(TestCase):
             with patch("deepparse.parser.address_parser.FastTextEmbeddingsModel") as embeddings_model:
                 self.address_parser = AddressParser(model=self.a_fasttext_model_type, device=self.a_device)
 
-                embeddings_model.assert_called_with(self.a_embeddings_path)
+                embeddings_model.assert_called_with(self.a_embeddings_path, verbose=self.verbose)
 
     @patch("deepparse.parser.address_parser.PreTrainedFastTextSeq2SeqModel")
     def test_givenAFasttextLightModelType_whenInstanciatingParser_thenInstanciateModelWithCorrectPath(

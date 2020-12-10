@@ -211,7 +211,10 @@ class AddressParser:
         else:
             raise ValueError("Device should be a string, an int or a torch device.")
 
-    def _model_factory(self, model):
+    def _model_factory(self, model: str) -> None:
+        """
+        Model factory to create the vectorizer, the data converter and the pre-trained model
+        """
         model = model.lower()
         if model in ("fasttext", "fastest", "fasttext-light", "lightest"):
             path = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")

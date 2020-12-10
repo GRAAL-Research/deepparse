@@ -130,9 +130,7 @@ class AddressParser:
             os.makedirs(CACHE_PATH, exist_ok=True)
 
             file_name = download_fasttext_embeddings("fr", saving_dir=CACHE_PATH, verbose=self.verbose)
-            if self.verbose:
-                print("Loading the embeddings model")
-            embeddings_model = FastTextEmbeddingsModel(file_name)
+            embeddings_model = FastTextEmbeddingsModel(file_name, verbose=self.verbose)
 
             self.vectorizer = FastTextVectorizer(embeddings_model=embeddings_model)
 
@@ -143,10 +141,8 @@ class AddressParser:
                                               path_to_retrained_model=path_to_retrained_model)
 
         elif self.model_type in ("bpemb", "best", "lightest"):
-            if self.verbose:
-                print("Loading the embeddings model")
-
-            self.vectorizer = BPEmbVectorizer(embeddings_model=BPEmbEmbeddingsModel(lang="multi", vs=100000, dim=300))
+            self.vectorizer = BPEmbVectorizer(
+                embeddings_model=BPEmbEmbeddingsModel(verbose=self.verbose, lang="multi", vs=100000, dim=300))
 
             self.data_converter = bpemb_data_padding
 

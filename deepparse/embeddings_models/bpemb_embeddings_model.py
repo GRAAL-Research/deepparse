@@ -11,11 +11,12 @@ class BPEmbEmbeddingsModel(EmbeddingsModel):
     `BPEmb class <https://github.com/bheinzerling/bpemb/blob/master/bpemb/bpemb.py>`_
 
     Params:
+        verbose (bool): Either or not to make the loading of the embeddings verbose.
         kwargs: Same as the :class:`~bpemb.BPEmb` class.
     """
 
-    def __init__(self, **kwargs) -> None:
-        super().__init__()
+    def __init__(self, verbose: bool = True, **kwargs) -> None:
+        super().__init__(verbose=verbose)
         self.model = BPEmb(**kwargs)
 
     def __call__(self, word: str) -> ndarray:

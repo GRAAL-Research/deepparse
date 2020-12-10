@@ -37,7 +37,7 @@ import sys
 from urllib.request import urlopen
 
 from fasttext.FastText import _FastText
-from fasttext.util.util import valid_lang_ids, _download_file
+from fasttext.util.util import valid_lang_ids
 
 
 def download_fasttext_embeddings(lang_id: str, saving_dir: str, verbose: bool = True) -> str:

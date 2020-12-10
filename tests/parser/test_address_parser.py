@@ -140,7 +140,7 @@ class AddressParserTest(TestCase):
             with patch("deepparse.parser.address_parser.MagnitudeEmbeddingsModel") as embeddings_model:
                 self.address_parser = AddressParser(model=self.a_fasttext_light_model_type, device=self.a_device)
 
-                embeddings_model.assert_called_with(self.a_embeddings_path)
+                embeddings_model.assert_called_with(self.a_embeddings_path, verbose=self.verbose)
 
     @patch("deepparse.parser.address_parser.PreTrainedFastTextSeq2SeqModel")
     @patch("deepparse.parser.address_parser.download_fasttext_embeddings")

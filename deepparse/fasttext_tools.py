@@ -37,7 +37,7 @@ import sys
 from urllib.request import urlopen
 
 from fasttext.FastText import _FastText
-from fasttext.util.util import valid_lang_ids, _download_file
+from fasttext.util.util import valid_lang_ids
 
 from .tools import download_from_url
 

@@ -36,7 +36,6 @@ import shutil
 import sys
 from urllib.request import urlopen
 
-import warnings
 from fasttext.FastText import _FastText
 from fasttext.util.util import valid_lang_ids, _download_file
 
@@ -79,8 +78,8 @@ def download_fasttext_magnitude_embeddings(saving_dir: str, verbose: bool = True
     file_name = os.path.join(saving_dir, f"{model}.{extension}")
     if not os.path.isfile(file_name):
         if verbose:
-            warnings.warn("The fastText pre-trained word embeddings will be download in magnitude format (2.3 GO), "
-                          "this process will take several minutes.")
+            print("The fastText pre-trained word embeddings will be download in magnitude format (2.3 GO), "
+                  "this process will take several minutes.")
         extension = extension + ".gz"
         download_from_url(model=model, saving_dir=saving_dir, extension=extension)
         gz_file_name = file_name + ".gz"

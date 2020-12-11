@@ -4,7 +4,9 @@ import warnings
 
 from bpemb import BPEmb
 
-from deepparse import download_fasttext_embeddings, latest_version, download_weights, CACHE_PATH
+from deepparse import download_fasttext_embeddings, download_weights, \
+    download_fasttext_magnitude_embeddings
+from deepparse import latest_version, CACHE_PATH
 
 
 def main(args: argparse.Namespace) -> None:
@@ -16,6 +18,8 @@ def main(args: argparse.Namespace) -> None:
 
     if model_type == "fasttext":
         download_fasttext_embeddings("fr", saving_dir=CACHE_PATH)
+    if model_type == "fasttext-light":
+        download_fasttext_magnitude_embeddings(saving_dir=CACHE_PATH)
     if model_type == "bpemb":
         BPEmb(lang="multi", vs=100000, dim=300)  # The class manage the download of the pre-trained words embedding
 
@@ -30,7 +34,9 @@ def main(args: argparse.Namespace) -> None:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("model_type", choices=["fasttext", "bpemb"], help="The model type to download.")
+    parser.add_argument("model_type",
+                        choices=["fasttext", "fasttext-light", "bpemb"],
+                        help="The model type to download.")
 
     args_parser = parser.parse_args()
 

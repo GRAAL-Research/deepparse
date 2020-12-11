@@ -16,7 +16,9 @@ class FastTextEmbeddingsModel(EmbeddingsModel):
 
     def __init__(self, embeddings_path: str, verbose: bool = True) -> None:
         super().__init__(verbose=verbose)
+
         self.model = load_fasttext_embeddings(embeddings_path)
+
         self.model.dim = 300  # fastText is only in 300d
 
     def __call__(self, word: str) -> ndarray:

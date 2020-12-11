@@ -18,6 +18,7 @@ class AddressParserTest(TestCase):
         cls.a_BPEmb_model_type = "BPEmb"
         cls.a_fastest_model_type = "fastest"
         cls.a_fasttext_model_type = "fasttext"
+        cls.a_fasttext_light_model_type = "fasttext-light"
         cls.a_rounding = 5
         cls.a_device = "cpu"
         cls.a_torch_device = device(cls.a_device)
@@ -104,6 +105,15 @@ class AddressParserTest(TestCase):
 
             downloader.assert_called_with(self.a_language, saving_dir=self.fasttext_download_path, verbose=self.verbose)
 
+    @patch("deepparse.parser.address_parser.MagnitudeEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
+    def test_givenAFasttextLightModelType_whenInstanciatingParser_thenDownloadFasttextMagnitudeModelWithCorrectPath(
+            self, embeddings_model_mock, pretrained_model_mock):
+        with patch("deepparse.parser.address_parser.download_fasttext_magnitude_embeddings") as downloader:
+            self.address_parser = AddressParser(model_type=self.a_fasttext_light_model_type, device=self.a_device)
+
+            downloader.assert_called_with(saving_dir=self.fasttext_download_path, verbose=self.verbose)
+
     @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
     def test_givenAFastestModelType_whenInstantiatingParser_thenInstantiateModelWithCorrectPath(
             self, pretrained_model_mock):
@@ -119,6 +129,16 @@ class AddressParserTest(TestCase):
         with patch("deepparse.parser.address_parser.download_fasttext_embeddings", return_value=self.a_embeddings_path):
             with patch("deepparse.parser.address_parser.FastTextEmbeddingsModel") as embeddings_model:
                 self.address_parser = AddressParser(model_type=self.a_fasttext_model_type, device=self.a_device)
+
+                embeddings_model.assert_called_with(self.a_embeddings_path, verbose=self.verbose)
+
+    @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
+    def test_givenAFasttextLightModelType_whenInstanciatingParser_thenInstanciateModelWithCorrectPath(
+            self, pretrained_model_mock):
+        with patch("deepparse.parser.address_parser.download_fasttext_magnitude_embeddings",
+                   return_value=self.a_embeddings_path):
+            with patch("deepparse.parser.address_parser.MagnitudeEmbeddingsModel") as embeddings_model:
+                self.address_parser = AddressParser(model_type=self.a_fasttext_light_model_type, device=self.a_device)
 
                 embeddings_model.assert_called_with(self.a_embeddings_path, verbose=self.verbose)
 
@@ -139,6 +159,17 @@ class AddressParserTest(TestCase):
         with patch("deepparse.parser.address_parser.FastTextEmbeddingsModel", return_value=self.embeddings_model_mock):
             with patch("deepparse.parser.address_parser.FastTextVectorizer") as vectorizer:
                 self.address_parser = AddressParser(model_type=self.a_fasttext_model_type, device=self.a_device)
+
+                vectorizer.assert_called_with(embeddings_model=self.embeddings_model_mock)
+
+    @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
+    @patch("deepparse.parser.address_parser.download_fasttext_magnitude_embeddings")
+    # pylint: disable=C0301
+    def test_givenAFasttextLightModelType_whenInstanciatingParser_thenInstanciateMagnitudeVectorizerWithCorrectParameters(
+            self, pretrained_model_mock, downloader_mock):
+        with patch("deepparse.parser.address_parser.MagnitudeEmbeddingsModel", return_value=self.embeddings_model_mock):
+            with patch("deepparse.parser.address_parser.MagnitudeVectorizer") as vectorizer:
+                self.address_parser = AddressParser(model_type=self.a_fasttext_light_model_type, device=self.a_device)
 
                 vectorizer.assert_called_with(embeddings_model=self.embeddings_model_mock)
 

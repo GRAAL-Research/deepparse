@@ -11,17 +11,22 @@ from torch.optim import SGD
 from torch.utils.data import DataLoader, Subset
 
 from .parsed_address import ParsedAddress
-from .. import load_tuple_to_device, CACHE_PATH, handle_checkpoint
-from ..converter import TagsConverter, fasttext_data_padding, DataTransform
+from .. import CACHE_PATH, handle_checkpoint
+from .. import load_tuple_to_device, download_fasttext_magnitude_embeddings
+from ..converter import TagsConverter
+from ..converter import fasttext_data_padding, DataTransform
 from ..converter.data_padding import bpemb_data_padding
 from ..dataset_container import DatasetContainerInterface
 from ..embeddings_models import BPEmbEmbeddingsModel
 from ..embeddings_models import FastTextEmbeddingsModel
+from ..embeddings_models.magnitude_embeddings_model import MagnitudeEmbeddingsModel
 from ..fasttext_tools import download_fasttext_embeddings
 from ..metrics import nll_loss_function, accuracy
 from ..network.bpemb_seq2seq import BPEmbSeq2SeqModel
 from ..network.fasttext_seq2seq import FastTextSeq2SeqModel
-from ..vectorizer import FastTextVectorizer, BPEmbVectorizer, TrainVectorizer
+from ..vectorizer import FastTextVectorizer, BPEmbVectorizer
+from ..vectorizer import TrainVectorizer
+from ..vectorizer.magnitude_vectorizer import MagnitudeVectorizer
 
 _pre_trained_tags_to_idx = {
     "StreetNumber": 0,
@@ -49,12 +54,13 @@ class AddressParser:
         model_type (str): The network name to use, can be either:
 
             - fasttext (need ~9 GO of RAM to be used);
+            - fasttext-light (need ~2 GO of RAM to be used, but slower than fasttext version);
             - bpemb (need ~2 GO of RAM to be used);
-            - lightest (less RAM usage) (equivalent to bpemb);
             - fastest (quicker to process one address) (equivalent to fasttext);
+            - lightest (the one using the less RAM and GPU usage) (equivalent to fasttext-light);
             - best (best accuracy performance) (equivalent to bpemb).
 
-            The default value is 'best' for the most accurate model.
+            The default value is "best" for the most accurate model.
         device (Union[int, str, torch.device]): The device to use can be either:
 
             - a ``GPU`` index in int format (e.g. ``0``);
@@ -73,13 +79,23 @@ class AddressParser:
 
     Note:
         For both the networks, we will download the pre-trained weights and embeddings in the ``.cache`` directory
-        for the root user. Also, one can download all the dependencies of our pre-trained model using the
+        for the root user. The pre-trained weights take at most 44 MB. The fastText embeddings take 6.8 GO,
+        the fastText-light embeddings take 3.3 GO and bpemb take 116 MB (in .cache/bpemb).
+
+        Also, one can download all the dependencies of our pre-trained model using the
         `deepparse.download` module (e.g. python -m deepparse.download fasttext) before sending it to a node without
         access to Internet.
 
     Note:
-        Also note that the first time the fastText model is instantiated on a computer, we download the fastText
+        Note that the first time the fastText model is instantiated on a computer, we download the fastText
         pre-trained embeddings of 6.8 GO, and this process can be quite long (a couple of minutes).
+
+    Note:
+        You may observe a 100% CPU load the first time you call the fasttext-light model. We
+        `hypotheses <https://github.com/GRAAL-Research/deepparse/pull/54#issuecomment-743463855>`_ that this is due
+        to the SQLite database behind `pymagnitude`. This approach create a cache to speed up processing and since the
+        memory mapping is save between the runs, it's more intensive the first time you call it and subsequent
+        time this load doesn't appear.
 
     Note:
         The predictions tags are the following
@@ -125,33 +141,8 @@ class AddressParser:
         self.tags_converter = TagsConverter(_pre_trained_tags_to_idx)
 
         self.model_type = model_type.lower()
-        # model factory
-        if self.model_type in ("fasttext", "fastest"):
-            os.makedirs(CACHE_PATH, exist_ok=True)
-
-            file_name = download_fasttext_embeddings("fr", saving_dir=CACHE_PATH, verbose=self.verbose)
-            embeddings_model = FastTextEmbeddingsModel(file_name, verbose=self.verbose)
-
-            self.vectorizer = FastTextVectorizer(embeddings_model=embeddings_model)
-
-            self.data_converter = fasttext_data_padding
-
-            self.model = FastTextSeq2SeqModel(self.device,
-                                              verbose=self.verbose,
-                                              path_to_retrained_model=path_to_retrained_model)
-
-        elif self.model_type in ("bpemb", "best", "lightest"):
-            self.vectorizer = BPEmbVectorizer(
-                embeddings_model=BPEmbEmbeddingsModel(verbose=self.verbose, lang="multi", vs=100000, dim=300))
-
-            self.data_converter = bpemb_data_padding
-
-            self.model = BPEmbSeq2SeqModel(self.device,
-                                           verbose=self.verbose,
-                                           path_to_retrained_model=path_to_retrained_model)
-        else:
-            raise NotImplementedError(f"There is no {model_type} network implemented. Value can be: "
-                                      f"fasttext, bpemb, lightest (bpemb), fastest (fasttext) or best (bpemb).")
+        self.path_to_retrained_model = path_to_retrained_model
+        self._model_factory()
         self.model.eval()
 
     def __str__(self) -> str:
@@ -454,3 +445,40 @@ class AddressParser:
                                      num_workers=num_workers)
 
         return train_generator, valid_generator
+
+    def _model_factory(self) -> None:
+        """
+        Model factory to create the vectorizer, the data converter and the pre-trained model
+        """
+        if self.model_type in ("fasttext", "fastest", "fasttext-light", "lightest"):
+            os.makedirs(CACHE_PATH, exist_ok=True)
+
+            if self.model_type in ("fasttext-light", "lightest"):
+                file_name = download_fasttext_magnitude_embeddings(saving_dir=CACHE_PATH, verbose=self.verbose)
+
+                embeddings_model = MagnitudeEmbeddingsModel(file_name, verbose=self.verbose)
+                self.vectorizer = MagnitudeVectorizer(embeddings_model=embeddings_model)
+            else:
+                file_name = download_fasttext_embeddings("fr", saving_dir=CACHE_PATH, verbose=self.verbose)
+
+                embeddings_model = FastTextEmbeddingsModel(file_name, verbose=self.verbose)
+                self.vectorizer = FastTextVectorizer(embeddings_model=embeddings_model)
+
+            self.data_converter = fasttext_data_padding
+
+            self.model = FastTextSeq2SeqModel(self.device,
+                                              verbose=self.verbose,
+                                              path_to_retrained_model=self.path_to_retrained_model)
+
+        elif self.model_type in ("bpemb", "best"):
+            self.vectorizer = BPEmbVectorizer(
+                embeddings_model=BPEmbEmbeddingsModel(verbose=self.verbose, lang="multi", vs=100000, dim=300))
+
+            self.data_converter = bpemb_data_padding
+
+            self.model = BPEmbSeq2SeqModel(self.device,
+                                           verbose=self.verbose,
+                                           path_to_retrained_model=self.path_to_retrained_model)
+        else:
+            raise NotImplementedError(f"There is no {self.model_type} network implemented. Value can be: "
+                                      f"fasttext, bpemb, lightest (bpemb), fastest (fasttext) or best (bpemb).")

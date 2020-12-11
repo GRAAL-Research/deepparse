@@ -39,17 +39,17 @@ are a little bit lower on trained country (around ~2%) but are similar on zero-s
             - Mean time of execution (batch of 1) (s)
             - Mean time of execution (batch of more than 1) (s)
         *   - fastText
-            - ~0.8854
+            - ~1
             - ~9
             - ~0.0037
             - ~0.0007
         *   - fastText-light
-            - ~0.885
+            - ~1
             - ~2
             - ~0.0074
             - ~0.0033
         *   - BPEmb
-            - ~0.885
+            - ~1
             - ~2
             - ~0.0097
             - ~0.0045

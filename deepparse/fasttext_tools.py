@@ -39,6 +39,8 @@ from urllib.request import urlopen
 from fasttext.FastText import _FastText
 from fasttext.util.util import valid_lang_ids
 
+from .tools import download_from_url
+
 
 def download_fasttext_embeddings(lang_id: str, saving_dir: str, verbose: bool = True) -> str:
     """
@@ -65,6 +67,27 @@ def download_fasttext_embeddings(lang_id: str, saving_dir: str, verbose: bool = 
         os.remove(os.path.join(saving_dir, gz_file_name))
 
     return file_name_path  # return the full path to the fastText embeddings
+
+
+def download_fasttext_magnitude_embeddings(saving_dir: str, verbose: bool = True) -> str:
+    """
+    Function to download the magnitude pre-trained fastText model.
+    """
+    model = "fasttext"
+    extension = "magnitude"
+    file_name = os.path.join(saving_dir, f"{model}.{extension}")
+    if not os.path.isfile(file_name):
+        if verbose:
+            print("The fastText pre-trained word embeddings will be download in magnitude format (2.3 GO), "
+                  "this process will take several minutes.")
+        extension = extension + ".gz"
+        download_from_url(model=model, saving_dir=saving_dir, extension=extension)
+        gz_file_name = file_name + ".gz"
+        with gzip.open(os.path.join(saving_dir, gz_file_name), "rb") as f:
+            with open(os.path.join(saving_dir, file_name), "wb") as f_out:
+                shutil.copyfileobj(f, f_out)
+        os.remove(os.path.join(saving_dir, gz_file_name))
+    return file_name
 
 
 def _download_gz_model(gz_file_name: str, saving_path: str, verbose: bool = True) -> bool:  # now use a saving path

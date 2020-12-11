@@ -14,7 +14,7 @@ class EmbeddingsModel(ABC):
             print("Loading the embeddings model")
 
     @abstractmethod
-    def __call__(self, word: str) -> ndarray:
+    def __call__(self, words: str) -> ndarray:
         pass
 
     @property

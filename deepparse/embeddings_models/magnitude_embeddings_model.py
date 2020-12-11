@@ -1,5 +1,3 @@
-from typing import List
-
 from pymagnitudelight import Magnitude
 
 from deepparse.embeddings_models import EmbeddingsModel, ndarray

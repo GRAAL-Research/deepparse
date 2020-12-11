@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from typing import List, Union
 
 from numpy.core.multiarray import ndarray
 

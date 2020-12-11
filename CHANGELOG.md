@@ -1,6 +1,7 @@
 ## Beta (0.1)
-Initial release of the pre-trained models
-Beta version of the API
+
+- Initial release of the pre-trained models
+- Beta version of the API
 
 ## 0.1.2
 

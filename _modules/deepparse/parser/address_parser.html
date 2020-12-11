@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>deepparse.parser.address_parser &mdash; deepparse 0.1.2 documentation</title>
+  <title>deepparse.parser.address_parser &mdash; deepparse 0.1.3.1 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.1.2
+                0.1.3.1
               </div>
             
           
@@ -185,6 +185,10 @@
     <span class="s2">&quot;EOS&quot;</span><span class="p">:</span> <span class="mi">8</span>  <span class="c1"># the 9th is the EOS with idx 8</span>
 <span class="p">}</span>
 
+<span class="c1"># this threshold represent at which point the prediction of the address takes enough time to</span>
+<span class="c1"># justify a predict verbosity.</span>
+<span class="n">PREDICTION_TIME_PERFORMANCE_THRESHOLD</span> <span class="o">=</span> <span class="mi">64</span>
+
 
 <div class="viewcode-block" id="AddressParser"><a class="viewcode-back" href="../../../parser.html#deepparse.parser.AddressParser">[docs]</a><span class="k">class</span> <span class="nc">AddressParser</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -210,6 +214,7 @@
 
 <span class="sd">            The default value is GPU with the index ``0`` if it exist, otherwise the value is ``CPU``.</span>
 <span class="sd">        rounding (int): The rounding to use when asking the probability of the tags. The default value is 4 digits.</span>
+<span class="sd">        verbose (bool): Turn on/off the verbosity of the model weights download and loading. The default value is True.</span>
 
 <span class="sd">    Note:</span>
 <span class="sd">        For both the networks, we will download the pre-trained weights and embeddings in the ``.cache`` directory</span>
@@ -221,44 +226,65 @@
 <span class="sd">        Also note that the first time the fastText model is instantiated on a computer, we download the fastText</span>
 <span class="sd">        pre-trained embeddings of 6.8 GO, and this process can be quite long (a couple of minutes).</span>
 
+<span class="sd">    Note:</span>
+<span class="sd">        The predictions tags are the following</span>
+
+<span class="sd">            - &quot;StreetNumber&quot;: for the street number</span>
+<span class="sd">            - &quot;StreetName&quot;: for the name of the street</span>
+<span class="sd">            - &quot;Unit&quot;: for the unit (such as apartment)</span>
+<span class="sd">            - &quot;Municipality&quot;: for the municipality</span>
+<span class="sd">            - &quot;Province&quot;: for the province or local region</span>
+<span class="sd">            - &quot;PostalCode&quot;: for the postal code</span>
+<span class="sd">            - &quot;Orientation&quot;: for the street orientation (e.g. west, east)</span>
+<span class="sd">            - &quot;GeneralDelivery&quot;: for other delivery information</span>
+
 <span class="sd">    Example:</span>
 
 <span class="sd">        .. code-block:: python</span>
 
 <span class="sd">                address_parser = AddressParser(device=0) #on gpu device 0</span>
-<span class="sd">                parse_address = address_parser(&#39;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&#39;)</span>
+<span class="sd">                parse_address = address_parser(&quot;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&quot;)</span>
 
-<span class="sd">                address_parser = AddressParser(model=&#39;fasttext&#39;, device=&#39;cpu&#39;) # fasttext model on cpu</span>
-<span class="sd">                parse_address = address_parser(&#39;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&#39;)</span>
+<span class="sd">                address_parser = AddressParser(model=&quot;fasttext&quot;, device=&quot;cpu&quot;) # fasttext model on cpu</span>
+<span class="sd">                parse_address = address_parser(&quot;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&quot;)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;best&#39;</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">rounding</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;best&quot;</span><span class="p">,</span>
+                 <span class="n">device</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+                 <span class="n">rounding</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+                 <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_process_device</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">rounding</span> <span class="o">=</span> <span class="n">rounding</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">tags_converter</span> <span class="o">=</span> <span class="n">TagsConverter</span><span class="p">(</span><span class="n">_pre_trained_tags_to_idx</span><span class="p">)</span>
 
         <span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">model</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;fasttext&quot;</span><span class="p">,</span> <span class="s2">&quot;fastest&quot;</span><span class="p">):</span>
-            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s1">&#39;~&#39;</span><span class="p">),</span> <span class="s2">&quot;.cache&quot;</span><span class="p">,</span> <span class="s2">&quot;deepparse&quot;</span><span class="p">)</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">),</span> <span class="s2">&quot;.cache&quot;</span><span class="p">,</span> <span class="s2">&quot;deepparse&quot;</span><span class="p">)</span>
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-            <span class="n">file_name</span> <span class="o">=</span> <span class="n">download_fasttext_embeddings</span><span class="p">(</span><span class="s2">&quot;fr&quot;</span><span class="p">,</span> <span class="n">saving_dir</span><span class="o">=</span><span class="n">path</span><span class="p">)</span>
+            <span class="n">file_name</span> <span class="o">=</span> <span class="n">download_fasttext_embeddings</span><span class="p">(</span><span class="s2">&quot;fr&quot;</span><span class="p">,</span> <span class="n">saving_dir</span><span class="o">=</span><span class="n">path</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Loading the embeddings model&quot;</span><span class="p">)</span>
             <span class="n">embeddings_model</span> <span class="o">=</span> <span class="n">FastTextEmbeddingsModel</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">vectorizer</span> <span class="o">=</span> <span class="n">FastTextVectorizer</span><span class="p">(</span><span class="n">embeddings_model</span><span class="o">=</span><span class="n">embeddings_model</span><span class="p">)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">data_converter</span> <span class="o">=</span> <span class="n">data_padding</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">pre_trained_model</span> <span class="o">=</span> <span class="n">PreTrainedFastTextSeq2SeqModel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pre_trained_model</span> <span class="o">=</span> <span class="n">PreTrainedFastTextSeq2SeqModel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
 
         <span class="k">elif</span> <span class="n">model</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;bpemb&quot;</span><span class="p">,</span> <span class="s2">&quot;best&quot;</span><span class="p">,</span> <span class="s2">&quot;lightest&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Loading the embeddings model&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">vectorizer</span> <span class="o">=</span> <span class="n">BPEmbVectorizer</span><span class="p">(</span><span class="n">embeddings_model</span><span class="o">=</span><span class="n">BPEmbEmbeddingsModel</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;multi&quot;</span><span class="p">,</span> <span class="n">vs</span><span class="o">=</span><span class="mi">100000</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">300</span><span class="p">))</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">data_converter</span> <span class="o">=</span> <span class="n">bpemb_data_padding</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">pre_trained_model</span> <span class="o">=</span> <span class="n">PreTrainedBPEmbSeq2SeqModel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pre_trained_model</span> <span class="o">=</span> <span class="n">PreTrainedBPEmbSeq2SeqModel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;There is no </span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2"> network implemented. Value can be: &quot;</span>
                                       <span class="sa">f</span><span class="s2">&quot;fasttext, bpemb, lightest (bpemb), fastest (fasttext) or best (bpemb).&quot;</span><span class="p">)</span>
@@ -291,8 +317,8 @@
 <span class="sd">            .. code-block:: python</span>
 
 <span class="sd">                    address_parser = AddressParser(device=0) #on gpu device 0</span>
-<span class="sd">                    parse_address = address_parser(&#39;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&#39;)</span>
-<span class="sd">                    parse_address = address_parser(&#39;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&#39;, with_prob=True)</span>
+<span class="sd">                    parse_address = address_parser(&quot;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&quot;)</span>
+<span class="sd">                    parse_address = address_parser(&quot;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&quot;, with_prob=True)</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">addresses_to_parse</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
@@ -301,6 +327,8 @@
         <span class="c1"># since training data is lowercase</span>
         <span class="n">lower_cased_addresses_to_parse</span> <span class="o">=</span> <span class="p">[</span><span class="n">address</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">address</span> <span class="ow">in</span> <span class="n">addresses_to_parse</span><span class="p">]</span>
 
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">addresses_to_parse</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">PREDICTION_TIME_PERFORMANCE_THRESHOLD</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Vectorizing the address&quot;</span><span class="p">)</span>
         <span class="n">vectorize_address</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vectorizer</span><span class="p">(</span><span class="n">lower_cased_addresses_to_parse</span><span class="p">)</span>
 
         <span class="n">padded_address</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_converter</span><span class="p">(</span><span class="n">vectorize_address</span><span class="p">)</span>
@@ -349,7 +377,7 @@
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;cpu|cuda:\d+&#39;</span><span class="p">,</span> <span class="n">device</span><span class="o">.</span><span class="n">lower</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;cpu|cuda:\d+&quot;</span><span class="p">,</span> <span class="n">device</span><span class="o">.</span><span class="n">lower</span><span class="p">()):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;String value should be &#39;cpu&#39; or follow the pattern &#39;cuda:[int]&#39;.&quot;</span><span class="p">)</span>

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Parser &mdash; deepparse 0.1.2 documentation</title>
+  <title>Parser &mdash; deepparse 0.1.3.1 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.1.2
+                0.1.3.1
               </div>
             
           
@@ -246,7 +246,7 @@ single address (batch of 1 element) takes around 0.003 seconds. This time can be
 address when using a batch of 256, but using 512 take 0.0035 seconds.</p>
 <dl class="py class">
 <dt id="deepparse.parser.AddressParser">
-<em class="property">class </em><code class="sig-prename descclassname">deepparse.parser.</code><code class="sig-name descname">AddressParser</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span> <span class="o">=</span> <span class="default_value">'best'</span></em>, <em class="sig-param"><span class="n">device</span><span class="p">:</span> <span class="n">Union<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a><span class="p">, </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">, </span>torch.device<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">0</span></em>, <em class="sig-param"><span class="n">rounding</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a></span> <span class="o">=</span> <span class="default_value">4</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deepparse/parser/address_parser.html#AddressParser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepparse.parser.AddressParser" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">deepparse.parser.</code><code class="sig-name descname">AddressParser</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></span> <span class="o">=</span> <span class="default_value">'best'</span></em>, <em class="sig-param"><span class="n">device</span><span class="p">:</span> <span class="n">Union<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a><span class="p">, </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">, </span>torch.device<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">0</span></em>, <em class="sig-param"><span class="n">rounding</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a></span> <span class="o">=</span> <span class="default_value">4</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deepparse/parser/address_parser.html#AddressParser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepparse.parser.AddressParser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Address parser to parse an address or a list of address using one of the seq2seq pre-trained
 networks either with fastText or BPEmb.</p>
 <dl class="field-list simple">
@@ -266,12 +266,13 @@ networks either with fastText or BPEmb.</p>
 <ul>
 <li><p>a <code class="docutils literal notranslate"><span class="pre">GPU</span></code> index in int format (e.g. <code class="docutils literal notranslate"><span class="pre">0</span></code>);</p></li>
 <li><p>a complete device name in a string format (e.g. <code class="docutils literal notranslate"><span class="pre">'cuda:0'</span></code>);</p></li>
-<li><p>a <a class="reference external" href="https://pytorch.org/docs/master/tensor_attributes.html#torch.torch.device" title="(in PyTorch vmaster (1.8.0a0+3292b9e ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">device</span></code></a> object;</p></li>
+<li><p>a <a class="reference external" href="https://pytorch.org/docs/master/tensor_attributes.html#torch.torch.device" title="(in PyTorch vmaster (1.8.0a0+2275fa0 ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">device</span></code></a> object;</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'cpu'</span></code> for a  <code class="docutils literal notranslate"><span class="pre">CPU</span></code> use.</p></li>
 </ul>
 <p>The default value is GPU with the index <code class="docutils literal notranslate"><span class="pre">0</span></code> if it exist, otherwise the value is <code class="docutils literal notranslate"><span class="pre">CPU</span></code>.</p>
 </p></li>
 <li><p><strong>rounding</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – The rounding to use when asking the probability of the tags. The default value is 4 digits.</p></li>
+<li><p><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Turn on/off the verbosity of the model weights download and loading. The default value is True.</p></li>
 </ul>
 </dd>
 </dl>
@@ -287,12 +288,28 @@ access to Internet.</p>
 <p>Also note that the first time the fastText model is instantiated on a computer, we download the fastText
 pre-trained embeddings of 6.8 GO, and this process can be quite long (a couple of minutes).</p>
 </div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The predictions tags are the following</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>“StreetNumber”: for the street number</p></li>
+<li><p>“StreetName”: for the name of the street</p></li>
+<li><p>“Unit”: for the unit (such as apartment)</p></li>
+<li><p>“Municipality”: for the municipality</p></li>
+<li><p>“Province”: for the province or local region</p></li>
+<li><p>“PostalCode”: for the postal code</p></li>
+<li><p>“Orientation”: for the street orientation (e.g. west, east)</p></li>
+<li><p>“GeneralDelivery”: for other delivery information</p></li>
+</ul>
+</div></blockquote>
+</div>
 <p class="rubric">Example</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="c1">#on gpu device 0</span>
-<span class="n">parse_address</span> <span class="o">=</span> <span class="n">address_parser</span><span class="p">(</span><span class="s1">&#39;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&#39;</span><span class="p">)</span>
+<span class="n">parse_address</span> <span class="o">=</span> <span class="n">address_parser</span><span class="p">(</span><span class="s2">&quot;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&quot;</span><span class="p">)</span>
 
-<span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s1">&#39;fasttext&#39;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cpu&#39;</span><span class="p">)</span> <span class="c1"># fasttext model on cpu</span>
-<span class="n">parse_address</span> <span class="o">=</span> <span class="n">address_parser</span><span class="p">(</span><span class="s1">&#39;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&#39;</span><span class="p">)</span>
+<span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;fasttext&quot;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span> <span class="c1"># fasttext model on cpu</span>
+<span class="n">parse_address</span> <span class="o">=</span> <span class="n">address_parser</span><span class="p">(</span><span class="s2">&quot;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <dl class="py method">
@@ -319,8 +336,8 @@ rounding.</p></li>
 </dl>
 <p class="rubric">Example</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="c1">#on gpu device 0</span>
-<span class="n">parse_address</span> <span class="o">=</span> <span class="n">address_parser</span><span class="p">(</span><span class="s1">&#39;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&#39;</span><span class="p">)</span>
-<span class="n">parse_address</span> <span class="o">=</span> <span class="n">address_parser</span><span class="p">(</span><span class="s1">&#39;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&#39;</span><span class="p">,</span> <span class="n">with_prob</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">parse_address</span> <span class="o">=</span> <span class="n">address_parser</span><span class="p">(</span><span class="s2">&quot;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&quot;</span><span class="p">)</span>
+<span class="n">parse_address</span> <span class="o">=</span> <span class="n">address_parser</span><span class="p">(</span><span class="s2">&quot;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&quot;</span><span class="p">,</span> <span class="n">with_prob</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -400,7 +417,7 @@ are the address components and the second elements are the tags.</p>
 
 <p class="rubric">Example</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">()</span>
-<span class="n">parse_address</span> <span class="o">=</span> <span class="n">address_parser</span><span class="p">(</span><span class="s1">&#39;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&#39;</span><span class="p">)</span>
+<span class="n">parse_address</span> <span class="o">=</span> <span class="n">address_parser</span><span class="p">(</span><span class="s2">&quot;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">parse_address</span><span class="o">.</span><span class="n">street_number</span><span class="p">)</span> <span class="c1">#350</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">parse_address</span><span class="o">.</span><span class="n">postal_code</span><span class="p">)</span> <span class="c1"># G1L 1B6</span>
 </pre></div>

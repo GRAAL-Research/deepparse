@@ -71,8 +71,15 @@ class AddressParser:
         access to Internet.
 
     Note:
-        Also note that the first time the fastText model is instantiated on a computer, we download the fastText
+        Note that the first time the fastText model is instantiated on a computer, we download the fastText
         pre-trained embeddings of 6.8 GO, and this process can be quite long (a couple of minutes).
+
+    Note:
+        You may observe a 100% CPU load the first time you call the fasttext-light model. We
+        `hypotheses <https://github.com/GRAAL-Research/deepparse/pull/54#issuecomment-743463855>`_ that this is due
+        to the SQLite database behind `pymagnitude`. This approach create a cache to speed up processing and since the
+        memory mapping is save between the runs, it's more intensive the first time you call it and subsequent
+        time this load doesn't appear.
 
     Note:
         The predictions tags are the following

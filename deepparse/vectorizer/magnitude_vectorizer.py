@@ -1,5 +1,7 @@
 from typing import List
 
+from numpy import ndarray
+
 from .vectorizer import Vectorizer
 
 
@@ -20,7 +22,7 @@ class MagnitudeVectorizer(Vectorizer):
         """
         return [self._vectorize_sequence(address) for address in addresses]
 
-    def _vectorize_sequence(self, address: str) -> List:
+    def _vectorize_sequence(self, address: str) -> ndarray:
         """
         Method to vectorize the address.
 

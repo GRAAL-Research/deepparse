@@ -22,7 +22,7 @@ class MagnitudeEmbeddingsModel(EmbeddingsModel):
 
         self.model.dim = 300  # fastText is only in 300d
 
-    def __call__(self, words: str) -> List[ndarray]:
+    def __call__(self, words: str) -> ndarray:
         """
         Callable method to get word vector of a complete address.
 

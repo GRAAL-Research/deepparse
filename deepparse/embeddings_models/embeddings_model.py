@@ -15,7 +15,7 @@ class EmbeddingsModel(ABC):
             print("Loading the embeddings model")
 
     @abstractmethod
-    def __call__(self, word: Union[str, List[str]]) -> Union[ndarray, List[ndarray]]:
+    def __call__(self, words: str) -> ndarray:
         pass
 
     @property

@@ -1,50 +1,55 @@
-# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+name: Continuous Integration
 
-name: deepparse
+on: [push, pull_request]
 
-on: [push]
 jobs:
-  build-and-deploy:
+  build:
+
     runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: ['3.6', '3.7', '3.8']
 
     steps:
-      - uses: actions/checkout@v2.3.1
-        with:
-          persist-credentials: false
-        
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python-version }}
-          
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install -r requirements.txt
-          python -m pip install -r docs/requirements.txt
-          python -m pip install -r styling_requirements.txt
-          if [ $TRAVIS_BRANCH == "stable" ] && [ $TRAVIS_EVENT_TYPE == "push" ]; then
-            export DEEPPARSE_RELEASE_BUILD=1;
-          else
-            export DEEPPARSE_RELEASE_BUILD=0;
-          fi
-          python setup.py develop
-      - name: Linter phase
-        run: |
-          yapf --diff --recursive deepparse/
-          pylint deepparse/
-          yapf --diff --recursive tests/
-          pylint tests/
-      - name: Tests phase
-        run: |
-          python -m unittest discover -s ./tests
-      - name: doc build phase
-        run: |
-          cd docs
-          ./rebuild_html_doc.sh
-          cd ..
-        
+    - name: Set deploy environment variable
+      run: |
+        # DEEPARSE_RELEASE_BUILD is also used in setup.py
+        if [ $GITHUB_REF == "refs/heads/stable" ] && \
+           [ $GITHUB_EVENT_NAME == "push" ] && \
+           [ ${{ matrix.python-version }} == "3.8" ]; then
+          echo "DEEPPARSE_RELEASE_BUILD=1" >> $GITHUB_ENV
+        else
+          echo "DEEPPARSE_RELEASE_BUILD=0" >> $GITHUB_ENV
+        fi
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+        pip install -r docs/requirements.txt
+        pip install -r tests/requirements.txt
+        pip install -r styling_requirements.txt
+        python setup.py develop
+    - name: Linting
+      run: |
+        yapf --diff --recursive deepparse/
+        yapf --diff --recursive tests/
+        pylint deepparse/
+        pylint tests/
+    - name: Test with pytest
+      run: |
+        pytest tests/
+    - name: Building doc
+      run: |
+        cd docs
+        ./rebuild_html_doc.sh
+        cd ..
+    - name: Deploy
+      if: env.DEEPPARSE_RELEASE_BUILD == '1'
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./docs/_build/html/

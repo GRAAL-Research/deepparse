@@ -1,11 +1,12 @@
 from torch.nn import NLLLoss
 
+criterion = NLLLoss()
+
 
 def nll_loss_function(pred, ground_truth):
     """
     NLL loss compute per tag.
     """
-    criterion = NLLLoss()
     loss = 0
 
     ground_truth = ground_truth.transpose(0, 1)

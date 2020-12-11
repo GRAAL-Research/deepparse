@@ -23,3 +23,9 @@
 
 - Added a verbose flag to trigger more message during embedding loading
 - Added a verbose flag in model/embeddings download
+
+## dev
+
+- Added fasttext magnitude model using pymagnitude-light
+
+

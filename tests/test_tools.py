@@ -20,6 +20,12 @@ class ToolsTests(TestCase):
         self.latest_fasttext_version = "617a417a2f2b02654f7deb5b5cbc60ab2f6334ba"
         self.latest_bpemb_version = "6d01367745157066ea6e621ac087be828137711f"
 
+    def tearDown(self) -> None:
+        if os.path.exists("fasttext.version"):
+            os.remove("fasttext.version")
+        if os.path.exists("bpemb.version"):
+            os.remove("bpemb.version")
+
     def create_cache_version(self, model_name, content):
         file = open(os.path.join(self.fake_cache_path, model_name + ".version"), "w")
         file.write(content)

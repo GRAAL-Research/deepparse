@@ -4,9 +4,8 @@ import warnings
 
 from bpemb import BPEmb
 
-from deepparse import download_fasttext_embeddings, download_weights, \
-    download_fasttext_magnitude_embeddings
-from deepparse import latest_version, CACHE_PATH
+from deepparse import CACHE_PATH, download_fasttext_magnitude_embeddings, latest_version
+from deepparse import download_fasttext_embeddings, download_weights
 
 
 def main(args: argparse.Namespace) -> None:

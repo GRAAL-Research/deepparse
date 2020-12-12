@@ -7,7 +7,8 @@ from unittest.mock import patch
 
 import requests
 
-from deepparse import download_from_url, latest_version, download_weights, handle_checkpoint, CACHE_PATH
+from deepparse import download_from_url, latest_version, download_weights
+from deepparse import handle_checkpoint, CACHE_PATH
 
 
 class ToolsTests(TestCase):

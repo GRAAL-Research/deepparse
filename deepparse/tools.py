@@ -43,7 +43,6 @@ def download_from_url(file_name: str, saving_dir: str, file_extension: str):
 def download_weights(model: str, saving_dir: str, verbose: bool = True) -> None:
     """
     Function to download the pre-trained weights of the models.
-
     Args:
         model: The network type (i.e. fasttext or bpemb).
         saving_dir: The path to the saving directory.

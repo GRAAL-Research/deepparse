@@ -5,36 +5,43 @@ import torch
 import torch.nn as nn
 import torch.nn.init as init
 
-base_url = "https://graal.ift.ulaval.ca/public/deepparse/"
+BASE_URL = "https://graal.ift.ulaval.ca/public/deepparse/"
+CACHE_PATH = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
 
 
-def verify_latest_version(model: str, root_path: str) -> bool:
+def latest_version(model: str, cache_path: str) -> bool:
     """
     Verify if the local model is the latest.
     """
-    local_model_hash_version = open(os.path.join(root_path, model + ".version")).readline()
-    download_from_url(model, root_path, "version")
-    remote_model_hash_version = open(os.path.join(root_path, model + ".version")).readline()
-    return local_model_hash_version != remote_model_hash_version
+    local_model_hash_file = open(os.path.join(cache_path, model + ".version"))
+    local_model_hash_version = local_model_hash_file.readline()
+    local_model_hash_file.close()
+    download_from_url(model, cache_path, "version")
+    remote_model_hash_file = open(os.path.join(cache_path, model + ".version"))
+    remote_model_hash_version = remote_model_hash_file.readline()
+    remote_model_hash_file.close()
+    return local_model_hash_version.strip() == remote_model_hash_version.strip()
 
 
-def download_from_url(model: str, saving_dir: str, extension: str):
+def download_from_url(file_name: str, saving_dir: str, file_extension: str):
     """
     Simple function to download the content of a file from a distant repository.
     """
-    model_url = base_url + "{}." + extension
-    url = model_url.format(model)
+    model_url = BASE_URL + "{}." + file_extension
+    url = model_url.format(file_name)
     r = requests.get(url)
+    r.raise_for_status()  # raise exception if 404 or other http error
 
     os.makedirs(saving_dir, exist_ok=True)
 
-    open(os.path.join(saving_dir, f"{model}.{extension}"), "wb").write(r.content)
+    file = open(os.path.join(saving_dir, f"{file_name}.{file_extension}"), "wb")
+    file.write(r.content)
+    file.close()
 
 
 def download_weights(model: str, saving_dir: str, verbose: bool = True) -> None:
     """
     Function to download the pre-trained weights of the models.
-
     Args:
         model: The network type (i.e. fasttext or bpemb).
         saving_dir: The path to the saving directory.

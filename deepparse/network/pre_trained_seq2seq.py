@@ -9,7 +9,7 @@ from torch import load
 
 from .decoder import Decoder
 from .encoder import Encoder
-from ..tools import download_weights, verify_latest_version
+from ..tools import download_weights, latest_version
 
 
 class PreTrainedSeq2SeqModel(ABC, nn.Module):
@@ -48,7 +48,7 @@ class PreTrainedSeq2SeqModel(ABC, nn.Module):
 
         if not os.path.isfile(model_path):
             download_weights(model_type, root_path, verbose=self.verbose)
-        elif verify_latest_version(model_type, root_path):
+        elif not latest_version(model_type, root_path):
             if self.verbose:
                 warnings.warn("A new version of the pre-trained model is available. "
                               "The newest model will be downloaded.")

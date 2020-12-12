@@ -81,7 +81,7 @@ def download_fasttext_magnitude_embeddings(saving_dir: str, verbose: bool = True
             print("The fastText pre-trained word embeddings will be download in magnitude format (2.3 GO), "
                   "this process will take several minutes.")
         extension = extension + ".gz"
-        download_from_url(model=model, saving_dir=saving_dir, extension=extension)
+        download_from_url(file_name=model, saving_dir=saving_dir, file_extension=extension)
         gz_file_name = file_name + ".gz"
         with gzip.open(os.path.join(saving_dir, gz_file_name), "rb") as f:
             with open(os.path.join(saving_dir, file_name), "wb") as f_out:

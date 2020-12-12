@@ -4,8 +4,8 @@ import warnings
 
 from bpemb import BPEmb
 
-from deepparse import download_fasttext_embeddings, verify_latest_version, download_weights, \
-    download_fasttext_magnitude_embeddings
+from deepparse import download_fasttext_embeddings, download_weights, \
+    download_fasttext_magnitude_embeddings, latest_version
 
 
 def main(args: argparse.Namespace) -> None:
@@ -27,7 +27,7 @@ def main(args: argparse.Namespace) -> None:
     version_path = os.path.join(root_path, f"{model}.version")
     if not os.path.isfile(model_path) or not os.path.isfile(version_path):
         download_weights(model, root_path)
-    elif verify_latest_version(model, root_path):
+    elif not latest_version(model, root_path):
         warnings.warn("A new version of the pre-trained model is available. The newest model will be downloaded.")
         download_weights(model, root_path)
 

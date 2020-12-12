@@ -10,7 +10,7 @@ from deepparse import download_fasttext_embeddings, download_weights
 
 def main(args: argparse.Namespace) -> None:
     """
-    Script to manually download all the dependancies for a pre-trained model.
+    Script to manually download all the dependencies for a pre-trained model.
     """
     model_type = args.model_type
     os.makedirs(CACHE_PATH, exist_ok=True)

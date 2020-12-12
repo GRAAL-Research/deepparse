@@ -73,7 +73,9 @@ class AddressParser:
         verbose (bool): Turn on/off the verbosity of the model weights download and loading. The default value is True.
         path_to_retrained_model (Union[str, None]): The path to the retrained model to use for prediction. Be sure to
             use the same model_type as the retrained model. For example, if you have use our pre-trained fasttext
-            model and fine-tuned it, model_type='fasttext' and path_to_retrained_model='/path/to/model/'.
+            model and fine-tuned it, model_type='fasttext' and path_to_retrained_model='/path/to/fasttext_model/'.
+            Since the architecture of fasttext and fasttext-light are similar, one can interchange both
+            (e.g. retrain a fasttext model and load the weights into a fasttext-light model).
             Default is None, meaning we use our pre-trained model.
 
 
@@ -243,6 +245,11 @@ class AddressParser:
             We use SGD optimizer, NLL loss and accuracy, the data are shuffled and we use teacher forcing during
             training (with a prob of 0.5) as in the `article <https://arxiv.org/abs/2006.16152>`_.
 
+        Note:
+            Due to pymagnitude, we could not train using the Magnitude embeddings, meaning it's not possible to
+            train using the fasttext-light model. But, since we don't update the embeddings weights, one can retrain
+            using the fasttext model and later on use the weights with the fasttext-light.
+
         Example:
 
             .. code-block:: python
@@ -271,6 +278,9 @@ class AddressParser:
         See `this <https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py>`_ for a fine
         tuning example.
         """
+        if self.model_type == "fasttext-light":
+            raise ValueError("It's not possible to retrain a fasttext-light due to pymagnitude problem.")
+
         callbacks = [] if callbacks is None else callbacks
         train_generator, valid_generator = self._create_training_data_generator(dataset_container, train_ratio,
                                                                                 batch_size, num_workers)

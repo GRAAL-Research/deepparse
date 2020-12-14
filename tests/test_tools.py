@@ -9,6 +9,7 @@ import requests
 
 from deepparse import download_from_url, latest_version, download_weights
 from deepparse import handle_checkpoint, CACHE_PATH
+from tests.tools import create_file
 
 
 class ToolsTests(TestCase):
@@ -28,9 +29,8 @@ class ToolsTests(TestCase):
             os.remove("bpemb.version")
 
     def create_cache_version(self, model_name, content):
-        file = open(os.path.join(self.fake_cache_path, model_name + ".version"), "w")
-        file.write(content)
-        file.close()
+        version_file_path = os.path.join(self.fake_cache_path, model_name + ".version")
+        create_file(version_file_path, content)
 
     def test_givenAFasttextLatestVersion_whenVerifyIfLastVersion_thenReturnTrue(self):
         self.create_cache_version("fasttext", self.latest_fasttext_version)

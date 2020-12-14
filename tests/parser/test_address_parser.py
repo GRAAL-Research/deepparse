@@ -27,7 +27,6 @@ class AddressParserTest(TestCase):
         cls.BPEmb_embeddings_model_param = {"lang": "multi", "vs": 100000, "dim": 300}
         cls.fasttext_download_path = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
         os.makedirs(cls.fasttext_download_path, exist_ok=True)
-        cls.a_language = "fr"
         cls.a_embeddings_path = "."
 
     def setUp(self):
@@ -94,7 +93,7 @@ class AddressParserTest(TestCase):
         with patch("deepparse.parser.address_parser.download_fasttext_embeddings") as downloader:
             self.address_parser = AddressParser(model_type=self.a_fastest_model_type, device=self.a_device)
 
-            downloader.assert_called_with(self.a_language, saving_dir=self.fasttext_download_path, verbose=self.verbose)
+            downloader.assert_called_with(saving_dir=self.fasttext_download_path, verbose=self.verbose)
 
     @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
     @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
@@ -103,7 +102,7 @@ class AddressParserTest(TestCase):
         with patch("deepparse.parser.address_parser.download_fasttext_embeddings") as downloader:
             self.address_parser = AddressParser(model_type=self.a_fasttext_model_type, device=self.a_device)
 
-            downloader.assert_called_with(self.a_language, saving_dir=self.fasttext_download_path, verbose=self.verbose)
+            downloader.assert_called_with(saving_dir=self.fasttext_download_path, verbose=self.verbose)
 
     @patch("deepparse.parser.address_parser.MagnitudeEmbeddingsModel")
     @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")

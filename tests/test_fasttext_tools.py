@@ -1,3 +1,6 @@
+# Since we use a patch as model mock we skip the unused argument error
+# pylint: disable=W0613
+
 import gzip
 import io
 import os
@@ -48,7 +51,7 @@ class ToolsTests(TestCase):
         with gzip.open(self.a_fasttext_gz_file_name_path, "wb") as f:
             f.write(self.a_fasttext_file_name_path.encode("utf-8"))
 
-        with patch("deepparse.fasttext_tools.download_gz_model") as downloader:
+        with patch("deepparse.fasttext_tools.download_gz_model") as _:
             actual = download_fasttext_embeddings(self.a_directory_path)
             expected = self.a_fasttext_file_name_path
             self.assertEqual(actual, expected)

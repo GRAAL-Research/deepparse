@@ -30,6 +30,7 @@ def download_fasttext_magnitude_embeddings(saving_dir: str, verbose: bool = True
     return file_name
 
 
+# pylint: disable=pointless-string-statement
 """
 The code below was copied from the fastText project, and has been modified for the purpose of this package.
 
@@ -77,7 +78,7 @@ def download_fasttext_embeddings(saving_dir: str, verbose: bool = True) -> str:
         return file_name_path  # return the full path to the fastText embeddings
 
     saving_file_path = os.path.join(saving_dir, gz_file_name)
-    
+
     download_gz_model(gz_file_name, saving_file_path, verbose=verbose)
     with gzip.open(os.path.join(saving_dir, gz_file_name), "rb") as f:
         with open(os.path.join(saving_dir, file_name), "wb") as f_out:
@@ -103,7 +104,7 @@ def download_gz_model(gz_file_name: str, saving_path: str, verbose: bool = True)
 
 
 # No modification, we just need to call our _print_progress function
-def _download_file(url: str, write_file_name: str, chunk_size: int = 2 ** 13, verbose: bool = True) -> None:
+def _download_file(url: str, write_file_name: str, chunk_size: int = 2**13, verbose: bool = True) -> None:
     if verbose:
         print("Downloading %s" % url)
     response = urlopen(url)

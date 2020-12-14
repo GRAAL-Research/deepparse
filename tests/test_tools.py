@@ -24,9 +24,8 @@ class ToolsTests(TestCase):
             os.remove("bpemb.version")
 
     def create_cache_version(self, model_name, content):
-        file = open(os.path.join(self.fake_cache_path, model_name + ".version"), "w")
-        file.write(content)
-        file.close()
+        with open(os.path.join(self.fake_cache_path, model_name + ".version"), "w") as f:
+            f.write(content)
 
     def test_givenAFasttextLatestVersion_whenVerifyIfLastVersion_thenReturnTrue(self):
         self.create_cache_version("fasttext", self.latest_fasttext_version)

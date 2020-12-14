@@ -37,21 +37,17 @@ import sys
 from urllib.request import urlopen
 
 from fasttext.FastText import _FastText
-from fasttext.util.util import valid_lang_ids
 
 from .tools import download_from_url
 
 
-def download_fasttext_embeddings(lang_id: str, saving_dir: str, verbose: bool = True) -> str:
+def download_fasttext_embeddings(saving_dir: str, verbose: bool = True) -> str:
     """
         Simpler version of the download_model function from fastText to download pre-trained common-crawl
         vectors from fastText's website https://fasttext.cc/docs/en/crawl-vectors.html and save it in the
         saving directory (saving_dir).
     """
-    if lang_id not in valid_lang_ids:
-        raise Exception("Invalid lang id. Please select among %s" % repr(valid_lang_ids))
-
-    file_name = "cc.%s.300.bin" % lang_id
+    file_name = "cc.fr.300.bin"
     gz_file_name = "%s.gz" % file_name
 
     file_name_path = os.path.join(saving_dir, file_name)

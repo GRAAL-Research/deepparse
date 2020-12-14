@@ -233,7 +233,7 @@ class AddressParser:
                 embeddings_model = MagnitudeEmbeddingsModel(file_name, verbose=self.verbose)
                 self.vectorizer = MagnitudeVectorizer(embeddings_model=embeddings_model)
             else:
-                file_name = download_fasttext_embeddings("fr", saving_dir=path, verbose=self.verbose)
+                file_name = download_fasttext_embeddings(saving_dir=path, verbose=self.verbose)
 
                 embeddings_model = FastTextEmbeddingsModel(file_name, verbose=self.verbose)
                 self.vectorizer = FastTextVectorizer(embeddings_model=embeddings_model)

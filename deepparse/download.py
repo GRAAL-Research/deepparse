@@ -16,7 +16,7 @@ def main(args: argparse.Namespace) -> None:
     os.makedirs(CACHE_PATH, exist_ok=True)
 
     if model_type == "fasttext":
-        download_fasttext_embeddings("fr", saving_dir=CACHE_PATH)
+        download_fasttext_embeddings(saving_dir=CACHE_PATH)
     if model_type == "fasttext-light":
         download_fasttext_magnitude_embeddings(saving_dir=CACHE_PATH)
     if model_type == "bpemb":

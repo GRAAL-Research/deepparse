@@ -3,8 +3,8 @@ import os
 
 from bpemb import BPEmb
 
-from deepparse import CACHE_PATH, download_fasttext_magnitude_embeddings, latest_version
-from deepparse import download_fasttext_embeddings, download_weights
+from deepparse import CACHE_PATH, download_fasttext_magnitude_embeddings, latest_version, \
+    download_fasttext_embeddings, download_weights
 
 
 def main(args: argparse.Namespace) -> None:

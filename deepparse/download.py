@@ -1,6 +1,5 @@
 import argparse
 import os
-import warnings
 
 from bpemb import BPEmb
 
@@ -27,7 +26,7 @@ def main(args: argparse.Namespace) -> None:
     if not os.path.isfile(model_path) or not os.path.isfile(version_path):
         download_weights(model_type, CACHE_PATH)
     elif not latest_version(model_type, cache_path=CACHE_PATH):
-        warnings.warn("A new version of the pre-trained model is available. The newest model will be downloaded.")
+        print("A new version of the pre-trained model is available. The newest model will be downloaded.")
         download_weights(model_type, CACHE_PATH)
 
 

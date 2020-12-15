@@ -98,3 +98,84 @@ class DownloadTests(TestCase):
             download.main(args_parser)
 
             downloader.assert_any_call(self.a_bpemb_model_type, self.fake_cache_path)
+
+    @patch("deepparse.download.download_fasttext_embeddings")
+    @patch("deepparse.download.CACHE_PATH", "./")  # we mock the cache path with the fake_cache_path
+    @patch("deepparse.download.os.path.isfile", return_value=True)
+    @patch("deepparse.download.latest_version", return_value=False)  # not the latest version
+    def test_givenAFasttextDownload_whenModelIsLocalButNotLatest_thenDownloadWeights(
+            self, download_embeddings_mock, os_is_file_mock, latest_version_mock):
+        args_parser = self.parser.parse_args([self.a_fasttext_model_type])
+        with patch("deepparse.download.download_weights") as downloader:
+            download.main(args_parser)
+
+            downloader.assert_any_call(self.a_fasttext_model_type, self.fake_cache_path)
+
+    @patch("deepparse.download.download_fasttext_magnitude_embeddings")
+    @patch("deepparse.download.CACHE_PATH", "./")  # we mock the cache path with the fake_cache_path
+    @patch("deepparse.download.os.path.isfile", return_value=True)
+    @patch("deepparse.download.latest_version", return_value=False)  # not the latest version
+    def test_givenAFasttextLightDownload_whenModelIsLocalButNotLatest_thenDownloadWeights(
+            self, download_embeddings_mock, os_is_file_mock, latest_version_mock):
+        args_parser = self.parser.parse_args([self.a_fasttext_light_model_type])
+
+        with patch("deepparse.download.download_weights") as downloader:
+            download.main(args_parser)
+
+            downloader.assert_any_call(self.a_fasttext_light_model_type, self.fake_cache_path)
+
+    @patch("deepparse.download.BPEmb")
+    @patch("deepparse.download.CACHE_PATH", "./")  # we mock the cache path with the fake_cache_path
+    @patch("deepparse.download.os.path.isfile", return_value=True)
+    @patch("deepparse.download.latest_version", return_value=False)  # not the latest version
+    def test_givenABPembDownload_whenModelIsLocalButNotLatest_thenDownloadWeights(self, download_embeddings_mock,
+                                                                                  os_is_file_mock, latest_version_mock):
+        args_parser = self.parser.parse_args([self.a_bpemb_model_type])
+
+        with patch("deepparse.download.download_weights") as downloader:
+            download.main(args_parser)
+
+            downloader.assert_any_call(self.a_bpemb_model_type, self.fake_cache_path)
+
+    @patch("deepparse.download.download_fasttext_embeddings")
+    @patch("deepparse.download.CACHE_PATH", "./")  # we mock the cache path with the fake_cache_path
+    @patch("deepparse.download.os.path.isfile", return_value=True)
+    @patch("deepparse.download.latest_version", return_value=True)  # the latest version
+    def test_givenAFasttextDownload_whenModelIsLocalAndGoodVersion_thenDoNoting(self, download_embeddings_mock,
+                                                                                os_is_file_mock, latest_version_mock):
+        args_parser = self.parser.parse_args([self.a_fasttext_model_type])
+
+        with patch("deepparse.download.download_weights") as downloader:
+            download.main(args_parser)
+
+            downloader.assert_not_called()
+
+    @patch("deepparse.download.download_fasttext_magnitude_embeddings")
+    @patch("deepparse.download.CACHE_PATH", "./")  # we mock the cache path with the fake_cache_path
+    @patch("deepparse.download.os.path.isfile", return_value=True)
+    @patch("deepparse.download.latest_version", return_value=True)  # the latest version
+    def test_givenAFasttextLightDownload_whenModelIsLocalAndGoodVersion_thenDoNoting(
+            self, download_embeddings_mock, os_is_file_mock, latest_version_mock):
+        os_is_file_mock.return_value = True
+        latest_version_mock.return_value = True  # the latest version
+        args_parser = self.parser.parse_args([self.a_fasttext_light_model_type])
+
+        with patch("deepparse.download.download_weights") as downloader:
+            download.main(args_parser)
+
+            downloader.assert_not_called()
+
+    @patch("deepparse.download.BPEmb")
+    @patch("deepparse.download.CACHE_PATH", "./")  # we mock the cache path with the fake_cache_path
+    @patch("deepparse.download.os.path.isfile", return_value=True)
+    @patch("deepparse.download.latest_version", return_value=True)  # the latest version
+    def test_givenABPembDownload_whenModelIsLocalAndGoodVersion_thenDoNoting(self, download_embeddings_mock,
+                                                                             os_is_file_mock, latest_version_mock):
+        os_is_file_mock.return_value = True
+        latest_version_mock.return_value = True  # the latest version
+        args_parser = self.parser.parse_args([self.a_bpemb_model_type])
+
+        with patch("deepparse.download.download_weights") as downloader:
+            download.main(args_parser)
+
+            downloader.assert_not_called()

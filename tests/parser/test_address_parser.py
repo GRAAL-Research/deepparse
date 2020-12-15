@@ -1,20 +1,16 @@
 # Since we use a patch as model mock we skip the unused argument error
 # pylint: disable=W0613
-# Bug with PyTorch source code makes torch.tensor as not callable for pylint.
-# pylint: disable=not-callable
-
 import os
-from unittest import TestCase
 from unittest.mock import patch, Mock
 
-import torch
-from torch import device, tensor
+from torch import device
 
 from deepparse.parser import ParsedAddress
 from deepparse.parser.address_parser import AddressParser
+from tests.parser.base import AddressParserPredictTestCase
 
 
-class AddressParserTest(TestCase):
+class AddressParserTest(AddressParserPredictTestCase):
     # pylint: disable=too-many-public-methods
     @classmethod
     def setUpClass(cls):
@@ -35,61 +31,21 @@ class AddressParserTest(TestCase):
         os.makedirs(cls.fasttext_download_path, exist_ok=True)
         cls.a_embeddings_path = "."
 
-        # here a example with the model prediction vectors
+        # A address parsing example
         cls.a_complete_address = "15 major st london ontario n5z1e1"
         cls.a_municipality = "london"
         cls.a_postal_code = "n5z1e1"
         cls.a_province = "ontario"
         cls.a_street_name = "major st"
         cls.a_street_number = "15"
-        cls.a_prediction_vector_for_a_complete_address = tensor([[[
-            -6.7080e-04, -7.3572e+00, -1.4086e+01, -1.1092e+01, -2.1749e+01, -1.1060e+01, -1.4627e+01, -1.4654e+01,
-            -2.8624e+01
-        ]],
-                                                                 [[
-                                                                     -1.5119e+01, -1.7881e-06, -1.7613e+01, -1.3365e+01,
-                                                                     -2.9415e+01, -2.3198e+01, -2.2065e+01, -2.2009e+01,
-                                                                     -4.0588e+01
-                                                                 ]],
-                                                                 [[
-                                                                     -1.5922e+01, -1.1903e-03, -1.3102e+01, -6.7359e+00,
-                                                                     -2.4669e+01, -1.7328e+01, -1.9970e+01, -1.9923e+01,
-                                                                     -4.0041e+01
-                                                                 ]],
-                                                                 [[
-                                                                     -1.9461e+01, -1.3808e+01, -1.5707e+01, -2.0146e-05,
-                                                                     -1.0881e+01, -1.5345e+01, -2.1945e+01, -2.2081e+01,
-                                                                     -4.6854e+01
-                                                                 ]],
-                                                                 [[
-                                                                     -1.7136e+01, -1.8420e+01, -1.5489e+01, -1.5802e+01,
-                                                                     -1.2159e-05, -1.1350e+01, -2.1703e+01, -2.1866e+01,
-                                                                     -4.2224e+01
-                                                                 ]],
-                                                                 [[
-                                                                     -1.4736e+01, -1.7999e+01, -1.5483e+01, -2.1751e+01,
-                                                                     -1.3005e+01, -3.4571e-06, -1.7897e+01, -1.7965e+01,
-                                                                     -1.4235e+01
-                                                                 ]],
-                                                                 [[
-                                                                     -1.7509e+01, -1.8191e+01, -1.7853e+01, -2.6309e+01,
-                                                                     -1.7179e+01, -1.0518e+01, -1.9438e+01, -1.9542e+01,
-                                                                     -2.7060e-05
-                                                                 ]]])
 
     def setUp(self):
+        super().setUp()
         self.address_parser = 0
         self.BPEmb_mock = Mock()
         self.fasttext_mock = Mock()
 
         self.embeddings_model_mock = Mock()
-
-    def mock_predictions_vectors(self, model):
-        model.return_value = Mock(return_value=self.a_prediction_vector_for_a_complete_address)
-
-    def mock_multiple_predictions_vectors(self, model):
-        model.return_value = Mock(return_value=torch.cat((self.a_prediction_vector_for_a_complete_address,
-                                                          self.a_prediction_vector_for_a_complete_address), 1))
 
     @patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel")
     def test_givenABestModelType_whenInstantiatingParser_thenInstantiateBPEmbEmbeddingsModelWithCorrectParameters(

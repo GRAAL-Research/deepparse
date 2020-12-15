@@ -465,11 +465,13 @@ class AddressParser:
             os.makedirs(CACHE_PATH, exist_ok=True)
 
             if self.model_type in ("fasttext-light", "lightest"):
+                self.model_type = "fasttext-light"  # we change name to fasttext Light since name can be lightest
                 file_name = download_fasttext_magnitude_embeddings(saving_dir=CACHE_PATH, verbose=self.verbose)
 
                 embeddings_model = MagnitudeEmbeddingsModel(file_name, verbose=self.verbose)
                 self.vectorizer = MagnitudeVectorizer(embeddings_model=embeddings_model)
             else:
+                self.model_type = "fasttext"  # we change name to fasttext since name can be fastest
                 file_name = download_fasttext_embeddings(saving_dir=CACHE_PATH, verbose=self.verbose)
 
                 embeddings_model = FastTextEmbeddingsModel(file_name, verbose=self.verbose)
@@ -482,6 +484,7 @@ class AddressParser:
                                               path_to_retrained_model=path_to_retrained_model)
 
         elif self.model_type in ("bpemb", "best"):
+            self.model_type = "bpemb"  # we change name to bpemb since name can be best
             self.vectorizer = BPEmbVectorizer(
                 embeddings_model=BPEmbEmbeddingsModel(verbose=self.verbose, lang="multi", vs=100000, dim=300))
 

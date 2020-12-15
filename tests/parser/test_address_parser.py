@@ -17,10 +17,13 @@ class AddressParserTest(AddressParserPredictTestCase):
         cls.a_address = "3 test road quebec"
         cls.a_best_model_type = "best"
         cls.a_BPEmb_model_type = "BPEmb"
+        cls.a_BPemb_name = "BpembAddressParser"
         cls.a_fastest_model_type = "fastest"
         cls.a_fasttext_model_type = "fasttext"
-        cls.a_fasttext_light_model_type = "fasttext-light"
+        cls.a_fasttext_name = "FasttextAddressParser"
         cls.a_fasttext_lightest_model_type = "lightest"
+        cls.a_fasttext_light_model_type = "fasttext-light"
+        cls.a_fasttext_light_name = "Fasttext-lightAddressParser"
         cls.a_rounding = 5
         cls.a_device = "cpu"
         cls.a_torch_device = device(cls.a_device)
@@ -198,7 +201,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
     @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
     def test_givenAFastestModelType_whenInstantiatingParser_thenInstantiatePretrainedModelWithCorrectParameters(
-            self, pretrained_model_mock, embeddings_model_mock):
+            self, download_weights_mock, embeddings_model_mock):
         with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel") as model:
             self.address_parser = AddressParser(model_type=self.a_fastest_model_type, device=self.a_device)
 
@@ -207,7 +210,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
     @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
     def test_givenAFasttextModelType_whenInstantiatingParser_thenInstantiatePretrainedModelWithCorrectParameters(
-            self, pretrained_model_mock, embeddings_model_mock):
+            self, download_weights_mock, embeddings_model_mock):
         with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel") as model:
             self.address_parser = AddressParser(model_type=self.a_fasttext_model_type, device=self.a_device)
 
@@ -217,7 +220,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
     @patch("deepparse.parser.address_parser.FastTextVectorizer")
     @patch("deepparse.parser.address_parser.fasttext_data_padding")
-    def test_givenAFasttextModel_whenAddressParsingAString_thenParseAddress(self, pretrained_model_mock,
+    def test_givenAFasttextModel_whenAddressParsingAString_thenParseAddress(self, download_weights_mock,
                                                                             embeddings_model_mock,
                                                                             vectorizer_model_mock, data_padding_mock):
         with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel") as model:
@@ -234,7 +237,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     @patch("deepparse.parser.address_parser.FastTextVectorizer")
     @patch("deepparse.parser.address_parser.fasttext_data_padding")
     def test_givenAFasttextModel_whenAddressParsingAListOfAddress_thenParseAllAddress(
-            self, pretrained_model_mock, embeddings_model_mock, vectorizer_model_mock, data_padding_mock):
+            self, download_weights_mock, embeddings_model_mock, vectorizer_model_mock, data_padding_mock):
         with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel") as model:
             self.mock_multiple_predictions_vectors(model)
             self.address_parser = AddressParser(model_type=self.a_fasttext_model_type, device=self.a_device)
@@ -251,7 +254,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     @patch("deepparse.parser.address_parser.FastTextVectorizer")
     @patch("deepparse.parser.address_parser.fasttext_data_padding")
     def test_givenAFasttextModel_whenAddressParsingAnAddress_thenParseAddressCorrectly(
-            self, pretrained_model_mock, embeddings_model_mock, vectorizer_model_mock, data_padding_mock):
+            self, download_weights_mock, embeddings_model_mock, vectorizer_model_mock, data_padding_mock):
         with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel") as model:
             self.mock_predictions_vectors(model)
             self.address_parser = AddressParser(model_type=self.a_fasttext_model_type, device=self.a_device)
@@ -270,7 +273,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     @patch("deepparse.parser.address_parser.MagnitudeEmbeddingsModel")
     @patch("deepparse.parser.address_parser.MagnitudeVectorizer")
     @patch("deepparse.parser.address_parser.fasttext_data_padding")
-    def test_givenAMagnitudeModel_whenAddressParsingAString_thenParseAddress(self, pretrained_model_mock,
+    def test_givenAMagnitudeModel_whenAddressParsingAString_thenParseAddress(self, download_weights_mock,
                                                                              embeddings_model_mock,
                                                                              vectorizer_model_mock, data_padding_mock):
         with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel") as model:
@@ -287,7 +290,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     @patch("deepparse.parser.address_parser.MagnitudeVectorizer")
     @patch("deepparse.parser.address_parser.fasttext_data_padding")
     def test_givenAMagnitudeModel_whenAddressParsingAListOfAddress_thenParseAllAddress(
-            self, pretrained_model_mock, embeddings_model_mock, vectorizer_model_mock, data_padding_mock):
+            self, download_weights_mock, embeddings_model_mock, vectorizer_model_mock, data_padding_mock):
         with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel") as model:
             self.mock_multiple_predictions_vectors(model)
             self.address_parser = AddressParser(model_type=self.a_fasttext_light_model_type, device=self.a_device)
@@ -304,7 +307,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     @patch("deepparse.parser.address_parser.MagnitudeVectorizer")
     @patch("deepparse.parser.address_parser.fasttext_data_padding")
     def test_givenAMagnitudeModel_whenAddressParsingAnAddress_thenParseAddressCorrectly(
-            self, pretrained_model_mock, embeddings_model_mock, vectorizer_model_mock, data_padding_mock):
+            self, download_weights_mock, embeddings_model_mock, vectorizer_model_mock, data_padding_mock):
         with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel") as model:
             self.mock_predictions_vectors(model)
             self.address_parser = AddressParser(model_type=self.a_fasttext_light_model_type, device=self.a_device)
@@ -319,33 +322,29 @@ class AddressParserTest(AddressParserPredictTestCase):
             self.assertEqual(parse_address.street_name, self.a_street_name)
             self.assertEqual(parse_address.street_number, self.a_street_number)
 
-    @patch("deepparse.parser.address_parser.download_fasttext_magnitude_embeddings")
     @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
     @patch("deepparse.parser.address_parser.BPEmbVectorizer")
     @patch("deepparse.parser.address_parser.bpemb_data_padding")
-    def test_givenABPEmbModel_whenAddressParsingAString_thenParseAddress(self, pretrained_model_mock,
-                                                                         embeddings_model_mock, vectorizer_model_mock,
-                                                                         bpemb_data_padding_mock):
+    def test_givenABPEmbModel_whenAddressParsingAString_thenParseAddress(self, embeddings_model_mock,
+                                                                         vectorizer_model_mock, data_padding_mock):
         with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel") as model:
             self.mock_predictions_vectors(model)
-            self.address_parser = AddressParser(model_type=self.a_best_model_type, device=self.a_device)
+            self.address_parser = AddressParser(model_type=self.a_BPEmb_model_type, device=self.a_device)
 
             parse_address = self.address_parser(self.a_complete_address)
 
             self.assertIsInstance(parse_address, ParsedAddress)
             self.assertEqual(parse_address.raw_address, self.a_complete_address)
 
-    @patch("deepparse.parser.address_parser.download_fasttext_magnitude_embeddings")
     @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
     @patch("deepparse.parser.address_parser.BPEmbVectorizer")
     @patch("deepparse.parser.address_parser.bpemb_data_padding")
-    def test_givenABPEmbModel_whenAddressParsingAListOfAddress_thenParseAllAddress(self, pretrained_model_mock,
-                                                                                   embeddings_model_mock,
+    def test_givenABPEmbModel_whenAddressParsingAListOfAddress_thenParseAllAddress(self, embeddings_model_mock,
                                                                                    vectorizer_model_mock,
-                                                                                   bpemb_data_padding_mock):
+                                                                                   data_padding_mock):
         with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel") as model:
             self.mock_multiple_predictions_vectors(model)
-            self.address_parser = AddressParser(model_type=self.a_best_model_type, device=self.a_device)
+            self.address_parser = AddressParser(model_type=self.a_BPEmb_model_type, device=self.a_device)
 
             parse_address = self.address_parser([self.a_complete_address, self.a_complete_address])
 
@@ -354,17 +353,15 @@ class AddressParserTest(AddressParserPredictTestCase):
             self.assertEqual(parse_address[0].raw_address, self.a_complete_address)
             self.assertEqual(parse_address[1].raw_address, self.a_complete_address)
 
-    @patch("deepparse.parser.address_parser.download_fasttext_magnitude_embeddings")
     @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
     @patch("deepparse.parser.address_parser.BPEmbVectorizer")
     @patch("deepparse.parser.address_parser.bpemb_data_padding")
-    def test_givenABPEmbModel_whenAddressParsingAnAddress_thenParseAddressCorrectly(self, pretrained_model_mock,
-                                                                                    embeddings_model_mock,
+    def test_givenABPEmbModel_whenAddressParsingAnAddress_thenParseAddressCorrectly(self, embeddings_model_mock,
                                                                                     vectorizer_model_mock,
-                                                                                    bpemb_data_padding_mock):
+                                                                                    data_padding_mock):
         with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel") as model:
             self.mock_predictions_vectors(model)
-            self.address_parser = AddressParser(model_type=self.a_best_model_type, device=self.a_device)
+            self.address_parser = AddressParser(model_type=self.a_BPEmb_model_type, device=self.a_device)
 
             parse_address = self.address_parser(self.a_complete_address)
 
@@ -375,3 +372,91 @@ class AddressParserTest(AddressParserPredictTestCase):
             self.assertEqual(parse_address.province, self.a_province)
             self.assertEqual(parse_address.street_name, self.a_street_name)
             self.assertEqual(parse_address.street_number, self.a_street_number)
+
+    @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.BPEmbVectorizer")
+    @patch("deepparse.parser.address_parser.bpemb_data_padding")
+    def test_givenAnBPembAddressParser_whenStrAddressParser_thenStringIsModelTypeAddressParse(
+            self, embeddings_model_mock, vectorizer_model_mock, data_padding_mock):
+        self._capture_output()
+
+        with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel") as model:
+            self.mock_predictions_vectors(model)
+            self.address_parser = AddressParser(model_type=self.a_BPEmb_model_type, device=self.a_device)
+            print(self.address_parser)
+
+            self.assertEqual(self.a_BPemb_name, self.test_out.getvalue().strip())
+
+    @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.BPEmbVectorizer")
+    @patch("deepparse.parser.address_parser.bpemb_data_padding")
+    def test_givenAnBPembAddressParser_whenReprAddressParser_thenStringIsModelTypeAddressParse(
+            self, embeddings_model_mock, vectorizer_model_mock, data_padding_mock):
+        self._capture_output()
+
+        with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel") as model:
+            self.mock_predictions_vectors(model)
+            self.address_parser = AddressParser(model_type=self.a_best_model_type, device=self.a_device)
+            print(self.address_parser.__repr__())
+
+            self.assertEqual(self.a_BPemb_name, self.test_out.getvalue().strip())
+
+    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
+    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.FastTextVectorizer")
+    @patch("deepparse.parser.address_parser.fasttext_data_padding")
+    def test_givenAnFasttextAddressParser_whenStrAddressParser_thenStringIsModelTypeAddressParse(
+            self, download_weights_mock, embeddings_model_mock, vectorizer_model_mock, data_padding_mock):
+        self._capture_output()
+
+        with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel") as model:
+            self.mock_predictions_vectors(model)
+            self.address_parser = AddressParser(model_type=self.a_fasttext_model_type, device=self.a_device)
+            print(self.address_parser)
+
+            self.assertEqual(self.a_fasttext_name, self.test_out.getvalue().strip())
+
+    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
+    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.FastTextVectorizer")
+    @patch("deepparse.parser.address_parser.fasttext_data_padding")
+    def test_givenAnFasttextAddressParser_whenReprAddressParser_thenStringIsModelTypeAddressParse(
+            self, pretrained_model_mock, embeddings_model_mock, vectorizer_model_mock, data_padding_mock):
+        self._capture_output()
+
+        with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel") as model:
+            self.mock_predictions_vectors(model)
+            self.address_parser = AddressParser(model_type=self.a_fasttext_model_type, device=self.a_device)
+            print(self.address_parser.__repr__())
+
+            self.assertEqual(self.a_fasttext_name, self.test_out.getvalue().strip())
+
+    @patch("deepparse.parser.address_parser.download_fasttext_magnitude_embeddings")
+    @patch("deepparse.parser.address_parser.MagnitudeEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.MagnitudeVectorizer")
+    @patch("deepparse.parser.address_parser.fasttext_data_padding")
+    def test_givenAnFasttextLightAddressParser_whenStrAddressParser_thenStringIsModelTypeAddressParse(
+            self, download_weights_mock, embeddings_model_mock, vectorizer_model_mock, data_padding_mock):
+        self._capture_output()
+
+        with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel") as model:
+            self.mock_predictions_vectors(model)
+            self.address_parser = AddressParser(model_type=self.a_fasttext_lightest_model_type, device=self.a_device)
+            print(self.address_parser)
+
+            self.assertEqual(self.a_fasttext_light_name, self.test_out.getvalue().strip())
+
+    @patch("deepparse.parser.address_parser.download_fasttext_magnitude_embeddings")
+    @patch("deepparse.parser.address_parser.MagnitudeEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.MagnitudeVectorizer")
+    @patch("deepparse.parser.address_parser.fasttext_data_padding")
+    def test_givenAnFasttextLightAddressParser_whenReprAddressParser_thenStringIsModelTypeAddressParse(
+            self, pretrained_model_mock, embeddings_model_mock, vectorizer_model_mock, data_padding_mock):
+        self._capture_output()
+
+        with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel") as model:
+            self.mock_predictions_vectors(model)
+            self.address_parser = AddressParser(model_type=self.a_fasttext_lightest_model_type, device=self.a_device)
+            print(self.address_parser.__repr__())
+
+            self.assertEqual(self.a_fasttext_light_name, self.test_out.getvalue().strip())

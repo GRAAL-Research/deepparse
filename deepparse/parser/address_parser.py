@@ -148,7 +148,9 @@ class AddressParser:
         self.model.eval()
 
     def __str__(self) -> str:
-        return self.model_type
+        return f"{self.model_type.capitalize()}AddressParser"
+
+    __repr__ = __str__  # to call __str__ when list of address
 
     def __call__(self,
                  addresses_to_parse: Union[List[str], str],

@@ -143,8 +143,7 @@ class AddressParser:
         self.tags_converter = TagsConverter(_pre_trained_tags_to_idx)
 
         self.model_type = model_type.lower()
-        self.path_to_retrained_model = path_to_retrained_model
-        self._model_factory()
+        self._model_factory(path_to_retrained_model=path_to_retrained_model)
         self.model.eval()
 
     def __str__(self) -> str:
@@ -458,7 +457,7 @@ class AddressParser:
 
         return train_generator, valid_generator
 
-    def _model_factory(self) -> None:
+    def _model_factory(self, path_to_retrained_model: Union[str, None] = None) -> None:
         """
         Model factory to create the vectorizer, the data converter and the pre-trained model
         """
@@ -480,7 +479,7 @@ class AddressParser:
 
             self.model = FastTextSeq2SeqModel(self.device,
                                               verbose=self.verbose,
-                                              path_to_retrained_model=self.path_to_retrained_model)
+                                              path_to_retrained_model=path_to_retrained_model)
 
         elif self.model_type in ("bpemb", "best"):
             self.vectorizer = BPEmbVectorizer(
@@ -490,7 +489,7 @@ class AddressParser:
 
             self.model = BPEmbSeq2SeqModel(self.device,
                                            verbose=self.verbose,
-                                           path_to_retrained_model=self.path_to_retrained_model)
+                                           path_to_retrained_model=path_to_retrained_model)
         else:
             raise NotImplementedError(f"There is no {self.model_type} network implemented. Value can be: "
                                       f"fasttext, bpemb, lightest (bpemb), fastest (fasttext) or best (bpemb).")

@@ -22,7 +22,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     @classmethod
     def setUpClass(cls):
         super(AddressParserTest, cls).setUpClass()
-        cls.a_device = 0
+        cls.a_device = "cpu"
 
     def setUp(self):
         super().setUp()
@@ -33,7 +33,7 @@ class AddressParserTest(AddressParserPredictTestCase):
         self.a_learning_rate = 0.01
         self.a_callbacks_list = []
         self.a_seed = 42
-        self.a_logging_path = "./"
+        self.a_logging_path = "./ckpts"
         self.a_torch_device = torch.device(self.a_device)
 
         self.a_loss_function = nll_loss_function
@@ -41,6 +41,7 @@ class AddressParserTest(AddressParserPredictTestCase):
 
         self.mocked_data_container = MockDataContainer()
 
+    @patch("deepparse.parser.address_parser.Experiment")
     @patch("deepparse.parser.address_parser.SGD")
     @patch("deepparse.parser.address_parser.DataTransform")
     @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
@@ -51,17 +52,20 @@ class AddressParserTest(AddressParserPredictTestCase):
     def test_givenAFasttextModel_whenRetrain_thenInstantiateOptimizer(self, download_weights_mock,
                                                                       embeddings_model_mock, vectorizer_model_mock,
                                                                       data_padding_mock, model_mock,
-                                                                      data_transform_mock, optimizer_mock):
+                                                                      data_transform_mock, optimizer_mock,
+                                                                      experiment_mock):
         self.address_parser = AddressParser(model_type=self.a_fasttext_model_type, device=self.a_device)
 
         self.address_parser.retrain(self.mocked_data_container,
                                     self.a_train_ratio,
                                     self.a_batch_size,
                                     self.a_epoch_number,
-                                    learning_rate=self.a_learning_rate)
+                                    learning_rate=self.a_learning_rate,
+                                    logging_path=self.a_logging_path)
 
         optimizer_mock.assert_called_with(model_mock().parameters(), self.a_learning_rate)
 
+    @patch("deepparse.parser.address_parser.Experiment")
     @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
     @patch("deepparse.parser.address_parser.fasttext_data_padding")
     @patch("deepparse.parser.address_parser.MagnitudeVectorizer")
@@ -69,7 +73,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     @patch("deepparse.parser.address_parser.download_fasttext_magnitude_embeddings")
     def test_givenAFasttextMagnitudeModel_whenRetrain_thenRaiseError(self, download_weights_mock, embeddings_model_mock,
                                                                      vectorizer_model_mock, data_padding_mock,
-                                                                     mock_model):
+                                                                     mock_model, experiment_mock):
         self.address_parser = AddressParser(model_type=self.a_fasttext_light_model_type, device=self.a_device)
 
         with self.assertRaises(ValueError):
@@ -77,8 +81,10 @@ class AddressParserTest(AddressParserPredictTestCase):
                                         self.a_train_ratio,
                                         self.a_batch_size,
                                         self.a_epoch_number,
-                                        learning_rate=self.a_learning_rate)
+                                        learning_rate=self.a_learning_rate,
+                                        logging_path=self.a_logging_path)
 
+    @patch("deepparse.parser.address_parser.Experiment")
     @patch("deepparse.parser.address_parser.SGD")
     @patch("deepparse.parser.address_parser.DataTransform")
     @patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel")
@@ -87,14 +93,15 @@ class AddressParserTest(AddressParserPredictTestCase):
     @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
     def test_givenABPEmbModel_whenRetrain_thenRaiseError(self, embeddings_model_mock, vectorizer_model_mock,
                                                          data_padding_mock, model_mock, data_transform_mock,
-                                                         optimizer_mock):
+                                                         optimizer_mock, experiment_mock):
         self.address_parser = AddressParser(model_type=self.a_BPEmb_model_type, device=self.a_device)
 
         self.address_parser.retrain(self.mocked_data_container,
                                     self.a_train_ratio,
                                     self.a_batch_size,
                                     self.a_epoch_number,
-                                    learning_rate=self.a_learning_rate)
+                                    learning_rate=self.a_learning_rate,
+                                    logging_path=self.a_logging_path)
 
         optimizer_mock.assert_called_with(model_mock().parameters(), self.a_learning_rate)
 

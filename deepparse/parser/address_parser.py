@@ -1,9 +1,7 @@
-import math
 import os
 import re
 from typing import List, Union, Dict, Tuple
 
-import numpy as np
 import torch
 from numpy.core.multiarray import ndarray
 from poutyne.framework import Experiment
@@ -11,7 +9,7 @@ from torch.optim import SGD
 from torch.utils.data import DataLoader, Subset
 
 from .parsed_address import ParsedAddress
-from .. import CACHE_PATH, handle_checkpoint
+from .. import CACHE_PATH, handle_checkpoint, indices_splitting
 from .. import load_tuple_to_device, download_fasttext_magnitude_embeddings
 from ..converter import TagsConverter
 from ..converter import fasttext_data_padding, DataTransform
@@ -284,7 +282,7 @@ class AddressParser:
 
         callbacks = [] if callbacks is None else callbacks
         train_generator, valid_generator = self._create_training_data_generator(dataset_container, train_ratio,
-                                                                                batch_size, num_workers)
+                                                                                batch_size, num_workers, seed=seed)
 
         optimizer = SGD(self.model.parameters(), learning_rate)
 
@@ -429,27 +427,20 @@ class AddressParser:
         return data_transform
 
     def _create_training_data_generator(self, dataset_container: DatasetContainerInterface, train_ratio: float,
-                                        batch_size: int, num_workers: int) -> Tuple:
+                                        batch_size: int, num_workers: int, seed: int) -> Tuple:
         data_transform = self._set_data_transformer()
 
-        num_data = len(dataset_container)
-        indices = list(range(num_data))
-        np.random.shuffle(indices)
+        train_indices, valid_indices = indices_splitting(num_data=len(dataset_container), train_ratio=train_ratio,
+                                                         seed=seed)
 
-        split = math.floor(train_ratio * num_data)
-
-        train_indices = indices[:split]
         train_dataset = Subset(dataset_container, train_indices)
-
-        valid_indices = indices[split:]
-        valid_dataset = Subset(dataset_container, valid_indices)
-
         train_generator = DataLoader(train_dataset,
                                      collate_fn=data_transform.teacher_forcing_transform,
                                      batch_size=batch_size,
                                      num_workers=num_workers,
                                      shuffle=True)
 
+        valid_dataset = Subset(dataset_container, valid_indices)
         valid_generator = DataLoader(valid_dataset,
                                      collate_fn=data_transform.output_transform,
                                      batch_size=batch_size,

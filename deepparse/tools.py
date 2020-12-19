@@ -1,6 +1,8 @@
+import math
 import os
 import warnings
 
+import numpy as np
 import requests
 import torch
 import torch.nn as nn
@@ -85,6 +87,22 @@ def handle_checkpoint(checkpoint):
                          "'fasttext' or 'bpemb'.")
 
     return checkpoint
+
+
+def indices_splitting(num_data: int, train_ratio: float, seed: int = 42):
+    """
+    Split indices into train and valid
+    """
+    np.random.seed(seed)
+    indices = list(range(num_data))
+    np.random.shuffle(indices)
+
+    split = math.floor(train_ratio * num_data)
+
+    train_indices = indices[:split]
+    valid_indices = indices[split:]
+
+    return train_indices, valid_indices
 
 
 def weight_init(m):

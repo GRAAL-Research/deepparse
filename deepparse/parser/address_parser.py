@@ -280,8 +280,11 @@ class AddressParser:
             raise ValueError("It's not possible to retrain a fasttext-light due to pymagnitude problem.")
 
         callbacks = [] if callbacks is None else callbacks
-        train_generator, valid_generator = self._create_training_data_generator(dataset_container, train_ratio,
-                                                                                batch_size, num_workers, seed=seed)
+        train_generator, valid_generator = self._create_training_data_generator(dataset_container,
+                                                                                train_ratio,
+                                                                                batch_size,
+                                                                                num_workers,
+                                                                                seed=seed)
 
         optimizer = SGD(self.model.parameters(), learning_rate)
 
@@ -422,9 +425,11 @@ class AddressParser:
 
     def _create_training_data_generator(self, dataset_container: DatasetContainerInterface, train_ratio: float,
                                         batch_size: int, num_workers: int, seed: int) -> Tuple:
+        # pylint: disable=too-many-arguments
         data_transform = self._set_data_transformer()
 
-        train_indices, valid_indices = indices_splitting(num_data=len(dataset_container), train_ratio=train_ratio,
+        train_indices, valid_indices = indices_splitting(num_data=len(dataset_container),
+                                                         train_ratio=train_ratio,
                                                          seed=seed)
 
         train_dataset = Subset(dataset_container, train_indices)

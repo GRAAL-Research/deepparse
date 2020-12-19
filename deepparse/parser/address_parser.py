@@ -285,15 +285,12 @@ class AddressParser:
 
         optimizer = SGD(self.model.parameters(), learning_rate)
 
-        loss_fn = nll_loss_function
-        accuracy_fn = accuracy
-
         exp = Experiment(logging_path,
                          self.model,
                          device=self.device,
                          optimizer=optimizer,
-                         loss_function=loss_fn,
-                         batch_metrics=[accuracy_fn])
+                         loss_function=nll_loss_function,
+                         batch_metrics=[accuracy])
 
         train_res = exp.train(train_generator,
                               valid_generator=valid_generator,
@@ -360,14 +357,12 @@ class AddressParser:
                                     collate_fn=data_transform.output_transform,
                                     batch_size=batch_size,
                                     num_workers=num_workers)
-        loss_fn = nll_loss_function
-        accuracy_fn = accuracy
 
         exp = Experiment(logging_path,
                          self.model,
                          device=self.device,
-                         loss_function=loss_fn,
-                         batch_metrics=[accuracy_fn])
+                         loss_function=nll_loss_function,
+                         batch_metrics=[accuracy])
 
         checkpoint = handle_checkpoint(checkpoint)
 

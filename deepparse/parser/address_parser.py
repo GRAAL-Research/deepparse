@@ -12,12 +12,11 @@ from .parsed_address import ParsedAddress
 from .. import CACHE_PATH, handle_checkpoint, indices_splitting
 from .. import load_tuple_to_device, download_fasttext_magnitude_embeddings
 from ..converter import TagsConverter
-from ..converter import fasttext_data_padding, DataTransform
-from ..converter.data_padding import bpemb_data_padding
+from ..converter import fasttext_data_padding, bpemb_data_padding, DataTransform
 from ..dataset_container import DatasetContainerInterface
 from ..embeddings_models import BPEmbEmbeddingsModel
 from ..embeddings_models import FastTextEmbeddingsModel
-from ..embeddings_models.magnitude_embeddings_model import MagnitudeEmbeddingsModel
+from ..embeddings_models import MagnitudeEmbeddingsModel
 from ..fasttext_tools import download_fasttext_embeddings
 from ..metrics import nll_loss_function, accuracy
 from ..network.bpemb_seq2seq import BPEmbSeq2SeqModel

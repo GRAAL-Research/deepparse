@@ -12,6 +12,23 @@ from torch import tensor
 class AddressParserPredictTestCase(TestCase):
     # pylint: disable=too-many-public-methods
 
+    @classmethod
+    def setUpClass(cls):
+        cls.a_best_model_type = "best"
+        cls.a_BPEmb_model_type = "BPEmb"
+        cls.a_fastest_model_type = "fastest"
+        cls.a_fasttext_model_type = "fasttext"
+        cls.a_fasttext_lightest_model_type = "lightest"
+        cls.a_fasttext_light_model_type = "fasttext-light"
+
+        # A address parsing example
+        cls.a_complete_address = "15 major st london ontario n5z1e1"
+        cls.a_municipality = "london"
+        cls.a_postal_code = "n5z1e1"
+        cls.a_province = "ontario"
+        cls.a_street_name = "major st"
+        cls.a_street_number = "15"
+
     def setUp(self):
         # a prediction vector with real values
         self.a_prediction_vector_for_a_complete_address = tensor(

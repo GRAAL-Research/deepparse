@@ -14,15 +14,9 @@ class AddressParserTest(AddressParserPredictTestCase):
     # pylint: disable=too-many-public-methods
     @classmethod
     def setUpClass(cls):
-        cls.a_address = "3 test road quebec"
-        cls.a_best_model_type = "best"
-        cls.a_BPEmb_model_type = "BPEmb"
+        super(AddressParserTest, cls).setUpClass()
         cls.a_BPemb_name = "BpembAddressParser"
-        cls.a_fastest_model_type = "fastest"
-        cls.a_fasttext_model_type = "fasttext"
         cls.a_fasttext_name = "FasttextAddressParser"
-        cls.a_fasttext_lightest_model_type = "lightest"
-        cls.a_fasttext_light_model_type = "fasttext-light"
         cls.a_fasttext_light_name = "Fasttext-lightAddressParser"
         cls.a_rounding = 5
         cls.a_device = "cpu"
@@ -33,14 +27,6 @@ class AddressParserTest(AddressParserPredictTestCase):
         cls.fasttext_download_path = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
         os.makedirs(cls.fasttext_download_path, exist_ok=True)
         cls.a_embeddings_path = "."
-
-        # A address parsing example
-        cls.a_complete_address = "15 major st london ontario n5z1e1"
-        cls.a_municipality = "london"
-        cls.a_postal_code = "n5z1e1"
-        cls.a_province = "ontario"
-        cls.a_street_name = "major st"
-        cls.a_street_number = "15"
 
     def setUp(self):
         super().setUp()

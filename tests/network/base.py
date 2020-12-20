@@ -34,7 +34,7 @@ class PreTrainedSeq2SeqTestCase(TestCase):
 
         # try except to manage pytest path to file
         try:
-            file = open(f"./tests/network/decoder_hidden.p", "rb")
+            file = open("./tests/network/decoder_hidden.p", "rb")
         except FileNotFoundError:
             file = open("./decoder_hidden.p", "rb")
         self.decoder_hidden_tensor = pickle.load(file)

@@ -17,6 +17,7 @@ class Seq2SeqTest(Seq2SeqTestCase):
         super().setUp()
         self.pre_trained_seq2seq_model = Seq2SeqModel(self.a_torch_device)
         self.encoder_input_setUp("fasttext")  # fasttext since the simplest case (bpemb use a embedding layer)
+        self.none_target = None  # No target (for teacher forcing)
 
     def test_whenEncoderStep_thenEncoderStepIsOk(self):
         # encoding for two address: '['15 major st london ontario n5z1e1', '15 major st london ontario n5z1e1']'
@@ -39,9 +40,12 @@ class Seq2SeqTest(Seq2SeqTestCase):
 
         actual_prediction_sequence = self.pre_trained_seq2seq_model._decoder_steps(self.decoder_input,
                                                                                    self.decoder_hidden_tensor,
+                                                                                   self.none_target,
                                                                                    self.max_length, self.a_batch_size)
 
         self.assert_output_is_valid_dim(actual_prediction_sequence)
+
+    # todo il manque un test avec teacher forcing (target)
 
 
 @skipIf(not torch.cuda.is_available(), "no gpu available")
@@ -59,6 +63,8 @@ class FastTextSeq2SeqTest(Seq2SeqTestCase):
         predictions = self.pre_trained_seq2seq_model.forward(self.to_predict_tensor, self.a_lengths_tensor)
 
         self.assert_output_is_valid_dim(predictions)
+
+    # todo il manque un test avec teacher forcing (target)
 
 
 @skipIf(not torch.cuda.is_available(), "no gpu available")
@@ -81,3 +87,5 @@ class BPEmbSeq2SeqTest(Seq2SeqTestCase):
         )
 
         self.assert_output_is_valid_dim(predictions)
+
+    # todo il manque un test avec teacher forcing (target)

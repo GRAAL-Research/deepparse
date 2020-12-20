@@ -6,16 +6,16 @@ from unittest import skipIf
 
 import torch
 
-from deepparse.network import PreTrainedSeq2SeqModel, PreTrainedFastTextSeq2SeqModel, PreTrainedBPEmbSeq2SeqModel
-from tests.network.base import PreTrainedSeq2SeqTestCase
+from deepparse.network import Seq2SeqModel, FastTextSeq2SeqModel, BPEmbSeq2SeqModel
+from tests.network.base import Seq2SeqTestCase
 
 
 @skipIf(not torch.cuda.is_available(), "no gpu available")
-class PreTrainedSeq2SeqTest(PreTrainedSeq2SeqTestCase):
+class Seq2SeqTest(Seq2SeqTestCase):
 
     def setUp(self) -> None:
         super().setUp()
-        self.pre_trained_seq2seq_model = PreTrainedSeq2SeqModel(self.a_torch_device)
+        self.pre_trained_seq2seq_model = Seq2SeqModel(self.a_torch_device)
         self.encoder_input_setUp("fasttext")  # fasttext since the simplest case (bpemb use a embedding layer)
 
     def test_whenEncoderStep_thenEncoderStepIsOk(self):
@@ -45,11 +45,11 @@ class PreTrainedSeq2SeqTest(PreTrainedSeq2SeqTestCase):
 
 
 @skipIf(not torch.cuda.is_available(), "no gpu available")
-class PreTrainedFastTextSeq2SeqTest(PreTrainedSeq2SeqTestCase):
+class FastTextSeq2SeqTest(Seq2SeqTestCase):
 
     def setUp(self) -> None:
         # will load the weights if not local
-        self.pre_trained_seq2seq_model = PreTrainedFastTextSeq2SeqModel(self.a_torch_device)
+        self.pre_trained_seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device)
         self.encoder_input_setUp("fasttext")
 
     def test_whenForwardStep_thenStepIsOk(self):
@@ -62,11 +62,11 @@ class PreTrainedFastTextSeq2SeqTest(PreTrainedSeq2SeqTestCase):
 
 
 @skipIf(not torch.cuda.is_available(), "no gpu available")
-class PreTrainedBPEmbSeq2SeqTest(PreTrainedSeq2SeqTestCase):
+class BPEmbSeq2SeqTest(Seq2SeqTestCase):
 
     def setUp(self) -> None:
         # will load the weights if not local
-        self.pre_trained_seq2seq_model = PreTrainedBPEmbSeq2SeqModel(self.a_torch_device)
+        self.pre_trained_seq2seq_model = BPEmbSeq2SeqModel(self.a_torch_device)
         self.encoder_input_setUp("bpemb")
         self.decomposition_lengths = [[1, 1, 1, 1, 1, 6], [1, 1, 1, 1, 1, 6]]
 

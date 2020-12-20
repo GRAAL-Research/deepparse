@@ -2,10 +2,10 @@ from unittest import TestCase
 
 import torch
 
-from deepparse.network import PreTrainedSeq2SeqModel
+from deepparse.network import Seq2SeqModel
 
 
-class PreTrainedSeq2SeqTest(TestCase):
+class Seq2SeqTest(TestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -22,9 +22,9 @@ class PreTrainedSeq2SeqTest(TestCase):
         cls.decoder_set_device = cls.a_torch_device
 
     def setUp(self) -> None:
-        self.pre_trained_seq2seq_model = PreTrainedSeq2SeqModel(self.a_torch_device)
+        self.pre_trained_seq2seq_model = Seq2SeqModel(self.a_torch_device)
 
-    def test_whenInstantiateAPreTrainedSeq2SeqModel_thenParametersAreOk(self):
+    def test_whenInstantiateASeq2SeqModel_thenParametersAreOk(self):
         self.assertEqual(self.a_torch_device, self.pre_trained_seq2seq_model.device)
 
         self.assertEqual(self.encoder_input_size_dim, self.pre_trained_seq2seq_model.encoder.lstm.input_size)

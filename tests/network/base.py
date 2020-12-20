@@ -7,7 +7,7 @@ from unittest import TestCase
 import torch
 
 
-class PreTrainedSeq2SeqTestCase(TestCase):
+class Seq2SeqTestCase(TestCase):
 
     @classmethod
     def setUpClass(cls):

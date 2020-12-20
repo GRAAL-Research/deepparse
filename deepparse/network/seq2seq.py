@@ -6,7 +6,6 @@ from typing import Tuple
 
 import torch
 import torch.nn as nn
-from torch import load
 
 from .decoder import Decoder
 from .encoder import Encoder
@@ -56,7 +55,7 @@ class Seq2SeqModel(ABC, nn.Module):
                               "The newest model will be downloaded.")
             download_weights(model_type, root_path, verbose=self.verbose)
 
-        all_layers_params = load(model_path, map_location=self.device)
+        all_layers_params = torch.load(model_path, map_location=self.device)
 
         self.load_state_dict(all_layers_params)
 
@@ -67,7 +66,7 @@ class Seq2SeqModel(ABC, nn.Module):
         Args:
             path_to_retrained_model (str): The path to the fine-tuned model.
         """
-        all_layers_params = load(path_to_retrained_model, map_location=self.device)
+        all_layers_params = torch.load(path_to_retrained_model, map_location=self.device)
 
         self.load_state_dict(all_layers_params)
 
@@ -88,9 +87,10 @@ class Seq2SeqModel(ABC, nn.Module):
 
         # -1 for BOS token
         decoder_input = torch.zeros(1, batch_size, 1).to(self.device).new_full((1, batch_size, 1), -1)
+
         return decoder_input, decoder_hidden
 
-    def _decoder_steps(self, decoder_input: torch.Tensor, decoder_hidden: torch.Tensor, target: torch.Tensor,
+    def _decoder_steps(self, decoder_input: torch.Tensor, decoder_hidden: tuple, target: torch.Tensor,
                        max_length: int, batch_size: int) -> torch.Tensor:
         # pylint: disable=too-many-arguments
         """
@@ -109,7 +109,6 @@ class Seq2SeqModel(ABC, nn.Module):
             A tuple (``x``, ``y``) where ``x`` is the decoder input (a zeros tensor) and ``y`` is the decoder
             hidden states.
         """
-
         # The empty prediction sequence
         # +1 for the EOS
         # 9 for the output size (9 tokens)

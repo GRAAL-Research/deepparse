@@ -5,7 +5,6 @@ from typing import Tuple
 
 import torch
 import torch.nn as nn
-from torch import load
 
 from .decoder import Decoder
 from .encoder import Encoder
@@ -54,7 +53,7 @@ class PreTrainedSeq2SeqModel(ABC, nn.Module):
                               "The newest model will be downloaded.")
             download_weights(model_type, root_path, verbose=self.verbose)
 
-        all_layers_params = load(model_path, map_location=self.device)
+        all_layers_params = torch.load(model_path, map_location=self.device)
 
         self.load_state_dict(all_layers_params)
 

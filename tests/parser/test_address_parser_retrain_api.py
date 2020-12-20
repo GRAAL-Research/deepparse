@@ -279,5 +279,3 @@ class AddressParserTest(AddressParserPredictTestCase):
         self.address_parser_test_call()
 
         self.assert_experiment_test_method_is_call(dataloader_mock, experiment_mock)
-
-    # à test pour reload pretrained

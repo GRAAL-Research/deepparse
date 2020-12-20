@@ -74,9 +74,10 @@ class PreTrainedSeq2SeqModel(ABC, nn.Module):
 
         # -1 for BOS token
         decoder_input = torch.zeros(1, batch_size, 1).to(self.device).new_full((1, batch_size, 1), -1)
+
         return decoder_input, decoder_hidden
 
-    def _decoder_steps(self, decoder_input: torch.Tensor, decoder_hidden: torch.Tensor, max_length: int,
+    def _decoder_steps(self, decoder_input: torch.Tensor, decoder_hidden: tuple, max_length: int,
                        batch_size: int) -> torch.Tensor:
         # The empty prediction sequence
         # +1 for the EOS

@@ -44,16 +44,15 @@ class Seq2SeqModel(ABC, nn.Module):
         Args:
             model_type (str): The network pre-trained weights to load.
         """
-        root_path = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
-        model_path = os.path.join(root_path, f"{model_type}.ckpt")
+        model_path = os.path.join(CACHE_PATH, f"{model_type}.ckpt")
 
         if not os.path.isfile(model_path):
-            download_weights(model_type, root_path, verbose=self.verbose)
+            download_weights(model_type, CACHE_PATH, verbose=self.verbose)
         elif not latest_version(model_type, cache_path=CACHE_PATH):
             if self.verbose:
                 warnings.warn("A new version of the pre-trained model is available. "
                               "The newest model will be downloaded.")
-            download_weights(model_type, root_path, verbose=self.verbose)
+            download_weights(model_type, CACHE_PATH, verbose=self.verbose)
 
         all_layers_params = torch.load(model_path, map_location=self.device)
 

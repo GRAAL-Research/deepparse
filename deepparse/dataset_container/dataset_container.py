@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from pickle import load
+from typing import Union
 
 from torch.utils.data import Dataset
 
@@ -11,16 +12,16 @@ class DatasetContainerInterface(Dataset, ABC):
     """
 
     @abstractmethod
-    def __init__(self):
+    def __init__(self) -> None:
         """
         Need to be define by child class.
         """
         self.data = None
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.data)
 
-    def __getitem__(self, idx):
+    def __getitem__(self, idx: Union[int, slice]):
         if isinstance(idx, slice):
             result = []
             for element in range(idx.start, idx.stop):
@@ -40,6 +41,7 @@ class PickleDatasetContainer(DatasetContainerInterface):
     example of pickle address data.
     """
 
-    def __init__(self, data_path):
+    def __init__(self, data_path: str) -> None:
         super().__init__()
-        self.data = load(open(data_path, 'rb'))
+        with open(data_path, 'rb') as f:
+            self.data = load(f)

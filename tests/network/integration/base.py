@@ -11,6 +11,7 @@ class Seq2SeqIntegrationTestCase(TestCase):
 
     @classmethod
     def setUpClass(cls):
+        cls.verbose = False
         cls.a_torch_device = torch.device("cuda:0")
         cls.begin_of_sequence_idx = -1  # BOS
         cls.encoder_hidden_size = 1024
@@ -22,7 +23,7 @@ class Seq2SeqIntegrationTestCase(TestCase):
         try:
             file = open(f"./tests/network/integration/to_predict_{model_type}.p", "rb")
         except FileNotFoundError:
-            file = open(f"./to_predict_{model_type}.p", "rb")
+            file = open(f"./network/integration/to_predict_{model_type}.p", "rb")
         self.to_predict_tensor = pickle.load(file)
         self.to_predict_tensor = self.to_predict_tensor.to(self.a_torch_device)
         file.close()
@@ -37,7 +38,7 @@ class Seq2SeqIntegrationTestCase(TestCase):
         try:
             file = open("./tests/network/integration/decoder_hidden.p", "rb")
         except FileNotFoundError:
-            file = open("./decoder_hidden.p", "rb")
+            file = open("./network/integration/decoder_hidden.p", "rb")
         self.decoder_hidden_tensor = pickle.load(file)
         self.decoder_hidden_tensor = (self.decoder_hidden_tensor[0].to(self.a_torch_device),
                                       self.decoder_hidden_tensor[1].to(self.a_torch_device))

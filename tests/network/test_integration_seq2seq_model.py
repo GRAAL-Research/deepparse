@@ -3,6 +3,7 @@
 # pylint: disable=not-callable, protected-access
 
 from unittest import skipIf
+from unittest.mock import patch
 
 import torch
 
@@ -18,6 +19,7 @@ class Seq2SeqTest(Seq2SeqTestCase):
         self.pre_trained_seq2seq_model = Seq2SeqModel(self.a_torch_device)
         self.encoder_input_setUp("fasttext")  # fasttext since the simplest case (bpemb use a embedding layer)
         self.none_target = None  # No target (for teacher forcing)
+        self.a_value_below_then_threshold = 0.1
 
     def test_whenEncoderStep_thenEncoderStepIsOk(self):
         # encoding for two address: '['15 major st london ontario n5z1e1', '15 major st london ontario n5z1e1']'
@@ -52,10 +54,36 @@ class Seq2SeqTest(Seq2SeqTestCase):
 
         actual_prediction_sequence = self.pre_trained_seq2seq_model._decoder_step(self.decoder_input,
                                                                                   self.decoder_hidden_tensor,
-                                                                                  self.a_target_vector,
-                                                                                  self.max_length, self.a_batch_size)
+                                                                                  self.a_target_vector, self.max_length,
+                                                                                  self.a_batch_size)
 
         self.assert_output_is_valid_dim(actual_prediction_sequence)
+
+    @patch("deepparse.network.seq2seq.random.random")
+    def test_whenDecoderStepWithTarget_thenUsesTarget(self, random_mock):
+        random_mock.return_value = self.a_value_below_then_threshold
+
+        # decoding for two address: '['15 major st london ontario n5z1e1', '15 major st london ontario n5z1e1']'
+        self.encoder_output_setUp()
+        self.decoder_input_setUp()
+
+        _ = self.pre_trained_seq2seq_model._decoder_step(self.decoder_input, self.decoder_hidden_tensor,
+                                                         self.a_target_vector, self.max_length, self.a_batch_size)
+
+        random_mock.assert_called_once()
+
+    @patch("deepparse.network.seq2seq.random.random")
+    def test_whenDecoderStepWithoutTarget_thenDontUsesTarget(self, random_mock):
+        random_mock.return_value = self.a_value_below_then_threshold
+
+        # decoding for two address: '['15 major st london ontario n5z1e1', '15 major st london ontario n5z1e1']'
+        self.encoder_output_setUp()
+        self.decoder_input_setUp()
+
+        _ = self.pre_trained_seq2seq_model._decoder_step(self.decoder_input, self.decoder_hidden_tensor,
+                                                         self.none_target, self.max_length, self.a_batch_size)
+
+        random_mock.assert_not_called()
 
 
 @skipIf(not torch.cuda.is_available(), "no gpu available")

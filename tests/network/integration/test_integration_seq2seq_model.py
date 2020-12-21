@@ -7,12 +7,12 @@ from unittest.mock import patch
 
 import torch
 
-from deepparse.network import Seq2SeqModel, FastTextSeq2SeqModel, BPEmbSeq2SeqModel
-from tests.network.base import Seq2SeqTestCase
+from deepparse.network import Seq2SeqModel
+from tests.network.integration.base import Seq2SeqIntegrationTestCase
 
 
 @skipIf(not torch.cuda.is_available(), "no gpu available")
-class Seq2SeqTest(Seq2SeqTestCase):
+class Seq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
 
     def setUp(self) -> None:
         super().setUp()
@@ -84,57 +84,3 @@ class Seq2SeqTest(Seq2SeqTestCase):
                                                          self.none_target, self.max_length, self.a_batch_size)
 
         random_mock.assert_not_called()
-
-
-@skipIf(not torch.cuda.is_available(), "no gpu available")
-class FastTextSeq2SeqTest(Seq2SeqTestCase):
-
-    def setUp(self) -> None:
-        # will load the weights if not local
-        self.pre_trained_seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device)
-        self.encoder_input_setUp("fasttext")
-
-    def test_whenForwardStep_thenStepIsOk(self):
-        # forward pass for two address: '['15 major st london ontario n5z1e1', '15 major st london ontario n5z1e1']'
-        self.decoder_input_setUp()
-
-        predictions = self.pre_trained_seq2seq_model.forward(self.to_predict_tensor, self.a_lengths_tensor)
-
-        self.assert_output_is_valid_dim(predictions)
-
-    def test_whenForwardStepWithTarget_thenStepIsOk(self):
-        # forward pass for two address: '['15 major st london ontario n5z1e1', '15 major st london ontario n5z1e1']'
-        self.decoder_input_setUp()
-
-        predictions = self.pre_trained_seq2seq_model.forward(self.to_predict_tensor, self.a_lengths_tensor,
-                                                             self.a_target_vector)
-
-        self.assert_output_is_valid_dim(predictions)
-
-
-@skipIf(not torch.cuda.is_available(), "no gpu available")
-class BPEmbSeq2SeqTest(Seq2SeqTestCase):
-
-    def setUp(self) -> None:
-        # will load the weights if not local
-        self.pre_trained_seq2seq_model = BPEmbSeq2SeqModel(self.a_torch_device)
-        self.encoder_input_setUp("bpemb")
-        self.decomposition_lengths = [[1, 1, 1, 1, 1, 6], [1, 1, 1, 1, 1, 6]]
-
-    def test_whenForwardStep_thenStepIsOk(self):
-        # forward pass for two address: '['15 major st london ontario n5z1e1', '15 major st london ontario n5z1e1']'
-        self.decoder_input_setUp()
-
-        predictions = self.pre_trained_seq2seq_model.forward(self.to_predict_tensor, self.decomposition_lengths,
-                                                             self.a_lengths_tensor)
-
-        self.assert_output_is_valid_dim(predictions)
-
-    def test_whenForwardStepWithTarget_thenStepIsOk(self):
-        # forward pass for two address: '['15 major st london ontario n5z1e1', '15 major st london ontario n5z1e1']'
-        self.decoder_input_setUp()
-
-        predictions = self.pre_trained_seq2seq_model.forward(self.to_predict_tensor, self.decomposition_lengths,
-                                                             self.a_lengths_tensor, self.a_target_vector)
-
-        self.assert_output_is_valid_dim(predictions)

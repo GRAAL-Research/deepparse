@@ -6,16 +6,13 @@ from deepparse.network import Encoder
 
 
 class EncoderTest(TestCase):
-
-    @classmethod
-    def setUpClass(cls):
-        cls.a_torch_device = torch.device("cpu")
-
-        cls.input_size_dim = 300
-        cls.hidden_size = 1024
-        cls.num_layers = 1
-
     def setUp(self) -> None:
+        self.a_torch_device = torch.device("cpu")
+
+        self.input_size_dim = 300
+        self.hidden_size = 1024
+        self.num_layers = 1
+
         self.encoder = Encoder(self.input_size_dim, self.hidden_size, self.num_layers)
 
     def test_whenInstantiateEncoder_thenParametersAreOk(self):

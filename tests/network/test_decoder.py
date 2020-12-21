@@ -6,17 +6,14 @@ from deepparse.network import Decoder
 
 
 class DecoderTest(TestCase):
-
-    @classmethod
-    def setUpClass(cls):
-        cls.a_torch_device = torch.device("cpu")
-
-        cls.input_size_dim = 1
-        cls.hidden_size = 1024
-        cls.num_layers = 1
-        cls.output_size = 9
-
     def setUp(self) -> None:
+        self.a_torch_device = torch.device("cpu")
+
+        self.input_size_dim = 1
+        self.hidden_size = 1024
+        self.num_layers = 1
+        self.output_size = 9
+
         self.decoder = Decoder(self.input_size_dim, self.hidden_size, self.num_layers, self.output_size)
 
     def test_whenInstantiateASeq2SeqModel_thenParametersAreOk(self):

@@ -8,7 +8,7 @@ from unittest.mock import patch
 import torch
 
 from deepparse.network import Seq2SeqModel
-from tests.network.integration.base import Seq2SeqIntegrationTestCase
+from ..integration.base import Seq2SeqIntegrationTestCase
 
 
 @skipIf(not torch.cuda.is_available(), "no gpu available")

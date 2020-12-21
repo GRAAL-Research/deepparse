@@ -38,10 +38,10 @@ class Seq2SeqTest(Seq2SeqTestCase):
         self.encoder_output_setUp()
         self.decoder_input_setUp()
 
-        actual_prediction_sequence = self.pre_trained_seq2seq_model._decoder_steps(self.decoder_input,
-                                                                                   self.decoder_hidden_tensor,
-                                                                                   self.none_target, self.max_length,
-                                                                                   self.a_batch_size)
+        actual_prediction_sequence = self.pre_trained_seq2seq_model._decoder_step(self.decoder_input,
+                                                                                  self.decoder_hidden_tensor,
+                                                                                  self.none_target, self.max_length,
+                                                                                  self.a_batch_size)
 
         self.assert_output_is_valid_dim(actual_prediction_sequence)
 
@@ -50,10 +50,10 @@ class Seq2SeqTest(Seq2SeqTestCase):
         self.encoder_output_setUp()
         self.decoder_input_setUp()
 
-        actual_prediction_sequence = self.pre_trained_seq2seq_model._decoder_steps(self.decoder_input,
-                                                                                   self.decoder_hidden_tensor,
-                                                                                   self.a_target_vector,
-                                                                                   self.max_length, self.a_batch_size)
+        actual_prediction_sequence = self.pre_trained_seq2seq_model._decoder_step(self.decoder_input,
+                                                                                  self.decoder_hidden_tensor,
+                                                                                  self.a_target_vector,
+                                                                                  self.max_length, self.a_batch_size)
 
         self.assert_output_is_valid_dim(actual_prediction_sequence)
 

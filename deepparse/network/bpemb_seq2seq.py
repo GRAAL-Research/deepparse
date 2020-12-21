@@ -56,6 +56,6 @@ class BPEmbSeq2SeqModel(Seq2SeqModel):
         decoder_input, decoder_hidden = self._encoder_step(embedded_output, lengths_tensor, batch_size)
 
         max_length = lengths_tensor[0].item()
-        prediction_sequence = self._decoder_steps(decoder_input, decoder_hidden, target, max_length, batch_size)
+        prediction_sequence = self._decoder_step(decoder_input, decoder_hidden, target, max_length, batch_size)
 
         return prediction_sequence

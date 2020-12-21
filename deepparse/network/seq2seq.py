@@ -89,8 +89,8 @@ class Seq2SeqModel(ABC, nn.Module):
 
         return decoder_input, decoder_hidden
 
-    def _decoder_steps(self, decoder_input: torch.Tensor, decoder_hidden: tuple, target: torch.Tensor, max_length: int,
-                       batch_size: int) -> torch.Tensor:
+    def _decoder_step(self, decoder_input: torch.Tensor, decoder_hidden: tuple, target: torch.Tensor, max_length: int,
+                      batch_size: int) -> torch.Tensor:
         # pylint: disable=too-many-arguments
         """
         Step of the encoder.

@@ -50,6 +50,6 @@ class FastTextSeq2SeqModel(Seq2SeqModel):
         decoder_input, decoder_hidden = self._encoder_step(to_predict, lengths_tensor, batch_size)
 
         max_length = lengths_tensor[0].item()
-        decoder_predict = self._decoder_steps(decoder_input, decoder_hidden, target, max_length, batch_size)
+        decoder_predict = self._decoder_step(decoder_input, decoder_hidden, target, max_length, batch_size)
 
         return decoder_predict

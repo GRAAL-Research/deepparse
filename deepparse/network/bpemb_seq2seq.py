@@ -35,7 +35,7 @@ class BPEmbSeq2SeqModel(Seq2SeqModel):
                 to_predict: torch.Tensor,
                 decomposition_lengths: List,
                 lengths_tensor: torch.Tensor,
-                target: torch.Tensor = None) -> torch.Tensor:
+                target: Union[torch.Tensor, None] = None) -> torch.Tensor:
         """
         Callable method as per PyTorch forward method to get tags prediction over the components of
         an address.

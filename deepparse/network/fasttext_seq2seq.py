@@ -30,7 +30,7 @@ class FastTextSeq2SeqModel(Seq2SeqModel):
     def forward(self,
                 to_predict: torch.Tensor,
                 lengths_tensor: torch.Tensor,
-                target: torch.Tensor = None) -> torch.Tensor:
+                target: Union[torch.Tensor, None] = None) -> torch.Tensor:
         """
         Callable method as per PyTorch forward method to get tags prediction over the components of
         an address.

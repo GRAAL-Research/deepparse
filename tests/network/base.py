@@ -15,6 +15,7 @@ class Seq2SeqTestCase(TestCase):
         cls.begin_of_sequence_idx = -1  # BOS
         cls.encoder_hidden_size = 1024
         cls.number_of_tags = 9  # tag space of our models
+        cls.a_target_vector = torch.tensor([[0, 1, 1, 4, 5, 8], [1, 0, 3, 8, 0, 0]], device=cls.a_torch_device)
 
     def encoder_input_setUp(self, model_type: str):
         # try except to manage pytest path to file

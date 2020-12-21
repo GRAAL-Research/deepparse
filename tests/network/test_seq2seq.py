@@ -6,6 +6,7 @@ from deepparse.network import Seq2SeqModel
 
 
 class Seq2SeqTest(TestCase):
+
     def setUp(self) -> None:
         self.a_torch_device = torch.device("cpu")
 

@@ -6,6 +6,7 @@ from deepparse.network import Encoder
 
 
 class EncoderTest(TestCase):
+
     def setUp(self) -> None:
         self.a_torch_device = torch.device("cpu")
 

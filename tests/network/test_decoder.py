@@ -6,6 +6,7 @@ from deepparse.network import Decoder
 
 
 class DecoderTest(TestCase):
+
     def setUp(self) -> None:
         self.a_torch_device = torch.device("cpu")
 

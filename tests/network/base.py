@@ -22,6 +22,8 @@ class Seq2SeqTestCase(TestCase):
 
         cls.a_root_path = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
 
+        cls.a_path_to_retrained_model = "a/path/to/a/retrain/model"
+
     def setup_encoder_mocks(self):
         to_predict_mock = MagicMock()
         lengths_tensor_mock = MagicMock()

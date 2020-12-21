@@ -2,7 +2,7 @@
 # We also skip protected-access since we test the encoder and decoder step
 # pylint: disable=W0613, protected-access, too-many-arguments
 
-from unittest.mock import patch, call
+from unittest.mock import patch, call, MagicMock
 
 from deepparse.network import BPEmbSeq2SeqModel
 from tests.network.base import Seq2SeqTestCase
@@ -57,6 +57,22 @@ class BPEmbSeq2SeqTest(Seq2SeqTestCase):
         with patch("deepparse.network.seq2seq.download_weights") as download_weights_mock:
             self.seq2seq_model = BPEmbSeq2SeqModel(self.a_torch_device, self.verbose)
             download_weights_mock.assert_not_called()
+
+    @patch("deepparse.network.seq2seq.torch")
+    @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
+    def test_retrainedWeights_InstantiateAFastTextSeq2SeqModel_useRetrainedWeights(self, load_state_dict_mock,
+                                                                                   torch_mock):
+        all_layers_params = MagicMock()
+        torch_mock.load.return_value = all_layers_params
+        self.seq2seq_model = BPEmbSeq2SeqModel(self.a_torch_device,
+                                               self.verbose,
+                                               path_to_retrained_model=self.a_path_to_retrained_model)
+
+        torch_load_call = [call.load(self.a_path_to_retrained_model, map_location=self.a_torch_device)]
+        torch_mock.assert_has_calls(torch_load_call)
+
+        load_state_dict_call = [call(all_layers_params)]
+        load_state_dict_mock.assert_has_calls(load_state_dict_call)
 
     @patch("deepparse.network.seq2seq.Encoder")
     @patch("deepparse.network.seq2seq.download_weights")

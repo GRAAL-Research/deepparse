@@ -19,7 +19,7 @@ class Seq2SeqTest(Seq2SeqTestCase):
         self.pre_trained_seq2seq_model = Seq2SeqModel(self.a_torch_device)
         self.encoder_input_setUp("fasttext")  # fasttext since the simplest case (bpemb use a embedding layer)
         self.none_target = None  # No target (for teacher forcing)
-        self.a_value_below_then_threshold = 0.1
+        self.a_value_greater_than_threshold = 0.1
 
     def test_whenEncoderStep_thenEncoderStepIsOk(self):
         # encoding for two address: '['15 major st london ontario n5z1e1', '15 major st london ontario n5z1e1']'
@@ -61,7 +61,7 @@ class Seq2SeqTest(Seq2SeqTestCase):
 
     @patch("deepparse.network.seq2seq.random.random")
     def test_whenDecoderStepWithTarget_thenUsesTarget(self, random_mock):
-        random_mock.return_value = self.a_value_below_then_threshold
+        random_mock.return_value = self.a_value_greater_than_threshold
 
         # decoding for two address: '['15 major st london ontario n5z1e1', '15 major st london ontario n5z1e1']'
         self.encoder_output_setUp()
@@ -74,7 +74,7 @@ class Seq2SeqTest(Seq2SeqTestCase):
 
     @patch("deepparse.network.seq2seq.random.random")
     def test_whenDecoderStepWithoutTarget_thenDontUsesTarget(self, random_mock):
-        random_mock.return_value = self.a_value_below_then_threshold
+        random_mock.return_value = self.a_value_greater_than_threshold
 
         # decoding for two address: '['15 major st london ontario n5z1e1', '15 major st london ontario n5z1e1']'
         self.encoder_output_setUp()

@@ -134,7 +134,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     def test_givenABPEmbModel_whenRetrain_thenRaiseError(self, embeddings_model_mock, vectorizer_model_mock,
                                                          data_padding_mock, model_mock, data_transform_mock,
                                                          optimizer_mock, experiment_mock):
-        self.address_parser = AddressParser(model_type=self.a_BPEmb_model_type, device=self.a_device)
+        self.address_parser = AddressParser(model_type=self.a_bpemb_model_type, device=self.a_device)
         self.address_parser_retrain_call()
 
         optimizer_mock.assert_called_with(model_mock().parameters(), self.a_learning_rate)
@@ -186,7 +186,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                                                                             model_mock, data_transform_mock,
                                                                             optimizer_mock, experiment_mock,
                                                                             dataloader_mock):
-        self.address_parser = AddressParser(model_type=self.a_BPEmb_model_type, device=self.a_device)
+        self.address_parser = AddressParser(model_type=self.a_bpemb_model_type, device=self.a_device)
         self.address_parser_retrain_call()
 
         self.assert_experiment_retrain(experiment_mock, model_mock, optimizer_mock)
@@ -204,7 +204,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                                                                                     data_padding_mock, model_mock,
                                                                                     data_transform_mock, optimizer_mock,
                                                                                     experiment_mock, dataloader_mock):
-        self.address_parser = AddressParser(model_type=self.a_BPEmb_model_type, device=self.a_device)
+        self.address_parser = AddressParser(model_type=self.a_bpemb_model_type, device=self.a_device)
         self.address_parser_retrain_call()
 
         self.assert_experiment_train_method_is_call(dataloader_mock, experiment_mock)
@@ -257,7 +257,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                                                                          model_mock, data_transform_mock,
                                                                          optimizer_mock, experiment_mock,
                                                                          dataloader_mock):
-        self.address_parser = AddressParser(model_type=self.a_BPEmb_model_type, device=self.a_device)
+        self.address_parser = AddressParser(model_type=self.a_bpemb_model_type, device=self.a_device)
         self.address_parser_test_call()
 
         self.assert_experiment_test(experiment_mock, model_mock)
@@ -275,7 +275,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                                                                                 data_padding_mock, model_mock,
                                                                                 data_transform_mock, optimizer_mock,
                                                                                 experiment_mock, dataloader_mock):
-        self.address_parser = AddressParser(model_type=self.a_BPEmb_model_type, device=self.a_device)
+        self.address_parser = AddressParser(model_type=self.a_bpemb_model_type, device=self.a_device)
         self.address_parser_test_call()
 
         self.assert_experiment_test_method_is_call(dataloader_mock, experiment_mock)

@@ -15,7 +15,7 @@ class AddressParserPredictTestCase(TestCase):
     @classmethod
     def setUpClass(cls):
         cls.a_best_model_type = "best"
-        cls.a_BPEmb_model_type = "BPEmb"
+        cls.a_bpemb_model_type = "bpemb"
         cls.a_fastest_model_type = "fastest"
         cls.a_fasttext_model_type = "fasttext"
         cls.a_fasttext_lightest_model_type = "lightest"

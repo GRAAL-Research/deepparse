@@ -48,7 +48,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     def test_givenABPEmbModelType_whenInstantiatingParser_thenInstantiateBPEmbEmbeddingsModelWithCorrectParameters(
             self, model_mock):
         with patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel") as embeddings_model:
-            self.address_parser = AddressParser(model_type=self.a_BPEmb_model_type, device=self.a_device)
+            self.address_parser = AddressParser(model_type=self.a_bpemb_model_type, device=self.a_device)
 
             embeddings_model.assert_called_with(verbose=self.verbose, **self.BPEmb_embeddings_model_param)
 
@@ -66,7 +66,7 @@ class AddressParserTest(AddressParserPredictTestCase):
             self, model_mock):
         with patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel", return_value=self.embeddings_model_mock):
             with patch("deepparse.parser.address_parser.BPEmbVectorizer") as vectorizer:
-                self.address_parser = AddressParser(model_type=self.a_BPEmb_model_type, device=self.a_device)
+                self.address_parser = AddressParser(model_type=self.a_bpemb_model_type, device=self.a_device)
 
                 vectorizer.assert_called_with(embeddings_model=self.embeddings_model_mock)
 
@@ -82,7 +82,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     def test_givenABPEmbModelType_whenInstantiatingParser_thenInstantiateModelWithCorrectParameters(
             self, embeddings_model_mock):
         with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel") as model:
-            self.address_parser = AddressParser(model_type=self.a_BPEmb_model_type, device=self.a_device)
+            self.address_parser = AddressParser(model_type=self.a_bpemb_model_type, device=self.a_device)
 
             model.assert_called_with(self.a_torch_device, verbose=self.verbose, path_to_retrained_model=None)
 
@@ -312,7 +312,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                                                                          vectorizer_model_mock, data_padding_mock):
         with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel") as model:
             self.mock_predictions_vectors(model)
-            self.address_parser = AddressParser(model_type=self.a_BPEmb_model_type, device=self.a_device)
+            self.address_parser = AddressParser(model_type=self.a_bpemb_model_type, device=self.a_device)
 
             parse_address = self.address_parser(self.a_complete_address)
 
@@ -327,7 +327,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                                                                                    data_padding_mock):
         with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel") as model:
             self.mock_multiple_predictions_vectors(model)
-            self.address_parser = AddressParser(model_type=self.a_BPEmb_model_type, device=self.a_device)
+            self.address_parser = AddressParser(model_type=self.a_bpemb_model_type, device=self.a_device)
 
             parse_address = self.address_parser([self.a_complete_address, self.a_complete_address])
 
@@ -344,7 +344,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                                                                                     data_padding_mock):
         with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel") as model:
             self.mock_predictions_vectors(model)
-            self.address_parser = AddressParser(model_type=self.a_BPEmb_model_type, device=self.a_device)
+            self.address_parser = AddressParser(model_type=self.a_bpemb_model_type, device=self.a_device)
 
             parse_address = self.address_parser(self.a_complete_address)
 
@@ -365,7 +365,7 @@ class AddressParserTest(AddressParserPredictTestCase):
 
         with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel") as model:
             self.mock_predictions_vectors(model)
-            self.address_parser = AddressParser(model_type=self.a_BPEmb_model_type, device=self.a_device)
+            self.address_parser = AddressParser(model_type=self.a_bpemb_model_type, device=self.a_device)
             print(self.address_parser)
 
             self.assertEqual(self.a_BPemb_name, self.test_out.getvalue().strip())

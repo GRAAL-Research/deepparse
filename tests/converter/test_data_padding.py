@@ -1,7 +1,6 @@
 # Bug with PyTorch source code makes torch.tensor as not callable for pylint.
 # pylint: disable=not-callable
 
-import unittest
 from unittest import TestCase
 
 import torch
@@ -81,7 +80,3 @@ class DataPaddingTest(TestCase):
         padded_batch, _, _ = self.bpemb_data_padding(self.a_non_padded_subword_embedding_batch)
 
         self.assertTrue(torch.all(padded_batch.eq(self.a_bpemb_padded_batch)))
-
-
-if __name__ == '__main__':
-    unittest.main()

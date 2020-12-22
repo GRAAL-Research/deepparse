@@ -12,7 +12,7 @@ from .. import CACHE_PATH, handle_checkpoint, indices_splitting
 from .. import load_tuple_to_device, download_fasttext_magnitude_embeddings
 from ..converter import TagsConverter
 from ..converter import fasttext_data_padding, bpemb_data_padding, DataTransform
-from ..dataset_container import DatasetContainerInterface
+from ..dataset_container import DatasetContainer
 from ..embeddings_models import BPEmbEmbeddingsModel
 from ..embeddings_models import FastTextEmbeddingsModel
 from ..embeddings_models import MagnitudeEmbeddingsModel
@@ -201,7 +201,7 @@ class AddressParser:
         return tagged_addresses_components
 
     def retrain(self,
-                dataset_container: DatasetContainerInterface,
+                dataset_container: DatasetContainer,
                 train_ratio: float,
                 batch_size: int,
                 epochs: int,
@@ -218,7 +218,7 @@ class AddressParser:
         the best epochs can be found (the best epoch is used in test).
 
         Args:
-            dataset_container (~deepparse.deepparse.dataset_container.dataset_container.DatasetContainerInterface): The
+            dataset_container (~deepparse.deepparse.dataset_container.dataset_container.DatasetContainer): The
                 dataset container of the data to use.
             train_ratio (float): The ratio to use of the dataset for the training. The rest of the data is used for the validation
                 (e.g. a train ratio of 0.8 mean a 80-20 train-valid split).
@@ -302,7 +302,7 @@ class AddressParser:
         return train_res
 
     def test(self,
-             test_dataset_container: DatasetContainerInterface,
+             test_dataset_container: DatasetContainer,
              batch_size: int,
              num_workers: int = 1,
              callbacks: Union[List, None] = None,
@@ -317,7 +317,7 @@ class AddressParser:
         the best epochs can be found (the best epoch is use in test).
 
         Args:
-            test_dataset_container (~deepparse.deepparse.dataset_container.dataset_container.DatasetContainerInterface):
+            test_dataset_container (~deepparse.deepparse.dataset_container.dataset_container.DatasetContainer):
                 The test dataset container of the data to use.
             callbacks (Union[List, None]): List of callbacks to use during training.
                 See Poutyne `callback <https://poutyne.org/callbacks.html#callback-class>`_ for more information.
@@ -422,8 +422,8 @@ class AddressParser:
                                        self.model_type)  # use for transforming the data prior to training
         return data_transform
 
-    def _create_training_data_generator(self, dataset_container: DatasetContainerInterface, train_ratio: float,
-                                        batch_size: int, num_workers: int, seed: int) -> Tuple:
+    def _create_training_data_generator(self, dataset_container: DatasetContainer, train_ratio: float, batch_size: int,
+                                        num_workers: int, seed: int) -> Tuple:
         # pylint: disable=too-many-arguments
         data_transform = self._set_data_transformer()
 

@@ -5,7 +5,7 @@ from typing import Union
 from torch.utils.data import Dataset
 
 
-class DatasetContainerInterface(Dataset, ABC):
+class DatasetContainer(Dataset, ABC):
     """
     Interface for the dataset. This interface define most of the method that the dataset needs to define.
     If you define another dataset container, the init must define the attribute data.
@@ -34,7 +34,7 @@ class DatasetContainerInterface(Dataset, ABC):
         return result
 
 
-class PickleDatasetContainer(DatasetContainerInterface):
+class PickleDatasetContainer(DatasetContainer):
     """
     Pickle dataset container that import a list of address in pickle format.
     See `here <https://github.com/GRAAL-Research/poutyne-external-assets/tree/master/tips_and_tricks_assets>`_ for

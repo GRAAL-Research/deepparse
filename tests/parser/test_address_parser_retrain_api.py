@@ -4,13 +4,13 @@ from unittest.mock import patch, call
 
 import torch
 
-from deepparse.parser import AddressParser, DatasetContainerInterface, nll_loss_function, accuracy
+from deepparse.parser import AddressParser, DatasetContainer, nll_loss_function, accuracy
 from tests.parser.base import AddressParserPredictTestCase
 
 batch_size = 32
 
 
-class MockDataContainer(DatasetContainerInterface):
+class MockDataContainer(DatasetContainer):
 
     def __init__(self, ):
         super().__init__()

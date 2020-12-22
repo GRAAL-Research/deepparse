@@ -8,7 +8,7 @@ Dataset Container
 
 To load the data, we use dataset container that are implemented with respect to an interface.
 
-.. autoclass:: DatasetContainerInterface
+.. autoclass:: DatasetContainer
     :members:
 
 .. autoclass:: PickleDatasetContainer

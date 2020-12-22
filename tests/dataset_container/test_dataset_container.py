@@ -7,10 +7,10 @@ from unittest import TestCase
 
 import numpy as np
 
-from deepparse.dataset_container import DatasetContainerInterface, PickleDatasetContainer
+from deepparse.dataset_container import DatasetContainer, PickleDatasetContainer
 
 
-class ADatasetContainer(DatasetContainerInterface):
+class ADatasetContainer(DatasetContainer):
 
     def __init__(self, number_of_data_points: int = 4, number_of_features_each: int = 10):
         super().__init__()

@@ -37,6 +37,34 @@ class AddressParserTest(AddressParserPredictTestCase):
         self.embeddings_model_mock = Mock()
 
     @patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel")
+    def test_givenACapitalizeBPEmbModelType_whenInstantiatingParser_thenInstantiateModelWithCorrectParameters(
+            self, model_mock):
+        with patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel") as embeddings_model:
+            self.address_parser = AddressParser(model_type=self.a_best_model_type.capitalize(), device=self.a_device)
+
+            embeddings_model.assert_called_with(verbose=self.verbose, **self.BPEmb_embeddings_model_param)
+
+        with patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel") as embeddings_model:
+            self.address_parser = AddressParser(model_type=self.a_bpemb_model_type.capitalize(), device=self.a_device)
+
+            embeddings_model.assert_called_with(verbose=self.verbose, **self.BPEmb_embeddings_model_param)
+
+    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
+    def test_givenACapitalizeFastTextModelType_whenInstantiatingParser_thenInstantiateModelWithCorrectParameters(
+            self, embeddings_model_mock, model_mock):
+        with patch("deepparse.parser.address_parser.download_fasttext_embeddings") as downloader:
+            self.address_parser = AddressParser(model_type=self.a_fastest_model_type.capitalize(), device=self.a_device)
+
+            downloader.assert_called_with(saving_dir=self.fasttext_download_path, verbose=self.verbose)
+
+        with patch("deepparse.parser.address_parser.download_fasttext_embeddings") as downloader:
+            self.address_parser = AddressParser(model_type=self.a_fasttext_model_type.capitalize(),
+                                                device=self.a_device)
+
+            downloader.assert_called_with(saving_dir=self.fasttext_download_path, verbose=self.verbose)
+
+    @patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel")
     def test_givenABestModelType_whenInstantiatingParser_thenInstantiateBPEmbEmbeddingsModelWithCorrectParameters(
             self, model_mock):
         with patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel") as embeddings_model:

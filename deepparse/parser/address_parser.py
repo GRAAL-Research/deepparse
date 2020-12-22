@@ -320,7 +320,7 @@ class AddressParser:
         Args:
             test_dataset_container (~deepparse.deepparse.dataset_container.dataset_container.DatasetContainerInterface):
                 The test dataset container of the data to use.
-            callbacks (Union[List, None]): List of callback to use during training.
+            callbacks (Union[List, None]): List of callbacks to use during training.
                 See Poutyne `callback <https://poutyne.org/callbacks.html#callback-class>`_ for more information.
                 By default we set no callback.
             seed (int): Seed to use (by default 42).

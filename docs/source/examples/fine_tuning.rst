@@ -43,7 +43,7 @@ We will retrain the fasttext version of our pretrained model.
 
 
 Now let's retrain for 5 epoch using a batch size of 8 since the data is really small for the example.
-The starting default 0.01 learning rate, but using a learning rate scheduler to lower the learning rate as we progress.
+Let's start with the default learning rate of 0.01 and use a learning rate scheduler to lower the learning rate as we progress.
 
 .. code-block:: python
 
@@ -62,5 +62,4 @@ Now let's test our fine tuned model using the best ckeckpoint (default parameter
 .. code-block:: python
 
     address_parser.test(test_container, batch_size=256)
-
 

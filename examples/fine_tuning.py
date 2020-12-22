@@ -19,7 +19,7 @@ test_container = PickleDatasetContainer(saving_dir + test_dataset_name + "." + f
 # We will retrain the fasttext version of our pretrained model.
 address_parser = AddressParser(model_type="fasttext", device=0)
 
-# Now let's retrain for 5 epoch using a batch size of 8 since the data is really small for the example.
+# Now let's retrain for 5 epochs using a batch size of 8 since the data is really small for the example.
 # The starting default 0.01 learning rate, but using a learning rate scheduler to lower the learning rate
 # as we progress.
 lr_scheduler = poutyne.StepLR(step_size=1, gamma=0.1)  # reduce LR by a factor of 10 each epoch

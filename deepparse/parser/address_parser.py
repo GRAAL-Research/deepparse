@@ -221,7 +221,7 @@ class AddressParser:
         Args:
             dataset_container (~deepparse.deepparse.dataset_container.dataset_container.DatasetContainerInterface): The
                 dataset container of the data to use.
-            train_ratio (float): The ratio to use of the dataset for the training. The rest of the data is use for valid
+            train_ratio (float): The ratio to use of the dataset for the training. The rest of the data is used for the validation
                 (e.g. a train ratio of 0.8 mean a 80-20 train-valid split).
             batch_size (int): The size of the batch.
             epochs (int): number of training epoch.

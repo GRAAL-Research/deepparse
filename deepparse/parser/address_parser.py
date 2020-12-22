@@ -225,7 +225,7 @@ class AddressParser:
                 (e.g. a train ratio of 0.8 mean a 80-20 train-valid split).
             batch_size (int): The size of the batch.
             epochs (int): number of training epochs.
-            num_workers (int): Number of worker to use for the data loader (default is 1 worker).
+            num_workers (int): Number of workers to use for the data loader (default is 1 worker).
             learning_rate (float): The learning rate (LR) to use for training (default 0.01). To reduce the LR during
                 training, use `Poutyne learning rate scheduler callback
                 <https://github.com/GRAAL-Research/poutyne/blob/master/poutyne/framework/callbacks/lr_scheduler.py>`_.

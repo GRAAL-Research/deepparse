@@ -229,7 +229,7 @@ class AddressParser:
             learning_rate (float): The learning rate (LR) to use for training (default 0.01). To reduce the LR during
                 training, use `Poutyne learning rate scheduler callback
                 <https://github.com/GRAAL-Research/poutyne/blob/master/poutyne/framework/callbacks/lr_scheduler.py>`_.
-            callbacks (Union[List, None]): List of callback to use during training.
+            callbacks (Union[List, None]): List of callbacks to use during training.
                 See Poutyne `callback <https://poutyne.org/callbacks.html#callback-class>`_ for more information. By default
                 we set no callback.
             seed (int): Seed to use (by default 42).

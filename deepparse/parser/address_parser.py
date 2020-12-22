@@ -1,4 +1,3 @@
-import os
 import re
 from typing import List, Union, Dict, Tuple
 
@@ -69,7 +68,8 @@ class AddressParser:
         rounding (int): The rounding to use when asking the probability of the tags. The default value is 4 digits.
         verbose (bool): Turn on/off the verbosity of the model weights download and loading. The default value is True.
         path_to_retrained_model (Union[str, None]): The path to the retrained model to use for prediction. Be sure to
-            use the same model_type as the retrained model. For example, if you fine-tuned our pretrained fasttext model and want to use it, model_type='fasttext' and path_to_retrained_model='/path/to/fasttext_model/'.
+            use the same model_type as the retrained model. For example, if you fine-tuned our pretrained fasttext model
+            and want to use it, model_type='fasttext' and path_to_retrained_model='/path/to/fasttext_model/'.
             Since the architecture of fasttext and fasttext-light are similar, one can interchange both
             (e.g. retrain a fasttext model and load the weights into a fasttext-light model).
             Default is None, meaning we use our pre-trained model.
@@ -451,8 +451,6 @@ class AddressParser:
         Model factory to create the vectorizer, the data converter and the pre-trained model
         """
         if self.model_type in ("fasttext", "fastest", "fasttext-light", "lightest"):
-            os.makedirs(CACHE_PATH, exist_ok=True)
-
             if self.model_type in ("fasttext-light", "lightest"):
                 self.model_type = "fasttext-light"  # we change name to 'fasttext-light' since name can be lightest
                 file_name = download_fasttext_magnitude_embeddings(saving_dir=CACHE_PATH, verbose=self.verbose)

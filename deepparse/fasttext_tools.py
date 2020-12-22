@@ -13,6 +13,8 @@ def download_fasttext_magnitude_embeddings(saving_dir: str, verbose: bool = True
     """
     Function to download the magnitude pre-trained fastText model.
     """
+    os.makedirs(saving_dir, exist_ok=True)
+
     model = "fasttext"
     extension = "magnitude"
     file_name = os.path.join(saving_dir, f"{model}.{extension}")
@@ -70,6 +72,8 @@ def download_fasttext_embeddings(saving_dir: str, verbose: bool = True) -> str:
         vectors from fastText's website https://fasttext.cc/docs/en/crawl-vectors.html and save it in the
         saving directory (saving_dir).
     """
+    os.makedirs(saving_dir, exist_ok=True)
+
     file_name = "cc.fr.300.bin"
     gz_file_name = "%s.gz" % file_name
 

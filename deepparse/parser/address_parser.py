@@ -216,7 +216,7 @@ class AddressParser:
         Method to retrain the address parser model using a dataset with the same tags. We train using
         `experiment <https://poutyne.org/experiment.html>`_ from `poutyne <https://poutyne.org/index.html>`_
         framework. The experiment module allow us to save checkpoints ``ckpt`` (pickle format) and a log.tsv where
-        the best epochs can be found (the best epoch is use in test).
+        the best epochs can be found (the best epoch is used in test).
 
         Args:
             dataset_container (~deepparse.deepparse.dataset_container.dataset_container.DatasetContainerInterface): The

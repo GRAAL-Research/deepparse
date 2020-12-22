@@ -455,7 +455,7 @@ class AddressParser:
             os.makedirs(CACHE_PATH, exist_ok=True)
 
             if self.model_type in ("fasttext-light", "lightest"):
-                self.model_type = "fasttext-light"  # we change name to fasttext Light since name can be lightest
+                self.model_type = "fasttext-light"  # we change name to 'fasttext-light' since name can be lightest
                 file_name = download_fasttext_magnitude_embeddings(saving_dir=CACHE_PATH, verbose=self.verbose)
 
                 embeddings_model = MagnitudeEmbeddingsModel(file_name, verbose=self.verbose)

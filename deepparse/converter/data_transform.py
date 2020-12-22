@@ -23,6 +23,9 @@ class DataTransform:
         elif model_type in ("bpemb", "best", "lightest"):
             self.teacher_forcing_data_padding_fn = bpemb_data_padding_teacher_forcing
             self.output_transform_data_padding_fn = bpemb_data_padding_with_target
+        else:
+            raise NotImplementedError(f"There is no {model_type} network implemented. Value should be: "
+                                      f"fasttext, bpemb, lightest (bpemb), fastest (fasttext) or best (bpemb).")
 
     def teacher_forcing_transform(self, batch_pairs: Tuple) -> Tuple:
         """

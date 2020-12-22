@@ -240,7 +240,7 @@ class AddressParser:
             <https://poutyne.org/experiment.html#poutyne.Experiment.train>`_ for details).
 
         Note:
-            We use SGD optimizer, NLL loss and accuracy, the data are shuffled and we use teacher forcing during
+            We use SGD optimizer, NLL loss and accuracy as a metric, the data is shuffled and we use teacher forcing during
             training (with a prob of 0.5) as in the `article <https://arxiv.org/abs/2006.16152>`_.
 
         Note:

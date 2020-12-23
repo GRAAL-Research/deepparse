@@ -1,6 +1,6 @@
 from pymagnitudelight import Magnitude
 
-from deepparse.embeddings_models import EmbeddingsModel, ndarray
+from .embeddings_model import EmbeddingsModel, ndarray
 
 
 class MagnitudeEmbeddingsModel(EmbeddingsModel):

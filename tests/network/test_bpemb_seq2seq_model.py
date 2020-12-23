@@ -61,7 +61,7 @@ class BPEmbSeq2SeqTest(Seq2SeqTestCase):
 
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
-    def test_retrainedWeights_InstantiateAFastTextSeq2SeqModel_useRetrainedWeights(self, load_state_dict_mock,
+    def test_givenRetrainedWeights_whenInstantiatingAFastTextSeq2SeqModel_thenShouldUseRetrainedWeights(self, load_state_dict_mock,
                                                                                    torch_mock):
         all_layers_params = MagicMock()
         torch_mock.load.return_value = all_layers_params

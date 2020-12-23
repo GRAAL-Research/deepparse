@@ -482,4 +482,5 @@ class AddressParser:
                                            path_to_retrained_model=path_to_retrained_model)
         else:
             raise NotImplementedError(f"There is no {self.model_type} network implemented. Value should be: "
-                                      f"fasttext, bpemb, lightest (bpemb), fastest (fasttext) or best (bpemb).")
+                                      f"fasttext, bpemb, lightest (fasttext-light), fastest (fasttext) "
+                                      f"or best (bpemb).")

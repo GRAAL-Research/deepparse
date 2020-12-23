@@ -12,7 +12,12 @@ class DataTransform:
     Args:
         vectorizer (~deepparse.deepparse.train_vectorizer.TrainVectorizer): Vectorizer to vectorize the data
          (i.e. transform into word embedding and tag idx).
-        model_type (str): The model type.
+        model_type (str): The model type, can be either:
+
+            - fasttext (need ~9 GO of RAM to be used);
+            - bpemb (need ~2 GO of RAM to be used);
+            - fastest (quicker to process one address) (equivalent to fasttext);
+            - best (best accuracy performance) (equivalent to bpemb).
     """
 
     def __init__(self, vectorizer: TrainVectorizer, model_type: str):
@@ -20,12 +25,14 @@ class DataTransform:
         if model_type in ("fasttext", "fastest"):
             self.teacher_forcing_data_padding_fn = fasttext_data_padding_teacher_forcing
             self.output_transform_data_padding_fn = fasttext_data_padding_with_target
-        elif model_type in ("bpemb", "best", "lightest"):
+        elif model_type in ("bpemb", "best"):
             self.teacher_forcing_data_padding_fn = bpemb_data_padding_teacher_forcing
             self.output_transform_data_padding_fn = bpemb_data_padding_with_target
         else:
+            # Note that we don't have lightest here since lightest is fasttext-light (magnitude) and we cannot train
+            # with that model type (see doc note).
             raise NotImplementedError(f"There is no {model_type} network implemented. Value should be: "
-                                      f"fasttext, bpemb, lightest (bpemb), fastest (fasttext) or best (bpemb).")
+                                      f"fasttext, bpemb, fastest (fasttext) or best (bpemb).")
 
     def teacher_forcing_transform(self, batch_pairs: Tuple) -> Tuple:
         """

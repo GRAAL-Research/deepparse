@@ -27,7 +27,7 @@ class FasttextSeq2SeqTest(Seq2SeqTestCase):
     @patch("os.path.isfile")
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
-    def test_LocalWeightsNotLastVersion_InstantiateAFastTextSeq2SeqModel_DownloadWeights(
+    def test_givenLocalWeightsNotLastVersion_whenInstantiatingAFastTextSeq2SeqModel_thenShouldDownloadWeights(
             self, load_state_dict_mock, torch_mock, isfile_mock, last_version_mock):
         isfile_mock.return_value = True
         last_version_mock.return_value = False

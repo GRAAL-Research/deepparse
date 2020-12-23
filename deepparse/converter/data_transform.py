@@ -1,8 +1,8 @@
 from typing import Tuple
 
-from deepparse.converter import fasttext_data_padding_teacher_forcing, bpemb_data_padding_teacher_forcing, \
+from . import fasttext_data_padding_teacher_forcing, bpemb_data_padding_teacher_forcing, \
     bpemb_data_padding_with_target, fasttext_data_padding_with_target
-from deepparse.vectorizer import TrainVectorizer
+from ..vectorizer import TrainVectorizer
 
 
 class DataTransform:

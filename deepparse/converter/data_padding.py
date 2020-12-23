@@ -28,7 +28,7 @@ def fasttext_data_padding(batch: List) -> Tuple:
 
     lengths = torch.tensor(lengths)
 
-    padded_sequences_vectors = pad_sequence(sequences_vectors, batch_first=True)
+    padded_sequences_vectors = pad_sequence(sequences_vectors, batch_first=True, padding_value=padding_value)
 
     return padded_sequences_vectors, lengths
 
@@ -53,7 +53,7 @@ def bpemb_data_padding(batch: List[Tuple]) -> Tuple:
 
     lengths = torch.tensor(lengths)
 
-    padded_sequences_vectors = pad_sequence(sequences_vectors, batch_first=True)
+    padded_sequences_vectors = pad_sequence(sequences_vectors, batch_first=True, padding_value=padding_value)
 
     # pad decomposition length
     max_sequence_length = lengths.max().item()

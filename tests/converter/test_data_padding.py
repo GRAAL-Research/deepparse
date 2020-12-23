@@ -33,8 +33,8 @@ class DataPaddingTest(TestCase):
     def setUp(self):
         self.a_non_padded_word_embedding_batch_length_list = torch.tensor([3, 2, 1])
         self.a_non_padded_word_embedding_batch = [[[1, 1], [1, 1], [1, 1]], [[1, 1], [1, 1]], [[1, 1]]]
-        self.a_fasttext_padded_batch = torch.FloatTensor([[[1, 1], [1, 1], [1, 1]], [[1, 1], [1, 1], [0, 0]],
-                                                          [[1, 1], [0, 0], [0, 0]]])
+        self.a_fasttext_padded_batch = torch.FloatTensor([[[1, 1], [1, 1], [1, 1]], [[1, 1], [1, 1], [-100, -100]],
+                                                          [[1, 1], [-100, -100], [-100, -100]]])
 
         self.a_non_padded_subword_embedding_batch_lenght_list = torch.tensor([3, 2, 1])
         self.a_non_padded_subword_embedding_batch = [([[[1, 1], [1, 1], [-1, -1]], [[1, 1], [1, 1], [1, 1]],
@@ -44,9 +44,9 @@ class DataPaddingTest(TestCase):
         self.a_bpemb_padded_batch = torch.tensor([[[[1, 1], [1, 1], [-1, -1]], [[1, 1], [1, 1], [1, 1]],
                                                    [[1, 1], [-1, -1], [-1, -1]]],
                                                   [[[1, 1], [1, 1], [-1, -1]], [[1, 1], [1, 1], [-1, -1]],
-                                                   [[0, 0], [0, 0], [0, 0]]],
-                                                  [[[1, 1], [1, 1], [1, 1]], [[0, 0], [0, 0], [0, 0]],
-                                                   [[0, 0], [0, 0], [0, 0]]]])
+                                                   [[-100, -100], [-100, -100], [-100, -100]]],
+                                                  [[[1, 1], [1, 1], [1, 1]], [[-100, -100], [-100, -100], [-100, -100]],
+                                                   [[-100, -100], [-100, -100], [-100, -100]]]])
         self.a_non_padded_subword_embedding_batch_decomposition_lenght_list = [[2, 3, 1], [2, 2, 1], [3, 1, 1]]
 
         self.a_training_non_padded_word_embedding_batch = [([[1, 1], [1, 1], [1, 1]], [0, 3, 5]),
@@ -58,7 +58,7 @@ class DataPaddingTest(TestCase):
                                                                  [[1, 1], [1, 1], [-1, -1]]], [2, 2]), [4, 7]),
                                                               (([[[1, 1], [1, 1], [1, 1]]], [3]), [8])]
 
-        self.a_padded_target_tensor = torch.tensor([[0, 3, 5], [4, 7, 0], [8, 0, 0]])
+        self.a_padded_target_tensor = torch.tensor([[0, 3, 5], [4, 7, -100], [8, -100, -100]])
 
         self.fasttext_data_padding = fasttext_data_padding
         self.bpemb_data_padding = bpemb_data_padding

@@ -27,7 +27,7 @@ class BPEmbSeq2SeqTest(Seq2SeqTestCase):
     @patch("os.path.isfile")
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
-    def test_NotLocalWeights_InstantiateABPEmbSeq2SeqModel_DownloadWeights(self, load_state_dict_mock, torch_mock,
+    def test_givenNotLocalWeights_whenInstantiatingABPEmbSeq2SeqModel_thenShouldDownloadWeights(self, load_state_dict_mock, torch_mock,
                                                                            isfile_mock):
         isfile_mock.return_value = False
         with patch("deepparse.network.seq2seq.download_weights") as download_weights_mock:

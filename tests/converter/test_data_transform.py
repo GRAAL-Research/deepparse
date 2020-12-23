@@ -1,6 +1,3 @@
-# Since we use patch we skip the unused argument error
-# pylint: disable=unused-variable
-
 from unittest import TestCase
 from unittest.mock import MagicMock, patch, call
 
@@ -64,7 +61,7 @@ class DataTransformTest(TestCase):
 
     def test_whenInstantiateAFasttextLightDataTransform_thenRaiseError(self):
         with self.assertRaises(NotImplementedError):
-            data_transform = DataTransform(self.train_vectorizer_mock, self.a_fasttext_light_model_type)
+            _ = DataTransform(self.train_vectorizer_mock, self.a_fasttext_light_model_type)
 
     @patch("deepparse.converter.data_transform.fasttext_data_padding_teacher_forcing")
     def test_givenAFasttextDataTransform_whenTeacherForcingTransform_thenComponentsAreCall(self, teacher_forcing_mock):

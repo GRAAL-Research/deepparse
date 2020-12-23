@@ -80,7 +80,7 @@ class BPEmbSeq2SeqTest(Seq2SeqTestCase):
     @patch("os.path.isfile")
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
-    def test_whenInstantiateASeq2SeqModel_thenEncodeIsCalledOnce(self, load_state_dict_mock, torch_mock, isfile_mock,
+    def test_whenInstantiateASeq2SeqModel_thenEncoderIsCalledOnce(self, load_state_dict_mock, torch_mock, isfile_mock,
                                                                  last_version_mock, download_weights_mock,
                                                                  encoder_mock):
         self.seq2seq_model = BPEmbSeq2SeqModel(self.a_torch_device, self.verbose)

@@ -332,7 +332,9 @@ class AddressParser:
                 - If 'str', will load a specific model (e.g. a retrained model), must be a path to a pickled format
                     model i.e. ends with a '.p' extension (e.g. retrained_model.p).
                 - If 'fasttext', will load our pre-trained fasttext model and test it on your data.
+                    (Need to have Poutyne>=1.2 to work)
                 - If 'bpemb', will load our pre-trained bpemb model and test it on your data.
+                    (Need to have Poutyne>=1.2 to work)
         Return:
             A dictionary with the best epoch stats (see `Experiment class
             <https://poutyne.org/experiment.html#poutyne.Experiment.train>`_ for details).
@@ -353,6 +355,9 @@ class AddressParser:
                     address_parser.test(test_container, checkpoint='last') # using the last epoch
                     address_parser.test(test_container, checkpoint=5) # using the epoch 5 model
         """
+        if self.model_type == "fasttext-light":
+            raise ValueError("It's not possible to test a fasttext-light due to pymagnitude problem.")
+
         callbacks = [] if callbacks is None else callbacks
         data_transform = self._set_data_transformer()
 

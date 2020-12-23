@@ -115,7 +115,7 @@ class ToolsTests(TestCase):
         checkpoint = "fasttext"
 
         actual = handle_checkpoint(checkpoint)
-        expected = os.path.join(CACHE_PATH, checkpoint + ".p")
+        expected = os.path.join(CACHE_PATH, checkpoint + ".ckpt")
 
         self.assertEqual(actual, expected)
 
@@ -124,12 +124,12 @@ class ToolsTests(TestCase):
         checkpoint = "bpemb"
 
         actual = handle_checkpoint(checkpoint)
-        expected = os.path.join(CACHE_PATH, checkpoint + ".p")
+        expected = os.path.join(CACHE_PATH, checkpoint + ".ckpt")
 
         self.assertEqual(actual, expected)
 
     def test_givenAStringCheckpoint_whenHandleCheckpoint_thenReturnSamePath(self):
-        pickle_checkpoint = "/a/path/to/a/model.p"
+        pickle_checkpoint = "/a/path/to/a/model.ckpt"
 
         actual = handle_checkpoint(pickle_checkpoint)
         expected = pickle_checkpoint

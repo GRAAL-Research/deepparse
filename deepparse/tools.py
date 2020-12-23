@@ -75,12 +75,12 @@ def handle_checkpoint(checkpoint):
     elif checkpoint == "fasttext":
         if not latest_version("fasttext", cache_path=CACHE_PATH):
             warnings.warn("A newer model of fasttext is available, you can download it using the download script.")
-        checkpoint = os.path.join(CACHE_PATH, "fasttext.p")
+        checkpoint = os.path.join(CACHE_PATH, "fasttext.ckpt")
     elif checkpoint == "bpemb":
         if not latest_version("bpemb", cache_path=CACHE_PATH):
             warnings.warn("A newer model bpemb is available, you can download it using the download script.")
-        checkpoint = os.path.join(CACHE_PATH, "bpemb.p")
-    elif isinstance(checkpoint, str) and checkpoint.endswith(".p"):
+        checkpoint = os.path.join(CACHE_PATH, "bpemb.ckpt")
+    elif isinstance(checkpoint, str) and checkpoint.endswith(".ckpt"):
         pass
     else:
         raise ValueError("The checkpoint is not valid. Can be 'best', 'last', a int, a path in a string format, "

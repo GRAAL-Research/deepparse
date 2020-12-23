@@ -20,7 +20,7 @@ First, let's download the train and test data from the public repository.
 
 .. code-block:: python
 
-    saving_dir = "./data/"
+    saving_dir = "./data"
     file_extension = "p"
     training_dataset_name = "sample_noisy_data"
     test_dataset_name = "test_sample_data"
@@ -31,8 +31,8 @@ Now let's create a training and test container.
 
 .. code-block:: python
 
-    training_container = PickleDatasetContainer(saving_dir + training_dataset_name + "." + file_extension)
-    test_container = PickleDatasetContainer(saving_dir + test_dataset_name + "." + file_extension)
+    training_container = PickleDatasetContainer(os.path.join(saving_dir, training_dataset_name + "." + file_extension))
+    test_container = PickleDatasetContainer(os.path.join(saving_dir, test_dataset_name + "." + file_extension))
 
 
 We will retrain the fasttext version of our pretrained model.

@@ -17,7 +17,7 @@ class BPEmbSeq2SeqTest(Seq2SeqTestCase):
         self.model_type = "bpemb"
 
     @patch("deepparse.network.seq2seq.Seq2SeqModel._load_pre_trained_weights")
-    def test_InstantiateABPEmbSeq2SeqModel_InstantiateAEmbeddingNetwork(self, load_pre_trained_weights_mock):
+    def test_whenInstantiatingABPEmbSeq2SeqModel_thenShouldInstantiateAEmbeddingNetwork(self, load_pre_trained_weights_mock):
         self.seq2seq_model = BPEmbSeq2SeqModel(self.a_torch_device, self.verbose)
 
         self.assertEqual(self.input_size, self.seq2seq_model.embedding_network.model.input_size)

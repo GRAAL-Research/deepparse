@@ -17,7 +17,7 @@ class BPEmbSeq2SeqTest(Seq2SeqTestCase):
         self.model_type = "bpemb"
 
     @patch("deepparse.network.seq2seq.Seq2SeqModel._load_pre_trained_weights")
-    def test_InstantiateABPEmbSeq2SeqModel_InstantiateAEmbeddingNetwork(self, load_pre_trained_weights_mock):
+    def test_whenInstantiatingABPEmbSeq2SeqModel_thenShouldInstantiateAEmbeddingNetwork(self, load_pre_trained_weights_mock):
         self.seq2seq_model = BPEmbSeq2SeqModel(self.a_torch_device, self.verbose)
 
         self.assertEqual(self.input_size, self.seq2seq_model.embedding_network.model.input_size)
@@ -27,7 +27,7 @@ class BPEmbSeq2SeqTest(Seq2SeqTestCase):
     @patch("os.path.isfile")
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
-    def test_NotLocalWeights_InstantiateABPEmbSeq2SeqModel_DownloadWeights(self, load_state_dict_mock, torch_mock,
+    def test_givenNotLocalWeights_whenInstantiatingABPEmbSeq2SeqModel_thenShouldDownloadWeights(self, load_state_dict_mock, torch_mock,
                                                                            isfile_mock):
         isfile_mock.return_value = False
         with patch("deepparse.network.seq2seq.download_weights") as download_weights_mock:
@@ -38,7 +38,7 @@ class BPEmbSeq2SeqTest(Seq2SeqTestCase):
     @patch("os.path.isfile")
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
-    def test_LocalWeightsNotLastVersion_InstantiateABPEmbSeq2SeqModel_DownloadWeights(
+    def test_givenLocalWeightsNotLastVersion_whenInstantiatingABPEmbSeq2SeqModel_thenShouldDownloadWeights(
             self, load_state_dict_mock, torch_mock, isfile_mock, last_version_mock):
         isfile_mock.return_value = True
         last_version_mock.return_value = False
@@ -80,7 +80,7 @@ class BPEmbSeq2SeqTest(Seq2SeqTestCase):
     @patch("os.path.isfile")
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
-    def test_whenInstantiateASeq2SeqModel_thenEncodeIsCalledOnce(self, load_state_dict_mock, torch_mock, isfile_mock,
+    def test_whenInstantiateASeq2SeqModel_thenEncoderIsCalledOnce(self, load_state_dict_mock, torch_mock, isfile_mock,
                                                                  last_version_mock, download_weights_mock,
                                                                  encoder_mock):
         self.seq2seq_model = BPEmbSeq2SeqModel(self.a_torch_device, self.verbose)

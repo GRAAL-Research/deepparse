@@ -4,7 +4,7 @@ from unittest.mock import patch, call
 
 import torch
 
-from deepparse.parser import AddressParser, DatasetContainer, nll_loss_function, accuracy
+from deepparse.parser import AddressParser, DatasetContainer, nll_loss, accuracy
 from tests.parser.base import AddressParserPredictTestCase
 
 batch_size = 32
@@ -36,7 +36,7 @@ class AddressParserTest(AddressParserPredictTestCase):
         self.a_logging_path = "./ckpts"
         self.a_torch_device = torch.device(self.a_device)
 
-        self.a_loss_function = nll_loss_function
+        self.a_loss_function = nll_loss
         self.a_list_of_batch_metrics = [accuracy]
 
         self.mocked_data_container = MockDataContainer()

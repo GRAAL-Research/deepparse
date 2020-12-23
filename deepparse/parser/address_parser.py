@@ -17,7 +17,7 @@ from ..embeddings_models import BPEmbEmbeddingsModel
 from ..embeddings_models import FastTextEmbeddingsModel
 from ..embeddings_models import MagnitudeEmbeddingsModel
 from ..fasttext_tools import download_fasttext_embeddings
-from ..metrics import nll_loss_function, accuracy
+from ..metrics import nll_loss, accuracy
 from ..network.bpemb_seq2seq import BPEmbSeq2SeqModel
 from ..network.fasttext_seq2seq import FastTextSeq2SeqModel
 from ..vectorizer import FastTextVectorizer, BPEmbVectorizer
@@ -291,7 +291,7 @@ class AddressParser:
                          self.model,
                          device=self.device,
                          optimizer=optimizer,
-                         loss_function=nll_loss_function,
+                         loss_function=nll_loss,
                          batch_metrics=[accuracy])
 
         train_res = exp.train(train_generator,
@@ -360,11 +360,7 @@ class AddressParser:
                                     batch_size=batch_size,
                                     num_workers=num_workers)
 
-        exp = Experiment(logging_path,
-                         self.model,
-                         device=self.device,
-                         loss_function=nll_loss_function,
-                         batch_metrics=[accuracy])
+        exp = Experiment(logging_path, self.model, device=self.device, loss_function=nll_loss, batch_metrics=[accuracy])
 
         checkpoint = handle_checkpoint(checkpoint)
 

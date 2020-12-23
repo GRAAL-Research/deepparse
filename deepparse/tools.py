@@ -91,7 +91,6 @@ def handle_checkpoint(checkpoint):
         if poutyne.version.__version__ < 1.2:
             raise NotImplementedError("To load the pre-trained fasttext model, you need to have a Poutyne version"
                                       "greater than 1.1 (>1.1)")
-        pass
     else:
         raise ValueError("The checkpoint is not valid. Can be 'best', 'last', a int, a path in a string format, "
                          "'fasttext' or 'bpemb'.")

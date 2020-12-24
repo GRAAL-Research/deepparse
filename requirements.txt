@@ -6,4 +6,4 @@ requests~=2.23.0
 fasttext~=0.9.2
 pymagnitude-light~=0.1.146
 colorama~=0.4.3
-Poutyne~=1.0.1
+Poutyne~=1.2

@@ -70,7 +70,7 @@ def handle_pre_trained_checkpoint(checkpoint: str) -> str:
     """
     Handle the checkpoint formatting for pre trained models.
     """
-    if poutyne.version.__version__ < 1.2:
+    if float(poutyne.version.__version__) < 1.2:
         raise NotImplementedError(f"To load the pre-trained {checkpoint} model, you need to have a Poutyne version"
                                   "greater than 1.1 (>1.1)")
     if not latest_version(checkpoint, cache_path=CACHE_PATH):
@@ -90,7 +90,7 @@ def handle_checkpoint(checkpoint: str) -> str:
     elif checkpoint in ("fasttext", "bpemb"):
         checkpoint = handle_pre_trained_checkpoint(checkpoint)
     elif isinstance(checkpoint, str) and checkpoint.endswith(".ckpt"):
-        if poutyne.version.__version__ < 1.2:
+        if float(poutyne.version.__version__) < 1.2:
             raise NotImplementedError("To load a string path to a model, you need to have a Poutyne version"
                                       "greater than 1.1 (>1.1)")
     else:

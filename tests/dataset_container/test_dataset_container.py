@@ -40,45 +40,6 @@ class DataSetContainerTest(TestCase):
         for expected_array, actual_array in zip(expected_list_arrays, actual_list_arrays):
             self.assertEqual(expected_array.tolist(), actual_array.tolist())
 
-    def test_givenADatasetContainer_whenLen_thenReturnGoodLen(self):
-        number_of_data_points = 4
-        a_dataset_container = ADatasetContainer(number_of_data_points=number_of_data_points)
-
-        expected = number_of_data_points
-        self.assertEqual(expected, len(a_dataset_container))
-
-        number_of_data_points = 200
-        a_dataset_container = ADatasetContainer(number_of_data_points=number_of_data_points)
-
-        expected = number_of_data_points
-        self.assertEqual(expected, len(a_dataset_container))
-
-    def test_givenADatasetContainer_whenGetOneItem_thenReturnTheCorrectItem(self):
-        a_dataset_container = ADatasetContainer()
-
-        expected = list(range(0, 10))  # first data point
-        actual = a_dataset_container[0]
-        self.assertEqual(expected, actual.tolist())
-
-        expected = list(range(10, 20))  # second data point
-        actual = a_dataset_container[1]
-        self.assertEqual(expected, actual.tolist())
-
-        expected = list(range(20, 30))  # third data point
-        actual = a_dataset_container[2]
-        self.assertEqual(expected, actual.tolist())
-
-    def test_givenADatasetContainer_whenGetSlice_thenReturnTheCorrectItems(self):
-        a_dataset_container = ADatasetContainer()
-
-        expected = [np.array(range(0, 10)), np.array(range(10, 20))]  # first and second data points
-        actual = a_dataset_container[0:2]
-        self.assertListOfArraysEqual(expected, actual)
-
-        expected = [np.array(range(20, 30)), np.array(range(30, 40))]  # third and forth data points
-        actual = a_dataset_container[2:4]
-        self.assertListOfArraysEqual(expected, actual)
-
     def test_givenAPickleDatasetContainer_whenInstantiate_thenDataIsPickleContent(self):
         number_of_data_points = 4
         create_pickle_file(self.a_pickle_data_container_path, number_of_data_points=number_of_data_points)

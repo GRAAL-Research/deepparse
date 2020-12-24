@@ -9,7 +9,7 @@ from unittest.mock import patch
 import requests
 
 from deepparse import download_from_url, latest_version, download_weights, indices_splitting, \
-    handle_pre_trained_checkpoint
+    handle_pre_trained_checkpoint, handle_poutyne_version, valid_poutyne_version
 from deepparse import handle_checkpoint, CACHE_PATH
 from tests.tools import create_file
 
@@ -191,7 +191,7 @@ class ToolsTests(TestCase):
 
     @patch("deepparse.tools.poutyne")
     def test_givenPoutyneVersionLowerThan12_givenHandlePreTrainedCheckpoint_thenRaiseError(self, poutyne_mock):
-        poutyne_mock.version.__version__ = 1.1
+        poutyne_mock.version.__version__ = "1.1"
 
         with self.assertRaises(NotImplementedError):
             handle_pre_trained_checkpoint(self.a_model_type_checkpoint)
@@ -200,7 +200,7 @@ class ToolsTests(TestCase):
     @patch("deepparse.tools.poutyne")
     def test_givenPoutyneVersionGreaterThan12_givenHandlePreTrainedCheckpointFasttext_thenReturnFasttext(
             self, poutyne_mock, latest_version_mock):
-        poutyne_mock.version.__version__ = 1.2
+        poutyne_mock.version.__version__ = "1.2"
 
         actual = handle_pre_trained_checkpoint(self.a_fasttext_model_type_checkpoint)
         expected = os.path.join(CACHE_PATH, f"{self.a_fasttext_model_type_checkpoint}.ckpt")
@@ -210,7 +210,7 @@ class ToolsTests(TestCase):
     @patch("deepparse.tools.poutyne")
     def test_givenPoutyneVersionGreaterThan12_givenHandlePreTrainedCheckpointBPEmb_thenReturnBPEmb(
             self, poutyne_mock, latest_version_mock):
-        poutyne_mock.version.__version__ = 1.2
+        poutyne_mock.version.__version__ = "1.2"
 
         actual = handle_pre_trained_checkpoint(self.a_bpemb_model_type_checkpoint)
         expected = os.path.join(CACHE_PATH, f"{self.a_bpemb_model_type_checkpoint}.ckpt")
@@ -221,7 +221,7 @@ class ToolsTests(TestCase):
     def test_givenPoutyneVersionGreaterThan12_givenHandlePreTrainedCheckpointFasttextNotLatestVersion_thenRaiseWarning(
             self, poutyne_mock, latest_version_mock):
         latest_version_mock.return_value = False  # Not the latest version
-        poutyne_mock.version.__version__ = 1.2
+        poutyne_mock.version.__version__ = "1.2"
 
         with self.assertWarns(UserWarning):
             handle_pre_trained_checkpoint(self.a_bpemb_model_type_checkpoint)
@@ -231,10 +231,78 @@ class ToolsTests(TestCase):
     def test_givenPoutyneVersionGreaterThan12_givenHandlePreTrainedCheckpointBPEmbNotLatestVersion_thenRaiseWarning(
             self, poutyne_mock, latest_version_mock):
         latest_version_mock.return_value = False  # Not the latest version
-        poutyne_mock.version.__version__ = 1.2
+        poutyne_mock.version.__version__ = "1.2"
 
         with self.assertWarns(UserWarning):
             handle_pre_trained_checkpoint(self.a_bpemb_model_type_checkpoint)
+
+    @patch("deepparse.tools.poutyne")
+    def test_givenPoutyneVersion1_1_1_givenHandlePoutyneVersion_thenReturnVersion1_1(self, poutyne_mock):
+        poutyne_mock.version.__version__ = "1.1.1"
+
+        actual = handle_poutyne_version()
+        expected = 1.1
+        self.assertEqual(expected, actual)
+
+    @patch("deepparse.tools.poutyne")
+    def test_givenPoutyneVersion1_1_1_1_givenHandlePoutyneVersion_thenReturnVersion1_1(self, poutyne_mock):
+        poutyne_mock.version.__version__ = "1.1.1.1"
+
+        actual = handle_poutyne_version()
+        expected = 1.1
+        self.assertEqual(expected, actual)
+
+    @patch("deepparse.tools.poutyne")
+    def test_givenPoutyneVersion1_1_dev_givenHandlePoutyneVersion_thenReturnVersion1_1(self, poutyne_mock):
+        poutyne_mock.version.__version__ = "1.1.dev1+81b3c7b"
+
+        actual = handle_poutyne_version()
+        expected = 1.1
+        self.assertEqual(expected, actual)
+
+    @patch("deepparse.tools.poutyne")
+    def test_givenPoutyneVersion1_1_1_dev_givenHandlePoutyneVersion_thenReturnVersion1_1(self, poutyne_mock):
+        poutyne_mock.version.__version__ = "1.1.dev1+81b3c7b"
+
+        actual = handle_poutyne_version()
+        expected = 1.1
+        self.assertEqual(expected, actual)
+
+    @patch("deepparse.tools.poutyne")
+    def test_givenPoutyneVersion1_2_givenHandlePoutyneVersion_thenReturnVersion1_2(self, poutyne_mock):
+        poutyne_mock.version.__version__ = "1.2"
+
+        actual = handle_poutyne_version()
+        expected = 1.2
+        self.assertEqual(expected, actual)
+
+    @patch("deepparse.tools.poutyne")
+    def test_givenPoutyneVersion1_2_givenValidPoutyneVersion_thenReturnTrue(self, poutyne_mock):
+        poutyne_mock.version.__version__ = "1.2"
+
+        actual = valid_poutyne_version()
+        self.assertTrue(actual)
+
+    @patch("deepparse.tools.poutyne")
+    def test_givenPoutyneVersion1_2_dev_givenValidPoutyneVersion_thenReturnTrue(self, poutyne_mock):
+        poutyne_mock.version.__version__ = "1.2.dev1+81b3c7b"
+
+        actual = valid_poutyne_version()
+        self.assertTrue(actual)
+
+    @patch("deepparse.tools.poutyne")
+    def test_givenPoutyneVersion1_1_givenValidPoutyneVersion_thenReturnFalse(self, poutyne_mock):
+        poutyne_mock.version.__version__ = "1.1"
+
+        actual = valid_poutyne_version()
+        self.assertFalse(actual)
+
+    @patch("deepparse.tools.poutyne")
+    def test_givenPoutyneVersion1_1_dev_givenValidPoutyneVersion_thenReturnFalse(self, poutyne_mock):
+        poutyne_mock.version.__version__ = "1.1.dev1+81b3c7b"
+
+        actual = valid_poutyne_version()
+        self.assertFalse(actual)
 
 
 if __name__ == "__main__":

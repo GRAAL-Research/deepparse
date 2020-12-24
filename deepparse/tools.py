@@ -65,11 +65,31 @@ def load_tuple_to_device(padded_address, device):
     return tuple([element.to(device) if isinstance(element, torch.Tensor) else element for element in padded_address])
 
 
+def handle_poutyne_version() -> float:
+    """
+    Handle the retrieval of the major and minor part of the Poutyne version
+    """
+    full_version = poutyne.version.__version__
+    components_parts = full_version.split(".")
+    major = components_parts[0]
+    minor = components_parts[1]
+    version = f"{major}.{minor}"
+    return float(version)
+
+
+def valid_poutyne_version():
+    """
+    Validate Poutyne version is greater than 1.2 for using a str checkpoint. Version before does not support that
+    feature.
+    """
+    return handle_poutyne_version() >= 1.2
+
+
 def handle_pre_trained_checkpoint(model_type_checkpoint: str) -> str:
     """
     Handle the checkpoint formatting for pre trained models.
     """
-    if float(poutyne.version.__version__) < 1.2:
+    if not valid_poutyne_version():
         raise NotImplementedError(
             f"To load the pre-trained {model_type_checkpoint} model, you need to have a Poutyne version"
             "greater than 1.1 (>1.1)")
@@ -91,7 +111,7 @@ def handle_checkpoint(checkpoint: str) -> str:
     elif checkpoint in ("fasttext", "bpemb"):
         checkpoint = handle_pre_trained_checkpoint(checkpoint)
     elif isinstance(checkpoint, str) and checkpoint.endswith(".ckpt"):
-        if float(poutyne.version.__version__) < 1.2:
+        if not valid_poutyne_version():
             raise NotImplementedError("To load a string path to a model, you need to have a Poutyne version"
                                       "greater than 1.1 (>1.1)")
     else:

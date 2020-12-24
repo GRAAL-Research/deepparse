@@ -3,6 +3,7 @@ import argparse
 
 from poutyne import StepLR
 
+from deepparse import handle_pre_trained_checkpoint
 from deepparse.dataset_container import PickleDatasetContainer
 from deepparse.parser import AddressParser
 
@@ -21,8 +22,13 @@ def main(args):
     if args.mode in ("test", "both"):
         test_container = PickleDatasetContainer(args.test_dataset_path)
 
+        if args.mode == "test":
+            checkpoint = handle_pre_trained_checkpoint(args.model_type)
+        else:
+            checkpoint = "best"
+
         address_parser.test(test_container, batch_size=2048, num_workers=4,
-                            logging_path=f"./chekpoints/{args.model_type}")
+                            logging_path=f"./chekpoints/{args.model_type}", checkpoint=checkpoint)
 
 
 if __name__ == "__main__":

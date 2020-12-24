@@ -1,3 +1,4 @@
+import unittest
 from unittest import TestCase
 
 import torch
@@ -33,3 +34,7 @@ class Seq2SeqTest(TestCase):
         self.assertEqual(self.decoder_num_layers, self.seq2seq_model.decoder.lstm.num_layers)
         self.assertEqual(self.decoder_output_size, self.seq2seq_model.decoder.linear.out_features)
         self.assertEqual(self.a_torch_device, self.seq2seq_model.decoder.lstm.all_weights[0][0].device)
+
+
+if __name__ == "__main__":
+    unittest.main()

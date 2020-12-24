@@ -2,6 +2,7 @@
 # pylint: disable=not-callable
 
 import pickle
+import unittest
 from unittest import TestCase, skipIf
 
 import torch
@@ -51,3 +52,7 @@ class EncoderTest(TestCase):
         predictions = self.encoder.forward(self.to_predict_tensor, self.a_lengths_tensor)
 
         self.assert_output_is_valid_dim(predictions)
+
+
+if __name__ == "__main__":
+    unittest.main()

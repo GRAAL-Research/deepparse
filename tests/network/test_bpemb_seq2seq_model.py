@@ -1,7 +1,7 @@
 # Since we use patch we skip the unused argument error
 # We also skip protected-access since we test the encoder and decoder step
 # pylint: disable=W0613, protected-access, too-many-arguments
-
+import unittest
 from unittest.mock import patch, call, MagicMock
 
 from deepparse.network import BPEmbSeq2SeqModel
@@ -146,3 +146,7 @@ class BPEmbSeq2SeqTest(Seq2SeqTestCase):
                                        decoder_hidden_mock))
 
         self.assert_has_calls_tensor_equals(decoder_mock, decoder_call)
+
+
+if __name__ == "__main__":
+    unittest.main()

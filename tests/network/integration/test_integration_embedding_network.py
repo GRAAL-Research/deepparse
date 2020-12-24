@@ -1,4 +1,5 @@
 # pylint: disable=line-too-long
+import unittest
 from unittest import TestCase
 
 import torch
@@ -50,3 +51,7 @@ class EmbeddingNetworkTest(TestCase):
         self.assertEqual(result.size(0), self.a_batch_size)
         self.assertEqual(result.size(1), self.a_max_sequence_length)
         self.assertEqual(result.size(2), self.a_post_maxpool_embedding_dimension)
+
+
+if __name__ == "__main__":
+    unittest.main()

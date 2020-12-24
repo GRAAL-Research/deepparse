@@ -1,7 +1,7 @@
 # Bug with PyTorch source code makes torch.tensor as not callable for pylint.
 # We also skip protected-access since we test the encoder and decoder step
 # pylint: disable=not-callable, protected-access
-
+import unittest
 from unittest import skipIf
 
 import os
@@ -64,3 +64,7 @@ class BPEmbSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
                                                  self.a_lengths_tensor, self.a_target_vector)
 
         self.assert_output_is_valid_dim(predictions)
+
+
+if __name__ == "__main__":
+    unittest.main()

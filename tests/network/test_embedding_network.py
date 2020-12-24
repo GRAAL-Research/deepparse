@@ -1,3 +1,4 @@
+import unittest
 from unittest import TestCase
 from unittest.mock import patch
 
@@ -46,3 +47,7 @@ class EmbeddingNetworkTest(TestCase):
                                                   maxpool_kernel_size=self.a_maxpool_kernel_size)
 
         maxpool_mock.asset_called_with(self.a_maxpool_kernel_size)
+
+
+if __name__ == "__main__":
+    unittest.main()

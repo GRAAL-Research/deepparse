@@ -1,6 +1,6 @@
 # Bug with PyTorch source code makes torch.tensor as not callable for pylint.
 # pylint: disable=not-callable
-
+import unittest
 from unittest import TestCase
 
 import torch
@@ -105,3 +105,7 @@ class NLLLossTest(TestCase):
         actual = nll_loss(predict_tensor, self.a_short_ground_truth).detach().tolist()
         expected = torch.tensor(0., device=self.a_device)
         self.assertAlmostEqual(expected, actual, delta=5)
+
+
+if __name__ == "__main__":
+    unittest.main()

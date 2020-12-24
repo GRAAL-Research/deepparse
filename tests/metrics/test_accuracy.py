@@ -1,6 +1,6 @@
 # Bug with PyTorch source code makes torch.tensor as not callable for pylint.
 # pylint: disable=not-callable
-
+import unittest
 from unittest import TestCase
 
 import torch
@@ -102,3 +102,7 @@ class AccuracyTest(TestCase):
         actual = accuracy(predict_tensor, self.a_short_ground_truth)
         expected = torch.tensor(0., device=self.a_device)
         self.assertEqual(expected, actual)
+
+
+if __name__ == "__main__":
+    unittest.main()

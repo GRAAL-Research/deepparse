@@ -1,3 +1,4 @@
+import unittest
 from unittest import TestCase
 from unittest.mock import MagicMock, patch, call
 
@@ -118,3 +119,7 @@ class DataTransformTest(TestCase):
 
         train_vectorizer_call = [call(self.train_vectorizer_mock())]
         output_transform_mock.assert_has_calls(train_vectorizer_call)
+
+
+if __name__ == "__main__":
+    unittest.main()

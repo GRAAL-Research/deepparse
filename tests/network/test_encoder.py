@@ -1,3 +1,4 @@
+import unittest
 from unittest import TestCase
 
 import torch
@@ -21,3 +22,7 @@ class EncoderTest(TestCase):
         self.assertEqual(self.hidden_size, self.encoder.lstm.hidden_size)
         self.assertEqual(self.num_layers, self.encoder.lstm.num_layers)
         self.assertEqual(self.a_torch_device, self.encoder.lstm.all_weights[0][0].device)
+
+
+if __name__ == "__main__":
+    unittest.main()

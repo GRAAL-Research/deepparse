@@ -4,6 +4,7 @@
 
 import os
 import shutil
+import unittest
 from unittest import skipIf, TestCase
 from unittest.mock import MagicMock, call
 
@@ -461,3 +462,7 @@ class AddressParserIntegrationTest(TestCase):
                                                      checkpoint=self.bpemb_local_path)
 
         self.assertIsNotNone(performance_after_test)
+
+
+if __name__ == "__main__":
+    unittest.main()

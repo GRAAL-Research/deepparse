@@ -1,6 +1,6 @@
 # Bug with PyTorch source code makes torch.tensor as not callable for pylint.
 # pylint: disable=not-callable, too-many-public-methods
-
+import unittest
 from unittest import TestCase
 
 import torch
@@ -215,3 +215,7 @@ class DataPaddingTest(TestCase):
          target_tensor), _ = self.bpemb_data_padding_teacher_forcing(self.a_training_non_padded_subword_embedding_batch)
 
         self.assertTrue(torch.all(target_tensor.eq(self.a_padded_target_tensor)))
+
+
+if __name__ == "__main__":
+    unittest.main()

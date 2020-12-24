@@ -2,6 +2,7 @@
 # pylint: disable=not-callable
 
 import pickle
+import unittest
 from unittest import TestCase, skipIf
 
 import torch
@@ -54,3 +55,7 @@ class DecoderTest(TestCase):
 
         self.assert_predictions_is_valid_dim(predictions)
         self.assert_hidden_is_valid_dim(hidden)
+
+
+if __name__ == "__main__":
+    unittest.main()

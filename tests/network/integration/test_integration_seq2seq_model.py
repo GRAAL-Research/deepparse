@@ -1,7 +1,7 @@
 # Bug with PyTorch source code makes torch.tensor as not callable for pylint.
 # We also skip protected-access since we test the encoder and decoder step
 # pylint: disable=not-callable, protected-access
-
+import unittest
 from unittest import skipIf
 from unittest.mock import patch
 
@@ -84,3 +84,7 @@ class Seq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
                                                          self.none_target, self.max_length, self.a_batch_size)
 
         random_mock.assert_not_called()
+
+
+if __name__ == "__main__":
+    unittest.main()

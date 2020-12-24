@@ -1,3 +1,4 @@
+import unittest
 from unittest import TestCase
 
 import torch
@@ -23,3 +24,7 @@ class DecoderTest(TestCase):
         self.assertEqual(self.num_layers, self.decoder.lstm.num_layers)
         self.assertEqual(self.output_size, self.decoder.linear.out_features)
         self.assertEqual(self.a_torch_device, self.decoder.lstm.all_weights[0][0].device)
+
+
+if __name__ == "__main__":
+    unittest.main()

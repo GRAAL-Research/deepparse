@@ -2,6 +2,7 @@
 # pylint: disable=W0613
 
 import os
+import unittest
 from unittest import TestCase
 from unittest.mock import patch
 
@@ -20,6 +21,7 @@ class ToolsTests(TestCase):
         self.latest_fasttext_version = "617a417a2f2b02654f7deb5b5cbc60ab2f6334ba"
         self.latest_bpemb_version = "6d01367745157066ea6e621ac087be828137711f"
         self.a_seed = 42
+        self.verbose = False
 
     def tearDown(self) -> None:
         if os.path.exists("fasttext.version"):
@@ -75,13 +77,13 @@ class ToolsTests(TestCase):
 
     def test_givenModelWeightsToDownload_whenDownloadOk_thenWeightsAreDownloaded(self):
         with patch("deepparse.tools.download_from_url") as downloader:
-            download_weights(model="fasttext", saving_dir="./")
+            download_weights(model="fasttext", saving_dir="./", verbose=self.verbose)
 
             downloader.assert_any_call("fasttext", "./", "ckpt")
             downloader.assert_any_call("fasttext", "./", "version")
 
         with patch("deepparse.tools.download_from_url") as downloader:
-            download_weights(model="bpemb", saving_dir="./")
+            download_weights(model="bpemb", saving_dir="./", verbose=self.verbose)
 
             downloader.assert_any_call("bpemb", "./", "ckpt")
             downloader.assert_any_call("bpemb", "./", "version")
@@ -181,3 +183,7 @@ class ToolsTests(TestCase):
         self.assertEqual(len(actual_valid_indices), expected_len_valid_indices)
         self.assertEqual(actual_train_indices, expected_train_indices)
         self.assertEqual(actual_valid_indices, expected_valid_indices)
+
+
+if __name__ == "__main__":
+    unittest.main()

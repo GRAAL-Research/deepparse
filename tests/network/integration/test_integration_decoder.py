@@ -26,7 +26,7 @@ class DecoderTest(TestCase):
         self.encoder.to(self.a_torch_device)  # we mount it into the device
         self.encoder_input_setUp()
 
-    def encoder_input_setUp(self):
+    def decoder_input_setUp(self):
         self.decoder_input = torch.tensor([[[-1.], [-1.]]], device=self.a_torch_device)
 
         # try except to manage pytest path to file

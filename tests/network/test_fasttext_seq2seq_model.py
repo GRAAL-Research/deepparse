@@ -76,13 +76,13 @@ class FasttextSeq2SeqTest(Seq2SeqTestCase):
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
     def test_whenInstantiateASeq2SeqModelNoTarget_thenDecoderIsCalled(
-            self,
-            load_state_dict_mock,
-            torch_mock,
-            isfile_mock,
-            last_version_mock,
-            download_weights_mock,
-            decoder_mock,
+        self,
+        load_state_dict_mock,
+        torch_mock,
+        isfile_mock,
+        last_version_mock,
+        download_weights_mock,
+        decoder_mock,
     ):
         self.seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device, self.verbose)
 

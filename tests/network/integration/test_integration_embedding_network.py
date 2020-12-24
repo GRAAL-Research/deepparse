@@ -1,5 +1,7 @@
-import torch
+# pylint: disable=line-too-long
 from unittest import TestCase
+
+import torch
 
 from deepparse.network import EmbeddingNetwork
 

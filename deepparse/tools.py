@@ -65,7 +65,21 @@ def load_tuple_to_device(padded_address, device):
     return tuple([element.to(device) if isinstance(element, torch.Tensor) else element for element in padded_address])
 
 
-def handle_checkpoint(checkpoint):
+# todo add test
+def handle_pre_trained_checkpoint(checkpoint: str) -> str:
+    """
+    Handle the checkpoint formatting for pre trained models.
+    """
+    if poutyne.version.__version__ < 1.2:
+        raise NotImplementedError(f"To load the pre-trained {checkpoint} model, you need to have a Poutyne version"
+                                  "greater than 1.1 (>1.1)")
+    if not latest_version(checkpoint, cache_path=CACHE_PATH):
+        warnings.warn("A newer model of fasttext is available, you can download it using the download script.")
+    checkpoint = os.path.join(CACHE_PATH, f"{checkpoint}.ckpt")
+    return checkpoint
+
+
+def handle_checkpoint(checkpoint: str) -> str:
     """
     Handle the checkpoint format validity and path.
     """
@@ -73,23 +87,11 @@ def handle_checkpoint(checkpoint):
         pass
     elif isinstance(checkpoint, int):
         pass
-    elif checkpoint == "fasttext":
-        if poutyne.version.__version__ < 1.2:
-            raise NotImplementedError("To load the pre-trained fasttext model, you need to have a Poutyne version"
-                                      "greater than 1.1 (>1.1)")
-        if not latest_version("fasttext", cache_path=CACHE_PATH):
-            warnings.warn("A newer model of fasttext is available, you can download it using the download script.")
-        checkpoint = os.path.join(CACHE_PATH, "fasttext.ckpt")
-    elif checkpoint == "bpemb":
-        if poutyne.version.__version__ < 1.2:
-            raise NotImplementedError("To load the pre-trained fasttext model, you need to have a Poutyne version"
-                                      "greater than 1.1 (>1.1)")
-        if not latest_version("bpemb", cache_path=CACHE_PATH):
-            warnings.warn("A newer model bpemb is available, you can download it using the download script.")
-        checkpoint = os.path.join(CACHE_PATH, "bpemb.ckpt")
+    elif checkpoint in ("fasttext", "bpemb"):
+        checkpoint = handle_pre_trained_checkpoint(checkpoint)
     elif isinstance(checkpoint, str) and checkpoint.endswith(".ckpt"):
         if poutyne.version.__version__ < 1.2:
-            raise NotImplementedError("To load the pre-trained fasttext model, you need to have a Poutyne version"
+            raise NotImplementedError("To load a string path to a model, you need to have a Poutyne version"
                                       "greater than 1.1 (>1.1)")
     else:
         raise ValueError("The checkpoint is not valid. Can be 'best', 'last', a int, a path in a string format, "

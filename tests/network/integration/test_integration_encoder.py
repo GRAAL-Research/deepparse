@@ -27,12 +27,8 @@ class EncoderTest(TestCase):
         self.encoder_input_setUp()
 
     def encoder_input_setUp(self):
-        # try except to manage pytest path to file
         # we use the fasttext case since easier
-        try:
-            file = open("./tests/network/integration/to_predict_fasttext.p", "rb")
-        except FileNotFoundError:
-            file = open("./to_predict_fasttext.p", "rb")
+        file = open("./to_predict_fasttext.p", "rb")
         self.to_predict_tensor = pickle.load(file)
         self.to_predict_tensor = self.to_predict_tensor.to(self.a_torch_device)
         file.close()

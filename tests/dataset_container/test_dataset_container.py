@@ -69,7 +69,8 @@ class DataSetContainerTest(TestCase):
         actual = pickle_dataset_container[1]
         self.assertEqual(expected, actual.tolist())
 
-        expected = list(range(20, 30))  # third data point        actual = pickle_dataset_container[2]
+        expected = list(range(20, 30))  # third data point
+        actual = pickle_dataset_container[2]
         self.assertEqual(expected, actual.tolist())
 
     def test_givenAPickleDatasetContainer_whenGetSlice_thenReturnTheCorrectItems(self):

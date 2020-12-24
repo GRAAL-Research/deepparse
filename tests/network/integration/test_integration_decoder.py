@@ -30,11 +30,7 @@ class DecoderTest(TestCase):
     def decoder_input_setUp(self):
         self.decoder_input = torch.tensor([[[-1.], [-1.]]], device=self.a_torch_device)
 
-        # try except to manage pytest path to file
-        try:
-            file = open("./tests/network/integration/decoder_hidden.p", "rb")
-        except FileNotFoundError:
-            file = open("./decoder_hidden.p", "rb")
+        file = open("./decoder_hidden.p", "rb")
         self.decoder_hidden_tensor = pickle.load(file)
         self.decoder_hidden_tensor = (self.decoder_hidden_tensor[0].to(self.a_torch_device),
                                       self.decoder_hidden_tensor[1].to(self.a_torch_device))

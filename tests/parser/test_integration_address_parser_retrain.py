@@ -9,6 +9,7 @@ from unittest import skipIf, TestCase
 from unittest.mock import MagicMock, call
 
 import torch
+from poutyne import Callback
 
 from deepparse import download_from_url
 from deepparse.dataset_container import PickleDatasetContainer
@@ -124,7 +125,7 @@ class AddressParserIntegrationTest(TestCase):
                                        device=self.a_torch_device,
                                        verbose=self.verbose)
 
-        callback_mock = MagicMock()
+        callback_mock = MagicMock(spec=Callback)
         performance_after_training = address_parser.retrain(self.training_container,
                                                             self.a_train_ratio,
                                                             epochs=self.a_single_epoch,
@@ -202,7 +203,7 @@ class AddressParserIntegrationTest(TestCase):
                                        device=self.a_torch_device,
                                        verbose=self.verbose)
 
-        callback_mock = MagicMock()
+        callback_mock = MagicMock(spec=Callback)
         performance_after_training = address_parser.retrain(self.training_container,
                                                             self.a_train_ratio,
                                                             epochs=self.a_single_epoch,

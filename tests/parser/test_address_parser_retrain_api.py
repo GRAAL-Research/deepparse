@@ -10,7 +10,7 @@ from tests.parser.base import AddressParserPredictTestCase
 batch_size = 32
 
 
-class MockDataContainer(DatasetContainer):
+class ADataContainer(DatasetContainer):
 
     def __init__(self, ):
         super().__init__()
@@ -39,7 +39,7 @@ class AddressParserTest(AddressParserPredictTestCase):
         self.a_loss_function = nll_loss
         self.a_list_of_batch_metrics = [accuracy]
 
-        self.mocked_data_container = MockDataContainer()
+        self.mocked_data_container = ADataContainer()
 
         self.a_best_checkpoint = "best"
 

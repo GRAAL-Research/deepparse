@@ -16,7 +16,7 @@ class FasttextSeq2SeqTest(Seq2SeqTestCase):
     @patch("os.path.isfile")
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
-    def test_NotLocalWeights_InstantiateAFastTextSeq2SeqModel_DownloadWeights(self, load_state_dict_mock, torch_mock,
+    def test_givenNotLocalWeights_whenInstantiatingAFastTextSeq2SeqModel_thenShouldDownloadWeights(self, load_state_dict_mock, torch_mock,
                                                                               isfile_mock):
         isfile_mock.return_value = False
         with patch("deepparse.network.seq2seq.download_weights") as download_weights_mock:
@@ -27,7 +27,7 @@ class FasttextSeq2SeqTest(Seq2SeqTestCase):
     @patch("os.path.isfile")
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
-    def test_LocalWeightsNotLastVersion_InstantiateAFastTextSeq2SeqModel_DownloadWeights(
+    def test_givenLocalWeightsNotLastVersion_whenInstantiatingAFastTextSeq2SeqModel_thenShouldDownloadWeights(
             self, load_state_dict_mock, torch_mock, isfile_mock, last_version_mock):
         isfile_mock.return_value = True
         last_version_mock.return_value = False
@@ -37,8 +37,8 @@ class FasttextSeq2SeqTest(Seq2SeqTestCase):
 
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
-    def test_givenRetrainedWeights_whenInstantiatingAFastTextSeq2SeqModel_thenShouldUseRetrainedWeights(self, load_state_dict_mock,
-                                                                                   torch_mock):
+    def test_givenRetrainedWeights_whenInstantiatingAFastTextSeq2SeqModel_thenShouldUseRetrainedWeights(
+            self, load_state_dict_mock, torch_mock):
         all_layers_params = MagicMock()
         torch_mock.load.return_value = all_layers_params
         self.seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device,

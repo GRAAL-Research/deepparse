@@ -65,7 +65,7 @@ class NLLLossTest(TestCase):
                                                   ]]],
                                                 device=self.a_device,
                                                 requires_grad=True)
-        self.an_accuracy_score = torch.tensor(37.2189, device=self.a_device)
+        self.a_loss = torch.tensor(37.2189, device=self.a_device)
 
         # 2 address of two element each
         self.a_short_ground_truth = torch.tensor([[0, 1], [1, 0]], device=self.a_device)
@@ -73,7 +73,7 @@ class NLLLossTest(TestCase):
     def test_givenAPredictionTensor_whenNLLLossPerTag_thenLossIsOk(self):
         # need to convert to list and use float since not working almost equal for tensor
         actual = nll_loss(self.a_prediction_tensor, self.ground_truth).detach().tolist()
-        expected = self.an_accuracy_score.tolist()
+        expected = self.a_loss.tolist()
         self.assertAlmostEqual(expected, actual, delta=5)
 
     def test_givenAPerfectPredictionTensor_whenNLLLossPerTag_thenLossIs0(self):

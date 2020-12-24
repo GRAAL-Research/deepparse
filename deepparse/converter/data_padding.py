@@ -6,6 +6,10 @@ from typing import List, Tuple
 import torch
 from torch.nn.utils.rnn import pad_sequence
 
+# By default the loss and accuracy ignore the value of -100
+# we leverage that when padding elements
+padding_value = -100
+
 
 def fasttext_data_padding(batch: List) -> Tuple:
     """
@@ -24,7 +28,7 @@ def fasttext_data_padding(batch: List) -> Tuple:
 
     lengths = torch.tensor(lengths)
 
-    padded_sequences_vectors = pad_sequence(sequences_vectors, batch_first=True)
+    padded_sequences_vectors = pad_sequence(sequences_vectors, batch_first=True, padding_value=padding_value)
 
     return padded_sequences_vectors, lengths
 
@@ -49,7 +53,7 @@ def bpemb_data_padding(batch: List[Tuple]) -> Tuple:
 
     lengths = torch.tensor(lengths)
 
-    padded_sequences_vectors = pad_sequence(sequences_vectors, batch_first=True)
+    padded_sequences_vectors = pad_sequence(sequences_vectors, batch_first=True, padding_value=padding_value)
 
     # pad decomposition length
     max_sequence_length = lengths.max().item()
@@ -78,8 +82,8 @@ def fasttext_data_padding_teacher_forcing(batch: List) -> Tuple:
 
     lengths = torch.tensor(lengths)
 
-    padded_sequences_vectors = pad_sequence(sequences_vectors, batch_first=True)
-    padded_target_vectors = pad_sequence(target_vectors, batch_first=True)
+    padded_sequences_vectors = pad_sequence(sequences_vectors, batch_first=True, padding_value=padding_value)
+    padded_target_vectors = pad_sequence(target_vectors, batch_first=True, padding_value=padding_value)
 
     return (padded_sequences_vectors, lengths, padded_target_vectors), padded_target_vectors
 
@@ -104,8 +108,8 @@ def bpemb_data_padding_teacher_forcing(batch: List[Tuple]) -> Tuple:
 
     lengths = torch.tensor(lengths)
 
-    padded_sequences_vectors = pad_sequence(sequences_vectors, batch_first=True)
-    padded_target_vectors = pad_sequence(target_vectors, batch_first=True)
+    padded_sequences_vectors = pad_sequence(sequences_vectors, batch_first=True, padding_value=padding_value)
+    padded_target_vectors = pad_sequence(target_vectors, batch_first=True, padding_value=padding_value)
 
     # pad decomposition length
     max_sequence_length = lengths.max().item()
@@ -132,8 +136,8 @@ def fasttext_data_padding_with_target(batch: List) -> Tuple:
 
     lengths = torch.tensor(lengths)
 
-    padded_sequences_vectors = pad_sequence(sequences_vectors, batch_first=True)
-    padded_target_vectors = pad_sequence(target_vectors, batch_first=True)
+    padded_sequences_vectors = pad_sequence(sequences_vectors, batch_first=True, padding_value=padding_value)
+    padded_target_vectors = pad_sequence(target_vectors, batch_first=True, padding_value=padding_value)
 
     return (padded_sequences_vectors, lengths), padded_target_vectors
 
@@ -157,8 +161,8 @@ def bpemb_data_padding_with_target(batch: List[Tuple]) -> Tuple:
 
     lengths = torch.tensor(lengths)
 
-    padded_sequences_vectors = pad_sequence(sequences_vectors, batch_first=True)
-    padded_target_vectors = pad_sequence(target_vectors, batch_first=True)
+    padded_sequences_vectors = pad_sequence(sequences_vectors, batch_first=True, padding_value=padding_value)
+    padded_target_vectors = pad_sequence(target_vectors, batch_first=True, padding_value=padding_value)
 
     # pad decomposition length
     max_sequence_length = lengths.max().item()

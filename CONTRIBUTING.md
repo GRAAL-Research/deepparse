@@ -103,6 +103,8 @@ For any pull request submitted, **ALL** of the tests must succeed. You can run t
 python -m unittest
 ```
 
+> The integration tests need to be executed on a device with a GPU.
+
 ## Documentation
 
 When submitting a pull request for a new feature, try to include documentation for the new objects/modules introduced and their public methods.

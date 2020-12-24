@@ -41,7 +41,7 @@ jobs:
         pylint tests/
     - name: Test with pytest
       run: |
-        pytest tests/
+        python -m unittest
     - name: Building doc
       run: |
         cd docs

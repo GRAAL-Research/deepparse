@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>deepparse.parser.address_parser &mdash; deepparse 0.1.3.1 documentation</title>
+  <title>deepparse.parser.address_parser &mdash; deepparse 0.2 documentation</title>
   
 
   
@@ -29,7 +29,6 @@
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/language_data.js"></script>
         <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
@@ -63,7 +62,7 @@
             
             
               <div class="version">
-                0.1.3.1
+                0.2
               </div>
             
           
@@ -91,6 +90,11 @@
               <p class="caption"><span class="caption-text">API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../parser.html">Parser</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dataset_container.html">Dataset Container</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/fine_tuning.html">Retrain a pretrained model</a></li>
 </ul>
 
             
@@ -155,23 +159,31 @@
            <div itemprop="articleBody">
             
   <h1>Source code for deepparse.parser.address_parser</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+<span></span><span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="kn">import</span> <span class="nn">torch</span>
 <span class="kn">from</span> <span class="nn">numpy.core.multiarray</span> <span class="kn">import</span> <span class="n">ndarray</span>
+<span class="kn">from</span> <span class="nn">poutyne.framework</span> <span class="kn">import</span> <span class="n">Experiment</span>
+<span class="kn">from</span> <span class="nn">torch.optim</span> <span class="kn">import</span> <span class="n">SGD</span>
+<span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">DataLoader</span><span class="p">,</span> <span class="n">Subset</span>
 
 <span class="kn">from</span> <span class="nn">.parsed_address</span> <span class="kn">import</span> <span class="n">ParsedAddress</span>
-<span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">load_tuple_to_device</span>
-<span class="kn">from</span> <span class="nn">..converter</span> <span class="kn">import</span> <span class="n">TagsConverter</span><span class="p">,</span> <span class="n">data_padding</span>
-<span class="kn">from</span> <span class="nn">..converter.data_padding</span> <span class="kn">import</span> <span class="n">bpemb_data_padding</span>
+<span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">CACHE_PATH</span><span class="p">,</span> <span class="n">handle_checkpoint</span><span class="p">,</span> <span class="n">indices_splitting</span>
+<span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">load_tuple_to_device</span><span class="p">,</span> <span class="n">download_fasttext_magnitude_embeddings</span>
+<span class="kn">from</span> <span class="nn">..converter</span> <span class="kn">import</span> <span class="n">TagsConverter</span>
+<span class="kn">from</span> <span class="nn">..converter</span> <span class="kn">import</span> <span class="n">fasttext_data_padding</span><span class="p">,</span> <span class="n">bpemb_data_padding</span><span class="p">,</span> <span class="n">DataTransform</span>
+<span class="kn">from</span> <span class="nn">..dataset_container</span> <span class="kn">import</span> <span class="n">DatasetContainer</span>
 <span class="kn">from</span> <span class="nn">..embeddings_models</span> <span class="kn">import</span> <span class="n">BPEmbEmbeddingsModel</span>
 <span class="kn">from</span> <span class="nn">..embeddings_models</span> <span class="kn">import</span> <span class="n">FastTextEmbeddingsModel</span>
+<span class="kn">from</span> <span class="nn">..embeddings_models</span> <span class="kn">import</span> <span class="n">MagnitudeEmbeddingsModel</span>
 <span class="kn">from</span> <span class="nn">..fasttext_tools</span> <span class="kn">import</span> <span class="n">download_fasttext_embeddings</span>
-<span class="kn">from</span> <span class="nn">..network.pre_trained_bpemb_seq2seq</span> <span class="kn">import</span> <span class="n">PreTrainedBPEmbSeq2SeqModel</span>
-<span class="kn">from</span> <span class="nn">..network.pre_trained_fasttext_seq2seq</span> <span class="kn">import</span> <span class="n">PreTrainedFastTextSeq2SeqModel</span>
+<span class="kn">from</span> <span class="nn">..metrics</span> <span class="kn">import</span> <span class="n">nll_loss</span><span class="p">,</span> <span class="n">accuracy</span>
+<span class="kn">from</span> <span class="nn">..network.bpemb_seq2seq</span> <span class="kn">import</span> <span class="n">BPEmbSeq2SeqModel</span>
+<span class="kn">from</span> <span class="nn">..network.fasttext_seq2seq</span> <span class="kn">import</span> <span class="n">FastTextSeq2SeqModel</span>
 <span class="kn">from</span> <span class="nn">..vectorizer</span> <span class="kn">import</span> <span class="n">FastTextVectorizer</span><span class="p">,</span> <span class="n">BPEmbVectorizer</span>
+<span class="kn">from</span> <span class="nn">..vectorizer</span> <span class="kn">import</span> <span class="n">TrainVectorizer</span>
+<span class="kn">from</span> <span class="nn">..vectorizer.magnitude_vectorizer</span> <span class="kn">import</span> <span class="n">MagnitudeVectorizer</span>
 
 <span class="n">_pre_trained_tags_to_idx</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;StreetNumber&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
@@ -196,15 +208,16 @@
 <span class="sd">    networks either with fastText or BPEmb.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        model (str): The network name to use, can be either:</span>
+<span class="sd">        model_type (str): The network name to use, can be either:</span>
 
 <span class="sd">            - fasttext (need ~9 GO of RAM to be used);</span>
+<span class="sd">            - fasttext-light (need ~2 GO of RAM to be used, but slower than fasttext version);</span>
 <span class="sd">            - bpemb (need ~2 GO of RAM to be used);</span>
-<span class="sd">            - lightest (less RAM usage) (equivalent to bpemb);</span>
 <span class="sd">            - fastest (quicker to process one address) (equivalent to fasttext);</span>
+<span class="sd">            - lightest (the one using the less RAM and GPU usage) (equivalent to fasttext-light);</span>
 <span class="sd">            - best (best accuracy performance) (equivalent to bpemb).</span>
 
-<span class="sd">            The default value is &#39;best&#39; for the most accurate model.</span>
+<span class="sd">            The default value is &quot;best&quot; for the most accurate model.</span>
 <span class="sd">        device (Union[int, str, torch.device]): The device to use can be either:</span>
 
 <span class="sd">            - a ``GPU`` index in int format (e.g. ``0``);</span>
@@ -215,16 +228,33 @@
 <span class="sd">            The default value is GPU with the index ``0`` if it exist, otherwise the value is ``CPU``.</span>
 <span class="sd">        rounding (int): The rounding to use when asking the probability of the tags. The default value is 4 digits.</span>
 <span class="sd">        verbose (bool): Turn on/off the verbosity of the model weights download and loading. The default value is True.</span>
+<span class="sd">        path_to_retrained_model (Union[str, None]): The path to the retrained model to use for prediction. Be sure to</span>
+<span class="sd">            use the same model_type as the retrained model. For example, if you fine-tuned our pretrained fasttext model</span>
+<span class="sd">            and want to use it, model_type=&#39;fasttext&#39; and path_to_retrained_model=&#39;/path/to/fasttext_model/&#39;.</span>
+<span class="sd">            Since the architecture of fasttext and fasttext-light are similar, one can interchange both</span>
+<span class="sd">            (e.g. retrain a fasttext model and load the weights into a fasttext-light model).</span>
+<span class="sd">            Default is None, meaning we use our pre-trained model.</span>
+
 
 <span class="sd">    Note:</span>
 <span class="sd">        For both the networks, we will download the pre-trained weights and embeddings in the ``.cache`` directory</span>
-<span class="sd">        for the root user. Also, one can download all the dependencies of our pre-trained model using the</span>
+<span class="sd">        for the root user. The pre-trained weights take at most 44 MB. The fastText embeddings take 6.8 GO,</span>
+<span class="sd">        the fastText-light embeddings take 3.3 GO and bpemb take 116 MB (in .cache/bpemb).</span>
+
+<span class="sd">        Also, one can download all the dependencies of our pre-trained model using the</span>
 <span class="sd">        `deepparse.download` module (e.g. python -m deepparse.download fasttext) before sending it to a node without</span>
 <span class="sd">        access to Internet.</span>
 
 <span class="sd">    Note:</span>
-<span class="sd">        Also note that the first time the fastText model is instantiated on a computer, we download the fastText</span>
+<span class="sd">        Note that the first time the fastText model is instantiated on a computer, we download the fastText</span>
 <span class="sd">        pre-trained embeddings of 6.8 GO, and this process can be quite long (a couple of minutes).</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        You may observe a 100% CPU load the first time you call the fasttext-light model. We</span>
+<span class="sd">        `hypotheses &lt;https://github.com/GRAAL-Research/deepparse/pull/54#issuecomment-743463855&gt;`_ that this is due</span>
+<span class="sd">        to the SQLite database behind `pymagnitude`. This approach create a cache to speed up processing and since the</span>
+<span class="sd">        memory mapping is save between the runs, it&#39;s more intensive the first time you call it and subsequent</span>
+<span class="sd">        time this load doesn&#39;t appear.</span>
 
 <span class="sd">    Note:</span>
 <span class="sd">        The predictions tags are the following</span>
@@ -245,15 +275,23 @@
 <span class="sd">                address_parser = AddressParser(device=0) #on gpu device 0</span>
 <span class="sd">                parse_address = address_parser(&quot;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&quot;)</span>
 
-<span class="sd">                address_parser = AddressParser(model=&quot;fasttext&quot;, device=&quot;cpu&quot;) # fasttext model on cpu</span>
+<span class="sd">                address_parser = AddressParser(model_type=&quot;fasttext&quot;, device=&quot;cpu&quot;) # fasttext model on cpu</span>
 <span class="sd">                parse_address = address_parser(&quot;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&quot;)</span>
+
+<span class="sd">        Using a retrain model</span>
+
+<span class="sd">        .. code-block:: python</span>
+<span class="sd">                address_parser = AddressParser(model_type=&quot;fasttext&quot;,</span>
+<span class="sd">                                               path_to_retrained_model=&#39;/path_to_a_retrain_fasttext_model&#39;)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="n">model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;best&quot;</span><span class="p">,</span>
+                 <span class="n">model_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;best&quot;</span><span class="p">,</span>
                  <span class="n">device</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
                  <span class="n">rounding</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
-                 <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+                 <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                 <span class="n">path_to_retrained_model</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># pylint: disable=too-many-arguments</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_process_device</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">rounding</span> <span class="o">=</span> <span class="n">rounding</span>
@@ -261,35 +299,14 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">tags_converter</span> <span class="o">=</span> <span class="n">TagsConverter</span><span class="p">(</span><span class="n">_pre_trained_tags_to_idx</span><span class="p">)</span>
 
-        <span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">model</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;fasttext&quot;</span><span class="p">,</span> <span class="s2">&quot;fastest&quot;</span><span class="p">):</span>
-            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">),</span> <span class="s2">&quot;.cache&quot;</span><span class="p">,</span> <span class="s2">&quot;deepparse&quot;</span><span class="p">)</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">=</span> <span class="n">model_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model_factory</span><span class="p">(</span><span class="n">path_to_retrained_model</span><span class="o">=</span><span class="n">path_to_retrained_model</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
 
-            <span class="n">file_name</span> <span class="o">=</span> <span class="n">download_fasttext_embeddings</span><span class="p">(</span><span class="s2">&quot;fr&quot;</span><span class="p">,</span> <span class="n">saving_dir</span><span class="o">=</span><span class="n">path</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Loading the embeddings model&quot;</span><span class="p">)</span>
-            <span class="n">embeddings_model</span> <span class="o">=</span> <span class="n">FastTextEmbeddingsModel</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s2">AddressParser&quot;</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">vectorizer</span> <span class="o">=</span> <span class="n">FastTextVectorizer</span><span class="p">(</span><span class="n">embeddings_model</span><span class="o">=</span><span class="n">embeddings_model</span><span class="p">)</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">data_converter</span> <span class="o">=</span> <span class="n">data_padding</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">pre_trained_model</span> <span class="o">=</span> <span class="n">PreTrainedFastTextSeq2SeqModel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
-
-        <span class="k">elif</span> <span class="n">model</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;bpemb&quot;</span><span class="p">,</span> <span class="s2">&quot;best&quot;</span><span class="p">,</span> <span class="s2">&quot;lightest&quot;</span><span class="p">):</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Loading the embeddings model&quot;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">vectorizer</span> <span class="o">=</span> <span class="n">BPEmbVectorizer</span><span class="p">(</span><span class="n">embeddings_model</span><span class="o">=</span><span class="n">BPEmbEmbeddingsModel</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;multi&quot;</span><span class="p">,</span> <span class="n">vs</span><span class="o">=</span><span class="mi">100000</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">300</span><span class="p">))</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">data_converter</span> <span class="o">=</span> <span class="n">bpemb_data_padding</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">pre_trained_model</span> <span class="o">=</span> <span class="n">PreTrainedBPEmbSeq2SeqModel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;There is no </span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2"> network implemented. Value can be: &quot;</span>
-                                      <span class="sa">f</span><span class="s2">&quot;fasttext, bpemb, lightest (bpemb), fastest (fasttext) or best (bpemb).&quot;</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">pre_trained_model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+    <span class="fm">__repr__</span> <span class="o">=</span> <span class="fm">__str__</span>  <span class="c1"># to call __str__ when list of address</span>
 
 <div class="viewcode-block" id="AddressParser.__call__"><a class="viewcode-back" href="../../../parser.html#deepparse.parser.AddressParser.__call__">[docs]</a>    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">addresses_to_parse</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">],</span>
@@ -334,7 +351,7 @@
         <span class="n">padded_address</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_converter</span><span class="p">(</span><span class="n">vectorize_address</span><span class="p">)</span>
         <span class="n">padded_address</span> <span class="o">=</span> <span class="n">load_tuple_to_device</span><span class="p">(</span><span class="n">padded_address</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
 
-        <span class="n">predictions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pre_trained_model</span><span class="p">(</span><span class="o">*</span><span class="n">padded_address</span><span class="p">)</span>
+        <span class="n">predictions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="o">*</span><span class="n">padded_address</span><span class="p">)</span>
 
         <span class="n">tags_predictions</span> <span class="o">=</span> <span class="n">predictions</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="mi">2</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
         <span class="n">tags_predictions_prob</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">predictions</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="mi">2</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
@@ -343,6 +360,184 @@
                                                                              <span class="n">addresses_to_parse</span><span class="p">,</span> <span class="n">with_prob</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">tagged_addresses_components</span></div>
+
+<div class="viewcode-block" id="AddressParser.retrain"><a class="viewcode-back" href="../../../parser.html#deepparse.parser.AddressParser.retrain">[docs]</a>    <span class="k">def</span> <span class="nf">retrain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                <span class="n">dataset_container</span><span class="p">:</span> <span class="n">DatasetContainer</span><span class="p">,</span>
+                <span class="n">train_ratio</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                <span class="n">epochs</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                <span class="n">num_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="n">learning_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span>
+                <span class="n">callbacks</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span><span class="p">,</span>
+                <span class="n">logging_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;./chekpoints&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
+        <span class="c1"># pylint: disable=too-many-arguments, line-too-long, too-many-locals</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to retrain the address parser model using a dataset with the same tags. We train using</span>
+<span class="sd">        `experiment &lt;https://poutyne.org/experiment.html&gt;`_ from `poutyne &lt;https://poutyne.org/index.html&gt;`_</span>
+<span class="sd">        framework. The experiment module allow us to save checkpoints ``ckpt`` (pickle format) and a log.tsv where</span>
+<span class="sd">        the best epochs can be found (the best epoch is used in test).</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            dataset_container (~deepparse.deepparse.dataset_container.dataset_container.DatasetContainer): The</span>
+<span class="sd">                dataset container of the data to use.</span>
+<span class="sd">            train_ratio (float): The ratio to use of the dataset for the training. The rest of the data is used for the validation</span>
+<span class="sd">                (e.g. a train ratio of 0.8 mean a 80-20 train-valid split).</span>
+<span class="sd">            batch_size (int): The size of the batch.</span>
+<span class="sd">            epochs (int): number of training epochs.</span>
+<span class="sd">            num_workers (int): Number of workers to use for the data loader (default is 1 worker).</span>
+<span class="sd">            learning_rate (float): The learning rate (LR) to use for training (default 0.01). To reduce the LR during</span>
+<span class="sd">                training, use `Poutyne learning rate scheduler callback</span>
+<span class="sd">                &lt;https://github.com/GRAAL-Research/poutyne/blob/master/poutyne/framework/callbacks/lr_scheduler.py&gt;`_.</span>
+<span class="sd">            callbacks (Union[List, None]): List of callbacks to use during training.</span>
+<span class="sd">                See Poutyne `callback &lt;https://poutyne.org/callbacks.html#callback-class&gt;`_ for more information. By default</span>
+<span class="sd">                we set no callback.</span>
+<span class="sd">            seed (int): Seed to use (by default 42).</span>
+<span class="sd">            logging_path (str): The logging path for the checkpoints. By default the path is ``./chekpoints``.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            A list of dictionary with the best epoch stats (see `Experiment class</span>
+<span class="sd">            &lt;https://poutyne.org/experiment.html#poutyne.Experiment.train&gt;`_ for details).</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            We use SGD optimizer, NLL loss and accuracy as a metric, the data is shuffled and we use teacher forcing during</span>
+<span class="sd">            training (with a prob of 0.5) as in the `article &lt;https://arxiv.org/abs/2006.16152&gt;`_.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            Due to pymagnitude, we could not train using the Magnitude embeddings, meaning it&#39;s not possible to</span>
+<span class="sd">            train using the fasttext-light model. But, since we don&#39;t update the embeddings weights, one can retrain</span>
+<span class="sd">            using the fasttext model and later on use the weights with the fasttext-light.</span>
+
+<span class="sd">        Example:</span>
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                    address_parser = AddressParser(device=0) #on gpu device 0</span>
+<span class="sd">                    data_path = &#39;path_to_a_pickle_dataset.p&#39;</span>
+
+<span class="sd">                    container = PickleDatasetContainer(data_path)</span>
+
+<span class="sd">                    address_parser.retrain(container, 0.8, epochs=1, batch_size=128)</span>
+
+<span class="sd">            Using learning rate scheduler callback.</span>
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                    import poutyne</span>
+
+<span class="sd">                    address_parser = AddressParser(device=0)</span>
+<span class="sd">                    data_path = &#39;path_to_a_pickle_dataset.p&#39;</span>
+
+<span class="sd">                    container = PickleDatasetContainer(data_path)</span>
+
+<span class="sd">                    lr_scheduler = poutyne.StepLR(step_size=1, gamma=0.1) # reduce LR by a factor of 10 each epoch</span>
+<span class="sd">                    address_parser.retrain(container, 0.8, epochs=5, batch_size=128, callbacks=[lr_scheduler])</span>
+
+<span class="sd">        See `this &lt;https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py&gt;`_ for a fine</span>
+<span class="sd">        tuning example.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;fasttext-light&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;It&#39;s not possible to retrain a fasttext-light due to pymagnitude problem.&quot;</span><span class="p">)</span>
+
+        <span class="n">callbacks</span> <span class="o">=</span> <span class="p">[]</span> <span class="k">if</span> <span class="n">callbacks</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">callbacks</span>
+        <span class="n">train_generator</span><span class="p">,</span> <span class="n">valid_generator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_training_data_generator</span><span class="p">(</span><span class="n">dataset_container</span><span class="p">,</span>
+                                                                                <span class="n">train_ratio</span><span class="p">,</span>
+                                                                                <span class="n">batch_size</span><span class="p">,</span>
+                                                                                <span class="n">num_workers</span><span class="p">,</span>
+                                                                                <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+
+        <span class="n">optimizer</span> <span class="o">=</span> <span class="n">SGD</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">learning_rate</span><span class="p">)</span>
+
+        <span class="n">exp</span> <span class="o">=</span> <span class="n">Experiment</span><span class="p">(</span><span class="n">logging_path</span><span class="p">,</span>
+                         <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
+                         <span class="n">logging</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">,</span>
+                         <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
+                         <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span>
+                         <span class="n">loss_function</span><span class="o">=</span><span class="n">nll_loss</span><span class="p">,</span>
+                         <span class="n">batch_metrics</span><span class="o">=</span><span class="p">[</span><span class="n">accuracy</span><span class="p">])</span>
+
+        <span class="n">train_res</span> <span class="o">=</span> <span class="n">exp</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">train_generator</span><span class="p">,</span>
+                              <span class="n">valid_generator</span><span class="o">=</span><span class="n">valid_generator</span><span class="p">,</span>
+                              <span class="n">epochs</span><span class="o">=</span><span class="n">epochs</span><span class="p">,</span>
+                              <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
+                              <span class="n">callbacks</span><span class="o">=</span><span class="n">callbacks</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">train_res</span></div>
+
+<div class="viewcode-block" id="AddressParser.test"><a class="viewcode-back" href="../../../parser.html#deepparse.parser.AddressParser.test">[docs]</a>    <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+             <span class="n">test_dataset_container</span><span class="p">:</span> <span class="n">DatasetContainer</span><span class="p">,</span>
+             <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+             <span class="n">num_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+             <span class="n">callbacks</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+             <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span><span class="p">,</span>
+             <span class="n">logging_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;./chekpoints&quot;</span><span class="p">,</span>
+             <span class="n">checkpoint</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;best&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+        <span class="c1"># pylint: disable=too-many-arguments</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to test a retrained or a pre-trained model using a dataset with the same tags. We train using</span>
+<span class="sd">        `experiment &lt;https://poutyne.org/experiment.html&gt;`_ from `poutyne &lt;https://poutyne.org/index.html&gt;`_</span>
+<span class="sd">        framework. The experiment module allow us to save checkpoints ``ckpt`` (pickle format) and a log.tsv where</span>
+<span class="sd">        the best epochs can be found (the best epoch is use in test).</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            test_dataset_container (~deepparse.deepparse.dataset_container.dataset_container.DatasetContainer):</span>
+<span class="sd">                The test dataset container of the data to use.</span>
+<span class="sd">            callbacks (Union[List, None]): List of callbacks to use during training.</span>
+<span class="sd">                See Poutyne `callback &lt;https://poutyne.org/callbacks.html#callback-class&gt;`_ for more information.</span>
+<span class="sd">                By default we set no callback.</span>
+<span class="sd">            seed (int): Seed to use (by default 42).</span>
+<span class="sd">            logging_path (str): The logging path for the checkpoints. By default the path is ``./chekpoints``.</span>
+<span class="sd">            checkpoint (Union[str, int]): Checkpoint to use for the test.</span>
+<span class="sd">                - If &#39;best&#39;, will load the best weights.</span>
+<span class="sd">                - If &#39;last&#39;, will load the last model checkpoint.</span>
+<span class="sd">                - If int, will load a specific checkpoint (e.g. 3).</span>
+<span class="sd">                - If &#39;str&#39;, will load a specific model (e.g. a retrained model), must be a path to a pickled format</span>
+<span class="sd">                    model i.e. ends with a &#39;.p&#39; extension (e.g. retrained_model.p).</span>
+<span class="sd">                - If &#39;fasttext&#39;, will load our pre-trained fasttext model and test it on your data.</span>
+<span class="sd">                    (Need to have Poutyne&gt;=1.2 to work)</span>
+<span class="sd">                - If &#39;bpemb&#39;, will load our pre-trained bpemb model and test it on your data.</span>
+<span class="sd">                    (Need to have Poutyne&gt;=1.2 to work)</span>
+<span class="sd">        Return:</span>
+<span class="sd">            A dictionary with the best epoch stats (see `Experiment class</span>
+<span class="sd">            &lt;https://poutyne.org/experiment.html#poutyne.Experiment.train&gt;`_ for details).</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            We use NLL loss and accuracy as in the `article &lt;https://arxiv.org/abs/2006.16152&gt;`_.</span>
+
+<span class="sd">        Example:</span>
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                    address_parser = AddressParser(device=0) #on gpu device 0</span>
+<span class="sd">                    data_path = &#39;path_to_a_pickle_test_dataset.p&#39;</span>
+
+<span class="sd">                    test_container = PickleDatasetContainer(data_path)</span>
+
+<span class="sd">                    address_parser.test(test_container) # using the default best epoch</span>
+<span class="sd">                    address_parser.test(test_container, checkpoint=&#39;last&#39;) # using the last epoch</span>
+<span class="sd">                    address_parser.test(test_container, checkpoint=5) # using the epoch 5 model</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;fasttext-light&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;It&#39;s not possible to test a fasttext-light due to pymagnitude problem.&quot;</span><span class="p">)</span>
+
+        <span class="n">callbacks</span> <span class="o">=</span> <span class="p">[]</span> <span class="k">if</span> <span class="n">callbacks</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">callbacks</span>
+        <span class="n">data_transform</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set_data_transformer</span><span class="p">()</span>
+
+        <span class="n">test_generator</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">test_dataset_container</span><span class="p">,</span>
+                                    <span class="n">collate_fn</span><span class="o">=</span><span class="n">data_transform</span><span class="o">.</span><span class="n">output_transform</span><span class="p">,</span>
+                                    <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+                                    <span class="n">num_workers</span><span class="o">=</span><span class="n">num_workers</span><span class="p">)</span>
+
+        <span class="n">exp</span> <span class="o">=</span> <span class="n">Experiment</span><span class="p">(</span><span class="n">logging_path</span><span class="p">,</span>
+                         <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
+                         <span class="n">logging</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">,</span>
+                         <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
+                         <span class="n">loss_function</span><span class="o">=</span><span class="n">nll_loss</span><span class="p">,</span>
+                         <span class="n">batch_metrics</span><span class="o">=</span><span class="p">[</span><span class="n">accuracy</span><span class="p">])</span>
+
+        <span class="n">checkpoint</span> <span class="o">=</span> <span class="n">handle_checkpoint</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">)</span>
+
+        <span class="n">test_res</span> <span class="o">=</span> <span class="n">exp</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="n">test_generator</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="n">callbacks</span><span class="p">,</span> <span class="n">checkpoint</span><span class="o">=</span><span class="n">checkpoint</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">test_res</span></div>
 
     <span class="k">def</span> <span class="nf">_fill_tagged_addresses_components</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tags_predictions</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">,</span> <span class="n">tags_predictions_prob</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">,</span>
                                           <span class="n">addresses_to_parse</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
@@ -387,7 +582,76 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Device should not be a negative number.&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Device should be a string, an int or a torch device.&quot;</span><span class="p">)</span></div>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Device should be a string, an int or a torch device.&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_set_data_transformer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">train_vectorizer</span> <span class="o">=</span> <span class="n">TrainVectorizer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vectorizer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tags_converter</span><span class="p">)</span>  <span class="c1"># vectorize to provide also the target</span>
+        <span class="n">data_transform</span> <span class="o">=</span> <span class="n">DataTransform</span><span class="p">(</span><span class="n">train_vectorizer</span><span class="p">,</span>
+                                       <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="p">)</span>  <span class="c1"># use for transforming the data prior to training</span>
+        <span class="k">return</span> <span class="n">data_transform</span>
+
+    <span class="k">def</span> <span class="nf">_create_training_data_generator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset_container</span><span class="p">:</span> <span class="n">DatasetContainer</span><span class="p">,</span> <span class="n">train_ratio</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                                        <span class="n">num_workers</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">:</span>
+        <span class="c1"># pylint: disable=too-many-arguments</span>
+        <span class="n">data_transform</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set_data_transformer</span><span class="p">()</span>
+
+        <span class="n">train_indices</span><span class="p">,</span> <span class="n">valid_indices</span> <span class="o">=</span> <span class="n">indices_splitting</span><span class="p">(</span><span class="n">num_data</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">dataset_container</span><span class="p">),</span>
+                                                         <span class="n">train_ratio</span><span class="o">=</span><span class="n">train_ratio</span><span class="p">,</span>
+                                                         <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+
+        <span class="n">train_dataset</span> <span class="o">=</span> <span class="n">Subset</span><span class="p">(</span><span class="n">dataset_container</span><span class="p">,</span> <span class="n">train_indices</span><span class="p">)</span>
+        <span class="n">train_generator</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">train_dataset</span><span class="p">,</span>
+                                     <span class="n">collate_fn</span><span class="o">=</span><span class="n">data_transform</span><span class="o">.</span><span class="n">teacher_forcing_transform</span><span class="p">,</span>
+                                     <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+                                     <span class="n">num_workers</span><span class="o">=</span><span class="n">num_workers</span><span class="p">,</span>
+                                     <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">valid_dataset</span> <span class="o">=</span> <span class="n">Subset</span><span class="p">(</span><span class="n">dataset_container</span><span class="p">,</span> <span class="n">valid_indices</span><span class="p">)</span>
+        <span class="n">valid_generator</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">valid_dataset</span><span class="p">,</span>
+                                     <span class="n">collate_fn</span><span class="o">=</span><span class="n">data_transform</span><span class="o">.</span><span class="n">output_transform</span><span class="p">,</span>
+                                     <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+                                     <span class="n">num_workers</span><span class="o">=</span><span class="n">num_workers</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">train_generator</span><span class="p">,</span> <span class="n">valid_generator</span>
+
+    <span class="k">def</span> <span class="nf">_model_factory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_to_retrained_model</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Model factory to create the vectorizer, the data converter and the pre-trained model</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;fasttext&quot;</span><span class="p">,</span> <span class="s2">&quot;fastest&quot;</span><span class="p">,</span> <span class="s2">&quot;fasttext-light&quot;</span><span class="p">,</span> <span class="s2">&quot;lightest&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;fasttext-light&quot;</span><span class="p">,</span> <span class="s2">&quot;lightest&quot;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">=</span> <span class="s2">&quot;fasttext-light&quot;</span>  <span class="c1"># we change name to &#39;fasttext-light&#39; since name can be lightest</span>
+                <span class="n">file_name</span> <span class="o">=</span> <span class="n">download_fasttext_magnitude_embeddings</span><span class="p">(</span><span class="n">saving_dir</span><span class="o">=</span><span class="n">CACHE_PATH</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
+
+                <span class="n">embeddings_model</span> <span class="o">=</span> <span class="n">MagnitudeEmbeddingsModel</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">vectorizer</span> <span class="o">=</span> <span class="n">MagnitudeVectorizer</span><span class="p">(</span><span class="n">embeddings_model</span><span class="o">=</span><span class="n">embeddings_model</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">=</span> <span class="s2">&quot;fasttext&quot;</span>  <span class="c1"># we change name to fasttext since name can be fastest</span>
+                <span class="n">file_name</span> <span class="o">=</span> <span class="n">download_fasttext_embeddings</span><span class="p">(</span><span class="n">saving_dir</span><span class="o">=</span><span class="n">CACHE_PATH</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
+
+                <span class="n">embeddings_model</span> <span class="o">=</span> <span class="n">FastTextEmbeddingsModel</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">vectorizer</span> <span class="o">=</span> <span class="n">FastTextVectorizer</span><span class="p">(</span><span class="n">embeddings_model</span><span class="o">=</span><span class="n">embeddings_model</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_converter</span> <span class="o">=</span> <span class="n">fasttext_data_padding</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">FastTextSeq2SeqModel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
+                                              <span class="n">verbose</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">,</span>
+                                              <span class="n">path_to_retrained_model</span><span class="o">=</span><span class="n">path_to_retrained_model</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;bpemb&quot;</span><span class="p">,</span> <span class="s2">&quot;best&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">=</span> <span class="s2">&quot;bpemb&quot;</span>  <span class="c1"># we change name to bpemb since name can be best</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vectorizer</span> <span class="o">=</span> <span class="n">BPEmbVectorizer</span><span class="p">(</span>
+                <span class="n">embeddings_model</span><span class="o">=</span><span class="n">BPEmbEmbeddingsModel</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;multi&quot;</span><span class="p">,</span> <span class="n">vs</span><span class="o">=</span><span class="mi">100000</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">300</span><span class="p">))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_converter</span> <span class="o">=</span> <span class="n">bpemb_data_padding</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">BPEmbSeq2SeqModel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
+                                           <span class="n">verbose</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">,</span>
+                                           <span class="n">path_to_retrained_model</span><span class="o">=</span><span class="n">path_to_retrained_model</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;There is no </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="si">}</span><span class="s2"> network implemented. Value should be: &quot;</span>
+                                      <span class="sa">f</span><span class="s2">&quot;fasttext, bpemb, lightest (fasttext-light), fastest (fasttext) &quot;</span>
+                                      <span class="sa">f</span><span class="s2">&quot;or best (bpemb).&quot;</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

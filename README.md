@@ -45,7 +45,7 @@ and this one for the package;
 ```python
 from deepparse.parser import AddressParser
 
-address_parser = AddressParser(model="bpemb", device=0)
+address_parser = AddressParser(model_type="bpemb", device=0)
 
 # you can parse one address
 parsed_address = address_parser("350 rue des Lilas Ouest Québec Québec G1L 1B6")

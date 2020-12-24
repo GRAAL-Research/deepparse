@@ -1,20 +1,27 @@
-import os
 import re
-from typing import List, Union
+from typing import List, Union, Dict, Tuple
 
 import torch
 from numpy.core.multiarray import ndarray
+from poutyne.framework import Experiment
+from torch.optim import SGD
+from torch.utils.data import DataLoader, Subset
 
 from .parsed_address import ParsedAddress
-from .. import load_tuple_to_device, download_fasttext_embeddings, download_fasttext_magnitude_embeddings
-from ..converter import TagsConverter, data_padding
-from ..converter.data_padding import bpemb_data_padding
+from .. import CACHE_PATH, handle_checkpoint, indices_splitting
+from .. import load_tuple_to_device, download_fasttext_magnitude_embeddings
+from ..converter import TagsConverter
+from ..converter import fasttext_data_padding, bpemb_data_padding, DataTransform
+from ..dataset_container import DatasetContainer
 from ..embeddings_models import BPEmbEmbeddingsModel
 from ..embeddings_models import FastTextEmbeddingsModel
-from ..embeddings_models.magnitude_embeddings_model import MagnitudeEmbeddingsModel
-from ..network.pre_trained_bpemb_seq2seq import PreTrainedBPEmbSeq2SeqModel
-from ..network.pre_trained_fasttext_seq2seq import PreTrainedFastTextSeq2SeqModel
+from ..embeddings_models import MagnitudeEmbeddingsModel
+from ..fasttext_tools import download_fasttext_embeddings
+from ..metrics import nll_loss, accuracy
+from ..network.bpemb_seq2seq import BPEmbSeq2SeqModel
+from ..network.fasttext_seq2seq import FastTextSeq2SeqModel
 from ..vectorizer import FastTextVectorizer, BPEmbVectorizer
+from ..vectorizer import TrainVectorizer
 from ..vectorizer.magnitude_vectorizer import MagnitudeVectorizer
 
 _pre_trained_tags_to_idx = {
@@ -40,7 +47,7 @@ class AddressParser:
     networks either with fastText or BPEmb.
 
     Args:
-        model (str): The network name to use, can be either:
+        model_type (str): The network name to use, can be either:
 
             - fasttext (need ~9 GO of RAM to be used);
             - fasttext-light (need ~2 GO of RAM to be used, but slower than fasttext version);
@@ -60,6 +67,13 @@ class AddressParser:
             The default value is GPU with the index ``0`` if it exist, otherwise the value is ``CPU``.
         rounding (int): The rounding to use when asking the probability of the tags. The default value is 4 digits.
         verbose (bool): Turn on/off the verbosity of the model weights download and loading. The default value is True.
+        path_to_retrained_model (Union[str, None]): The path to the retrained model to use for prediction. Be sure to
+            use the same model_type as the retrained model. For example, if you fine-tuned our pretrained fasttext model
+            and want to use it, model_type='fasttext' and path_to_retrained_model='/path/to/fasttext_model/'.
+            Since the architecture of fasttext and fasttext-light are similar, one can interchange both
+            (e.g. retrain a fasttext model and load the weights into a fasttext-light model).
+            Default is None, meaning we use our pre-trained model.
+
 
     Note:
         For both the networks, we will download the pre-trained weights and embeddings in the ``.cache`` directory
@@ -100,15 +114,23 @@ class AddressParser:
                 address_parser = AddressParser(device=0) #on gpu device 0
                 parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
 
-                address_parser = AddressParser(model="fasttext", device="cpu") # fasttext model on cpu
+                address_parser = AddressParser(model_type="fasttext", device="cpu") # fasttext model on cpu
                 parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
+
+        Using a retrain model
+
+        .. code-block:: python
+                address_parser = AddressParser(model_type="fasttext",
+                                               path_to_retrained_model='/path_to_a_retrain_fasttext_model')
     """
 
     def __init__(self,
-                 model: str = "best",
+                 model_type: str = "best",
                  device: Union[int, str, torch.device] = 0,
                  rounding: int = 4,
-                 verbose: bool = True) -> None:
+                 verbose: bool = True,
+                 path_to_retrained_model: Union[str, None] = None) -> None:
+        # pylint: disable=too-many-arguments
         self._process_device(device)
 
         self.rounding = rounding
@@ -116,9 +138,14 @@ class AddressParser:
 
         self.tags_converter = TagsConverter(_pre_trained_tags_to_idx)
 
-        self._model_factory(model)
+        self.model_type = model_type.lower()
+        self._model_factory(path_to_retrained_model=path_to_retrained_model)
+        self.model.eval()
 
-        self.pre_trained_model.eval()
+    def __str__(self) -> str:
+        return f"{self.model_type.capitalize()}AddressParser"
+
+    __repr__ = __str__  # to call __str__ when list of address
 
     def __call__(self,
                  addresses_to_parse: Union[List[str], str],
@@ -163,7 +190,7 @@ class AddressParser:
         padded_address = self.data_converter(vectorize_address)
         padded_address = load_tuple_to_device(padded_address, self.device)
 
-        predictions = self.pre_trained_model(*padded_address)
+        predictions = self.model(*padded_address)
 
         tags_predictions = predictions.max(2)[1].transpose(0, 1).cpu().numpy()
         tags_predictions_prob = torch.exp(predictions.max(2)[0]).transpose(0, 1).detach().cpu().numpy()
@@ -172,6 +199,184 @@ class AddressParser:
                                                                              addresses_to_parse, with_prob)
 
         return tagged_addresses_components
+
+    def retrain(self,
+                dataset_container: DatasetContainer,
+                train_ratio: float,
+                batch_size: int,
+                epochs: int,
+                num_workers: int = 1,
+                learning_rate: float = 0.01,
+                callbacks: Union[List, None] = None,
+                seed: int = 42,
+                logging_path: str = "./chekpoints") -> List[Dict]:
+        # pylint: disable=too-many-arguments, line-too-long, too-many-locals
+        """
+        Method to retrain the address parser model using a dataset with the same tags. We train using
+        `experiment <https://poutyne.org/experiment.html>`_ from `poutyne <https://poutyne.org/index.html>`_
+        framework. The experiment module allow us to save checkpoints ``ckpt`` (pickle format) and a log.tsv where
+        the best epochs can be found (the best epoch is used in test).
+
+        Args:
+            dataset_container (~deepparse.deepparse.dataset_container.dataset_container.DatasetContainer): The
+                dataset container of the data to use.
+            train_ratio (float): The ratio to use of the dataset for the training. The rest of the data is used for the validation
+                (e.g. a train ratio of 0.8 mean a 80-20 train-valid split).
+            batch_size (int): The size of the batch.
+            epochs (int): number of training epochs.
+            num_workers (int): Number of workers to use for the data loader (default is 1 worker).
+            learning_rate (float): The learning rate (LR) to use for training (default 0.01). To reduce the LR during
+                training, use `Poutyne learning rate scheduler callback
+                <https://github.com/GRAAL-Research/poutyne/blob/master/poutyne/framework/callbacks/lr_scheduler.py>`_.
+            callbacks (Union[List, None]): List of callbacks to use during training.
+                See Poutyne `callback <https://poutyne.org/callbacks.html#callback-class>`_ for more information. By default
+                we set no callback.
+            seed (int): Seed to use (by default 42).
+            logging_path (str): The logging path for the checkpoints. By default the path is ``./chekpoints``.
+
+        Return:
+            A list of dictionary with the best epoch stats (see `Experiment class
+            <https://poutyne.org/experiment.html#poutyne.Experiment.train>`_ for details).
+
+        Note:
+            We use SGD optimizer, NLL loss and accuracy as a metric, the data is shuffled and we use teacher forcing during
+            training (with a prob of 0.5) as in the `article <https://arxiv.org/abs/2006.16152>`_.
+
+        Note:
+            Due to pymagnitude, we could not train using the Magnitude embeddings, meaning it's not possible to
+            train using the fasttext-light model. But, since we don't update the embeddings weights, one can retrain
+            using the fasttext model and later on use the weights with the fasttext-light.
+
+        Example:
+
+            .. code-block:: python
+
+                    address_parser = AddressParser(device=0) #on gpu device 0
+                    data_path = 'path_to_a_pickle_dataset.p'
+
+                    container = PickleDatasetContainer(data_path)
+
+                    address_parser.retrain(container, 0.8, epochs=1, batch_size=128)
+
+            Using learning rate scheduler callback.
+
+            .. code-block:: python
+
+                    import poutyne
+
+                    address_parser = AddressParser(device=0)
+                    data_path = 'path_to_a_pickle_dataset.p'
+
+                    container = PickleDatasetContainer(data_path)
+
+                    lr_scheduler = poutyne.StepLR(step_size=1, gamma=0.1) # reduce LR by a factor of 10 each epoch
+                    address_parser.retrain(container, 0.8, epochs=5, batch_size=128, callbacks=[lr_scheduler])
+
+        See `this <https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py>`_ for a fine
+        tuning example.
+        """
+        if self.model_type == "fasttext-light":
+            raise ValueError("It's not possible to retrain a fasttext-light due to pymagnitude problem.")
+
+        callbacks = [] if callbacks is None else callbacks
+        train_generator, valid_generator = self._create_training_data_generator(dataset_container,
+                                                                                train_ratio,
+                                                                                batch_size,
+                                                                                num_workers,
+                                                                                seed=seed)
+
+        optimizer = SGD(self.model.parameters(), learning_rate)
+
+        exp = Experiment(logging_path,
+                         self.model,
+                         logging=self.verbose,
+                         device=self.device,
+                         optimizer=optimizer,
+                         loss_function=nll_loss,
+                         batch_metrics=[accuracy])
+
+        train_res = exp.train(train_generator,
+                              valid_generator=valid_generator,
+                              epochs=epochs,
+                              seed=seed,
+                              callbacks=callbacks)
+        return train_res
+
+    def test(self,
+             test_dataset_container: DatasetContainer,
+             batch_size: int,
+             num_workers: int = 1,
+             callbacks: Union[List, None] = None,
+             seed: int = 42,
+             logging_path: str = "./chekpoints",
+             checkpoint: Union[str, int] = "best") -> Dict:
+        # pylint: disable=too-many-arguments
+        """
+        Method to test a retrained or a pre-trained model using a dataset with the same tags. We train using
+        `experiment <https://poutyne.org/experiment.html>`_ from `poutyne <https://poutyne.org/index.html>`_
+        framework. The experiment module allow us to save checkpoints ``ckpt`` (pickle format) and a log.tsv where
+        the best epochs can be found (the best epoch is use in test).
+
+        Args:
+            test_dataset_container (~deepparse.deepparse.dataset_container.dataset_container.DatasetContainer):
+                The test dataset container of the data to use.
+            callbacks (Union[List, None]): List of callbacks to use during training.
+                See Poutyne `callback <https://poutyne.org/callbacks.html#callback-class>`_ for more information.
+                By default we set no callback.
+            seed (int): Seed to use (by default 42).
+            logging_path (str): The logging path for the checkpoints. By default the path is ``./chekpoints``.
+            checkpoint (Union[str, int]): Checkpoint to use for the test.
+                - If 'best', will load the best weights.
+                - If 'last', will load the last model checkpoint.
+                - If int, will load a specific checkpoint (e.g. 3).
+                - If 'str', will load a specific model (e.g. a retrained model), must be a path to a pickled format
+                    model i.e. ends with a '.p' extension (e.g. retrained_model.p).
+                - If 'fasttext', will load our pre-trained fasttext model and test it on your data.
+                    (Need to have Poutyne>=1.2 to work)
+                - If 'bpemb', will load our pre-trained bpemb model and test it on your data.
+                    (Need to have Poutyne>=1.2 to work)
+        Return:
+            A dictionary with the best epoch stats (see `Experiment class
+            <https://poutyne.org/experiment.html#poutyne.Experiment.train>`_ for details).
+
+        Note:
+            We use NLL loss and accuracy as in the `article <https://arxiv.org/abs/2006.16152>`_.
+
+        Example:
+
+            .. code-block:: python
+
+                    address_parser = AddressParser(device=0) #on gpu device 0
+                    data_path = 'path_to_a_pickle_test_dataset.p'
+
+                    test_container = PickleDatasetContainer(data_path)
+
+                    address_parser.test(test_container) # using the default best epoch
+                    address_parser.test(test_container, checkpoint='last') # using the last epoch
+                    address_parser.test(test_container, checkpoint=5) # using the epoch 5 model
+        """
+        if self.model_type == "fasttext-light":
+            raise ValueError("It's not possible to test a fasttext-light due to pymagnitude problem.")
+
+        callbacks = [] if callbacks is None else callbacks
+        data_transform = self._set_data_transformer()
+
+        test_generator = DataLoader(test_dataset_container,
+                                    collate_fn=data_transform.output_transform,
+                                    batch_size=batch_size,
+                                    num_workers=num_workers)
+
+        exp = Experiment(logging_path,
+                         self.model,
+                         logging=self.verbose,
+                         device=self.device,
+                         loss_function=nll_loss,
+                         batch_metrics=[accuracy])
+
+        checkpoint = handle_checkpoint(checkpoint)
+
+        test_res = exp.test(test_generator, seed=seed, callbacks=callbacks, checkpoint=checkpoint)
+        return test_res
 
     def _fill_tagged_addresses_components(self, tags_predictions: ndarray, tags_predictions_prob: ndarray,
                                           addresses_to_parse: List[str],
@@ -218,37 +423,71 @@ class AddressParser:
         else:
             raise ValueError("Device should be a string, an int or a torch device.")
 
-    def _model_factory(self, model: str) -> None:
+    def _set_data_transformer(self):
+        train_vectorizer = TrainVectorizer(self.vectorizer, self.tags_converter)  # vectorize to provide also the target
+        data_transform = DataTransform(train_vectorizer,
+                                       self.model_type)  # use for transforming the data prior to training
+        return data_transform
+
+    def _create_training_data_generator(self, dataset_container: DatasetContainer, train_ratio: float, batch_size: int,
+                                        num_workers: int, seed: int) -> Tuple:
+        # pylint: disable=too-many-arguments
+        data_transform = self._set_data_transformer()
+
+        train_indices, valid_indices = indices_splitting(num_data=len(dataset_container),
+                                                         train_ratio=train_ratio,
+                                                         seed=seed)
+
+        train_dataset = Subset(dataset_container, train_indices)
+        train_generator = DataLoader(train_dataset,
+                                     collate_fn=data_transform.teacher_forcing_transform,
+                                     batch_size=batch_size,
+                                     num_workers=num_workers,
+                                     shuffle=True)
+
+        valid_dataset = Subset(dataset_container, valid_indices)
+        valid_generator = DataLoader(valid_dataset,
+                                     collate_fn=data_transform.output_transform,
+                                     batch_size=batch_size,
+                                     num_workers=num_workers)
+
+        return train_generator, valid_generator
+
+    def _model_factory(self, path_to_retrained_model: Union[str, None] = None) -> None:
         """
         Model factory to create the vectorizer, the data converter and the pre-trained model
         """
-        model = model.lower()
-        if model in ("fasttext", "fastest", "fasttext-light", "lightest"):
-            path = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
-            os.makedirs(path, exist_ok=True)
-
-            if model in ("fasttext-light", "lightest"):
-                file_name = download_fasttext_magnitude_embeddings(saving_dir=path, verbose=self.verbose)
+        if self.model_type in ("fasttext", "fastest", "fasttext-light", "lightest"):
+            if self.model_type in ("fasttext-light", "lightest"):
+                self.model_type = "fasttext-light"  # we change name to 'fasttext-light' since name can be lightest
+                file_name = download_fasttext_magnitude_embeddings(saving_dir=CACHE_PATH, verbose=self.verbose)
 
                 embeddings_model = MagnitudeEmbeddingsModel(file_name, verbose=self.verbose)
                 self.vectorizer = MagnitudeVectorizer(embeddings_model=embeddings_model)
             else:
-                file_name = download_fasttext_embeddings(saving_dir=path, verbose=self.verbose)
+                self.model_type = "fasttext"  # we change name to fasttext since name can be fastest
+                file_name = download_fasttext_embeddings(saving_dir=CACHE_PATH, verbose=self.verbose)
 
                 embeddings_model = FastTextEmbeddingsModel(file_name, verbose=self.verbose)
                 self.vectorizer = FastTextVectorizer(embeddings_model=embeddings_model)
 
-            self.data_converter = data_padding
+            self.data_converter = fasttext_data_padding
 
-            self.pre_trained_model = PreTrainedFastTextSeq2SeqModel(self.device, verbose=self.verbose)
+            self.model = FastTextSeq2SeqModel(self.device,
+                                              verbose=self.verbose,
+                                              path_to_retrained_model=path_to_retrained_model)
 
-        elif model in ("bpemb", "best"):
+        elif self.model_type in ("bpemb", "best"):
+            self.model_type = "bpemb"  # we change name to bpemb since name can be best
             self.vectorizer = BPEmbVectorizer(
                 embeddings_model=BPEmbEmbeddingsModel(verbose=self.verbose, lang="multi", vs=100000, dim=300))
 
             self.data_converter = bpemb_data_padding
 
-            self.pre_trained_model = PreTrainedBPEmbSeq2SeqModel(self.device, verbose=self.verbose)
+            self.model = BPEmbSeq2SeqModel(self.device,
+                                           verbose=self.verbose,
+                                           path_to_retrained_model=path_to_retrained_model)
         else:
-            raise NotImplementedError(f"There is no {model} network implemented. Value can be: "
-                                      f"fasttext, bpemb, lightest (bpemb), fastest (fasttext) or best (bpemb).")
+            raise NotImplementedError(f"There is no {self.model_type} network implemented. Value should be: "
+                                      f"fasttext, bpemb, lightest (fasttext-light), fastest (fasttext) "
+                                      f"or best (bpemb).")

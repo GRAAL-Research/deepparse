@@ -1,17 +1,13 @@
-.. deepparse documentation master file, created by
-   sphinx-quickstart on Sat Feb 17 12:19:43 2018.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
-
 :github_url: https://github.com/GRAAL-Research/deepparse
 
 
 .. meta::
+
   :description: deepparse is a state-of-the-art library for parsing multinational street addresses using deep learning
   :keywords: deepparse, deep learning, pytorch, neural network, machine learning, natural language processing, parsing, data science, python
   :author: Marouane Yassine & David Beauchemin
   :property="og:image": https://deepparse.org/_static/logos/logo.png
+
 
 Here is deepparse
 =================
@@ -21,6 +17,7 @@ Deepparse is a state-of-the-art library for parsing multinational street address
 Use deepparse to:
 
 - Use the pre-trained models to parse multinational addresses.
+- Retrain our pre-trained model using your data.
 
 Read the documentation at `deepparse.org <https://deepparse.org>`_.
 
@@ -29,6 +26,7 @@ Deepparse is compatible with the **latest version of PyTorch** and  **Python >= 
 
 Cite
 ----
+
 .. code-block:: bib
 
    @misc{yassine2020leveraging,
@@ -53,11 +51,12 @@ and this one for the package;
 
 Getting started
 ===============
+
 .. code-block:: python
 
    from deepparse.parser import AddressParser
 
-   address_parser = AddressParser(model="bpemb", device=0)
+   address_parser = AddressParser(model_type="bpemb", device=0)
 
    # you can parse one address
    parsed_address = address_parser("350 rue des Lilas Ouest Québec Québec G1L 1B6")
@@ -101,6 +100,14 @@ API Reference
   :caption: API
 
   parser
+  dataset_container
+
+.. toctree::
+  :glob:
+  :maxdepth: 1
+  :caption: Examples
+
+  examples/fine_tuning
 
 Indices and tables
 ==================

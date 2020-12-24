@@ -3,6 +3,7 @@
 
 import argparse
 import os
+import unittest
 from unittest import TestCase
 from unittest.mock import patch
 
@@ -179,3 +180,7 @@ class DownloadTests(TestCase):
             download.main(args_parser)
 
             downloader.assert_not_called()
+
+
+if __name__ == "__main__":
+    unittest.main()

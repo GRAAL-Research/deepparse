@@ -5,6 +5,7 @@ import gzip
 import io
 import os
 import sys
+import unittest
 from unittest import TestCase
 from unittest.mock import patch
 
@@ -75,3 +76,7 @@ class ToolsTests(TestCase):
                               self.test_out.getvalue().strip())
 
         self.assertStdoutContains(["[", ">", "=", "]"])
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -1,5 +1,7 @@
-from numpy.core.multiarray import ndarray
+import warnings
+
 from bpemb import BPEmb
+from numpy.core.multiarray import ndarray
 
 from .embeddings_model import EmbeddingsModel
 
@@ -17,7 +19,12 @@ class BPEmbEmbeddingsModel(EmbeddingsModel):
 
     def __init__(self, verbose: bool = True, **kwargs) -> None:
         super().__init__(verbose=verbose)
-        self.model = BPEmb(**kwargs)
+        with warnings.catch_warnings():
+            # annoying scipy.sparcetools private module warnings removal
+            # annoying boto warnings
+            warnings.filterwarnings("ignore")
+            model = BPEmb(**kwargs)
+        self.model = model
 
     def __call__(self, word: str) -> ndarray:
         """

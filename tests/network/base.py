@@ -1,51 +1,47 @@
 # Bug with PyTorch source code makes torch.tensor as not callable for pylint.
 # pylint: disable=not-callable
 
-import pickle
+import os
 from unittest import TestCase
+from unittest.mock import MagicMock
 
 import torch
 
 
-class PreTrainedSeq2SeqTestCase(TestCase):
+class Seq2SeqTestCase(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.a_torch_device = torch.device("cuda:0")
-        cls.begin_of_sequence_idx = -1  # BOS
-        cls.encoder_hidden_size = 1024
-        cls.number_of_tags = 9  # tag space of our models
+        cls.a_torch_device = torch.device("cpu")
+        cls.verbose = False
+        cls.a_batch_size = 2
+        cls.a_none_target = None
+        cls.a_value_lower_than_threshold = 0.1
+        cls.a_target_vector = torch.tensor([[0, 1, 1, 4, 5, 8], [1, 0, 3, 8, 0, 0]], device=cls.a_torch_device)
+        cls.a_transpose_target_vector = cls.a_target_vector.transpose(0, 1)
 
-    def encoder_input_setUp(self, model_type: str):
-        # try except to manage pytest path to file
-        try:
-            file = open(f"./tests/network/to_predict_{model_type}.p", "rb")
-        except FileNotFoundError:
-            file = open(f"./to_predict_{model_type}.p", "rb")
-        self.to_predict_tensor = pickle.load(file)
-        self.to_predict_tensor = self.to_predict_tensor.to(self.a_torch_device)
-        file.close()
+        cls.a_root_path = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
 
-        self.a_lengths_tensor = torch.tensor([6, 6], device=self.a_torch_device)
-        self.a_batch_size = 2
+        cls.a_path_to_retrained_model = "a/path/to/a/retrain/model"
 
-    def encoder_output_setUp(self):
-        self.decoder_input = torch.tensor([[[-1.], [-1.]]], device=self.a_torch_device)
+    def setup_encoder_mocks(self):
+        to_predict_mock = MagicMock()
+        lengths_tensor_mock = MagicMock()
+        return to_predict_mock, lengths_tensor_mock
 
-        # try except to manage pytest path to file
-        try:
-            file = open("./tests/network/decoder_hidden.p", "rb")
-        except FileNotFoundError:
-            file = open("./decoder_hidden.p", "rb")
-        self.decoder_hidden_tensor = pickle.load(file)
-        self.decoder_hidden_tensor = (self.decoder_hidden_tensor[0].to(self.a_torch_device),
-                                      self.decoder_hidden_tensor[1].to(self.a_torch_device))
-        file.close()
+    def setUp_decoder_mocks(self, decoder_mock):
+        decoder_input_mock = MagicMock()
+        decoder_hidden_mock = MagicMock()
 
-    def decoder_input_setUp(self):
-        self.max_length = self.a_lengths_tensor[0].item()
+        decoder_output = MagicMock()
+        decoder_output.topk.return_value = MagicMock(), decoder_input_mock
+        decoder_mock().return_value = decoder_output, decoder_hidden_mock
 
-    def assert_output_is_valid_dim(self, actual_prediction):
-        self.assertEqual(self.max_length + 1, actual_prediction.shape[0])  # + 1 since end-of-sequence (EOS)
-        self.assertEqual(self.a_batch_size, actual_prediction.shape[1])
-        self.assertEqual(self.number_of_tags, actual_prediction.shape[2])
+        return decoder_input_mock, decoder_hidden_mock
+
+    def assert_has_calls_tensor_equals(self, decoder_mock, expected_calls):
+        # since we can't compare tensor in calls, we open it and compare each elements
+        decoder_mock_calls = decoder_mock.mock_calls[4:8]
+        for decoder_mock_call, expected_call in zip(decoder_mock_calls, expected_calls):
+            self.assertEqual(decoder_mock_call[1][0].tolist(), expected_call[1][0].tolist())  # the tensor
+            self.assertEqual(decoder_mock_call[1][1], expected_call[1][1])  # The other element of the call

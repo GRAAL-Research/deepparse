@@ -65,17 +65,18 @@ def load_tuple_to_device(padded_address, device):
     return tuple([element.to(device) if isinstance(element, torch.Tensor) else element for element in padded_address])
 
 
-# todo add test
-def handle_pre_trained_checkpoint(checkpoint: str) -> str:
+def handle_pre_trained_checkpoint(model_type_checkpoint: str) -> str:
     """
     Handle the checkpoint formatting for pre trained models.
     """
     if float(poutyne.version.__version__) < 1.2:
-        raise NotImplementedError(f"To load the pre-trained {checkpoint} model, you need to have a Poutyne version"
-                                  "greater than 1.1 (>1.1)")
-    if not latest_version(checkpoint, cache_path=CACHE_PATH):
-        warnings.warn("A newer model of fasttext is available, you can download it using the download script.")
-    checkpoint = os.path.join(CACHE_PATH, f"{checkpoint}.ckpt")
+        raise NotImplementedError(
+            f"To load the pre-trained {model_type_checkpoint} model, you need to have a Poutyne version"
+            "greater than 1.1 (>1.1)")
+    if not latest_version(model_type_checkpoint, cache_path=CACHE_PATH):
+        warnings.warn("A newer model of fasttext is available, you can download it using the download script.",
+                      UserWarning)
+    checkpoint = os.path.join(CACHE_PATH, f"{model_type_checkpoint}.ckpt")
     return checkpoint
 
 

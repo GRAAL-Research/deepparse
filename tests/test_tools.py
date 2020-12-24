@@ -1,5 +1,5 @@
 # Since we use a patch to mock verify last we skip the unused argument error
-# pylint: disable=W0613
+# pylint: disable=W0613, too-many-public-methods
 
 import os
 import unittest
@@ -8,7 +8,8 @@ from unittest.mock import patch
 
 import requests
 
-from deepparse import download_from_url, latest_version, download_weights, indices_splitting
+from deepparse import download_from_url, latest_version, download_weights, indices_splitting, \
+    handle_pre_trained_checkpoint
 from deepparse import handle_checkpoint, CACHE_PATH
 from tests.tools import create_file
 
@@ -22,6 +23,10 @@ class ToolsTests(TestCase):
         self.latest_bpemb_version = "6d01367745157066ea6e621ac087be828137711f"
         self.a_seed = 42
         self.verbose = False
+
+        self.a_model_type_checkpoint = "a_fake_model_type"
+        self.a_fasttext_model_type_checkpoint = "fasttext"
+        self.a_bpemb_model_type_checkpoint = "bpemb"
 
     def tearDown(self) -> None:
         if os.path.exists("fasttext.version"):
@@ -183,6 +188,53 @@ class ToolsTests(TestCase):
         self.assertEqual(len(actual_valid_indices), expected_len_valid_indices)
         self.assertEqual(actual_train_indices, expected_train_indices)
         self.assertEqual(actual_valid_indices, expected_valid_indices)
+
+    @patch("deepparse.tools.poutyne")
+    def test_givenPoutyneVersionLowerThan12_givenHandlePreTrainedCheckpoint_thenRaiseError(self, poutyne_mock):
+        poutyne_mock.version.__version__ = 1.1
+
+        with self.assertRaises(NotImplementedError):
+            handle_pre_trained_checkpoint(self.a_model_type_checkpoint)
+
+    @patch("deepparse.tools.latest_version")
+    @patch("deepparse.tools.poutyne")
+    def test_givenPoutyneVersionGreaterThan12_givenHandlePreTrainedCheckpointFasttext_thenReturnFasttext(
+            self, poutyne_mock, latest_version_mock):
+        poutyne_mock.version.__version__ = 1.2
+
+        actual = handle_pre_trained_checkpoint(self.a_fasttext_model_type_checkpoint)
+        expected = os.path.join(CACHE_PATH, f"{self.a_fasttext_model_type_checkpoint}.ckpt")
+        self.assertEqual(expected, actual)
+
+    @patch("deepparse.tools.latest_version")
+    @patch("deepparse.tools.poutyne")
+    def test_givenPoutyneVersionGreaterThan12_givenHandlePreTrainedCheckpointBPEmb_thenReturnBPEmb(
+            self, poutyne_mock, latest_version_mock):
+        poutyne_mock.version.__version__ = 1.2
+
+        actual = handle_pre_trained_checkpoint(self.a_bpemb_model_type_checkpoint)
+        expected = os.path.join(CACHE_PATH, f"{self.a_bpemb_model_type_checkpoint}.ckpt")
+        self.assertEqual(expected, actual)
+
+    @patch("deepparse.tools.latest_version")
+    @patch("deepparse.tools.poutyne")
+    def test_givenPoutyneVersionGreaterThan12_givenHandlePreTrainedCheckpointFasttextNotLatestVersion_thenRaiseWarning(
+            self, poutyne_mock, latest_version_mock):
+        latest_version_mock.return_value = False  # Not the latest version
+        poutyne_mock.version.__version__ = 1.2
+
+        with self.assertWarns(UserWarning):
+            handle_pre_trained_checkpoint(self.a_bpemb_model_type_checkpoint)
+
+    @patch("deepparse.tools.latest_version")
+    @patch("deepparse.tools.poutyne")
+    def test_givenPoutyneVersionGreaterThan12_givenHandlePreTrainedCheckpointBPEmbNotLatestVersion_thenRaiseWarning(
+            self, poutyne_mock, latest_version_mock):
+        latest_version_mock.return_value = False  # Not the latest version
+        poutyne_mock.version.__version__ = 1.2
+
+        with self.assertWarns(UserWarning):
+            handle_pre_trained_checkpoint(self.a_bpemb_model_type_checkpoint)
 
 
 if __name__ == "__main__":

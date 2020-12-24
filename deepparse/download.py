@@ -1,37 +1,39 @@
 import argparse
 import os
-import warnings
 
 from bpemb import BPEmb
 
-from deepparse import download_fasttext_embeddings, verify_latest_version, download_weights
+from . import CACHE_PATH, download_fasttext_magnitude_embeddings, latest_version, \
+    download_fasttext_embeddings, download_weights
 
 
 def main(args: argparse.Namespace) -> None:
     """
-    Script to manually download all the dependancies for a pre-trained model.
+    Script to manually download all the dependencies for a pre-trained model.
     """
-    model = args.model
-    root_path = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
-    os.makedirs(root_path, exist_ok=True)
+    model_type = args.model_type
 
-    if model == "fasttext":
-        download_fasttext_embeddings("fr", saving_dir=root_path)
-    if model == "bpemb":
+    if model_type == "fasttext":
+        download_fasttext_embeddings(saving_dir=CACHE_PATH)
+    if model_type == "fasttext-light":
+        download_fasttext_magnitude_embeddings(saving_dir=CACHE_PATH)
+    if model_type == "bpemb":
         BPEmb(lang="multi", vs=100000, dim=300)  # The class manage the download of the pre-trained words embedding
 
-    model_path = os.path.join(root_path, f"{model}.ckpt")
-    version_path = os.path.join(root_path, f"{model}.version")
+    model_path = os.path.join(CACHE_PATH, f"{model_type}.ckpt")
+    version_path = os.path.join(CACHE_PATH, f"{model_type}.version")
     if not os.path.isfile(model_path) or not os.path.isfile(version_path):
-        download_weights(model, root_path)
-    elif verify_latest_version(model, root_path):
-        warnings.warn("A new version of the pre-trained model is available. The newest model will be downloaded.")
-        download_weights(model, root_path)
+        download_weights(model_type, CACHE_PATH)
+    elif not latest_version(model_type, cache_path=CACHE_PATH):
+        print("A new version of the pre-trained model is available. The newest model will be downloaded.")
+        download_weights(model_type, CACHE_PATH)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("model", choices=["fasttext", "bpemb"], help="The model type to download.")
+    parser.add_argument("model_type",
+                        choices=["fasttext", "fasttext-light", "bpemb"],
+                        help="The model type to download.")
 
     args_parser = parser.parse_args()
 

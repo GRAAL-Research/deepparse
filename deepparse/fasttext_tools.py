@@ -1,5 +1,40 @@
+import gzip
+import os
+import shutil
+import sys
+from urllib.request import urlopen
+
+from fasttext.FastText import _FastText
+
+from .tools import download_from_url
+
+
+def download_fasttext_magnitude_embeddings(saving_dir: str, verbose: bool = True) -> str:
+    """
+    Function to download the magnitude pre-trained fastText model.
+    """
+    os.makedirs(saving_dir, exist_ok=True)
+
+    model = "fasttext"
+    extension = "magnitude"
+    file_name = os.path.join(saving_dir, f"{model}.{extension}")
+    if not os.path.isfile(file_name):
+        if verbose:
+            print("The fastText pre-trained word embeddings will be download in magnitude format (2.3 GO), "
+                  "this process will take several minutes.")
+        extension = extension + ".gz"
+        download_from_url(file_name=model, saving_dir=saving_dir, file_extension=extension)
+        gz_file_name = file_name + ".gz"
+        with gzip.open(os.path.join(saving_dir, gz_file_name), "rb") as f:
+            with open(os.path.join(saving_dir, file_name), "wb") as f_out:
+                shutil.copyfileobj(f, f_out)
+        os.remove(os.path.join(saving_dir, gz_file_name))
+    return file_name
+
+
+# pylint: disable=pointless-string-statement
 """
-The module code was copied from the fastText project, and has been modified for the purpose of this package.
+The code below was copied from the fastText project, and has been modified for the purpose of this package.
 
 COPYRIGHT
 
@@ -30,26 +65,16 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
-import gzip
-import os
-import shutil
-import sys
-from urllib.request import urlopen
 
-from fasttext.FastText import _FastText
-from fasttext.util.util import valid_lang_ids, _download_file
-
-
-def download_fasttext_embeddings(lang_id: str, saving_dir: str, verbose: bool = True) -> str:
+def download_fasttext_embeddings(saving_dir: str, verbose: bool = True) -> str:
     """
         Simpler version of the download_model function from fastText to download pre-trained common-crawl
         vectors from fastText's website https://fasttext.cc/docs/en/crawl-vectors.html and save it in the
         saving directory (saving_dir).
     """
-    if lang_id not in valid_lang_ids:
-        raise Exception("Invalid lang id. Please select among %s" % repr(valid_lang_ids))
+    os.makedirs(saving_dir, exist_ok=True)
 
-    file_name = "cc.%s.300.bin" % lang_id
+    file_name = "cc.fr.300.bin"
     gz_file_name = "%s.gz" % file_name
 
     file_name_path = os.path.join(saving_dir, file_name)
@@ -58,16 +83,17 @@ def download_fasttext_embeddings(lang_id: str, saving_dir: str, verbose: bool = 
 
     saving_file_path = os.path.join(saving_dir, gz_file_name)
 
-    if _download_gz_model(gz_file_name, saving_file_path, verbose=verbose):
-        with gzip.open(os.path.join(saving_dir, gz_file_name), "rb") as f:
-            with open(os.path.join(saving_dir, file_name), "wb") as f_out:
-                shutil.copyfileobj(f, f_out)
-        os.remove(os.path.join(saving_dir, gz_file_name))
+    download_gz_model(gz_file_name, saving_file_path, verbose=verbose)
+    with gzip.open(os.path.join(saving_dir, gz_file_name), "rb") as f:
+        with open(os.path.join(saving_dir, file_name), "wb") as f_out:
+            shutil.copyfileobj(f, f_out)
+    os.remove(os.path.join(saving_dir, gz_file_name))
 
     return file_name_path  # return the full path to the fastText embeddings
 
 
-def _download_gz_model(gz_file_name: str, saving_path: str, verbose: bool = True) -> bool:  # now use a saving path
+# Now use a saving path and don't return a bool
+def download_gz_model(gz_file_name: str, saving_path: str, verbose: bool = True) -> None:
     """
     Simpler version of the _download_gz_model function from fastText to download pre-trained common-crawl
     vectors from fastText's website https://fasttext.cc/docs/en/crawl-vectors.html and save it in the
@@ -80,11 +106,9 @@ def _download_gz_model(gz_file_name: str, saving_path: str, verbose: bool = True
               "this process will take several minutes.")
     _download_file(url, saving_path, verbose=verbose)
 
-    return True
-
 
 # No modification, we just need to call our _print_progress function
-def _download_file(url: str, write_file_name: str, chunk_size: int = 2**13, verbose: bool = True):
+def _download_file(url: str, write_file_name: str, chunk_size: int = 2**13, verbose: bool = True) -> None:
     if verbose:
         print("Downloading %s" % url)
     response = urlopen(url)
@@ -107,7 +131,7 @@ def _download_file(url: str, write_file_name: str, chunk_size: int = 2**13, verb
     os.rename(download_file_name, write_file_name)
 
 
-# Better print formatting for some shell that don"t update properly.
+# Better print formatting for some shell that don't update properly.
 def _print_progress(downloaded_bytes, total_size):
     percent = float(downloaded_bytes) / total_size
     bar_size = 50

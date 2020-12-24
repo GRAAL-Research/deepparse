@@ -100,8 +100,10 @@ If your pull request introduces a new feature, please deliver it with tests that
 For any pull request submitted, **ALL** of the tests must succeed. You can run the tests with
 
 ```
-pytest tests
+python -m unittest
 ```
+
+> The integration tests need to be executed on a device with a GPU.
 
 ## Documentation
 

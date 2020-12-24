@@ -51,8 +51,8 @@ class BPEmbSeq2SeqTest(Seq2SeqTestCase):
     @patch("os.path.isfile")
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
-    def test_givenLocalWeights_whenInstantiatingABPEmbSeq2SeqModel_thenShouldntDownloadWeights(self, load_state_dict_mock, torch_mock,
-                                                                            isfile_mock, last_version_mock):
+    def test_givenLocalWeights_whenInstantiatingABPEmbSeq2SeqModel_thenShouldntDownloadWeights(
+            self, load_state_dict_mock, torch_mock, isfile_mock, last_version_mock):
         isfile_mock.return_value = True
         last_version_mock.return_value = True
         with patch("deepparse.network.seq2seq.download_weights") as download_weights_mock:
@@ -61,8 +61,8 @@ class BPEmbSeq2SeqTest(Seq2SeqTestCase):
 
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
-    def test_givenRetrainedWeights_whenInstantiatingAFastTextSeq2SeqModel_thenShouldUseRetrainedWeights(self, load_state_dict_mock,
-                                                                                   torch_mock):
+    def test_givenRetrainedWeights_whenInstantiatingAFastTextSeq2SeqModel_thenShouldUseRetrainedWeights(
+            self, load_state_dict_mock, torch_mock):
         all_layers_params = MagicMock()
         torch_mock.load.return_value = all_layers_params
         self.seq2seq_model = BPEmbSeq2SeqModel(self.a_torch_device,

@@ -289,7 +289,6 @@ class AddressParser:
 
         exp = Experiment(logging_path,
                          self.model,
-                         logging=self.verbose,
                          device=self.device,
                          optimizer=optimizer,
                          loss_function=nll_loss,
@@ -368,7 +367,6 @@ class AddressParser:
 
         exp = Experiment(logging_path,
                          self.model,
-                         logging=self.verbose,
                          device=self.device,
                          loss_function=nll_loss,
                          batch_metrics=[accuracy])

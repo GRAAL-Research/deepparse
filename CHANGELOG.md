@@ -32,3 +32,11 @@
 - Added metric, loss and dataset container to facilitate finetuning training
 - Added an example of finetuning
 - Added way to load retrain model when instantiation of AddressParser
+
+## 0.2.1
+
+- Fixed README
+
+## 0.2.2
+
+- Fixed error with experiment and verbosity as logging trigger on or off

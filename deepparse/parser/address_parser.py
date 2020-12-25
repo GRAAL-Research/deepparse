@@ -289,7 +289,6 @@ class AddressParser:
 
         exp = Experiment(logging_path,
                          self.model,
-                         logging=self.verbose,
                          device=self.device,
                          optimizer=optimizer,
                          loss_function=nll_loss,
@@ -366,12 +365,7 @@ class AddressParser:
                                     batch_size=batch_size,
                                     num_workers=num_workers)
 
-        exp = Experiment(logging_path,
-                         self.model,
-                         logging=self.verbose,
-                         device=self.device,
-                         loss_function=nll_loss,
-                         batch_metrics=[accuracy])
+        exp = Experiment(logging_path, self.model, device=self.device, loss_function=nll_loss, batch_metrics=[accuracy])
 
         checkpoint = handle_checkpoint(checkpoint)
 

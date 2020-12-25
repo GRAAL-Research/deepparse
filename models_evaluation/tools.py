@@ -1,4 +1,12 @@
-def clean_up_name(country):
+import os
+
+import pycountry
+
+from deepparse.dataset_container import PickleDatasetContainer
+from deepparse.parser import AddressParser
+
+
+def clean_up_name(country: str) -> str:
     """
     Function to clean up pycountry name
     """
@@ -22,7 +30,7 @@ train_test_files = [
 
 
 # country that we trained on
-def train_country_file(file: str):
+def train_country_file(file: str) -> bool:
     return file in train_test_files
 
 
@@ -34,5 +42,22 @@ other_test_files = [
 ]
 
 
-def zero_shot_eval_country_file(file: str):
+def zero_shot_eval_country_file(file: str) -> bool:
     return file in other_test_files
+
+
+def test_on_country_data(address_parser: AddressParser, file: str, directory_path: str, args) -> tuple:
+    country = pycountry.countries.get(alpha_2=file.replace('.p', '').upper()).name
+    country = clean_up_name(country)
+
+    print(f'Testing on test files {country}')
+
+    test_file_path = os.path.join(directory_path, file)
+    test_container = PickleDatasetContainer(test_file_path)
+
+    results = address_parser.test(test_container,
+                                  batch_size=4096,
+                                  num_workers=4,
+                                  logging_path=f"./chekpoints/{args.model_type}",
+                                  checkpoint=args.model_path)
+    return results, country

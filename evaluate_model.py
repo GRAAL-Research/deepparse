@@ -45,6 +45,10 @@ def main(args):
 
     training_test_results = {}
     zero_shot_test_results = {}
+
+    saving_dir = os.path.join(".", "results")
+    os.makedirs(saving_dir, exist_ok=True)
+    
     for test_file in test_files:
         country = pycountry.countries.get(alpha_2=test_file.replace('.p', '').upper()).name
         country = clean_up_name(country)
@@ -63,9 +67,9 @@ def main(args):
             zero_shot_test_results.update({country: results['test_accuracy']})
 
     json.dump(training_test_results,
-              open(os.path.join(".", "results", f"training_test_results{args.model_type}.json"), "w"))
+              open(os.path.join(saving_dir, f"training_test_results{args.model_type}.json"), "w"))
     json.dump(training_test_results,
-              open(os.path.join(".", "results", f"zero_shot_test_results{args.model_type}.json"), "w"))
+              open(os.path.join(saving_dir, f"zero_shot_test_results{args.model_type}.json"), "w"))
 
     # todo add test on noisy dataset
 

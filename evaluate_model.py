@@ -62,8 +62,12 @@ def main(args):
         elif test_file in other_test_files:
             zero_shot_test_results.update({country: results['test_accuracy']})
 
-    json.dump(training_test_results, open(os.path.join(".", "results", "training_test_results.json"), "w"))
-    json.dump(training_test_results, open(os.path.join(".", "results", "zero_shot_test_results.json"), "w"))
+    json.dump(training_test_results,
+              open(os.path.join(".", "results", f"training_test_results{args.model_type}.json"), "w"))
+    json.dump(training_test_results,
+              open(os.path.join(".", "results", f"zero_shot_test_results{args.model_type}.json"), "w"))
+
+    # todo add test on noisy dataset
 
 
 if __name__ == "__main__":

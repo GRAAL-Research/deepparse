@@ -60,7 +60,6 @@ class AddressParserTest(AddressParserPredictTestCase):
     def assert_experiment_retrain(self, experiment_mock, model_mock, optimizer_mock):
         experiment_mock.assert_called_with(self.a_logging_path,
                                            model_mock(),
-                                           logging=self.verbose,
                                            device=self.a_torch_device,
                                            optimizer=optimizer_mock(),
                                            loss_function=self.a_loss_function,
@@ -88,7 +87,6 @@ class AddressParserTest(AddressParserPredictTestCase):
     def assert_experiment_test(self, experiment_mock, model_mock):
         experiment_mock.assert_called_with(self.a_logging_path,
                                            model_mock(),
-                                           logging=self.verbose,
                                            device=self.a_torch_device,
                                            loss_function=self.a_loss_function,
                                            batch_metrics=self.a_list_of_batch_metrics)
@@ -228,7 +226,6 @@ class AddressParserTest(AddressParserPredictTestCase):
 
         self.assert_experiment_train_method_is_call(dataloader_mock, experiment_mock)
 
-    ##
     @patch("deepparse.parser.address_parser.DataLoader")
     @patch("deepparse.parser.address_parser.Experiment")
     @patch("deepparse.parser.address_parser.SGD")

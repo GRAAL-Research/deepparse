@@ -16,8 +16,9 @@ def main(args):
 
         lr_scheduler = StepLR(step_size=20)
 
-        address_parser.retrain(train_container, 0.8, epochs=100, batch_size=1024, num_workers=6, learning_rate=0.001,
-                               callbacks=[lr_scheduler], logging_path=f"./chekpoints/{args.model_type}")
+        address_parser.retrain(train_container, 0.8, epochs=100, batch_size=args.batch_size, num_workers=6,
+                               learning_rate=0.001, callbacks=[lr_scheduler],
+                               logging_path=f"./chekpoints/{args.model_type}")
 
     if args.mode in ("test", "both"):
         test_container = PickleDatasetContainer(args.test_dataset_path)
@@ -34,12 +35,13 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('model_type', type=str, help='Model type to retrain.',
+    parser.add_argument("model_type", type=str, help="Model type to retrain.",
                         choices=["fasttext", "bpemb"])
-    parser.add_argument('train_dataset_path', type=str, help='Path to the train dataset.')
-    parser.add_argument('test_dataset_path', type=str, help='Path to the test dataset.')
-    parser.add_argument('mode', type=str, help='Mode type.',
+    parser.add_argument("train_dataset_path", type=str, help="Path to the train dataset.")
+    parser.add_argument("test_dataset_path", type=str, help="Path to the test dataset.")
+    parser.add_argument("mode", type=str, help="Mode type.",
                         choices=["train", "test", "both"])
+    parser.add_argument("--batch_size", type=int, default=1024)
     args_parser = parser.parse_args()
 
     main(args_parser)

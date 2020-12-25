@@ -54,7 +54,7 @@ def main(args):
         test_file_path = os.path.join(directory_path, test_file)
         test_container = PickleDatasetContainer(test_file_path)
 
-        results = address_parser.test(test_container, batch_size=2048, num_workers=6,
+        results = address_parser.test(test_container, batch_size=4096, num_workers=4,
                                       logging_path=f"./chekpoints/{args.model_type}", checkpoint=args.model_path)
 
         if test_file in train_test_files:

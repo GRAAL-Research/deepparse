@@ -2,12 +2,12 @@ import argparse
 import json
 import os
 
-from ..deepparse.parser import AddressParser
+from deepparse.parser import AddressParser
 from models_evaluation.tools import train_country_file, zero_shot_eval_country_file, test_on_country_data
 
 
 def main(args):
-    saving_dir = os.path.join(".", "results")
+    saving_dir = os.path.join(".", "models_evaluation", "results")
     os.makedirs(saving_dir, exist_ok=True)
 
     address_parser = AddressParser(model_type=args.model_type, device=0)
@@ -29,8 +29,8 @@ def main(args):
 
     json.dump(training_test_results, open(os.path.join(saving_dir, f"training_test_results{args.model_type}.json"),
                                           "w"))
-    json.dump(training_test_results, open(os.path.join(saving_dir, f"zero_shot_test_results{args.model_type}.json"),
-                                          "w"))
+    json.dump(zero_shot_test_results,
+              open(os.path.join(saving_dir, f"zero_shot_test_results{args.model_type}.json"), "w"))
 
     noisy_test_directory = args.noisy_test_directory
     noisy_test_files = os.listdir(noisy_test_directory)
@@ -44,7 +44,7 @@ def main(args):
         else:
             print(f"Error with the identification of test file type {noisy_test_file}.")
 
-    json.dump(training_test_results,
+    json.dump(noisy_training_test_results,
               open(os.path.join(saving_dir, f"training_noisy_test_results{args.model_type}.json"), "w"))
 
 

@@ -2,7 +2,7 @@ import argparse
 import json
 import os
 
-from deepparse.parser import AddressParser
+from ..deepparse.parser import AddressParser
 from models_evaluation.tools import train_country_file, zero_shot_eval_country_file, test_on_country_data
 
 

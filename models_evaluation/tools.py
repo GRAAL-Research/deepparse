@@ -80,23 +80,68 @@ def make_table(data_type: str, root_path: str = "."):
     table_dir = os.path.join(root_path, "tables")
     os.makedirs(table_dir, exist_ok=True)
 
-    fasttext_res = json.load(open(os.path.join(".", "results", f"{data_type}_test_results_fasttext.json"), "r"))
-    bpemb_res = json.load(open(os.path.join(".", "results", f"{data_type}_test_results_bpemb.json"), "r"))
+    fasttext_all_res = json.load(open(os.path.join(".", "results", f"{data_type}_test_results_fasttext.json"), "r"))
+    bpemb_all_res = json.load(open(os.path.join(".", "results", f"{data_type}_test_results_bpemb.json"), "r"))
 
     formatted_data = []
     # we format the data to have two pairs of columns for a less long table
-    for idx, ((country, fasttext_res), (_, bpemb_res)) in enumerate(zip(fasttext_res.items(), bpemb_res.items())):
+    for idx, ((country, fasttext_res), (_, bpemb_res)) in enumerate(zip(fasttext_all_res.items(),
+                                                                        bpemb_all_res.items())):
         if idx % 2 and idx != 0:
             data.extend([country, fasttext_res, bpemb_res])
             formatted_data.append(data)
         else:
             data = [country, fasttext_res, bpemb_res]
-            if idx == 60:
-                # todo to validate
-                data.extend(data)
+            if idx == 40:
+                formatted_data.append(data)
     table = pd.DataFrame(formatted_data,
                          columns=["Country", r"Fasttext (%)", r"BPEmb (%)", "Country", r"Fasttext (%)",
                                   r"BPEmb (%)"]).round(2).to_markdown(index=False)
 
-    with open(os.path.join(table_dir, f"{data_type}_table.txt"), "w") as file:
+    with open(os.path.join(table_dir, f"{data_type}_table.md"), "w", encoding="utf-8") as file:
         file.writelines(table)
+
+
+def make_table_rst(data_type: str, root_path: str = "."):
+    # pylint: disable=too-many-locals
+    """
+    Function to generate an Sphinx RST table
+    """
+    table_dir = os.path.join(root_path, "tables")
+    os.makedirs(table_dir, exist_ok=True)
+
+    fasttext_all_res = json.load(open(os.path.join(".", "results", f"{data_type}_test_results_fasttext.json"), "r"))
+    bpemb_all_res = json.load(open(os.path.join(".", "results", f"{data_type}_test_results_bpemb.json"), "r"))
+
+    formatted_data = []
+    # we format the data to have two pairs of columns for a less long table
+    for idx, ((country, fasttext_res), (_, bpemb_res)) in enumerate(zip(fasttext_all_res.items(),
+                                                                        bpemb_all_res.items())):
+        if idx % 2 and idx != 0:
+            data.extend([country, fasttext_res, bpemb_res])
+            formatted_data.append(data)
+        else:
+            data = [country, fasttext_res, bpemb_res]
+            if idx == 40:
+                formatted_data.append(data)
+    table = pd.DataFrame(formatted_data,
+                         columns=["Country", r"Fasttext (%)", r"BPEmb (%)", "Country", r"Fasttext (%)",
+                                  r"BPEmb (%)"]).round(2)
+    new_line_prefix = "\t\t"
+    string = ".. list-table::\n" + new_line_prefix + ":header-rows: 1\n" + "\n"
+
+    for idx, column in enumerate(table.columns):
+        if idx == 0:
+            string = string + new_line_prefix + "*" + f"\t- {column}\n"
+        else:
+            string = string + new_line_prefix + f"\t- {column}\n"
+
+    for _, row in table.iterrows():
+        for idx, data in enumerate(list(row)):
+            if idx == 0:
+                string = string + new_line_prefix + "*" + f"\t- {data}\n"
+            else:
+                string = string + new_line_prefix + f"\t- {data}\n"
+
+    with open(os.path.join(table_dir, f"{data_type}_table.rst"), "w", encoding="utf-8") as file:
+        file.writelines(string)

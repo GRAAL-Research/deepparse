@@ -27,10 +27,12 @@ def main(args):
         else:
             print(f"Error with the identification of test file type {test_file}.")
 
-    json.dump(training_test_results, open(os.path.join(saving_dir, f"training_test_results_{args.model_type}.json"),
-                                          "w"))
+    json.dump(training_test_results,
+              open(os.path.join(saving_dir, f"training_test_results_{args.model_type}.json"), "w", encoding="utf-8"),
+              ensure_ascii=False)
     json.dump(zero_shot_test_results,
-              open(os.path.join(saving_dir, f"zero_shot_test_results_{args.model_type}.json"), "w"))
+              open(os.path.join(saving_dir, f"zero_shot_test_results_{args.model_type}.json"), "w", encoding="utf-8"),
+              ensure_ascii=False)
 
     noisy_test_directory = args.noisy_test_directory
     noisy_test_files = os.listdir(noisy_test_directory)
@@ -45,7 +47,10 @@ def main(args):
             print(f"Error with the identification of test file type {noisy_test_file}.")
 
     json.dump(noisy_training_test_results,
-              open(os.path.join(saving_dir, f"training_noisy_test_results_{args.model_type}.json"), "w"))
+              open(os.path.join(saving_dir, f"training_noisy_test_results_{args.model_type}.json"),
+                   "w",
+                   encoding="utf-8"),
+              ensure_ascii=False)
 
 
 if __name__ == "__main__":

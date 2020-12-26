@@ -16,8 +16,9 @@ def main(args):
     test_files = os.listdir(directory_path)
     training_test_results = {}
     zero_shot_test_results = {}
-    for test_file in test_files:
+    for idx, test_file in enumerate(test_files):
         results, country = test_on_country_data(address_parser, test_file, directory_path, args)
+        print(f"{idx} file done of {len(test_files)}.")
 
         if train_country_file(test_file):
             training_test_results.update({country: results['test_accuracy']})
@@ -34,8 +35,9 @@ def main(args):
     noisy_test_directory = args.noisy_test_directory
     noisy_test_files = os.listdir(noisy_test_directory)
     noisy_training_test_results = {}
-    for noisy_test_file in noisy_test_files:
+    for idx, noisy_test_file in enumerate(noisy_test_files):
         results, country = test_on_country_data(address_parser, noisy_test_file, directory_path, args)
+        print(f"{idx} file done of {len(noisy_test_files)}.")
 
         if train_country_file(noisy_test_file):
             noisy_training_test_results.update({country: results['test_accuracy']})

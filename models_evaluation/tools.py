@@ -1,5 +1,6 @@
+import json
 import os
-
+import pandas as pd
 import pycountry
 
 from deepparse.dataset_container import PickleDatasetContainer
@@ -70,3 +71,32 @@ def test_on_country_data(address_parser: AddressParser, file: str, directory_pat
                                   logging_path=f"./chekpoints/{args.model_type}",
                                   checkpoint=args.model_path)
     return results, country
+
+
+def make_table(data_type: str, root_path: str = "."):
+    """
+    Function to generate an Markdown table
+    """
+    table_dir = os.path.join(root_path, "tables")
+    os.makedirs(table_dir, exist_ok=True)
+
+    fasttext_res = json.load(open(os.path.join(".", "results", f"{data_type}_test_results_fasttext.json"), "r"))
+    bpemb_res = json.load(open(os.path.join(".", "results", f"{data_type}_test_results_bpemb.json"), "r"))
+
+    formatted_data = []
+    # we format the data to have two pairs of columns for a less long table
+    for idx, ((country, fasttext_res), (_, bpemb_res)) in enumerate(zip(fasttext_res.items(), bpemb_res.items())):
+        if idx % 2 and idx != 0:
+            data.extend([country, fasttext_res, bpemb_res])
+            formatted_data.append(data)
+        else:
+            data = [country, fasttext_res, bpemb_res]
+            if idx == 60:
+                # todo to validate
+                data.extend(data)
+    table = pd.DataFrame(formatted_data,
+                         columns=["Country", r"Fasttext (%)", r"BPEmb (%)", "Country", r"Fasttext (%)",
+                                  r"BPEmb (%)"]).round(2).to_markdown(index=False)
+
+    with open(os.path.join(table_dir, f"{data_type}_table.txt"), "w") as file:
+        file.writelines(table)

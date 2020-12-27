@@ -24,7 +24,7 @@ Read the documentation at `deepparse.org <https://deepparse.org>`_.
 
 Deepparse is compatible with the **latest version of PyTorch** and  **Python >= 3.6**.
 
-Country and Results
+Countries and Results
 ===================
 
 The following table presents the accuracy of the 20 countries we used during training for both our models.

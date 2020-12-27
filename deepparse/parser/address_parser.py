@@ -120,6 +120,7 @@ class AddressParser:
         Using a retrain model
 
         .. code-block:: python
+
                 address_parser = AddressParser(model_type="fasttext",
                                                path_to_retrained_model='/path_to_a_retrain_fasttext_model')
     """
@@ -324,16 +325,16 @@ class AddressParser:
                 By default we set no callback.
             seed (int): Seed to use (by default 42).
             logging_path (str): The logging path for the checkpoints. By default the path is ``./chekpoints``.
-            checkpoint (Union[str, int]): Checkpoint to use for the test.
+                checkpoint (Union[str, int]): Checkpoint to use for the test.
                 - If 'best', will load the best weights.
                 - If 'last', will load the last model checkpoint.
                 - If int, will load a specific checkpoint (e.g. 3).
                 - If 'str', will load a specific model (e.g. a retrained model), must be a path to a pickled format
-                    model i.e. ends with a '.p' extension (e.g. retrained_model.p).
+                model i.e. ends with a '.p' extension (e.g. retrained_model.p).
                 - If 'fasttext', will load our pre-trained fasttext model and test it on your data.
-                    (Need to have Poutyne>=1.2 to work)
+                (Need to have Poutyne>=1.2 to work)
                 - If 'bpemb', will load our pre-trained bpemb model and test it on your data.
-                    (Need to have Poutyne>=1.2 to work)
+                (Need to have Poutyne>=1.2 to work)
         Return:
             A dictionary with the best epoch stats (see `Experiment class
             <https://poutyne.org/experiment.html#poutyne.Experiment.train>`_ for details).
@@ -353,6 +354,7 @@ class AddressParser:
                     address_parser.test(test_container) # using the default best epoch
                     address_parser.test(test_container, checkpoint='last') # using the last epoch
                     address_parser.test(test_container, checkpoint=5) # using the epoch 5 model
+
         """
         if self.model_type == "fasttext-light":
             raise ValueError("It's not possible to test a fasttext-light due to pymagnitude problem.")

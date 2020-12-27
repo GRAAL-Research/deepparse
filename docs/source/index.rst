@@ -100,7 +100,7 @@ The following table presents the accuracy on the 20 countries we used during tra
 			- 99.83
 
 
-We have also made a zero-shot evaluation of our models using 41 other countries; the results are shown in the next table.
+We have also made a zero-shot evaluation of our models using data from 41 other countries; the results are shown in the next table.
 
 .. list-table::
 		:header-rows: 1

@@ -40,3 +40,7 @@
 ## 0.2.2
 
 - Fixed error with experiment and verbosity as logging trigger on or off
+
+## 0.2.3
+
+- Improved documentation

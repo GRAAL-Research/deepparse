@@ -3,7 +3,6 @@ import argparse
 
 from poutyne import StepLR
 
-from deepparse import handle_pre_trained_checkpoint
 from deepparse.dataset_container import PickleDatasetContainer
 from deepparse.parser import AddressParser
 

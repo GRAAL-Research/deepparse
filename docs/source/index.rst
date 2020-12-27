@@ -24,6 +24,272 @@ Read the documentation at `deepparse.org <https://deepparse.org>`_.
 
 Deepparse is compatible with the **latest version of PyTorch** and  **Python >= 3.6**.
 
+Countries and Results
+===================
+
+The following table presents the accuracy on the 20 countries we used during training for both our models.
+
+.. list-table::
+		:header-rows: 1
+
+		*	- Country
+			- Fasttext (%)
+			- BPEmb (%)
+			- Country
+			- Fasttext (%)
+			- BPEmb (%)
+		*	- Italy
+			- 99.66
+			- 99.73
+			- United States
+			- 99.56
+			- 99.53
+		*	- Germany
+			- 99.72
+			- 99.84
+			- Austria
+			- 99.19
+			- 99.03
+		*	- South Korea
+			- 99.96
+			- 100.00
+			- Canada
+			- 99.76
+			- 99.80
+		*	- Mexico
+			- 99.54
+			- 99.60
+			- Australia
+			- 99.62
+			- 99.74
+		*	- Finland
+			- 99.75
+			- 99.87
+			- Netherlands
+			- 99.50
+			- 99.84
+		*	- France
+			- 99.54
+			- 99.50
+			- United Kingdom
+			- 99.54
+			- 99.62
+		*	- Russia
+			- 98.71
+			- 99.49
+			- Norway
+			- 99.40
+			- 98.71
+		*	- Switzerland
+			- 99.48
+			- 99.61
+			- Poland
+			- 99.64
+			- 99.83
+		*	- Brazil
+			- 99.33
+			- 99.24
+			- Denmark
+			- 99.65
+			- 99.84
+		*	- Spain
+			- 99.70
+			- 99.79
+			- Czechia
+			- 99.46
+			- 99.83
+
+
+We have also made a zero-shot evaluation of our models using data from 41 other countries; the results are shown in the next table.
+
+.. list-table::
+		:header-rows: 1
+
+		*	- Country
+			- Fasttext (%)
+			- BPEmb (%)
+			- Country
+			- Fasttext (%)
+			- BPEmb (%)
+		*	- Philippines
+			- 81.56
+			- 83.73
+			- South Africa
+			- 92.69
+			- 95.03
+		*	- Colombia
+			- 85.92
+			- 87.50
+			- Venezuela
+			- 95.36
+			- 89.67
+		*	- Bermuda
+			- 91.30
+			- 93.66
+			- Lithuania
+			- 89.21
+			- 76.60
+		*	- Moldova
+			- 88.51
+			- 89.13
+			- India
+			- 66.91
+			- 77.26
+		*	- Malaysia
+			- 81.31
+			- 92.78
+			- Bosnia
+			- 88.91
+			- 84.33
+		*	- Belgium
+			- 89.57
+			- 86.41
+			- Ukraine
+			- 91.80
+			- 92.73
+		*	- Greece
+			- 83.42
+			- 39.82
+			- Algeria
+			- 86.93
+			- 80.62
+		*	- Slovakia
+			- 81.00
+			- 91.28
+			- Bangladesh
+			- 74.49
+			- 79.29
+		*	- Latvia
+			- 93.80
+			- 80.18
+			- Reunion
+			- 96.48
+			- 93.40
+		*	- Romania
+			- 93.23
+			- 91.83
+			- Singapore
+			- 84.55
+			- 81.68
+		*	- Indonesia
+			- 63.15
+			- 67.97
+			- Cyprus
+			- 97.69
+			- 98.30
+		*	- Portugal
+			- 93.39
+			- 93.20
+			- Serbia
+			- 95.62
+			- 94.69
+		*	- Croatia
+			- 96.63
+			- 86.24
+			- Japan
+			- 44.33
+			- 35.77
+		*	- New Caledonia
+			- 99.42
+			- 99.01
+			- New Zealand
+			- 97.04
+			- 98.86
+		*	- Uzbekistan
+			- 87.63
+			- 71.93
+			- Faroe Islands
+			- 71.73
+			- 85.46
+		*	- Hungary
+			- 47.00
+			- 24.05
+			- Slovenia
+			- 96.27
+			- 97.28
+		*	- Paraguay
+			- 97.00
+			- 97.15
+			- Iceland
+			- 95.76
+			- 98.01
+		*	- Estonia
+			- 90.61
+			- 76.45
+			- Argentina
+			- 89.47
+			- 88.55
+		*	- Bulgaria
+			- 92.70
+			- 95.87
+			- Sweden
+			- 77.29
+			- 87.77
+		*	- Belarus
+			- 88.77
+			- 93.00
+			- Kazakhstan
+			- 87.24
+			- 91.23
+		*	- Ireland
+			- 86.35
+			- 87.49
+			-
+			-
+			-
+
+
+
+Getting started
+===============
+
+.. code-block:: python
+
+   from deepparse.parser import AddressParser
+
+   address_parser = AddressParser(model_type="bpemb", device=0)
+
+   # you can parse one address
+   parsed_address = address_parser("350 rue des Lilas Ouest Québec Québec G1L 1B6")
+
+   # or multiple addresses
+   parsed_address = address_parser(["350 rue des Lilas Ouest Québec Québec G1L 1B6", "350 rue des Lilas Ouest Québec Québec G1L 1B6"])
+
+   # you can also get the probability of the predicted tags
+   parsed_address = address_parser("350 rue des Lilas Ouest Québec Québec G1L 1B6", with_prob=True)
+
+
+Retrain a model
+---------------
+see `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py>`_ for a complete example.
+
+.. code-block:: python
+
+    # We will retrain the fasttext version of our pretrained model.
+    address_parser = AddressParser(model_type="fasttext", device=0)
+
+    address_parser.retrain(training_container, 0.8, epochs=5, batch_size=8)
+
+
+
+Installation
+============
+
+Before installing deepparse, you must have the latest version of `PyTorch <https://pytorch.org/>`_ in your environment.
+
+- **Install the stable version of deepparse:**
+
+  .. code-block:: sh
+
+   pip install deepparse
+
+- **Install the latest development version of deepparse:**
+
+  .. code-block:: sh
+
+    pip install -U git+https://github.com/GRAAL-Research/deepparse.git@dev
+
+
 Cite
 ----
 
@@ -47,45 +313,6 @@ and this one for the package;
        year   = {2020},
        note   = {\url{https://deepparse.org}}
    }
-
-
-Getting started
-===============
-
-.. code-block:: python
-
-   from deepparse.parser import AddressParser
-
-   address_parser = AddressParser(model_type="bpemb", device=0)
-
-   # you can parse one address
-   parsed_address = address_parser("350 rue des Lilas Ouest Québec Québec G1L 1B6")
-
-   # or multiple addresses
-   parsed_address = address_parser(["350 rue des Lilas Ouest Québec Québec G1L 1B6", "350 rue des Lilas Ouest Québec Québec G1L 1B6"])
-
-   # you can also get the probability of the predicted tags
-   parsed_address = address_parser("350 rue des Lilas Ouest Québec Québec G1L 1B6", with_prob=True)
-
-
-Installation
-============
-
-Before installing deepparse, you must have the latest version of `PyTorch <https://pytorch.org/>`_ in your environment.
-
-- **Install the stable version of deepparse:**
-
-  .. code-block:: sh
-
-   pip install deepparse
-
-- **Install the latest development version of deepparse:**
-
-  .. code-block:: sh
-
-    pip install -U git+https://github.com/GRAAL-Research/deepparse.git@dev
-
-
 
 License
 =======

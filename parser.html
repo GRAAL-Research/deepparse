@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Parser &mdash; deepparse 0.2.2 documentation</title>
+  <title>Parser &mdash; deepparse 0.2.3 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.2.2
+                0.2.3
               </div>
             
           
@@ -287,7 +287,7 @@ networks either with fastText or BPEmb.</p>
 <ul>
 <li><p>a <code class="docutils literal notranslate"><span class="pre">GPU</span></code> index in int format (e.g. <code class="docutils literal notranslate"><span class="pre">0</span></code>);</p></li>
 <li><p>a complete device name in a string format (e.g. <code class="docutils literal notranslate"><span class="pre">'cuda:0'</span></code>);</p></li>
-<li><p>a <a class="reference external" href="https://pytorch.org/docs/master/tensor_attributes.html#torch.torch.device" title="(in PyTorch vmaster (1.8.0a0+8e7138b ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">device</span></code></a> object;</p></li>
+<li><p>a <a class="reference external" href="https://pytorch.org/docs/master/tensor_attributes.html#torch.torch.device" title="(in PyTorch vmaster (1.8.0a0+9b38aa2 ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">device</span></code></a> object;</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'cpu'</span></code> for a  <code class="docutils literal notranslate"><span class="pre">CPU</span></code> use.</p></li>
 </ul>
 <p>The default value is GPU with the index <code class="docutils literal notranslate"><span class="pre">0</span></code> if it exist, otherwise the value is <code class="docutils literal notranslate"><span class="pre">CPU</span></code>.</p>
@@ -350,6 +350,10 @@ time this load doesn’t appear.</p>
 </pre></div>
 </div>
 <p>Using a retrain model</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;fasttext&quot;</span><span class="p">,</span>
+                               <span class="n">path_to_retrained_model</span><span class="o">=</span><span class="s1">&#39;/path_to_a_retrain_fasttext_model&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 <dl class="py method">
 <dt id="deepparse.parser.AddressParser.__call__">
 <code class="sig-name descname">__call__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">addresses_to_parse</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>List<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span><span class="p">, </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">with_prob</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></span> <span class="o">=</span> <span class="default_value">False</span></em><span class="sig-paren">)</span> &#x2192; Union<span class="p">[</span>deepparse.parser.parsed_address.ParsedAddress<span class="p">, </span>List<span class="p">[</span>deepparse.parser.parsed_address.ParsedAddress<span class="p">]</span><span class="p">]</span><a class="reference internal" href="_modules/deepparse/parser/address_parser.html#AddressParser.__call__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepparse.parser.AddressParser.__call__" title="Permalink to this definition">¶</a></dt>
@@ -462,28 +466,17 @@ See Poutyne <a class="reference external" href="https://poutyne.org/callbacks.ht
 By default we set no callback.</p>
 </p></li>
 <li><p><strong>seed</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Seed to use (by default 42).</p></li>
-<li><p><strong>logging_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The logging path for the checkpoints. By default the path is <code class="docutils literal notranslate"><span class="pre">./chekpoints</span></code>.</p></li>
-<li><p><strong>checkpoint</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>]</em>) – <p>Checkpoint to use for the test.
+<li><p><strong>logging_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The logging path for the checkpoints. By default the path is <code class="docutils literal notranslate"><span class="pre">./chekpoints</span></code>.
+checkpoint (Union[str, int]): Checkpoint to use for the test.
 - If ‘best’, will load the best weights.
 - If ‘last’, will load the last model checkpoint.
 - If int, will load a specific checkpoint (e.g. 3).
-- If ‘str’, will load a specific model (e.g. a retrained model), must be a path to a pickled format</p>
-<blockquote>
-<div><p>model i.e. ends with a ‘.p’ extension (e.g. retrained_model.p).</p>
-</div></blockquote>
-<ul>
-<li><dl class="simple">
-<dt>If ‘fasttext’, will load our pre-trained fasttext model and test it on your data.</dt><dd><p>(Need to have Poutyne&gt;=1.2 to work)</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>If ‘bpemb’, will load our pre-trained bpemb model and test it on your data.</dt><dd><p>(Need to have Poutyne&gt;=1.2 to work)</p>
-</dd>
-</dl>
-</li>
-</ul>
-</p></li>
+- If ‘str’, will load a specific model (e.g. a retrained model), must be a path to a pickled format
+model i.e. ends with a ‘.p’ extension (e.g. retrained_model.p).
+- If ‘fasttext’, will load our pre-trained fasttext model and test it on your data.
+(Need to have Poutyne&gt;=1.2 to work)
+- If ‘bpemb’, will load our pre-trained bpemb model and test it on your data.
+(Need to have Poutyne&gt;=1.2 to work)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>

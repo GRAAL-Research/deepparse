@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>deepparse.parser.address_parser &mdash; deepparse 0.2.2 documentation</title>
+  <title>deepparse.parser.address_parser &mdash; deepparse 0.2.3 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.2.2
+                0.2.3
               </div>
             
           
@@ -281,6 +281,7 @@
 <span class="sd">        Using a retrain model</span>
 
 <span class="sd">        .. code-block:: python</span>
+
 <span class="sd">                address_parser = AddressParser(model_type=&quot;fasttext&quot;,</span>
 <span class="sd">                                               path_to_retrained_model=&#39;/path_to_a_retrain_fasttext_model&#39;)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -485,16 +486,16 @@
 <span class="sd">                By default we set no callback.</span>
 <span class="sd">            seed (int): Seed to use (by default 42).</span>
 <span class="sd">            logging_path (str): The logging path for the checkpoints. By default the path is ``./chekpoints``.</span>
-<span class="sd">            checkpoint (Union[str, int]): Checkpoint to use for the test.</span>
+<span class="sd">                checkpoint (Union[str, int]): Checkpoint to use for the test.</span>
 <span class="sd">                - If &#39;best&#39;, will load the best weights.</span>
 <span class="sd">                - If &#39;last&#39;, will load the last model checkpoint.</span>
 <span class="sd">                - If int, will load a specific checkpoint (e.g. 3).</span>
 <span class="sd">                - If &#39;str&#39;, will load a specific model (e.g. a retrained model), must be a path to a pickled format</span>
-<span class="sd">                    model i.e. ends with a &#39;.p&#39; extension (e.g. retrained_model.p).</span>
+<span class="sd">                model i.e. ends with a &#39;.p&#39; extension (e.g. retrained_model.p).</span>
 <span class="sd">                - If &#39;fasttext&#39;, will load our pre-trained fasttext model and test it on your data.</span>
-<span class="sd">                    (Need to have Poutyne&gt;=1.2 to work)</span>
+<span class="sd">                (Need to have Poutyne&gt;=1.2 to work)</span>
 <span class="sd">                - If &#39;bpemb&#39;, will load our pre-trained bpemb model and test it on your data.</span>
-<span class="sd">                    (Need to have Poutyne&gt;=1.2 to work)</span>
+<span class="sd">                (Need to have Poutyne&gt;=1.2 to work)</span>
 <span class="sd">        Return:</span>
 <span class="sd">            A dictionary with the best epoch stats (see `Experiment class</span>
 <span class="sd">            &lt;https://poutyne.org/experiment.html#poutyne.Experiment.train&gt;`_ for details).</span>
@@ -514,6 +515,7 @@
 <span class="sd">                    address_parser.test(test_container) # using the default best epoch</span>
 <span class="sd">                    address_parser.test(test_container, checkpoint=&#39;last&#39;) # using the last epoch</span>
 <span class="sd">                    address_parser.test(test_container, checkpoint=5) # using the epoch 5 model</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;fasttext-light&quot;</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;It&#39;s not possible to test a fasttext-light due to pymagnitude problem.&quot;</span><span class="p">)</span>

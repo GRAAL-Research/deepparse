@@ -27,7 +27,7 @@ Deepparse is compatible with the **latest version of PyTorch** and  **Python >= 
 Countries and Results
 ===================
 
-The following table presents the accuracy of the 20 countries we used during training for both our models.
+The following table presents the accuracy on the 20 countries we used during training for both our models.
 
 .. list-table::
 		:header-rows: 1

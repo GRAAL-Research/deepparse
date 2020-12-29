@@ -38,7 +38,7 @@ def main(args):
     noisy_test_files = os.listdir(noisy_test_directory)
     noisy_training_test_results = {}
     for idx, noisy_test_file in enumerate(noisy_test_files):
-        results, country = test_on_country_data(address_parser, noisy_test_file, directory_path, args)
+        results, country = test_on_country_data(address_parser, noisy_test_file, noisy_test_directory, args)
         print(f"{idx} file done of {len(noisy_test_files)}.")
 
         if train_country_file(noisy_test_file):

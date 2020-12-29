@@ -62,7 +62,7 @@ We have also made a zero-shot evaluation of our models using data from 41 other 
 
 #### Noisy data
 The following table presents the accuracy on the 20 countries we used during training for both our models but for noisy 
-and incomplete data. We didn't test on the other 41 countries since we did not train and results were even lower.
+and incomplete data. We didn't test on the other 41 countries since we did not train on them and the results would most likely be even lower.
 
 > We are working on better model for noisy data.
 

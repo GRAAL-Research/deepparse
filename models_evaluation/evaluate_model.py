@@ -12,7 +12,6 @@ def main(args):
 
     address_parser = AddressParser(model_type=args.model_type, device=0)
     directory_path = args.test_directory
-
     test_files = os.listdir(directory_path)
     training_test_results = {}
     zero_shot_test_results = {}

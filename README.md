@@ -64,7 +64,7 @@ We have also made a zero-shot evaluation of our models using data from 41 other 
 The following table presents the accuracy on the 20 countries we used during training for both our models but for noisy 
 and incomplete data. We didn't test on the other 41 countries since we did not train on them and the results would most likely be even lower.
 
-> We are working on better model for noisy data.
+> We are working on better models for noisy data which should be made available during January 2021. 
 
 | Country     |   Fasttext (%) |   BPEmb (%) | Country        |   Fasttext (%) |   BPEmb (%) |
 |:------------|---------------:|------------:|:---------------|---------------:|------------:|

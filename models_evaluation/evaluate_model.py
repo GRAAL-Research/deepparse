@@ -75,6 +75,7 @@ if __name__ == "__main__":
                         help="Either or not the model to "
                         "evaluation is a fine tuning one. This will only better "
                         "create naming of results files.")
+    parser.add_argument("--batch_size", type=int, default=2048, help="Batch size of the data to evaluate on.")
     args_parser = parser.parse_args()
 
     main(args_parser)

@@ -44,3 +44,7 @@
 ## 0.2.3
 
 - Improved documentation
+
+## dev
+
+- Added Libpostal time in doc

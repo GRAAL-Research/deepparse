@@ -40,19 +40,23 @@ are a little bit lower on trained country (around ~2%) but are similar on zero-s
             - Mean time of execution (batch of more than 1) (s)
         *   - fastText
             - ~1
-            - ~9
+            - ~8
             - ~0.0037
             - ~0.0007
         *   - fastText-light
             - ~1
-            - ~2
+            - ~1
             - ~0.0074
             - ~0.0033
         *   - BPEmb
             - ~1
-            - ~2
+            - ~1
             - ~0.0097
             - ~0.0045
+        *   - Libpostal
+            - -
+            - <1
+            - ~0.00007
 
 .. list-table::
         :header-rows: 1
@@ -62,17 +66,21 @@ are a little bit lower on trained country (around ~2%) but are similar on zero-s
             - Mean time of execution (batch of 1) (s)
             - Mean time of execution (batch of more than 1) (s)
         *   - fastText
-            - ~9
+            - ~8
             - ~0.0216
             - ~0.0032
         *   - fastText-light
-            - ~2
+            - ~1
             - ~0.0177
             - ~0.0036
         *   - BPEmb
-            - ~2
+            - ~1
             - ~0.0309
             - ~0.0075
+        *   - Libpostal
+            - -
+            - <1
+            - ~0.00007
 
 The two tables highlight that the batch size (number of address in the list to be parsed) influence the processing time.
 Thus, the more there is address, the faster processing each address can be. However, note that at some point, this

@@ -1,3 +1,4 @@
+import argparse
 import json
 import os
 import pandas as pd
@@ -5,6 +6,19 @@ import pycountry
 
 from deepparse.dataset_container import PickleDatasetContainer
 from deepparse.parser import AddressParser
+
+
+def bool_parse(arg):
+    """
+    Function to better manage bool type in argparse
+    """
+    if arg.lower() in ("true", "t", "yes", "y", "1"):
+        is_bool = True
+    elif arg.lower() in ("false", "f", "no", "n", "0"):
+        is_bool = False
+    else:
+        raise argparse.ArgumentTypeError("Boolean value expected.")
+    return is_bool
 
 
 def clean_up_name(country: str) -> str:
@@ -66,7 +80,7 @@ def test_on_country_data(address_parser: AddressParser, file: str, directory_pat
     test_container = PickleDatasetContainer(test_file_path)
 
     results = address_parser.test(test_container,
-                                  batch_size=4096,
+                                  batch_size=args.batch_size,
                                   num_workers=4,
                                   logging_path=f"./chekpoints/{args.model_type}",
                                   checkpoint=args.model_path)

@@ -563,12 +563,15 @@ and incomplete data. We didn’t test on the other 41 countries since we did not
 <span class="n">parsed_address</span> <span class="o">=</span> <span class="n">address_parser</span><span class="p">(</span><span class="s2">&quot;350 rue des Lilas Ouest Québec Québec G1L 1B6&quot;</span><span class="p">,</span> <span class="n">with_prob</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
+<div class="section" id="retrain-a-model">
+<h2>Retrain a model<a class="headerlink" href="#retrain-a-model" title="Permalink to this headline">¶</a></h2>
 <p>see <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py">here</a> for a complete example.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># We will retrain the fasttext version of our pretrained model.</span>
 <span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;fasttext&quot;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
 <span class="n">address_parser</span><span class="o">.</span><span class="n">retrain</span><span class="p">(</span><span class="n">training_container</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
 </pre></div>
+</div>
 </div>
 </div>
 <div class="section" id="installation">
@@ -586,6 +589,9 @@ and incomplete data. We didn’t test on the other 41 countries since we did not
 </div>
 </li>
 </ul>
+</div>
+<div class="section" id="cite">
+<h1>Cite<a class="headerlink" href="#cite" title="Permalink to this headline">¶</a></h1>
 <div class="highlight-bib notranslate"><div class="highlight"><pre><span></span><span class="nc">@misc</span><span class="p">{</span><span class="nl">yassine2020leveraging</span><span class="p">,</span>
     <span class="na">title</span><span class="p">=</span><span class="s">{{Leveraging Subword Embeddings for Multinational Address Parsing}}</span><span class="p">,</span>
     <span class="na">author</span><span class="p">=</span><span class="s">{Marouane Yassine and David Beauchemin and François Laviolette and Luc Lamontagne}</span><span class="p">,</span>

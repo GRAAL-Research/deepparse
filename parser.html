@@ -196,6 +196,49 @@ are a little bit lower on trained country (around ~2%) but are similar on zero-s
 (see our <a class="reference external" href="https://arxiv.org/abs/2006.16152">article</a> for more details).</p>
 <table class="docutils align-default">
 <colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head"><p>Memory usage GPU (GB)</p></th>
+<th class="head"><p>Memory usage RAM (GB)</p></th>
+<th class="head"><p>Mean time of execution (batch of 1) (s)</p></th>
+<th class="head"><p>Mean time of execution (batch of more than 1) (s)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>fastText</p></td>
+<td><p>~1</p></td>
+<td><p>~8</p></td>
+<td><p>~0.0037</p></td>
+<td><p>~0.0007</p></td>
+</tr>
+<tr class="row-odd"><td><p>fastText-light</p></td>
+<td><p>~1</p></td>
+<td><p>~1</p></td>
+<td><p>~0.0074</p></td>
+<td><p>~0.0033</p></td>
+</tr>
+<tr class="row-even"><td><p>BPEmb</p></td>
+<td><p>~1</p></td>
+<td><p>~1</p></td>
+<td><p>~0.0097</p></td>
+<td><p>~0.0045</p></td>
+</tr>
+<tr class="row-odd"><td><p>Libpostal</p></td>
+<td><p>N/A</p></td>
+<td><p>N/A</p></td>
+<td><p>&lt;1</p></td>
+<td><p>~0.00007</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<colgroup>
 <col style="width: 25%" />
 <col style="width: 25%" />
 <col style="width: 25%" />

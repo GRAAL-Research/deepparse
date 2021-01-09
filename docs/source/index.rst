@@ -25,7 +25,7 @@ Read the documentation at `deepparse.org <https://deepparse.org>`_.
 Deepparse is compatible with the **latest version of PyTorch** and  **Python >= 3.6**.
 
 Countries and Results
-===================
+=====================
 
 The following table presents the accuracy on the 20 countries we used during training for both our models.
 
@@ -336,7 +336,7 @@ Getting started
 
 
 Retrain a model
----------------
+***************
 see `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py>`_ for a complete example.
 
 .. code-block:: python
@@ -367,7 +367,7 @@ Before installing deepparse, you must have the latest version of `PyTorch <https
 
 
 Cite
-----
+====
 
 .. code-block:: bib
 

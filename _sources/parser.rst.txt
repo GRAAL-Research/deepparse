@@ -80,7 +80,6 @@ are a little bit lower on trained country (around ~2%) but are similar on zero-s
             - ~0.0075
         *   - Libpostal
             - N/A
-            - N/A
             - <1
             - ~0.00007
 

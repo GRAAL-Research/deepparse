@@ -3,9 +3,9 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Parser &mdash; deepparse 0.2.3 documentation</title>
   
@@ -16,7 +16,10 @@
 
   
   
+
   
+  
+
   
 
   
@@ -143,6 +146,8 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
@@ -154,7 +159,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="_sources/parser.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -184,50 +189,13 @@ the architecture is similar, and performances are comparable; our results are av
 <p>We have conducted an experiment, and we report the results in the next two tables. In each table, we report the RAM usage,
 and in the first table, we also report the GPU memory usage. Also, for both table, we report the mean-time of execution
 that was obtained by processing ~183,000 address using different batch size (2^0, …, 2^9)
-(i.e. <span class="math notranslate nohighlight">\(\frac{\text{Total time to process all addresses}}{~183,000} = \text{time per address}\)</span>). In addition, we
-proposed a lighter version (fastText-light) of our fastText model using
+(i.e. <span class="math notranslate nohighlight">\(\frac{\text{Total time to process all addresses}}{~183,000}\)</span> :math:` = text{time per address}).
+In addition, we proposed a lighter version (fastText-light) of our fastText model using
 <a class="reference external" href="https://github.com/plasticityai/magnitude">Magnitude embeddings mapping</a>. Fot this lighter model, in average results
 are a little bit lower on trained country (around ~2%) but are similar on zero-shot country
 (see our <a class="reference external" href="https://arxiv.org/abs/2006.16152">article</a> for more details).</p>
 <table class="docutils align-default">
 <colgroup>
-<col style="width: 20%" />
-<col style="width: 20%" />
-<col style="width: 20%" />
-<col style="width: 20%" />
-<col style="width: 20%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"></th>
-<th class="head"><p>Memory usage GPU (GB)</p></th>
-<th class="head"><p>Memory usage RAM (GB)</p></th>
-<th class="head"><p>Mean time of execution (batch of 1) (s)</p></th>
-<th class="head"><p>Mean time of execution (batch of more than 1) (s)</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>fastText</p></td>
-<td><p>~1</p></td>
-<td><p>~9</p></td>
-<td><p>~0.0037</p></td>
-<td><p>~0.0007</p></td>
-</tr>
-<tr class="row-odd"><td><p>fastText-light</p></td>
-<td><p>~1</p></td>
-<td><p>~2</p></td>
-<td><p>~0.0074</p></td>
-<td><p>~0.0033</p></td>
-</tr>
-<tr class="row-even"><td><p>BPEmb</p></td>
-<td><p>~1</p></td>
-<td><p>~2</p></td>
-<td><p>~0.0097</p></td>
-<td><p>~0.0045</p></td>
-</tr>
-</tbody>
-</table>
-<table class="docutils align-default">
-<colgroup>
 <col style="width: 25%" />
 <col style="width: 25%" />
 <col style="width: 25%" />
@@ -242,19 +210,27 @@ are a little bit lower on trained country (around ~2%) but are similar on zero-s
 </thead>
 <tbody>
 <tr class="row-even"><td><p>fastText</p></td>
-<td><p>~9</p></td>
+<td><p>~8</p></td>
 <td><p>~0.0216</p></td>
 <td><p>~0.0032</p></td>
 </tr>
 <tr class="row-odd"><td><p>fastText-light</p></td>
-<td><p>~2</p></td>
+<td><p>~1</p></td>
 <td><p>~0.0177</p></td>
 <td><p>~0.0036</p></td>
 </tr>
 <tr class="row-even"><td><p>BPEmb</p></td>
-<td><p>~2</p></td>
+<td><p>~1</p></td>
 <td><p>~0.0309</p></td>
 <td><p>~0.0075</p></td>
+</tr>
+<tr class="row-odd"><td><p>Libpostal</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+<td><p>&lt;1</p></td>
+<td><p>~0.00007</p></td>
 </tr>
 </tbody>
 </table>
@@ -287,7 +263,7 @@ networks either with fastText or BPEmb.</p>
 <ul>
 <li><p>a <code class="docutils literal notranslate"><span class="pre">GPU</span></code> index in int format (e.g. <code class="docutils literal notranslate"><span class="pre">0</span></code>);</p></li>
 <li><p>a complete device name in a string format (e.g. <code class="docutils literal notranslate"><span class="pre">'cuda:0'</span></code>);</p></li>
-<li><p>a <a class="reference external" href="https://pytorch.org/docs/master/tensor_attributes.html#torch.torch.device" title="(in PyTorch vmaster (1.8.0a0+606ddb1 ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">device</span></code></a> object;</p></li>
+<li><p>a <a class="reference external" href="https://pytorch.org/docs/master/tensor_attributes.html#torch.torch.device" title="(in PyTorch vmaster (1.8.0a0+206064a ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">device</span></code></a> object;</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'cpu'</span></code> for a  <code class="docutils literal notranslate"><span class="pre">CPU</span></code> use.</p></li>
 </ul>
 <p>The default value is GPU with the index <code class="docutils literal notranslate"><span class="pre">0</span></code> if it exist, otherwise the value is <code class="docutils literal notranslate"><span class="pre">CPU</span></code>.</p>
@@ -592,37 +568,29 @@ are the address components and the second elements are the tags.</p>
            
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="dataset_container.html" class="btn btn-neutral float-right" title="Dataset Container" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="index.html" class="btn btn-neutral float-left" title="Here is deepparse" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="dataset_container.html" class="btn btn-neutral float-right" title="Dataset Container" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Here is deepparse" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        
-        &copy; Copyright 2020-2020, Marouane Yassine &amp; David Beauchemin
+        &#169; Copyright 2020-2021, Marouane Yassine &amp; David Beauchemin.
 
     </p>
   </div>
     
     
     
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     
     provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 

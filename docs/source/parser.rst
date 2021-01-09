@@ -54,7 +54,7 @@ are a little bit lower on trained country (around ~2%) but are similar on zero-s
             - ~0.0097
             - ~0.0045
         *   - Libpostal
-            - -
+            - N/A
             - <1
             - ~0.00007
 

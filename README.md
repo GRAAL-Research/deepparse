@@ -1,8 +1,10 @@
 <img src="https://raw.githubusercontent.com/GRAAL-Research/deepparse/master/docs/source/_static/logos/logo.png" width="150" height="135"/>
 
-[![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](http://www.gnu.org/licenses/lgpl-3.0)
-[![Continuous Integration](https://github.com/GRAAL-Research/deepparse/workflows/Continuous%20Integration/badge.svg)](https://github.com/GRAAL-Research/deepparse/actions?query=workflow%3A%22Continuous+Integration%22+branch%3Amaster)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/deepparse)](https://pypi.org/project/deepparse)
+[![PyPI Status](https://badge.fury.io/py/deepparse.svg)](https://badge.fury.io/py/deepparse)
 [![PyPI Status](https://pepy.tech/badge/notif)](https://pepy.tech/project/notif)
+[![Continuous Integration](https://github.com/GRAAL-Research/deepparse/workflows/Continuous%20Integration/badge.svg)](https://github.com/GRAAL-Research/deepparse/actions?query=workflow%3A%22Continuous+Integration%22+branch%3Amaster)
+[![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](http://www.gnu.org/licenses/lgpl-3.0)
 
 ## Here is deepparse.
 

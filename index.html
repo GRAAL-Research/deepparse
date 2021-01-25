@@ -562,6 +562,19 @@ and incomplete data. We didn’t test on the other 41 countries since we did not
 <span class="n">parsed_address</span> <span class="o">=</span> <span class="n">address_parser</span><span class="p">(</span><span class="s2">&quot;350 rue des Lilas Ouest Québec Québec G1L 1B6&quot;</span><span class="p">,</span> <span class="n">with_prob</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>The predictions tags are the following</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>“StreetNumber”: for the street number</p></li>
+<li><p>“StreetName”: for the name of the street</p></li>
+<li><p>“Unit”: for the unit (such as apartment)</p></li>
+<li><p>“Municipality”: for the municipality</p></li>
+<li><p>“Province”: for the province or local region</p></li>
+<li><p>“PostalCode”: for the postal code</p></li>
+<li><p>“Orientation”: for the street orientation (e.g. west, east)</p></li>
+<li><p>“GeneralDelivery”: for other delivery information</p></li>
+</ul>
+</div></blockquote>
 <div class="section" id="retrain-a-model">
 <h2>Retrain a model<a class="headerlink" href="#retrain-a-model" title="Permalink to this headline">¶</a></h2>
 <p>see <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py">here</a> for a complete example.</p>

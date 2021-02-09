@@ -42,7 +42,7 @@ The following table presents the accuracy (using clean data) on the 20 countries
 | Spain          |          99.73 |       99.4  | Finland     |          99.77 |       99.76 |
 
 
-We have also made a zero-shot evaluation of our models using (clean) data from 41 other countries; the results are shown in the next table.
+We have also made a zero-shot evaluation of our models using clean data from 41 other countries; the results are shown in the next table.
 
 | Country      |   Fasttext (%) |   BPEmb (%) | Country       |   Fasttext (%) |   BPEmb (%) |
 |:-------------|---------------:|------------:|:--------------|---------------:|------------:|

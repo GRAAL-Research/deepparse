@@ -11,7 +11,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Here is deepparse &mdash; deepparse 0.2.3 documentation</title>
+  <title>Here is deepparse &mdash; deepparse 0.3.1 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.2.3
+                0.3.1
               </div>
             
           
@@ -187,7 +187,18 @@
 </div>
 <div class="section" id="countries-and-results">
 <h1>Countries and Results<a class="headerlink" href="#countries-and-results" title="Permalink to this headline">¶</a></h1>
-<p>The following table presents the accuracy on the 20 countries we used during training for both our models.</p>
+<p>We evaluate our models on two forms of address data:</p>
+<ul class="simple">
+<li><p><strong>clean data</strong> which refers to addresses containing</p></li>
+</ul>
+<p>elements from four categories, namely a street name, a municipality, a province and a postal code.</p>
+<ul class="simple">
+<li><p><strong>noisy data</strong> which is made up of addresses missing at least one category amongst the aforementioned</p></li>
+</ul>
+<p>ones.</p>
+<div class="section" id="clean-data">
+<h2>Clean data<a class="headerlink" href="#clean-data" title="Permalink to this headline">¶</a></h2>
+<p>The following table presents the accuracy on the 20 countries (using clean data) we used during training for both our models.</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 17%" />
@@ -207,79 +218,79 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Italy</p></td>
-<td><p>99.66</p></td>
-<td><p>99.73</p></td>
-<td><p>United States</p></td>
-<td><p>99.56</p></td>
-<td><p>99.53</p></td>
+<tr class="row-even"><td><p>Norway</p></td>
+<td><p>99.06</p></td>
+<td><p>98.3</p></td>
+<td><p>Austria</p></td>
+<td><p>99.21</p></td>
+<td><p>97.82</p></td>
+</tr>
+<tr class="row-odd"><td><p>Italy</p></td>
+<td><p>99.65</p></td>
+<td><p>98.93</p></td>
+<td><p>Mexico</p></td>
+<td><p>99.49</p></td>
+<td><p>98.9</p></td>
+</tr>
+<tr class="row-even"><td><p>United Kingdom</p></td>
+<td><p>99.58</p></td>
+<td><p>97.62</p></td>
+<td><p>Switzerland</p></td>
+<td><p>98.9</p></td>
+<td><p>98.38</p></td>
 </tr>
 <tr class="row-odd"><td><p>Germany</p></td>
 <td><p>99.72</p></td>
-<td><p>99.84</p></td>
-<td><p>Austria</p></td>
-<td><p>99.19</p></td>
+<td><p>99.4</p></td>
+<td><p>Denmark</p></td>
+<td><p>99.71</p></td>
+<td><p>99.55</p></td>
+</tr>
+<tr class="row-even"><td><p>France</p></td>
+<td><p>99.6</p></td>
+<td><p>98.18</p></td>
+<td><p>Brazil</p></td>
+<td><p>99.31</p></td>
+<td><p>97.69</p></td>
+</tr>
+<tr class="row-odd"><td><p>Netherlands</p></td>
+<td><p>99.47</p></td>
+<td><p>99.54</p></td>
+<td><p>Australia</p></td>
+<td><p>99.68</p></td>
+<td><p>98.44</p></td>
+</tr>
+<tr class="row-even"><td><p>Poland</p></td>
+<td><p>99.64</p></td>
+<td><p>99.52</p></td>
+<td><p>Czechia</p></td>
+<td><p>99.48</p></td>
+<td><p>99.03</p></td>
+</tr>
+<tr class="row-odd"><td><p>United States</p></td>
+<td><p>99.56</p></td>
+<td><p>97.69</p></td>
+<td><p>Canada</p></td>
+<td><p>99.76</p></td>
 <td><p>99.03</p></td>
 </tr>
 <tr class="row-even"><td><p>South Korea</p></td>
-<td><p>99.96</p></td>
-<td><p>100.00</p></td>
-<td><p>Canada</p></td>
-<td><p>99.76</p></td>
-<td><p>99.80</p></td>
-</tr>
-<tr class="row-odd"><td><p>Mexico</p></td>
-<td><p>99.54</p></td>
-<td><p>99.60</p></td>
-<td><p>Australia</p></td>
-<td><p>99.62</p></td>
-<td><p>99.74</p></td>
-</tr>
-<tr class="row-even"><td><p>Finland</p></td>
-<td><p>99.75</p></td>
-<td><p>99.87</p></td>
-<td><p>Netherlands</p></td>
-<td><p>99.50</p></td>
-<td><p>99.84</p></td>
-</tr>
-<tr class="row-odd"><td><p>France</p></td>
-<td><p>99.54</p></td>
-<td><p>99.50</p></td>
-<td><p>United Kingdom</p></td>
-<td><p>99.54</p></td>
-<td><p>99.62</p></td>
-</tr>
-<tr class="row-even"><td><p>Russia</p></td>
-<td><p>98.71</p></td>
-<td><p>99.49</p></td>
-<td><p>Norway</p></td>
-<td><p>99.40</p></td>
-<td><p>98.71</p></td>
-</tr>
-<tr class="row-odd"><td><p>Switzerland</p></td>
-<td><p>99.48</p></td>
-<td><p>99.61</p></td>
-<td><p>Poland</p></td>
-<td><p>99.64</p></td>
-<td><p>99.83</p></td>
-</tr>
-<tr class="row-even"><td><p>Brazil</p></td>
-<td><p>99.33</p></td>
-<td><p>99.24</p></td>
-<td><p>Denmark</p></td>
-<td><p>99.65</p></td>
-<td><p>99.84</p></td>
+<td><p>99.97</p></td>
+<td><p>99.99</p></td>
+<td><p>Russia</p></td>
+<td><p>98.9</p></td>
+<td><p>96.97</p></td>
 </tr>
 <tr class="row-odd"><td><p>Spain</p></td>
-<td><p>99.70</p></td>
-<td><p>99.79</p></td>
-<td><p>Czechia</p></td>
-<td><p>99.46</p></td>
-<td><p>99.83</p></td>
+<td><p>99.73</p></td>
+<td><p>99.4</p></td>
+<td><p>Finland</p></td>
+<td><p>99.77</p></td>
+<td><p>99.76</p></td>
 </tr>
 </tbody>
 </table>
-<p>We have also made a zero-shot evaluation of our models using data from 41 other countries; the results are shown in the next table.</p>
+<p>We have also made a zero-shot evaluation of our models using clean data from 41 other countries; the results are shown in the next table.</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 17%" />
@@ -299,160 +310,161 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Philippines</p></td>
-<td><p>81.56</p></td>
-<td><p>83.73</p></td>
-<td><p>South Africa</p></td>
-<td><p>92.69</p></td>
-<td><p>95.03</p></td>
+<tr class="row-even"><td><p>Latvia</p></td>
+<td><p>89.29</p></td>
+<td><p>68.31</p></td>
+<td><p>Faroe Islands</p></td>
+<td><p>71.22</p></td>
+<td><p>64.74</p></td>
 </tr>
 <tr class="row-odd"><td><p>Colombia</p></td>
-<td><p>85.92</p></td>
-<td><p>87.50</p></td>
-<td><p>Venezuela</p></td>
-<td><p>95.36</p></td>
-<td><p>89.67</p></td>
+<td><p>85.96</p></td>
+<td><p>68.09</p></td>
+<td><p>Singapore</p></td>
+<td><p>86.03</p></td>
+<td><p>67.19</p></td>
+</tr>
+<tr class="row-even"><td><p>Réunion</p></td>
+<td><p>84.3</p></td>
+<td><p>78.65</p></td>
+<td><p>Indonesia</p></td>
+<td><p>62.38</p></td>
+<td><p>63.04</p></td>
+</tr>
+<tr class="row-odd"><td><p>Japan</p></td>
+<td><p>36.26</p></td>
+<td><p>34.97</p></td>
+<td><p>Portugal</p></td>
+<td><p>93.09</p></td>
+<td><p>72.01</p></td>
+</tr>
+<tr class="row-even"><td><p>Algeria</p></td>
+<td><p>86.32</p></td>
+<td><p>70.59</p></td>
+<td><p>Belgium</p></td>
+<td><p>93.14</p></td>
+<td><p>86.06</p></td>
+</tr>
+<tr class="row-odd"><td><p>Malaysia</p></td>
+<td><p>83.14</p></td>
+<td><p>89.64</p></td>
+<td><p>Ukraine</p></td>
+<td><p>93.34</p></td>
+<td><p>89.42</p></td>
+</tr>
+<tr class="row-even"><td><p>Estonia</p></td>
+<td><p>87.62</p></td>
+<td><p>70.08</p></td>
+<td><p>Bangladesh</p></td>
+<td><p>72.28</p></td>
+<td><p>65.63</p></td>
+</tr>
+<tr class="row-odd"><td><p>Slovenia</p></td>
+<td><p>89.01</p></td>
+<td><p>83.96</p></td>
+<td><p>Hungary</p></td>
+<td><p>51.52</p></td>
+<td><p>37.87</p></td>
 </tr>
 <tr class="row-even"><td><p>Bermuda</p></td>
-<td><p>91.30</p></td>
-<td><p>93.66</p></td>
-<td><p>Lithuania</p></td>
-<td><p>89.21</p></td>
-<td><p>76.60</p></td>
+<td><p>83.19</p></td>
+<td><p>59.16</p></td>
+<td><p>Romania</p></td>
+<td><p>90.04</p></td>
+<td><p>82.9</p></td>
 </tr>
-<tr class="row-odd"><td><p>Moldova</p></td>
-<td><p>88.51</p></td>
-<td><p>89.13</p></td>
-<td><p>India</p></td>
-<td><p>66.91</p></td>
-<td><p>77.26</p></td>
+<tr class="row-odd"><td><p>Philippines</p></td>
+<td><p>63.91</p></td>
+<td><p>57.36</p></td>
+<td><p>Belarus</p></td>
+<td><p>93.25</p></td>
+<td><p>78.59</p></td>
 </tr>
-<tr class="row-even"><td><p>Malaysia</p></td>
-<td><p>81.31</p></td>
-<td><p>92.78</p></td>
-<td><p>Bosnia</p></td>
-<td><p>88.91</p></td>
-<td><p>84.33</p></td>
+<tr class="row-even"><td><p>Bosnia</p></td>
+<td><p>88.54</p></td>
+<td><p>67.46</p></td>
+<td><p>Moldova</p></td>
+<td><p>89.22</p></td>
+<td><p>57.48</p></td>
 </tr>
-<tr class="row-odd"><td><p>Belgium</p></td>
-<td><p>89.57</p></td>
-<td><p>86.41</p></td>
-<td><p>Ukraine</p></td>
-<td><p>91.80</p></td>
-<td><p>92.73</p></td>
-</tr>
-<tr class="row-even"><td><p>Greece</p></td>
-<td><p>83.42</p></td>
-<td><p>39.82</p></td>
-<td><p>Algeria</p></td>
-<td><p>86.93</p></td>
-<td><p>80.62</p></td>
-</tr>
-<tr class="row-odd"><td><p>Slovakia</p></td>
-<td><p>81.00</p></td>
-<td><p>91.28</p></td>
-<td><p>Bangladesh</p></td>
-<td><p>74.49</p></td>
-<td><p>79.29</p></td>
-</tr>
-<tr class="row-even"><td><p>Latvia</p></td>
-<td><p>93.80</p></td>
-<td><p>80.18</p></td>
-<td><p>Reunion</p></td>
-<td><p>96.48</p></td>
-<td><p>93.40</p></td>
-</tr>
-<tr class="row-odd"><td><p>Romania</p></td>
-<td><p>93.23</p></td>
-<td><p>91.83</p></td>
-<td><p>Singapore</p></td>
-<td><p>84.55</p></td>
-<td><p>81.68</p></td>
-</tr>
-<tr class="row-even"><td><p>Indonesia</p></td>
-<td><p>63.15</p></td>
-<td><p>67.97</p></td>
-<td><p>Cyprus</p></td>
-<td><p>97.69</p></td>
-<td><p>98.30</p></td>
-</tr>
-<tr class="row-odd"><td><p>Portugal</p></td>
-<td><p>93.39</p></td>
-<td><p>93.20</p></td>
-<td><p>Serbia</p></td>
-<td><p>95.62</p></td>
-<td><p>94.69</p></td>
+<tr class="row-odd"><td><p>Lithuania</p></td>
+<td><p>93.28</p></td>
+<td><p>69.97</p></td>
+<td><p>Paraguay</p></td>
+<td><p>96.02</p></td>
+<td><p>87.07</p></td>
 </tr>
 <tr class="row-even"><td><p>Croatia</p></td>
-<td><p>96.63</p></td>
-<td><p>86.24</p></td>
-<td><p>Japan</p></td>
-<td><p>44.33</p></td>
-<td><p>35.77</p></td>
-</tr>
-<tr class="row-odd"><td><p>New Caledonia</p></td>
-<td><p>99.42</p></td>
-<td><p>99.01</p></td>
-<td><p>New Zealand</p></td>
-<td><p>97.04</p></td>
-<td><p>98.86</p></td>
-</tr>
-<tr class="row-even"><td><p>Uzbekistan</p></td>
-<td><p>87.63</p></td>
-<td><p>71.93</p></td>
-<td><p>Faroe Islands</p></td>
-<td><p>71.73</p></td>
-<td><p>85.46</p></td>
-</tr>
-<tr class="row-odd"><td><p>Hungary</p></td>
-<td><p>47.00</p></td>
-<td><p>24.05</p></td>
-<td><p>Slovenia</p></td>
-<td><p>96.27</p></td>
-<td><p>97.28</p></td>
-</tr>
-<tr class="row-even"><td><p>Paraguay</p></td>
-<td><p>97.00</p></td>
-<td><p>97.15</p></td>
-<td><p>Iceland</p></td>
-<td><p>95.76</p></td>
-<td><p>98.01</p></td>
-</tr>
-<tr class="row-odd"><td><p>Estonia</p></td>
-<td><p>90.61</p></td>
-<td><p>76.45</p></td>
+<td><p>95.8</p></td>
+<td><p>81.76</p></td>
 <td><p>Argentina</p></td>
-<td><p>89.47</p></td>
-<td><p>88.55</p></td>
+<td><p>81.68</p></td>
+<td><p>71.2</p></td>
 </tr>
-<tr class="row-even"><td><p>Bulgaria</p></td>
-<td><p>92.70</p></td>
-<td><p>95.87</p></td>
-<td><p>Sweden</p></td>
-<td><p>77.29</p></td>
-<td><p>87.77</p></td>
-</tr>
-<tr class="row-odd"><td><p>Belarus</p></td>
-<td><p>88.77</p></td>
-<td><p>93.00</p></td>
+<tr class="row-odd"><td><p>Ireland</p></td>
+<td><p>80.16</p></td>
+<td><p>54.44</p></td>
 <td><p>Kazakhstan</p></td>
-<td><p>87.24</p></td>
-<td><p>91.23</p></td>
+<td><p>89.04</p></td>
+<td><p>76.13</p></td>
 </tr>
-<tr class="row-even"><td><p>Ireland</p></td>
-<td><p>86.35</p></td>
-<td><p>87.49</p></td>
+<tr class="row-even"><td><p>Greece</p></td>
+<td><p>87.08</p></td>
+<td><p>38.95</p></td>
+<td><p>Bulgaria</p></td>
+<td><p>91.16</p></td>
+<td><p>65.76</p></td>
+</tr>
+<tr class="row-odd"><td><p>Serbia</p></td>
+<td><p>92.87</p></td>
+<td><p>76.79</p></td>
+<td><p>New Caledonia</p></td>
+<td><p>94.45</p></td>
+<td><p>94.46</p></td>
+</tr>
+<tr class="row-even"><td><p>Sweden</p></td>
+<td><p>73.13</p></td>
+<td><p>86.85</p></td>
+<td><p>Venezuela</p></td>
+<td><p>79.23</p></td>
+<td><p>70.88</p></td>
+</tr>
+<tr class="row-odd"><td><p>New Zealand</p></td>
+<td><p>91.25</p></td>
+<td><p>75.57</p></td>
+<td><p>Iceland</p></td>
+<td><p>83.7</p></td>
+<td><p>77.09</p></td>
+</tr>
+<tr class="row-even"><td><p>India</p></td>
+<td><p>70.3</p></td>
+<td><p>63.68</p></td>
+<td><p>Uzbekistan</p></td>
+<td><p>85.85</p></td>
+<td><p>70.1</p></td>
+</tr>
+<tr class="row-odd"><td><p>Cyprus</p></td>
+<td><p>89.64</p></td>
+<td><p>89.47</p></td>
+<td><p>Slovakia</p></td>
+<td><p>78.34</p></td>
+<td><p>68.96</p></td>
+</tr>
+<tr class="row-even"><td><p>South Africa</p></td>
+<td><p>95.68</p></td>
+<td><p>74.829</p></td>
 <td></td>
 <td></td>
 <td></td>
 </tr>
 </tbody>
 </table>
+</div>
 <div class="section" id="noisy-data">
 <h2>Noisy data<a class="headerlink" href="#noisy-data" title="Permalink to this headline">¶</a></h2>
 <p>The following table presents the accuracy on the 20 countries we used during training for both our models but for noisy
-and incomplete data. We didn’t test on the other 41 countries since we did not train on them and the results would most likely be even lower.</p>
-<p>&gt; We are working on better models for noisy data which should be made available during January 2021.</p>
+and incomplete data. We didn’t test on the other 41 countries since we did not train on them and therefore do not expect
+to achieve an interesting performance.</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 17%" />
@@ -472,75 +484,75 @@ and incomplete data. We didn’t test on the other 41 countries since we did not
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Italy</p></td>
-<td><p>64.36</p></td>
-<td><p>71.18</p></td>
-<td><p>United States</p></td>
-<td><p>57.59</p></td>
-<td><p>58.35</p></td>
+<tr class="row-even"><td><p>Norway</p></td>
+<td><p>99.52</p></td>
+<td><p>99.75</p></td>
+<td><p>Austria</p></td>
+<td><p>99.55</p></td>
+<td><p>98.94</p></td>
+</tr>
+<tr class="row-odd"><td><p>Italy</p></td>
+<td><p>99.16</p></td>
+<td><p>98.88</p></td>
+<td><p>Mexico</p></td>
+<td><p>97.24</p></td>
+<td><p>95.93</p></td>
+</tr>
+<tr class="row-even"><td><p>United Kingdom</p></td>
+<td><p>97.85</p></td>
+<td><p>95.2</p></td>
+<td><p>Switzerland</p></td>
+<td><p>99.2</p></td>
+<td><p>99.47</p></td>
 </tr>
 <tr class="row-odd"><td><p>Germany</p></td>
-<td><p>39.63</p></td>
-<td><p>52.46</p></td>
-<td><p>Austria</p></td>
-<td><p>61.93</p></td>
-<td><p>73.64</p></td>
+<td><p>99.41</p></td>
+<td><p>99.38</p></td>
+<td><p>Denmark</p></td>
+<td><p>97.86</p></td>
+<td><p>97.9</p></td>
+</tr>
+<tr class="row-even"><td><p>France</p></td>
+<td><p>99.51</p></td>
+<td><p>98.49</p></td>
+<td><p>Brazil</p></td>
+<td><p>98.96</p></td>
+<td><p>97.12</p></td>
+</tr>
+<tr class="row-odd"><td><p>Netherlands</p></td>
+<td><p>98.74</p></td>
+<td><p>99.46</p></td>
+<td><p>Australia</p></td>
+<td><p>99.34</p></td>
+<td><p>98.7</p></td>
+</tr>
+<tr class="row-even"><td><p>Poland</p></td>
+<td><p>99.43</p></td>
+<td><p>99.41</p></td>
+<td><p>Czechia</p></td>
+<td><p>98.78</p></td>
+<td><p>98.88</p></td>
+</tr>
+<tr class="row-odd"><td><p>United States</p></td>
+<td><p>98.49</p></td>
+<td><p>96.5</p></td>
+<td><p>Canada</p></td>
+<td><p>98.96</p></td>
+<td><p>96.98</p></td>
 </tr>
 <tr class="row-even"><td><p>South Korea</p></td>
-<td><p>27.67</p></td>
-<td><p>40.93</p></td>
-<td><p>Canada</p></td>
-<td><p>70.42</p></td>
-<td><p>70.31</p></td>
-</tr>
-<tr class="row-odd"><td><p>Mexico</p></td>
-<td><p>50.68</p></td>
-<td><p>43.81</p></td>
-<td><p>Australia</p></td>
-<td><p>72.38</p></td>
-<td><p>72.92</p></td>
-</tr>
-<tr class="row-even"><td><p>Finland</p></td>
-<td><p>43.23</p></td>
-<td><p>68.26</p></td>
-<td><p>Netherlands</p></td>
-<td><p>47.42</p></td>
-<td><p>69.62</p></td>
-</tr>
-<tr class="row-odd"><td><p>France</p></td>
-<td><p>65.3</p></td>
-<td><p>66.93</p></td>
-<td><p>United Kingdom</p></td>
-<td><p>44.82</p></td>
-<td><p>43.03</p></td>
-</tr>
-<tr class="row-even"><td><p>Russia</p></td>
-<td><p>52.75</p></td>
-<td><p>47.48</p></td>
-<td><p>Norway</p></td>
-<td><p>54.37</p></td>
-<td><p>71.26</p></td>
-</tr>
-<tr class="row-odd"><td><p>Switzerland</p></td>
-<td><p>54.13</p></td>
-<td><p>66.27</p></td>
-<td><p>Poland</p></td>
-<td><p>37.89</p></td>
-<td><p>43.31</p></td>
-</tr>
-<tr class="row-even"><td><p>Brazil</p></td>
-<td><p>48.07</p></td>
-<td><p>46.25</p></td>
-<td><p>Denmark</p></td>
-<td><p>48.12</p></td>
-<td><p>56.76</p></td>
+<td><p>91.1</p></td>
+<td><p>99.89</p></td>
+<td><p>Russia</p></td>
+<td><p>97.18</p></td>
+<td><p>96.01</p></td>
 </tr>
 <tr class="row-odd"><td><p>Spain</p></td>
-<td><p>68.19</p></td>
-<td><p>77.27</p></td>
-<td><p>Czechia</p></td>
-<td><p>52.86</p></td>
-<td><p>62.88</p></td>
+<td><p>99.07</p></td>
+<td><p>98.35</p></td>
+<td><p>Finland</p></td>
+<td><p>99.04</p></td>
+<td><p>99.52</p></td>
 </tr>
 </tbody>
 </table>

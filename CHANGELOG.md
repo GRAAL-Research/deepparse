@@ -49,3 +49,4 @@
 
 - Added Libpostal time in doc
 - Documentation improvement
+- Added new models evaluation to doc

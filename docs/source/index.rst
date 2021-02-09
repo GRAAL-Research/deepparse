@@ -24,7 +24,18 @@ Deepparse is compatible with the **latest version of PyTorch** and  **Python >= 
 Countries and Results
 =====================
 
-The following table presents the accuracy on the 20 countries we used during training for both our models.
+We evaluate our models on two forms of address data: 
+
+- **clean data** which refers to addresses containing 
+elements from four categories, namely a street name, a municipality, a province and a postal code. 
+
+- **noisy data** which is made up of addresses missing at least one category amongst the aforementioned
+ones.
+
+Clean data
+**********
+
+The following table presents the accuracy on the 20 countries (using clean data) we used during training for both our models.
 
 .. list-table::
 		:header-rows: 1
@@ -35,69 +46,69 @@ The following table presents the accuracy on the 20 countries we used during tra
 			- Country
 			- Fasttext (%)
 			- BPEmb (%)
+		*	- Norway
+			- 99.06
+			- 98.3
+			- Austria
+			- 99.21
+			- 97.82
 		*	- Italy
-			- 99.66
-			- 99.73
-			- United States
-			- 99.56
-			- 99.53
+			- 99.65
+			- 98.93
+			- Mexico
+			- 99.49
+			- 98.9
+		*	- United Kingdom
+			- 99.58
+			- 97.62
+			- Switzerland
+			- 98.9
+			- 98.38
 		*	- Germany
 			- 99.72
-			- 99.84
-			- Austria
-			- 99.19
+			- 99.4
+			- Denmark
+			- 99.71
+			- 99.55
+		*	- France
+			- 99.6
+			- 98.18
+			- Brazil
+			- 99.31
+			- 97.69
+		*	- Netherlands
+			- 99.47
+			- 99.54
+			- Australia
+			- 99.68
+			- 98.44
+		*	- Poland
+			- 99.64
+			- 99.52
+			- Czechia
+			- 99.48
 			- 99.03
-		*	- South Korea
-			- 99.96
-			- 100.00
+		*	- United States
+			- 99.56
+			- 97.69
 			- Canada
 			- 99.76
-			- 99.80
-		*	- Mexico
-			- 99.54
-			- 99.60
-			- Australia
-			- 99.62
-			- 99.74
-		*	- Finland
-			- 99.75
-			- 99.87
-			- Netherlands
-			- 99.50
-			- 99.84
-		*	- France
-			- 99.54
-			- 99.50
-			- United Kingdom
-			- 99.54
-			- 99.62
-		*	- Russia
-			- 98.71
-			- 99.49
-			- Norway
-			- 99.40
-			- 98.71
-		*	- Switzerland
-			- 99.48
-			- 99.61
-			- Poland
-			- 99.64
-			- 99.83
-		*	- Brazil
-			- 99.33
-			- 99.24
-			- Denmark
-			- 99.65
-			- 99.84
+			- 99.03
+		*	- South Korea
+			- 99.97
+			- 99.99
+			- Russia
+			- 98.9
+			- 96.97
 		*	- Spain
-			- 99.70
-			- 99.79
-			- Czechia
-			- 99.46
-			- 99.83
+			- 99.73
+			- 99.4
+			- Finland
+			- 99.77
+			- 99.76
 
 
-We have also made a zero-shot evaluation of our models using data from 41 other countries; the results are shown in the next table.
+We have also made a zero-shot evaluation of our models using clean data from 41 other countries; the results are shown in the next table.
 
 .. list-table::
 		:header-rows: 1
@@ -108,129 +119,129 @@ We have also made a zero-shot evaluation of our models using data from 41 other 
 			- Country
 			- Fasttext (%)
 			- BPEmb (%)
-		*	- Philippines
-			- 81.56
-			- 83.73
-			- South Africa
-			- 92.69
-			- 95.03
-		*	- Colombia
-			- 85.92
-			- 87.50
-			- Venezuela
-			- 95.36
-			- 89.67
-		*	- Bermuda
-			- 91.30
-			- 93.66
-			- Lithuania
-			- 89.21
-			- 76.60
-		*	- Moldova
-			- 88.51
-			- 89.13
-			- India
-			- 66.91
-			- 77.26
-		*	- Malaysia
-			- 81.31
-			- 92.78
-			- Bosnia
-			- 88.91
-			- 84.33
-		*	- Belgium
-			- 89.57
-			- 86.41
-			- Ukraine
-			- 91.80
-			- 92.73
-		*	- Greece
-			- 83.42
-			- 39.82
-			- Algeria
-			- 86.93
-			- 80.62
-		*	- Slovakia
-			- 81.00
-			- 91.28
-			- Bangladesh
-			- 74.49
-			- 79.29
 		*	- Latvia
-			- 93.80
-			- 80.18
-			- Reunion
-			- 96.48
-			- 93.40
-		*	- Romania
-			- 93.23
-			- 91.83
-			- Singapore
-			- 84.55
-			- 81.68
-		*	- Indonesia
-			- 63.15
-			- 67.97
-			- Cyprus
-			- 97.69
-			- 98.30
-		*	- Portugal
-			- 93.39
-			- 93.20
-			- Serbia
-			- 95.62
-			- 94.69
-		*	- Croatia
-			- 96.63
-			- 86.24
-			- Japan
-			- 44.33
-			- 35.77
-		*	- New Caledonia
-			- 99.42
-			- 99.01
-			- New Zealand
-			- 97.04
-			- 98.86
-		*	- Uzbekistan
-			- 87.63
-			- 71.93
+			- 89.29
+			- 68.31
 			- Faroe Islands
-			- 71.73
-			- 85.46
-		*	- Hungary
-			- 47.00
-			- 24.05
-			- Slovenia
-			- 96.27
-			- 97.28
-		*	- Paraguay
-			- 97.00
-			- 97.15
-			- Iceland
-			- 95.76
-			- 98.01
+			- 71.22
+			- 64.74
+		*	- Colombia
+			- 85.96
+			- 68.09
+			- Singapore
+			- 86.03
+			- 67.19
+		*	- Réunion
+			- 84.3
+			- 78.65
+			- Indonesia
+			- 62.38
+			- 63.04
+		*	- Japan
+			- 36.26
+			- 34.97
+			- Portugal
+			- 93.09
+			- 72.01
+		*	- Algeria
+			- 86.32
+			- 70.59
+			- Belgium
+			- 93.14
+			- 86.06
+		*	- Malaysia
+			- 83.14
+			- 89.64
+			- Ukraine
+			- 93.34
+			- 89.42
 		*	- Estonia
-			- 90.61
-			- 76.45
+			- 87.62
+			- 70.08
+			- Bangladesh
+			- 72.28
+			- 65.63
+		*	- Slovenia
+			- 89.01
+			- 83.96
+			- Hungary
+			- 51.52
+			- 37.87
+		*	- Bermuda
+			- 83.19
+			- 59.16
+			- Romania
+			- 90.04
+			- 82.9
+		*	- Philippines
+			- 63.91
+			- 57.36
+			- Belarus
+			- 93.25
+			- 78.59
+		*	- Bosnia
+			- 88.54
+			- 67.46
+			- Moldova
+			- 89.22
+			- 57.48
+		*	- Lithuania
+			- 93.28
+			- 69.97
+			- Paraguay
+			- 96.02
+			- 87.07
+		*	- Croatia
+			- 95.8
+			- 81.76
 			- Argentina
-			- 89.47
-			- 88.55
-		*	- Bulgaria
-			- 92.70
-			- 95.87
-			- Sweden
-			- 77.29
-			- 87.77
-		*	- Belarus
-			- 88.77
-			- 93.00
-			- Kazakhstan
-			- 87.24
-			- 91.23
+			- 81.68
+			- 71.2
 		*	- Ireland
-			- 86.35
-			- 87.49
+			- 80.16
+			- 54.44
+			- Kazakhstan
+			- 89.04
+			- 76.13
+		*	- Greece
+			- 87.08
+			- 38.95
+			- Bulgaria
+			- 91.16
+			- 65.76
+		*	- Serbia
+			- 92.87
+			- 76.79
+			- New Caledonia
+			- 94.45
+			- 94.46
+		*	- Sweden
+			- 73.13
+			- 86.85
+			- Venezuela
+			- 79.23
+			- 70.88
+		*	- New Zealand
+			- 91.25
+			- 75.57
+			- Iceland
+			- 83.7
+			- 77.09
+		*	- India
+			- 70.3
+			- 63.68
+			- Uzbekistan
+			- 85.85
+			- 70.1
+		*	- Cyprus
+			- 89.64
+			- 89.47
+			- Slovakia
+			- 78.34
+			- 68.96
+		*	- South Africa
+			- 95.68
+			- 74.829
 			-
 			-
 			-
@@ -238,10 +249,9 @@ We have also made a zero-shot evaluation of our models using data from 41 other 
 Noisy data
 **********
 
-The following table presents the accuracy on the 20 countries we used during training for both our models but for noisy
-and incomplete data. We didn't test on the other 41 countries since we did not train on them and the results would most likely be even lower.
-
-> We are working on better models for noisy data which should be made available during January 2021. 
+The following table presents the accuracy on the 20 countries we used during training for both our models but for noisy 
+and incomplete data. We didn't test on the other 41 countries since we did not train on them and therefore do not expect 
+to achieve an interesting performance. 
 
 .. list-table::
 		:header-rows: 1
@@ -252,66 +262,66 @@ and incomplete data. We didn't test on the other 41 countries since we did not t
 			- Country
 			- Fasttext (%)
 			- BPEmb (%)
-		*	- Italy
-			- 64.36
-			- 71.18
-			- United States
-			- 57.59
-			- 58.35
-		*	- Germany
-			- 39.63
-			- 52.46
+		*	- Norway
+			- 99.52
+			- 99.75
 			- Austria
-			- 61.93
-			- 73.64
-		*	- South Korea
-			- 27.67
-			- 40.93
-			- Canada
-			- 70.42
-			- 70.31
-		*	- Mexico
-			- 50.68
-			- 43.81
-			- Australia
-			- 72.38
-			- 72.92
-		*	- Finland
-			- 43.23
-			- 68.26
-			- Netherlands
-			- 47.42
-			- 69.62
-		*	- France
-			- 65.3
-			- 66.93
-			- United Kingdom
-			- 44.82
-			- 43.03
-		*	- Russia
-			- 52.75
-			- 47.48
-			- Norway
-			- 54.37
-			- 71.26
-		*	- Switzerland
-			- 54.13
-			- 66.27
-			- Poland
-			- 37.89
-			- 43.31
-		*	- Brazil
-			- 48.07
-			- 46.25
+			- 99.55
+			- 98.94
+		*	- Italy
+			- 99.16
+			- 98.88
+			- Mexico
+			- 97.24
+			- 95.93
+		*	- United Kingdom
+			- 97.85
+			- 95.2
+			- Switzerland
+			- 99.2
+			- 99.47
+		*	- Germany
+			- 99.41
+			- 99.38
 			- Denmark
-			- 48.12
-			- 56.76
-		*	- Spain
-			- 68.19
-			- 77.27
+			- 97.86
+			- 97.9
+		*	- France
+			- 99.51
+			- 98.49
+			- Brazil
+			- 98.96
+			- 97.12
+		*	- Netherlands
+			- 98.74
+			- 99.46
+			- Australia
+			- 99.34
+			- 98.7
+		*	- Poland
+			- 99.43
+			- 99.41
 			- Czechia
-			- 52.86
-			- 62.88
+			- 98.78
+			- 98.88
+		*	- United States
+			- 98.49
+			- 96.5
+			- Canada
+			- 98.96
+			- 96.98
+		*	- South Korea
+			- 91.1
+			- 99.89
+			- Russia
+			- 97.18
+			- 96.01
+		*	- Spain
+			- 99.07
+			- 98.35
+			- Finland
+			- 99.04
+			- 99.52
 
 Getting started
 ===============

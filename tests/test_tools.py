@@ -19,8 +19,8 @@ class ToolsTests(TestCase):
     def setUp(self) -> None:
         self.fake_cache_path = "./"
         self.a_file_extension = "version"
-        self.latest_fasttext_version = "617a417a2f2b02654f7deb5b5cbc60ab2f6334ba"
-        self.latest_bpemb_version = "6d01367745157066ea6e621ac087be828137711f"
+        self.latest_fasttext_version = "b4f098bb8909b1c8a8d24eea07df3435"
+        self.latest_bpemb_version = "ac0dc019748b6853dca412add7234203"
         self.a_seed = 42
         self.verbose = False
 

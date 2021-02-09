@@ -24,12 +24,18 @@ Deepparse is compatible with the **latest version of PyTorch** and  **Python >= 
 Countries and Results
 =====================
 
-We evaluate our models on two forms of address data: **clean data** which refers to addresses containing 
-elements from four categories, namely a street name, a municipality, a province and a postal code. We also 
-test our models on **noisy data** which is made up of addresses missing at least one category amongst the aforementioned
-ones. 
+We evaluate our models on two forms of address data: 
 
-The following table presents the accuracy on the 20 countries (clean) we used during training for both our models.
+- **clean data** which refers to addresses containing 
+elements from four categories, namely a street name, a municipality, a province and a postal code. 
+
+- **noisy data** which is made up of addresses missing at least one category amongst the aforementioned
+ones.
+
+Clean data
+**********
+
+The following table presents the accuracy on the 20 countries (using clean data) we used during training for both our models.
 
 .. list-table::
 		:header-rows: 1
@@ -102,7 +108,7 @@ The following table presents the accuracy on the 20 countries (clean) we used du
 			- 99.76
 
 
-We have also made a zero-shot evaluation of our models using (clean) data from 41 other countries; the results are shown in the next table.
+We have also made a zero-shot evaluation of our models using clean data from 41 other countries; the results are shown in the next table.
 
 .. list-table::
 		:header-rows: 1

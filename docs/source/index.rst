@@ -29,8 +29,7 @@ We evaluate our models on two forms of address data:
 - **clean data** which refers to addresses containing 
 elements from four categories, namely a street name, a municipality, a province and a postal code. 
 
-- **noisy data** which is made up of addresses missing at least one category amongst the aforementioned
-ones.
+- **noisy data** which is made up of addresses missing at least one category amongst the aforementioned ones.
 
 Clean data
 **********

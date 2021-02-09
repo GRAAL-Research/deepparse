@@ -45,8 +45,9 @@
 
 - Improved documentation
 
-## dev
+## 0.3
 
 - Added Libpostal time in doc
 - Documentation improvement
 - Added new models evaluation to doc
+- Release new models

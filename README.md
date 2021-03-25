@@ -1,10 +1,15 @@
+<div align="center">
 <img src="https://raw.githubusercontent.com/GRAAL-Research/deepparse/master/docs/source/_static/logos/logo.png" width="150" height="135"/>
+
 
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/deepparse)](https://pypi.org/project/deepparse)
 [![PyPI Status](https://badge.fury.io/py/deepparse.svg)](https://badge.fury.io/py/deepparse)
 [![PyPI Status](https://pepy.tech/badge/deepparse)](https://pepy.tech/project/deepparse)
 [![Continuous Integration](https://github.com/GRAAL-Research/deepparse/workflows/Continuous%20Integration/badge.svg)](https://github.com/GRAAL-Research/deepparse/actions?query=workflow%3A%22Continuous+Integration%22+branch%3Amaster)
 [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](http://www.gnu.org/licenses/lgpl-3.0)
+
+[![Download](https://img.shields.io/badge/Download%20Dataset-blue?style=for-the-badge&logo=download)](https://github.com/GRAAL-Research/deepparse-address-data)
+</div>
 
 ## Here is deepparse.
 
@@ -24,7 +29,10 @@ Deepparse is compatible with the __latest version of PyTorch__ and  __Python >= 
 We evaluate our models on two forms of address data: 
 
 - **clean data** which refers to addresses containing elements from four categories, namely a street name, a municipality, a province and a postal code,
-- **noisy data** which is made up of addresses missing at least one category amongst the aforementioned ones. 
+- **noisy data** which is made up of addresses missing at least one category amongst the aforementioned ones.
+
+You can get our dataset [here](https://github.com/GRAAL-Research/deepparse-address-data).
+
 #### Clean Data
 
 The following table presents the accuracy (using clean data) on the 20 countries we used during training for both our models.

@@ -7,7 +7,7 @@ from poutyne.framework import Experiment
 from torch.optim import SGD
 from torch.utils.data import DataLoader, Subset
 
-from .parsed_address import ParsedAddress
+from .parsed_address import FormattedParsedAddress
 from .. import CACHE_PATH, handle_checkpoint, indices_splitting
 from .. import load_tuple_to_device, download_fasttext_magnitude_embeddings
 from ..converter import TagsConverter
@@ -73,7 +73,10 @@ class AddressParser:
             Since the architecture of fasttext and fasttext-light are similar, one can interchange both
             (e.g. retrain a fasttext model and load the weights into a fasttext-light model).
             Default is None, meaning we use our pre-trained model.
-
+        prediction_tags (Union[Dict, None]): A dictionary were the keys are the address components (e.g. street name)
+            and the value are the components idx (from 0 to N) use during retraining of a model. Will have no effect
+            if `path_to_retrained_model` is None. Default is None, meaning we use our pre-trained  model prediction
+            tags.
 
     Note:
         For both the networks, we will download the pre-trained weights and embeddings in the ``.cache`` directory
@@ -96,7 +99,7 @@ class AddressParser:
         time this load doesn't appear.
 
     Note:
-        The predictions tags are the following
+        The default predictions tags are the following
 
             - "StreetNumber": for the street number
             - "StreetName": for the name of the street
@@ -123,6 +126,14 @@ class AddressParser:
 
                 address_parser = AddressParser(model_type="fasttext",
                                                path_to_retrained_model='/path_to_a_retrain_fasttext_model')
+
+        Using a retrain model trained on different tags
+
+        .. code-block:: python
+
+                address_parser = AddressParser(model_type="fasttext",
+                                               path_to_retrained_model='/path_to_a_retrain_fasttext_model',
+                                               prediction_tags={"a_tag": 0, "a_second_tag": 1})
     """
 
     def __init__(self,
@@ -130,17 +141,28 @@ class AddressParser:
                  device: Union[int, str, torch.device] = 0,
                  rounding: int = 4,
                  verbose: bool = True,
-                 path_to_retrained_model: Union[str, None] = None) -> None:
+                 path_to_retrained_model: Union[str, None] = None,
+                 prediction_tags: Union[Dict, None] = None) -> None:
         # pylint: disable=too-many-arguments
         self._process_device(device)
 
         self.rounding = rounding
         self.verbose = verbose
 
-        self.tags_converter = TagsConverter(_pre_trained_tags_to_idx)
+        # default pre trained tag are loaded
+        tags_to_idx = _pre_trained_tags_to_idx
+
+        if path_to_retrained_model is not None:
+            # change pre_trained_tags to user define tags
+            if prediction_tags is not None:
+                if "EOS" not in prediction_tags.keys():
+                    raise ValueError("The prediction tags dictionary is missing the EOS tag.")
+                tags_to_idx = prediction_tags
+
+        self.tags_converter = TagsConverter(tags_to_idx)
 
         self.model_type = model_type.lower()
-        self._model_factory(path_to_retrained_model=path_to_retrained_model)
+        self._model_factory(path_to_retrained_model=path_to_retrained_model, prediction_layer_len=len(tags_to_idx))
         self.model.eval()
 
     def __str__(self) -> str:
@@ -150,7 +172,7 @@ class AddressParser:
 
     def __call__(self,
                  addresses_to_parse: Union[List[str], str],
-                 with_prob: bool = False) -> Union[ParsedAddress, List[ParsedAddress]]:
+                 with_prob: bool = False) -> Union[FormattedParsedAddress, List[FormattedParsedAddress]]:
         """
         Callable method to parse the components of an address or a list of address.
 
@@ -165,8 +187,8 @@ class AddressParser:
                 rounding.
 
         Return:
-            Either a :class:`~deepparse.deepparse.parsed_address.ParsedAddress` or a list of
-            :class:`~deepparse.deepparse.parsed_address.ParsedAddress` when given more than one address.
+            Either a :class:`~deepparse.deepparse.parsed_address.FormattedParsedAddress` or a list of
+            :class:`~deepparse.deepparse.parsed_address.FormattedParsedAddress` when given more than one address.
 
 
         Example:
@@ -210,7 +232,8 @@ class AddressParser:
                 learning_rate: float = 0.01,
                 callbacks: Union[List, None] = None,
                 seed: int = 42,
-                logging_path: str = "./chekpoints") -> List[Dict]:
+                logging_path: str = "./chekpoints",
+                prediction_tags: Union[Dict, None] = None) -> List[Dict]:
         # pylint: disable=too-many-arguments, line-too-long, too-many-locals
         """
         Method to retrain the address parser model using a dataset with the same tags. We train using
@@ -234,6 +257,11 @@ class AddressParser:
                 we set no callback.
             seed (int): Seed to use (by default 42).
             logging_path (str): The logging path for the checkpoints. By default the path is ``./chekpoints``.
+            prediction_tags (Union[Dict, None]): A dictionary were the keys are the address components
+                (e.g. street name) and the value are the components idx (from 0 to N + 1) to use during retrain
+                of a model. The `+1` is the End Of Sequence (EOS) token that need to be include in the dictionary.
+                We will use the length of this dictionary for the output size of the prediction layer.
+                Default is None, meaning we use our pre-trained  model prediction tags.
 
         Return:
             A list of dictionary with the best epoch stats (see `Experiment class
@@ -279,6 +307,12 @@ class AddressParser:
         if self.model_type == "fasttext-light":
             raise ValueError("It's not possible to retrain a fasttext-light due to pymagnitude problem.")
 
+        if prediction_tags is not None:
+            if "EOS" not in prediction_tags.keys():
+                raise ValueError("The prediction tags dictionary is missing the EOS tag.")
+            self.tags_converter = TagsConverter(prediction_tags)
+            self._model_factory(prediction_layer_len=len(prediction_tags))
+
         callbacks = [] if callbacks is None else callbacks
         train_generator, valid_generator = self._create_training_data_generator(dataset_container,
                                                                                 train_ratio,
@@ -309,7 +343,8 @@ class AddressParser:
              callbacks: Union[List, None] = None,
              seed: int = 42,
              logging_path: str = "./chekpoints",
-             checkpoint: Union[str, int] = "best") -> Dict:
+             checkpoint: Union[str, int] = "best",
+             prediction_tags: Union[Dict, None] = None) -> Dict:
         # pylint: disable=too-many-arguments
         """
         Method to test a retrained or a pre-trained model using a dataset with the same tags. We train using
@@ -325,7 +360,7 @@ class AddressParser:
                 By default we set no callback.
             seed (int): Seed to use (by default 42).
             logging_path (str): The logging path for the checkpoints. By default the path is ``./chekpoints``.
-                checkpoint (Union[str, int]): Checkpoint to use for the test.
+            checkpoint (Union[str, int]): Checkpoint to use for the test.
                 - If 'best', will load the best weights.
                 - If 'last', will load the last model checkpoint.
                 - If int, will load a specific checkpoint (e.g. 3).
@@ -335,6 +370,9 @@ class AddressParser:
                 (Need to have Poutyne>=1.2 to work)
                 - If 'bpemb', will load our pre-trained bpemb model and test it on your data.
                 (Need to have Poutyne>=1.2 to work)
+            prediction_tags (Union[Dict, None]): A dictionary were the keys are the address components
+                (e.g. street name) and the value are the components idx (from 0 to N + 1) was use during retrain
+                of the model. Default is None, meaning we use our pre-trained  model prediction tags.
         Return:
             A dictionary with the best epoch stats (see `Experiment class
             <https://poutyne.org/experiment.html#poutyne.Experiment.train>`_ for details).
@@ -359,6 +397,11 @@ class AddressParser:
         if self.model_type == "fasttext-light":
             raise ValueError("It's not possible to test a fasttext-light due to pymagnitude problem.")
 
+        if prediction_tags is not None:
+            if "EOS" not in prediction_tags.keys():
+                raise ValueError("The prediction tags dictionary is missing the EOS tag.")
+            self.tags_converter = TagsConverter(prediction_tags)
+
         callbacks = [] if callbacks is None else callbacks
         data_transform = self._set_data_transformer()
 
@@ -376,7 +419,8 @@ class AddressParser:
 
     def _fill_tagged_addresses_components(self, tags_predictions: ndarray, tags_predictions_prob: ndarray,
                                           addresses_to_parse: List[str],
-                                          with_prob: bool) -> Union[ParsedAddress, List[ParsedAddress]]:
+                                          with_prob: bool) -> Union[
+        FormattedParsedAddress, List[FormattedParsedAddress]]:
         """
         Method to fill the mapping for every address between a address components and is associated predicted tag (or
         tag and prob).
@@ -392,7 +436,8 @@ class AddressParser:
                 if with_prob:
                     tag = (tag, round(tag_proba, self.rounding))
                 tagged_address_components.append((word, tag))
-            tagged_addresses_components.append(ParsedAddress({address_to_parse: tagged_address_components}))
+            tagged_addresses_components.append(FormattedParsedAddress(list(self.tags_converter.tags_to_idx.keys()),
+                                                                      {address_to_parse: tagged_address_components}))
 
         if len(tagged_addresses_components) == 1:
             return tagged_addresses_components[0]
@@ -449,7 +494,7 @@ class AddressParser:
 
         return train_generator, valid_generator
 
-    def _model_factory(self, path_to_retrained_model: Union[str, None] = None) -> None:
+    def _model_factory(self, path_to_retrained_model: Union[str, None] = None, prediction_layer_len: int = 9) -> None:
         """
         Model factory to create the vectorizer, the data converter and the pre-trained model
         """
@@ -470,6 +515,7 @@ class AddressParser:
             self.data_converter = fasttext_data_padding
 
             self.model = FastTextSeq2SeqModel(self.device,
+                                              prediction_layer_len,
                                               verbose=self.verbose,
                                               path_to_retrained_model=path_to_retrained_model)
 
@@ -481,6 +527,7 @@ class AddressParser:
             self.data_converter = bpemb_data_padding
 
             self.model = BPEmbSeq2SeqModel(self.device,
+                                           prediction_layer_len,
                                            verbose=self.verbose,
                                            path_to_retrained_model=path_to_retrained_model)
         else:

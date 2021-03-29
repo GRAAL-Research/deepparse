@@ -12,15 +12,17 @@ class BPEmbSeq2SeqModel(Seq2SeqModel):
 
      Args:
         device (~torch.device): The device tu use for the prediction.
+        output_size (int): The size of the prediction layers (i.e. the number of tag to predict).
         verbose (bool): Turn on/off the verbosity of the model. The default value is True.
         path_to_retrained_model (Union[str, None]): The path to the retrained model to use for the seq2seq.
     """
 
     def __init__(self,
                  device: torch.device,
+                 output_size: int,
                  verbose: bool = True,
                  path_to_retrained_model: Union[str, None] = None) -> None:
-        super().__init__(device, verbose)
+        super().__init__(device, output_size, verbose)
 
         # design dimension params (the 300)
         self.embedding_network = EmbeddingNetwork(input_size=300, hidden_size=300, projection_size=300)

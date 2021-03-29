@@ -23,10 +23,11 @@ class Seq2SeqModel(ABC, nn.Module):
 
      Args:
         device (~torch.device): The device tu use for the prediction.
+        output_size (int): The size of the prediction layers (i.e. the number of tag to predict).
         verbose (bool): Turn on/off the verbosity of the model. The default value is True.
     """
 
-    def __init__(self, device: torch.device, verbose: bool = True) -> None:
+    def __init__(self, device: torch.device, output_size: int, verbose: bool = True) -> None:
         super().__init__()
         self.device = device
         self.verbose = verbose
@@ -34,7 +35,7 @@ class Seq2SeqModel(ABC, nn.Module):
         self.encoder = Encoder(input_size=300, hidden_size=1024, num_layers=1)
         self.encoder.to(self.device)
 
-        self.decoder = Decoder(input_size=1, hidden_size=1024, num_layers=1, output_size=9)
+        self.decoder = Decoder(input_size=1, hidden_size=1024, num_layers=1, output_size=output_size)
         self.decoder.to(self.device)
 
     def _load_pre_trained_weights(self, model_type: str) -> None:

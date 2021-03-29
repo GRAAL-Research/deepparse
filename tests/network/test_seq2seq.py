@@ -19,7 +19,7 @@ class Seq2SeqTest(TestCase):
         self.decoder_num_layers = 1
         self.decoder_output_size = 9
 
-        self.seq2seq_model = Seq2SeqModel(self.a_torch_device)
+        self.seq2seq_model = Seq2SeqModel(self.a_torch_device, output_size=self.decoder_output_size)
 
     def test_whenInstantiateASeq2SeqModel_thenParametersAreOk(self):
         self.assertEqual(self.a_torch_device, self.seq2seq_model.device)

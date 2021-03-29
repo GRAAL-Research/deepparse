@@ -12,6 +12,7 @@ class FasttextSeq2SeqTest(Seq2SeqTestCase):
 
     def setUp(self) -> None:
         self.model_type = "fasttext"
+        self.output_size = 9
 
     @patch("os.path.isfile")
     @patch("deepparse.network.seq2seq.torch")
@@ -20,7 +21,7 @@ class FasttextSeq2SeqTest(Seq2SeqTestCase):
             self, load_state_dict_mock, torch_mock, isfile_mock):
         isfile_mock.return_value = False
         with patch("deepparse.network.seq2seq.download_weights") as download_weights_mock:
-            self.seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device, self.verbose)
+            self.seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device, self.output_size, self.verbose)
             download_weights_mock.assert_called_with(self.model_type, self.a_root_path, verbose=self.verbose)
 
     @patch("deepparse.network.seq2seq.latest_version")
@@ -32,7 +33,7 @@ class FasttextSeq2SeqTest(Seq2SeqTestCase):
         isfile_mock.return_value = True
         last_version_mock.return_value = False
         with patch("deepparse.network.seq2seq.download_weights") as download_weights_mock:
-            self.seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device, self.verbose)
+            self.seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device, self.output_size, self.verbose)
             download_weights_mock.assert_called_with(self.model_type, self.a_root_path, verbose=self.verbose)
 
     @patch("deepparse.network.seq2seq.torch")
@@ -42,6 +43,7 @@ class FasttextSeq2SeqTest(Seq2SeqTestCase):
         all_layers_params = MagicMock()
         torch_mock.load.return_value = all_layers_params
         self.seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device,
+                                                  self.output_size,
                                                   self.verbose,
                                                   path_to_retrained_model=self.a_path_to_retrained_model)
 
@@ -60,7 +62,7 @@ class FasttextSeq2SeqTest(Seq2SeqTestCase):
     def test_whenInstantiateASeq2SeqModel_thenEncodeIsCalledOnce(self, load_state_dict_mock, torch_mock, isfile_mock,
                                                                  last_version_mock, download_weights_mock,
                                                                  encoder_mock):
-        self.seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device, self.verbose)
+        self.seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device, self.output_size, self.verbose)
 
         to_predict_mock, lengths_tensor_mock = self.setup_encoder_mocks()
         self.seq2seq_model._encoder_step(to_predict_mock, lengths_tensor_mock, self.a_batch_size)
@@ -76,15 +78,15 @@ class FasttextSeq2SeqTest(Seq2SeqTestCase):
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
     def test_whenInstantiateASeq2SeqModelNoTarget_thenDecoderIsCalled(
-        self,
-        load_state_dict_mock,
-        torch_mock,
-        isfile_mock,
-        last_version_mock,
-        download_weights_mock,
-        decoder_mock,
+            self,
+            load_state_dict_mock,
+            torch_mock,
+            isfile_mock,
+            last_version_mock,
+            download_weights_mock,
+            decoder_mock,
     ):
-        self.seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device, self.verbose)
+        self.seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device, self.output_size, self.verbose)
 
         decoder_input_mock, decoder_hidden_mock = self.setUp_decoder_mocks(decoder_mock)
         max_length = 4  # a sequence of 4 tokens
@@ -108,7 +110,7 @@ class FasttextSeq2SeqTest(Seq2SeqTestCase):
                                                                         random_mock):
         random_mock.return_value = self.a_value_lower_than_threshold
 
-        self.seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device, self.verbose)
+        self.seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device, self.output_size, self.verbose)
 
         decoder_input_mock, decoder_hidden_mock = self.setUp_decoder_mocks(decoder_mock)
         max_length = 4  # a sequence of 4 tokens

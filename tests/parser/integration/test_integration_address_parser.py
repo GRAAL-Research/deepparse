@@ -5,6 +5,7 @@ from deepparse.parser import AddressParser, FormattedParsedAddress
 
 
 class AddressParserPredictTest(TestCase):
+
     @classmethod
     def setUpClass(cls):
         cls.fasttext_address_parser = AddressParser(model_type="fasttext", device=0)

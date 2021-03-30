@@ -144,8 +144,7 @@ class AddressParser:
                  device: Union[int, str, torch.device] = 0,
                  rounding: int = 4,
                  verbose: bool = True,
-                 path_to_retrained_model: Union[str, None] = None,
-                 prediction_tags: Union[Dict, None] = None) -> None:
+                 path_to_retrained_model: Union[str, None] = None) -> None:
         # pylint: disable=too-many-arguments
         self._process_device(device)
 
@@ -156,7 +155,7 @@ class AddressParser:
         tags_to_idx = _pre_trained_tags_to_idx
 
         if path_to_retrained_model is not None:
-            model_directory = os.path.join(path_to_retrained_model.split("/")[:-1])
+            model_directory = os.path.dirname(path_to_retrained_model)
             path_to_prediction_tags = os.path.join(model_directory, "prediction_tags.p")
             if os.path.isfile(path_to_prediction_tags):
                 # mean the user have changed the prediction tags of the model

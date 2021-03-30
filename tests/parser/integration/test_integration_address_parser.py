@@ -1,9 +1,14 @@
+# Bug with PyTorch source code makes torch.tensor as not callable for pylint.
+# pylint: disable=not-callable
+
 from typing import List
-from unittest import TestCase
+from unittest import TestCase, skipIf
+
+import torch
 
 from deepparse.parser import AddressParser, FormattedParsedAddress
 
-
+@skipIf(not torch.cuda.is_available(), "no gpu available")
 class AddressParserPredictTest(TestCase):
 
     @classmethod

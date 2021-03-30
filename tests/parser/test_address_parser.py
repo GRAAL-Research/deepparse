@@ -1,6 +1,7 @@
 # Since we use a patch as model mock we skip the unused argument error
 # pylint: disable=W0613, no-member
 import os
+import pickle
 import unittest
 from unittest.mock import patch, Mock
 
@@ -40,6 +41,15 @@ class AddressParserTest(AddressParserPredictTestCase):
         self.fasttext_mock = Mock()
 
         self.embeddings_model_mock = Mock()
+
+        self.model_path = "./model.p"
+
+    def prediction_tags_dict_setup(self):
+        pickle.dump(self.correct_address_components, open("./prediction_tags.p", "wb"))
+
+    def tearDown(self) -> None:
+        if os.path.exists("./prediction_tags.p"):
+            os.remove("./prediction_tags.p")
 
     @patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel")
     def test_givenACapitalizeBPEmbModelType_whenInstantiatingParser_thenInstantiateModelWithCorrectParameters(
@@ -135,47 +145,28 @@ class AddressParserTest(AddressParserPredictTestCase):
     def test_givenABPEmbModelType_whenInstantiatingParserWithUserComponent_thenCorrectNumberOfOutputDim(
             self, embeddings_model_mock):
         with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel") as model:
+            self.prediction_tags_dict_setup()
             self.address_parser = AddressParser(model_type=self.a_bpemb_model_type,
                                                 device=self.a_device,
                                                 verbose=self.verbose,
-                                                path_to_retrained_model="a_path",
-                                                prediction_tags=self.correct_address_components)
+                                                path_to_retrained_model=self.model_path)
 
-            model.assert_called_with(self.a_torch_device, 3, verbose=self.verbose, path_to_retrained_model="a_path")
-
-    @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
-    def test_givenABPEmbModelType_whenInstantiatingParserWithIncorrectUserComponent_thenRaiseValueError(
-            self, embeddings_model_mock):
-        with self.assertRaises(ValueError):
-            self.address_parser = AddressParser(model_type=self.a_bpemb_model_type,
-                                                device=self.a_device,
-                                                verbose=self.verbose,
-                                                path_to_retrained_model="a_path",
-                                                prediction_tags=self.incorrect_address_components)
+            model.assert_called_with(self.a_torch_device, len(self.correct_address_components), verbose=self.verbose,
+                                     path_to_retrained_model=self.model_path)
 
     @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
     @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
     def test_givenAFasttextModelType_whenInstantiatingParserWithUserComponent_thenCorrectNumberOfOutputDim(
             self, download_weights_mock, model_mock):
         with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel") as model:
+            self.prediction_tags_dict_setup()
             self.address_parser = AddressParser(model_type=self.a_fasttext_model_type,
                                                 device=self.a_device,
                                                 verbose=self.verbose,
-                                                path_to_retrained_model="a_path",
-                                                prediction_tags=self.correct_address_components)
+                                                path_to_retrained_model=self.model_path)
 
-            model.assert_called_with(self.a_torch_device, 3, verbose=self.verbose, path_to_retrained_model="a_path")
-
-    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
-    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
-    def test_givenAFasttextModelType_whenInstantiatingParserWithUserComponent_thenRaiseValueError(
-            self, download_weights_mock, model_mock):
-        with self.assertRaises(ValueError):
-            self.address_parser = AddressParser(model_type=self.a_fasttext_model_type,
-                                                device=self.a_device,
-                                                verbose=self.verbose,
-                                                path_to_retrained_model="a_path",
-                                                prediction_tags=self.incorrect_address_components)
+            model.assert_called_with(self.a_torch_device, len(self.correct_address_components), verbose=self.verbose,
+                                     path_to_retrained_model=self.model_path)
 
     @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
     def test_givenABPEmbModelType_whenInstantiatingParser_thenInstantiateModelWithCorrectParameters(
@@ -606,6 +597,29 @@ class AddressParserTest(AddressParserPredictTestCase):
             print(self.address_parser.__repr__())
 
             self.assertEqual(self.a_fasttext_light_name, self.test_out.getvalue().strip())
+
+    # fix test
+    @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
+    def test_givenABPEmbModelType_whenRetrainWithIncorrectPredictionTags_thenRaiseValueError(
+            self, embeddings_model_mock):
+        with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel") as model:
+            self.address_parser = AddressParser(model_type=self.a_bpemb_model_type,
+                                                device=self.a_device,
+                                                verbose=self.verbose)
+            with self.assertRaises(ValueError):
+                self.address_parser.retrain(Mock(), 0.8, 1, 1, prediction_tags=self.incorrect_address_components)
+
+    # fix test
+    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
+    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
+    def test_givenAFasttextModelType_whenInstantiatingParserWithUserComponent_thenRaiseValueError(
+            self, download_weights_mock, model_mock):
+        with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel") as model:
+            self.address_parser = AddressParser(model_type=self.a_fasttext_model_type,
+                                                device=self.a_device,
+                                                verbose=self.verbose)
+            with self.assertRaises(ValueError):
+                self.address_parser.retrain(Mock(), 0.8, 1, 1, prediction_tags=self.incorrect_address_components)
 
 
 if __name__ == "__main__":

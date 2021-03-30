@@ -18,11 +18,11 @@ class ADataContainer(DatasetContainer):
         self.data = (torch.rand(batch_size, 1), torch.rand(batch_size, 1))
 
 
-class AddressParserTest(AddressParserPredictTestCase):
+class AddressParserRetrainTest(AddressParserPredictTestCase):
     # pylint: disable=too-many-public-methods
     @classmethod
     def setUpClass(cls):
-        super(AddressParserTest, cls).setUpClass()
+        super(AddressParserRetrainTest, cls).setUpClass()
         cls.a_device = "cpu"
 
     def setUp(self):

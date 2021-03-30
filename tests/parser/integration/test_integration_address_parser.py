@@ -12,7 +12,6 @@ class AddressParserPredictTest(TestCase):
 
     def setUp(self):
         self.an_address_to_parse = "350 rue des lilas o"
-        self.parsed_address = [("350", "StreetNumber"), ("rue des lilas", "StreetName"), ("o", "StreetName")]
 
     def test_givenAAddress_whenParse_thenParseAddress(self):
         parse_address = self.fasttext_address_parser(self.an_address_to_parse)

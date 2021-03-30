@@ -6,7 +6,7 @@ import os
 import shutil
 import unittest
 from unittest import skipIf, TestCase
-from unittest.mock import MagicMock, call
+from unittest.mock import MagicMock, call, ANY
 
 import torch
 from poutyne import Callback
@@ -282,7 +282,8 @@ class AddressParserIntegrationTest(TestCase):
         callback_test_start_call = [call.on_test_begin({})]
         callback_mock.assert_has_calls(callback_test_start_call)
         callback_test_end_call = [
-            call.on_test_end((performance_after_test["test_loss"], performance_after_test["test_accuracy"]))
+            call.on_test_end({"time": ANY, "test_loss": performance_after_test["test_loss"],
+                              "test_accuracy": performance_after_test["test_accuracy"]})
         ]
         callback_mock.assert_has_calls(callback_test_end_call)
         callback_mock.assert_not_called()
@@ -403,7 +404,8 @@ class AddressParserIntegrationTest(TestCase):
         callback_test_start_call = [call.on_test_begin({})]
         callback_mock.assert_has_calls(callback_test_start_call)
         callback_test_end_call = [
-            call.on_test_end((performance_after_test["test_loss"], performance_after_test["test_accuracy"]))
+            call.on_test_end({"time": ANY, "test_loss": performance_after_test["test_loss"],
+                              "test_accuracy": performance_after_test["test_accuracy"]})
         ]
         callback_mock.assert_has_calls(callback_test_end_call)
         callback_mock.assert_not_called()

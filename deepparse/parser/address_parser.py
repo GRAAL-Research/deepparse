@@ -1,4 +1,7 @@
+import os
+import pickle
 import re
+import warnings
 from typing import List, Union, Dict, Tuple
 
 import torch
@@ -73,10 +76,6 @@ class AddressParser:
             Since the architecture of fasttext and fasttext-light are similar, one can interchange both
             (e.g. retrain a fasttext model and load the weights into a fasttext-light model).
             Default is None, meaning we use our pre-trained model.
-        prediction_tags (Union[Dict, None]): A dictionary were the keys are the address components (e.g. street name)
-            and the value are the components idx (from 0 to N) use during retraining of a model. Will have no effect
-            if `path_to_retrained_model` is None. Default is None, meaning we use our pre-trained  model prediction
-            tags.
 
     Note:
         For both the networks, we will download the pre-trained weights and embeddings in the ``.cache`` directory
@@ -109,6 +108,10 @@ class AddressParser:
             - "PostalCode": for the postal code
             - "Orientation": for the street orientation (e.g. west, east)
             - "GeneralDelivery": for other delivery information
+
+    Note:
+        If you have changed the `prediction_tags` dictionary during a fine-tuning of our model, don't forget to keep
+        the `prediction_tags.p` file at the same level of the checkpoint of your model.
 
     Example:
 
@@ -153,11 +156,14 @@ class AddressParser:
         tags_to_idx = _pre_trained_tags_to_idx
 
         if path_to_retrained_model is not None:
-            # change pre_trained_tags to user define tags
-            if prediction_tags is not None:
-                if "EOS" not in prediction_tags.keys():
-                    raise ValueError("The prediction tags dictionary is missing the EOS tag.")
-                tags_to_idx = prediction_tags
+            model_directory = os.path.join(path_to_retrained_model.split("/")[:-1])
+            path_to_prediction_tags = os.path.join(model_directory, "prediction_tags.p")
+            if os.path.isfile(path_to_prediction_tags):
+                # mean the user have changed the prediction tags of the model
+                if self.verbose:
+                    warnings.warn("Loading the prediction tags dictionary.")
+                with open(path_to_prediction_tags, "rb") as file:
+                    tags_to_idx = pickle.load(file)
 
         self.tags_converter = TagsConverter(tags_to_idx)
 
@@ -260,8 +266,9 @@ class AddressParser:
             prediction_tags (Union[Dict, None]): A dictionary were the keys are the address components
                 (e.g. street name) and the value are the components idx (from 0 to N + 1) to use during retrain
                 of a model. The `+1` is the End Of Sequence (EOS) token that need to be include in the dictionary.
-                We will use the length of this dictionary for the output size of the prediction layer.
-                Default is None, meaning we use our pre-trained  model prediction tags.
+                We will use the length of this dictionary for the output size of the prediction layer. We also save
+                the dictionary to be use later on when you will use the model. Default is None, meaning we use our
+                pre-trained  model prediction tags.
 
         Return:
             A list of dictionary with the best epoch stats (see `Experiment class
@@ -275,6 +282,10 @@ class AddressParser:
             Due to pymagnitude, we could not train using the Magnitude embeddings, meaning it's not possible to
             train using the fasttext-light model. But, since we don't update the embeddings weights, one can retrain
             using the fasttext model and later on use the weights with the fasttext-light.
+
+        Note:
+            Since we save the `prediction_tags` dictionary, this pickled file need to be in pair with the checkpoint of
+            your model.
 
         Example:
 
@@ -334,6 +345,7 @@ class AddressParser:
                               epochs=epochs,
                               seed=seed,
                               callbacks=callbacks)
+        pickle.dump(prediction_tags, open(os.path.join(logging_path, "prediction_tags.p"), "wb"))
         return train_res
 
     def test(self,
@@ -343,8 +355,7 @@ class AddressParser:
              callbacks: Union[List, None] = None,
              seed: int = 42,
              logging_path: str = "./chekpoints",
-             checkpoint: Union[str, int] = "best",
-             prediction_tags: Union[Dict, None] = None) -> Dict:
+             checkpoint: Union[str, int] = "best") -> Dict:
         # pylint: disable=too-many-arguments
         """
         Method to test a retrained or a pre-trained model using a dataset with the same tags. We train using
@@ -370,15 +381,17 @@ class AddressParser:
                 (Need to have Poutyne>=1.2 to work)
                 - If 'bpemb', will load our pre-trained bpemb model and test it on your data.
                 (Need to have Poutyne>=1.2 to work)
-            prediction_tags (Union[Dict, None]): A dictionary were the keys are the address components
-                (e.g. street name) and the value are the components idx (from 0 to N + 1) was use during retrain
-                of the model. Default is None, meaning we use our pre-trained  model prediction tags.
+
         Return:
             A dictionary with the best epoch stats (see `Experiment class
             <https://poutyne.org/experiment.html#poutyne.Experiment.train>`_ for details).
 
         Note:
             We use NLL loss and accuracy as in the `article <https://arxiv.org/abs/2006.16152>`_.
+
+        Note:
+            If you have retrain our model and changed the prediction tags the file `prediction_tags.p` need to be
+            next to the model (i.e. in the same directory as the model such as define by the `logging_path`).
 
         Example:
 
@@ -397,9 +410,11 @@ class AddressParser:
         if self.model_type == "fasttext-light":
             raise ValueError("It's not possible to test a fasttext-light due to pymagnitude problem.")
 
-        if prediction_tags is not None:
-            if "EOS" not in prediction_tags.keys():
-                raise ValueError("The prediction tags dictionary is missing the EOS tag.")
+        path_to_prediction_tags = os.path.join(logging_path, "prediction_tags.p")
+        if os.path.isfile(path_to_prediction_tags):
+            # mean the user have changed the prediction tags of the model
+            with open(path_to_prediction_tags, "rb") as file:
+                prediction_tags = pickle.load(file)
             self.tags_converter = TagsConverter(prediction_tags)
 
         callbacks = [] if callbacks is None else callbacks

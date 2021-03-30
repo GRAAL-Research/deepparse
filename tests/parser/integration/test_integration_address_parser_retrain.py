@@ -451,6 +451,8 @@ class AddressParserIntegrationTest(TestCase):
                                        device=self.a_torch_device,
                                        verbose=self.verbose)
 
+        self.training(address_parser)
+
         performance_after_test = address_parser.test(self.test_container,
                                                      batch_size=self.a_batch_size,
                                                      num_workers=self.a_number_of_workers,
@@ -460,9 +462,11 @@ class AddressParserIntegrationTest(TestCase):
         self.assertIsNotNone(performance_after_test)
 
     def test_givenABPEmbAddressParser_whenTestWithStrCkpt_thenTestOccur(self):
-        address_parser = AddressParser(model_type=self.a_fasttext_model_type,
+        address_parser = AddressParser(model_type=self.a_bpemb_model_type,
                                        device=self.a_torch_device,
                                        verbose=self.verbose)
+
+        self.training(address_parser)
 
         performance_after_test = address_parser.test(self.test_container,
                                                      batch_size=self.a_batch_size,

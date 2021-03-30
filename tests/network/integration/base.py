@@ -18,6 +18,8 @@ class Seq2SeqIntegrationTestCase(TestCase):
         cls.number_of_tags = 9  # tag space of our models
         cls.a_target_vector = torch.tensor([[0, 1, 1, 4, 5, 8], [1, 0, 3, 8, 0, 0]], device=cls.a_torch_device)
 
+        cls.output_size = 9
+
     def encoder_input_setUp(self, model_type: str):
         file = open(f"./tests/network/integration/to_predict_{model_type}.p", "rb")
         self.to_predict_tensor = pickle.load(file)

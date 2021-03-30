@@ -326,6 +326,8 @@ class AddressParserIntegrationTest(TestCase):
                                        device=self.a_torch_device,
                                        verbose=self.verbose)
 
+        self.training(address_parser)
+
         performance_after_test = address_parser.test(self.test_container,
                                                      batch_size=self.a_batch_size,
                                                      num_workers=self.a_number_of_workers,
@@ -338,6 +340,8 @@ class AddressParserIntegrationTest(TestCase):
         address_parser = AddressParser(model_type=self.a_fasttext_model_type,
                                        device=self.a_torch_device,
                                        verbose=self.verbose)
+
+        self.training(address_parser)
 
         performance_after_test = address_parser.test(self.test_container,
                                                      batch_size=self.a_batch_size,

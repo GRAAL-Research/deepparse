@@ -1,5 +1,5 @@
 # Since we use a patch as model mock we skip the unused argument error
-# pylint: disable=W0613
+# pylint: disable=W0613, no-member
 import os
 import unittest
 from unittest.mock import patch, Mock
@@ -126,7 +126,9 @@ class AddressParserTest(AddressParserPredictTestCase):
                                                 device=self.a_device,
                                                 verbose=self.verbose)
 
-            model.assert_called_with(self.a_torch_device, self.number_tags, verbose=self.verbose,
+            model.assert_called_with(self.a_torch_device,
+                                     self.number_tags,
+                                     verbose=self.verbose,
                                      path_to_retrained_model=None)
 
     @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
@@ -139,8 +141,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                                                 path_to_retrained_model="a_path",
                                                 prediction_tags=self.correct_address_components)
 
-            model.assert_called_with(self.a_torch_device, 3, verbose=self.verbose,
-                                     path_to_retrained_model="a_path")
+            model.assert_called_with(self.a_torch_device, 3, verbose=self.verbose, path_to_retrained_model="a_path")
 
     @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
     def test_givenABPEmbModelType_whenInstantiatingParserWithIncorrectUserComponent_thenRaiseValueError(
@@ -163,12 +164,11 @@ class AddressParserTest(AddressParserPredictTestCase):
                                                 path_to_retrained_model="a_path",
                                                 prediction_tags=self.correct_address_components)
 
-            model.assert_called_with(self.a_torch_device, 3, verbose=self.verbose,
-                                     path_to_retrained_model="a_path")
+            model.assert_called_with(self.a_torch_device, 3, verbose=self.verbose, path_to_retrained_model="a_path")
 
     @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
     @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
-    def test_givenAFasttextModelType_whenInstantiatingParserWithUserComponent_thenCorrectNumberOfOutputDim(
+    def test_givenAFasttextModelType_whenInstantiatingParserWithUserComponent_thenRaiseValueError(
             self, download_weights_mock, model_mock):
         with self.assertRaises(ValueError):
             self.address_parser = AddressParser(model_type=self.a_fasttext_model_type,
@@ -185,7 +185,9 @@ class AddressParserTest(AddressParserPredictTestCase):
                                                 device=self.a_device,
                                                 verbose=self.verbose)
 
-            model.assert_called_with(self.a_torch_device, self.number_tags, verbose=self.verbose,
+            model.assert_called_with(self.a_torch_device,
+                                     self.number_tags,
+                                     verbose=self.verbose,
                                      path_to_retrained_model=None)
 
     @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
@@ -311,7 +313,9 @@ class AddressParserTest(AddressParserPredictTestCase):
                                                 device=self.a_device,
                                                 verbose=self.verbose)
 
-            model.assert_called_with(self.a_torch_device, self.number_tags, verbose=self.verbose,
+            model.assert_called_with(self.a_torch_device,
+                                     self.number_tags,
+                                     verbose=self.verbose,
                                      path_to_retrained_model=None)
 
     @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
@@ -323,7 +327,9 @@ class AddressParserTest(AddressParserPredictTestCase):
                                                 device=self.a_device,
                                                 verbose=self.verbose)
 
-            model.assert_called_with(self.a_torch_device, self.number_tags, verbose=self.verbose,
+            model.assert_called_with(self.a_torch_device,
+                                     self.number_tags,
+                                     verbose=self.verbose,
                                      path_to_retrained_model=None)
 
     @patch("deepparse.parser.address_parser.download_fasttext_embeddings")

@@ -63,8 +63,7 @@ class FormattedParsedAddress:
                 setattr(self, tag, address_component)
             else:
                 # we merge the previous components with the new element
-                setattr(self, tag, " ".join(
-                    [getattr(self, tag), address_component]))
+                setattr(self, tag, " ".join([getattr(self, tag), address_component]))
 
     def _get_attr_repr(self, name):
         value = getattr(self, name)
@@ -73,7 +72,9 @@ class FormattedParsedAddress:
         return ""
 
     def __repr__(self):
-        values = [self._get_attr_repr(name) for name in self.__dict__ if
-                  name != "raw_address" and name != "address_parsed_components"]
+        values = [
+            self._get_attr_repr(name) for name in self.__dict__
+            if name not in ("raw_address", "address_parsed_components")
+        ]
         joined_values = ", ".join(v for v in values if v != "")
         return self.__class__.__name__ + "<" + joined_values + ">"

@@ -1,3 +1,5 @@
+# pylint: disable=no-member
+
 import io
 import sys
 import unittest
@@ -10,8 +12,10 @@ class FormattedParsedAddressTest(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.address_components = ["StreetNumber", "StreetName", "Unit", "Municipality", "Province",
-                                  "PostalCode", "Orientation", "GeneralDelivery", "EOS"]
+        cls.address_components = [
+            "StreetNumber", "StreetName", "Unit", "Municipality", "Province", "PostalCode", "Orientation",
+            "GeneralDelivery", "EOS"
+        ]
         cls.a_address_str = "3 test road"
         cls.a_parsed_address = [("3", "StreetNumber"), ("test", "StreetName"), ("road", "StreetName")]
         cls.a_address_repr = "FormattedParsedAddress<StreetNumber='3', StreetName='test road'>"

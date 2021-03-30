@@ -417,10 +417,9 @@ class AddressParser:
         test_res = exp.test(test_generator, seed=seed, callbacks=callbacks, checkpoint=checkpoint)
         return test_res
 
-    def _fill_tagged_addresses_components(self, tags_predictions: ndarray, tags_predictions_prob: ndarray,
-                                          addresses_to_parse: List[str],
-                                          with_prob: bool) -> Union[
-        FormattedParsedAddress, List[FormattedParsedAddress]]:
+    def _fill_tagged_addresses_components(
+            self, tags_predictions: ndarray, tags_predictions_prob: ndarray, addresses_to_parse: List[str],
+            with_prob: bool) -> Union[FormattedParsedAddress, List[FormattedParsedAddress]]:
         """
         Method to fill the mapping for every address between a address components and is associated predicted tag (or
         tag and prob).
@@ -436,8 +435,9 @@ class AddressParser:
                 if with_prob:
                     tag = (tag, round(tag_proba, self.rounding))
                 tagged_address_components.append((word, tag))
-            tagged_addresses_components.append(FormattedParsedAddress(list(self.tags_converter.tags_to_idx.keys()),
-                                                                      {address_to_parse: tagged_address_components}))
+            tagged_addresses_components.append(
+                FormattedParsedAddress(list(self.tags_converter.tags_to_idx.keys()),
+                                       {address_to_parse: tagged_address_components}))
 
         if len(tagged_addresses_components) == 1:
             return tagged_addresses_components[0]

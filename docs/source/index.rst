@@ -346,7 +346,8 @@ Getting Started
         "Ansgarstr. 4, Wallenhorst, 49134", "221 B Baker Street", "서울특별시 종로구 사직로3길 23"])
 
    # you can also get the probability of the predicted tags
-   parsed_address = address_parser("350 rue des Lilas Ouest Québec Québec G1L 1B6", with_prob=True)
+   parsed_address = address_parser("350 rue des Lilas Ouest Québec Québec G1L 1B6",
+        with_prob=True)
 
 
 The predictions tags are the following
@@ -362,7 +363,7 @@ The predictions tags are the following
 
 Retrain a Model
 ***************
-see `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py>`_ for a complete example.
+See `this <https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py>`_ for a complete example.
 
 .. code-block:: python
 

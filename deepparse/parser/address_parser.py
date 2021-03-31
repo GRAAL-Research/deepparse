@@ -85,10 +85,10 @@ class AddressParser:
         access to Internet.
 
         Here are the URLs to download our pre-trained models directly
+
             - `FastText <https://graal.ift.ulaval.ca/public/deepparse/fasttext.ckpt>`_
             - `BPEmb <https://graal.ift.ulaval.ca/public/deepparse/bpemb.ckpt>`_
-            - `FastText Light <https://graal.ift.ulaval.ca/public/deepparse/fasttext.magnitude.gz>`_
-                (using `Magnitude Light <https://github.com/davebulaval/magnitude-light>`_)
+            - `FastText Light <https://graal.ift.ulaval.ca/public/deepparse/fasttext.magnitude.gz>`_.
 
     Note:
         Note that the first time the fastText model is instantiated on a computer, we download the fastText
@@ -181,7 +181,8 @@ class AddressParser:
 
                     address_parser = AddressParser(device=0) #on gpu device 0
                     parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
-                    parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6", with_prob=True)
+                    parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6",
+                                                    with_prob=True)
 
         """
         if isinstance(addresses_to_parse, str):

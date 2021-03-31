@@ -32,7 +32,7 @@ We evaluate our models on two forms of address data:
 
 You can get our dataset `here <https://github.com/GRAAL-Research/deepparse-address-data)>`_.
 
-Clean data
+Clean Data
 **********
 
 The following table presents the accuracy on the 20 countries (using clean data) we used during training for both our models.
@@ -246,7 +246,7 @@ We have also made a zero-shot evaluation of our models using clean data from 41 
 			-
 			-
 
-Noisy data
+Noisy Data
 **********
 
 The following table presents the accuracy on the 20 countries we used during training for both our models but for noisy 
@@ -323,7 +323,7 @@ to achieve an interesting performance.
 			- 99.04
 			- 99.52
 
-Getting started
+Getting Started
 ===============
 
 .. code-block:: python
@@ -336,10 +336,18 @@ Getting started
    parsed_address = address_parser("350 rue des Lilas Ouest Québec Québec G1L 1B6")
 
    # or multiple addresses
-   parsed_address = address_parser(["350 rue des Lilas Ouest Québec Québec G1L 1B6", "350 rue des Lilas Ouest Québec Québec G1L 1B6"])
+   parsed_address = address_parser(["350 rue des Lilas Ouest Québec Québec G1L 1B6",
+        "350 rue des Lilas Ouest Québec Québec G1L 1B6"])
+
+   # or multinational addresses
+   # Canada, US, Germany, UK and South Korea
+   parsed_address = address_parser(
+       ["350 rue des Lilas Ouest Québec Québec G1L 1B6", "777 Brockton Avenue, Abington MA 2351",
+        "Ansgarstr. 4, Wallenhorst, 49134", "221 B Baker Street", "서울특별시 종로구 사직로3길 23"])
 
    # you can also get the probability of the predicted tags
-   parsed_address = address_parser("350 rue des Lilas Ouest Québec Québec G1L 1B6", with_prob=True)
+   parsed_address = address_parser("350 rue des Lilas Ouest Québec Québec G1L 1B6",
+        with_prob=True)
 
 
 The predictions tags are the following
@@ -353,9 +361,9 @@ The predictions tags are the following
     - "Orientation": for the street orientation (e.g. west, east)
     - "GeneralDelivery": for other delivery information
 
-Retrain a model
+Retrain a Model
 ***************
-see `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py>`_ for a complete example.
+See `this <https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py>`_ for a complete example.
 
 .. code-block:: python
 
@@ -364,6 +372,13 @@ see `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine
 
     address_parser.retrain(training_container, 0.8, epochs=5, batch_size=8)
 
+Download our Models
+*******************
+
+Here are the URLs to download our pre-trained models directly
+    - `FastText <https://graal.ift.ulaval.ca/public/deepparse/fasttext.ckpt>`_
+    - `BPEmb <https://graal.ift.ulaval.ca/public/deepparse/bpemb.ckpt>`_
+    - `FastText Light <https://graal.ift.ulaval.ca/public/deepparse/fasttext.magnitude.gz>`_ (using `Magnitude Light <https://github.com/davebulaval/magnitude-light>`_)
 
 
 Installation

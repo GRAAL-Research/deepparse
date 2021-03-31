@@ -6,7 +6,7 @@ Parser
 
 .. currentmodule:: deepparse.parser
 
-Pre-trained complete model
+Pre-trained Complete Model
 --------------------------
 
 This is the complete pre-trained address parser model. This model allows using the pre-trained weights to predict the

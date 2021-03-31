@@ -4,7 +4,7 @@
 
 .. _intro:
 
-Retrain a pretrained model
+Retrain a Pretrained Model
 **************************
 
 .. code-block:: python

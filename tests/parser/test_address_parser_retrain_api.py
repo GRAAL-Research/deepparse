@@ -1,5 +1,6 @@
 # Since we use a patch as model mock we skip the unused argument error
 # pylint: disable=W0613, too-many-arguments
+import os
 import unittest
 from unittest.mock import patch, call
 
@@ -18,11 +19,11 @@ class ADataContainer(DatasetContainer):
         self.data = (torch.rand(batch_size, 1), torch.rand(batch_size, 1))
 
 
-class AddressParserTest(AddressParserPredictTestCase):
+class AddressParserRetrainTest(AddressParserPredictTestCase):
     # pylint: disable=too-many-public-methods
     @classmethod
     def setUpClass(cls):
-        super(AddressParserTest, cls).setUpClass()
+        super(AddressParserRetrainTest, cls).setUpClass()
         cls.a_device = "cpu"
 
     def setUp(self):
@@ -45,6 +46,17 @@ class AddressParserTest(AddressParserPredictTestCase):
         self.a_best_checkpoint = "best"
 
         self.verbose = False
+
+        # to create the dirs for dumping the prediction tags since we mock Poutyne that usually will do it
+        os.makedirs(self.a_logging_path, exist_ok=True)
+
+    def tearDown(self) -> None:
+        # cleanup after the tests
+        path = os.path.join(self.a_logging_path, "./prediction_tags.p")
+        if os.path.exists(path):
+            os.remove(path)
+
+        os.rmdir(self.a_logging_path)
 
     def address_parser_retrain_call(self):
         self.address_parser.retrain(self.mocked_data_container,

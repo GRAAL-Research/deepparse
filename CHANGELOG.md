@@ -51,3 +51,6 @@
 - Documentation improvement
 - Added new models evaluation to doc
 - Release new models
+
+## 0.3.3
+- Improvement in the loading of data during prediction. We now use a data loader.

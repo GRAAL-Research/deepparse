@@ -54,5 +54,5 @@
 
 ## 0.3.3
 
-- Improvement in the loading of data during prediction. We now use a data loader.
-- Fixed missing import in parser module
+- We have improved the loading of data during prediction. We now use a data loader.
+- Fixed missing import in the parser module.

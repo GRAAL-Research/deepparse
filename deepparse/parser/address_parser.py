@@ -5,7 +5,6 @@ import warnings
 from typing import List, Union, Dict, Tuple
 
 import torch
-from numpy.core.multiarray import ndarray
 from poutyne.framework import Experiment
 from torch.optim import SGD
 from torch.utils.data import DataLoader, Subset
@@ -183,7 +182,9 @@ class AddressParser:
 
     def __call__(self,
                  addresses_to_parse: Union[List[str], str],
-                 with_prob: bool = False) -> Union[FormattedParsedAddress, List[FormattedParsedAddress]]:
+                 with_prob: bool = False,
+                 batch_size: int = 32,
+                 num_workers: int = 0) -> Union[FormattedParsedAddress, List[FormattedParsedAddress]]:
         """
         Callable method to parse the components of an address or a list of address.
 
@@ -196,6 +197,10 @@ class AddressParser:
                 (128 elements at the time are processed).
             with_prob (bool): If true, return the probability of all the tags with the specified
                 rounding.
+            batch_size (int): The size of the batch (default is 32).
+            num_workers (int): Number of workers to use for the data loader (default is 0, which means that the data
+                will be loaded in the main process.).
+
 
         Return:
             Either a :class:`~deepparse.deepparse.parsed_address.FormattedParsedAddress` or a list of
@@ -220,15 +225,19 @@ class AddressParser:
 
         if self.verbose and len(addresses_to_parse) > PREDICTION_TIME_PERFORMANCE_THRESHOLD:
             print("Vectorizing the address")
-        vectorize_address = self.vectorizer(lower_cased_addresses_to_parse)
 
-        padded_address = self.data_converter(vectorize_address)
-        padded_address = load_tuple_to_device(padded_address, self.device)
+        predict_dataloader = DataLoader(lower_cased_addresses_to_parse,
+                                        collate_fn=self._predict_pipeline,
+                                        batch_size=batch_size,
+                                        num_workers=num_workers)
 
-        predictions = self.model(*padded_address)
-
-        tags_predictions = predictions.max(2)[1].transpose(0, 1).cpu().numpy()
-        tags_predictions_prob = torch.exp(predictions.max(2)[0]).transpose(0, 1).detach().cpu().numpy()
+        tags_predictions = []
+        tags_predictions_prob = []
+        for x in predict_dataloader:
+            tensor_prediction = self.model(*load_tuple_to_device(x, self.device))
+            tags_predictions.extend(tensor_prediction.max(2)[1].transpose(0, 1).cpu().numpy().tolist())
+            tags_predictions_prob.extend(
+                torch.exp(tensor_prediction.max(2)[0]).transpose(0, 1).detach().cpu().numpy().tolist())
 
         tagged_addresses_components = self._fill_tagged_addresses_components(tags_predictions, tags_predictions_prob,
                                                                              addresses_to_parse, with_prob)
@@ -439,7 +448,7 @@ class AddressParser:
         return test_res
 
     def _fill_tagged_addresses_components(
-            self, tags_predictions: ndarray, tags_predictions_prob: ndarray, addresses_to_parse: List[str],
+            self, tags_predictions: List, tags_predictions_prob: List, addresses_to_parse: List[str],
             with_prob: bool) -> Union[FormattedParsedAddress, List[FormattedParsedAddress]]:
         """
         Method to fill the mapping for every address between a address components and is associated predicted tag (or
@@ -555,3 +564,9 @@ class AddressParser:
             raise NotImplementedError(f"There is no {self.model_type} network implemented. Value should be: "
                                       f"fasttext, bpemb, lightest (fasttext-light), fastest (fasttext) "
                                       f"or best (bpemb).")
+
+    def _predict_pipeline(self, data):
+        """
+        Pipeline to process data in a data loader for prediction.
+        """
+        return self.data_converter(self.vectorizer(data))

@@ -51,3 +51,7 @@
 - Documentation improvement
 - Added new models evaluation to doc
 - Release new models
+
+## 0.3.3
+
+- Fixed missing import in parser module

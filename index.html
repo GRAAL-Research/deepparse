@@ -11,7 +11,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Here is deepparse &mdash; deepparse 0.3.2 documentation</title>
+  <title>Here is deepparse &mdash; deepparse 0.3.3 documentation</title>
   
 
   
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.3.2
+                0.3.3
               </div>
             
           
@@ -101,7 +101,7 @@
 </ul>
 <p class="caption"><span class="caption-text">Examples</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="examples/fine_tuning.html">Retrain a pretrained model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/fine_tuning.html">Retrain a Pretrained Model</a></li>
 </ul>
 
             
@@ -193,7 +193,7 @@
 </ul>
 <p>You can get our dataset <a class="reference external" href="https://github.com/GRAAL-Research/deepparse-address-data)">here</a>.</p>
 <div class="section" id="clean-data">
-<h2>Clean data<a class="headerlink" href="#clean-data" title="Permalink to this headline">¶</a></h2>
+<h2>Clean Data<a class="headerlink" href="#clean-data" title="Permalink to this headline">¶</a></h2>
 <p>The following table presents the accuracy on the 20 countries (using clean data) we used during training for both our models.</p>
 <table class="docutils align-default">
 <colgroup>
@@ -457,7 +457,7 @@
 </table>
 </div>
 <div class="section" id="noisy-data">
-<h2>Noisy data<a class="headerlink" href="#noisy-data" title="Permalink to this headline">¶</a></h2>
+<h2>Noisy Data<a class="headerlink" href="#noisy-data" title="Permalink to this headline">¶</a></h2>
 <p>The following table presents the accuracy on the 20 countries we used during training for both our models but for noisy
 and incomplete data. We didn’t test on the other 41 countries since we did not train on them and therefore do not expect
 to achieve an interesting performance.</p>
@@ -555,7 +555,7 @@ to achieve an interesting performance.</p>
 </div>
 </div>
 <div class="section" id="getting-started">
-<h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">deepparse.parser</span> <span class="kn">import</span> <span class="n">AddressParser</span>
 
 <span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;bpemb&quot;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
@@ -564,10 +564,18 @@ to achieve an interesting performance.</p>
 <span class="n">parsed_address</span> <span class="o">=</span> <span class="n">address_parser</span><span class="p">(</span><span class="s2">&quot;350 rue des Lilas Ouest Québec Québec G1L 1B6&quot;</span><span class="p">)</span>
 
 <span class="c1"># or multiple addresses</span>
-<span class="n">parsed_address</span> <span class="o">=</span> <span class="n">address_parser</span><span class="p">([</span><span class="s2">&quot;350 rue des Lilas Ouest Québec Québec G1L 1B6&quot;</span><span class="p">,</span> <span class="s2">&quot;350 rue des Lilas Ouest Québec Québec G1L 1B6&quot;</span><span class="p">])</span>
+<span class="n">parsed_address</span> <span class="o">=</span> <span class="n">address_parser</span><span class="p">([</span><span class="s2">&quot;350 rue des Lilas Ouest Québec Québec G1L 1B6&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;350 rue des Lilas Ouest Québec Québec G1L 1B6&quot;</span><span class="p">])</span>
+
+<span class="c1"># or multinational addresses</span>
+<span class="c1"># Canada, US, Germany, UK and South Korea</span>
+<span class="n">parsed_address</span> <span class="o">=</span> <span class="n">address_parser</span><span class="p">(</span>
+    <span class="p">[</span><span class="s2">&quot;350 rue des Lilas Ouest Québec Québec G1L 1B6&quot;</span><span class="p">,</span> <span class="s2">&quot;777 Brockton Avenue, Abington MA 2351&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;Ansgarstr. 4, Wallenhorst, 49134&quot;</span><span class="p">,</span> <span class="s2">&quot;221 B Baker Street&quot;</span><span class="p">,</span> <span class="s2">&quot;서울특별시 종로구 사직로3길 23&quot;</span><span class="p">])</span>
 
 <span class="c1"># you can also get the probability of the predicted tags</span>
-<span class="n">parsed_address</span> <span class="o">=</span> <span class="n">address_parser</span><span class="p">(</span><span class="s2">&quot;350 rue des Lilas Ouest Québec Québec G1L 1B6&quot;</span><span class="p">,</span> <span class="n">with_prob</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">parsed_address</span> <span class="o">=</span> <span class="n">address_parser</span><span class="p">(</span><span class="s2">&quot;350 rue des Lilas Ouest Québec Québec G1L 1B6&quot;</span><span class="p">,</span>
+     <span class="n">with_prob</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The predictions tags are the following</p>
@@ -584,14 +592,25 @@ to achieve an interesting performance.</p>
 </ul>
 </div></blockquote>
 <div class="section" id="retrain-a-model">
-<h2>Retrain a model<a class="headerlink" href="#retrain-a-model" title="Permalink to this headline">¶</a></h2>
-<p>see <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py">here</a> for a complete example.</p>
+<h2>Retrain a Model<a class="headerlink" href="#retrain-a-model" title="Permalink to this headline">¶</a></h2>
+<p>See <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py">this</a> for a complete example.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># We will retrain the fasttext version of our pretrained model.</span>
 <span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;fasttext&quot;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
 <span class="n">address_parser</span><span class="o">.</span><span class="n">retrain</span><span class="p">(</span><span class="n">training_container</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="section" id="download-our-models">
+<h2>Download our Models<a class="headerlink" href="#download-our-models" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt>Here are the URLs to download our pre-trained models directly</dt><dd><ul class="simple">
+<li><p><a class="reference external" href="https://graal.ift.ulaval.ca/public/deepparse/fasttext.ckpt">FastText</a></p></li>
+<li><p><a class="reference external" href="https://graal.ift.ulaval.ca/public/deepparse/bpemb.ckpt">BPEmb</a></p></li>
+<li><p><a class="reference external" href="https://graal.ift.ulaval.ca/public/deepparse/fasttext.magnitude.gz">FastText Light</a> (using <a class="reference external" href="https://github.com/davebulaval/magnitude-light">Magnitude Light</a>)</p></li>
+</ul>
+</dd>
+</dl>
 </div>
 </div>
 <div class="section" id="installation">
@@ -647,7 +666,7 @@ to achieve an interesting performance.</p>
 <div class="toctree-wrapper compound">
 <p class="caption"><span class="caption-text">Examples</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="examples/fine_tuning.html">Retrain a pretrained model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/fine_tuning.html">Retrain a Pretrained Model</a></li>
 </ul>
 </div>
 </div>

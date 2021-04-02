@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>deepparse.parser.address_parser &mdash; deepparse 0.3.2 documentation</title>
+  <title>deepparse.parser.address_parser &mdash; deepparse 0.3.3 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.3.2
+                0.3.3
               </div>
             
           
@@ -96,7 +96,7 @@
 </ul>
 <p class="caption"><span class="caption-text">Examples</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../examples/fine_tuning.html">Retrain a pretrained model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/fine_tuning.html">Retrain a Pretrained Model</a></li>
 </ul>
 
             
@@ -167,7 +167,6 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="kn">import</span> <span class="nn">torch</span>
-<span class="kn">from</span> <span class="nn">numpy.core.multiarray</span> <span class="kn">import</span> <span class="n">ndarray</span>
 <span class="kn">from</span> <span class="nn">poutyne.framework</span> <span class="kn">import</span> <span class="n">Experiment</span>
 <span class="kn">from</span> <span class="nn">torch.optim</span> <span class="kn">import</span> <span class="n">SGD</span>
 <span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">DataLoader</span><span class="p">,</span> <span class="n">Subset</span>
@@ -249,6 +248,12 @@
 <span class="sd">        `deepparse.download` module (e.g. python -m deepparse.download fasttext) before sending it to a node without</span>
 <span class="sd">        access to Internet.</span>
 
+<span class="sd">        Here are the URLs to download our pre-trained models directly</span>
+
+<span class="sd">            - `FastText &lt;https://graal.ift.ulaval.ca/public/deepparse/fasttext.ckpt&gt;`_</span>
+<span class="sd">            - `BPEmb &lt;https://graal.ift.ulaval.ca/public/deepparse/bpemb.ckpt&gt;`_</span>
+<span class="sd">            - `FastText Light &lt;https://graal.ift.ulaval.ca/public/deepparse/fasttext.magnitude.gz&gt;`_.</span>
+
 <span class="sd">    Note:</span>
 <span class="sd">        Note that the first time the fastText model is instantiated on a computer, we download the fastText</span>
 <span class="sd">        pre-trained embeddings of 6.8 GO, and this process can be quite long (a couple of minutes).</span>
@@ -315,7 +320,9 @@
 
 <div class="viewcode-block" id="AddressParser.__call__"><a class="viewcode-back" href="../../../parser.html#deepparse.parser.AddressParser.__call__">[docs]</a>    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">addresses_to_parse</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">],</span>
-                 <span class="n">with_prob</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">ParsedAddress</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">ParsedAddress</span><span class="p">]]:</span>
+                 <span class="n">with_prob</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                 <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
+                 <span class="n">num_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">ParsedAddress</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">ParsedAddress</span><span class="p">]]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Callable method to parse the components of an address or a list of address.</span>
 
@@ -328,6 +335,10 @@
 <span class="sd">                (128 elements at the time are processed).</span>
 <span class="sd">            with_prob (bool): If true, return the probability of all the tags with the specified</span>
 <span class="sd">                rounding.</span>
+<span class="sd">            batch_size (int): The size of the batch (default is 32).</span>
+<span class="sd">            num_workers (int): Number of workers to use for the data loader (default is 0, which means that the data</span>
+<span class="sd">                will be loaded in the main process.).</span>
+
 
 <span class="sd">        Return:</span>
 <span class="sd">            Either a :class:`~deepparse.deepparse.parsed_address.ParsedAddress` or a list of</span>
@@ -340,7 +351,17 @@
 
 <span class="sd">                    address_parser = AddressParser(device=0) #on gpu device 0</span>
 <span class="sd">                    parse_address = address_parser(&quot;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&quot;)</span>
-<span class="sd">                    parse_address = address_parser(&quot;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&quot;, with_prob=True)</span>
+<span class="sd">                    parse_address = address_parser(&quot;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&quot;,</span>
+<span class="sd">                                                    with_prob=True)</span>
+
+<span class="sd">            Using a larger batch size</span>
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                    address_parser = AddressParser(device=0) #on gpu device 0</span>
+<span class="sd">                    parse_address = address_parser(a_large_dataset, batch_size=1024)</span>
+<span class="sd">                    # You can also use more worker</span>
+<span class="sd">                    parse_address = address_parser(a_large_dataset, batch_size=1024, num_workers=2)</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">addresses_to_parse</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
@@ -351,15 +372,19 @@
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">addresses_to_parse</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">PREDICTION_TIME_PERFORMANCE_THRESHOLD</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Vectorizing the address&quot;</span><span class="p">)</span>
-        <span class="n">vectorize_address</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vectorizer</span><span class="p">(</span><span class="n">lower_cased_addresses_to_parse</span><span class="p">)</span>
 
-        <span class="n">padded_address</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_converter</span><span class="p">(</span><span class="n">vectorize_address</span><span class="p">)</span>
-        <span class="n">padded_address</span> <span class="o">=</span> <span class="n">load_tuple_to_device</span><span class="p">(</span><span class="n">padded_address</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">predict_data_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">lower_cased_addresses_to_parse</span><span class="p">,</span>
+                                         <span class="n">collate_fn</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_predict_pipeline</span><span class="p">,</span>
+                                         <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+                                         <span class="n">num_workers</span><span class="o">=</span><span class="n">num_workers</span><span class="p">)</span>
 
-        <span class="n">predictions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="o">*</span><span class="n">padded_address</span><span class="p">)</span>
-
-        <span class="n">tags_predictions</span> <span class="o">=</span> <span class="n">predictions</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="mi">2</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
-        <span class="n">tags_predictions_prob</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">predictions</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="mi">2</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+        <span class="n">tags_predictions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">tags_predictions_prob</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">predict_data_loader</span><span class="p">:</span>
+            <span class="n">tensor_prediction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="o">*</span><span class="n">load_tuple_to_device</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">))</span>
+            <span class="n">tags_predictions</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">tensor_prediction</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="mi">2</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+            <span class="n">tags_predictions_prob</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">tensor_prediction</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="mi">2</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
 
         <span class="n">tagged_addresses_components</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fill_tagged_addresses_components</span><span class="p">(</span><span class="n">tags_predictions</span><span class="p">,</span> <span class="n">tags_predictions_prob</span><span class="p">,</span>
                                                                              <span class="n">addresses_to_parse</span><span class="p">,</span> <span class="n">with_prob</span><span class="p">)</span>
@@ -539,7 +564,7 @@
         <span class="n">test_res</span> <span class="o">=</span> <span class="n">exp</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="n">test_generator</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="n">callbacks</span><span class="p">,</span> <span class="n">checkpoint</span><span class="o">=</span><span class="n">checkpoint</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">test_res</span></div>
 
-    <span class="k">def</span> <span class="nf">_fill_tagged_addresses_components</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tags_predictions</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">,</span> <span class="n">tags_predictions_prob</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">_fill_tagged_addresses_components</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tags_predictions</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">tags_predictions_prob</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span>
                                           <span class="n">addresses_to_parse</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
                                           <span class="n">with_prob</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">ParsedAddress</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">ParsedAddress</span><span class="p">]]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -651,7 +676,13 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;There is no </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="si">}</span><span class="s2"> network implemented. Value should be: &quot;</span>
                                       <span class="sa">f</span><span class="s2">&quot;fasttext, bpemb, lightest (fasttext-light), fastest (fasttext) &quot;</span>
-                                      <span class="sa">f</span><span class="s2">&quot;or best (bpemb).&quot;</span><span class="p">)</span></div>
+                                      <span class="sa">f</span><span class="s2">&quot;or best (bpemb).&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_predict_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Pipeline to process data in a data loader for prediction.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_converter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vectorizer</span><span class="p">(</span><span class="n">data</span><span class="p">))</span></div>
 </pre></div>
 
            </div>

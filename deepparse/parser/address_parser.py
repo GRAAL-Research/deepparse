@@ -207,7 +207,7 @@ class AddressParser:
         tags_predictions = []
         tags_predictions_prob = []
         for x in predict_dataloader:
-            tensor_prediction = self.model(*x)
+            tensor_prediction = self.model(*load_tuple_to_device(x, self.device))
             tags_predictions.extend(tensor_prediction.max(2)[1].transpose(0, 1).cpu().numpy().tolist())
             tags_predictions_prob.extend(
                 torch.exp(tensor_prediction.max(2)[0]).transpose(0, 1).detach().cpu().numpy().tolist())
@@ -508,4 +508,4 @@ class AddressParser:
         """
         Pipeline to process data in a data loader for prediction.
         """
-        return load_tuple_to_device(self.data_converter(self.vectorizer(data)), self.device)
+        return self.data_converter(self.vectorizer(data))

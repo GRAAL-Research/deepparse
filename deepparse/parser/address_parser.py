@@ -189,6 +189,15 @@ class AddressParser:
                     parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6",
                                                     with_prob=True)
 
+            Using a larger batch size
+
+            .. code-block:: python
+
+                    address_parser = AddressParser(device=0) #on gpu device 0
+                    parse_address = address_parser(a_large_dataset, batch_size=1024)
+                    # You can also use more worker
+                    parse_address = address_parser(a_large_dataset, batch_size=1024, num_workers=2)
+
         """
         if isinstance(addresses_to_parse, str):
             addresses_to_parse = [addresses_to_parse]
@@ -199,14 +208,14 @@ class AddressParser:
         if self.verbose and len(addresses_to_parse) > PREDICTION_TIME_PERFORMANCE_THRESHOLD:
             print("Vectorizing the address")
 
-        predict_dataloader = DataLoader(lower_cased_addresses_to_parse,
-                                        collate_fn=self._predict_pipeline,
-                                        batch_size=batch_size,
-                                        num_workers=num_workers)
+        predict_data_loader = DataLoader(lower_cased_addresses_to_parse,
+                                         collate_fn=self._predict_pipeline,
+                                         batch_size=batch_size,
+                                         num_workers=num_workers)
 
         tags_predictions = []
         tags_predictions_prob = []
-        for x in predict_dataloader:
+        for x in predict_data_loader:
             tensor_prediction = self.model(*load_tuple_to_device(x, self.device))
             tags_predictions.extend(tensor_prediction.max(2)[1].transpose(0, 1).cpu().numpy().tolist())
             tags_predictions_prob.extend(

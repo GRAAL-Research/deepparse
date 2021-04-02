@@ -55,5 +55,6 @@
 ## 0.3.3
 
 - We have improved the loading of data during prediction. We now use a data loader.
+- Updated the performance table of model with the data loader approach.
 - Fixed missing import in the parser module.
 - Bug fix of the `max_len` for the predictions

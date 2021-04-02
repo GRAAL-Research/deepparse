@@ -26,16 +26,18 @@ Deepparse is compatible with the __latest version of PyTorch__ and  __Python >= 
 
 ### Countries and Results
 
-We evaluate our models on two forms of address data: 
+We evaluate our models on two forms of address data:
 
-- **clean data** which refers to addresses containing elements from four categories, namely a street name, a municipality, a province and a postal code,
+- **clean data** which refers to addresses containing elements from four categories, namely a street name, a
+  municipality, a province and a postal code,
 - **noisy data** which is made up of addresses missing at least one category amongst the aforementioned ones.
 
 You can get our dataset [here](https://github.com/GRAAL-Research/deepparse-address-data).
 
 #### Clean Data
 
-The following table presents the accuracy (using clean data) on the 20 countries we used during training for both our models.
+The following table presents the accuracy (using clean data) on the 20 countries we used during training for both our
+models.
 
 | Country        |   Fasttext (%) |   BPEmb (%) | Country     |   Fasttext (%) |   BPEmb (%) |
 |:---------------|---------------:|------------:|:------------|---------------:|------------:|
@@ -50,8 +52,8 @@ The following table presents the accuracy (using clean data) on the 20 countries
 | South Korea    |          99.97 |       99.99 | Russia      |          98.9  |       96.97 |
 | Spain          |          99.73 |       99.4  | Finland     |          99.77 |       99.76 |
 
-
-We have also made a zero-shot evaluation of our models using clean data from 41 other countries; the results are shown in the next table.
+We have also made a zero-shot evaluation of our models using clean data from 41 other countries; the results are shown
+in the next table.
 
 | Country      |   Fasttext (%) |   BPEmb (%) | Country       |   Fasttext (%) |   BPEmb (%) |
 |:-------------|---------------:|------------:|:--------------|---------------:|------------:|
@@ -77,9 +79,10 @@ We have also made a zero-shot evaluation of our models using clean data from 41 
 | Cyprus       |          89.64 |       89.47 | Slovakia      |          78.34 |       68.96 |
 | South Africa |          95.68 |       74.82 |
 
-#### Noisy data
-The following table presents the accuracy on the 20 countries we used during training for both our models but for noisy 
-and incomplete data. We didn't test on the other 41 countries since we did not train on them and therefore do not expect 
+#### Noisy Data
+
+The following table presents the accuracy on the 20 countries we used during training for both our models but for noisy
+and incomplete data. We didn't test on the other 41 countries since we did not train on them and therefore do not expect
 to achieve an interesting performance.
 
 | Country        |   Fasttext (%) |   BPEmb (%) | Country     |   Fasttext (%) |   BPEmb (%) |
@@ -95,8 +98,7 @@ to achieve an interesting performance.
 | South Korea    |          91.1  |       99.89 | Russia      |          97.18 |       96.01 |
 | Spain          |          99.07 |       98.35 | Finland     |          99.04 |       99.52 |
 
-
-## Getting started:
+## Getting Started:
 
 ```python
 from deepparse.parser import AddressParser
@@ -109,6 +111,12 @@ parsed_address = address_parser("350 rue des Lilas Ouest Québec Québec G1L 1B6
 # or multiple addresses
 parsed_address = address_parser(
     ["350 rue des Lilas Ouest Québec Québec G1L 1B6", "350 rue des Lilas Ouest Québec Québec G1L 1B6"])
+
+# or multinational addresses
+# Canada, US, Germany, UK and South Korea
+parsed_address = address_parser(
+    ["350 rue des Lilas Ouest Québec Québec G1L 1B6", "777 Brockton Avenue, Abington MA 2351",
+     "Ansgarstr. 4, Wallenhorst, 49134", "221 B Baker Street", "서울특별시 종로구 사직로3길 23"])
 
 # you can also get the probability of the predicted tags
 parsed_address = address_parser("350 rue des Lilas Ouest Québec Québec G1L 1B6", with_prob=True)
@@ -125,7 +133,8 @@ The predictions tags are the following
 - "Orientation": for the street orientation (e.g. west, east)
 - "GeneralDelivery": for other delivery information
 
-### Retrain a model
+### Retrain a Model
+
 > see [here](https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py) for a complete example.
 
 ```python
@@ -135,6 +144,15 @@ address_parser = AddressParser(model_type="fasttext", device=0)
 address_parser.retrain(training_container, 0.8, epochs=5, batch_size=8)
 
 ```
+
+### Download our Models
+
+Here are the URLs to download our pre-trained models directly
+
+- [FastText](https://graal.ift.ulaval.ca/public/deepparse/fasttext.ckpt)
+- [BPEmb](https://graal.ift.ulaval.ca/public/deepparse/bpemb.ckpt)
+- [FastText Light](https://graal.ift.ulaval.ca/public/deepparse/fasttext.magnitude.gz) (
+  using [Magnitude Light](https://github.com/davebulaval/magnitude-light))
 
 ------------------
 

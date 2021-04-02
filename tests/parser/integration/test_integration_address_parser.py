@@ -8,6 +8,7 @@ import torch
 
 from deepparse.parser import AddressParser, FormattedParsedAddress
 
+
 @skipIf(not torch.cuda.is_available(), "no gpu available")
 class AddressParserPredictTest(TestCase):
 

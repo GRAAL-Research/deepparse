@@ -41,18 +41,18 @@ are a little bit lower on trained country (around ~2%) but are similar on zero-s
         *   - fastText
             - ~1
             - ~8
-            - ~0.0037
-            - ~0.0007
+            - ~0.00236
+            - ~0.0004
         *   - fastText-light
             - ~1
             - ~1
-            - ~0.0074
-            - ~0.0033
+            - ~0.0028
+            - ~0.0037
         *   - BPEmb
             - ~1
             - ~1
-            - ~0.0097
-            - ~0.0045
+            - ~0.0053
+            - ~0.0019
         *   - Libpostal
             - N/A
             - N/A
@@ -84,11 +84,9 @@ are a little bit lower on trained country (around ~2%) but are similar on zero-s
             - ~0.00007
 
 The two tables highlight that the batch size (number of address in the list to be parsed) influence the processing time.
-Thus, the more there is address, the faster processing each address can be. However, note that at some point, this
-'improvement' of performance decrease. We found that fastText and BPEmb obtain their best performance using a batch
-size of 256, beyond that performance decrease. For example, using the fastText model, our test has shown that parsing a
-single address (batch of 1 element) takes around 0.003 seconds. This time can be reduced to 0.00033 seconds per
-address when using a batch of 256, but using 512 take 0.0035 seconds.
+Thus, the more there is address, the faster processing each address can be. You can also improve performance by
+using more worker for the data loader created with your data within the call. But note that this performance
+improvements is not linear.
 
 .. autoclass:: AddressParser
     :members:

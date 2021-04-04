@@ -23,8 +23,7 @@ def fasttext_data_padding(batch: List) -> Tuple:
         lengths of the sequences.
     """
 
-    sequences_vectors, lengths = zip(*[(torch.FloatTensor(seq_vectors), len(seq_vectors))
-                                       for seq_vectors in sorted(batch, key=lambda x: len(x[0]), reverse=True)])
+    sequences_vectors, lengths = zip(*[(torch.FloatTensor(seq_vectors), len(seq_vectors)) for seq_vectors in batch])
 
     lengths = torch.tensor(lengths)
 
@@ -47,9 +46,8 @@ def bpemb_data_padding(batch: List[Tuple]) -> Tuple:
         decomposition lengths, and ``z`` is the original lengths of the sequences before padding.
     """
 
-    sequences_vectors, decomp_len, lengths = zip(
-        *[(torch.tensor(vectors), word_decomposition_len, len(vectors))
-          for vectors, word_decomposition_len in sorted(batch, key=lambda x: len(x[0]), reverse=True)])
+    sequences_vectors, decomp_len, lengths = zip(*[(torch.tensor(vectors), word_decomposition_len, len(vectors))
+                                                   for vectors, word_decomposition_len in batch])
 
     lengths = torch.tensor(lengths)
 

@@ -68,16 +68,16 @@ are a little bit lower on trained country (around ~2%) but are similar on zero-s
             - Mean time of execution (batch of more than 1) (s)
         *   - fastText
             - ~8
-            - ~0.0216
-            - ~0.0032
+            - ~0.0168
+            - ~0.0026
         *   - fastText-light
             - ~1
-            - ~0.0177
-            - ~0.0036
+            - ~0.0170
+            - ~0.0030
         *   - BPEmb
             - ~1
-            - ~0.0309
-            - ~0.0075
+            - ~0.0219
+            - ~0.0059
         *   - Libpostal
             - N/A
             - <1

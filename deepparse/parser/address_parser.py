@@ -407,7 +407,6 @@ class AddressParser:
         tag and prob).
         """
         tagged_addresses_components = []
-
         for address_to_parse, tags_prediction, tags_prediction_prob in zip(addresses_to_parse, tags_predictions,
                                                                            tags_predictions_prob):
             tagged_address_components = []

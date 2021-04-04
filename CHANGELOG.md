@@ -58,3 +58,9 @@
 - Updated the performance table of model with the data loader approach.
 - Fixed missing import in the parser module.
 - Bug fix of the `max_len` for the predictions
+
+## 0.3.4
+
+- Fixed a bug when use batched address. Since we were sorting the address during the forward pass, the output prediction 
+  tags were not aligned with the supposed parsed address. We have removed the sorting, and now the results are more 
+  aligned with our research.

@@ -369,7 +369,9 @@ class AddressParser:
                               epochs=epochs,
                               seed=seed,
                               callbacks=callbacks)
-        pickle.dump(prediction_tags, open(os.path.join(logging_path, "prediction_tags.p"), "wb"))
+        if prediction_tags is not None:
+            with open(os.path.join(logging_path, "prediction_tags.p"), "wb") as file:
+                pickle.dump(prediction_tags, file)
         return train_res
 
     def test(self,
@@ -439,7 +441,7 @@ class AddressParser:
             # mean the user have changed the prediction tags of the model
             with open(path_to_prediction_tags, "rb") as file:
                 prediction_tags = pickle.load(file)
-            self.tags_converter = TagsConverter(prediction_tags)
+                self.tags_converter = TagsConverter(prediction_tags)
 
         callbacks = [] if callbacks is None else callbacks
         data_transform = self._set_data_transformer()

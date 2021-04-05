@@ -9,7 +9,7 @@ from unittest.mock import patch
 import requests
 
 from deepparse import download_from_url, latest_version, download_weights, indices_splitting, \
-    handle_pre_trained_checkpoint, handle_poutyne_version, valid_poutyne_version
+    handle_pre_trained_checkpoint, handle_poutyne_version, valid_poutyne_version, handle_pre_trained_modified_checkpoint
 from deepparse import handle_checkpoint, CACHE_PATH
 from tests.tools import create_file
 
@@ -26,6 +26,7 @@ class ToolsTests(TestCase):
 
         self.a_model_type_checkpoint = "a_fake_model_type"
         self.a_fasttext_model_type_checkpoint = "fasttext"
+        self.a_fasttext_user_tags_model_type_checkpoint = "fasttext_user_tags"
         self.a_bpemb_model_type_checkpoint = "bpemb"
 
     def tearDown(self) -> None:
@@ -126,9 +127,25 @@ class ToolsTests(TestCase):
 
         self.assertEqual(actual, expected)
 
+    def test_givenAFasttextUserTagsCheckpoint_whenHandleCheckpoint_thenReturnCachedFasttextModifiedPath(self):
+        checkpoint = "fasttext_user_tags"
+
+        actual = handle_checkpoint(checkpoint)
+        expected = os.path.join(CACHE_PATH, checkpoint + ".ckpt")
+
+        self.assertEqual(actual, expected)
+
     @patch("deepparse.tools.latest_version")
     def test_givenABPEmbCheckpoint_whenHandleCheckpoint_thenReturnCachedBPEmbPath(self, latest_version_check):
         checkpoint = "bpemb"
+
+        actual = handle_checkpoint(checkpoint)
+        expected = os.path.join(CACHE_PATH, checkpoint + ".ckpt")
+
+        self.assertEqual(actual, expected)
+
+    def test_givenABPEmbUserTagsCheckpoint_whenHandleCheckpoint_thenReturnCachedBPEmbModifiedPath(self):
+        checkpoint = "bpemb_user_tags"
 
         actual = handle_checkpoint(checkpoint)
         expected = os.path.join(CACHE_PATH, checkpoint + ".ckpt")
@@ -303,6 +320,22 @@ class ToolsTests(TestCase):
 
         actual = valid_poutyne_version()
         self.assertFalse(actual)
+
+    @patch("deepparse.tools.poutyne")
+    def test_givenPoutyneVersionLowerThan12_givenHandlePreTrainedModifiedCheckpoint_thenRaiseError(self, poutyne_mock):
+        poutyne_mock.version.__version__ = "1.1"
+
+        with self.assertRaises(NotImplementedError):
+            handle_pre_trained_modified_checkpoint(self.a_model_type_checkpoint)
+
+    @patch("deepparse.tools.poutyne")
+    def test_givenPoutyneVersionGreaterThan12_givenHandlePreTrainedModifiedCheckpointFasttext_thenReturnFasttext(
+            self, poutyne_mock):
+        poutyne_mock.version.__version__ = "1.2"
+
+        actual = handle_pre_trained_modified_checkpoint(self.a_fasttext_user_tags_model_type_checkpoint)
+        expected = os.path.join(CACHE_PATH, f"{self.a_fasttext_user_tags_model_type_checkpoint}.ckpt")
+        self.assertEqual(expected, actual)
 
 
 if __name__ == "__main__":

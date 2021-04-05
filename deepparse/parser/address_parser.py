@@ -337,6 +337,19 @@ class AddressParser:
                     lr_scheduler = poutyne.StepLR(step_size=1, gamma=0.1) # reduce LR by a factor of 10 each epoch
                     address_parser.retrain(container, 0.8, epochs=5, batch_size=128, callbacks=[lr_scheduler])
 
+            Using your own prediction tags dictionary.
+
+            .. code-block:: python
+                    address_components = {"ATag":0, "AnotherTag": 1, "EOS": 2}
+
+                    address_parser = AddressParser(device=0) #on gpu device 0
+                    data_path = 'path_to_a_pickle_dataset.p'
+
+                    container = PickleDatasetContainer(data_path)
+
+                    address_parser.retrain(container, 0.8, epochs=1, batch_size=128, prediction_tags=address_components)
+
+
         See `this <https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py>`_ for a fine
         tuning example.
         """
@@ -424,7 +437,8 @@ class AddressParser:
 
         Note:
             You can also test our model on new prediction tags by adding your dictionary into the logging directory
-            with the name `prediction_tags.p`. But keep in mind that the prediction layer weights are randomly
+            with the name `prediction_tags.p`. For the evaluation, we will create a `<model_type>_user_tags.ckpt`
+            model in the `.cache` directory. But keep in mind that the prediction layer weights are randomly
             initialize.
 
         Example:
@@ -440,18 +454,43 @@ class AddressParser:
                     address_parser.test(test_container, checkpoint='last') # using the last epoch
                     address_parser.test(test_container, checkpoint=5) # using the epoch 5 model
 
-            You can also test our models with your tags.
+            You can also test our fine tuned model
 
                 .. code-block:: python
+                    address_components = {"ATag":0, "AnotherTag": 1, "EOS": 2}
 
+                    address_parser = AddressParser(device=0) #on gpu device 0
+
+                    # train phase
+                    data_path = 'path_to_a_pickle_train_dataset.p'
+
+                    train_container = PickleDatasetContainer(data_path)
+
+                    address_parser.retrain(container, 0.8, epochs=1, batch_size=128, prediction_tags=address_components)
+
+                    # test phase
+                    data_path = 'path_to_a_pickle_test_dataset.p'
+
+                    test_container = PickleDatasetContainer(data_path)
+
+                    address_parser.test(test_container, checkpoint="bpemb") # test with the bpemb pre-trained model
+                    address_parser.test(test_container, checkpoint="fasttext") # test with fasttext model
+
+            You can also test our models with your tags without a previous retraining.
+
+                .. code-block:: python
+                    address_components = {"ATag":0, "AnotherTag": 1, "EOS": 2}
                     with open("./checkpoints", "wb") as file:
-                        pickle.dump(self.address_components, file)
+                        # save your dictionary of tags in the default model directory "./checkpoints"
+                        pickle.dump(address_components, file)
+
                     address_parser = AddressParser(device=0) #on gpu device 0
                     data_path = 'path_to_a_pickle_test_dataset.p'
 
                     test_container = PickleDatasetContainer(data_path)
 
-                    address_parser.test(test_container) # using the default best epoch
+                    address_parser.test(test_container, checkpoint="bpemb") # test with the bpemb pre-trained model
+                    address_parser.test(test_container, checkpoint="fasttext") # test with fasttext model
 
 
         """
@@ -470,6 +509,8 @@ class AddressParser:
             # prediction layer dim. We handle that by saving a _user_tags model in the cache and load that model
             # later on for testing.
             if checkpoint in ("bpemb", "fasttext"):
+                if self.verbose:
+                    warnings.warn("Testing pre-trained model with a new predictions tags dictionary.")
                 checkpoint = checkpoint + "_user_tags"
                 with open(os.path.join(CACHE_PATH, checkpoint + ".ckpt"), "wb") as model_file:
                     torch.save(self.model.state_dict(), model_file)
@@ -487,6 +528,7 @@ class AddressParser:
         checkpoint = handle_checkpoint(checkpoint)
 
         test_res = exp.test(test_generator, seed=seed, callbacks=callbacks, checkpoint=checkpoint)
+
         return test_res
 
     def _fill_tagged_addresses_components(

@@ -100,7 +100,7 @@ def handle_pre_trained_checkpoint(model_type_checkpoint: str) -> str:
     return checkpoint
 
 
-def handle_pre_trained_modify_checkpoint(model_type_checkpoint: str) -> str:
+def handle_pre_trained_modified_checkpoint(model_type_checkpoint: str) -> str:
     """
     Handle the checkpoint formatting for pre trained models but with user prediction tags.
     """
@@ -127,7 +127,7 @@ def handle_checkpoint(checkpoint: str) -> str:
             raise NotImplementedError("To load a string path to a model, you need to have a Poutyne version"
                                       "greater than 1.1 (>1.1)")
     elif checkpoint in ("fasttext_user_tags", "bpemb_user_tags"):
-        checkpoint = handle_pre_trained_modify_checkpoint(checkpoint)
+        checkpoint = handle_pre_trained_modified_checkpoint(checkpoint)
     else:
         raise ValueError("The checkpoint is not valid. Can be 'best', 'last', a int, a path in a string format, "
                          "'fasttext' or 'bpemb'.")

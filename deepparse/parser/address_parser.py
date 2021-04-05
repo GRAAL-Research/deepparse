@@ -346,6 +346,7 @@ class AddressParser:
             if "EOS" not in prediction_tags.keys():
                 raise ValueError("The prediction tags dictionary is missing the EOS tag.")
             self.tags_converter = TagsConverter(prediction_tags)
+            # since we have change the output layer dim, we need to handle again the model creation
             self._model_factory(prediction_layer_len=len(prediction_tags))
 
         callbacks = [] if callbacks is None else callbacks
@@ -380,14 +381,15 @@ class AddressParser:
              num_workers: int = 1,
              callbacks: Union[List, None] = None,
              seed: int = 42,
-             logging_path: str = "./chekpoints",
+             logging_path: str = "./checkpoints",
              checkpoint: Union[str, int] = "best") -> Dict:
         # pylint: disable=too-many-arguments
         """
         Method to test a retrained or a pre-trained model using a dataset with the same tags. We train using
         `experiment <https://poutyne.org/experiment.html>`_ from `poutyne <https://poutyne.org/index.html>`_
         framework. The experiment module allow us to save checkpoints ``ckpt`` (pickle format) and a log.tsv where
-        the best epochs can be found (the best epoch is use in test).
+        the best epochs can be found (the best epoch is use in test). If you have retrained with different
+        prediction tags, we load the new tags automatically used during the retrain.
 
         Args:
             test_dataset_container (~deepparse.deepparse.dataset_container.dataset_container.DatasetContainer):
@@ -419,6 +421,11 @@ class AddressParser:
             If you have retrain our model and changed the prediction tags the file `prediction_tags.p` need to be
             next to the model (i.e. in the same directory as the model such as define by the `logging_path`).
 
+        Note:
+            You can also test our model on new prediction tags by adding your dictionary into the logging directory
+            with the name `prediction_tags.p`. But keep in mind that the prediction layer weights are randomly
+            initialize.
+
         Example:
 
             .. code-block:: python
@@ -439,9 +446,18 @@ class AddressParser:
         path_to_prediction_tags = os.path.join(logging_path, "prediction_tags.p")
         if os.path.isfile(path_to_prediction_tags):
             # mean the user have changed the prediction tags of the model
-            with open(path_to_prediction_tags, "rb") as file:
-                prediction_tags = pickle.load(file)
+            with open(path_to_prediction_tags, "rb") as prediction_tags_file:
+                prediction_tags = pickle.load(prediction_tags_file)
                 self.tags_converter = TagsConverter(prediction_tags)
+            # since we have change the output layer dim, we need to handle again the model creation
+            self._model_factory(prediction_layer_len=len(prediction_tags))
+            # one can test on new dataset with new prediction tags but to do so, we need to change the
+            # prediction layer dim. We handle that by saving a _user_tags model in the cache and load that model
+            # later on for testing.
+            if checkpoint in ("bpemb", "fasttext"):
+                checkpoint = checkpoint + "_user_tags"
+                with open(os.path.join(CACHE_PATH, checkpoint + ".ckpt"), "wb") as model_file:
+                    torch.save(self.model.state_dict(), model_file)
 
         callbacks = [] if callbacks is None else callbacks
         data_transform = self._set_data_transformer()

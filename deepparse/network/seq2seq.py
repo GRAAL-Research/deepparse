@@ -15,11 +15,13 @@ from ..tools import download_weights, latest_version
 
 class Seq2SeqModel(ABC, nn.Module):
     """
-    Abstract class for Seq2Seq network. The network use the config as design in our article for the encoder and
-    decoder:
+    Abstract class for Seq2Seq network. By default, the network use the config as design in our article for the encoder
+    and decoder:
 
         - Encoder: ``input_size = 300``, ``hidden_size = 1024`` and ``num_layers = 1``
         - Decoder: ``input_size = 1``, ``hidden_size = 1024``, ``num_layers = 1`` and ``output_size = 9``
+
+    When retraining with a different tag dictionary the output_size is change to the size of that dictionary.
 
      Args:
         device (~torch.device): The device tu use for the prediction.
@@ -119,8 +121,7 @@ class Seq2SeqModel(ABC, nn.Module):
         """
         # The empty prediction sequence
         # +1 for the EOS
-        # 9 for the output size (9 tokens)
-        prediction_sequence = torch.zeros(max_length + 1, batch_size, 9).to(self.device)
+        prediction_sequence = torch.zeros(max_length + 1, batch_size, self.output_size).to(self.device)
 
         # we decode the first token
         decoder_output, decoder_hidden = self.decoder(decoder_input, decoder_hidden)

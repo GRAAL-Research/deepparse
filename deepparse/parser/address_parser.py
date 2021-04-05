@@ -172,7 +172,8 @@ class AddressParser:
         self.tags_converter = TagsConverter(tags_to_idx)
 
         self.model_type = model_type.lower()
-        self._model_factory(verbose=self.verbose, path_to_retrained_model=path_to_retrained_model,
+        self._model_factory(verbose=self.verbose,
+                            path_to_retrained_model=path_to_retrained_model,
                             prediction_layer_len=len(tags_to_idx))
         self.model.eval()
 
@@ -602,7 +603,9 @@ class AddressParser:
 
         return train_generator, valid_generator
 
-    def _model_factory(self, verbose, path_to_retrained_model: Union[str, None] = None,
+    def _model_factory(self,
+                       verbose,
+                       path_to_retrained_model: Union[str, None] = None,
                        prediction_layer_len: int = 9) -> None:
         """
         Model factory to create the vectorizer, the data converter and the pre-trained model

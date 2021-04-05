@@ -1,7 +1,6 @@
 # Since we use a patch as model mock we skip the unused argument error
 # pylint: disable=W0613, no-member
 import os
-import pickle
 import unittest
 from unittest.mock import patch, Mock
 
@@ -43,9 +42,6 @@ class AddressParserTest(AddressParserPredictTestCase):
         self.embeddings_model_mock = Mock()
 
         self.model_path = "./model.p"
-
-    def prediction_tags_dict_setup(self):
-        pickle.dump(self.correct_address_components, open("./prediction_tags.p", "wb"))
 
     def tearDown(self) -> None:
         if os.path.exists("./prediction_tags.p"):
@@ -145,7 +141,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     def test_givenABPEmbModelType_whenInstantiatingParserWithUserComponent_thenCorrectNumberOfOutputDim(
             self, embeddings_model_mock):
         with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel") as model:
-            self.prediction_tags_dict_setup()
+            self.prediction_tags_dict_setup(self.correct_address_components)
             self.address_parser = AddressParser(model_type=self.a_bpemb_model_type,
                                                 device=self.a_device,
                                                 verbose=self.verbose,
@@ -161,7 +157,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     def test_givenAFasttextModelType_whenInstantiatingParserWithUserComponent_thenCorrectNumberOfOutputDim(
             self, download_weights_mock, model_mock):
         with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel") as model:
-            self.prediction_tags_dict_setup()
+            self.prediction_tags_dict_setup(self.incorrect_address_components)
             self.address_parser = AddressParser(model_type=self.a_fasttext_model_type,
                                                 device=self.a_device,
                                                 verbose=self.verbose,

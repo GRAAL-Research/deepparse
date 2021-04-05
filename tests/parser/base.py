@@ -1,6 +1,7 @@
 # Bug with PyTorch source code makes torch.tensor as not callable for pylint.
 # pylint: disable=not-callable
 import io
+import pickle
 import sys
 from unittest import TestCase
 from unittest.mock import Mock
@@ -72,3 +73,7 @@ class AddressParserPredictTestCase(TestCase):
         self.test_out = io.StringIO()
         self.original_output = sys.stdout
         sys.stdout = self.test_out
+
+    @staticmethod
+    def prediction_tags_dict_setup(address_components):
+        pickle.dump(address_components, open("./prediction_tags.p", "wb"))

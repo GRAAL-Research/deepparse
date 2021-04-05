@@ -8,8 +8,6 @@ from unittest import TestCase
 
 import torch
 
-from deepparse.parser import CACHE_PATH
-
 
 class AddressParserRetrainTestCase(TestCase):
 

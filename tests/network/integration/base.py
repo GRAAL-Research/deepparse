@@ -21,21 +21,19 @@ class Seq2SeqIntegrationTestCase(TestCase):
         cls.output_size = 9
 
     def encoder_input_setUp(self, model_type: str):
-        file = open(f"./tests/network/integration/to_predict_{model_type}.p", "rb")
-        self.to_predict_tensor = pickle.load(file)
+        with open(f"./network/integration/to_predict_{model_type}.p", "rb") as file:
+            self.to_predict_tensor = pickle.load(file)
         self.to_predict_tensor = self.to_predict_tensor.to(self.a_torch_device)
-        file.close()
 
         self.a_lengths_tensor = torch.tensor([6, 6], device=self.a_torch_device)
         self.a_batch_size = 2
 
     def encoder_output_setUp(self):
         self.decoder_input = torch.tensor([[[-1.], [-1.]]], device=self.a_torch_device)
-        file = open("./tests/network/integration/decoder_hidden.p", "rb")
-        self.decoder_hidden_tensor = pickle.load(file)
+        with open("./network/integration/decoder_hidden.p", "rb") as file:
+            self.decoder_hidden_tensor = pickle.load(file)
         self.decoder_hidden_tensor = (self.decoder_hidden_tensor[0].to(self.a_torch_device),
                                       self.decoder_hidden_tensor[1].to(self.a_torch_device))
-        file.close()
 
     def decoder_input_setUp(self):
         self.max_length = self.a_lengths_tensor[0].item()

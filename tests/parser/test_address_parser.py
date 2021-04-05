@@ -164,7 +164,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                                                 path_to_retrained_model=self.model_path)
 
             model.assert_called_with(self.a_torch_device,
-                                     len(self.correct_address_components),
+                                     len(self.incorrect_address_components),
                                      verbose=self.verbose,
                                      path_to_retrained_model=self.model_path)
 

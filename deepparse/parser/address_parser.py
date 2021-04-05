@@ -439,6 +439,20 @@ class AddressParser:
                     address_parser.test(test_container, checkpoint='last') # using the last epoch
                     address_parser.test(test_container, checkpoint=5) # using the epoch 5 model
 
+            You can also test our models with your tags.
+
+                .. code-block:: python
+
+                    with open("./checkpoints", "wb") as file:
+                        pickle.dump(self.address_components, file)
+                    address_parser = AddressParser(device=0) #on gpu device 0
+                    data_path = 'path_to_a_pickle_test_dataset.p'
+
+                    test_container = PickleDatasetContainer(data_path)
+
+                    address_parser.test(test_container) # using the default best epoch
+
+
         """
         if self.model_type == "fasttext-light":
             raise ValueError("It's not possible to test a fasttext-light due to pymagnitude problem.")

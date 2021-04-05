@@ -235,7 +235,7 @@ class AddressParser:
                 learning_rate: float = 0.01,
                 callbacks: Union[List, None] = None,
                 seed: int = 42,
-                logging_path: str = "./chekpoints") -> List[Dict]:
+                logging_path: str = "./checkpoints") -> List[Dict]:
         # pylint: disable=too-many-arguments, line-too-long, too-many-locals
         """
         Method to retrain the address parser model using a dataset with the same tags. We train using
@@ -258,7 +258,7 @@ class AddressParser:
                 See Poutyne `callback <https://poutyne.org/callbacks.html#callback-class>`_ for more information. By default
                 we set no callback.
             seed (int): Seed to use (by default 42).
-            logging_path (str): The logging path for the checkpoints. By default the path is ``./chekpoints``.
+            logging_path (str): The logging path for the checkpoints. By default the path is ``./checkpoints``.
 
         Return:
             A list of dictionary with the best epoch stats (see `Experiment class
@@ -333,7 +333,7 @@ class AddressParser:
              num_workers: int = 1,
              callbacks: Union[List, None] = None,
              seed: int = 42,
-             logging_path: str = "./chekpoints",
+             logging_path: str = "./checkpoints",
              checkpoint: Union[str, int] = "best") -> Dict:
         # pylint: disable=too-many-arguments
         """
@@ -349,7 +349,7 @@ class AddressParser:
                 See Poutyne `callback <https://poutyne.org/callbacks.html#callback-class>`_ for more information.
                 By default we set no callback.
             seed (int): Seed to use (by default 42).
-            logging_path (str): The logging path for the checkpoints. By default the path is ``./chekpoints``.
+            logging_path (str): The logging path for the checkpoints. By default the path is ``./checkpoints``.
                 checkpoint (Union[str, int]): Checkpoint to use for the test.
                 - If 'best', will load the best weights.
                 - If 'last', will load the last model checkpoint.

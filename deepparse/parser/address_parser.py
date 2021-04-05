@@ -172,7 +172,8 @@ class AddressParser:
         self.tags_converter = TagsConverter(tags_to_idx)
 
         self.model_type = model_type.lower()
-        self._model_factory(path_to_retrained_model=path_to_retrained_model, prediction_layer_len=len(tags_to_idx))
+        self._model_factory(verbose=self.verbose, path_to_retrained_model=path_to_retrained_model,
+                            prediction_layer_len=len(tags_to_idx))
         self.model.eval()
 
     def __str__(self) -> str:
@@ -361,7 +362,8 @@ class AddressParser:
                 raise ValueError("The prediction tags dictionary is missing the EOS tag.")
             self.tags_converter = TagsConverter(prediction_tags)
             # since we have change the output layer dim, we need to handle again the model creation
-            self._model_factory(prediction_layer_len=len(prediction_tags))
+            # we set verbose to False since we may already have printed message when __init__ of class.
+            self._model_factory(verbose=False, prediction_layer_len=len(prediction_tags))
 
         callbacks = [] if callbacks is None else callbacks
         train_generator, valid_generator = self._create_training_data_generator(dataset_container,
@@ -504,16 +506,9 @@ class AddressParser:
                 prediction_tags = pickle.load(prediction_tags_file)
                 self.tags_converter = TagsConverter(prediction_tags)
             # since we have change the output layer dim, we need to handle again the model creation
-            self._model_factory(prediction_layer_len=len(prediction_tags))
-            # one can test on new dataset with new prediction tags but to do so, we need to change the
-            # prediction layer dim. We handle that by saving a _user_tags model in the cache and load that model
-            # later on for testing.
-            if checkpoint in ("bpemb", "fasttext"):
-                if self.verbose:
-                    warnings.warn("Testing pre-trained model with a new predictions tags dictionary.")
-                checkpoint = checkpoint + "_user_tags"
-                with open(os.path.join(CACHE_PATH, checkpoint + ".ckpt"), "wb") as model_file:
-                    torch.save(self.model.state_dict(), model_file)
+            # we set verbose to False since we may already have printed message when __init__ of class.
+            self._model_factory(verbose=self.verbose, prediction_layer_len=len(prediction_tags))
+            self._handle_pre_trained_test_new_prediction_layer(checkpoint)
 
         callbacks = [] if callbacks is None else callbacks
         data_transform = self._set_data_transformer()
@@ -607,41 +602,42 @@ class AddressParser:
 
         return train_generator, valid_generator
 
-    def _model_factory(self, path_to_retrained_model: Union[str, None] = None, prediction_layer_len: int = 9) -> None:
+    def _model_factory(self, verbose, path_to_retrained_model: Union[str, None] = None,
+                       prediction_layer_len: int = 9) -> None:
         """
         Model factory to create the vectorizer, the data converter and the pre-trained model
         """
         if self.model_type in ("fasttext", "fastest", "fasttext-light", "lightest"):
             if self.model_type in ("fasttext-light", "lightest"):
                 self.model_type = "fasttext-light"  # we change name to 'fasttext-light' since name can be lightest
-                file_name = download_fasttext_magnitude_embeddings(saving_dir=CACHE_PATH, verbose=self.verbose)
+                file_name = download_fasttext_magnitude_embeddings(saving_dir=CACHE_PATH, verbose=verbose)
 
-                embeddings_model = MagnitudeEmbeddingsModel(file_name, verbose=self.verbose)
+                embeddings_model = MagnitudeEmbeddingsModel(file_name, verbose=verbose)
                 self.vectorizer = MagnitudeVectorizer(embeddings_model=embeddings_model)
             else:
                 self.model_type = "fasttext"  # we change name to fasttext since name can be fastest
-                file_name = download_fasttext_embeddings(saving_dir=CACHE_PATH, verbose=self.verbose)
+                file_name = download_fasttext_embeddings(saving_dir=CACHE_PATH, verbose=verbose)
 
-                embeddings_model = FastTextEmbeddingsModel(file_name, verbose=self.verbose)
+                embeddings_model = FastTextEmbeddingsModel(file_name, verbose=verbose)
                 self.vectorizer = FastTextVectorizer(embeddings_model=embeddings_model)
 
             self.data_converter = fasttext_data_padding
 
             self.model = FastTextSeq2SeqModel(self.device,
                                               prediction_layer_len,
-                                              verbose=self.verbose,
+                                              verbose=verbose,
                                               path_to_retrained_model=path_to_retrained_model)
 
         elif self.model_type in ("bpemb", "best"):
             self.model_type = "bpemb"  # we change name to bpemb since name can be best
             self.vectorizer = BPEmbVectorizer(
-                embeddings_model=BPEmbEmbeddingsModel(verbose=self.verbose, lang="multi", vs=100000, dim=300))
+                embeddings_model=BPEmbEmbeddingsModel(verbose=verbose, lang="multi", vs=100000, dim=300))
 
             self.data_converter = bpemb_data_padding
 
             self.model = BPEmbSeq2SeqModel(self.device,
                                            prediction_layer_len,
-                                           verbose=self.verbose,
+                                           verbose=verbose,
                                            path_to_retrained_model=path_to_retrained_model)
         else:
             raise NotImplementedError(f"There is no {self.model_type} network implemented. Value should be: "
@@ -653,3 +649,16 @@ class AddressParser:
         Pipeline to process data in a data loader for prediction.
         """
         return self.data_converter(self.vectorizer(data))
+
+    def _handle_pre_trained_test_new_prediction_layer(self, checkpoint: Union[str, int]) -> None:
+        """
+        One can test on new dataset with new prediction tags but to do so, we need to change the
+        prediction layer dim. We handle that by saving a `_user_tags` model in the cache and load that model
+        later on for testing.
+        """
+        if checkpoint in ("bpemb", "fasttext"):
+            if self.verbose:
+                warnings.warn("Testing pre-trained model with a new predictions tags dictionary.")
+            checkpoint = checkpoint + "_user_tags"
+            with open(os.path.join(CACHE_PATH, checkpoint + ".ckpt"), "wb") as model_file:
+                torch.save(self.model.state_dict(), model_file)

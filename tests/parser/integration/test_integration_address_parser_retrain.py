@@ -16,6 +16,7 @@ from tests.parser.integration.base_integration import AddressParserRetrainTestCa
 
 @skipIf(not torch.cuda.is_available(), "no gpu available")
 class AddressParserIntegrationTest(AddressParserRetrainTestCase):
+
     @classmethod
     def setUpClass(cls):
         super(AddressParserIntegrationTest, cls).setUpClass()
@@ -23,7 +24,6 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
 
     @classmethod
     def class_training_setup(cls):
-        cls.a_data_saving_dir = "./data"
         file_extension = "p"
         training_dataset_name = "sample_noisy_data"
         test_dataset_name = "test_sample_data"

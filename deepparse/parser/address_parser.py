@@ -397,7 +397,7 @@ class AddressParser:
              seed: int = 42,
              logging_path: str = "./checkpoints",
              checkpoint: Union[str, int] = "best") -> Dict:
-        # pylint: disable=too-many-arguments
+        # pylint: disable=too-many-arguments, too-many-locals
         """
         Method to test a retrained or a pre-trained model using a dataset with the same tags. We train using
         `experiment <https://poutyne.org/experiment.html>`_ from `poutyne <https://poutyne.org/index.html>`_

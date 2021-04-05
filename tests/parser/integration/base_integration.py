@@ -1,5 +1,6 @@
 # Bug with PyTorch source code makes torch.tensor as not callable for pylint.
-# pylint: disable=not-callable, too-many-public-methods
+# no-member skip is so because child define the training_container in setup
+# pylint: disable=not-callable, too-many-public-methods, no-member
 
 import os
 import shutil
@@ -33,6 +34,8 @@ class AddressParserRetrainTestCase(TestCase):
         cls.bpemb_local_path = os.path.join(CACHE_PATH, "bpemb.ckpt")
 
         cls.a_torch_device = torch.device("cuda:0")
+
+        cls.a_data_saving_dir = "./data"
 
     @classmethod
     def tearDownClass(cls) -> None:

@@ -105,9 +105,8 @@ def handle_pre_trained_modified_checkpoint(model_type_checkpoint: str) -> str:
     Handle the checkpoint formatting for pre trained models but with user prediction tags.
     """
     if not valid_poutyne_version():
-        raise NotImplementedError(
-            f"To load the pre-trained {model_type_checkpoint.replace('_user_tags', '')} model, "
-            f"you need to have a Poutyne version greater than 1.1 (>1.1)")
+        raise NotImplementedError(f"To load the pre-trained {model_type_checkpoint.replace('_user_tags', '')} model, "
+                                  f"you need to have a Poutyne version greater than 1.1 (>1.1)")
     checkpoint = os.path.join(CACHE_PATH, f"{model_type_checkpoint}.ckpt")
     return checkpoint
 

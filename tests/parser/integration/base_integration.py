@@ -13,6 +13,7 @@ from deepparse.parser import CACHE_PATH
 
 
 class AddressParserRetrainTestCase(TestCase):
+
     @classmethod
     def setUpClass(cls):
         cls.a_data_saving_dir = "./data"

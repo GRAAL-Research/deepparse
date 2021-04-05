@@ -38,6 +38,8 @@ class Seq2SeqModel(ABC, nn.Module):
         self.decoder = Decoder(input_size=1, hidden_size=1024, num_layers=1, output_size=output_size)
         self.decoder.to(self.device)
 
+        self.output_size = output_size
+
     def _load_pre_trained_weights(self, model_type: str) -> None:
         """
         Method to download and resolved the loading (into the network) of the pre-trained weights.
@@ -91,7 +93,7 @@ class Seq2SeqModel(ABC, nn.Module):
         return decoder_input, decoder_hidden
 
     def _resolve_change_in_prediction_layer(self, all_layers_params: OrderedDict):
-        if self.decoder.linear.out_features != 9:
+        if self.output_size != 9:
             # Since we have change the prediction layer size, we need to change the dict
             # we will load into the params dict the randomly set actual decoder linear weights to be retrain
             all_layers_params.update({"decoder.linear.weight": self.decoder.linear.state_dict()["weight"]})

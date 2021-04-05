@@ -262,8 +262,9 @@ class AddressParser:
                 learning_rate: float = 0.01,
                 callbacks: Union[List, None] = None,
                 seed: int = 42,
-                logging_path: str = "./chekpoints",
+                logging_path: str = "./checkpoints",
                 prediction_tags: Union[Dict, None] = None) -> List[Dict]:
+
         # pylint: disable=too-many-arguments, line-too-long, too-many-locals
         """
         Method to retrain the address parser model using a dataset with the same tags. We train using
@@ -286,7 +287,7 @@ class AddressParser:
                 See Poutyne `callback <https://poutyne.org/callbacks.html#callback-class>`_ for more information. By default
                 we set no callback.
             seed (int): Seed to use (by default 42).
-            logging_path (str): The logging path for the checkpoints. By default the path is ``./chekpoints``.
+            logging_path (str): The logging path for the checkpoints. By default the path is ``./checkpoints``.
             prediction_tags (Union[Dict, None]): A dictionary were the keys are the address components
                 (e.g. street name) and the value are the components idx (from 0 to N + 1) to use during retrain
                 of a model. The `+1` is the End Of Sequence (EOS) token that need to be include in the dictionary.
@@ -398,7 +399,7 @@ class AddressParser:
                 See Poutyne `callback <https://poutyne.org/callbacks.html#callback-class>`_ for more information.
                 By default we set no callback.
             seed (int): Seed to use (by default 42).
-            logging_path (str): The logging path for the checkpoints. By default the path is ``./chekpoints``.
+            logging_path (str): The logging path for the checkpoints. By default the path is ``./checkpoints``.
             checkpoint (Union[str, int]): Checkpoint to use for the test.
                 - If 'best', will load the best weights.
                 - If 'last', will load the last model checkpoint.

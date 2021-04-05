@@ -509,7 +509,7 @@ class AddressParser:
             # since we have change the output layer dim, we need to handle again the model creation
             # we set verbose to False since we may already have printed message when __init__ of class.
             self._model_factory(verbose=self.verbose, prediction_layer_len=len(prediction_tags))
-            self._handle_pre_trained_test_new_prediction_layer(checkpoint)
+            checkpoint = self._handle_pre_trained_test_new_prediction_layer(checkpoint)
 
         callbacks = [] if callbacks is None else callbacks
         data_transform = self._set_data_transformer()
@@ -653,11 +653,13 @@ class AddressParser:
         """
         return self.data_converter(self.vectorizer(data))
 
-    def _handle_pre_trained_test_new_prediction_layer(self, checkpoint: Union[str, int]) -> None:
+    def _handle_pre_trained_test_new_prediction_layer(self, checkpoint: Union[str, int]) -> str:
         """
         One can test on new dataset with new prediction tags but to do so, we need to change the
         prediction layer dim. We handle that by saving a `_user_tags` model in the cache and load that model
         later on for testing.
+
+        Will return the handled checkpoint name.
         """
         if checkpoint in ("bpemb", "fasttext"):
             if self.verbose:
@@ -665,3 +667,4 @@ class AddressParser:
             checkpoint = checkpoint + "_user_tags"
             with open(os.path.join(CACHE_PATH, checkpoint + ".ckpt"), "wb") as model_file:
                 torch.save(self.model.state_dict(), model_file)
+        return checkpoint

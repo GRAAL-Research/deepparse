@@ -24,7 +24,7 @@ class EncoderTest(TestCase):
         cls.num_layers = 1
 
         cls.weights_dir = "./weights"
-        download_from_url(file_name="to_predict_fasttext", saving_dir=cls.weights_dir, file_extension=".p")
+        download_from_url(file_name="to_predict_fasttext", saving_dir=cls.weights_dir, file_extension="p")
 
     @classmethod
     def tearDownClass(cls) -> None:

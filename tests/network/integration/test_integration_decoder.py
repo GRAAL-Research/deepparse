@@ -1,17 +1,25 @@
 # Bug with PyTorch source code makes torch.tensor as not callable for pylint.
 # pylint: disable=not-callable
-
+import os
 import pickle
+import shutil
 import unittest
 from unittest import TestCase, skipIf
 
 import torch
 
+from deepparse import download_from_url
 from deepparse.network import Decoder
 
 
 @skipIf(not torch.cuda.is_available(), "no gpu available")
 class DecoderTest(TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.weights_dir = "./weights"
+
+        download_from_url(file_name="decoder_hidden", saving_dir=cls.weights_dir, file_extension="p")
 
     def setUp(self) -> None:
         self.a_torch_device = torch.device("cuda:0")
@@ -27,14 +35,18 @@ class DecoderTest(TestCase):
         self.encoder.to(self.a_torch_device)  # we mount it into the device
         self.decoder_input_setUp()
 
+    @classmethod
+    def tearDownClass(cls) -> None:
+        if os.path.exists(cls.weights_dir):
+            shutil.rmtree(cls.weights_dir)
+
     def decoder_input_setUp(self):
         self.decoder_input = torch.tensor([[[-1.], [-1.]]], device=self.a_torch_device)
 
-        file = open("./tests/network/integration/decoder_hidden.p", "rb")
-        self.decoder_hidden_tensor = pickle.load(file)
+        with open(os.path.join(self.weights_dir, "decoder_hidden.p"), "rb") as file:
+            self.decoder_hidden_tensor = pickle.load(file)
         self.decoder_hidden_tensor = (self.decoder_hidden_tensor[0].to(self.a_torch_device),
                                       self.decoder_hidden_tensor[1].to(self.a_torch_device))
-        file.close()
 
     def assert_predictions_is_valid_dim(self, actual_predictions):
         self.assertEqual(self.a_batch_size, actual_predictions.shape[0])

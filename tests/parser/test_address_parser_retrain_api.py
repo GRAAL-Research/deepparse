@@ -185,12 +185,9 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
     @patch("deepparse.parser.address_parser.FastTextVectorizer")
     @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
     @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
-    def test_givenAFasttextModel_whenRetrainWithUserTags_thenSaveTagsDict(self, download_weights_mock,
-                                                                          embeddings_model_mock, vectorizer_model_mock,
-                                                                          data_padding_mock, model_mock,
-                                                                          data_transform_mock, optimizer_mock,
-                                                                          experiment_mock, dataloader_mock, pickle_mock,
-                                                                          open_mock):
+    def test_givenAFasttextModel_whenRetrainWithUserTags_thenSaveTagsDict(
+            self, download_weights_mock, embeddings_model_mock, vectorizer_model_mock, data_padding_mock, model_mock,
+            data_transform_mock, optimizer_mock, experiment_mock, dataloader_mock, pickle_mock, open_mock):
         self.address_parser = AddressParser(model_type=self.a_fasttext_model_type,
                                             device=self.a_device,
                                             verbose=self.verbose)
@@ -251,9 +248,8 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
     @patch("deepparse.parser.address_parser.BPEmbVectorizer")
     @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
     def test_givenABPEmbModel_whenRetrainWithUserTags_thenSaveTagsDict(self, embeddings_model_mock,
-                                                                       vectorizer_model_mock,
-                                                                       data_padding_mock, model_mock,
-                                                                       data_transform_mock, optimizer_mock,
+                                                                       vectorizer_model_mock, data_padding_mock,
+                                                                       model_mock, data_transform_mock, optimizer_mock,
                                                                        experiment_mock, dataloader_mock, pickle_mock,
                                                                        open_mock):
         self.address_parser = AddressParser(model_type=self.a_bpemb_model_type,

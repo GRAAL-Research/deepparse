@@ -552,7 +552,7 @@ class AddressParser:
             return tagged_addresses_components[0]
         return tagged_addresses_components
 
-    def _process_device(self, device: Union[int, str, torch.device]):
+    def _process_device(self, device: Union[int, str, torch.device]) -> None:
         """
         Function to process the device depending of the argument type.
 
@@ -573,7 +573,7 @@ class AddressParser:
         else:
             raise ValueError("Device should be a string, an int or a torch device.")
 
-    def _set_data_transformer(self):
+    def _set_data_transformer(self) -> DataTransform:
         train_vectorizer = TrainVectorizer(self.vectorizer, self.tags_converter)  # vectorize to provide also the target
         data_transform = DataTransform(train_vectorizer,
                                        self.model_type)  # use for transforming the data prior to training
@@ -604,7 +604,7 @@ class AddressParser:
         return train_generator, valid_generator
 
     def _model_factory(self,
-                       verbose,
+                       verbose: bool,
                        path_to_retrained_model: Union[str, None] = None,
                        prediction_layer_len: int = 9) -> None:
         """
@@ -647,7 +647,7 @@ class AddressParser:
                                       f"fasttext, bpemb, lightest (fasttext-light), fastest (fasttext) "
                                       f"or best (bpemb).")
 
-    def _predict_pipeline(self, data):
+    def _predict_pipeline(self, data: List) -> Tuple:
         """
         Pipeline to process data in a data loader for prediction.
         """

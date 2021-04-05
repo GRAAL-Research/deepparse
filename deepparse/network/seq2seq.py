@@ -2,7 +2,7 @@ import os
 import random
 import warnings
 from abc import ABC
-from typing import Tuple, Union, OrderedDict
+from typing import Tuple, Union, Dict
 
 import torch
 import torch.nn as nn
@@ -94,7 +94,7 @@ class Seq2SeqModel(ABC, nn.Module):
 
         return decoder_input, decoder_hidden
 
-    def _resolve_change_in_prediction_layer(self, all_layers_params: OrderedDict):
+    def _resolve_change_in_prediction_layer(self, all_layers_params: Dict) -> None:
         if self.output_size != 9:
             # Since we have change the prediction layer size, we need to change the dict
             # we will load into the params dict the randomly set actual decoder linear weights to be retrain

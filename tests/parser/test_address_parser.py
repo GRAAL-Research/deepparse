@@ -602,7 +602,6 @@ class AddressParserTest(AddressParserPredictTestCase):
 
             self.assertEqual(self.a_fasttext_light_name, self.test_out.getvalue().strip())
 
-    # fix test
     @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
     def test_givenABPEmbModelType_whenRetrainWithIncorrectPredictionTags_thenRaiseValueError(
             self, embeddings_model_mock):
@@ -613,7 +612,6 @@ class AddressParserTest(AddressParserPredictTestCase):
             with self.assertRaises(ValueError):
                 self.address_parser.retrain(Mock(), 0.8, 1, 1, prediction_tags=self.incorrect_address_components)
 
-    # fix test
     @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
     @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
     def test_givenAFasttextModelType_whenInstantiatingParserWithUserComponent_thenRaiseValueError(

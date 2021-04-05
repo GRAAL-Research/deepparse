@@ -7,8 +7,6 @@ from unittest import TestCase
 
 import torch
 
-from deepparse import download_from_url
-from deepparse.dataset_container import PickleDatasetContainer
 from deepparse.parser import CACHE_PATH
 
 
@@ -16,18 +14,6 @@ class AddressParserRetrainTestCase(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.a_data_saving_dir = "./data"
-        file_extension = "p"
-        training_dataset_name = "sample_noisy_data"
-        test_dataset_name = "test_sample_data"
-        download_from_url(training_dataset_name, cls.a_data_saving_dir, file_extension=file_extension)
-        download_from_url(test_dataset_name, cls.a_data_saving_dir, file_extension=file_extension)
-
-        cls.training_container = PickleDatasetContainer(
-            os.path.join(cls.a_data_saving_dir, training_dataset_name + "." + file_extension))
-        cls.test_container = PickleDatasetContainer(
-            os.path.join(cls.a_data_saving_dir, test_dataset_name + "." + file_extension))
-
         cls.a_fasttext_model_type = "fasttext"
         cls.a_fasttext_light_model_type = "fasttext-light"
         cls.a_bpemb_model_type = "bpemb"

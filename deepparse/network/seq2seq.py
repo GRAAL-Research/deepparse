@@ -2,7 +2,7 @@ import os
 import random
 import warnings
 from abc import ABC
-from typing import Tuple, Union
+from typing import Tuple, Union, OrderedDict
 
 import torch
 import torch.nn as nn
@@ -56,7 +56,7 @@ class Seq2SeqModel(ABC, nn.Module):
             download_weights(model_type, CACHE_PATH, verbose=self.verbose)
 
         all_layers_params = torch.load(model_path, map_location=self.device)
-
+        self._resolve_change_in_prediction_layer(all_layers_params)
         self.load_state_dict(all_layers_params)
 
     def _load_weights(self, path_to_retrained_model: str) -> None:
@@ -67,7 +67,7 @@ class Seq2SeqModel(ABC, nn.Module):
             path_to_retrained_model (str): The path to the fine-tuned model.
         """
         all_layers_params = torch.load(path_to_retrained_model, map_location=self.device)
-
+        self._resolve_change_in_prediction_layer(all_layers_params)
         self.load_state_dict(all_layers_params)
 
     def _encoder_step(self, to_predict: torch.Tensor, lengths_tensor: torch.Tensor, batch_size: int) -> Tuple:
@@ -89,6 +89,13 @@ class Seq2SeqModel(ABC, nn.Module):
         decoder_input = torch.zeros(1, batch_size, 1).to(self.device).new_full((1, batch_size, 1), -1)
 
         return decoder_input, decoder_hidden
+
+    def _resolve_change_in_prediction_layer(self, all_layers_params: OrderedDict):
+        if self.decoder.linear.out_features != 9:
+            # Since we have change the prediction layer size, we need to change the dict
+            # we will load into the params dict the randomly set actual decoder linear weights to be retrain
+            all_layers_params.update({"decoder.linear.weight": self.decoder.linear.state_dict()["weight"]})
+            all_layers_params.update({"decoder.linear.bias": self.decoder.linear.state_dict()["bias"]})
 
     def _decoder_step(self, decoder_input: torch.Tensor, decoder_hidden: tuple, target: Union[torch.Tensor, None],
                       max_length: int, batch_size: int) -> torch.Tensor:

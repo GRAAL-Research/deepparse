@@ -1,6 +1,6 @@
 # Bug with PyTorch source code makes torch.tensor as not callable for pylint.
 # pylint: disable=not-callable, too-many-public-methods
-
+import os
 import unittest
 from unittest import skipIf
 from unittest.mock import MagicMock, call, ANY
@@ -8,12 +8,33 @@ from unittest.mock import MagicMock, call, ANY
 import torch
 from poutyne import Callback
 
+from deepparse import download_from_url
+from deepparse.dataset_container import PickleDatasetContainer
 from deepparse.parser import AddressParser
 from tests.parser.integration.base_integration import AddressParserRetrainTestCase
 
 
 @skipIf(not torch.cuda.is_available(), "no gpu available")
 class AddressParserIntegrationTest(AddressParserRetrainTestCase):
+    @classmethod
+    def setUpClass(cls):
+        super(AddressParserIntegrationTest, cls).setUpClass()
+        cls.class_training_setup()
+
+    @classmethod
+    def class_training_setup(cls):
+        cls.a_data_saving_dir = "./data"
+        file_extension = "p"
+        training_dataset_name = "sample_noisy_data"
+        test_dataset_name = "test_sample_data"
+        download_from_url(training_dataset_name, cls.a_data_saving_dir, file_extension=file_extension)
+        download_from_url(test_dataset_name, cls.a_data_saving_dir, file_extension=file_extension)
+
+        cls.training_container = PickleDatasetContainer(
+            os.path.join(cls.a_data_saving_dir, training_dataset_name + "." + file_extension))
+        cls.test_container = PickleDatasetContainer(
+            os.path.join(cls.a_data_saving_dir, test_dataset_name + "." + file_extension))
+
     # Retrain API tests
     def test_givenAFasttextAddressParser_whenRetrain_thenTrainingOccur(self):
         address_parser = AddressParser(model_type=self.a_fasttext_model_type,

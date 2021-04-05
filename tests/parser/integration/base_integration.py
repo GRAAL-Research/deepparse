@@ -28,10 +28,7 @@ class AddressParserRetrainTestCase(TestCase):
         cls.a_batch_size = 128
         cls.a_number_of_workers = 2
         cls.a_learning_rate = 0.001
-        cls.a_checkpoints_saving_dir = "./chekpoints"
-
-        cls.fasttext_local_path = os.path.join(CACHE_PATH, "fasttext.ckpt")
-        cls.bpemb_local_path = os.path.join(CACHE_PATH, "bpemb.ckpt")
+        cls.a_checkpoints_saving_dir = "./checkpoints"
 
         cls.a_torch_device = torch.device("cuda:0")
 

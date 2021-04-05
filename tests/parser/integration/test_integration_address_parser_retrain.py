@@ -302,11 +302,13 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
 
         self.training(address_parser)
 
+        str_path = os.path.join(self.a_checkpoints_saving_dir, "checkpoint_epoch_1.ckpt")
+
         performance_after_test = address_parser.test(self.test_container,
                                                      batch_size=self.a_batch_size,
                                                      num_workers=self.a_number_of_workers,
                                                      logging_path=self.a_checkpoints_saving_dir,
-                                                     checkpoint=self.fasttext_local_path)
+                                                     checkpoint=str_path)
 
         self.assertIsNotNone(performance_after_test)
 
@@ -431,11 +433,13 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
 
         self.training(address_parser)
 
+        str_path = os.path.join(self.a_checkpoints_saving_dir, "checkpoint_epoch_1.ckpt")
+
         performance_after_test = address_parser.test(self.test_container,
                                                      batch_size=self.a_batch_size,
                                                      num_workers=self.a_number_of_workers,
                                                      logging_path=self.a_checkpoints_saving_dir,
-                                                     checkpoint=self.bpemb_local_path)
+                                                     checkpoint=str_path)
 
         self.assertIsNotNone(performance_after_test)
 

@@ -56,6 +56,9 @@ class AddressParserIntegrationNewPredictionLayerTest(AddressParserRetrainTestCas
         if os.path.exists(os.path.join(self.a_checkpoints_saving_dir, self.prediction_tags_file_name)):
             os.remove(os.path.join(self.a_checkpoints_saving_dir, self.prediction_tags_file_name))
 
+        if os.path.exists(self.prediction_tags_file_name):
+            os.remove(self.prediction_tags_file_name)
+
     # Retrain API tests
     def test_givenAFasttextAddressParser_whenRetrainWithNewPredictionTags_thenTrainingOccur(self):
         address_parser = AddressParser(model_type=self.a_fasttext_model_type,
@@ -372,14 +375,15 @@ class AddressParserIntegrationNewPredictionLayerTest(AddressParserRetrainTestCas
         address_parser = AddressParser(model_type=self.a_fasttext_model_type,
                                        device=self.a_torch_device,
                                        verbose=self.verbose)
+        self.training(address_parser, with_new_prediction_tags=self.address_components)
 
-        self.prediction_tags_dict_setup()
+        str_path = os.path.join(self.a_checkpoints_saving_dir, "checkpoint_epoch_1.ckpt")
 
         performance_after_test = address_parser.test(self.test_container,
                                                      batch_size=self.a_batch_size,
                                                      num_workers=self.a_number_of_workers,
                                                      logging_path=self.a_checkpoints_saving_dir,
-                                                     checkpoint=self.fasttext_local_path)
+                                                     checkpoint=str_path)
 
         self.assertIsNotNone(performance_after_test)
 
@@ -515,13 +519,15 @@ class AddressParserIntegrationNewPredictionLayerTest(AddressParserRetrainTestCas
                                        device=self.a_torch_device,
                                        verbose=self.verbose)
 
-        self.prediction_tags_dict_setup()
+        self.training(address_parser, with_new_prediction_tags=self.address_components)
+
+        str_path = os.path.join(self.a_checkpoints_saving_dir, "checkpoint_epoch_1.ckpt")
 
         performance_after_test = address_parser.test(self.test_container,
                                                      batch_size=self.a_batch_size,
                                                      num_workers=self.a_number_of_workers,
                                                      logging_path=self.a_checkpoints_saving_dir,
-                                                     checkpoint=self.bpemb_local_path)
+                                                     checkpoint=str_path)
 
         self.assertIsNotNone(performance_after_test)
 

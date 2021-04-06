@@ -89,12 +89,12 @@
               
             
             
-              <p><span class="caption-text">API</span></p>
+              <p class="caption"><span class="caption-text">API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../parser.html">Parser</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../dataset_container.html">Dataset Container</a></li>
 </ul>
-<p><span class="caption-text">Examples</span></p>
+<p class="caption"><span class="caption-text">Examples</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/fine_tuning.html">Retrain a Pretrained Model</a></li>
 </ul>
@@ -400,7 +400,7 @@
                 <span class="n">learning_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span>
                 <span class="n">callbacks</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                 <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span><span class="p">,</span>
-                <span class="n">logging_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;./chekpoints&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
+                <span class="n">logging_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;./checkpoints&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
         <span class="c1"># pylint: disable=too-many-arguments, line-too-long, too-many-locals</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to retrain the address parser model using a dataset with the same tags. We train using</span>
@@ -423,7 +423,7 @@
 <span class="sd">                See Poutyne `callback &lt;https://poutyne.org/callbacks.html#callback-class&gt;`_ for more information. By default</span>
 <span class="sd">                we set no callback.</span>
 <span class="sd">            seed (int): Seed to use (by default 42).</span>
-<span class="sd">            logging_path (str): The logging path for the checkpoints. By default the path is ``./chekpoints``.</span>
+<span class="sd">            logging_path (str): The logging path for the checkpoints. By default the path is ``./checkpoints``.</span>
 
 <span class="sd">        Return:</span>
 <span class="sd">            A list of dictionary with the best epoch stats (see `Experiment class</span>
@@ -498,7 +498,7 @@
              <span class="n">num_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
              <span class="n">callbacks</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
              <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span><span class="p">,</span>
-             <span class="n">logging_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;./chekpoints&quot;</span><span class="p">,</span>
+             <span class="n">logging_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;./checkpoints&quot;</span><span class="p">,</span>
              <span class="n">checkpoint</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;best&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
         <span class="c1"># pylint: disable=too-many-arguments</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -514,7 +514,7 @@
 <span class="sd">                See Poutyne `callback &lt;https://poutyne.org/callbacks.html#callback-class&gt;`_ for more information.</span>
 <span class="sd">                By default we set no callback.</span>
 <span class="sd">            seed (int): Seed to use (by default 42).</span>
-<span class="sd">            logging_path (str): The logging path for the checkpoints. By default the path is ``./chekpoints``.</span>
+<span class="sd">            logging_path (str): The logging path for the checkpoints. By default the path is ``./checkpoints``.</span>
 <span class="sd">                checkpoint (Union[str, int]): Checkpoint to use for the test.</span>
 <span class="sd">                - If &#39;best&#39;, will load the best weights.</span>
 <span class="sd">                - If &#39;last&#39;, will load the last model checkpoint.</span>

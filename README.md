@@ -30,7 +30,7 @@ We evaluate our models on two forms of address data:
 
 - **clean data** which refers to addresses containing elements from four categories, namely a street name, a
   municipality, a province and a postal code,
-- **noisy data** which is made up of addresses missing at least one category amongst the aforementioned ones.
+- **incomplete data** which is made up of addresses missing at least one category amongst the aforementioned ones.
 
 You can get our dataset [here](https://github.com/GRAAL-Research/deepparse-address-data).
 
@@ -79,10 +79,10 @@ in the next table.
 | Cyprus       |          89.64 |       89.47 | Slovakia      |          78.34 |       68.96 |
 | South Africa |          95.68 |       74.82 |
 
-#### Noisy Data
+#### Incomplete Data
 
-The following table presents the accuracy on the 20 countries we used during training for both our models but for noisy
-and incomplete data. We didn't test on the other 41 countries since we did not train on them and therefore do not expect
+The following table presents the accuracy on the 20 countries we used during training for both our models but for 
+incomplete data. We didn't test on the other 41 countries since we did not train on them and therefore do not expect
 to achieve an interesting performance.
 
 | Country        |   Fasttext (%) |   BPEmb (%) | Country     |   Fasttext (%) |   BPEmb (%) |

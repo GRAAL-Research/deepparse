@@ -30,11 +30,11 @@ def main(args):
 
     if args.fine_tuning:
         training_base_string = "training_fine_tuned_test_results"
-        training_noisy_base_string = "training_noisy_fine_tuned_test_results"
+        training_incomplete_base_string = "training_incomplete_fine_tuned_test_results"
         zero_shot_base_string = "zero_shot_fine_tuned_test_results"
     else:
         training_base_string = "training_test_results"
-        training_noisy_base_string = "training_noisy_test_results"
+        training_incomplete_base_string = "training_incomplete_test_results"
         zero_shot_base_string = "zero_shot_test_results"
 
     json.dump(training_test_results,
@@ -44,20 +44,20 @@ def main(args):
               open(os.path.join(saving_dir, f"{zero_shot_base_string}_{args.model_type}.json"), "w", encoding="utf-8"),
               ensure_ascii=False)
 
-    noisy_test_directory = args.noisy_test_directory
-    noisy_test_files = os.listdir(noisy_test_directory)
-    noisy_training_test_results = {}
-    for idx, noisy_test_file in enumerate(noisy_test_files):
-        results, country = test_on_country_data(address_parser, noisy_test_file, noisy_test_directory, args)
-        print(f"{idx} file done of {len(noisy_test_files)}.")
+    incomplete_test_directory = args.incomplete_test_directory
+    incomplete_test_files = os.listdir(incomplete_test_directory)
+    incomplete_training_test_results = {}
+    for idx, incomplete_test_file in enumerate(incomplete_test_files):
+        results, country = test_on_country_data(address_parser, incomplete_test_file, incomplete_test_directory, args)
+        print(f"{idx} file done of {len(incomplete_test_files)}.")
 
-        if train_country_file(noisy_test_file):
-            noisy_training_test_results.update({country: results['test_accuracy']})
+        if train_country_file(incomplete_test_file):
+            incomplete_training_test_results.update({country: results['test_accuracy']})
         else:
-            print(f"Error with the identification of test file type {noisy_test_file}.")
+            print(f"Error with the identification of test file type {incomplete_test_file}.")
 
-    json.dump(noisy_training_test_results,
-              open(os.path.join(saving_dir, f"{training_noisy_base_string}_{args.model_type}.json"),
+    json.dump(incomplete_training_test_results,
+              open(os.path.join(saving_dir, f"{training_incomplete_base_string}_{args.model_type}.json"),
                    "w",
                    encoding="utf-8"),
               ensure_ascii=False)
@@ -68,7 +68,7 @@ if __name__ == "__main__":
 
     parser.add_argument("model_type", type=str, help="Model type to retrain.", choices=["fasttext", "bpemb"])
     parser.add_argument("test_directory", type=str, help="Path to the test directory.")
-    parser.add_argument("noisy_test_directory", type=str, help="Path the to noisy test directory.")
+    parser.add_argument("incomplete_test_directory", type=str, help="Path the to incomplete test directory.")
     parser.add_argument("model_path", type=str, help="Path to the model to evaluate on.")
     parser.add_argument("--fine_tuning",
                         type=bool_parse,

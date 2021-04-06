@@ -23,7 +23,7 @@ class AddressParserIntegrationTest(TestCase):
     def setUpClass(cls):
         cls.a_data_saving_dir = "./data"
         file_extension = "p"
-        training_dataset_name = "sample_noisy_data"
+        training_dataset_name = "sample_incomplete_data"
         test_dataset_name = "test_sample_data"
         download_from_url(training_dataset_name, cls.a_data_saving_dir, file_extension=file_extension)
         download_from_url(test_dataset_name, cls.a_data_saving_dir, file_extension=file_extension)

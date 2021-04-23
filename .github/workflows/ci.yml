@@ -73,3 +73,24 @@ jobs:
       - name: Test with pytest
         run: |
           python -m unittest
+
+  gputest:
+    runs-on: self-hosted
+    strategy:
+      matrix:
+        python-version: ['3.7', '3.8']
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+        pip install -r tests/requirements.txt
+        python setup.py develop
+    - name: Test with pytest
+      run: |
+        pytest tests/

@@ -61,6 +61,11 @@
 
 ## 0.3.4
 
-- Fixed a bug when use batched address. Since we were sorting the address during the forward pass, the output prediction 
-  tags were not aligned with the supposed parsed address. We have removed the sorting, and now the results are more 
+- Fixed a bug when use batched address. Since we were sorting the address during the forward pass, the output prediction
+  tags were not aligned with the supposed parsed address. We have removed the sorting, and now the results are more
   aligned with our research.
+
+## dev
+
+- **Breaking change** Since [SciPy 1.6](https://github.com/scipy/scipy/releases/tag/v1.6.0) is release on Python `3.7+`,
+  we don't support Python `3.6`.

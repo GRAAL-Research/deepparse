@@ -324,7 +324,8 @@ class AddressParser:
                               valid_generator=valid_generator,
                               epochs=epochs,
                               seed=seed,
-                              callbacks=callbacks)
+                              callbacks=callbacks,
+                              verbose=self.verbose)
         return train_res
 
     def test(self,
@@ -396,7 +397,7 @@ class AddressParser:
 
         checkpoint = handle_checkpoint(checkpoint)
 
-        test_res = exp.test(test_generator, seed=seed, callbacks=callbacks, checkpoint=checkpoint)
+        test_res = exp.test(test_generator, seed=seed, callbacks=callbacks, checkpoint=checkpoint, verbose=self.verbose)
         return test_res
 
     def _fill_tagged_addresses_components(self, tags_predictions: List, tags_predictions_prob: List,

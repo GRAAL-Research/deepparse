@@ -8,6 +8,7 @@ from deepparse.parser import AddressParser, ParsedAddress
 
 
 class AddressParserPredictCPUTest(TestCase):
+
     @classmethod
     def setUpClass(cls):
         cls.fasttext_address_parser = AddressParser(model_type="fasttext", device='cpu')
@@ -33,6 +34,7 @@ class AddressParserPredictCPUTest(TestCase):
 
 # test if num_workers > 0 is correct for the data loader
 class AddressParserPredictCPUMultiProcessTest(TestCase):
+
     @classmethod
     def setUpClass(cls):
         cls.fasttext_address_parser = AddressParser(model_type="fasttext", device='cpu')

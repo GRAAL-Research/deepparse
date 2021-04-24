@@ -83,7 +83,8 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
                          valid_generator=dataloader_mock(),
                          epochs=self.a_epoch_number,
                          seed=self.a_seed,
-                         callbacks=[])
+                         callbacks=[],
+                         verbose=self.verbose)
         ]
         experiment_mock.assert_has_calls(train_call)
 
@@ -104,7 +105,13 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
                                            batch_metrics=self.a_list_of_batch_metrics)
 
     def assert_experiment_test_method_is_call(self, dataloader_mock, experiment_mock):
-        test_call = [call().test(dataloader_mock(), seed=self.a_seed, callbacks=[], checkpoint=self.a_best_checkpoint)]
+        test_call = [
+            call().test(dataloader_mock(),
+                        seed=self.a_seed,
+                        callbacks=[],
+                        checkpoint=self.a_best_checkpoint,
+                        verbose=self.verbose)
+        ]
         experiment_mock.assert_has_calls(test_call)
 
     @patch("deepparse.parser.address_parser.Experiment")

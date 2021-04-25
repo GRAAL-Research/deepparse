@@ -16,10 +16,12 @@ class BPEmbSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
 
     def setUp(self) -> None:
         # will load the weights if not local
-        self.encoder_input_setUp("bpemb")
+        self.encoder_input_setUp("bpemb", self.a_torch_device)
         self.decomposition_lengths = [[1, 1, 1, 1, 1, 6], [1, 1, 1, 1, 1, 6]]
 
         self.a_retrain_model = os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "bpemb.ckpt")
+
+        self.a_target_vector = torch.tensor([[0, 1, 1, 4, 5, 8], [1, 0, 3, 8, 0, 0]], device=self.a_torch_device)
 
     def test_whenForwardStep_thenStepIsOk(self):
         self.seq2seq_model = BPEmbSeq2SeqModel(self.a_torch_device)

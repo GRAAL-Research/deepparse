@@ -45,7 +45,7 @@ class AddressParserIntegrationTestCase(TestCase):
         cls.bpemb_local_path = os.path.join(CACHE_PATH, "bpemb.ckpt")
 
         cls.a_cpu_device = 'cpu'
-        cls.a_torch_device = torch.device("0")
+        cls.a_torch_device = torch.device("cuda:0")
 
     def setUp(self) -> None:
         self.clean_checkpoints()

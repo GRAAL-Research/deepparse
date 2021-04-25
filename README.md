@@ -204,7 +204,7 @@ and this one for the package;
 ## Contributing to Deepparse
 
 We welcome user input, whether it is regarding bugs found in the library or feature propositions ! Make sure to have a
-look at our [contributing guidelines](https://github.com/GRAAL-Research/deepparse/blob/master/CONTRIBUTING.md) for more
+look at our [contributing guidelines](https://github.com/GRAAL-Research/deepparse/blob/master/.github/CONTRIBUTING.md) for more
 details on this matter.
 
 ## License

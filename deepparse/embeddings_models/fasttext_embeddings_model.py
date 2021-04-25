@@ -1,7 +1,7 @@
+from gensim.models.fasttext import load_facebook_model
 from numpy.core.multiarray import ndarray
 
 from .embeddings_model import EmbeddingsModel
-from .. import load_fasttext_embeddings
 
 
 class FastTextEmbeddingsModel(EmbeddingsModel):
@@ -17,7 +17,7 @@ class FastTextEmbeddingsModel(EmbeddingsModel):
     def __init__(self, embeddings_path: str, verbose: bool = True) -> None:
         super().__init__(verbose=verbose)
 
-        self.model = load_fasttext_embeddings(embeddings_path)
+        self.model = load_facebook_model(embeddings_path)
 
         self.model.dim = 300  # fastText is only in 300d
 

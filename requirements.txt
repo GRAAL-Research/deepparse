@@ -1,8 +1,8 @@
 torch
-bpemb~=0.3.0
+bpemb
 numpy
-requests~=2.23.0
-fasttext~=0.9.2
-pymagnitude-light~=0.1.146
-colorama~=0.4.3
-Poutyne~=1.4
+requests
+pymagnitude-light
+colorama
+Poutyne
+gensim

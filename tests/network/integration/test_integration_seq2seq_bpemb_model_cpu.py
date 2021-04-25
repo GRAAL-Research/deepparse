@@ -11,7 +11,9 @@ from deepparse.network import BPEmbSeq2SeqModel
 from ..integration.base import Seq2SeqIntegrationTestCase
 
 
-@skipIf(not torch.cuda.is_available(), "no gpu available")
+@skipIf(not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "fasttext.version"))
+        or not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "fasttext.version")),
+        "download of model too long for test in runner")
 class BPEmbSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
 
     def setUp(self) -> None:

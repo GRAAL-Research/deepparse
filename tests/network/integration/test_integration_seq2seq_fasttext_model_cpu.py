@@ -3,6 +3,7 @@
 # pylint: disable=not-callable, protected-access
 import os
 import unittest
+from unittest import skipIf
 
 import torch
 
@@ -10,6 +11,9 @@ from deepparse.network import FastTextSeq2SeqModel
 from ..integration.base import Seq2SeqIntegrationTestCase
 
 
+@skipIf(not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "fasttext.version"))
+        or not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "fasttext.version")),
+        "download of model too long for test in runner")
 class FastTextSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
 
     def setUp(self) -> None:

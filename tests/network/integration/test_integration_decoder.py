@@ -30,11 +30,10 @@ class DecoderTest(TestCase):
     def decoder_input_setUp(self):
         self.decoder_input = torch.tensor([[[-1.], [-1.]]], device=self.a_torch_device)
 
-        file = open("./tests/network/integration/decoder_hidden.p", "rb")
-        self.decoder_hidden_tensor = pickle.load(file)
+        with open("./tests/network/integration/decoder_hidden.p", "rb") as file:
+            self.decoder_hidden_tensor = pickle.load(file)
         self.decoder_hidden_tensor = (self.decoder_hidden_tensor[0].to(self.a_torch_device),
                                       self.decoder_hidden_tensor[1].to(self.a_torch_device))
-        file.close()
 
     def assert_predictions_is_valid_dim(self, actual_predictions):
         self.assertEqual(self.a_batch_size, actual_predictions.shape[0])

@@ -28,10 +28,9 @@ class EncoderTest(TestCase):
 
     def encoder_input_setUp(self):
         # we use the fasttext case since easier
-        file = open("./tests/network/integration/to_predict_fasttext.p", "rb")
-        self.to_predict_tensor = pickle.load(file)
+        with open("./tests/network/integration/to_predict_fasttext.p", "rb") as file:
+            self.to_predict_tensor = pickle.load(file)
         self.to_predict_tensor = self.to_predict_tensor.to(self.a_torch_device)
-        file.close()
 
         self.a_lengths_tensor = torch.tensor([6, 6], device=self.a_torch_device)
         self.a_batch_size = 2

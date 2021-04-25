@@ -2,7 +2,9 @@
 # We also skip protected-access since we test the encoder and decoder step
 # pylint: disable=not-callable, too-many-public-methods
 
+import os
 import unittest
+from unittest import skipIf
 from unittest.mock import MagicMock, call, ANY
 
 from poutyne import Callback
@@ -11,6 +13,8 @@ from deepparse.parser import AddressParser
 from tests.parser.integration.base_integration import AddressParserIntegrationTestCase
 
 
+@skipIf(not os.path.exists(os.path.join(".cache", "deepparse", "fasttext.version")) or not os.path.exists(
+    os.path.join(".cache", "deepparse", "bpemb.version")), "download of model too long for test in runner")
 class AddressParserIntegrationTest(AddressParserIntegrationTestCase):
     # Retrain API tests
     def test_givenAFasttextAddressParser_whenRetrain_thenTrainingOccur(self):

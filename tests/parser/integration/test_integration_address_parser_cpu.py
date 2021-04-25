@@ -2,11 +2,15 @@
 # pylint: disable=not-callable
 
 from typing import List
-from unittest import TestCase
+from unittest import TestCase, skipIf
+
+import os
 
 from deepparse.parser import AddressParser, ParsedAddress
 
 
+@skipIf(not os.path.exists(os.path.join(".cache", "deepparse", "fasttext.version")) or not os.path.exists(
+    os.path.join(".cache", "deepparse", "bpemb.version")), "download of model too long for test in runner")
 class AddressParserPredictCPUTest(TestCase):
 
     @classmethod
@@ -33,6 +37,8 @@ class AddressParserPredictCPUTest(TestCase):
 
 
 # test if num_workers > 0 is correct for the data loader
+@skipIf(not os.path.exists(os.path.join(".cache", "deepparse", "fasttext.version")) or not os.path.exists(
+    os.path.join(".cache", "deepparse", "bpemb.version")), "download of model too long for test in runner")
 class AddressParserPredictCPUMultiProcessTest(TestCase):
 
     @classmethod

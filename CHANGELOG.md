@@ -70,3 +70,4 @@
 - Added verbose flag to training and test base on the __init__ of address parser.
 - **Breaking change** Since [SciPy 1.6](https://github.com/scipy/scipy/releases/tag/v1.6.0) is release on Python `3.7+`,
   we don't support Python `3.6`.
+- Changed dependencies from fasttext to Gensim to load fasttext model.

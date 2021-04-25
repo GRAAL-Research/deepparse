@@ -13,8 +13,9 @@ from deepparse.parser import AddressParser
 from tests.parser.integration.base_integration import AddressParserIntegrationTestCase
 
 
-@skipIf(not os.path.exists(os.path.join(".cache", "deepparse", "fasttext.version")) or not os.path.exists(
-    os.path.join(".cache", "deepparse", "bpemb.version")), "download of model too long for test in runner")
+@skipIf(not os.path.exists(os.path.join(".cache", "deepparse", "fasttext.version"))
+        or not os.path.exists(os.path.join(".cache", "deepparse", "bpemb.version")),
+        "download of model too long for test in runner")
 class AddressParserIntegrationTest(AddressParserIntegrationTestCase):
     # Retrain API tests
     def test_givenAFasttextAddressParser_whenRetrain_thenTrainingOccur(self):

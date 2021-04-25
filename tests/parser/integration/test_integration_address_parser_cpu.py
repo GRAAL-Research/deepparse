@@ -9,8 +9,8 @@ import os
 from deepparse.parser import AddressParser, ParsedAddress
 
 
-@skipIf(not os.path.exists(os.path.join(".cache", "deepparse", "fasttext.version"))
-        or not os.path.exists(os.path.join(".cache", "deepparse", "bpemb.version")),
+@skipIf(not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "fasttext.version"))
+        or not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "fasttext.version")),
         "download of model too long for test in runner")
 class AddressParserPredictCPUTest(TestCase):
 
@@ -38,8 +38,8 @@ class AddressParserPredictCPUTest(TestCase):
 
 
 # test if num_workers > 0 is correct for the data loader
-@skipIf(not os.path.exists(os.path.join(".cache", "deepparse", "fasttext.version"))
-        or not os.path.exists(os.path.join(".cache", "deepparse", "bpemb.version")),
+@skipIf(not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "fasttext.version"))
+        or not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "fasttext.version")),
         "download of model too long for test in runner")
 class AddressParserPredictCPUMultiProcessTest(TestCase):
 

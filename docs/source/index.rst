@@ -423,6 +423,13 @@ and this one for the package;
        note   = {\url{https://deepparse.org}}
    }
 
+Contributing to Deepparse
+=========================
+
+We welcome user input, whether it is regarding bugs found in the library or feature propositions ! Make sure to have a
+look at our `contributing guidelines <https://github.com/GRAAL-Research/deepparse/blob/master/.github/CONTRIBUTING.md>`_ for more
+details on this matter.
+
 License
 =======
 Deepparse is LGPLv3 licensed, as found in the `LICENSE file <https://github.com/GRAAL-Research/deepparse/blob/master/LICENSE>`_.

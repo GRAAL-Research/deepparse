@@ -1,5 +1,6 @@
+import platform
 import unittest
-from unittest import TestCase
+from unittest import TestCase, skipIf
 from unittest.mock import patch, MagicMock
 
 from deepparse.embeddings_models import FastTextEmbeddingsModel
@@ -17,6 +18,7 @@ class FasttextEmbeddingsModelTest(TestCase):
         self.model = MagicMock()
         self.model.dim = 9
 
+    @skipIf(not platform.system() == "Windows", "Integration test on Windows env.")
     def test_whenInstantiatedWithPath_thenShouldLoadFasttextModel(self):
         with patch("deepparse.embeddings_models.fasttext_embeddings_model.load_fasttext_embeddings",
                    return_value=self.model) as loader:
@@ -24,6 +26,7 @@ class FasttextEmbeddingsModelTest(TestCase):
 
             loader.assert_called_with(self.a_path)
 
+    @skipIf(not platform.system() == "Windows", "Integration test on Windows env.")
     def test_whenCalledToEmbed_thenShouldCallLoadedModel(self):
         with patch("deepparse.embeddings_models.fasttext_embeddings_model.load_fasttext_embeddings",
                    return_value=self.model):

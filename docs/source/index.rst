@@ -247,7 +247,7 @@ We have also made a zero-shot evaluation of our models using clean data from 41 
 			-
 
 Incomplete Data
-**********
+***************
 
 The following table presents the accuracy on the 20 countries we used during training for both our models but for
 incomplete data. We didn't test on the other 41 countries since we did not train on them and therefore do not expect

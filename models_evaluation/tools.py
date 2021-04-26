@@ -1,24 +1,11 @@
-import argparse
 import json
 import os
+
 import pandas as pd
 import pycountry
 
 from deepparse.dataset_container import PickleDatasetContainer
 from deepparse.parser import AddressParser
-
-
-def bool_parse(arg):
-    """
-    Function to better manage bool type in argparse
-    """
-    if arg.lower() in ("true", "t", "yes", "y", "1"):
-        is_bool = True
-    elif arg.lower() in ("false", "f", "no", "n", "0"):
-        is_bool = False
-    else:
-        raise argparse.ArgumentTypeError("Boolean value expected.")
-    return is_bool
 
 
 def clean_up_name(country: str) -> str:
@@ -94,8 +81,8 @@ def make_table(data_type: str, root_path: str = "."):
     table_dir = os.path.join(root_path, "tables")
     os.makedirs(table_dir, exist_ok=True)
 
-    fasttext_all_res = json.load(open(os.path.join(".", "results", f"{data_type}_test_results_fasttext.json"), "r"))
-    bpemb_all_res = json.load(open(os.path.join(".", "results", f"{data_type}_test_results_bpemb.json"), "r"))
+    fasttext_all_res = json.load(open(os.path.join(root_path, f"{data_type}_test_results_fasttext.json"), "r"))
+    bpemb_all_res = json.load(open(os.path.join(root_path, f"{data_type}_test_results_bpemb.json"), "r"))
 
     formatted_data = []
     # we format the data to have two pairs of columns for a less long table
@@ -124,8 +111,8 @@ def make_table_rst(data_type: str, root_path: str = "."):
     table_dir = os.path.join(root_path, "tables")
     os.makedirs(table_dir, exist_ok=True)
 
-    fasttext_all_res = json.load(open(os.path.join(".", "results", f"{data_type}_test_results_fasttext.json"), "r"))
-    bpemb_all_res = json.load(open(os.path.join(".", "results", f"{data_type}_test_results_bpemb.json"), "r"))
+    fasttext_all_res = json.load(open(os.path.join(root_path, f"{data_type}_test_results_fasttext.json"), "r"))
+    bpemb_all_res = json.load(open(os.path.join(root_path, f"{data_type}_test_results_bpemb.json"), "r"))
 
     formatted_data = []
     # we format the data to have two pairs of columns for a less long table

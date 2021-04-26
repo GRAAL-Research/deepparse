@@ -386,7 +386,8 @@ class AddressParser:
                               valid_generator=valid_generator,
                               epochs=epochs,
                               seed=seed,
-                              callbacks=callbacks)
+                              callbacks=callbacks,
+                              verbose=self.verbose)
         if prediction_tags is not None:
             with open(os.path.join(logging_path, "prediction_tags.p"), "wb") as file:
                 pickle.dump(prediction_tags, file)
@@ -523,7 +524,7 @@ class AddressParser:
 
         checkpoint = handle_checkpoint(checkpoint)
 
-        test_res = exp.test(test_generator, seed=seed, callbacks=callbacks, checkpoint=checkpoint)
+        test_res = exp.test(test_generator, seed=seed, callbacks=callbacks, checkpoint=checkpoint, verbose=self.verbose)
 
         return test_res
 

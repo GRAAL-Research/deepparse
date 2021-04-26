@@ -247,7 +247,7 @@ We have also made a zero-shot evaluation of our models using clean data from 41 
 			-
 
 Incomplete Data
-**********
+***************
 
 The following table presents the accuracy on the 20 countries we used during training for both our models but for
 incomplete data. We didn't test on the other 41 countries since we did not train on them and therefore do not expect
@@ -422,6 +422,13 @@ and this one for the package;
        year   = {2020},
        note   = {\url{https://deepparse.org}}
    }
+
+Contributing to Deepparse
+=========================
+
+We welcome user input, whether it is regarding bugs found in the library or feature propositions ! Make sure to have a
+look at our `contributing guidelines <https://github.com/GRAAL-Research/deepparse/blob/master/.github/CONTRIBUTING.md>`_ for more
+details on this matter.
 
 License
 =======

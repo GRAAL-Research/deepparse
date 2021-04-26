@@ -79,7 +79,8 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
                          valid_generator=dataloader_mock(),
                          epochs=self.a_epoch_number,
                          seed=self.a_seed,
-                         callbacks=[])
+                         callbacks=[],
+                         verbose=self.verbose)
         ]
         experiment_mock.assert_has_calls(train_call)
 

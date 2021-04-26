@@ -38,7 +38,7 @@ are a little bit lower on trained country (around ~2%) but are similar on zero-s
             - Memory usage RAM (GB)
             - Mean time of execution (batch of 1) (s)
             - Mean time of execution (batch of more than 1) (s)
-        *   - fastText
+        *   - fastText [1]_
             - ~1
             - ~8
             - ~0.00236
@@ -59,6 +59,9 @@ are a little bit lower on trained country (around ~2%) but are similar on zero-s
             - <1
             - ~0.00007
 
+.. [1] Note that on Windows, we use the Gensim Fasttext models that use ~10 GO with similar performance.
+
+
 .. list-table::
         :header-rows: 1
 
@@ -66,7 +69,7 @@ are a little bit lower on trained country (around ~2%) but are similar on zero-s
             - Memory usage RAM (GB)
             - Mean time of execution (batch of 1) (s)
             - Mean time of execution (batch of more than 1) (s)
-        *   - fastText
+        *   - fastText [1]_
             - ~8
             - ~0.0168
             - ~0.0026
@@ -82,6 +85,8 @@ are a little bit lower on trained country (around ~2%) but are similar on zero-s
             - N/A
             - <1
             - ~0.00007
+
+.. [1] Note that on Windows, we use the Gensim Fasttext models that use ~10 GO with similar performance.
 
 The two tables highlight that the batch size (number of address in the list to be parsed) influence the processing time.
 Thus, the more there is address, the faster processing each address can be. You can also improve performance by

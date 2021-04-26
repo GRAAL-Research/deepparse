@@ -4,6 +4,8 @@ import shutil
 import sys
 from urllib.request import urlopen
 
+from fasttext.FastText import _FastText
+
 from .tools import download_from_url
 
 
@@ -143,3 +145,11 @@ def _print_progress(downloaded_bytes, total_size):
 
     if downloaded_bytes >= total_size:
         sys.stdout.write("\n")
+
+
+# The difference with the original code is the removal of the print warning.
+def load_fasttext_embeddings(path):
+    """
+    Load a model given a filepath and return a model object.
+    """
+    return _FastText(model_path=path)

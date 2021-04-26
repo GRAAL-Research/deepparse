@@ -1,12 +1,11 @@
 # Since we use a patch as model mock we skip the unused argument error
 # pylint: disable=W0613, too-many-arguments
-import os
 import unittest
 from unittest.mock import patch, call
 
 import torch
 
-from deepparse.parser import AddressParser, nll_loss, accuracy
+from deepparse.parser import AddressParser
 from tests.parser.base import AddressParserPredictTestCase
 from tests.tools import BATCH_SIZE, ADataContainer
 
@@ -35,23 +34,6 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         cls.verbose = False
 
         cls.address_components = {"ATag": 0, "AnotherTag": 1, "EOS": 2}
-
-    def setUp(self):
-        super().setUp()
-
-        self.a_loss_function = nll_loss
-        self.a_list_of_batch_metrics = [accuracy]
-
-        # to create the dirs for dumping the prediction tags since we mock Poutyne that usually will do it
-        os.makedirs(self.a_logging_path, exist_ok=True)
-
-    def tearDown(self) -> None:
-        # cleanup after the tests
-        path = os.path.join(self.a_logging_path, "./prediction_tags.p")
-        if os.path.exists(path):
-            os.remove(path)
-
-        os.rmdir(self.a_logging_path)
 
     def address_parser_retrain_call(self, prediction_tags=None):
         self.address_parser.retrain(self.mocked_data_container,

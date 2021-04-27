@@ -114,7 +114,7 @@ def _download_file(url: str, write_file_name: str, chunk_size: int = 2**13, verb
     response = urlopen(url)
     if hasattr(response, "getheader"):
         file_size = int(response.getheader("Content-Length").strip())
-    else:
+    else:  # pragma: no cover
         file_size = int(response.info().getheader("Content-Length").strip())
     downloaded = 0
     download_file_name = write_file_name + ".part"

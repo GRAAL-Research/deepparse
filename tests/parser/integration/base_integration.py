@@ -14,6 +14,7 @@ class AddressParserIntegrationTestCase(TestCase):
     @classmethod
     def setUpClass(cls):
         cls.a_data_saving_dir = "./data"
+        os.makedirs(cls.a_data_saving_dir, exist_ok=True)
         file_extension = "p"
         training_dataset_name = "sample_incomplete_data"
         test_dataset_name = "test_sample_data"
@@ -54,6 +55,9 @@ class AddressParserIntegrationTestCase(TestCase):
     def tearDownClass(cls) -> None:
         if os.path.exists(cls.a_data_saving_dir):
             shutil.rmtree(cls.a_data_saving_dir)
+            if os.path.exists(cls.a_data_saving_dir):
+                # to delete the directory after
+                os.rmdir(cls.a_data_saving_dir)
 
     def tearDown(self) -> None:
         self.clean_checkpoints()

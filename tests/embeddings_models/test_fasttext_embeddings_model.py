@@ -70,7 +70,17 @@ class FasttextEmbeddingsModelTest(TestCase):
 
                 loader.assert_called_with(self.a_path)
 
-    def test_givenADimOf9_whenAskDimProperty_thenReturnProperDim(self):
+    def test_givenADimOf9Windows_whenAskDimProperty_thenReturnProperDim(self):
+        with patch("deepparse.embeddings_models.fasttext_embeddings_model.load_facebook_vectors",
+                   return_value=self.model):
+            embeddings_model = FastTextEmbeddingsModel(self.a_path, verbose=self.verbose)
+
+            actual = embeddings_model.dim
+            expected = self.dim
+            self.assertEqual(actual, expected)
+
+    @skipIf(platform.system() == "Windows", "Integration test not on Windows env.")
+    def test_givenADimOf9Linux_whenAskDimProperty_thenReturnProperDim(self):
         with patch("deepparse.embeddings_models.fasttext_embeddings_model.load_fasttext_embeddings",
                    return_value=self.model):
             embeddings_model = FastTextEmbeddingsModel(self.a_path, verbose=self.verbose)

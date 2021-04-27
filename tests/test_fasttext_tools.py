@@ -2,19 +2,17 @@
 # pylint: disable=W0613
 
 import gzip
-import io
 import os
-import sys
 import unittest
-from unittest import TestCase
 from unittest.mock import patch, mock_open
 
 from deepparse import download_fasttext_embeddings
 from deepparse.fasttext_tools import _print_progress
+from tests.base_capture_output import CaptureOutputTestCase
 from tests.tools import create_file
 
 
-class ToolsTests(TestCase):
+class ToolsTests(CaptureOutputTestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -30,11 +28,6 @@ class ToolsTests(TestCase):
             os.remove(self.a_fasttext_file_name_path)
         if os.path.exists(self.a_fasttext_gz_file_name_path):
             os.remove(self.a_fasttext_gz_file_name_path)
-
-    def _capture_output(self):
-        self.test_out = io.StringIO()
-        self.original_output = sys.stdout
-        sys.stdout = self.test_out
 
     def assertStdoutContains(self, values):
         for value in values:

@@ -1,15 +1,14 @@
 # Bug with PyTorch source code makes torch.tensor as not callable for pylint.
 # pylint: disable=not-callable
-import io
-import sys
-from unittest import TestCase
 from unittest.mock import Mock
 
 import torch
 from torch import tensor
 
+from tests.base_capture_output import CaptureOutputTestCase
 
-class AddressParserPredictTestCase(TestCase):
+
+class AddressParserPredictTestCase(CaptureOutputTestCase):
     # pylint: disable=too-many-public-methods
 
     @classmethod
@@ -67,8 +66,3 @@ class AddressParserPredictTestCase(TestCase):
     def mock_multiple_predictions_vectors(self, model):
         model.return_value = Mock(return_value=torch.cat((self.a_prediction_vector_for_a_complete_address,
                                                           self.a_prediction_vector_for_a_complete_address), 1))
-
-    def _capture_output(self):
-        self.test_out = io.StringIO()
-        self.original_output = sys.stdout
-        sys.stdout = self.test_out

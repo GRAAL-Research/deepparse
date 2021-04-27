@@ -1,12 +1,10 @@
-import io
-import sys
 import unittest
-from unittest import TestCase
 
 from deepparse.parser import ParsedAddress
+from tests.base_capture_output import CaptureOutputTestCase
 
 
-class ParsedAddressTest(TestCase):
+class ParsedAddressTest(CaptureOutputTestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -15,11 +13,6 @@ class ParsedAddressTest(TestCase):
         cls.a_address_repr = "ParsedAddress<street_number='3', street_name='test road'>"
         cls.a_address = {cls.a_address_str: cls.a_parsed_address}
         cls.a_existing_tag = "3"
-
-    def _capture_output(self):
-        self.test_out = io.StringIO()
-        self.original_output = sys.stdout
-        sys.stdout = self.test_out
 
     def setUp(self):
         self.parsed_address = ParsedAddress(self.a_address)

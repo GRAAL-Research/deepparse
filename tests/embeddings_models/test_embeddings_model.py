@@ -1,9 +1,7 @@
-import io
-import sys
 import unittest
-from unittest import TestCase
 
 from deepparse.embeddings_models import EmbeddingsModel
+from tests.base_capture_output import CaptureOutputTestCase
 
 
 class CallAbstractedEmbeddingsModel(EmbeddingsModel):
@@ -12,12 +10,7 @@ class CallAbstractedEmbeddingsModel(EmbeddingsModel):
         pass
 
 
-class EmbeddingsModelInterfaceTest(TestCase):
-
-    def _capture_output(self):
-        self.test_out = io.StringIO()
-        self.original_output = sys.stdout
-        sys.stdout = self.test_out
+class EmbeddingsModelInterfaceTest(CaptureOutputTestCase):
 
     def test_whenInstantiated_thenInitProperly(self):
         embeddings_model = CallAbstractedEmbeddingsModel(verbose=False)

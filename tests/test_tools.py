@@ -1,9 +1,8 @@
 # Since we use a patch to mock verify last we skip the unused argument error
-# pylint: disable=W0613, too-many-public-methods
+# pylint: disable=unused-argument, too-many-public-methods
 
 import os
 import unittest
-from unittest import TestCase
 from unittest.mock import patch
 
 import requests
@@ -11,10 +10,11 @@ import requests
 from deepparse import download_from_url, latest_version, download_weights, indices_splitting, \
     handle_pre_trained_checkpoint, handle_poutyne_version, valid_poutyne_version
 from deepparse import handle_checkpoint, CACHE_PATH
+from tests.base_capture_output import CaptureOutputTestCase
 from tests.tools import create_file
 
 
-class ToolsTests(TestCase):
+class ToolsTests(CaptureOutputTestCase):
 
     def setUp(self) -> None:
         self.fake_cache_path = "./"
@@ -92,6 +92,26 @@ class ToolsTests(TestCase):
 
             downloader.assert_any_call("bpemb", "./", "ckpt")
             downloader.assert_any_call("bpemb", "./", "version")
+
+    def test_givenModelFasttextWeightsToDownloadVerbose_whenDownloadOk_thenVerbose(self):
+        self._capture_output()
+        with patch("deepparse.tools.download_from_url"):
+            download_weights(model="fasttext", saving_dir="./", verbose=True)
+
+        actual = self.test_out.getvalue().strip()
+        expected = "Downloading the weights for the network fasttext."
+
+        self.assertEqual(actual, expected)
+
+    def test_givenModelBPEmbWeightsToDownloadVerbose_whenDownloadOk_thenVerbose(self):
+        self._capture_output()
+        with patch("deepparse.tools.download_from_url"):
+            download_weights(model="bpemb", saving_dir="./", verbose=True)
+
+        actual = self.test_out.getvalue().strip()
+        expected = "Downloading the weights for the network bpemb."
+
+        self.assertEqual(actual, expected)
 
     def test_givenABestCheckpoint_whenHandleCheckpoint_thenReturnBest(self):
         checkpoint = "best"

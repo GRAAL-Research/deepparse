@@ -12,11 +12,11 @@ from deepparse.network import BPEmbSeq2SeqModel
 from tests.network.base import Seq2SeqTestCase
 
 
-class BPEmbSeq2SeqTest(Seq2SeqTestCase):
+class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
 
     @classmethod
     def setUpClass(cls):
-        super(BPEmbSeq2SeqTest, cls).setUpClass()
+        super(BPEmbSeq2SeqCPUTest, cls).setUpClass()
         cls.input_size = 300
         cls.hidden_size = 300
         cls.projection_size = 300

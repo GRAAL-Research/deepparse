@@ -1,5 +1,5 @@
 # Since we use a patch as model mock we skip the unused argument error
-# pylint: disable=W0613, too-many-arguments
+# pylint: disable=unused-argument, too-many-arguments
 import os
 import unittest
 from unittest.mock import patch, call

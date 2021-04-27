@@ -31,8 +31,6 @@ class FastTextEmbeddingsModel(EmbeddingsModel):
         else:
             self.model = load_fasttext_embeddings(embeddings_path)
 
-        self.model.dim = 300  # fastText is only in 300d
-
     def __call__(self, word: str) -> ndarray:
         """
         Callable method to get a word vector.
@@ -44,3 +42,7 @@ class FastTextEmbeddingsModel(EmbeddingsModel):
             The fastText embedding for a word.
         """
         return self.model[word]
+
+    @property
+    def dim(self):
+        return self.model.get_dimension()

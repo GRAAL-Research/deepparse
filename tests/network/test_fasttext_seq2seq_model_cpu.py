@@ -12,11 +12,11 @@ from deepparse.network import FastTextSeq2SeqModel
 from tests.network.base import Seq2SeqTestCase
 
 
-class FasttextSeq2SeqTest(Seq2SeqTestCase):
+class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
 
     @classmethod
     def setUpClass(cls):
-        super(FasttextSeq2SeqTest, cls).setUpClass()
+        super(FasttextSeq2SeqCPUTest, cls).setUpClass()
         cls.model_type = "fasttext"
 
         cls.a_target_vector = torch.tensor([[0, 1, 1, 4, 5, 8], [1, 0, 3, 8, 0, 0]], device=cls.a_cpu_device)

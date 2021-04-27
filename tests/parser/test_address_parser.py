@@ -1,5 +1,5 @@
 # Since we use a patch as model mock we skip the unused argument error
-# pylint: disable=W0613
+# pylint: disable=unused-argument
 import os
 import unittest
 from unittest.mock import patch, Mock
@@ -448,6 +448,24 @@ class AddressParserTest(AddressParserPredictTestCase):
     @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
     @patch("deepparse.parser.address_parser.BPEmbVectorizer")
     @patch("deepparse.parser.address_parser.bpemb_data_padding")
+    def test_givenABPEmbModel_whenAddressParsingAnAddressVerbose_thenVerbose(self, embeddings_model_mock,
+                                                                             vectorizer_model_mock, data_padding_mock):
+        self._capture_output()
+        with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel") as model:
+            with patch("deepparse.parser.address_parser.PREDICTION_TIME_PERFORMANCE_THRESHOLD", 0):
+                self.mock_predictions_vectors(model)
+                self.address_parser = AddressParser(model_type=self.a_bpemb_model_type,
+                                                    device=self.a_device,
+                                                    verbose=True)
+
+                _ = self.address_parser(self.a_complete_address)
+                actual = self.test_out.getvalue().strip()
+                expect = "Vectorizing the address"
+                self.assertEqual(actual, expect)
+
+    @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.BPEmbVectorizer")
+    @patch("deepparse.parser.address_parser.bpemb_data_padding")
     def test_givenAnBPembAddressParser_whenStrAddressParser_thenStringIsModelTypeAddressParse(
             self, embeddings_model_mock, vectorizer_model_mock, data_padding_mock):
         self._capture_output()
@@ -544,6 +562,50 @@ class AddressParserTest(AddressParserPredictTestCase):
             print(self.address_parser.__repr__())
 
             self.assertEqual(self.a_fasttext_light_name, self.test_out.getvalue().strip())
+
+    # we do BPemb but can be fasttext or fasttext-light
+    @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.BPEmbVectorizer")
+    @patch("deepparse.parser.address_parser.bpemb_data_padding")
+    def test_givenAModel_whenAddressParsingAnAddressVerbose_thenVerbose(self, embeddings_model_mock,
+                                                                        vectorizer_model_mock, data_padding_mock):
+        self._capture_output()
+        with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel") as model:
+            with patch("deepparse.parser.address_parser.PREDICTION_TIME_PERFORMANCE_THRESHOLD", 0):
+                self.mock_predictions_vectors(model)
+                self.address_parser = AddressParser(model_type=self.a_bpemb_model_type,
+                                                    device=self.a_device,
+                                                    verbose=True)
+
+                _ = self.address_parser(self.a_complete_address)
+                actual = self.test_out.getvalue().strip()
+                expect = "Vectorizing the address"
+                self.assertEqual(actual, expect)
+
+    @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.BPEmbVectorizer")
+    @patch("deepparse.parser.address_parser.bpemb_data_padding")
+    def test_givenAModel_whenInitModel_thenProcessDeviceProperly(self, embeddings_model_mock, vectorizer_model_mock,
+                                                                 data_padding_mock):
+        with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel") as model:
+            self.mock_predictions_vectors(model)
+            self.address_parser = AddressParser(model_type=self.a_bpemb_model_type, device=self.a_torch_device)
+        with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel") as model:
+            self.mock_predictions_vectors(model)
+            self.address_parser = AddressParser(model_type=self.a_bpemb_model_type, device=0)
+
+    @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.BPEmbVectorizer")
+    @patch("deepparse.parser.address_parser.bpemb_data_padding")
+    def test_givenAModel_whenAddressParsingAnAddressWithProb_thenIncludeProb(self, embeddings_model_mock,
+                                                                             vectorizer_model_mock, data_padding_mock):
+        with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel") as model:
+            self.mock_predictions_vectors(model)
+            self.address_parser = AddressParser(model_type=self.a_bpemb_model_type, device=self.a_device, verbose=True)
+
+            output = self.address_parser(self.a_complete_address, with_prob=True)
+            self.assertIsInstance(output.address_parsed_components[0][1], tuple)  # tuple of prob
+            self.assertIsInstance(output.address_parsed_components[1][1], tuple)
 
 
 if __name__ == "__main__":

@@ -1,8 +1,8 @@
 # Since we use patch we skip the unused argument error
 # We also skip protected-access since we test the encoder and decoder step
-# pylint: disable=W0613, protected-access, too-many-arguments
 # Bug with PyTorch source code makes torch.tensor as not callable for pylint.
-# pylint: disable=not-callable
+# pylint: disable=unused-argument, protected-access, too-many-arguments, not-callable
+
 import unittest
 from unittest import skipIf
 from unittest.mock import patch, call, MagicMock
@@ -14,14 +14,11 @@ from tests.network.base import Seq2SeqTestCase
 
 
 @skipIf(not torch.cuda.is_available(), "no gpu available")
-class BPEmbSeq2SeqTest(Seq2SeqTestCase):
+class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
 
     @classmethod
     def setUpClass(cls):
-        super(BPEmbSeq2SeqTest, cls).setUpClass()
-        cls.input_size = 300
-        cls.hidden_size = 300
-        cls.projection_size = 300
+        super(BPEmbSeq2SeqGPUTest, cls).setUpClass()
         cls.model_type = "bpemb"
 
         cls.a_target_vector = torch.tensor([[0, 1, 1, 4, 5, 8], [1, 0, 3, 8, 0, 0]], device=cls.a_torch_device)
@@ -35,6 +32,14 @@ class BPEmbSeq2SeqTest(Seq2SeqTestCase):
         self.assertEqual(self.input_size, self.seq2seq_model.embedding_network.model.input_size)
         self.assertEqual(self.hidden_size, self.seq2seq_model.embedding_network.model.hidden_size)
         self.assertEqual(self.projection_size, self.seq2seq_model.embedding_network.projection_layer.out_features)
+
+        load_pre_trained_weights_mock.assert_called_with(self.model_type)
+
+    @patch("deepparse.network.seq2seq.Seq2SeqModel._load_weights")
+    def test_whenInstantiatingABPEmbSeq2SeqModelWithPath_thenShouldCallLoadWeights(self, load_weights_mock):
+        self.seq2seq_model = BPEmbSeq2SeqModel(self.a_torch_device, self.verbose, self.a_path_to_retrained_model)
+
+        load_weights_mock.assert_called_with(self.a_path_to_retrained_model)
 
     @patch("os.path.isfile")
     @patch("deepparse.network.seq2seq.torch")

@@ -1,8 +1,8 @@
 # Since we use patch we skip the unused argument error
 # We also skip protected-access since we test the encoder and decoder step
-# pylint: disable=W0613, protected-access, too-many-arguments
 # Bug with PyTorch source code makes torch.tensor as not callable for pylint.
-# pylint: disable=not-callable
+# pylint: disable=unused-argument, protected-access, too-many-arguments, not-callable
+
 import unittest
 from unittest import skipIf
 from unittest.mock import patch, call, MagicMock
@@ -14,15 +14,28 @@ from tests.network.base import Seq2SeqTestCase
 
 
 @skipIf(not torch.cuda.is_available(), "no gpu available")
-class FasttextSeq2SeqTest(Seq2SeqTestCase):
+class FasttextSeq2SeqGPUTest(Seq2SeqTestCase):
 
     @classmethod
     def setUpClass(cls):
-        super(FasttextSeq2SeqTest, cls).setUpClass()
+        super(FasttextSeq2SeqGPUTest, cls).setUpClass()
         cls.model_type = "fasttext"
 
         cls.a_target_vector = torch.tensor([[0, 1, 1, 4, 5, 8], [1, 0, 3, 8, 0, 0]], device=cls.a_torch_device)
         cls.a_transpose_target_vector = cls.a_target_vector.transpose(0, 1)
+
+    @patch("deepparse.network.seq2seq.Seq2SeqModel._load_pre_trained_weights")
+    def test_whenInstantiatingAFasttextSeq2SeqModel_thenShouldInstantiateAEmbeddingNetwork(
+            self, load_pre_trained_weights_mock):
+        self.seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device, self.verbose)
+
+        load_pre_trained_weights_mock.assert_called_with(self.model_type)
+
+    @patch("deepparse.network.seq2seq.Seq2SeqModel._load_weights")
+    def test_whenInstantiatingAFasttextSeq2SeqModelWithPath_thenShouldCallLoadWeights(self, load_weights_mock):
+        self.seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device, self.verbose, self.a_path_to_retrained_model)
+
+        load_weights_mock.assert_called_with(self.a_path_to_retrained_model)
 
     @patch("os.path.isfile")
     @patch("deepparse.network.seq2seq.torch")

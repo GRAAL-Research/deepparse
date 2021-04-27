@@ -181,6 +181,41 @@ class DownloadTests(TestCase):
 
             downloader.assert_not_called()
 
+    @patch("deepparse.download.download_fasttext_embeddings")
+    @patch("deepparse.download.CACHE_PATH", "./")  # we mock the cache path with the fake_cache_path
+    @patch("deepparse.download.os.path.isfile", side_effect=[False, True])  # no version file in local
+    def test_givenAFasttextDownload_whenModelIsNotLocalButNotLatest_thenDownloadWeights(
+            self, download_embeddings_mock, os_is_file_mock):
+        args_parser = self.parser.parse_args([self.a_fasttext_model_type])
+        with patch("deepparse.download.download_weights") as downloader:
+            download.main(args_parser)
+
+            downloader.assert_any_call(self.a_fasttext_model_type, self.fake_cache_path)
+
+    @patch("deepparse.download.download_fasttext_magnitude_embeddings")
+    @patch("deepparse.download.CACHE_PATH", "./")  # we mock the cache path with the fake_cache_path
+    @patch("deepparse.download.os.path.isfile", side_effect=[False, True])  # no version file in local
+    def test_givenAFasttextLightDownload_whenModelIsNotLocalButNotLatest_thenDownloadWeights(
+            self, download_embeddings_mock, os_is_file_mock):
+        args_parser = self.parser.parse_args([self.a_fasttext_light_model_type])
+
+        with patch("deepparse.download.download_weights") as downloader:
+            download.main(args_parser)
+
+            downloader.assert_any_call(self.a_fasttext_light_model_type, self.fake_cache_path)
+
+    @patch("deepparse.download.BPEmb")
+    @patch("deepparse.download.CACHE_PATH", "./")  # we mock the cache path with the fake_cache_path
+    @patch("deepparse.download.os.path.isfile", side_effect=[False, True])  # no version file in local
+    def test_givenABPembDownload_whenModelIsNotLocalButNotLatest_thenDownloadWeights(
+            self, download_embeddings_mock, os_is_file_mock):
+        args_parser = self.parser.parse_args([self.a_bpemb_model_type])
+
+        with patch("deepparse.download.download_weights") as downloader:
+            download.main(args_parser)
+
+            downloader.assert_any_call(self.a_bpemb_model_type, self.fake_cache_path)
+
 
 if __name__ == "__main__":
     unittest.main()

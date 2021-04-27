@@ -64,8 +64,9 @@ class Seq2SeqTest(TestCase):
     @patch("os.path.isfile")
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.torch.nn.Module.load_state_dict")
-    def test_givenSeq2seqModel_whenLoadPreTrainedWeightsVerbose_thenWarningsRaised(self, torch_nn_mock, torch_mock,
-                                                                                   isfile_mock, last_version_mock):
+    @skipIf(not torch.cuda.is_available(), "no gpu available")
+    def test_givenSeq2seqModel_whenLoadPreTrainedWeightsVerboseGPU_thenWarningsRaised(
+            self, torch_nn_mock, torch_mock, isfile_mock, last_version_mock):
         seq2seq_model = Seq2SeqModel(self.a_torch_device, verbose=True)
         isfile_mock.return_value = True
         last_version_mock.return_value = False
@@ -77,9 +78,37 @@ class Seq2SeqTest(TestCase):
     @patch("os.path.isfile")
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.torch.nn.Module.load_state_dict")
-    def test_givenSeq2seqModel_whenLoadPreTrainedWeightsNotVerbose_thenWarningsNotRaised(
+    @skipIf(not torch.cuda.is_available(), "no gpu available")
+    def test_givenSeq2seqModel_whenLoadPreTrainedWeightsNotVerboseGPU_thenWarningsNotRaised(
             self, torch_nn_mock, torch_mock, isfile_mock, last_version_mock):
         seq2seq_model = Seq2SeqModel(self.a_torch_device, verbose=False)
+        isfile_mock.return_value = True
+        last_version_mock.return_value = False
+        with patch("deepparse.network.seq2seq.download_weights"):
+            with pytest.warns(None) as record:
+                seq2seq_model._load_pre_trained_weights("a_model_type")
+            self.assertEqual(0, len(record))
+
+    @patch("deepparse.network.seq2seq.latest_version")
+    @patch("os.path.isfile")
+    @patch("deepparse.network.seq2seq.torch")
+    @patch("deepparse.network.seq2seq.torch.nn.Module.load_state_dict")
+    def test_givenSeq2seqModel_whenLoadPreTrainedWeightsVerboseCPU_thenWarningsRaised(
+            self, torch_nn_mock, torch_mock, isfile_mock, last_version_mock):
+        seq2seq_model = Seq2SeqModel(self.a_cpu_device, verbose=True)
+        isfile_mock.return_value = True
+        last_version_mock.return_value = False
+        with patch("deepparse.network.seq2seq.download_weights"):
+            with self.assertWarns(UserWarning):
+                seq2seq_model._load_pre_trained_weights("a_model_type")
+
+    @patch("deepparse.network.seq2seq.latest_version")
+    @patch("os.path.isfile")
+    @patch("deepparse.network.seq2seq.torch")
+    @patch("deepparse.network.seq2seq.torch.nn.Module.load_state_dict")
+    def test_givenSeq2seqModel_whenLoadPreTrainedWeightsNotVerboseCPU_thenWarningsNotRaised(
+            self, torch_nn_mock, torch_mock, isfile_mock, last_version_mock):
+        seq2seq_model = Seq2SeqModel(self.a_cpu_device, verbose=False)
         isfile_mock.return_value = True
         last_version_mock.return_value = False
         with patch("deepparse.network.seq2seq.download_weights"):

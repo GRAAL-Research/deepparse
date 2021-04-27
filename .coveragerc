@@ -1,6 +1,6 @@
 # .coveragerc to control coverage.py
 [run]
-omit = ./venv/*,*tests*,*apps.py,*manage.py,*__init__.py,*migrations*,*asgi*,*wsgi*,*admin.py,*urls.py,*weight_init.py
+omit = ./venv/*,*tests*,*apps.py,*manage.py,*__init__.py,*migrations*,*asgi*,*wsgi*,*admin.py,*urls.py,*weight_init.py, *version.py
 
 [report]
 # Regexes for lines to exclude from consideration
@@ -20,7 +20,7 @@ exclude_lines =
 
     # Don't complain if non-runnable code isn't run:
     if __name__ == .__main__.:
-omit = ./venv/*,*tests*,*apps.py,*manage.py,*__init__.py,*migrations*,*asgi*,*wsgi*,*admin.py,*urls.py,*weight_init.py
+omit = ./venv/*,*tests*,*apps.py,*manage.py,*__init__.py,*migrations*,*asgi*,*wsgi*,*admin.py,*urls.py,*weight_init.py, *version.py
 
 ignore_errors = True
 

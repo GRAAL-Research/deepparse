@@ -7,11 +7,13 @@ from deepparse.embeddings_models import EmbeddingsModel
 
 
 class CallAbstractedEmbeddingsModel(EmbeddingsModel):
+
     def __call__(self, *args, **kwargs):
         pass
 
 
 class EmbeddingsModelInterfaceTest(TestCase):
+
     def _capture_output(self):
         self.test_out = io.StringIO()
         self.original_output = sys.stdout

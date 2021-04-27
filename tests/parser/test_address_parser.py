@@ -1,5 +1,5 @@
 # Since we use a patch as model mock we skip the unused argument error
-# pylint: disable=W0613
+# pylint: disable=unused-argument
 import os
 import unittest
 from unittest.mock import patch, Mock

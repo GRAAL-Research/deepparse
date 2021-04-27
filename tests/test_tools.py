@@ -1,5 +1,5 @@
 # Since we use a patch to mock verify last we skip the unused argument error
-# pylint: disable=W0613, too-many-public-methods
+# pylint: disable=unused-argument, too-many-public-methods
 
 import os
 import unittest

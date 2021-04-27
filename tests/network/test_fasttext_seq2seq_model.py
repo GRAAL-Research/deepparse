@@ -1,6 +1,6 @@
 # Since we use patch we skip the unused argument error
 # We also skip protected-access since we test the encoder and decoder step
-# pylint: disable=W0613, protected-access, too-many-arguments
+# pylint: disable=unused-argument, protected-access, too-many-arguments
 import unittest
 from unittest.mock import patch, call, MagicMock
 
@@ -12,6 +12,19 @@ class FasttextSeq2SeqTest(Seq2SeqTestCase):
 
     def setUp(self) -> None:
         self.model_type = "fasttext"
+
+    @patch("deepparse.network.seq2seq.Seq2SeqModel._load_pre_trained_weights")
+    def test_whenInstantiatingAFasttextSeq2SeqModel_thenShouldInstantiateAEmbeddingNetwork(
+            self, load_pre_trained_weights_mock):
+        self.seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device, self.verbose)
+
+        load_pre_trained_weights_mock.assert_called_with(self.model_type)
+
+    @patch("deepparse.network.seq2seq.Seq2SeqModel._load_weights")
+    def test_whenInstantiatingAFasttextSeq2SeqModelWithPath_thenShouldCallLoadWeights(self, load_weights_mock):
+        self.seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device, self.verbose, self.a_path_to_retrained_model)
+
+        load_weights_mock.assert_called_with(self.a_path_to_retrained_model)
 
     @patch("os.path.isfile")
     @patch("deepparse.network.seq2seq.torch")

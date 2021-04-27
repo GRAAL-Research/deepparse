@@ -28,11 +28,21 @@ class ToolsTests(CaptureOutputTestCase):
         # the payload is a first "chunk" a, a second chunk "b" and a empty chunk "" to end the loop
         cls.a_response_payload = ["a", "b", ""]
 
+        cls.a_fake_embeddings_path = "fake_embeddings_cc.fr.300.bin"
+
     def tearDown(self) -> None:
         if os.path.exists(self.a_fasttext_file_name_path):
             os.remove(self.a_fasttext_file_name_path)
         if os.path.exists(self.a_fasttext_gz_file_name_path):
             os.remove(self.a_fasttext_gz_file_name_path)
+
+        if os.path.exists(self.a_fasttext_light_name_path):
+            os.remove(self.a_fasttext_light_name_path)
+        if os.path.exists(self.a_fasttext_light_gz_file_name_path):
+            os.remove(self.a_fasttext_light_gz_file_name_path)
+
+        if os.path.exists(self.a_fake_embeddings_path):
+            os.remove(self.a_fake_embeddings_path)
 
     def assertStdoutContains(self, values):
         for value in values:
@@ -196,7 +206,7 @@ class ToolsTests(CaptureOutputTestCase):
 
     def test_givenAFasttextEmbeddingsToLoad_whenLoad_thenLoadProperly(self):
         download_from_url("fake_embeddings_cc.fr.300", self.a_directory_path, "bin")
-        embeddings_path = "fake_embeddings_cc.fr.300.bin"
+        embeddings_path = self.a_fake_embeddings_path
 
         embeddings = load_fasttext_embeddings(embeddings_path)
 

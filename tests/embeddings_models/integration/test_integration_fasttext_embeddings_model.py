@@ -37,7 +37,7 @@ class FastTextEmbeddingsModelIntegrationTest(AddressParserIntegrationTestCase):
 
         self.assertIsInstance(model.model, FastTextKeyedVectors)
 
-    @skipIf(not platform.system() != "Windows", "Integration test not on Windows env.")
+    @skipIf(platform.system() == "Windows", "Integration test not on Windows env.")
     def test_givenANotWindowsOS_whenFasttextModelInit_thenLoadWithProperFunction(self):
         model = FastTextEmbeddingsModel(self.a_fasttext_model_path, verbose=self.verbose)
 

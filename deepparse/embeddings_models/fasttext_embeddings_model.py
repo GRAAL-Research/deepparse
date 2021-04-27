@@ -26,7 +26,7 @@ class FastTextEmbeddingsModel(EmbeddingsModel):
     def __init__(self, embeddings_path: str, verbose: bool = True) -> None:
         super().__init__(verbose=verbose)
 
-        if platform.system() == 'Windows':
+        if platform.system().lower() == 'windows':
             self.model = load_facebook_vectors(embeddings_path)
         else:
             self.model = load_fasttext_embeddings(embeddings_path)

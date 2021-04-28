@@ -217,7 +217,7 @@ class FasttextSeq2SeqGPUTest(Seq2SeqTestCase):
                     encoder_mock.assert_has_calls([call()(to_predict_mock, lengths_tensor_mock)])
                     lengths_tensor_mock.assert_has_calls([call.max().item()])
                     decoder_mock.assert_has_calls([call()(decoder_input_mock, decoder_hidden_mock)])
-                    target_mock.assert_has_calls([call.transpose(0, 1), call.transpose().__getitem__(0)])
+                    target_mock.assert_has_calls([call.transpose(0, 1)])
 
 
 if __name__ == "__main__":

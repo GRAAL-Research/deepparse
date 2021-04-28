@@ -1,6 +1,6 @@
 # Since we use patch we skip the unused argument error
 # We also skip protected-access since we test the encoder and decoder step
-# pylint: disable=W0613, protected-access, too-many-arguments
+# pylint: disable=unused-argument, protected-access, too-many-arguments
 import unittest
 from unittest.mock import patch, call, MagicMock
 
@@ -10,13 +10,10 @@ from tests.network.base import Seq2SeqTestCase
 
 class BPEmbSeq2SeqTest(Seq2SeqTestCase):
 
-    def __init__(self, methodName: str = ...):
-        super().__init__(methodName)
+    def __init__(self):
+        super().__init__()
 
     def setUp(self) -> None:
-        self.input_size = 300
-        self.hidden_size = 300
-        self.projection_size = 300
         self.model_type = "bpemb"
         self.output_size = 9
 
@@ -28,6 +25,14 @@ class BPEmbSeq2SeqTest(Seq2SeqTestCase):
         self.assertEqual(self.input_size, self.seq2seq_model.embedding_network.model.input_size)
         self.assertEqual(self.hidden_size, self.seq2seq_model.embedding_network.model.hidden_size)
         self.assertEqual(self.projection_size, self.seq2seq_model.embedding_network.projection_layer.out_features)
+
+        load_pre_trained_weights_mock.assert_called_with(self.model_type)
+
+    @patch("deepparse.network.seq2seq.Seq2SeqModel._load_weights")
+    def test_whenInstantiatingABPEmbSeq2SeqModelWithPath_thenShouldCallLoadWeights(self, load_weights_mock):
+        self.seq2seq_model = BPEmbSeq2SeqModel(self.a_torch_device, self.verbose, self.a_path_to_retrained_model)
+
+        load_weights_mock.assert_called_with(self.a_path_to_retrained_model)
 
     @patch("os.path.isfile")
     @patch("deepparse.network.seq2seq.torch")

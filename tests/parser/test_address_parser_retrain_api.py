@@ -1,5 +1,6 @@
 # Since we use a patch as model mock we skip the unused argument error
-# pylint: disable=W0613, too-many-arguments
+# pylint: disable=unused-argument, too-many-arguments, too-many-public-methods
+
 import unittest
 from unittest.mock import patch, call
 
@@ -11,7 +12,7 @@ from tests.tools import BATCH_SIZE, ADataContainer
 
 
 class AddressParserRetrainTest(AddressParserPredictTestCase):
-    # pylint: disable=too-many-public-methods
+
     @classmethod
     def setUpClass(cls):
         super(AddressParserRetrainTest, cls).setUpClass()

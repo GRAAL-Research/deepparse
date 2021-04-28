@@ -1,20 +1,18 @@
 # Bug with PyTorch source code makes torch.tensor as not callable for pylint.
-# pylint: disable=not-callable
-import io
+# pylint: disable=not-callable, too-many-public-methods
+
 import os
 import pickle
-import sys
-from unittest import TestCase
 from unittest.mock import Mock
 
 import torch
 from torch import tensor
 
 from deepparse.parser import nll_loss, accuracy
+from tests.base_capture_output import CaptureOutputTestCase
 
 
-class AddressParserPredictTestCase(TestCase):
-    # pylint: disable=too-many-public-methods
+class AddressParserPredictTestCase(CaptureOutputTestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -33,6 +31,15 @@ class AddressParserPredictTestCase(TestCase):
         cls.a_street_name = "major st"
         cls.a_street_number = "15"
 
+        cls.a_logging_path = "./data"
+
+    def tearDown(self) -> None:
+        # cleanup after the tests
+        path = os.path.join(self.a_logging_path, "prediction_tags.p")
+        if os.path.exists(path):
+            os.remove(path)
+            os.rmdir(self.a_logging_path)
+
     def setUp(self):
         # a prediction vector with real values
         self.a_prediction_vector_for_a_complete_address = tensor(
@@ -40,36 +47,30 @@ class AddressParserPredictTestCase(TestCase):
                 -6.7080e-04, -7.3572e+00, -1.4086e+01, -1.1092e+01, -2.1749e+01, -1.1060e+01, -1.4627e+01, -1.4654e+01,
                 -2.8624e+01
             ]],
-                [[
-                    -1.5119e+01, -1.7881e-06, -1.7613e+01, -1.3365e+01, -2.9415e+01, -2.3198e+01, -2.2065e+01,
-                    -2.2009e+01,
-                    -4.0588e+01
-                ]],
-                [[
-                    -1.5922e+01, -1.1903e-03, -1.3102e+01, -6.7359e+00, -2.4669e+01, -1.7328e+01, -1.9970e+01,
-                    -1.9923e+01,
-                    -4.0041e+01
-                ]],
-                [[
-                    -1.9461e+01, -1.3808e+01, -1.5707e+01, -2.0146e-05, -1.0881e+01, -1.5345e+01, -2.1945e+01,
-                    -2.2081e+01,
-                    -4.6854e+01
-                ]],
-                [[
-                    -1.7136e+01, -1.8420e+01, -1.5489e+01, -1.5802e+01, -1.2159e-05, -1.1350e+01, -2.1703e+01,
-                    -2.1866e+01,
-                    -4.2224e+01
-                ]],
-                [[
-                    -1.4736e+01, -1.7999e+01, -1.5483e+01, -2.1751e+01, -1.3005e+01, -3.4571e-06, -1.7897e+01,
-                    -1.7965e+01,
-                    -1.4235e+01
-                ]],
-                [[
-                    -1.7509e+01, -1.8191e+01, -1.7853e+01, -2.6309e+01, -1.7179e+01, -1.0518e+01, -1.9438e+01,
-                    -1.9542e+01,
-                    -2.7060e-05
-                ]]])
+             [[
+                 -1.5119e+01, -1.7881e-06, -1.7613e+01, -1.3365e+01, -2.9415e+01, -2.3198e+01, -2.2065e+01, -2.2009e+01,
+                 -4.0588e+01
+             ]],
+             [[
+                 -1.5922e+01, -1.1903e-03, -1.3102e+01, -6.7359e+00, -2.4669e+01, -1.7328e+01, -1.9970e+01, -1.9923e+01,
+                 -4.0041e+01
+             ]],
+             [[
+                 -1.9461e+01, -1.3808e+01, -1.5707e+01, -2.0146e-05, -1.0881e+01, -1.5345e+01, -2.1945e+01, -2.2081e+01,
+                 -4.6854e+01
+             ]],
+             [[
+                 -1.7136e+01, -1.8420e+01, -1.5489e+01, -1.5802e+01, -1.2159e-05, -1.1350e+01, -2.1703e+01, -2.1866e+01,
+                 -4.2224e+01
+             ]],
+             [[
+                 -1.4736e+01, -1.7999e+01, -1.5483e+01, -2.1751e+01, -1.3005e+01, -3.4571e-06, -1.7897e+01, -1.7965e+01,
+                 -1.4235e+01
+             ]],
+             [[
+                 -1.7509e+01, -1.8191e+01, -1.7853e+01, -2.6309e+01, -1.7179e+01, -1.0518e+01, -1.9438e+01, -1.9542e+01,
+                 -2.7060e-05
+             ]]])
 
         self.a_loss_function = nll_loss
         self.a_list_of_batch_metrics = [accuracy]
@@ -84,19 +85,6 @@ class AddressParserPredictTestCase(TestCase):
         model.return_value = Mock(return_value=torch.cat((self.a_prediction_vector_for_a_complete_address,
                                                           self.a_prediction_vector_for_a_complete_address), 1))
 
-    def _capture_output(self):
-        self.test_out = io.StringIO()
-        self.original_output = sys.stdout
-        sys.stdout = self.test_out
-
-    def tearDown(self) -> None:
-        # cleanup after the tests
-        path = os.path.join(self.a_logging_path, "./prediction_tags.p")
-        if os.path.exists(path):
-            os.remove(path)
-
-        os.rmdir(self.a_logging_path)
-
-    @staticmethod
-    def prediction_tags_dict_setup(address_components):
-        pickle.dump(address_components, open("./prediction_tags.p", "wb"))
+    def prediction_tags_dict_setup(self, address_components):
+        with open(os.path.join(self.a_logging_path, "prediction_tags.p"), "wb") as file:
+            pickle.dump(address_components, file)

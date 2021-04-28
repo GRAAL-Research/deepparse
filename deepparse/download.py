@@ -29,7 +29,7 @@ def main(args: argparse.Namespace) -> None:
         download_weights(model_type, CACHE_PATH)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     parser = argparse.ArgumentParser()
     parser.add_argument("model_type",
                         choices=["fasttext", "fasttext-light", "bpemb"],

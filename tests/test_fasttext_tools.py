@@ -1,29 +1,34 @@
 # Since we use a patch as model mock we skip the unused argument error
-# pylint: disable=W0613
+# pylint: disable=unused-argument
 
 import gzip
-import io
 import os
-import sys
 import unittest
-from unittest import TestCase
 from unittest.mock import patch, mock_open
 
-from deepparse import download_fasttext_embeddings
+from fasttext.FastText import _FastText
+
+from deepparse import download_fasttext_embeddings, download_fasttext_magnitude_embeddings, download_from_url, \
+    load_fasttext_embeddings
 from deepparse.fasttext_tools import _print_progress
+from tests.base_capture_output import CaptureOutputTestCase
 from tests.tools import create_file
 
 
-class ToolsTests(TestCase):
+class ToolsTests(CaptureOutputTestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
         cls.a_directory_path = "./"
         cls.a_fasttext_file_name_path = os.path.join(cls.a_directory_path, "cc.fr.300.bin")
         cls.a_fasttext_gz_file_name_path = os.path.join(cls.a_directory_path, "cc.fr.300.bin.gz")
+        cls.a_fasttext_light_name_path = os.path.join(cls.a_directory_path, "fasttext.magnitude")
+        cls.a_fasttext_light_gz_file_name_path = os.path.join(cls.a_directory_path, "fasttext.magnitude.gz")
 
         # the payload is a first "chunk" a, a second chunk "b" and a empty chunk "" to end the loop
         cls.a_response_payload = ["a", "b", ""]
+
+        cls.a_fake_embeddings_path = "fake_embeddings_cc.fr.300.bin"
 
     def tearDown(self) -> None:
         if os.path.exists(self.a_fasttext_file_name_path):
@@ -31,10 +36,13 @@ class ToolsTests(TestCase):
         if os.path.exists(self.a_fasttext_gz_file_name_path):
             os.remove(self.a_fasttext_gz_file_name_path)
 
-    def _capture_output(self):
-        self.test_out = io.StringIO()
-        self.original_output = sys.stdout
-        sys.stdout = self.test_out
+        if os.path.exists(self.a_fasttext_light_name_path):
+            os.remove(self.a_fasttext_light_name_path)
+        if os.path.exists(self.a_fasttext_light_gz_file_name_path):
+            os.remove(self.a_fasttext_light_gz_file_name_path)
+
+        if os.path.exists(self.a_fake_embeddings_path):
+            os.remove(self.a_fake_embeddings_path)
 
     def assertStdoutContains(self, values):
         for value in values:
@@ -56,10 +64,75 @@ class ToolsTests(TestCase):
         with gzip.open(self.a_fasttext_gz_file_name_path, "wb") as f:
             f.write(self.a_fasttext_file_name_path.encode("utf-8"))
 
-        with patch("deepparse.fasttext_tools.download_gz_model") as _:
+        with patch("deepparse.fasttext_tools.download_gz_model"):
             actual = download_fasttext_embeddings(self.a_directory_path)
             expected = self.a_fasttext_file_name_path
-            self.assertEqual(actual, expected)
+            self.assertEqual(expected, actual)
+
+    @patch("os.path.isfile")
+    def test_givenAFasttextLightEmbeddingsLocal_whenDownloadFasttextLightEmbeddings_thenReturnFilePath(
+            self, isfile_mock):
+        expected = self.a_fasttext_light_name_path
+        actual = download_fasttext_magnitude_embeddings(self.a_directory_path)
+        self.assertEqual(expected, actual)
+
+    @patch("os.path.isfile")
+    def test_givenAFasttextLightEmbeddingsNotLocal_whenDownloadFasttextLightEmbeddings_thenDownloadIt(
+            self, isfile_mock):
+        # since we create a local fake file, the file exist, so we mock that the file doest not exist.
+        isfile_mock.return_value = False
+        create_file(self.a_fasttext_light_name_path, content="Fake fasttext embedding content")
+
+        # we create a fake fasttext archive
+        with gzip.open(self.a_fasttext_light_gz_file_name_path, "wb") as f:
+            f.write(self.a_fasttext_light_name_path.encode("utf-8"))
+
+        with patch("deepparse.fasttext_tools.download_from_url") as _:
+            actual = download_fasttext_magnitude_embeddings(self.a_directory_path)
+            expected = self.a_fasttext_light_name_path
+            self.assertEqual(expected, actual)
+
+    @patch("os.path.isfile")
+    def test_givenAFasttextLightEmbeddingsNotLocal_whenDownloadFasttextEmbeddingsNoVerbose_thenNoVerbose(
+            self, isfile_mock):
+        self._capture_output()
+
+        # since we create a local fake file, the file exist, so we mock that the file doest not exist.
+        isfile_mock.return_value = False
+        create_file(self.a_fasttext_light_name_path, content="Fake fasttext embedding content")
+
+        # we create a fake fasttext archive
+        with gzip.open(self.a_fasttext_light_gz_file_name_path, "wb") as f:
+            f.write(self.a_fasttext_light_name_path.encode("utf-8"))
+
+        with patch("deepparse.fasttext_tools.download_from_url"):
+            download_fasttext_magnitude_embeddings(self.a_directory_path, verbose=False)
+
+            expected = ""
+
+            actual = self.test_out.getvalue().strip()
+            self.assertEqual(expected, actual)
+
+    @patch("os.path.isfile")
+    def test_givenAFasttextLightEmbeddingsNotLocal_whenDownloadFasttextEmbeddingsVerbose_thenVerbose(self, isfile_mock):
+        self._capture_output()
+
+        # since we create a local fake file, the file exist, so we mock that the file doest not exist.
+        isfile_mock.return_value = False
+        create_file(self.a_fasttext_light_name_path, content="Fake fasttext embedding content")
+
+        # we create a fake fasttext archive
+        with gzip.open(self.a_fasttext_light_gz_file_name_path, "wb") as f:
+            f.write(self.a_fasttext_light_name_path.encode("utf-8"))
+
+        with patch("deepparse.fasttext_tools.download_from_url"):
+            download_fasttext_magnitude_embeddings(self.a_directory_path, verbose=True)
+
+            expected = "The fastText pre-trained word embeddings will be download in magnitude format (2.3 GO), " \
+                       "this process will take several minutes."
+
+            actual = self.test_out.getvalue().strip()
+            self.assertEqual(expected, actual)
 
     def test_givenAFileToDownload_whenPrintProgress_thenPrintProperly(self):
         self._capture_output()
@@ -130,6 +203,14 @@ class ToolsTests(TestCase):
 
         expected = "(100.00%) [==================================================>]"
         self.assertIn(expected, actual)
+
+    def test_givenAFasttextEmbeddingsToLoad_whenLoad_thenLoadProperly(self):
+        download_from_url("fake_embeddings_cc.fr.300", self.a_directory_path, "bin")
+        embeddings_path = self.a_fake_embeddings_path
+
+        embeddings = load_fasttext_embeddings(embeddings_path)
+
+        self.assertIsInstance(embeddings, _FastText)
 
 
 if __name__ == "__main__":

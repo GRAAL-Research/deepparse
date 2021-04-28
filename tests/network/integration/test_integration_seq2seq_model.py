@@ -16,7 +16,7 @@ class Seq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
 
     def setUp(self) -> None:
         super().setUp()
-        self.pre_trained_seq2seq_model = Seq2SeqModel(self.a_torch_device)
+        self.pre_trained_seq2seq_model = Seq2SeqModel(self.a_torch_device, self.output_size)
         self.encoder_input_setUp("fasttext")  # fasttext since the simplest case (bpemb use a embedding layer)
         self.none_target = None  # No target (for teacher forcing)
         self.a_value_greater_than_threshold = 0.1

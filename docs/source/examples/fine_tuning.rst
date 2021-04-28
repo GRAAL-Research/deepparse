@@ -50,7 +50,7 @@ Let's start with the default learning rate of 0.01 and use a learning rate sched
     lr_scheduler = poutyne.StepLR(step_size=1, gamma=0.1)  # reduce LR by a factor of 10 each epoch
 
 
-The checkpoints (ckpt) are saved in the default "./chekpoints" directory
+The checkpoints (ckpt) are saved in the default "./checkpoints" directory
 
 .. code-block:: python
 

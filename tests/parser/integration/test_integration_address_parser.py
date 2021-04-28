@@ -6,7 +6,7 @@ from unittest import TestCase, skipIf
 
 import torch
 
-from deepparse.parser import AddressParser, ParsedAddress
+from deepparse.parser import AddressParser, FormattedParsedAddress
 
 
 @skipIf(not torch.cuda.is_available(), "no gpu available")
@@ -22,10 +22,10 @@ class AddressParserPredictTest(TestCase):
 
     def test_givenAAddress_whenParse_thenParseAddress(self):
         parse_address = self.fasttext_address_parser(self.an_address_to_parse)
-        self.assertIsInstance(parse_address, ParsedAddress)
+        self.assertIsInstance(parse_address, FormattedParsedAddress)
 
         parse_address = self.bpemb_address_parser(self.an_address_to_parse)
-        self.assertIsInstance(parse_address, ParsedAddress)
+        self.assertIsInstance(parse_address, FormattedParsedAddress)
 
     def test_givenAListOfAddress_whenParse_thenParseAllAddress(self):
         parse_address = self.fasttext_address_parser([self.an_address_to_parse, self.an_address_to_parse])

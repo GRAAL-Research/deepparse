@@ -25,7 +25,7 @@ class Seq2SeqTest(TestCase):
         self.decoder_output_size = 9
 
     def test_whenInstantiateASeq2SeqModel_thenParametersAreOk(self):
-        seq2seq_model = Seq2SeqModel(self.a_torch_device)
+        seq2seq_model = Seq2SeqModel(self.a_torch_device, output_size=self.decoder_output_size)
         self.assertEqual(self.a_torch_device, seq2seq_model.device)
 
         self.assertEqual(self.encoder_input_size_dim, seq2seq_model.encoder.lstm.input_size)
@@ -45,7 +45,7 @@ class Seq2SeqTest(TestCase):
     @patch("deepparse.network.seq2seq.torch.nn.Module.load_state_dict")
     def test_givenSeq2seqModel_whenLoadPreTrainedWeightsVerbose_thenWarningsRaised(self, torch_nn_mock, torch_mock,
                                                                                    isfile_mock, last_version_mock):
-        seq2seq_model = Seq2SeqModel(self.a_torch_device, verbose=True)
+        seq2seq_model = Seq2SeqModel(self.a_torch_device, verbose=True, output_size=self.decoder_output_size)
         isfile_mock.return_value = True
         last_version_mock.return_value = False
         with patch("deepparse.network.seq2seq.download_weights"):
@@ -58,7 +58,7 @@ class Seq2SeqTest(TestCase):
     @patch("deepparse.network.seq2seq.torch.nn.Module.load_state_dict")
     def test_givenSeq2seqModel_whenLoadPreTrainedWeightsNotVerbose_thenWarningsNotRaised(
             self, torch_nn_mock, torch_mock, isfile_mock, last_version_mock):
-        seq2seq_model = Seq2SeqModel(self.a_torch_device, verbose=False)
+        seq2seq_model = Seq2SeqModel(self.a_torch_device, verbose=False, output_size=self.decoder_output_size)
         isfile_mock.return_value = True
         last_version_mock.return_value = False
         with patch("deepparse.network.seq2seq.download_weights"):

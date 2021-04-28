@@ -1,4 +1,7 @@
+import os
+import pickle
 import re
+import warnings
 from typing import List, Union, Dict, Tuple
 
 import torch
@@ -6,7 +9,7 @@ from poutyne.framework import Experiment
 from torch.optim import SGD
 from torch.utils.data import DataLoader, Subset
 
-from .parsed_address import ParsedAddress
+from .formated_parsed_address import FormattedParsedAddress
 from .. import CACHE_PATH, handle_checkpoint, indices_splitting
 from .. import load_tuple_to_device, download_fasttext_magnitude_embeddings
 from ..converter import TagsConverter
@@ -73,7 +76,6 @@ class AddressParser:
             (e.g. retrain a fasttext model and load the weights into a fasttext-light model).
             Default is None, meaning we use our pre-trained model.
 
-
     Note:
         For both the networks, we will download the pre-trained weights and embeddings in the ``.cache`` directory
         for the root user. The pre-trained weights take at most 44 MB. The fastText embeddings take 6.8 GO,
@@ -101,7 +103,7 @@ class AddressParser:
         time this load doesn't appear.
 
     Note:
-        The predictions tags are the following
+        The default predictions tags are the following
 
             - "StreetNumber": for the street number
             - "StreetName": for the name of the street
@@ -111,6 +113,10 @@ class AddressParser:
             - "PostalCode": for the postal code
             - "Orientation": for the street orientation (e.g. west, east)
             - "GeneralDelivery": for other delivery information
+
+    Note:
+        If you have changed the `prediction_tags` dictionary during a fine-tuning of our model, don't forget to keep
+        the `prediction_tags.p` file at the same level of the checkpoint of your model.
 
     Example:
 
@@ -128,6 +134,14 @@ class AddressParser:
 
                 address_parser = AddressParser(model_type="fasttext",
                                                path_to_retrained_model='/path_to_a_retrain_fasttext_model')
+
+        Using a retrain model trained on different tags
+
+        .. code-block:: python
+
+                address_parser = AddressParser(model_type="fasttext",
+                                               path_to_retrained_model='/path_to_a_retrain_fasttext_model',
+                                               prediction_tags={"a_tag": 0, "a_second_tag": 1})
     """
 
     def __init__(self,
@@ -142,10 +156,25 @@ class AddressParser:
         self.rounding = rounding
         self.verbose = verbose
 
-        self.tags_converter = TagsConverter(_pre_trained_tags_to_idx)
+        # default pre trained tag are loaded
+        tags_to_idx = _pre_trained_tags_to_idx
+
+        if path_to_retrained_model is not None:
+            model_directory = os.path.dirname(path_to_retrained_model)
+            path_to_prediction_tags = os.path.join(model_directory, "prediction_tags.p")
+            if os.path.isfile(path_to_prediction_tags):
+                # mean the user have changed the prediction tags of the model
+                if self.verbose:
+                    warnings.warn("Loading the prediction tags dictionary.")
+                with open(path_to_prediction_tags, "rb") as file:
+                    tags_to_idx = pickle.load(file)
+
+        self.tags_converter = TagsConverter(tags_to_idx)
 
         self.model_type = model_type.lower()
-        self._model_factory(path_to_retrained_model=path_to_retrained_model)
+        self._model_factory(verbose=self.verbose,
+                            path_to_retrained_model=path_to_retrained_model,
+                            prediction_layer_len=len(tags_to_idx))
         self.model.eval()
 
     def __str__(self) -> str:
@@ -157,7 +186,7 @@ class AddressParser:
                  addresses_to_parse: Union[List[str], str],
                  with_prob: bool = False,
                  batch_size: int = 32,
-                 num_workers: int = 0) -> Union[ParsedAddress, List[ParsedAddress]]:
+                 num_workers: int = 0) -> Union[FormattedParsedAddress, List[FormattedParsedAddress]]:
         """
         Callable method to parse the components of an address or a list of address.
 
@@ -176,8 +205,8 @@ class AddressParser:
 
 
         Return:
-            Either a :class:`~deepparse.deepparse.parsed_address.ParsedAddress` or a list of
-            :class:`~deepparse.deepparse.parsed_address.ParsedAddress` when given more than one address.
+            Either a :class:`~deepparse.deepparse.parsed_address.FormattedParsedAddress` or a list of
+            :class:`~deepparse.deepparse.parsed_address.FormattedParsedAddress` when given more than one address.
 
 
         Example:
@@ -235,7 +264,9 @@ class AddressParser:
                 learning_rate: float = 0.01,
                 callbacks: Union[List, None] = None,
                 seed: int = 42,
-                logging_path: str = "./checkpoints") -> List[Dict]:
+                logging_path: str = "./checkpoints",
+                prediction_tags: Union[Dict, None] = None) -> List[Dict]:
+
         # pylint: disable=too-many-arguments, line-too-long, too-many-locals
         """
         Method to retrain the address parser model using a dataset with the same tags. We train using
@@ -259,6 +290,12 @@ class AddressParser:
                 we set no callback.
             seed (int): Seed to use (by default 42).
             logging_path (str): The logging path for the checkpoints. By default the path is ``./checkpoints``.
+            prediction_tags (Union[Dict, None]): A dictionary were the keys are the address components
+                (e.g. street name) and the value are the components idx (from 0 to N + 1) to use during retrain
+                of a model. The `+1` is the End Of Sequence (EOS) token that need to be include in the dictionary.
+                We will use the length of this dictionary for the output size of the prediction layer. We also save
+                the dictionary to be use later on when you will use the model. Default is None, meaning we use our
+                pre-trained  model prediction tags.
 
         Return:
             A list of dictionary with the best epoch stats (see `Experiment class
@@ -272,6 +309,10 @@ class AddressParser:
             Due to pymagnitude, we could not train using the Magnitude embeddings, meaning it's not possible to
             train using the fasttext-light model. But, since we don't update the embeddings weights, one can retrain
             using the fasttext model and later on use the weights with the fasttext-light.
+
+        Note:
+            Since we save the `prediction_tags` dictionary, this pickled file need to be in pair with the checkpoint of
+            your model.
 
         Example:
 
@@ -298,11 +339,32 @@ class AddressParser:
                     lr_scheduler = poutyne.StepLR(step_size=1, gamma=0.1) # reduce LR by a factor of 10 each epoch
                     address_parser.retrain(container, 0.8, epochs=5, batch_size=128, callbacks=[lr_scheduler])
 
+            Using your own prediction tags dictionary.
+
+            .. code-block:: python
+                    address_components = {"ATag":0, "AnotherTag": 1, "EOS": 2}
+
+                    address_parser = AddressParser(device=0) #on gpu device 0
+                    data_path = 'path_to_a_pickle_dataset.p'
+
+                    container = PickleDatasetContainer(data_path)
+
+                    address_parser.retrain(container, 0.8, epochs=1, batch_size=128, prediction_tags=address_components)
+
+
         See `this <https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py>`_ for a fine
         tuning example.
         """
         if self.model_type == "fasttext-light":
             raise ValueError("It's not possible to retrain a fasttext-light due to pymagnitude problem.")
+
+        if prediction_tags is not None:
+            if "EOS" not in prediction_tags.keys():
+                raise ValueError("The prediction tags dictionary is missing the EOS tag.")
+            self.tags_converter = TagsConverter(prediction_tags)
+            # since we have change the output layer dim, we need to handle again the model creation
+            # we set verbose to False since we may already have printed message when __init__ of class.
+            self._model_factory(verbose=False, prediction_layer_len=len(prediction_tags))
 
         callbacks = [] if callbacks is None else callbacks
         train_generator, valid_generator = self._create_training_data_generator(dataset_container,
@@ -326,6 +388,9 @@ class AddressParser:
                               seed=seed,
                               callbacks=callbacks,
                               verbose=self.verbose)
+        if prediction_tags is not None:
+            with open(os.path.join(logging_path, "prediction_tags.p"), "wb") as file:
+                pickle.dump(prediction_tags, file)
         return train_res
 
     def test(self,
@@ -336,12 +401,13 @@ class AddressParser:
              seed: int = 42,
              logging_path: str = "./checkpoints",
              checkpoint: Union[str, int] = "best") -> Dict:
-        # pylint: disable=too-many-arguments
+        # pylint: disable=too-many-arguments, too-many-locals
         """
         Method to test a retrained or a pre-trained model using a dataset with the same tags. We train using
         `experiment <https://poutyne.org/experiment.html>`_ from `poutyne <https://poutyne.org/index.html>`_
         framework. The experiment module allow us to save checkpoints ``ckpt`` (pickle format) and a log.tsv where
-        the best epochs can be found (the best epoch is use in test).
+        the best epochs can be found (the best epoch is use in test). If you have retrained with different
+        prediction tags, we load the new tags automatically used during the retrain.
 
         Args:
             test_dataset_container (~deepparse.deepparse.dataset_container.dataset_container.DatasetContainer):
@@ -351,7 +417,7 @@ class AddressParser:
                 By default we set no callback.
             seed (int): Seed to use (by default 42).
             logging_path (str): The logging path for the checkpoints. By default the path is ``./checkpoints``.
-                checkpoint (Union[str, int]): Checkpoint to use for the test.
+            checkpoint (Union[str, int]): Checkpoint to use for the test.
                 - If 'best', will load the best weights.
                 - If 'last', will load the last model checkpoint.
                 - If int, will load a specific checkpoint (e.g. 3).
@@ -361,12 +427,23 @@ class AddressParser:
                 (Need to have Poutyne>=1.2 to work)
                 - If 'bpemb', will load our pre-trained bpemb model and test it on your data.
                 (Need to have Poutyne>=1.2 to work)
+
         Return:
             A dictionary with the best epoch stats (see `Experiment class
             <https://poutyne.org/experiment.html#poutyne.Experiment.train>`_ for details).
 
         Note:
             We use NLL loss and accuracy as in the `article <https://arxiv.org/abs/2006.16152>`_.
+
+        Note:
+            If you have retrain our model and changed the prediction tags the file `prediction_tags.p` need to be
+            next to the model (i.e. in the same directory as the model such as define by the `logging_path`).
+
+        Note:
+            You can also test our model on new prediction tags by adding your dictionary into the logging directory
+            with the name `prediction_tags.p`. For the evaluation, we will create a `<model_type>_user_tags.ckpt`
+            model in the `.cache` directory. But keep in mind that the prediction layer weights are randomly
+            initialize.
 
         Example:
 
@@ -381,9 +458,59 @@ class AddressParser:
                     address_parser.test(test_container, checkpoint='last') # using the last epoch
                     address_parser.test(test_container, checkpoint=5) # using the epoch 5 model
 
+            You can also test our fine tuned model
+
+                .. code-block:: python
+                    address_components = {"ATag":0, "AnotherTag": 1, "EOS": 2}
+
+                    address_parser = AddressParser(device=0) #on gpu device 0
+
+                    # train phase
+                    data_path = 'path_to_a_pickle_train_dataset.p'
+
+                    train_container = PickleDatasetContainer(data_path)
+
+                    address_parser.retrain(container, 0.8, epochs=1, batch_size=128, prediction_tags=address_components)
+
+                    # test phase
+                    data_path = 'path_to_a_pickle_test_dataset.p'
+
+                    test_container = PickleDatasetContainer(data_path)
+
+                    address_parser.test(test_container, checkpoint="bpemb") # test with the bpemb pre-trained model
+                    address_parser.test(test_container, checkpoint="fasttext") # test with fasttext model
+
+            You can also test our models with your tags without a previous retraining.
+
+                .. code-block:: python
+                    address_components = {"ATag":0, "AnotherTag": 1, "EOS": 2}
+                    with open("./checkpoints", "wb") as file:
+                        # save your dictionary of tags in the default model directory "./checkpoints"
+                        pickle.dump(address_components, file)
+
+                    address_parser = AddressParser(device=0) #on gpu device 0
+                    data_path = 'path_to_a_pickle_test_dataset.p'
+
+                    test_container = PickleDatasetContainer(data_path)
+
+                    address_parser.test(test_container, checkpoint="bpemb") # test with the bpemb pre-trained model
+                    address_parser.test(test_container, checkpoint="fasttext") # test with fasttext model
+
+
         """
         if self.model_type == "fasttext-light":
             raise ValueError("It's not possible to test a fasttext-light due to pymagnitude problem.")
+
+        path_to_prediction_tags = os.path.join(logging_path, "prediction_tags.p")
+        if os.path.isfile(path_to_prediction_tags):
+            # mean the user have changed the prediction tags of the model
+            with open(path_to_prediction_tags, "rb") as prediction_tags_file:
+                prediction_tags = pickle.load(prediction_tags_file)
+                self.tags_converter = TagsConverter(prediction_tags)
+            # since we have change the output layer dim, we need to handle again the model creation
+            # we set verbose to False since we may already have printed message when __init__ of class.
+            self._model_factory(verbose=self.verbose, prediction_layer_len=len(prediction_tags))
+            checkpoint = self._handle_pre_trained_test_new_prediction_layer(checkpoint)
 
         callbacks = [] if callbacks is None else callbacks
         data_transform = self._set_data_transformer()
@@ -398,11 +525,12 @@ class AddressParser:
         checkpoint = handle_checkpoint(checkpoint)
 
         test_res = exp.test(test_generator, seed=seed, callbacks=callbacks, checkpoint=checkpoint, verbose=self.verbose)
+
         return test_res
 
-    def _fill_tagged_addresses_components(self, tags_predictions: List, tags_predictions_prob: List,
-                                          addresses_to_parse: List[str],
-                                          with_prob: bool) -> Union[ParsedAddress, List[ParsedAddress]]:
+    def _fill_tagged_addresses_components(
+            self, tags_predictions: List, tags_predictions_prob: List, addresses_to_parse: List[str],
+            with_prob: bool) -> Union[FormattedParsedAddress, List[FormattedParsedAddress]]:
         """
         Method to fill the mapping for every address between a address components and is associated predicted tag (or
         tag and prob).
@@ -417,13 +545,15 @@ class AddressParser:
                 if with_prob:
                     tag = (tag, round(tag_proba, self.rounding))
                 tagged_address_components.append((word, tag))
-            tagged_addresses_components.append(ParsedAddress({address_to_parse: tagged_address_components}))
+            tagged_addresses_components.append(
+                FormattedParsedAddress(list(self.tags_converter.tags_to_idx.keys()),
+                                       {address_to_parse: tagged_address_components}))
 
         if len(tagged_addresses_components) == 1:
             return tagged_addresses_components[0]
         return tagged_addresses_components
 
-    def _process_device(self, device: Union[int, str, torch.device]):
+    def _process_device(self, device: Union[int, str, torch.device]) -> None:
         """
         Function to process the device depending of the argument type.
 
@@ -444,7 +574,7 @@ class AddressParser:
         else:
             raise ValueError("Device should be a string, an int or a torch device.")
 
-    def _set_data_transformer(self):
+    def _set_data_transformer(self) -> DataTransform:
         train_vectorizer = TrainVectorizer(self.vectorizer, self.tags_converter)  # vectorize to provide also the target
         data_transform = DataTransform(train_vectorizer,
                                        self.model_type)  # use for transforming the data prior to training
@@ -474,47 +604,68 @@ class AddressParser:
 
         return train_generator, valid_generator
 
-    def _model_factory(self, path_to_retrained_model: Union[str, None] = None) -> None:
+    def _model_factory(self,
+                       verbose: bool,
+                       path_to_retrained_model: Union[str, None] = None,
+                       prediction_layer_len: int = 9) -> None:
         """
         Model factory to create the vectorizer, the data converter and the pre-trained model
         """
         if self.model_type in ("fasttext", "fastest", "fasttext-light", "lightest"):
             if self.model_type in ("fasttext-light", "lightest"):
                 self.model_type = "fasttext-light"  # we change name to 'fasttext-light' since name can be lightest
-                file_name = download_fasttext_magnitude_embeddings(saving_dir=CACHE_PATH, verbose=self.verbose)
+                file_name = download_fasttext_magnitude_embeddings(saving_dir=CACHE_PATH, verbose=verbose)
 
-                embeddings_model = MagnitudeEmbeddingsModel(file_name, verbose=self.verbose)
+                embeddings_model = MagnitudeEmbeddingsModel(file_name, verbose=verbose)
                 self.vectorizer = MagnitudeVectorizer(embeddings_model=embeddings_model)
             else:
                 self.model_type = "fasttext"  # we change name to fasttext since name can be fastest
-                file_name = download_fasttext_embeddings(saving_dir=CACHE_PATH, verbose=self.verbose)
+                file_name = download_fasttext_embeddings(saving_dir=CACHE_PATH, verbose=verbose)
 
-                embeddings_model = FastTextEmbeddingsModel(file_name, verbose=self.verbose)
+                embeddings_model = FastTextEmbeddingsModel(file_name, verbose=verbose)
                 self.vectorizer = FastTextVectorizer(embeddings_model=embeddings_model)
 
             self.data_converter = fasttext_data_padding
 
             self.model = FastTextSeq2SeqModel(self.device,
-                                              verbose=self.verbose,
+                                              prediction_layer_len,
+                                              verbose=verbose,
                                               path_to_retrained_model=path_to_retrained_model)
 
         elif self.model_type in ("bpemb", "best"):
             self.model_type = "bpemb"  # we change name to bpemb since name can be best
             self.vectorizer = BPEmbVectorizer(
-                embeddings_model=BPEmbEmbeddingsModel(verbose=self.verbose, lang="multi", vs=100000, dim=300))
+                embeddings_model=BPEmbEmbeddingsModel(verbose=verbose, lang="multi", vs=100000, dim=300))
 
             self.data_converter = bpemb_data_padding
 
             self.model = BPEmbSeq2SeqModel(self.device,
-                                           verbose=self.verbose,
+                                           prediction_layer_len,
+                                           verbose=verbose,
                                            path_to_retrained_model=path_to_retrained_model)
         else:
             raise NotImplementedError(f"There is no {self.model_type} network implemented. Value should be: "
                                       f"fasttext, bpemb, lightest (fasttext-light), fastest (fasttext) "
                                       f"or best (bpemb).")
 
-    def _predict_pipeline(self, data):
+    def _predict_pipeline(self, data: List) -> Tuple:
         """
         Pipeline to process data in a data loader for prediction.
         """
         return self.data_converter(self.vectorizer(data))
+
+    def _handle_pre_trained_test_new_prediction_layer(self, checkpoint: Union[str, int]) -> str:
+        """
+        One can test on new dataset with new prediction tags but to do so, we need to change the
+        prediction layer dim. We handle that by saving a `_user_tags` model in the cache and load that model
+        later on for testing.
+
+        Will return the handled checkpoint name.
+        """
+        if checkpoint in ("bpemb", "fasttext"):
+            if self.verbose:
+                warnings.warn("Testing pre-trained model with a new predictions tags dictionary.")
+            checkpoint = checkpoint + "_user_tags"
+            with open(os.path.join(CACHE_PATH, checkpoint + ".ckpt"), "wb") as model_file:
+                torch.save(self.model.state_dict(), model_file)
+        return checkpoint

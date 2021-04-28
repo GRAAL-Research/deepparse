@@ -23,7 +23,7 @@ def main(args):
                            num_workers=6,
                            learning_rate=args.learning_rate,
                            callbacks=[lr_scheduler],
-                           logging_path=f"./chekpoints/{args.model_type}")
+                           logging_path=f"./checkpoints/{args.model_type}")
 
     test_container = PickleDatasetContainer(args.test_dataset_path)
 
@@ -32,7 +32,7 @@ def main(args):
     address_parser.test(test_container,
                         batch_size=args.batch_size,
                         num_workers=4,
-                        logging_path=f"./chekpoints/{args.model_type}",
+                        logging_path=f"./checkpoints/{args.model_type}",
                         checkpoint=checkpoint)
 
 

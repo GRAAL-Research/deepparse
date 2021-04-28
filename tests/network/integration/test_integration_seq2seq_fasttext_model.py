@@ -22,7 +22,7 @@ class FastTextSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
         self.a_retrain_model = os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "fasttext.ckpt")
 
     def test_whenForwardStep_thenStepIsOk(self):
-        self.seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device)
+        self.seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device, self.output_size)
         # forward pass for two address: '['15 major st london ontario n5z1e1', '15 major st london ontario n5z1e1']'
         self.decoder_input_setUp()
 
@@ -31,7 +31,7 @@ class FastTextSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
         self.assert_output_is_valid_dim(predictions)
 
     def test_whenForwardStepWithTarget_thenStepIsOk(self):
-        self.seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device)
+        self.seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device, self.output_size)
         # forward pass for two address: '['15 major st london ontario n5z1e1', '15 major st london ontario n5z1e1']'
         self.decoder_input_setUp()
 
@@ -41,6 +41,7 @@ class FastTextSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
 
     def test_retrainedModel_whenForwardStep_thenStepIsOk(self):
         self.seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device,
+                                                  self.output_size,
                                                   self.verbose,
                                                   path_to_retrained_model=self.a_retrain_model)
         # forward pass for two address: '['15 major st london ontario n5z1e1', '15 major st london ontario n5z1e1']'
@@ -52,6 +53,7 @@ class FastTextSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
 
     def test_retrainedModel_whenForwardStepWithTarget_thenStepIsOk(self):
         self.seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device,
+                                                  self.output_size,
                                                   self.verbose,
                                                   path_to_retrained_model=self.a_retrain_model)
         # forward pass for two address: '['15 major st london ontario n5z1e1', '15 major st london ontario n5z1e1']'

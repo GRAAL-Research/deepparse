@@ -12,15 +12,17 @@ class FastTextSeq2SeqModel(Seq2SeqModel):
 
     Args:
         device (~torch.device): The device tu use for the prediction.
+        output_size (int): The size of the prediction layers (i.e. the number of tag to predict).
         verbose (bool): Turn on/off the verbosity of the model. The default value is True.
         path_to_retrained_model (Union[str, None]): The path to the retrained model to use for the seq2seq.
     """
 
     def __init__(self,
                  device: torch.device,
+                 output_size: int,
                  verbose: bool = True,
                  path_to_retrained_model: Union[str, None] = None) -> None:
-        super().__init__(device, verbose)
+        super().__init__(device, output_size, verbose)
 
         if path_to_retrained_model is not None:
             self._load_weights(path_to_retrained_model)

@@ -1,6 +1,7 @@
+# pylint: disable=no-member
 import unittest
 
-from deepparse.parser import ParsedAddress
+from deepparse.parser import FormattedParsedAddress
 from tests.base_capture_output import CaptureOutputTestCase
 
 
@@ -8,6 +9,17 @@ class ParsedAddressTest(CaptureOutputTestCase):
 
     @classmethod
     def setUpClass(cls):
+        cls.tags = {
+            "StreetNumber": 0,
+            "StreetName": 1,
+            "Unit": 2,
+            "Municipality": 3,
+            "Province": 4,
+            "PostalCode": 5,
+            "Orientation": 6,
+            "GeneralDelivery": 7,
+            "EOS": 8  # the 9th is the EOS with idx 8
+        }
         cls.a_address_str = "3 test road"
         cls.a_complete_address_str = "3 test road unit west city province postal_code delivery"
         cls.a_parsed_address = [("3", "StreetNumber"), ("test", "StreetName"), ("road", "StreetName")]
@@ -22,7 +34,7 @@ class ParsedAddressTest(CaptureOutputTestCase):
         cls.a_existing_tag = "3"
 
     def setUp(self):
-        self.parsed_address = ParsedAddress(self.a_address)
+        self.parsed_address = FormattedParsedAddress(self.tags, self.a_address)
 
     def test_whenInstantiatedWithAddress_thenShouldReturnCorrectRawAddress(self):
         address = self.parsed_address.raw_address
@@ -35,7 +47,7 @@ class ParsedAddressTest(CaptureOutputTestCase):
         self.assertEqual(parsed_address, self.a_parsed_address)
 
     def test_whenInstantiatedWithCompleteAddress_thenShouldReturnCorrectCompleteParsedAddress(self):
-        self.parsed_address = ParsedAddress(self.a_complete_address)
+        self.parsed_address = FormattedParsedAddress(self.tags, self.a_complete_address)
         parsed_address = self.parsed_address.address_parsed_components
 
         self.assertEqual(parsed_address, self.a_complete_parsed_address)

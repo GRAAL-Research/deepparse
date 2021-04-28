@@ -2,16 +2,12 @@ import unittest
 from unittest import TestCase
 from unittest.mock import patch, MagicMock, call
 
-import torch
-
 from deepparse.network import Encoder
 
 
 class EncoderTest(TestCase):
 
     def setUp(self) -> None:
-        self.a_torch_device = torch.device("cpu")
-
         self.input_size_dim = 300
         self.hidden_size = 1024
         self.num_layers = 1

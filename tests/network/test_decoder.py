@@ -2,16 +2,12 @@ import unittest
 from unittest import TestCase
 from unittest.mock import patch, MagicMock, call
 
-import torch
-
 from deepparse.network import Decoder
 
 
 class DecoderTest(TestCase):
 
     def setUp(self) -> None:
-        self.a_torch_device = torch.device("cpu")
-
         self.input_size_dim = 1
         self.hidden_size = 1024
         self.num_layers = 1

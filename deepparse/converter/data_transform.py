@@ -14,10 +14,16 @@ class DataTransform:
          (i.e. transform into word embedding and tag idx).
         model_type (str): The model type, can be either:
 
-            - fasttext (need ~9 GO of RAM to be used);
+            - fasttext (need ~8 GO of RAM to be used);
             - bpemb (need ~2 GO of RAM to be used);
             - fastest (quicker to process one address) (equivalent to fasttext);
             - best (best accuracy performance) (equivalent to bpemb).
+
+        Note:
+        Since Windows uses `spawn` instead of `fork` during multiprocess (for the data loading pre-processing
+        `num_worker` > 0) we use the Gensim model, which takes more RAM (~10 GO) than the Fasttext one (~8 GO).
+        It also takes a longer time to load. See here the
+        `issue <https://github.com/GRAAL-Research/deepparse/issues/89>`_.
     """
 
     def __init__(self, vectorizer: TrainVectorizer, model_type: str):

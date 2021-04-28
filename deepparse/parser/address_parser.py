@@ -90,8 +90,10 @@ class AddressParser:
             - `FastText Light <https://graal.ift.ulaval.ca/public/deepparse/fasttext.magnitude.gz>`_.
 
     Note:
-        Note that the first time the fastText model is instantiated on a computer, we download the fastText
-        pre-trained embeddings of 6.8 GO, and this process can be quite long (a couple of minutes).
+        Since Windows uses `spawn` instead of `fork` during multiprocess (for the data loading pre-processing
+        `num_worker` > 0) we use the Gensim model, which takes more RAM (~10 GO) than the Fasttext one (~8 GO).
+        It also takes a longer time to load. See here the
+        `issue <https://github.com/GRAAL-Research/deepparse/issues/89>`_.
 
     Note:
         You may observe a 100% CPU load the first time you call the fasttext-light model. We

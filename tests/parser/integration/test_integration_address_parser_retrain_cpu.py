@@ -10,7 +10,7 @@ from unittest.mock import MagicMock, call, ANY
 from poutyne import Callback
 
 from deepparse.parser import AddressParser
-from tests.parser.integration.base_integration import AddressParserRetrainTestCase
+from tests.parser.integration.base_retrain import AddressParserRetrainTestCase
 
 
 @skipIf(not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "fasttext.version"))

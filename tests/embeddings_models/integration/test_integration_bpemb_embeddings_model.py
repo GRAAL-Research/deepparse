@@ -6,7 +6,7 @@ from torch.utils.data import DataLoader
 
 from deepparse.embeddings_models import BPEmbEmbeddingsModel
 from tests.embeddings_models.integration.tools import MockedDataTransform
-from tests.parser.integration.base_integration import AddressParserRetrainTestCase
+from tests.parser.integration.base_retrain import AddressParserRetrainTestCase
 
 
 class BPEmbEmbeddingsModelIntegrationTest(AddressParserRetrainTestCase):

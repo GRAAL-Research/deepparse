@@ -2,23 +2,16 @@
 # pylint: disable=not-callable
 
 from typing import List
-from unittest import TestCase, skipIf
+from unittest import skipIf
 
 import torch
 
-from deepparse.parser import AddressParser, FormattedParsedAddress
+from deepparse.parser import FormattedParsedAddress
+from tests.parser.integration.base_predict import AddressParserPredictBase
 
 
 @skipIf(not torch.cuda.is_available(), "no gpu available")
-class AddressParserPredictTest(TestCase):
-
-    @classmethod
-    def setUpClass(cls):
-        cls.fasttext_address_parser = AddressParser(model_type="fasttext", device=0)
-        cls.bpemb_address_parser = AddressParser(model_type="bpemb", device=0)
-
-    def setUp(self):
-        self.an_address_to_parse = "350 rue des lilas o"
+class AddressParserPredictTest(AddressParserPredictBase):
 
     def test_givenAAddress_whenParse_thenParseAddress(self):
         parse_address = self.fasttext_address_parser(self.an_address_to_parse)

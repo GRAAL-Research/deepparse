@@ -1,26 +1,18 @@
 # Bug with PyTorch source code makes torch.tensor as not callable for pylint.
 # pylint: disable=not-callable
 
-from typing import List
-from unittest import TestCase, skipIf
-
 import os
+from typing import List
+from unittest import skipIf
 
-from deepparse.parser import AddressParser, FormattedParsedAddress
+from deepparse.parser import FormattedParsedAddress
+from tests.parser.integration.base_predict import AddressParserPredictBase
 
 
 @skipIf(not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "fasttext.version"))
         or not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "fasttext.version")),
         "download of model too long for test in runner")
-class AddressParserPredictCPUTest(TestCase):
-
-    @classmethod
-    def setUpClass(cls):
-        cls.fasttext_address_parser = AddressParser(model_type="fasttext", device='cpu')
-        cls.bpemb_address_parser = AddressParser(model_type="bpemb", device='cpu')
-
-    def setUp(self):
-        self.an_address_to_parse = "350 rue des lilas o"
+class AddressParserPredictCPUTest(AddressParserPredictBase):
 
     def test_givenAAddress_whenParse_thenParseAddress(self):
         parse_address = self.fasttext_address_parser(self.an_address_to_parse)
@@ -41,15 +33,7 @@ class AddressParserPredictCPUTest(TestCase):
 @skipIf(not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "fasttext.version"))
         or not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "fasttext.version")),
         "download of model too long for test in runner")
-class AddressParserPredictCPUMultiProcessTest(TestCase):
-
-    @classmethod
-    def setUpClass(cls):
-        cls.fasttext_address_parser = AddressParser(model_type="fasttext", device='cpu')
-        cls.bpemb_address_parser = AddressParser(model_type="bpemb", device='cpu')
-
-    def setUp(self):
-        self.an_address_to_parse = "350 rue des lilas o"
+class AddressParserPredictCPUMultiProcessTest(AddressParserPredictBase):
 
     def test_givenAAddress_whenParseNumWorkers1_thenParseAddress(self):
         parse_address = self.fasttext_address_parser(self.an_address_to_parse, num_workers=1)

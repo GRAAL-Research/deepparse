@@ -68,12 +68,12 @@ class AddressParserRetrainTestCase(TestCase):
         if os.path.exists(self.a_checkpoints_saving_dir):
             shutil.rmtree(self.a_checkpoints_saving_dir)
 
-    def training(self, address_parser, with_new_prediction_tags=None):
+    def training(self, address_parser, num_workers: int, with_new_prediction_tags=None):
 
         address_parser.retrain(self.training_container,
                                self.a_train_ratio,
                                epochs=self.a_single_epoch,
                                batch_size=self.a_batch_size,
-                               num_workers=self.a_number_of_workers,
+                               num_workers=num_workers,
                                logging_path=self.a_checkpoints_saving_dir,
                                prediction_tags=with_new_prediction_tags)

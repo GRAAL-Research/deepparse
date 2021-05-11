@@ -1,3 +1,6 @@
+import platform
+
+from gensim.models.fasttext import load_facebook_vectors
 from numpy.core.multiarray import ndarray
 
 from .embeddings_model import EmbeddingsModel
@@ -12,12 +15,21 @@ class FastTextEmbeddingsModel(EmbeddingsModel):
     Args:
        embeddings_path (str): Path to the bin embeddings vector (.bin).
        verbose (bool): Either or not to make the loading of the embeddings verbose.
+
+    Note:
+        Since Windows uses `spawn` instead of `fork` during multiprocess (for the data loading pre-processing
+        `num_worker` > 0) we use the Gensim model, which takes more RAM (~10 GO) than the Fasttext one (~8 GO).
+        It also takes a longer time to load. See here the
+        `issue <https://github.com/GRAAL-Research/deepparse/issues/89>`_.
     """
 
     def __init__(self, embeddings_path: str, verbose: bool = True) -> None:
         super().__init__(verbose=verbose)
 
-        self.model = load_fasttext_embeddings(embeddings_path)
+        if platform.system() == "Windows":
+            self.model = load_facebook_vectors(embeddings_path)
+        else:
+            self.model = load_fasttext_embeddings(embeddings_path)
 
     def __call__(self, word: str) -> ndarray:
         """

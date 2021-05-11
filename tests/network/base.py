@@ -12,13 +12,12 @@ class Seq2SeqTestCase(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.a_torch_device = torch.device("cpu")
+        cls.a_cpu_device = torch.device("cpu")
+        cls.a_torch_device = torch.device("cuda:0")
         cls.verbose = False
         cls.a_batch_size = 2
         cls.a_none_target = None
         cls.a_value_lower_than_threshold = 0.1
-        cls.a_target_vector = torch.tensor([[0, 1, 1, 4, 5, 8], [1, 0, 3, 8, 0, 0]], device=cls.a_torch_device)
-        cls.a_transpose_target_vector = cls.a_target_vector.transpose(0, 1)
 
         cls.a_root_path = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
 

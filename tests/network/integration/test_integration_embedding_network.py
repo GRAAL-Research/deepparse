@@ -1,13 +1,12 @@
 # pylint: disable=line-too-long
 import unittest
-from unittest import TestCase, skipIf
+from unittest import TestCase
 
 import torch
 
 from deepparse.network import EmbeddingNetwork
 
 
-@skipIf(not torch.cuda.is_available(), "no gpu available")
 class EmbeddingNetworkTest(TestCase):
 
     @classmethod

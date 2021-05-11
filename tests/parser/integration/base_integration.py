@@ -17,7 +17,7 @@ class AddressParserRetrainTestCase(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.a_data_saving_dir = "./data"
+        cls.a_data_saving_dir = "data"
         os.makedirs(cls.a_data_saving_dir, exist_ok=True)
         file_extension = "p"
         training_dataset_name = "sample_incomplete_data"
@@ -43,7 +43,7 @@ class AddressParserRetrainTestCase(TestCase):
         cls.a_batch_size = 128
         cls.a_number_of_workers = 2
         cls.a_learning_rate = 0.001
-        cls.a_checkpoints_saving_dir = "./checkpoints"
+        cls.a_checkpoints_saving_dir = "checkpoints"
 
         cls.a_torch_device = torch.device("cuda:0")
         cls.a_cpu_device = 'cpu'

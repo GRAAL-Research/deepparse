@@ -20,7 +20,6 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
     def setUpClass(cls):
         super(BPEmbSeq2SeqGPUTest, cls).setUpClass()
         cls.model_type = "bpemb"
-        cls.output_size = 9
 
         cls.a_target_vector = torch.tensor([[0, 1, 1, 4, 5, 8], [1, 0, 3, 8, 0, 0]], device=cls.a_torch_device)
         cls.a_transpose_target_vector = cls.a_target_vector.transpose(0, 1)
@@ -38,7 +37,8 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
 
     @patch("deepparse.network.seq2seq.Seq2SeqModel._load_weights")
     def test_whenInstantiatingABPEmbSeq2SeqModelWithPath_thenShouldCallLoadWeights(self, load_weights_mock):
-        self.seq2seq_model = BPEmbSeq2SeqModel(self.a_torch_device, self.verbose, self.a_path_to_retrained_model)
+        self.seq2seq_model = BPEmbSeq2SeqModel(self.a_torch_device, self.output_size, self.verbose,
+                                               self.a_path_to_retrained_model)
 
         load_weights_mock.assert_called_with(self.a_path_to_retrained_model)
 
@@ -194,7 +194,7 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
                     # we mock the return of the decoder output
                     encoder_mock().return_value = decoder_hidden_mock
                     with decoder_mock:
-                        seq2seq_model = BPEmbSeq2SeqModel(self.a_torch_device, self.verbose)
+                        seq2seq_model = BPEmbSeq2SeqModel(self.a_torch_device, self.output_size, self.verbose)
 
                         seq2seq_model.forward(to_predict=to_predict_mock,
                                               decomposition_lengths=decomposition_lengths_mock,
@@ -240,7 +240,7 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
                     # we mock the return of the decoder output
                     encoder_mock().return_value = decoder_hidden_mock
                     with decoder_mock:
-                        seq2seq_model = BPEmbSeq2SeqModel(self.a_torch_device, self.verbose)
+                        seq2seq_model = BPEmbSeq2SeqModel(self.a_torch_device, self.output_size, self.verbose)
 
                         seq2seq_model.forward(to_predict=to_predict_mock,
                                               decomposition_lengths=decomposition_lengths_mock,

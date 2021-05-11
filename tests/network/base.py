@@ -27,6 +27,8 @@ class Seq2SeqTestCase(TestCase):
         cls.hidden_size = 300
         cls.projection_size = 300
 
+        cls.output_size = 9
+
     def setup_encoder_mocks(self):
         to_predict_mock = MagicMock()
         lengths_tensor_mock = MagicMock()

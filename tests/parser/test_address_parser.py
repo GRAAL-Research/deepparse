@@ -42,12 +42,6 @@ class AddressParserTest(AddressParserPredictTestCase):
 
         self.embeddings_model_mock = Mock()
 
-        self.model_path = "./model.p"
-
-    def tearDown(self) -> None:
-        if os.path.exists("./prediction_tags.p"):
-            os.remove("./prediction_tags.p")
-
     @patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel")
     def test_givenACapitalizeBPEmbModelType_whenInstantiatingParser_thenInstantiateModelWithCorrectParameters(
             self, model_mock):
@@ -146,12 +140,12 @@ class AddressParserTest(AddressParserPredictTestCase):
             self.address_parser = AddressParser(model_type=self.a_bpemb_model_type,
                                                 device=self.a_device,
                                                 verbose=self.verbose,
-                                                path_to_retrained_model=self.model_path)
+                                                path_to_retrained_model=self.a_model_path)
 
             model.assert_called_with(self.a_torch_device,
                                      len(self.correct_address_components),
                                      verbose=self.verbose,
-                                     path_to_retrained_model=self.model_path)
+                                     path_to_retrained_model=self.a_model_path)
 
     @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
     @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
@@ -162,12 +156,12 @@ class AddressParserTest(AddressParserPredictTestCase):
             self.address_parser = AddressParser(model_type=self.a_fasttext_model_type,
                                                 device=self.a_device,
                                                 verbose=self.verbose,
-                                                path_to_retrained_model=self.model_path)
+                                                path_to_retrained_model=self.a_model_path)
 
             model.assert_called_with(self.a_torch_device,
                                      len(self.incorrect_address_components),
                                      verbose=self.verbose,
-                                     path_to_retrained_model=self.model_path)
+                                     path_to_retrained_model=self.a_model_path)
 
     @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
     def test_givenABPEmbModelType_whenInstantiatingParser_thenInstantiateModelWithCorrectParameters(

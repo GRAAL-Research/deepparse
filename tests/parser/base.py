@@ -3,6 +3,7 @@
 
 import os
 import pickle
+import shutil
 from unittest.mock import Mock
 
 import torch
@@ -31,7 +32,7 @@ class AddressParserPredictTestCase(CaptureOutputTestCase):
         cls.a_street_name = "major st"
         cls.a_street_number = "15"
 
-        cls.a_logging_path = "./data"
+        cls.a_logging_path = "data"
 
     def tearDown(self) -> None:
         # cleanup after the tests
@@ -39,6 +40,9 @@ class AddressParserPredictTestCase(CaptureOutputTestCase):
         if os.path.exists(path):
             os.remove(path)
             os.rmdir(self.a_logging_path)
+
+        if os.path.exists(self.a_model_root_path):
+            shutil.rmtree(self.a_model_root_path)
 
     def setUp(self):
         # a prediction vector with real values
@@ -78,6 +82,11 @@ class AddressParserPredictTestCase(CaptureOutputTestCase):
         # to create the dirs for dumping the prediction tags since we mock Poutyne that usually will do it
         os.makedirs(self.a_logging_path, exist_ok=True)
 
+        # to create the dir for the model and dump the prediction_tags.p if needed
+        self.a_model_root_path = "model"
+        os.makedirs(self.a_model_root_path, exist_ok=True)
+        self.a_model_path = os.path.join(self.a_model_root_path, "model.p")
+
     def mock_predictions_vectors(self, model):
         model.return_value = Mock(return_value=self.a_prediction_vector_for_a_complete_address)
 
@@ -86,5 +95,5 @@ class AddressParserPredictTestCase(CaptureOutputTestCase):
                                                           self.a_prediction_vector_for_a_complete_address), 1))
 
     def prediction_tags_dict_setup(self, address_components):
-        with open(os.path.join(self.a_logging_path, "prediction_tags.p"), "wb") as file:
+        with open(os.path.join(self.a_model_root_path, "prediction_tags.p"), "wb") as file:
             pickle.dump(address_components, file)

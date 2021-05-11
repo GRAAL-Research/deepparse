@@ -20,7 +20,6 @@ class FasttextSeq2SeqGPUTest(Seq2SeqTestCase):
     def setUpClass(cls):
         super(FasttextSeq2SeqGPUTest, cls).setUpClass()
         cls.model_type = "fasttext"
-        cls.output_size = 9
 
         cls.a_target_vector = torch.tensor([[0, 1, 1, 4, 5, 8], [1, 0, 3, 8, 0, 0]], device=cls.a_torch_device)
         cls.a_transpose_target_vector = cls.a_target_vector.transpose(0, 1)
@@ -28,13 +27,14 @@ class FasttextSeq2SeqGPUTest(Seq2SeqTestCase):
     @patch("deepparse.network.seq2seq.Seq2SeqModel._load_pre_trained_weights")
     def test_whenInstantiatingAFasttextSeq2SeqModel_thenShouldInstantiateAEmbeddingNetwork(
             self, load_pre_trained_weights_mock):
-        self.seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device, self.verbose)
+        self.seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device, self.output_size, self.verbose)
 
         load_pre_trained_weights_mock.assert_called_with(self.model_type)
 
     @patch("deepparse.network.seq2seq.Seq2SeqModel._load_weights")
     def test_whenInstantiatingAFasttextSeq2SeqModelWithPath_thenShouldCallLoadWeights(self, load_weights_mock):
-        self.seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device, self.verbose, self.a_path_to_retrained_model)
+        self.seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device, self.output_size, self.verbose,
+                                                  self.a_path_to_retrained_model)
 
         load_weights_mock.assert_called_with(self.a_path_to_retrained_model)
 
@@ -173,7 +173,7 @@ class FasttextSeq2SeqGPUTest(Seq2SeqTestCase):
                 # we mock the return of the decoder output
                 encoder_mock().return_value = decoder_hidden_mock
                 with decoder_mock:
-                    seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device, self.verbose)
+                    seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device, self.output_size, self.verbose)
 
                     seq2seq_model.forward(to_predict=to_predict_mock, lengths_tensor=lengths_tensor_mock, target=None)
 
@@ -210,7 +210,7 @@ class FasttextSeq2SeqGPUTest(Seq2SeqTestCase):
                 # we mock the return of the decoder output
                 encoder_mock().return_value = decoder_hidden_mock
                 with decoder_mock:
-                    seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device, self.verbose)
+                    seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device, self.output_size, self.verbose)
 
                     seq2seq_model.forward(to_predict=to_predict_mock,
                                           lengths_tensor=lengths_tensor_mock,

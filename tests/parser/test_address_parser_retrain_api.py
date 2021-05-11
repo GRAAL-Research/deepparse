@@ -25,7 +25,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         cls.a_learning_rate = 0.01
         cls.a_callbacks_list = []
         cls.a_seed = 42
-        cls.a_logging_path = "./ckpts"
+        cls.a_logging_path = "ckpts"
         cls.a_torch_device = torch.device(cls.a_device)
 
         cls.mocked_data_container = ADataContainer()

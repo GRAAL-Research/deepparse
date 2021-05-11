@@ -16,14 +16,11 @@ class Seq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
 
     def setUp(self) -> None:
         super().setUp()
-<<<<<<< HEAD:tests/network/integration/test_integration_seq2seq_model.py
+
         self.pre_trained_seq2seq_model = Seq2SeqModel(self.a_torch_device, self.output_size)
-        self.encoder_input_setUp("fasttext")  # fasttext since the simplest case (bpemb use a embedding layer)
-=======
-        self.pre_trained_seq2seq_model = Seq2SeqModel(self.a_torch_device)
+
         self.encoder_input_setUp("fasttext",
                                  self.a_torch_device)  # fasttext since the simplest case (bpemb use a embedding layer)
->>>>>>> dev:tests/network/integration/test_integration_seq2seq_model_gpu.py
         self.none_target = None  # No target (for teacher forcing)
         self.a_value_greater_than_threshold = 0.1
 

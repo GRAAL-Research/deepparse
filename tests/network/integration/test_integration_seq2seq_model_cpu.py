@@ -19,7 +19,7 @@ class Seq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
 
     def setUp(self) -> None:
         super().setUp()
-        self.pre_trained_seq2seq_model = Seq2SeqModel(self.a_cpu_device)
+        self.pre_trained_seq2seq_model = Seq2SeqModel(self.a_cpu_device, output_size=self.number_of_tags)
         self.encoder_input_setUp("fasttext",
                                  self.a_cpu_device)  # fasttext since the simplest case (bpemb use a embedding layer)
         self.none_target = None  # No target (for teacher forcing)

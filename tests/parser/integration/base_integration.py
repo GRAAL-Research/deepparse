@@ -2,7 +2,6 @@
 # no-member skip is so because child define the training_container in setup
 # pylint: disable=not-callable, too-many-public-methods, no-member
 
-
 import os
 import shutil
 from unittest import TestCase
@@ -15,6 +14,7 @@ from deepparse.parser import CACHE_PATH
 
 
 class AddressParserRetrainTestCase(TestCase):
+
     @classmethod
     def setUpClass(cls):
         cls.a_data_saving_dir = "./data"

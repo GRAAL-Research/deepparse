@@ -66,8 +66,8 @@ class Seq2SeqTest(TestCase):
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.torch.nn.Module.load_state_dict")
     @skipIf(not torch.cuda.is_available(), "no gpu available")
-    def test_givenSeq2seqModel_whenLoadPreTrainedWeightsVerboseGPU_thenWarningsRaised(self, torch_nn_mock, torch_mock,
-                                                                                      isfile_mock, last_version_mock):
+    def test_givenSeq2seqModel_whenLoadPreTrainedWeightsVerboseGPU_thenWarningsRaised(
+            self, torch_nn_mock, torch_mock, isfile_mock, last_version_mock):
         seq2seq_model = Seq2SeqModel(self.a_torch_device, verbose=True, output_size=self.decoder_output_size)
         isfile_mock.return_value = True
         last_version_mock.return_value = False

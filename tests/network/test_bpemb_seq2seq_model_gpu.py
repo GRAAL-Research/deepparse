@@ -25,7 +25,6 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
         cls.a_target_vector = torch.tensor([[0, 1, 1, 4, 5, 8], [1, 0, 3, 8, 0, 0]], device=cls.a_torch_device)
         cls.a_transpose_target_vector = cls.a_target_vector.transpose(0, 1)
 
-
     @patch("deepparse.network.seq2seq.Seq2SeqModel._load_pre_trained_weights")
     def test_whenInstantiatingABPEmbSeq2SeqModel_thenShouldInstantiateAEmbeddingNetwork(
             self, load_pre_trained_weights_mock):

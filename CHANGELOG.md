@@ -65,7 +65,7 @@
   tags were not aligned with the supposed parsed address. We have removed the sorting, and now the results are more
   aligned with our research.
 
-## dev
+## 0.3.5
 
 - Added verbose flag to training and test base on the __init__ of address parser.
 - **Breaking change** Since [SciPy 1.6](https://github.com/scipy/scipy/releases/tag/v1.6.0) is released on Python `3.7+`,

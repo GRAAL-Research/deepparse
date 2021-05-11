@@ -31,7 +31,7 @@ class FastTextEmbeddingsModelIntegrationTest(AddressParserIntegrationTestCase):
         if os.path.exists(cls.a_fasttext_model_path):
             os.remove(cls.a_fasttext_model_path)
 
-    @skipIf(not platform.system() == "Windows", "Integration test on Windows env.")
+    @skipIf(platform.system() != "Windows", "Integration test on Windows env.")
     def test_givenAWindowsOS_whenFasttextModelInit_thenLoadWithProperFunction(self):
         model = FastTextEmbeddingsModel(self.a_fasttext_model_path, verbose=self.verbose)
 
@@ -43,7 +43,7 @@ class FastTextEmbeddingsModelIntegrationTest(AddressParserIntegrationTestCase):
 
         self.assertIsInstance(model.model, _FastText)
 
-    @skipIf(not platform.system() != "Windows", "Integration test on Windows env.")
+    @skipIf(platform.system() != "Windows", "Integration test on Windows env.")
     def test_givenAWindowsOS_whenFasttextModelCollateFnInDataLoader_thenWorkProperly(self):
         model = FastTextEmbeddingsModel(self.a_fasttext_model_path, verbose=self.verbose)
         data_transform = MockedDataTransform(model)
@@ -57,7 +57,7 @@ class FastTextEmbeddingsModelIntegrationTest(AddressParserIntegrationTestCase):
             dataset.append(data)
         self.assertGreater(len(dataset), 0)
 
-    @skipIf(not platform.system() != "Windows", "Integration test on Windows env.")
+    @skipIf(platform.system() != "Windows", "Integration test on Windows env.")
     def test_givenAWindowsOS_whenFasttextModelCollateFnInDataLoaderNumWorkers1_thenWorkProperly(self):
         model = FastTextEmbeddingsModel(self.a_fasttext_model_path, verbose=self.verbose)
         data_transform = MockedDataTransform(model)
@@ -71,7 +71,7 @@ class FastTextEmbeddingsModelIntegrationTest(AddressParserIntegrationTestCase):
             dataset.append(data)
         self.assertGreater(len(dataset), 0)
 
-    @skipIf(not platform.system() != "Windows", "Integration test on Windows env.")
+    @skipIf(platform.system() != "Windows", "Integration test on Windows env.")
     def test_givenAWindowsOS_whenFasttextModelCollateFnInDataLoaderNumWorkers2_thenWorkProperly(self):
         model = FastTextEmbeddingsModel(self.a_fasttext_model_path, verbose=self.verbose)
         data_transform = MockedDataTransform(model)
@@ -85,7 +85,7 @@ class FastTextEmbeddingsModelIntegrationTest(AddressParserIntegrationTestCase):
             dataset.append(data)
         self.assertGreater(len(dataset), 0)
 
-    @skipIf(not platform.system() != "Windows", "Integration test on Windows env.")
+    @skipIf(platform.system() != "Windows", "Integration test on Windows env.")
     @patch("deepparse.embeddings_models.fasttext_embeddings_model.platform")
     def test_givenAWindowsOS_whenFasttextModelCollateFnInDataLoaderEvenWithWindowsSetup_thenWorkProperly(
             self, platform_mock):
@@ -103,7 +103,7 @@ class FastTextEmbeddingsModelIntegrationTest(AddressParserIntegrationTestCase):
             dataset.append(data)
         self.assertGreater(len(dataset), 0)
 
-    @skipIf(not platform.system() == "Windows", "Integration test on Windows env.")
+    @skipIf(platform.system() != "Windows", "Integration test on Windows env.")
     def test_givenAWindowsOS_whenFasttextModelCollateFnInDataLoaderForWindows_thenRaiseError(self):
         model = FastTextEmbeddingsModel(self.a_fasttext_model_path, verbose=self.verbose)
 
@@ -118,7 +118,7 @@ class FastTextEmbeddingsModelIntegrationTest(AddressParserIntegrationTestCase):
             dataset.append(data)
         self.assertGreater(len(dataset), 0)
 
-    @skipIf(not platform.system() == "Windows", "Integration test on Windows env.")
+    @skipIf(platform.system() != "Windows", "Integration test on Windows env.")
     def test_givenAWindowsOS_whenFasttextModelCollateFnInDataLoaderForWindowsNumWorkers1_thenRaiseError(self):
         model = FastTextEmbeddingsModel(self.a_fasttext_model_path, verbose=self.verbose)
 
@@ -133,7 +133,7 @@ class FastTextEmbeddingsModelIntegrationTest(AddressParserIntegrationTestCase):
             dataset.append(data)
         self.assertGreater(len(dataset), 0)
 
-    @skipIf(not platform.system() == "Windows", "Integration test on Windows env.")
+    @skipIf(platform.system() != "Windows", "Integration test on Windows env.")
     def test_givenAWindowsOS_whenFasttextModelCollateFnInDataLoaderForWindowsNumWorkers2_thenRaiseError(self):
         model = FastTextEmbeddingsModel(self.a_fasttext_model_path, verbose=self.verbose)
 
@@ -148,7 +148,7 @@ class FastTextEmbeddingsModelIntegrationTest(AddressParserIntegrationTestCase):
             dataset.append(data)
         self.assertGreater(len(dataset), 0)
 
-    @skipIf(not platform.system() == "Windows", "Integration test on Windows env.")
+    @skipIf(platform.system() != "Windows", "Integration test on Windows env.")
     @patch("deepparse.embeddings_models.fasttext_embeddings_model.platform")
     def test_givenAWindowsOS_whenFasttextModelCollateFnInDataLoaderForNotWindows_thenRaiseError(self, platform_mock):
         platform_mock.system().__eq__.return_value = True

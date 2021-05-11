@@ -16,7 +16,7 @@ class BPEmbEmbeddingsModelIntegrationTest(AddressParserIntegrationTestCase):
         super(BPEmbEmbeddingsModelIntegrationTest, cls).setUpClass()
         cls.verbose = False
 
-    @skipIf(not platform.system() == "Windows", "Integration test on Windows env.")
+    @skipIf(platform.system() != "Windows", "Integration test on Windows env.")
     def test_givenAWindowsOS_whenBPEmbModelInit_thenLoadWithProperFunction(self):
         # we setup a smaller model for simplicity
         model = BPEmbEmbeddingsModel(verbose=self.verbose, lang="fr", vs=1000, dim=25)
@@ -30,7 +30,7 @@ class BPEmbEmbeddingsModelIntegrationTest(AddressParserIntegrationTestCase):
 
         self.assertIsInstance(model.model, BPEmb)
 
-    @skipIf(platform.system() == "Windows", "Integration test on Windows env.")
+    @skipIf(platform.system() != "Windows", "Integration test on Windows env.")
     def test_givenAWindowsOS_whenBPEmbModelCollateFnInDataLoader_thenWorkProperly(self):
         # we setup a smaller model for simplicity
         model = BPEmbEmbeddingsModel(verbose=self.verbose, lang="fr", vs=1000, dim=25)
@@ -45,7 +45,7 @@ class BPEmbEmbeddingsModelIntegrationTest(AddressParserIntegrationTestCase):
             dataset.append(data)
         self.assertGreater(len(dataset), 0)
 
-    @skipIf(platform.system() == "Windows", "Integration test on Windows env.")
+    @skipIf(platform.system() != "Windows", "Integration test on Windows env.")
     def test_givenAWindowsOS_whenBPEmbModelCollateFnInDataLoaderNumWorkers1_thenWorkProperly(self):
         # we setup a smaller model for simplicity
         model = BPEmbEmbeddingsModel(verbose=self.verbose, lang="fr", vs=1000, dim=25)
@@ -60,7 +60,7 @@ class BPEmbEmbeddingsModelIntegrationTest(AddressParserIntegrationTestCase):
             dataset.append(data)
         self.assertGreater(len(dataset), 0)
 
-    @skipIf(platform.system() == "Windows", "Integration test on Windows env.")
+    @skipIf(platform.system() != "Windows", "Integration test on Windows env.")
     def test_givenAWindowsOS_whenBPEmbModelCollateFnInDataLoaderNumWorkers2_thenWorkProperly(self):
         # we setup a smaller model for simplicity
         model = BPEmbEmbeddingsModel(verbose=self.verbose, lang="fr", vs=1000, dim=25)
@@ -75,8 +75,8 @@ class BPEmbEmbeddingsModelIntegrationTest(AddressParserIntegrationTestCase):
             dataset.append(data)
         self.assertGreater(len(dataset), 0)
 
-    @skipIf(not platform.system() == "Windows", "Integration test on Windows env.")
-    def test_givenAWindowsOS_whenBPEmbModelCollateFnInDataLoaderForWindows_thenRaiseError(self):
+    @skipIf(platform.system() == "Windows", "Integration test not on Windows env.")
+    def test_givenANotWindowsOS_whenBPEmbModelCollateFnInDataLoaderForWindows_thenWorkProperly(self):
         # we setup a smaller model for simplicity
         model = BPEmbEmbeddingsModel(verbose=self.verbose, lang="fr", vs=1000, dim=25)
 
@@ -91,8 +91,8 @@ class BPEmbEmbeddingsModelIntegrationTest(AddressParserIntegrationTestCase):
             dataset.append(data)
         self.assertGreater(len(dataset), 0)
 
-    @skipIf(not platform.system() == "Windows", "Integration test on Windows env.")
-    def test_givenAWindowsOS_whenBPEmbModelCollateFnInDataLoaderForWindowsNumWorkers1_thenRaiseError(self):
+    @skipIf(platform.system() == "Windows", "Integration test not on Windows env.")
+    def test_givenANotWindowsOS_whenBPEmbModelCollateFnInDataLoaderForWindowsNumWorkers1_thenWorkProperly(self):
         # we setup a smaller model for simplicity
         model = BPEmbEmbeddingsModel(verbose=self.verbose, lang="fr", vs=1000, dim=25)
 
@@ -107,8 +107,8 @@ class BPEmbEmbeddingsModelIntegrationTest(AddressParserIntegrationTestCase):
             dataset.append(data)
         self.assertGreater(len(dataset), 0)
 
-    @skipIf(not platform.system() == "Windows", "Integration test on Windows env.")
-    def test_givenAWindowsOS_whenBPEmbModelCollateFnInDataLoaderForWindowsNumWorkers2_thenRaiseError(self):
+    @skipIf(platform.system() == "Windows", "Integration test not on Windows env.")
+    def test_givenANotWindowsOS_whenBPEmbModelCollateFnInDataLoaderForWindowsNumWorkers2_thenWorkProperly(self):
         # we setup a smaller model for simplicity
         model = BPEmbEmbeddingsModel(verbose=self.verbose, lang="fr", vs=1000, dim=25)
 

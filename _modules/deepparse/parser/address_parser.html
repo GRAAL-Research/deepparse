@@ -7,12 +7,14 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>deepparse.parser.address_parser &mdash; deepparse 0.3.4 documentation</title>
+  <title>deepparse.parser.address_parser &mdash; deepparse 0.3.5 documentation</title>
   
 
   
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
@@ -64,7 +67,7 @@
             
             
               <div class="version">
-                0.3.4
+                0.3.5
               </div>
             
           
@@ -255,8 +258,10 @@
 <span class="sd">            - `FastText Light &lt;https://graal.ift.ulaval.ca/public/deepparse/fasttext.magnitude.gz&gt;`_.</span>
 
 <span class="sd">    Note:</span>
-<span class="sd">        Note that the first time the fastText model is instantiated on a computer, we download the fastText</span>
-<span class="sd">        pre-trained embeddings of 6.8 GO, and this process can be quite long (a couple of minutes).</span>
+<span class="sd">        Since Windows uses `spawn` instead of `fork` during multiprocess (for the data loading pre-processing</span>
+<span class="sd">        `num_worker` &gt; 0) we use the Gensim model, which takes more RAM (~10 GO) than the Fasttext one (~8 GO).</span>
+<span class="sd">        It also takes a longer time to load. See here the</span>
+<span class="sd">        `issue &lt;https://github.com/GRAAL-Research/deepparse/issues/89&gt;`_.</span>
 
 <span class="sd">    Note:</span>
 <span class="sd">        You may observe a 100% CPU load the first time you call the fasttext-light model. We</span>
@@ -489,7 +494,8 @@
                               <span class="n">valid_generator</span><span class="o">=</span><span class="n">valid_generator</span><span class="p">,</span>
                               <span class="n">epochs</span><span class="o">=</span><span class="n">epochs</span><span class="p">,</span>
                               <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
-                              <span class="n">callbacks</span><span class="o">=</span><span class="n">callbacks</span><span class="p">)</span>
+                              <span class="n">callbacks</span><span class="o">=</span><span class="n">callbacks</span><span class="p">,</span>
+                              <span class="n">verbose</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">train_res</span></div>
 
 <div class="viewcode-block" id="AddressParser.test"><a class="viewcode-back" href="../../../parser.html#deepparse.parser.AddressParser.test">[docs]</a>    <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
@@ -561,7 +567,7 @@
 
         <span class="n">checkpoint</span> <span class="o">=</span> <span class="n">handle_checkpoint</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">)</span>
 
-        <span class="n">test_res</span> <span class="o">=</span> <span class="n">exp</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="n">test_generator</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="n">callbacks</span><span class="p">,</span> <span class="n">checkpoint</span><span class="o">=</span><span class="n">checkpoint</span><span class="p">)</span>
+        <span class="n">test_res</span> <span class="o">=</span> <span class="n">exp</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="n">test_generator</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="n">callbacks</span><span class="p">,</span> <span class="n">checkpoint</span><span class="o">=</span><span class="n">checkpoint</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">test_res</span></div>
 
     <span class="k">def</span> <span class="nf">_fill_tagged_addresses_components</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tags_predictions</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">tags_predictions_prob</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span>

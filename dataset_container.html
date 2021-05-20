@@ -7,12 +7,14 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Dataset Container &mdash; deepparse 0.3.4 documentation</title>
+  <title>Dataset Container &mdash; deepparse 0.3.5 documentation</title>
   
 
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
@@ -66,7 +69,7 @@
             
             
               <div class="version">
-                0.3.4
+                0.3.5
               </div>
             
           
@@ -170,15 +173,15 @@
 <h1>Dataset Container<a class="headerlink" href="#dataset-container" title="Permalink to this headline">¶</a></h1>
 <p>To load the data, we use dataset container that are implemented with respect to an interface.</p>
 <dl class="py class">
-<dt id="deepparse.dataset_container.DatasetContainer">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">deepparse.dataset_container.</span></code><code class="sig-name descname"><span class="pre">DatasetContainer</span></code><a class="reference internal" href="_modules/deepparse/dataset_container/dataset_container.html#DatasetContainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.dataset_container.DatasetContainer" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="deepparse.dataset_container.DatasetContainer">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">deepparse.dataset_container.</span></span><span class="sig-name descname"><span class="pre">DatasetContainer</span></span><a class="reference internal" href="_modules/deepparse/dataset_container/dataset_container.html#DatasetContainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.dataset_container.DatasetContainer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Interface for the dataset. This interface define most of the method that the dataset needs to define.
 If you define another dataset container, the init must define the attribute data.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="deepparse.dataset_container.PickleDatasetContainer">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">deepparse.dataset_container.</span></code><code class="sig-name descname"><span class="pre">PickleDatasetContainer</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deepparse/dataset_container/dataset_container.html#PickleDatasetContainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.dataset_container.PickleDatasetContainer" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="deepparse.dataset_container.PickleDatasetContainer">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">deepparse.dataset_container.</span></span><span class="sig-name descname"><span class="pre">PickleDatasetContainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deepparse/dataset_container/dataset_container.html#PickleDatasetContainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.dataset_container.PickleDatasetContainer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Pickle dataset container that import a list of address in pickle format.
 See <a class="reference external" href="https://github.com/GRAAL-Research/poutyne-external-assets/tree/master/tips_and_tricks_assets">here</a> for
 example of pickle address data.</p>

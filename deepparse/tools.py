@@ -15,13 +15,11 @@ def latest_version(model: str, cache_path: str) -> bool:
     """
     Verify if the local model is the latest.
     """
-    local_model_hash_file = open(os.path.join(cache_path, model + ".version"))
-    local_model_hash_version = local_model_hash_file.readline()
-    local_model_hash_file.close()
+    with open(os.path.join(cache_path, model + ".version")) as local_model_hash_file:
+        local_model_hash_version = local_model_hash_file.readline()
     download_from_url(model, cache_path, "version")
-    remote_model_hash_file = open(os.path.join(cache_path, model + ".version"))
-    remote_model_hash_version = remote_model_hash_file.readline()
-    remote_model_hash_file.close()
+    with open(os.path.join(cache_path, model + ".version")) as remote_model_hash_file:
+        remote_model_hash_version = remote_model_hash_file.readline()
     return local_model_hash_version.strip() == remote_model_hash_version.strip()
 
 
@@ -33,12 +31,10 @@ def download_from_url(file_name: str, saving_dir: str, file_extension: str):
     url = model_url.format(file_name)
     r = requests.get(url)
     r.raise_for_status()  # raise exception if 404 or other http error
+    with open(os.path.join(saving_dir, f"{file_name}.{file_extension}"), "wb") as file:
+        file.write(r.content)
 
     os.makedirs(saving_dir, exist_ok=True)
-
-    file = open(os.path.join(saving_dir, f"{file_name}.{file_extension}"), "wb")
-    file.write(r.content)
-    file.close()
 
 
 def download_weights(model: str, saving_dir: str, verbose: bool = True) -> None:

@@ -54,12 +54,32 @@ def zero_shot_eval_country_file(file: str) -> bool:
     return file in other_test_files
 
 
+def convert_2_letters_name_into_country_name(country_file_name: str) -> str:
+    country_name = pycountry.countries.get(alpha_2=country_file_name.replace(".p", "").upper()).name
+    country_name = clean_up_name(country_name)
+    return country_name
+
+
+def convert_two_letter_name_to_country_name_in_json(file_path: str) -> None:
+    """
+    Function to convert the name of the countries in a results file into their complete name.
+    """
+    with open(file_path, "r") as file:
+        data = json.load(file)
+
+    new_data = {}
+    for country_name, value in data.items():
+        new_data.update({convert_2_letters_name_into_country_name(country_name): value})
+
+    with open(file_path, "w") as file:
+        json.dump(new_data, file)
+
+
 def test_on_country_data(address_parser: AddressParser, file: str, directory_path: str, args) -> tuple:
     """
     Compute the results over a country data.
     """
-    country = pycountry.countries.get(alpha_2=file.replace(".p", "").upper()).name
-    country = clean_up_name(country)
+    country = convert_2_letters_name_into_country_name(file)
 
     print(f"Testing on test files {country}")
 
@@ -78,7 +98,7 @@ def make_table(data_type: str, root_path: str = "."):
     """
     Function to generate an Markdown table
     """
-    table_dir = os.path.join(root_path, "tables")
+    table_dir = os.path.join("tables", "actual")
     os.makedirs(table_dir, exist_ok=True)
 
     fasttext_all_res = json.load(open(os.path.join(root_path, f"{data_type}_test_results_fasttext.json"), "r"))
@@ -108,7 +128,7 @@ def make_table_rst(data_type: str, root_path: str = "."):
     """
     Function to generate an Sphinx RST table
     """
-    table_dir = os.path.join(root_path, "tables")
+    table_dir = os.path.join("tables", "actual")
     os.makedirs(table_dir, exist_ok=True)
 
     fasttext_all_res = json.load(open(os.path.join(root_path, f"{data_type}_test_results_fasttext.json"), "r"))
@@ -146,3 +166,33 @@ def make_table_rst(data_type: str, root_path: str = "."):
 
     with open(os.path.join(table_dir, f"{data_type}_table.rst"), "w", encoding="utf-8") as file:
         file.writelines(string)
+
+
+def make_comparison_table(results_a_file_name: str, results_b_file_name: str, root_path: str = "."):
+    """
+    Function to generate an Markdown table
+    """
+    table_dir = os.path.join("tables", "comparison")
+    os.makedirs(table_dir, exist_ok=True)
+
+    model_a_res = json.load(open(os.path.join(root_path, results_a_file_name), "r"))
+    model_b_res = json.load(open(os.path.join(root_path, results_b_file_name), "r"))
+
+    formatted_data = []
+    # we format the data to have two pairs of columns for a less long table
+    for idx, ((country, fasttext_res), (_, bpemb_res)) in enumerate(zip(model_a_res.items(), model_b_res.items())):
+        if idx % 2 and idx != 0:
+            data.extend([country, fasttext_res, bpemb_res])
+            formatted_data.append(data)
+        else:
+            data = [country, fasttext_res, bpemb_res]
+            if idx == 40:
+                formatted_data.append(data)
+    table = pd.DataFrame(formatted_data,
+                         columns=["Country", r"Model A (%)", r"Model B (%)", "Country", r"Model A (%)",
+                                  r"Model B (%)"]).round(2).to_markdown(index=False)
+
+    with open(os.path.join(table_dir, f"{results_a_file_name}_vs_{results_b_file_name}_table.md"),
+              "w",
+              encoding="utf-8") as file:
+        file.writelines(table)

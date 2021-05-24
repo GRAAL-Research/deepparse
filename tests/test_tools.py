@@ -8,8 +8,8 @@ from unittest.mock import patch
 import requests
 
 from deepparse import download_from_url, latest_version, download_weights, indices_splitting, \
-    handle_pre_trained_checkpoint, handle_poutyne_version, valid_poutyne_version, handle_pre_trained_modified_checkpoint
-from deepparse import handle_checkpoint, CACHE_PATH
+    handle_pre_trained_checkpoint, handle_poutyne_version, valid_poutyne_version
+from deepparse import handle_model_path, CACHE_PATH
 from tests.base_capture_output import CaptureOutputTestCase
 from tests.tools import create_file
 
@@ -26,7 +26,6 @@ class ToolsTests(CaptureOutputTestCase):
 
         self.a_model_type_checkpoint = "a_fake_model_type"
         self.a_fasttext_model_type_checkpoint = "fasttext"
-        self.a_fasttext_user_tags_model_type_checkpoint = "fasttext_user_tags"
         self.a_bpemb_model_type_checkpoint = "bpemb"
 
     def tearDown(self) -> None:
@@ -114,43 +113,11 @@ class ToolsTests(CaptureOutputTestCase):
 
         self.assertEqual(actual, expected)
 
-    def test_givenABestCheckpoint_whenHandleCheckpoint_thenReturnBest(self):
-        checkpoint = "best"
-
-        actual = handle_checkpoint(checkpoint)
-        expected = checkpoint
-
-        self.assertEqual(actual, expected)
-
-    def test_givenALastCheckpoint_whenHandleCheckpoint_thenReturnLast(self):
-        checkpoint = "last"
-
-        actual = handle_checkpoint(checkpoint)
-        expected = checkpoint
-
-        self.assertEqual(actual, expected)
-
-    def test_givenAIntCheckpoint_whenHandleCheckpoint_thenReturn1(self):
-        checkpoint = 1
-
-        actual = handle_checkpoint(checkpoint)
-        expected = checkpoint
-
-        self.assertEqual(actual, expected)
-
     @patch("deepparse.tools.latest_version")
     def test_givenAFasttextCheckpoint_whenHandleCheckpoint_thenReturnCachedFasttextPath(self, latest_version_check):
         checkpoint = "fasttext"
 
-        actual = handle_checkpoint(checkpoint)
-        expected = os.path.join(CACHE_PATH, checkpoint + ".ckpt")
-
-        self.assertEqual(actual, expected)
-
-    def test_givenAFasttextUserTagsCheckpoint_whenHandleCheckpoint_thenReturnCachedFasttextModifiedPath(self):
-        checkpoint = "fasttext_user_tags"
-
-        actual = handle_checkpoint(checkpoint)
+        actual = handle_model_path(checkpoint)
         expected = os.path.join(CACHE_PATH, checkpoint + ".ckpt")
 
         self.assertEqual(actual, expected)
@@ -159,15 +126,7 @@ class ToolsTests(CaptureOutputTestCase):
     def test_givenABPEmbCheckpoint_whenHandleCheckpoint_thenReturnCachedBPEmbPath(self, latest_version_check):
         checkpoint = "bpemb"
 
-        actual = handle_checkpoint(checkpoint)
-        expected = os.path.join(CACHE_PATH, checkpoint + ".ckpt")
-
-        self.assertEqual(actual, expected)
-
-    def test_givenABPEmbUserTagsCheckpoint_whenHandleCheckpoint_thenReturnCachedBPEmbModifiedPath(self):
-        checkpoint = "bpemb_user_tags"
-
-        actual = handle_checkpoint(checkpoint)
+        actual = handle_model_path(checkpoint)
         expected = os.path.join(CACHE_PATH, checkpoint + ".ckpt")
 
         self.assertEqual(actual, expected)
@@ -175,7 +134,7 @@ class ToolsTests(CaptureOutputTestCase):
     def test_givenAStringCheckpoint_whenHandleCheckpoint_thenReturnSamePath(self):
         pickle_checkpoint = "/a/path/to/a/model.ckpt"
 
-        actual = handle_checkpoint(pickle_checkpoint)
+        actual = handle_model_path(pickle_checkpoint)
         expected = pickle_checkpoint
 
         self.assertEqual(actual, expected)
@@ -183,27 +142,27 @@ class ToolsTests(CaptureOutputTestCase):
     def test_givenBadNamesCheckpoint_whenHandleCheckpoint_thenRaiseErrors(self):
         with self.assertRaises(ValueError):
             bad_best_checkpoint = "bests"
-            handle_checkpoint(bad_best_checkpoint)
+            handle_model_path(bad_best_checkpoint)
 
         with self.assertRaises(ValueError):
             bad_last_checkpoint = "lasts"
-            handle_checkpoint(bad_last_checkpoint)
+            handle_model_path(bad_last_checkpoint)
 
         with self.assertRaises(ValueError):
             string_int_bad_checkpoint = "1"
-            handle_checkpoint(string_int_bad_checkpoint)
+            handle_model_path(string_int_bad_checkpoint)
 
         with self.assertRaises(ValueError):
             bad_fasttext_checkpoint = "fasttexts"
-            handle_checkpoint(bad_fasttext_checkpoint)
+            handle_model_path(bad_fasttext_checkpoint)
 
         with self.assertRaises(ValueError):
             bad_bpemb_checkpoint = "bpembds"
-            handle_checkpoint(bad_bpemb_checkpoint)
+            handle_model_path(bad_bpemb_checkpoint)
 
         with self.assertRaises(ValueError):
             bad_pickle_extension_checkpoint = "/a/path/to/a/model.pck"
-            handle_checkpoint(bad_pickle_extension_checkpoint)
+            handle_model_path(bad_pickle_extension_checkpoint)
 
     # test if splitting respect ratio splitting
     def test_givenADataset_whenIndicesSplittingRatio8020_thenSplitIndices80Train20Valid(self):
@@ -340,22 +299,6 @@ class ToolsTests(CaptureOutputTestCase):
 
         actual = valid_poutyne_version()
         self.assertFalse(actual)
-
-    @patch("deepparse.tools.poutyne")
-    def test_givenPoutyneVersionLowerThan12_givenHandlePreTrainedModifiedCheckpoint_thenRaiseError(self, poutyne_mock):
-        poutyne_mock.version.__version__ = "1.1"
-
-        with self.assertRaises(NotImplementedError):
-            handle_pre_trained_modified_checkpoint(self.a_model_type_checkpoint)
-
-    @patch("deepparse.tools.poutyne")
-    def test_givenPoutyneVersionGreaterThan12_givenHandlePreTrainedModifiedCheckpointFasttext_thenReturnFasttext(
-            self, poutyne_mock):
-        poutyne_mock.version.__version__ = "1.2"
-
-        actual = handle_pre_trained_modified_checkpoint(self.a_fasttext_user_tags_model_type_checkpoint)
-        expected = os.path.join(CACHE_PATH, f"{self.a_fasttext_user_tags_model_type_checkpoint}.ckpt")
-        self.assertEqual(expected, actual)
 
 
 if __name__ == "__main__":

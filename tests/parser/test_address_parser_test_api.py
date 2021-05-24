@@ -26,7 +26,6 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         cls.a_learning_rate = 0.01
         cls.a_callbacks_list = []
         cls.a_seed = 42
-        cls.a_logging_path = "ckpts"
         cls.a_torch_device = torch.device(cls.a_device)
 
         cls.a_loss_function = nll_loss
@@ -34,21 +33,20 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
 
         cls.mocked_data_container = ADataContainer()
 
-        cls.a_best_checkpoint = "best"
+        cls.a_fasttext_path = "fasttext"
 
         cls.verbose = False
 
     def address_parser_test_call(self):
         self.address_parser.test(self.mocked_data_container,
                                  self.a_batch_size,
+                                 self.a_fasttext_path,
                                  num_workers=self.a_number_of_workers,
                                  callbacks=self.a_callbacks_list,
-                                 seed=self.a_seed,
-                                 logging_path=self.a_logging_path,
-                                 checkpoint=self.a_best_checkpoint)
+                                 seed=self.a_seed)
 
     def assert_experiment_test(self, experiment_mock, model_mock):
-        experiment_mock.assert_called_with(self.a_logging_path,
+        experiment_mock.assert_called_with("./checkpoint",  # we always use this as default logging dir.
                                            model_mock(),
                                            device=self.a_torch_device,
                                            loss_function=self.a_loss_function,
@@ -59,7 +57,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
             call().test(dataloader_mock(),
                         seed=self.a_seed,
                         callbacks=[],
-                        checkpoint=self.a_best_checkpoint,
+                        checkpoint=self.a_fasttext_path,
                         verbose=verbose)
         ]
         experiment_mock.assert_has_calls(test_call)

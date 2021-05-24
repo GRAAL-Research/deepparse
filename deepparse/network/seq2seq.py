@@ -72,7 +72,7 @@ class Seq2SeqModel(ABC, nn.Module):
         """
         all_layers_params = torch.load(path_to_retrained_model, map_location=self.device)
         self._resolve_change_in_prediction_layer(all_layers_params)
-        self.load_state_dict(all_layers_params)
+        self.load_state_dict(all_layers_params["address_tagger_model"])
 
     def _encoder_step(self, to_predict: torch.Tensor, lengths_tensor: torch.Tensor, batch_size: int) -> Tuple:
         """
@@ -95,9 +95,9 @@ class Seq2SeqModel(ABC, nn.Module):
         return decoder_input, decoder_hidden
 
     def _resolve_change_in_prediction_layer(self, all_layers_params: Dict) -> None:
-        if self.output_size != 9:
-            # Since we have change the prediction layer size, we need to change the dict
-            # we will load into the params dict the randomly set actual decoder linear weights to be retrain
+        if self.output_size != len(all_layers_params["decoder.linear.weight"]):
+            # if the size of the actual linear layer is different from the size of the trained model
+            # we use the weights of the linear layer (which are set randomly)
             all_layers_params.update({"decoder.linear.weight": self.decoder.linear.state_dict()["weight"]})
             all_layers_params.update({"decoder.linear.bias": self.decoder.linear.state_dict()["bias"]})
 

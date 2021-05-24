@@ -6,11 +6,12 @@ from typing import List, Union, Dict, Tuple
 
 import torch
 from poutyne.framework import Experiment
+from torch import nn
 from torch.optim import SGD
 from torch.utils.data import DataLoader, Subset
 
 from .formated_parsed_address import FormattedParsedAddress
-from .. import CACHE_PATH, handle_checkpoint, indices_splitting
+from .. import CACHE_PATH, handle_model_path, indices_splitting
 from .. import load_tuple_to_device, download_fasttext_magnitude_embeddings
 from ..converter import TagsConverter
 from ..converter import fasttext_data_padding, bpemb_data_padding, DataTransform
@@ -162,21 +163,17 @@ class AddressParser:
         tags_to_idx = _pre_trained_tags_to_idx
 
         if path_to_retrained_model is not None:
-            model_directory = os.path.dirname(path_to_retrained_model)
-            path_to_prediction_tags = os.path.join(model_directory, "prediction_tags.p")
-            if os.path.isfile(path_to_prediction_tags):
+            checkpoint_weights = torch.load(path_to_retrained_model, map_location='cpu')
+            if isinstance(checkpoint_weights, dict):
                 # mean the user have changed the prediction tags of the model
-                if self.verbose:
-                    warnings.warn("Loading the prediction tags dictionary.")
-                with open(path_to_prediction_tags, "rb") as file:
-                    tags_to_idx = pickle.load(file)
+                tags_to_idx = checkpoint_weights["prediction_tags"]
 
         self.tags_converter = TagsConverter(tags_to_idx)
 
         self.model_type = model_type.lower()
         self._model_factory(verbose=self.verbose,
                             path_to_retrained_model=path_to_retrained_model,
-                            prediction_layer_len=len(tags_to_idx))
+                            prediction_layer_len=self.tags_converter.dim)
         self.model.eval()
 
     def __str__(self) -> str:
@@ -312,10 +309,6 @@ class AddressParser:
             train using the fasttext-light model. But, since we don't update the embeddings weights, one can retrain
             using the fasttext model and later on use the weights with the fasttext-light.
 
-        Note:
-            Since we save the `prediction_tags` dictionary, this pickled file need to be in pair with the checkpoint of
-            your model.
-
         Example:
 
             .. code-block:: python
@@ -366,7 +359,7 @@ class AddressParser:
             self.tags_converter = TagsConverter(prediction_tags)
             # since we have change the output layer dim, we need to handle again the model creation
             # we set verbose to False since we may already have printed message when __init__ of class.
-            self._model_factory(verbose=False, prediction_layer_len=len(prediction_tags))
+            self._model_factory(verbose=False, prediction_layer_len=self.tags_converter.dim)
 
         callbacks = [] if callbacks is None else callbacks
         train_generator, valid_generator = self._create_training_data_generator(dataset_container,
@@ -389,20 +382,25 @@ class AddressParser:
                               epochs=epochs,
                               seed=seed,
                               callbacks=callbacks,
-                              verbose=self.verbose)
+                              verbose=self.verbose,
+                              disable_tensorboard=True)  # to remove tensorboard automatic logging
+
+        file_path = os.path.join(logging_path, f"retrained_{self.model_type}_address_parser.ckpt")
         if prediction_tags is not None:
-            with open(os.path.join(logging_path, "prediction_tags.p"), "wb") as file:
-                pickle.dump(prediction_tags, file)
+            torch.save({"address_tagger_model": exp.model.state_dict(),
+                        "prediction_tags": prediction_tags},
+                       file_path)
+        else:
+            exp.model.save_weights(file_path)
         return train_res
 
     def test(self,
              test_dataset_container: DatasetContainer,
              batch_size: int,
+             model_path: str,
              num_workers: int = 1,
              callbacks: Union[List, None] = None,
-             seed: int = 42,
-             logging_path: str = "./checkpoints",
-             checkpoint: Union[str, int] = "best") -> Dict:
+             seed: int = 42) -> Dict:
         # pylint: disable=too-many-arguments, too-many-locals
         """
         Method to test a retrained or a pre-trained model using a dataset with the same tags. We train using
@@ -414,21 +412,18 @@ class AddressParser:
         Args:
             test_dataset_container (~deepparse.deepparse.dataset_container.dataset_container.DatasetContainer):
                 The test dataset container of the data to use.
-            callbacks (Union[List, None]): List of callbacks to use during training.
-                See Poutyne `callback <https://poutyne.org/callbacks.html#callback-class>`_ for more information.
-                By default we set no callback.
-            seed (int): Seed to use (by default 42).
-            logging_path (str): The logging path for the checkpoints. By default the path is ``./checkpoints``.
-            checkpoint (Union[str, int]): Checkpoint to use for the test.
-                - If 'best', will load the best weights.
-                - If 'last', will load the last model checkpoint.
-                - If int, will load a specific checkpoint (e.g. 3).
-                - If 'str', will load a specific model (e.g. a retrained model), must be a path to a pickled format
-                model i.e. ends with a '.p' extension (e.g. retrained_model.p).
+            batch_size (int):
+            model_path (str): Path to the model to test.
                 - If 'fasttext', will load our pre-trained fasttext model and test it on your data.
                 (Need to have Poutyne>=1.2 to work)
                 - If 'bpemb', will load our pre-trained bpemb model and test it on your data.
                 (Need to have Poutyne>=1.2 to work)
+                - If 'str', will load a specific model (e.g. a retrained model), must be a path to a pickled format
+                model i.e. ends with a '.p' extension (e.g. retrained_model.p).
+            callbacks (Union[List, None]): List of callbacks to use during training.
+                See Poutyne `callback <https://poutyne.org/callbacks.html#callback-class>`_ for more information.
+                By default we set no callback.
+            seed (int): Seed to use (by default 42).
 
         Return:
             A dictionary with the best epoch stats (see `Experiment class
@@ -498,21 +493,9 @@ class AddressParser:
                     address_parser.test(test_container, checkpoint="bpemb") # test with the bpemb pre-trained model
                     address_parser.test(test_container, checkpoint="fasttext") # test with fasttext model
 
-
         """
         if self.model_type == "fasttext-light":
             raise ValueError("It's not possible to test a fasttext-light due to pymagnitude problem.")
-
-        path_to_prediction_tags = os.path.join(logging_path, "prediction_tags.p")
-        if os.path.isfile(path_to_prediction_tags):
-            # mean the user have changed the prediction tags of the model
-            with open(path_to_prediction_tags, "rb") as prediction_tags_file:
-                prediction_tags = pickle.load(prediction_tags_file)
-                self.tags_converter = TagsConverter(prediction_tags)
-            # since we have change the output layer dim, we need to handle again the model creation
-            # we set verbose to False since we may already have printed message when __init__ of class.
-            self._model_factory(verbose=self.verbose, prediction_layer_len=len(prediction_tags))
-            checkpoint = self._handle_pre_trained_test_new_prediction_layer(checkpoint)
 
         callbacks = [] if callbacks is None else callbacks
         data_transform = self._set_data_transformer()
@@ -522,11 +505,24 @@ class AddressParser:
                                     batch_size=batch_size,
                                     num_workers=num_workers)
 
-        exp = Experiment(logging_path, self.model, device=self.device, loss_function=nll_loss, batch_metrics=[accuracy])
+        exp = Experiment("./checkpoint", self.model, device=self.device, loss_function=nll_loss,
+                         batch_metrics=[accuracy])
 
-        checkpoint = handle_checkpoint(checkpoint)
+        if model_path not in ("fasttext", "bpemb"):
+            checkpoint_weights = torch.load(model_path, map_location='cpu')
+            if isinstance(checkpoint_weights, dict):
+                # mean the user have changed the prediction tags of the model
+                self.tags_converter = TagsConverter(checkpoint_weights["prediction_tags"])
+                # since we have change the tags_converter, we need to change the linear dimension layer
+                self.model.decoder.linear = nn.Linear(1024, self.tags_converter.dim)
 
-        test_res = exp.test(test_generator, seed=seed, callbacks=callbacks, checkpoint=checkpoint, verbose=self.verbose)
+                model_weights = checkpoint_weights["address_tagger_model"]
+                exp.model.set_weights(weights=model_weights)
+        else:
+            model_path = handle_model_path(model_path)
+            exp.load_checkpoint(model_path)
+
+        test_res = exp.test(test_generator, seed=seed, callbacks=callbacks, verbose=self.verbose, logging=False)
 
         return test_res
 
@@ -655,19 +651,3 @@ class AddressParser:
         Pipeline to process data in a data loader for prediction.
         """
         return self.data_converter(self.vectorizer(data))
-
-    def _handle_pre_trained_test_new_prediction_layer(self, checkpoint: Union[str, int]) -> str:
-        """
-        One can test on new dataset with new prediction tags but to do so, we need to change the
-        prediction layer dim. We handle that by saving a `_user_tags` model in the cache and load that model
-        later on for testing.
-
-        Will return the handled checkpoint name.
-        """
-        if checkpoint in ("bpemb", "fasttext"):
-            if self.verbose:
-                warnings.warn("Testing pre-trained model with a new predictions tags dictionary.")
-            checkpoint = checkpoint + "_user_tags"
-            with open(os.path.join(CACHE_PATH, checkpoint + ".ckpt"), "wb") as model_file:
-                torch.save(self.model.state_dict(), model_file)
-        return checkpoint

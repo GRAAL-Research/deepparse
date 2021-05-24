@@ -36,11 +36,6 @@ class AddressParserPredictTestCase(CaptureOutputTestCase):
 
     def tearDown(self) -> None:
         # cleanup after the tests
-        path = os.path.join(self.a_logging_path, "prediction_tags.p")
-        if os.path.exists(path):
-            os.remove(path)
-            os.rmdir(self.a_logging_path)
-
         if os.path.exists(self.a_model_root_path):
             shutil.rmtree(self.a_model_root_path)
 
@@ -94,6 +89,7 @@ class AddressParserPredictTestCase(CaptureOutputTestCase):
         model.return_value = Mock(return_value=torch.cat((self.a_prediction_vector_for_a_complete_address,
                                                           self.a_prediction_vector_for_a_complete_address), 1))
 
-    def prediction_tags_dict_setup(self, address_components):
-        with open(os.path.join(self.a_model_root_path, "prediction_tags.p"), "wb") as file:
-            pickle.dump(address_components, file)
+    def setup_retrain_new_tags_model(self, address_components):
+        data_dict = {"address_tagger_model": {}, "prediction_tags": address_components}
+        with open(self.a_model_path, "wb") as file:
+            pickle.dump(data_dict, file)

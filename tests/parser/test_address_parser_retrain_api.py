@@ -1,6 +1,8 @@
 # Since we use a patch as model mock we skip the unused argument error
 # pylint: disable=unused-argument, too-many-arguments, too-many-public-methods
 
+import shutil
+
 import unittest
 from unittest.mock import patch, call
 
@@ -35,6 +37,9 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         cls.verbose = False
 
         cls.address_components = {"ATag": 0, "AnotherTag": 1, "EOS": 2}
+
+    def tearDown(self) -> None:
+        shutil.rmtree(self.a_logging_path)
 
     def address_parser_retrain_call(self, prediction_tags=None):
         self.address_parser.retrain(self.mocked_data_container,

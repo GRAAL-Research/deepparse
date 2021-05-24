@@ -1,12 +1,9 @@
 import os
-import pickle
 import re
-import warnings
 from typing import List, Union, Dict, Tuple
 
 import torch
 from poutyne.framework import Experiment
-from torch import nn
 from torch.optim import SGD
 from torch.utils.data import DataLoader, Subset
 
@@ -271,13 +268,15 @@ class AddressParser:
         Method to retrain the address parser model using a dataset with the same tags. We train using
         `experiment <https://poutyne.org/experiment.html>`_ from `poutyne <https://poutyne.org/index.html>`_
         framework. The experiment module allow us to save checkpoints ``ckpt`` (pickle format) and a log.tsv where
-        the best epochs can be found (the best epoch is used in test).
+        the best epochs can be found (the best epoch is used in test). The retrained model file name are formatted as
+        'retrained_{model_type}_address_parser.ckpt'. For example, if you retrain a fasttext model, the file name
+        will be 'retrained_fasttext_address_parser.ckpt'.
 
         Args:
             dataset_container (~deepparse.deepparse.dataset_container.dataset_container.DatasetContainer): The
                 dataset container of the data to use.
-            train_ratio (float): The ratio to use of the dataset for the training. The rest of the data is used for the validation
-                (e.g. a train ratio of 0.8 mean a 80-20 train-valid split).
+            train_ratio (float): The ratio to use of the dataset for the training. The rest of the data is used for the
+                validation (e.g. a train ratio of 0.8 mean a 80-20 train-valid split).
             batch_size (int): The size of the batch.
             epochs (int): number of training epochs.
             num_workers (int): Number of workers to use for the data loader (default is 1 worker).
@@ -285,8 +284,8 @@ class AddressParser:
                 training, use `Poutyne learning rate scheduler callback
                 <https://github.com/GRAAL-Research/poutyne/blob/master/poutyne/framework/callbacks/lr_scheduler.py>`_.
             callbacks (Union[List, None]): List of callbacks to use during training.
-                See Poutyne `callback <https://poutyne.org/callbacks.html#callback-class>`_ for more information. By default
-                we set no callback.
+                See Poutyne `callback <https://poutyne.org/callbacks.html#callback-class>`_ for more information. By
+                default we set no callback.
             seed (int): Seed to use (by default 42).
             logging_path (str): The logging path for the checkpoints. By default the path is ``./checkpoints``.
             prediction_tags (Union[Dict, None]): A dictionary were the keys are the address components
@@ -301,8 +300,8 @@ class AddressParser:
             <https://poutyne.org/experiment.html#poutyne.Experiment.train>`_ for details).
 
         Note:
-            We use SGD optimizer, NLL loss and accuracy as a metric, the data is shuffled and we use teacher forcing during
-            training (with a prob of 0.5) as in the `article <https://arxiv.org/abs/2006.16152>`_.
+            We use SGD optimizer, NLL loss and accuracy as a metric, the data is shuffled and we use teacher forcing
+            during training (with a prob of 0.5) as in the `article <https://arxiv.org/abs/2006.16152>`_.
 
         Note:
             Due to pymagnitude, we could not train using the Magnitude embeddings, meaning it's not possible to
@@ -387,7 +386,7 @@ class AddressParser:
 
         file_path = os.path.join(logging_path, f"retrained_{self.model_type}_address_parser.ckpt")
         if prediction_tags is not None:
-            torch.save({"address_tagger_model": exp.model.state_dict(),
+            torch.save({"address_tagger_model": exp.model.network.state_dict(),
                         "prediction_tags": prediction_tags},
                        file_path)
         else:
@@ -412,35 +411,28 @@ class AddressParser:
         Args:
             test_dataset_container (~deepparse.deepparse.dataset_container.dataset_container.DatasetContainer):
                 The test dataset container of the data to use.
-            batch_size (int):
-            model_path (str): Path to the model to test.
+            batch_size (int): The size of the batch (default is 32).
+            model_path (str): Path or name of the model to test.
                 - If 'fasttext', will load our pre-trained fasttext model and test it on your data.
                 (Need to have Poutyne>=1.2 to work)
                 - If 'bpemb', will load our pre-trained bpemb model and test it on your data.
                 (Need to have Poutyne>=1.2 to work)
                 - If 'str', will load a specific model (e.g. a retrained model), must be a path to a pickled format
                 model i.e. ends with a '.p' extension (e.g. retrained_model.p).
+            num_workers (int): Number of workers to use for the data loader (default is 1 worker).
             callbacks (Union[List, None]): List of callbacks to use during training.
                 See Poutyne `callback <https://poutyne.org/callbacks.html#callback-class>`_ for more information.
                 By default we set no callback.
             seed (int): Seed to use (by default 42).
-
+            callbacks (Union[List, None]): List of callbacks to use during training.
+                See Poutyne `callback <https://poutyne.org/callbacks.html#callback-class>`_ for more information.
+                By default we set no callback.
         Return:
             A dictionary with the best epoch stats (see `Experiment class
             <https://poutyne.org/experiment.html#poutyne.Experiment.train>`_ for details).
 
         Note:
             We use NLL loss and accuracy as in the `article <https://arxiv.org/abs/2006.16152>`_.
-
-        Note:
-            If you have retrain our model and changed the prediction tags the file `prediction_tags.p` need to be
-            next to the model (i.e. in the same directory as the model such as define by the `logging_path`).
-
-        Note:
-            You can also test our model on new prediction tags by adding your dictionary into the logging directory
-            with the name `prediction_tags.p`. For the evaluation, we will create a `<model_type>_user_tags.ckpt`
-            model in the `.cache` directory. But keep in mind that the prediction layer weights are randomly
-            initialize.
 
         Example:
 
@@ -506,7 +498,7 @@ class AddressParser:
                                     num_workers=num_workers)
 
         exp = Experiment("./checkpoint", self.model, device=self.device, loss_function=nll_loss,
-                         batch_metrics=[accuracy])
+                         batch_metrics=[accuracy], logging=False)  # we set logging to false since we don't need it
 
         if model_path not in ("fasttext", "bpemb"):
             checkpoint_weights = torch.load(model_path, map_location='cpu')
@@ -514,7 +506,8 @@ class AddressParser:
                 # mean the user have changed the prediction tags of the model
                 self.tags_converter = TagsConverter(checkpoint_weights["prediction_tags"])
                 # since we have change the tags_converter, we need to change the linear dimension layer
-                self.model.decoder.linear = nn.Linear(1024, self.tags_converter.dim)
+                self.model.decoder.linear_layer_set_up(self.tags_converter.dim)
+                self.model.decoder.to(self.device)  # we need to reload to GPU the model
 
                 model_weights = checkpoint_weights["address_tagger_model"]
                 exp.model.set_weights(weights=model_weights)
@@ -522,7 +515,7 @@ class AddressParser:
             model_path = handle_model_path(model_path)
             exp.load_checkpoint(model_path)
 
-        test_res = exp.test(test_generator, seed=seed, callbacks=callbacks, verbose=self.verbose, logging=False)
+        test_res = exp.test(test_generator, seed=seed, callbacks=callbacks, verbose=self.verbose)
 
         return test_res
 

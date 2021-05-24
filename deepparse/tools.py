@@ -31,10 +31,9 @@ def download_from_url(file_name: str, saving_dir: str, file_extension: str):
     url = model_url.format(file_name)
     r = requests.get(url)
     r.raise_for_status()  # raise exception if 404 or other http error
+    os.makedirs(saving_dir, exist_ok=True)
     with open(os.path.join(saving_dir, f"{file_name}.{file_extension}"), "wb") as file:
         file.write(r.content)
-
-    os.makedirs(saving_dir, exist_ok=True)
 
 
 def download_weights(model: str, saving_dir: str, verbose: bool = True) -> None:

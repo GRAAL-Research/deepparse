@@ -348,12 +348,14 @@ class AddressParser:
         Args:
             test_dataset_container (~deepparse.deepparse.dataset_container.dataset_container.DatasetContainer):
                 The test dataset container of the data to use.
+            batch_size (int): The size of the batch (default is 32).
+            num_workers (int): Number of workers to use for the data loader (default is 1 worker).
             callbacks (Union[List, None]): List of callbacks to use during training.
                 See Poutyne `callback <https://poutyne.org/callbacks.html#callback-class>`_ for more information.
                 By default we set no callback.
             seed (int): Seed to use (by default 42).
             logging_path (str): The logging path for the checkpoints. By default the path is ``./checkpoints``.
-                checkpoint (Union[str, int]): Checkpoint to use for the test.
+            checkpoint (Union[str, int]): Checkpoint to use for the test.
                 - If 'best', will load the best weights.
                 - If 'last', will load the last model checkpoint.
                 - If int, will load a specific checkpoint (e.g. 3).
@@ -363,6 +365,7 @@ class AddressParser:
                 (Need to have Poutyne>=1.2 to work)
                 - If 'bpemb', will load our pre-trained bpemb model and test it on your data.
                 (Need to have Poutyne>=1.2 to work)
+                By default we use best 'best'.
         Return:
             A dictionary with the best epoch stats (see `Experiment class
             <https://poutyne.org/experiment.html#poutyne.Experiment.train>`_ for details).

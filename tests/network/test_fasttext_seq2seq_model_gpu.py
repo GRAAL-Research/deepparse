@@ -65,7 +65,7 @@ class FasttextSeq2SeqGPUTest(Seq2SeqTestCase):
     def test_givenRetrainedWeights_whenInstantiatingAFastTextSeq2SeqModel_thenShouldUseRetrainedWeights(
             self, load_state_dict_mock, torch_mock):
         all_layers_params = MagicMock()
-        torch_mock.load().__getitem__.return_value = all_layers_params
+        torch_mock.load.return_value = all_layers_params
         self.seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device,
                                                   self.output_size,
                                                   self.verbose,

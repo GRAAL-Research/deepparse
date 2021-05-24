@@ -1,8 +1,7 @@
 # Since we use a patch as model mock we skip the unused argument error
 # pylint: disable=unused-argument, too-many-arguments, too-many-public-methods
-
+import os
 import shutil
-
 import unittest
 from unittest.mock import patch, call
 
@@ -38,6 +37,8 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
 
         cls.address_components = {"ATag": 0, "AnotherTag": 1, "EOS": 2}
 
+        cls.saving_template_path = os.path.join(cls.a_logging_path, "retrained_{}_address_parser.ckpt")
+
     def tearDown(self) -> None:
         shutil.rmtree(self.a_logging_path)
 
@@ -68,7 +69,8 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
                          epochs=self.a_epoch_number,
                          seed=self.a_seed,
                          callbacks=[],
-                         verbose=self.verbose)
+                         verbose=self.verbose,
+                         disable_tensorboard=True)
         ]
         experiment_mock.assert_has_calls(train_call)
 
@@ -164,7 +166,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         self.assert_experiment_train_method_is_call(dataloader_mock, experiment_mock)
 
     @patch("deepparse.parser.address_parser.open")
-    @patch("deepparse.parser.address_parser.pickle")
+    @patch("deepparse.parser.address_parser.torch.save")
     @patch("deepparse.parser.address_parser.DataLoader")
     @patch("deepparse.parser.address_parser.Experiment")
     @patch("deepparse.parser.address_parser.SGD")
@@ -176,15 +178,22 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
     @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
     def test_givenAFasttextModel_whenRetrainWithUserTags_thenSaveTagsDict(
             self, download_weights_mock, embeddings_model_mock, vectorizer_model_mock, data_padding_mock, model_mock,
-            data_transform_mock, optimizer_mock, experiment_mock, dataloader_mock, pickle_mock, open_mock):
+            data_transform_mock, optimizer_mock, experiment_mock, dataloader_mock, torch_save_mock, open_mock):
         self.address_parser = AddressParser(model_type=self.a_fasttext_model_type,
                                             device=self.a_device,
                                             verbose=self.verbose)
         self.address_parser_retrain_call(prediction_tags=self.address_components)
 
-        pickle_call = [call.dump(self.address_components, open_mock().__enter__())]
+        saving_model_path = self.saving_template_path.format(self.a_fasttext_model_type)
+        save_call = [
+            call(
+                {
+                    'address_tagger_model': experiment_mock().model.network.state_dict(),
+                    'prediction_tags': self.address_components
+                }, saving_model_path)
+        ]
 
-        pickle_mock.assert_has_calls(pickle_call)
+        torch_save_mock.assert_has_calls(save_call)
 
     @patch("deepparse.parser.address_parser.DataLoader")
     @patch("deepparse.parser.address_parser.Experiment")
@@ -227,7 +236,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         self.assert_experiment_train_method_is_call(dataloader_mock, experiment_mock)
 
     @patch("deepparse.parser.address_parser.open")
-    @patch("deepparse.parser.address_parser.pickle")
+    @patch("deepparse.parser.address_parser.torch.save")
     @patch("deepparse.parser.address_parser.DataLoader")
     @patch("deepparse.parser.address_parser.Experiment")
     @patch("deepparse.parser.address_parser.SGD")
@@ -239,16 +248,22 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
     def test_givenABPEmbModel_whenRetrainWithUserTags_thenSaveTagsDict(self, embeddings_model_mock,
                                                                        vectorizer_model_mock, data_padding_mock,
                                                                        model_mock, data_transform_mock, optimizer_mock,
-                                                                       experiment_mock, dataloader_mock, pickle_mock,
-                                                                       open_mock):
+                                                                       experiment_mock, dataloader_mock,
+                                                                       torch_save_mock, open_mock):
         self.address_parser = AddressParser(model_type=self.a_bpemb_model_type,
                                             device=self.a_device,
                                             verbose=self.verbose)
         self.address_parser_retrain_call(prediction_tags=self.address_components)
+        saving_model_path = self.saving_template_path.format(self.a_bpemb_model_type)
+        save_call = [
+            call(
+                {
+                    'address_tagger_model': experiment_mock().model.network.state_dict(),
+                    'prediction_tags': self.address_components
+                }, saving_model_path)
+        ]
 
-        pickle_call = [call.dump(self.address_components, open_mock().__enter__())]
-
-        pickle_mock.assert_has_calls(pickle_call)
+        torch_save_mock.assert_has_calls(save_call)
 
 
 if __name__ == "__main__":

@@ -13,8 +13,7 @@ from deepparse.parser import AddressParser
 from tests.parser.integration.base_retrain import AddressParserRetrainTestCase
 
 
-@skipIf(not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "fasttext.version"))
-        or not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "fasttext.version")),
+@skipIf(not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin ")),
         "download of model too long for test in runner")
 class AddressParserIntegrationTest(AddressParserRetrainTestCase):
     # Retrain API tests
@@ -170,9 +169,9 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
         self.training(address_parser, self.a_zero_number_of_workers)
 
         performance_after_test = address_parser.test(self.test_container,
+                                                     model_path=self.a_fasttext_model_type,
                                                      batch_size=self.a_batch_size,
-                                                     num_workers=self.a_number_of_workers,
-                                                     logging_path=self.a_checkpoints_saving_dir)
+                                                     num_workers=self.a_number_of_workers)
 
         self.assertIsNotNone(performance_after_test)
 
@@ -183,9 +182,9 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
         self.training(address_parser, self.a_number_of_workers)
 
         performance_after_test = address_parser.test(self.test_container,
+                                                     model_path=self.a_fasttext_model_type,
                                                      batch_size=self.a_batch_size,
-                                                     num_workers=self.a_number_of_workers,
-                                                     logging_path=self.a_checkpoints_saving_dir)
+                                                     num_workers=self.a_number_of_workers)
 
         self.assertIsNotNone(performance_after_test)
 
@@ -197,9 +196,9 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
         self.training(address_parser, self.a_number_of_workers)
 
         performance_after_test = address_parser.test(self.test_container,
+                                                     model_path=self.a_fasttext_model_type,
                                                      batch_size=self.a_batch_size,
-                                                     num_workers=self.a_number_of_workers,
-                                                     logging_path=self.a_checkpoints_saving_dir)
+                                                     num_workers=self.a_number_of_workers)
 
         self.assertIsNotNone(performance_after_test)
 
@@ -211,9 +210,9 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
         self.training(address_parser, self.a_number_of_workers)
 
         performance_after_test = address_parser.test(self.test_container,
+                                                     model_path=self.a_fasttext_model_type,
                                                      batch_size=self.a_batch_size,
-                                                     num_workers=self.a_number_of_workers,
-                                                     logging_path=self.a_checkpoints_saving_dir)
+                                                     num_workers=self.a_number_of_workers)
 
         self.assertIsNotNone(performance_after_test)
 
@@ -226,10 +225,10 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
 
         callback_mock = MagicMock()
         performance_after_test = address_parser.test(self.test_container,
+                                                     model_path=self.a_fasttext_model_type,
                                                      batch_size=self.a_batch_size,
                                                      num_workers=self.a_number_of_workers,
-                                                     callbacks=[callback_mock],
-                                                     logging_path=self.a_checkpoints_saving_dir)
+                                                     callbacks=[callback_mock])
 
         self.assertIsNotNone(performance_after_test)
 
@@ -245,36 +244,6 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
         callback_mock.assert_has_calls(callback_test_end_call)
         callback_mock.assert_not_called()
 
-    def test_givenAFasttextAddressParser_whenTestWithIntCkpt_thenTestOccur(self):
-        address_parser = AddressParser(model_type=self.a_fasttext_model_type,
-                                       device=self.a_cpu_device,
-                                       verbose=self.verbose)
-
-        self.training(address_parser, self.a_number_of_workers)
-
-        performance_after_test = address_parser.test(self.test_container,
-                                                     batch_size=self.a_batch_size,
-                                                     num_workers=self.a_number_of_workers,
-                                                     logging_path=self.a_checkpoints_saving_dir,
-                                                     checkpoint=self.a_single_epoch)
-
-        self.assertIsNotNone(performance_after_test)
-
-    def test_givenAFasttextAddressParser_whenTestWithLastCkpt_thenTestOccur(self):
-        address_parser = AddressParser(model_type=self.a_fasttext_model_type,
-                                       device=self.a_cpu_device,
-                                       verbose=self.verbose)
-
-        self.training(address_parser, self.a_number_of_workers)
-
-        performance_after_test = address_parser.test(self.test_container,
-                                                     batch_size=self.a_batch_size,
-                                                     num_workers=self.a_number_of_workers,
-                                                     logging_path=self.a_checkpoints_saving_dir,
-                                                     checkpoint="last")
-
-        self.assertIsNotNone(performance_after_test)
-
     def test_givenAFasttextAddressParser_whenTestWithFasttextCkpt_thenTestOccur(self):
         address_parser = AddressParser(model_type=self.a_fasttext_model_type,
                                        device=self.a_cpu_device,
@@ -285,8 +254,7 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
         performance_after_test = address_parser.test(self.test_container,
                                                      batch_size=self.a_batch_size,
                                                      num_workers=self.a_number_of_workers,
-                                                     logging_path=self.a_checkpoints_saving_dir,
-                                                     checkpoint="fasttext")
+                                                     model_path="fasttext")
 
         self.assertIsNotNone(performance_after_test)
 
@@ -300,8 +268,7 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
         performance_after_test = address_parser.test(self.test_container,
                                                      batch_size=self.a_batch_size,
                                                      num_workers=self.a_number_of_workers,
-                                                     logging_path=self.a_checkpoints_saving_dir,
-                                                     checkpoint=self.fasttext_local_path)
+                                                     model_path=self.fasttext_local_path)
 
         self.assertIsNotNone(performance_after_test)
 
@@ -312,9 +279,9 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
         self.training(address_parser, self.a_zero_number_of_workers)
 
         performance_after_test = address_parser.test(self.test_container,
+                                                     model_path=self.a_bpemb_model_type,
                                                      batch_size=self.a_batch_size,
-                                                     num_workers=self.a_number_of_workers,
-                                                     logging_path=self.a_checkpoints_saving_dir)
+                                                     num_workers=self.a_number_of_workers)
 
         self.assertIsNotNone(performance_after_test)
 
@@ -325,9 +292,9 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
         self.training(address_parser, self.a_number_of_workers)
 
         performance_after_test = address_parser.test(self.test_container,
+                                                     model_path=self.a_bpemb_model_type,
                                                      batch_size=self.a_batch_size,
-                                                     num_workers=self.a_number_of_workers,
-                                                     logging_path=self.a_checkpoints_saving_dir)
+                                                     num_workers=self.a_number_of_workers)
 
         self.assertIsNotNone(performance_after_test)
 
@@ -339,9 +306,9 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
         self.training(address_parser, self.a_number_of_workers)
 
         performance_after_test = address_parser.test(self.test_container,
+                                                     model_path=self.a_bpemb_model_type,
                                                      batch_size=self.a_batch_size,
-                                                     num_workers=self.a_number_of_workers,
-                                                     logging_path=self.a_checkpoints_saving_dir)
+                                                     num_workers=self.a_number_of_workers)
 
         self.assertIsNotNone(performance_after_test)
 
@@ -353,9 +320,9 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
         self.training(address_parser, self.a_number_of_workers)
 
         performance_after_test = address_parser.test(self.test_container,
+                                                     model_path=self.a_bpemb_model_type,
                                                      batch_size=self.a_batch_size,
-                                                     num_workers=self.a_number_of_workers,
-                                                     logging_path=self.a_checkpoints_saving_dir)
+                                                     num_workers=self.a_number_of_workers)
 
         self.assertIsNotNone(performance_after_test)
 
@@ -368,10 +335,10 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
 
         callback_mock = MagicMock()
         performance_after_test = address_parser.test(self.test_container,
+                                                     model_path=self.a_bpemb_model_type,
                                                      batch_size=self.a_batch_size,
                                                      num_workers=self.a_number_of_workers,
-                                                     callbacks=[callback_mock],
-                                                     logging_path=self.a_checkpoints_saving_dir)
+                                                     callbacks=[callback_mock])
 
         self.assertIsNotNone(performance_after_test)
 
@@ -387,36 +354,6 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
         callback_mock.assert_has_calls(callback_test_end_call)
         callback_mock.assert_not_called()
 
-    def test_givenABPEmbAddressParser_whenTestWithIntCkpt_thenTestOccur(self):
-        address_parser = AddressParser(model_type=self.a_bpemb_model_type,
-                                       device=self.a_cpu_device,
-                                       verbose=self.verbose)
-
-        self.training(address_parser, self.a_number_of_workers)
-
-        performance_after_test = address_parser.test(self.test_container,
-                                                     batch_size=self.a_batch_size,
-                                                     num_workers=self.a_number_of_workers,
-                                                     logging_path=self.a_checkpoints_saving_dir,
-                                                     checkpoint=self.a_single_epoch)
-
-        self.assertIsNotNone(performance_after_test)
-
-    def test_givenABPEmbAddressParser_whenTestWithLastCkpt_thenTestOccur(self):
-        address_parser = AddressParser(model_type=self.a_bpemb_model_type,
-                                       device=self.a_cpu_device,
-                                       verbose=self.verbose)
-
-        self.training(address_parser, self.a_number_of_workers)
-
-        performance_after_test = address_parser.test(self.test_container,
-                                                     batch_size=self.a_batch_size,
-                                                     num_workers=self.a_number_of_workers,
-                                                     logging_path=self.a_checkpoints_saving_dir,
-                                                     checkpoint="last")
-
-        self.assertIsNotNone(performance_after_test)
-
     def test_givenABPEmbAddressParser_whenTestWithBPEmbCkpt_thenTestOccur(self):
         address_parser = AddressParser(model_type=self.a_bpemb_model_type,
                                        device=self.a_cpu_device,
@@ -427,8 +364,7 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
         performance_after_test = address_parser.test(self.test_container,
                                                      batch_size=self.a_batch_size,
                                                      num_workers=self.a_number_of_workers,
-                                                     logging_path=self.a_checkpoints_saving_dir,
-                                                     checkpoint="bpemb")
+                                                     model_path="bpemb")
 
         self.assertIsNotNone(performance_after_test)
 
@@ -442,8 +378,7 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
         performance_after_test = address_parser.test(self.test_container,
                                                      batch_size=self.a_batch_size,
                                                      num_workers=self.a_number_of_workers,
-                                                     logging_path=self.a_checkpoints_saving_dir,
-                                                     checkpoint=self.bpemb_local_path)
+                                                     model_path=self.bpemb_local_path)
 
         self.assertIsNotNone(performance_after_test)
 

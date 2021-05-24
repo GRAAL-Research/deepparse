@@ -152,7 +152,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     def test_givenAFasttextModelType_whenInstantiatingParserWithUserComponent_thenCorrectNumberOfOutputDim(
             self, download_weights_mock, model_mock):
         with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel") as model:
-            self.prediction_tags_dict_setup(self.incorrect_address_components)
+            self.setup_retrain_new_tags_model(self.incorrect_address_components)
             self.address_parser = AddressParser(model_type=self.a_fasttext_model_type,
                                                 device=self.a_device,
                                                 verbose=self.verbose,

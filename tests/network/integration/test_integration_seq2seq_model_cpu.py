@@ -12,8 +12,7 @@ from deepparse.network import Seq2SeqModel
 from ..integration.base import Seq2SeqIntegrationTestCase
 
 
-@skipIf(not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "fasttext.version"))
-        or not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "fasttext.version")),
+@skipIf(not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin ")),
         "download of model too long for test in runner")
 class Seq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
 

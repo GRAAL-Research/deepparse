@@ -2,7 +2,6 @@
 # pylint: disable=not-callable, too-many-public-methods
 
 import os
-import pickle
 import shutil
 from unittest.mock import Mock
 
@@ -90,6 +89,5 @@ class AddressParserPredictTestCase(CaptureOutputTestCase):
                                                           self.a_prediction_vector_for_a_complete_address), 1))
 
     def setup_retrain_new_tags_model(self, address_components):
-        data_dict = {"address_tagger_model": {}, "prediction_tags": address_components}
-        with open(self.a_model_path, "wb") as file:
-            pickle.dump(data_dict, file)
+        data_dict = {"address_tagger_model": {"a_key": 1, "another_key": 2}, "prediction_tags": address_components}
+        torch.save(data_dict, self.a_model_path)

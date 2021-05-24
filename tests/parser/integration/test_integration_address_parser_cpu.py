@@ -9,8 +9,7 @@ from deepparse.parser import FormattedParsedAddress
 from tests.parser.integration.base_predict import AddressParserPredictBase
 
 
-@skipIf(not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "fasttext.version"))
-        or not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "fasttext.version")),
+@skipIf(not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin ")),
         "download of model too long for test in runner")
 class AddressParserPredictCPUTest(AddressParserPredictBase):
 
@@ -30,8 +29,7 @@ class AddressParserPredictCPUTest(AddressParserPredictBase):
 
 
 # test if num_workers > 0 is correct for the data loader
-@skipIf(not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "fasttext.version"))
-        or not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "fasttext.version")),
+@skipIf(not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin ")),
         "download of model too long for test in runner")
 class AddressParserPredictCPUMultiProcessTest(AddressParserPredictBase):
 

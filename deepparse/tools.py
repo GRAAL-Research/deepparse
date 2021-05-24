@@ -86,7 +86,11 @@ def handle_pre_trained_checkpoint(model_type_checkpoint: str) -> str:
         raise NotImplementedError(
             f"To load the pre-trained {model_type_checkpoint} model, you need to have a Poutyne version"
             "greater than 1.1 (>1.1)")
-    if not latest_version(model_type_checkpoint, cache_path=CACHE_PATH):
+    model_path = os.path.join(CACHE_PATH, f"{model_type_checkpoint}.ckpt")
+
+    if not os.path.isfile(model_path):
+        download_weights(model_type_checkpoint, CACHE_PATH, verbose=True)
+    elif not latest_version(model_type_checkpoint, cache_path=CACHE_PATH):
         warnings.warn("A newer model of fasttext is available, you can download it using the download script.",
                       UserWarning)
     checkpoint = os.path.join(CACHE_PATH, f"{model_type_checkpoint}.ckpt")

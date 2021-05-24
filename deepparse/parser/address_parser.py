@@ -386,9 +386,10 @@ class AddressParser:
 
         file_path = os.path.join(logging_path, f"retrained_{self.model_type}_address_parser.ckpt")
         if prediction_tags is not None:
-            torch.save({"address_tagger_model": exp.model.network.state_dict(),
-                        "prediction_tags": prediction_tags},
-                       file_path)
+            torch.save({
+                "address_tagger_model": exp.model.network.state_dict(),
+                "prediction_tags": prediction_tags
+            }, file_path)
         else:
             exp.model.save_weights(file_path)
         return train_res
@@ -497,8 +498,12 @@ class AddressParser:
                                     batch_size=batch_size,
                                     num_workers=num_workers)
 
-        exp = Experiment("./checkpoint", self.model, device=self.device, loss_function=nll_loss,
-                         batch_metrics=[accuracy], logging=False)  # we set logging to false since we don't need it
+        exp = Experiment("./checkpoint",
+                         self.model,
+                         device=self.device,
+                         loss_function=nll_loss,
+                         batch_metrics=[accuracy],
+                         logging=False)  # we set logging to false since we don't need it
 
         if model_path not in ("fasttext", "bpemb"):
             checkpoint_weights = torch.load(model_path, map_location='cpu')

@@ -1,6 +1,6 @@
 import os
 import re
-from typing import List, Union, Dict, Tuple
+from typing import List, Union, Dict, Tuple, OrderedDict
 
 import torch
 from poutyne.framework import Experiment
@@ -161,7 +161,7 @@ class AddressParser:
 
         if path_to_retrained_model is not None:
             checkpoint_weights = torch.load(path_to_retrained_model, map_location='cpu')
-            if isinstance(checkpoint_weights, dict):
+            if isinstance(checkpoint_weights, dict) and not isinstance(checkpoint_weights, OrderedDict):
                 # mean the user have changed the prediction tags of the model
                 tags_to_idx = checkpoint_weights["prediction_tags"]
 
@@ -507,7 +507,7 @@ class AddressParser:
 
         if model_path not in ("fasttext", "bpemb"):
             checkpoint_weights = torch.load(model_path, map_location='cpu')
-            if isinstance(checkpoint_weights, dict):
+            if isinstance(checkpoint_weights, dict) and not isinstance(checkpoint_weights, OrderedDict):
                 # mean the user have changed the prediction tags of the model
                 self.tags_converter = TagsConverter(checkpoint_weights["prediction_tags"])
                 # since we have change the tags_converter, we need to change the linear dimension layer

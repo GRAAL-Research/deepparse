@@ -2,7 +2,7 @@ import os
 import random
 import warnings
 from abc import ABC
-from typing import Tuple, Union, Dict
+from typing import Tuple, Union, Dict, OrderedDict
 
 import torch
 import torch.nn as nn
@@ -71,8 +71,11 @@ class Seq2SeqModel(ABC, nn.Module):
             path_to_retrained_model (str): The path to the fine-tuned model.
         """
         all_layers_params = torch.load(path_to_retrained_model, map_location=self.device)
+        if isinstance(all_layers_params, dict) and not isinstance(all_layers_params, OrderedDict):
+            # Case where we have a retrained model with a different tagging space
+            all_layers_params = all_layers_params["address_tagger_model"]
         self._resolve_change_in_prediction_layer(all_layers_params)
-        self.load_state_dict(all_layers_params["address_tagger_model"])
+        self.load_state_dict(all_layers_params)
 
     def _encoder_step(self, to_predict: torch.Tensor, lengths_tensor: torch.Tensor, batch_size: int) -> Tuple:
         """

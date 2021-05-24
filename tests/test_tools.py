@@ -18,16 +18,10 @@ def delete_cache_files(model_name):
     version_name = f"{model_name}.version"
     if os.path.exists(version_name):
         os.remove(version_name)
-    fasttext_path = os.path.join(CACHE_PATH, version_name)
-    if os.path.exists(fasttext_path):
-        os.remove(fasttext_path)
 
     ckpt_name = f"{model_name}.ckpt"
     if os.path.exists(ckpt_name):
         os.remove(ckpt_name)
-    fasttext_path = os.path.join(CACHE_PATH, ckpt_name)
-    if os.path.exists(fasttext_path):
-        os.remove(fasttext_path)
 
 
 class ToolsTests(CaptureOutputTestCase):

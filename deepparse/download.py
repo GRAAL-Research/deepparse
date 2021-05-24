@@ -3,7 +3,7 @@ import os
 
 from bpemb import BPEmb
 
-from . import CACHE_PATH, download_fasttext_magnitude_embeddings, latest_version, \
+from deepparse import CACHE_PATH, download_fasttext_magnitude_embeddings, latest_version, \
     download_fasttext_embeddings, download_weights
 
 

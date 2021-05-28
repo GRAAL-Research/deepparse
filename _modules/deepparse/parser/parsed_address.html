@@ -174,10 +174,12 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A parsed address as commonly known returned by an address parser.</span>
 
-<span class="sd">    Note:</span>
-<span class="sd">        Since an address component can be composed of multiple elements (e.g. Wolfe street), when the probability</span>
-<span class="sd">        values are asked of the address parser, the address components don&#39;t keep it. It&#39;s only available through the</span>
-<span class="sd">        ``address_parsed_components`` attribute.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        address: A dictionary where the key is an address, and the value is a list of tuples where</span>
+<span class="sd">            the first elements are address components, and the second elements are the parsed address</span>
+<span class="sd">            value. Also, the second tuple&#39;s address value can either be the tag of the components</span>
+<span class="sd">            (e.g. StreetName) or a tuple (``x``, ``y``) where ``x`` is the tag and ``y`` is the</span>
+<span class="sd">            probability (e.g. 0.9981) of the model prediction.</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        raw_address: The raw address (not parsed).</span>
@@ -200,17 +202,14 @@
 <span class="sd">                parse_address = address_parser(&quot;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&quot;)</span>
 <span class="sd">                print(parse_address.street_number) #350</span>
 <span class="sd">                print(parse_address.postal_code) # G1L 1B6</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        Since an address component can be composed of multiple elements (e.g. Wolfe street), when the probability</span>
+<span class="sd">        values are asked of the address parser, the address components don&#39;t keep it. It&#39;s only available through the</span>
+<span class="sd">        ``address_parsed_components`` attribute.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">Dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Args:</span>
-<span class="sd">            address: A dictionary where the key is an address, and the value is a list of tuples where</span>
-<span class="sd">            the first elements are address components, and the second elements are the parsed address</span>
-<span class="sd">            value. Also, the second tuple&#39;s address value can either be the tag of the components</span>
-<span class="sd">            (e.g. StreetName) or a tuple (``x``, ``y``) where ``x`` is the tag and ``y`` is the</span>
-<span class="sd">            probability (e.g. 0.9981) of the model prediction.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">raw_address</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">address</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">address_parsed_components</span> <span class="o">=</span> <span class="n">address</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">raw_address</span><span class="p">]</span>
 
@@ -231,14 +230,14 @@
 <div class="viewcode-block" id="ParsedAddress.to_dict"><a class="viewcode-back" href="../../../parser.html#deepparse.parser.ParsedAddress.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to convert an parsed address into a dictionary where the keys are the address components and the value</span>
-<span class="sd">        are the value of those components. For example, the parsed address &lt;street_number&gt; 305 &lt;street_name&gt;</span>
-<span class="sd">        rue des Lilas will be converted into the following dictionary:</span>
-<span class="sd">        {&#39;street_number&#39;:&#39;305&#39;, &#39;street_name&#39;: &#39;rue des Lilas&#39;}.</span>
+<span class="sd">        are the value of those components. For example, the parsed address ``&lt;street_number&gt; 305 &lt;street_name&gt;</span>
+<span class="sd">        rue des Lilas`` will be converted into the following dictionary:</span>
+<span class="sd">        ``{&#39;street_number&#39;:&#39;305&#39;, &#39;street_name&#39;: &#39;rue des Lilas&#39;}``.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            fields (Union[List, None]): Optional argument to define the fields to extract from the address and the</span>
-<span class="sd">            order of it. If None, will used the default order and value &#39;street_number, unit, street_name, orientation,</span>
-<span class="sd">            municipality, province, postal_code, general_delivery&#39;.</span>
+<span class="sd">                order of it. If None, will used the default order and value `&#39;street_number, unit, street_name,</span>
+<span class="sd">                orientation, municipality, province, postal_code, general_delivery&#39;`.</span>
 
 <span class="sd">        Return:</span>
 <span class="sd">            A dictionary where the keys are the selected (or default) fields and the value are the corresponding value</span>

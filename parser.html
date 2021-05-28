@@ -559,12 +559,15 @@ By default we use best ‘best’.</p></li>
 <dt class="sig sig-object py" id="deepparse.parser.ParsedAddress">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">deepparse.parser.</span></span><span class="sig-name descname"><span class="pre">ParsedAddress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deepparse/parser/parsed_address.html#ParsedAddress"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.parser.ParsedAddress" title="Permalink to this definition">¶</a></dt>
 <dd><p>A parsed address as commonly known returned by an address parser.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Since an address component can be composed of multiple elements (e.g. Wolfe street), when the probability
-values are asked of the address parser, the address components don’t keep it. It’s only available through the
-<code class="docutils literal notranslate"><span class="pre">address_parsed_components</span></code> attribute.</p>
-</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>address</strong> – A dictionary where the key is an address, and the value is a list of tuples where
+the first elements are address components, and the second elements are the parsed address
+value. Also, the second tuple’s address value can either be the tag of the components
+(e.g. StreetName) or a tuple (<code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>) where <code class="docutils literal notranslate"><span class="pre">x</span></code> is the tag and <code class="docutils literal notranslate"><span class="pre">y</span></code> is the
+probability (e.g. 0.9981) of the model prediction.</p>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="deepparse.parser.ParsedAddress.raw_address">
 <span class="sig-name descname"><span class="pre">raw_address</span></span><a class="headerlink" href="#deepparse.parser.ParsedAddress.raw_address" title="Permalink to this definition">¶</a></dt>
@@ -633,33 +636,27 @@ are the address components and the second elements are the tags.</p>
 <span class="nb">print</span><span class="p">(</span><span class="n">parse_address</span><span class="o">.</span><span class="n">postal_code</span><span class="p">)</span> <span class="c1"># G1L 1B6</span>
 </pre></div>
 </div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Since an address component can be composed of multiple elements (e.g. Wolfe street), when the probability
+values are asked of the address parser, the address components don’t keep it. It’s only available through the
+<code class="docutils literal notranslate"><span class="pre">address_parsed_components</span></code> attribute.</p>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="deepparse.parser.ParsedAddress.to_dict">
 <span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fields</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><span class="pre">dict</span></a><a class="reference internal" href="_modules/deepparse/parser/parsed_address.html#ParsedAddress.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.parser.ParsedAddress.to_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to convert an parsed address into a dictionary where the keys are the address components and the value
-are the value of those components. For example, the parsed address &lt;street_number&gt; 305 &lt;street_name&gt;
-rue des Lilas will be converted into the following dictionary:
-{‘street_number’:’305’, ‘street_name’: ‘rue des Lilas’}.</p>
+are the value of those components. For example, the parsed address <code class="docutils literal notranslate"><span class="pre">&lt;street_number&gt;</span> <span class="pre">305</span> <span class="pre">&lt;street_name&gt;</span>
+<span class="pre">rue</span> <span class="pre">des</span> <span class="pre">Lilas</span></code> will be converted into the following dictionary:
+<code class="docutils literal notranslate"><span class="pre">{'street_number':'305',</span> <span class="pre">'street_name':</span> <span class="pre">'rue</span> <span class="pre">des</span> <span class="pre">Lilas'}</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>fields</strong> (<em>Union</em><em>[</em><em>List</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><em>None</em></a><em>]</em>) – Optional argument to define the fields to extract from the address and the</p></li>
-<li><p><strong>of it. If None</strong> (<em>order</em>) – </p></li>
-<li><p><strong>used the default order and value 'street_number</strong> (<em>will</em>) – </p></li>
-<li><p><strong>unit</strong> – </p></li>
-<li><p><strong>street_name</strong> – </p></li>
-<li><p><strong>orientation</strong> – </p></li>
-</ul>
+<dd class="field-odd"><p><strong>fields</strong> (<em>Union</em><em>[</em><em>List</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><em>None</em></a><em>]</em>) – Optional argument to define the fields to extract from the address and the
+order of it. If None, will used the default order and value <cite>‘street_number, unit, street_name,
+orientation, municipality, province, postal_code, general_delivery’</cite>.</p>
 </dd>
-</dl>
-<p>:param :
-:param municipality:
-:param province:
-:param postal_code:
-:param general_delivery’.:</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>A dictionary where the keys are the selected (or default) fields and the value are the corresponding value
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary where the keys are the selected (or default) fields and the value are the corresponding value
 of the address components.</p>
 </dd>
 </dl>

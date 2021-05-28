@@ -76,3 +76,4 @@
 
 - Added a method for a dict conversion of parsed addresses for simpler `Pandas` integration.
 - Added examples for parsing addresses and how to convert them into a DataFrame.
+- Fixed error with download module.

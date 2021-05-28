@@ -1,4 +1,4 @@
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Union
 
 
 class ParsedAddress:
@@ -58,6 +58,29 @@ class ParsedAddress:
 
     def __str__(self) -> str:
         return self.raw_address
+
+    def to_dict(self, fields: Union[List, None] = None) -> dict:
+        """
+        Method to convert an parsed address into a dictionary where the keys are the address components and the value
+        are the value of those components. For example, the parsed address <street_number> 305 <street_name>
+        rue des Lilas will be converted into the following dictionary:
+        {'street_number':'305', 'street_name': 'rue des Lilas'}.
+
+        Args:
+            fields (Union[List, None]): Optional argument to define the fields to extract from the address and the
+            order of it. If None, will used the default order and value 'street_number, unit, street_name, orientation,
+            municipality, province, postal_code, general_delivery'.
+
+        Return:
+            A dictionary where the keys are the selected (or default) fields and the value are the corresponding value
+            of the address components.
+        """
+        if fields is None:
+            fields = [
+                "street_number", "unit", "street_name", "orientation", "municipality", "province", "postal_code",
+                "general_delivery"
+            ]
+        return {field: getattr(self, field) for field in fields}
 
     def _resolve_tagged_affectation(self, tagged_address: List[Tuple]) -> None:
         """

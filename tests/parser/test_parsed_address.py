@@ -21,8 +21,31 @@ class ParsedAddressTest(CaptureOutputTestCase):
         cls.a_complete_address = {cls.a_complete_address_str: cls.a_complete_parsed_address}
         cls.a_existing_tag = "3"
 
+        cls.a_parsed_address_in_dict_format = {
+            'street_number': '3',
+            'unit': None,
+            'street_name': 'test road',
+            'orientation': None,
+            'municipality': None,
+            'province': None,
+            'postal_code': None,
+            'general_delivery': None
+        }
+
+        cls.a_complete_parsed_address_in_dict_format = {
+            'street_number': '3',
+            'unit': 'unit',
+            'street_name': 'test road',
+            'orientation': 'west',
+            'municipality': 'city',
+            'province': 'province',
+            'postal_code': 'postal_code',
+            'general_delivery': 'delivery'
+        }
+
     def setUp(self):
         self.parsed_address = ParsedAddress(self.a_address)
+        self.complete_parsed_address = ParsedAddress(self.a_complete_address)
 
     def test_whenInstantiatedWithAddress_thenShouldReturnCorrectRawAddress(self):
         address = self.parsed_address.raw_address
@@ -63,6 +86,24 @@ class ParsedAddressTest(CaptureOutputTestCase):
         print(self.parsed_address.__repr__())
 
         self.assertEqual(self.a_address_repr, self.test_out.getvalue().strip())
+
+    def test_whenToDictDefaultFields_thenReturnTheProperDict(self):
+        actual = self.parsed_address.to_dict()
+        expected = self.a_parsed_address_in_dict_format
+        self.assertEqual(actual, expected)
+
+        actual = self.complete_parsed_address.to_dict()
+        expected = self.a_complete_parsed_address_in_dict_format
+        self.assertEqual(actual, expected)
+
+    def test_whenToDictUserFields_thenReturnTheProperDict(self):
+        actual = self.parsed_address.to_dict(fields=["street_number"])
+        expected = {'street_number': '3'}
+        self.assertEqual(actual, expected)
+
+        actual = self.complete_parsed_address.to_dict(fields=["street_number"])
+        expected = {'street_number': '3'}
+        self.assertEqual(actual, expected)
 
 
 if __name__ == "__main__":

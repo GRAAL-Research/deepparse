@@ -451,6 +451,7 @@ API Reference
   :caption: Examples
 
   examples/fine_tuning
+  examples/parse_addresses
 
 Indices and tables
 ==================

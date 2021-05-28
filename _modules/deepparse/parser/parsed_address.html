@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>deepparse.parser.parsed_address &mdash; deepparse 0.3.5 documentation</title>
+  <title>deepparse.parser.parsed_address &mdash; deepparse 0.3.6 documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.3.5
+                0.3.6
               </div>
             
           
@@ -166,7 +166,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for deepparse.parser.parsed_address</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
 
 <div class="viewcode-block" id="ParsedAddress"><a class="viewcode-back" href="../../../parser.html#deepparse.parser.ParsedAddress">[docs]</a><span class="k">class</span> <span class="nc">ParsedAddress</span><span class="p">:</span>
@@ -226,6 +226,29 @@
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw_address</span>
+
+<div class="viewcode-block" id="ParsedAddress.to_dict"><a class="viewcode-back" href="../../../parser.html#deepparse.parser.ParsedAddress.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to convert an parsed address into a dictionary where the keys are the address components and the value</span>
+<span class="sd">        are the value of those components. For example, the parsed address &lt;street_number&gt; 305 &lt;street_name&gt;</span>
+<span class="sd">        rue des Lilas will be converted into the following dictionary:</span>
+<span class="sd">        {&#39;street_number&#39;:&#39;305&#39;, &#39;street_name&#39;: &#39;rue des Lilas&#39;}.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            fields (Union[List, None]): Optional argument to define the fields to extract from the address and the</span>
+<span class="sd">            order of it. If None, will used the default order and value &#39;street_number, unit, street_name, orientation,</span>
+<span class="sd">            municipality, province, postal_code, general_delivery&#39;.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            A dictionary where the keys are the selected (or default) fields and the value are the corresponding value</span>
+<span class="sd">            of the address components.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">fields</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="s2">&quot;street_number&quot;</span><span class="p">,</span> <span class="s2">&quot;unit&quot;</span><span class="p">,</span> <span class="s2">&quot;street_name&quot;</span><span class="p">,</span> <span class="s2">&quot;orientation&quot;</span><span class="p">,</span> <span class="s2">&quot;municipality&quot;</span><span class="p">,</span> <span class="s2">&quot;province&quot;</span><span class="p">,</span> <span class="s2">&quot;postal_code&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;general_delivery&quot;</span>
+            <span class="p">]</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">field</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">}</span></div>
 
     <span class="k">def</span> <span class="nf">_resolve_tagged_affectation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tagged_address</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>

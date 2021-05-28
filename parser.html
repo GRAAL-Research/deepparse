@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Parser &mdash; deepparse 0.3.5 documentation</title>
+  <title>Parser &mdash; deepparse 0.3.6 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.3.5
+                0.3.6
               </div>
             
           
@@ -314,7 +314,7 @@ networks either with fastText or BPEmb.</p>
 <ul>
 <li><p>a <code class="docutils literal notranslate"><span class="pre">GPU</span></code> index in int format (e.g. <code class="docutils literal notranslate"><span class="pre">0</span></code>);</p></li>
 <li><p>a complete device name in a string format (e.g. <code class="docutils literal notranslate"><span class="pre">'cuda:0'</span></code>);</p></li>
-<li><p>a <a class="reference external" href="https://pytorch.org/docs/master/tensor_attributes.html#torch.torch.device" title="(in PyTorch vmaster (1.9.0a0+git94e33c1 ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">device</span></code></a> object;</p></li>
+<li><p>a <a class="reference external" href="https://pytorch.org/docs/master/tensor_attributes.html#torch.torch.device" title="(in PyTorch vmaster (1.9.0a0+git8149145 ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">device</span></code></a> object;</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'cpu'</span></code> for a  <code class="docutils literal notranslate"><span class="pre">CPU</span></code> use.</p></li>
 </ul>
 <p>The default value is GPU with the index <code class="docutils literal notranslate"><span class="pre">0</span></code> if it exist, otherwise the value is <code class="docutils literal notranslate"><span class="pre">CPU</span></code>.</p>
@@ -509,13 +509,15 @@ the best epochs can be found (the best epoch is use in test).</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>test_dataset_container</strong> (<em>DatasetContainer</em>) – The test dataset container of the data to use.</p></li>
+<li><p><strong>batch_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – The size of the batch (default is 32).</p></li>
+<li><p><strong>num_workers</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Number of workers to use for the data loader (default is 1 worker).</p></li>
 <li><p><strong>callbacks</strong> (<em>Union</em><em>[</em><em>List</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><em>None</em></a><em>]</em>) – <p>List of callbacks to use during training.
 See Poutyne <a class="reference external" href="https://poutyne.org/callbacks.html#callback-class">callback</a> for more information.
 By default we set no callback.</p>
 </p></li>
 <li><p><strong>seed</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Seed to use (by default 42).</p></li>
-<li><p><strong>logging_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The logging path for the checkpoints. By default the path is <code class="docutils literal notranslate"><span class="pre">./checkpoints</span></code>.
-checkpoint (Union[str, int]): Checkpoint to use for the test.
+<li><p><strong>logging_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The logging path for the checkpoints. By default the path is <code class="docutils literal notranslate"><span class="pre">./checkpoints</span></code>.</p></li>
+<li><p><strong>checkpoint</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>]</em>) – Checkpoint to use for the test.
 - If ‘best’, will load the best weights.
 - If ‘last’, will load the last model checkpoint.
 - If int, will load a specific checkpoint (e.g. 3).
@@ -524,7 +526,8 @@ model i.e. ends with a ‘.p’ extension (e.g. retrained_model.p).
 - If ‘fasttext’, will load our pre-trained fasttext model and test it on your data.
 (Need to have Poutyne&gt;=1.2 to work)
 - If ‘bpemb’, will load our pre-trained bpemb model and test it on your data.
-(Need to have Poutyne&gt;=1.2 to work)</p></li>
+(Need to have Poutyne&gt;=1.2 to work)
+By default we use best ‘best’.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -629,6 +632,38 @@ are the address components and the second elements are the tags.</p>
 <span class="nb">print</span><span class="p">(</span><span class="n">parse_address</span><span class="o">.</span><span class="n">postal_code</span><span class="p">)</span> <span class="c1"># G1L 1B6</span>
 </pre></div>
 </div>
+<dl class="py method">
+<dt class="sig sig-object py" id="deepparse.parser.ParsedAddress.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fields</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><span class="pre">dict</span></a><a class="reference internal" href="_modules/deepparse/parser/parsed_address.html#ParsedAddress.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.parser.ParsedAddress.to_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to convert an parsed address into a dictionary where the keys are the address components and the value
+are the value of those components. For example, the parsed address &lt;street_number&gt; 305 &lt;street_name&gt;
+rue des Lilas will be converted into the following dictionary:
+{‘street_number’:’305’, ‘street_name’: ‘rue des Lilas’}.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fields</strong> (<em>Union</em><em>[</em><em>List</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><em>None</em></a><em>]</em>) – Optional argument to define the fields to extract from the address and the</p></li>
+<li><p><strong>of it. If None</strong> (<em>order</em>) – </p></li>
+<li><p><strong>used the default order and value 'street_number</strong> (<em>will</em>) – </p></li>
+<li><p><strong>unit</strong> – </p></li>
+<li><p><strong>street_name</strong> – </p></li>
+<li><p><strong>orientation</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+<p>:param :
+:param municipality:
+:param province:
+:param postal_code:
+:param general_delivery’.:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A dictionary where the keys are the selected (or default) fields and the value are the corresponding value
+of the address components.</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </div>

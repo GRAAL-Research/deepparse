@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>deepparse.parser.address_parser &mdash; deepparse 0.3.5 documentation</title>
+  <title>deepparse.parser.address_parser &mdash; deepparse 0.3.6 documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.3.5
+                0.3.6
               </div>
             
           
@@ -516,12 +516,14 @@
 <span class="sd">        Args:</span>
 <span class="sd">            test_dataset_container (~deepparse.deepparse.dataset_container.dataset_container.DatasetContainer):</span>
 <span class="sd">                The test dataset container of the data to use.</span>
+<span class="sd">            batch_size (int): The size of the batch (default is 32).</span>
+<span class="sd">            num_workers (int): Number of workers to use for the data loader (default is 1 worker).</span>
 <span class="sd">            callbacks (Union[List, None]): List of callbacks to use during training.</span>
 <span class="sd">                See Poutyne `callback &lt;https://poutyne.org/callbacks.html#callback-class&gt;`_ for more information.</span>
 <span class="sd">                By default we set no callback.</span>
 <span class="sd">            seed (int): Seed to use (by default 42).</span>
 <span class="sd">            logging_path (str): The logging path for the checkpoints. By default the path is ``./checkpoints``.</span>
-<span class="sd">                checkpoint (Union[str, int]): Checkpoint to use for the test.</span>
+<span class="sd">            checkpoint (Union[str, int]): Checkpoint to use for the test.</span>
 <span class="sd">                - If &#39;best&#39;, will load the best weights.</span>
 <span class="sd">                - If &#39;last&#39;, will load the last model checkpoint.</span>
 <span class="sd">                - If int, will load a specific checkpoint (e.g. 3).</span>
@@ -531,6 +533,7 @@
 <span class="sd">                (Need to have Poutyne&gt;=1.2 to work)</span>
 <span class="sd">                - If &#39;bpemb&#39;, will load our pre-trained bpemb model and test it on your data.</span>
 <span class="sd">                (Need to have Poutyne&gt;=1.2 to work)</span>
+<span class="sd">                By default we use best &#39;best&#39;.</span>
 <span class="sd">        Return:</span>
 <span class="sd">            A dictionary with the best epoch stats (see `Experiment class</span>
 <span class="sd">            &lt;https://poutyne.org/experiment.html#poutyne.Experiment.train&gt;`_ for details).</span>

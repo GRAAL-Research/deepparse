@@ -68,9 +68,16 @@
 ## 0.3.5
 
 - Added verbose flag to training and test base on the __init__ of address parser.
-- **Breaking change** Since [SciPy 1.6](https://github.com/scipy/scipy/releases/tag/v1.6.0) is released on Python `3.7+`,
-  we don't support Python `3.6`.
-- Added management for Windows where the FastText model cannot be pickled. On Windows, we use Gensim fasttext model, which takes more RAM.
+- **Breaking change** Since [SciPy 1.6](https://github.com/scipy/scipy/releases/tag/v1.6.0) is released on Python `3.7+`
+  , we don't support Python `3.6`.
+- Added management for Windows where the FastText model cannot be pickled. On Windows, we use Gensim fasttext model,
+  which takes more RAM.
+
+## 0.3.6
+
+- Added a method for a dict conversion of parsed addresses for simpler `Pandas` integration.
+- Added examples for parsing addresses and how to convert them into a DataFrame.
+- Fixed error with download module.
 
 ## dev
 

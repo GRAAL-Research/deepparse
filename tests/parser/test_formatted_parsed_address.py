@@ -14,13 +14,42 @@ class FormattedParsedAddressTest(TestCase):
     def setUpClass(cls):
         cls.address_components = [
             "StreetNumber", "StreetName", "Unit", "Municipality", "Province", "PostalCode", "Orientation",
-            "GeneralDelivery", "EOS"
+            "GeneralDelivery"
         ]
         cls.a_address_str = "3 test road"
+        cls.a_complete_address_str = "3 test road unit west city province postal_code delivery"
         cls.a_parsed_address = [("3", "StreetNumber"), ("test", "StreetName"), ("road", "StreetName")]
+        cls.a_complete_parsed_address = [("3", "StreetNumber"), ("test", "StreetName"), ("road", "StreetName"),
+                                         ("unit", "Unit"), ("west", "Orientation"), ("city", "Municipality"),
+                                         ("province", "Province"), ("postal_code", "PostalCode"),
+                                         ("delivery", "GeneralDelivery")]
+
         cls.a_address_repr = "FormattedParsedAddress<StreetNumber='3', StreetName='test road'>"
         cls.a_address = {cls.a_address_str: cls.a_parsed_address}
+        cls.a_complete_address = {cls.a_complete_address_str: cls.a_complete_parsed_address}
         cls.a_existing_tag = "3"
+
+        cls.a_parsed_address_in_dict_format = {
+            'StreetNumber': '3',
+            'Unit': None,
+            'StreetName': 'test road',
+            'Orientation': None,
+            'Municipality': None,
+            'Province': None,
+            'PostalCode': None,
+            'GeneralDelivery': None
+        }
+
+        cls.a_complete_parsed_address_in_dict_format = {
+            'StreetNumber': '3',
+            'Unit': 'unit',
+            'StreetName': 'test road',
+            'Orientation': 'west',
+            'Municipality': 'city',
+            'Province': 'province',
+            'PostalCode': 'postal_code',
+            'GeneralDelivery': 'delivery'
+        }
 
     def _capture_output(self):
         self.test_out = io.StringIO()
@@ -28,7 +57,8 @@ class FormattedParsedAddressTest(TestCase):
         sys.stdout = self.test_out
 
     def setUp(self):
-        self.parsed_address = FormattedParsedAddress(self.address_components, self.a_address)
+        self.parsed_address = FormattedParsedAddress(self.a_address)
+        self.complete_parsed_address = FormattedParsedAddress(self.a_complete_address)
 
     def test_whenInstantiatedWithAddress_thenShouldReturnCorrectRawAddress(self):
         address = self.parsed_address.raw_address
@@ -63,6 +93,24 @@ class FormattedParsedAddressTest(TestCase):
         print(self.parsed_address.__repr__())
 
         self.assertEqual(self.a_address_repr, self.test_out.getvalue().strip())
+
+    def test_whenToDictDefaultFields_thenReturnTheProperDict(self):
+        actual = self.parsed_address.to_dict()
+        expected = self.a_parsed_address_in_dict_format
+        self.assertEqual(actual, expected)
+
+        actual = self.complete_parsed_address.to_dict()
+        expected = self.a_complete_parsed_address_in_dict_format
+        self.assertEqual(actual, expected)
+
+    def test_whenToDictUserFields_thenReturnTheProperDict(self):
+        actual = self.parsed_address.to_dict(fields=["StreetNumber"])
+        expected = {'StreetNumber': '3'}
+        self.assertEqual(actual, expected)
+
+        actual = self.complete_parsed_address.to_dict(fields=["StreetNumber"])
+        expected = {'StreetNumber': '3'}
+        self.assertEqual(actual, expected)
 
 
 if __name__ == "__main__":

@@ -7,6 +7,7 @@ from poutyne.framework import Experiment
 from torch.optim import SGD
 from torch.utils.data import DataLoader, Subset
 
+from . import formated_parsed_address
 from .formated_parsed_address import FormattedParsedAddress
 from .. import CACHE_PATH, handle_model_path, indices_splitting
 from .. import load_tuple_to_device, download_fasttext_magnitude_embeddings
@@ -158,13 +159,18 @@ class AddressParser:
 
         # default pre trained tag are loaded
         tags_to_idx = _pre_trained_tags_to_idx
+        # default field of the formatted addrress
+        fields = [field for field in tags_to_idx if field != "EOS"]
 
         if path_to_retrained_model is not None:
             checkpoint_weights = torch.load(path_to_retrained_model, map_location='cpu')
-            if isinstance(checkpoint_weights, dict) and not isinstance(checkpoint_weights, OrderedDict):
-                # mean the user have changed the prediction tags of the model
+            if isinstance(checkpoint_weights, dict) and not isinstance(checkpoint_weights, OrderedDict):  # User tags
+                # We change the tags_to_idx
                 tags_to_idx = checkpoint_weights["prediction_tags"]
+                # we change the FIELDS
+                fields = [field for field in tags_to_idx if field != "EOS"]
 
+        formated_parsed_address.FIELDS = fields
         self.tags_converter = TagsConverter(tags_to_idx)
 
         self.model_type = model_type.lower()
@@ -541,9 +547,7 @@ class AddressParser:
                 if with_prob:
                     tag = (tag, round(tag_proba, self.rounding))
                 tagged_address_components.append((word, tag))
-            tagged_addresses_components.append(
-                FormattedParsedAddress(list(self.tags_converter.tags_to_idx.keys()),
-                                       {address_to_parse: tagged_address_components}))
+            tagged_addresses_components.append(FormattedParsedAddress({address_to_parse: tagged_address_components}))
 
         if len(tagged_addresses_components) == 1:
             return tagged_addresses_components[0]

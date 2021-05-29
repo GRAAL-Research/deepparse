@@ -1,4 +1,8 @@
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Union
+
+FIELDS = [
+    "StreetNumber", "Unit", "StreetName", "Orientation", "Municipality", "Province", "PostalCode", "GeneralDelivery"
+]
 
 
 class FormattedParsedAddress:
@@ -6,18 +10,11 @@ class FormattedParsedAddress:
     A parsed address as commonly known returned by an address parser.
 
     Args:
-        address_components (List): A list of the address components to tag the address such as StreetName, StreetNumber,
-            etc.
         address (dict): A dictionary where the key is an address, and the value is a list of tuples where
             the first elements are address components, and the second elements are the parsed address
             value. Also, the second tuple's address value can either be the tag of the components
             (e.g. StreetName) or a tuple (``x``, ``y``) where ``x`` is the tag and ``y`` is the
             probability (e.g. 0.9981) of the model prediction.
-
-    Note:
-        Since an address component can be composed of multiple elements (e.g. Wolfe street), when the probability
-        values are asked of the address parser, the address components don't keep it. It's only available through the
-        ``address_parsed_components`` attribute.
 
     Attributes:
         raw_address: The raw address (not parsed).
@@ -33,10 +30,15 @@ class FormattedParsedAddress:
                 parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
                 print(parse_address.StreetNumber) # 350
                 print(parse_address.PostalCode) # G1L 1B6
+
+    Note:
+        Since an address component can be composed of multiple elements (e.g. Wolfe street), when the probability
+        values are asked of the address parser, the address components don't keep it. It's only available through the
+        ``address_parsed_components`` attribute.
     """
 
-    def __init__(self, address_components: List, address: Dict):
-        for key in address_components:
+    def __init__(self, address: Dict):
+        for key in FIELDS:
             setattr(self, key, None)
 
         self.raw_address = list(address.keys())[0]
@@ -46,6 +48,26 @@ class FormattedParsedAddress:
 
     def __str__(self) -> str:
         return self.raw_address
+
+    def to_dict(self, fields: Union[List, None] = None) -> dict:
+        """
+        Method to convert an parsed address into a dictionary where the keys are the address components and the value
+        are the value of those components. For example, the parsed address ``<street_number> 305 <street_name>
+        rue des Lilas`` will be converted into the following dictionary:
+        ``{'street_number':'305', 'street_name': 'rue des Lilas'}``.
+
+        Args:
+            fields (Union[List, None]): Optional argument to define the fields to extract from the address and the
+                order of it. If None, will used the default order and value `'street_number, unit, street_name,
+                orientation, municipality, province, postal_code, general_delivery'`.
+
+        Return:
+            A dictionary where the keys are the selected (or default) fields and the value are the corresponding value
+            of the address components.
+        """
+        if fields is None:
+            fields = FIELDS
+        return {field: getattr(self, field) for field in fields}
 
     def _resolve_tagged_affectation(self, tagged_address: List[Tuple]) -> None:
         """

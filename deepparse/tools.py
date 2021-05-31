@@ -28,8 +28,15 @@ def download_from_url(file_name: str, saving_dir: str, file_extension: str):
     Simple function to download the content of a file from a distant repository.
     """
     url = BASE_URL.format(file_name, file_extension)
-    r = requests.get(url, timeout=5)
-    r.raise_for_status()  # raise exception if 404 or other http error
+    try:
+        r = requests.get(url, timeout=5)
+        r.raise_for_status()  # raise exception if 404 or other http error
+    except requests.exceptions.ConnectTimeout:
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.2.8) Gecko/20100722 Firefox/3.6.8 GTB7.1 (.NET CLR 3.5.30729)",
+            "Referer": "http://example.com"}
+        r = requests.get(url, timeout=5, headers=headers)
+        r.raise_for_status()  # raise exception if 404 or other http error
     os.makedirs(saving_dir, exist_ok=True)
     with open(os.path.join(saving_dir, f"{file_name}.{file_extension}"), "wb") as file:
         file.write(r.content)

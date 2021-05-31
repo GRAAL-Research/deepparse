@@ -18,6 +18,7 @@ Use deepparse to:
 
 - Use the pre-trained models to parse multinational addresses.
 - Retrain our pre-trained models on new data to parse multinational addresses.
+- Retrain our pre-trained models with your own prediction tags easily.
 
 Deepparse is compatible with the **latest version of PyTorch** and  **Python >= 3.7**.
 

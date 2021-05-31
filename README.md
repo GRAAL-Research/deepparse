@@ -19,6 +19,7 @@ Use deepparse to:
 
 - Use the pre-trained models to parse multinational addresses.
 - Retrain our pre-trained models on new data to parse multinational addresses.
+- Retrain our pre-trained models with your own prediction tags easily.
 
 Read the documentation at [deepparse.org](https://deepparse.org).
 

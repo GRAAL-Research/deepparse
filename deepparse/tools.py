@@ -7,7 +7,7 @@ import poutyne
 import requests
 import torch
 
-BASE_URL = "https://graal.ift.ulaval.ca/public/deepparse/"
+BASE_URL = "https://graal.ift.ulaval.ca/public/deepparse/{}.{}"
 CACHE_PATH = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
 
 
@@ -27,9 +27,8 @@ def download_from_url(file_name: str, saving_dir: str, file_extension: str):
     """
     Simple function to download the content of a file from a distant repository.
     """
-    model_url = BASE_URL + "{}." + file_extension
-    url = model_url.format(file_name)
-    r = requests.get(url)
+    url = BASE_URL.format(file_name, file_extension)
+    r = requests.get(url, timeout=5)
     r.raise_for_status()  # raise exception if 404 or other http error
     os.makedirs(saving_dir, exist_ok=True)
     with open(os.path.join(saving_dir, f"{file_name}.{file_extension}"), "wb") as file:

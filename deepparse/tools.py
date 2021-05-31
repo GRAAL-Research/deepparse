@@ -33,8 +33,10 @@ def download_from_url(file_name: str, saving_dir: str, file_extension: str):
         r.raise_for_status()  # raise exception if 404 or other http error
     except requests.exceptions.ConnectTimeout:
         headers = {
-            "User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.2.8) Gecko/20100722 Firefox/3.6.8 GTB7.1 (.NET CLR 3.5.30729)",
-            "Referer": "http://example.com"}
+            "User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.2.8) "
+            "Gecko/20100722 Firefox/3.6.8 GTB7.1 (.NET CLR 3.5.30729)",
+            "Referer": "http://example.com"
+        }
         r = requests.get(url, timeout=5, headers=headers)
         r.raise_for_status()  # raise exception if 404 or other http error
     os.makedirs(saving_dir, exist_ok=True)

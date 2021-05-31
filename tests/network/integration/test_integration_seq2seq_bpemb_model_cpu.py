@@ -15,12 +15,20 @@ from ..integration.base import Seq2SeqIntegrationTestCase
         "download of model too long for test in runner")
 class BPEmbSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
 
+    @classmethod
+    def setUpClass(cls):
+        super(BPEmbSeq2SeqIntegrationTest, cls).setUpClass()
+        cls.a_retrain_model_path = cls.models_setup(model="bpemb")
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        super(BPEmbSeq2SeqIntegrationTest, cls).tearDownClass()
+        cls.models_tear_down(model="bpemb")
+
     def setUp(self) -> None:
         # will load the weights if not local
         self.encoder_input_setUp("bpemb", self.a_cpu_device)
         self.decomposition_lengths = [[1, 1, 1, 1, 1, 6], [1, 1, 1, 1, 1, 6]]
-
-        self.a_retrain_model = os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "bpemb.ckpt")
 
         self.a_target_vector = torch.tensor([[0, 1, 1, 4, 5, 8], [1, 0, 3, 8, 0, 0]], device=self.a_cpu_device)
 
@@ -48,7 +56,7 @@ class BPEmbSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
         self.seq2seq_model = BPEmbSeq2SeqModel(self.a_cpu_device,
                                                output_size=self.number_of_tags,
                                                verbose=self.verbose,
-                                               path_to_retrained_model=self.a_retrain_model)
+                                               path_to_retrained_model=self.a_retrain_model_path)
         # forward pass for two address: '['15 major st london ontario n5z1e1', '15 major st london ontario n5z1e1']'
         self.decoder_input_setUp()
 
@@ -61,7 +69,7 @@ class BPEmbSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
         self.seq2seq_model = BPEmbSeq2SeqModel(self.a_cpu_device,
                                                output_size=self.number_of_tags,
                                                verbose=self.verbose,
-                                               path_to_retrained_model=self.a_retrain_model)
+                                               path_to_retrained_model=self.a_retrain_model_path)
         # forward pass for two address: '['15 major st london ontario n5z1e1', '15 major st london ontario n5z1e1']'
         self.decoder_input_setUp()
 

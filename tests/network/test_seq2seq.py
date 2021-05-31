@@ -136,8 +136,8 @@ class Seq2SeqTest(TestCase):
 
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.torch.nn.Module.load_state_dict")
-    def test_givenSeq2SeqModelRetrained_whenLoadRetrainedWeightsDiffOutPutSize_thenChangeDim(self, torch_nn_mock,
-                                                                                             torch_mock):
+    def test_givenSeq2SeqModelRetrained_whenLoadRetrainedWeightsDiffOutPutSize_thenChangeDim(
+            self, torch_nn_mock, torch_mock):
         all_layers_params_mock = MagicMock()
         all_layers_params_mock.__getitem__().__len__.return_value = self.decoder_output_size - 1  # diff len of decoder
         torch_mock.load.return_value = all_layers_params_mock
@@ -146,12 +146,13 @@ class Seq2SeqTest(TestCase):
         seq2seq_model._load_weights(self.a_fake_retrain_path)
 
         all_layers_params_mock.assert_has_calls(
-            [call.update({'decoder.linear.weight': ANY}), call.update({'decoder.linear.bias': ANY})])
+            [call.update({'decoder.linear.weight': ANY}),
+             call.update({'decoder.linear.bias': ANY})])
 
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.torch.nn.Module.load_state_dict")
-    def test_givenSeq2SeqModelRetrained_whenLoadRetrainedWeightsNewTagModel_thenLoadProperDict(self, torch_nn_mock,
-                                                                                               torch_mock):
+    def test_givenSeq2SeqModelRetrained_whenLoadRetrainedWeightsNewTagModel_thenLoadProperDict(
+            self, torch_nn_mock, torch_mock):
         all_layers_params_mock = MagicMock(spec=dict)
         all_layers_params_mock.__getitem__().__len__.return_value = self.decoder_output_size
         torch_mock.load.return_value = all_layers_params_mock

@@ -1,7 +1,6 @@
 # Bug with PyTorch source code makes torch.tensor as not callable for pylint.
 # We also skip protected-access since we test the encoder and decoder step
 # pylint: disable=not-callable, protected-access
-import os
 import unittest
 from unittest import skipIf
 
@@ -14,12 +13,20 @@ from ..integration.base import Seq2SeqIntegrationTestCase
 @skipIf(not torch.cuda.is_available(), "no gpu available")
 class FastTextSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
 
+    @classmethod
+    def setUpClass(cls):
+        super(FastTextSeq2SeqIntegrationTest, cls).setUpClass()
+        cls.a_retrain_model_path = cls.models_setup(model="fasttext")
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        super(FastTextSeq2SeqIntegrationTest, cls).tearDownClass()
+        cls.models_tear_down(model="fasttext")
+
     def setUp(self) -> None:
         super().setUp()
         # will load the weights if not local
         self.encoder_input_setUp("fasttext", self.a_torch_device)
-
-        self.a_retrain_model = os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "fasttext.ckpt")
 
         self.a_target_vector = torch.tensor([[0, 1, 1, 4, 5, 8], [1, 0, 3, 8, 0, 0]], device=self.a_torch_device)
 
@@ -45,7 +52,7 @@ class FastTextSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
         self.seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device,
                                                   self.output_size,
                                                   self.verbose,
-                                                  path_to_retrained_model=self.a_retrain_model)
+                                                  path_to_retrained_model=self.a_retrain_model_path)
         # forward pass for two address: '['15 major st london ontario n5z1e1', '15 major st london ontario n5z1e1']'
         self.decoder_input_setUp()
 
@@ -57,7 +64,7 @@ class FastTextSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
         self.seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device,
                                                   self.output_size,
                                                   self.verbose,
-                                                  path_to_retrained_model=self.a_retrain_model)
+                                                  path_to_retrained_model=self.a_retrain_model_path)
         # forward pass for two address: '['15 major st london ontario n5z1e1', '15 major st london ontario n5z1e1']'
         self.decoder_input_setUp()
 

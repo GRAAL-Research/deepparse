@@ -31,10 +31,28 @@ class Seq2SeqIntegrationTestCase(TestCase):
         download_from_url(file_name="to_predict_fasttext", saving_dir=cls.weights_dir, file_extension="p")
         download_from_url(file_name="decoder_hidden", saving_dir=cls.weights_dir, file_extension="p")
 
+        cls.path = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
+        cls.retrain_file_name_format = "retrained_{}_address_parser"
+
+    @classmethod
+    def models_setup(cls, model: str) -> str:
+        # We download the "normal" model
+        download_from_url(file_name=model, saving_dir=cls.path, file_extension="ckpt")
+
+        # We download the "pre_trained" model
+        model = cls.retrain_file_name_format.format(model)
+        download_from_url(file_name=model, saving_dir=cls.path, file_extension="ckpt")
+        return os.path.join(cls.path, f"{model}.ckpt")
+
     @classmethod
     def tearDownClass(cls) -> None:
         if os.path.exists(cls.weights_dir):
             shutil.rmtree(cls.weights_dir)
+
+    @classmethod
+    def models_tear_down(cls, model: str) -> str:
+        os.remove(os.path.join(cls.path, model + ".ckpt"))
+        os.remove(os.path.join(cls.path, cls.retrain_file_name_format.format(model) + ".ckpt"))
 
     def encoder_input_setUp(self, model_type: str, device: torch.device):
         with open(os.path.join(self.weights_dir, f"to_predict_{model_type}.p"), "rb") as file:

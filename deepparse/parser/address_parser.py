@@ -362,9 +362,10 @@ class AddressParser:
             if "EOS" not in prediction_tags.keys():
                 raise ValueError("The prediction tags dictionary is missing the EOS tag.")
             self.tags_converter = TagsConverter(prediction_tags)
-            # Since we have change the output layer dim, we need to handle again the model creation
-            # we set verbose to False since we may already have printed message when __init__ of class.
-            self._model_factory(verbose=False, prediction_layer_len=self.tags_converter.dim)
+            if not self.model.same_output_dim(self.tags_converter.dim):
+                # Since we have change the output layer dim, we need to handle the prediction layer dim
+                new_dim = self.tags_converter.dim
+                self.model.handle_new_output_dim(new_dim)
 
         callbacks = [] if callbacks is None else callbacks
         train_generator, valid_generator = self._create_training_data_generator(dataset_container,

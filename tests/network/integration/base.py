@@ -35,14 +35,14 @@ class Seq2SeqIntegrationTestCase(TestCase):
         cls.retrain_file_name_format = "retrained_{}_address_parser"
 
     @classmethod
-    def models_setup(cls, model: str) -> str:
+    def models_setup(cls, model: str) -> None:
         # We download the "normal" model
         download_from_url(file_name=model, saving_dir=cls.path, file_extension="ckpt")
 
         # We download the "pre_trained" model
         model = cls.retrain_file_name_format.format(model)
         download_from_url(file_name=model, saving_dir=cls.path, file_extension="ckpt")
-        return os.path.join(cls.path, f"{model}.ckpt")
+        cls.re_trained_output_dim = 3
 
     @classmethod
     def tearDownClass(cls) -> None:
@@ -72,7 +72,7 @@ class Seq2SeqIntegrationTestCase(TestCase):
     def decoder_input_setUp(self):
         self.max_length = self.a_lengths_tensor[0].item()
 
-    def assert_output_is_valid_dim(self, actual_prediction):
+    def assert_output_is_valid_dim(self, actual_prediction, output_dim):
         self.assertEqual(self.max_length + 1, actual_prediction.shape[0])  # + 1 since end-of-sequence (EOS)
         self.assertEqual(self.a_batch_size, actual_prediction.shape[1])
-        self.assertEqual(self.number_of_tags, actual_prediction.shape[2])
+        self.assertEqual(output_dim, actual_prediction.shape[2])

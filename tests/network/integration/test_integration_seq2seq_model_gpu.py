@@ -50,7 +50,7 @@ class Seq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
                                                                                   self.none_target, self.max_length,
                                                                                   self.a_batch_size)
 
-        self.assert_output_is_valid_dim(actual_prediction_sequence)
+        self.assert_output_is_valid_dim(actual_prediction_sequence, output_dim=self.number_of_tags)
 
     def test_whenDecoderStepTeacherForcing_thenDecoderStepIsOk(self):
         # decoding for two address: '['15 major st london ontario n5z1e1', '15 major st london ontario n5z1e1']'
@@ -62,7 +62,7 @@ class Seq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
                                                                                   self.a_target_vector, self.max_length,
                                                                                   self.a_batch_size)
 
-        self.assert_output_is_valid_dim(actual_prediction_sequence)
+        self.assert_output_is_valid_dim(actual_prediction_sequence, output_dim=self.number_of_tags)
 
     @patch("deepparse.network.seq2seq.random.random")
     def test_whenDecoderStepWithTarget_thenUsesTarget(self, random_mock):

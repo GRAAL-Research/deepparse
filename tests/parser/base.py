@@ -88,6 +88,13 @@ class AddressParserPredictTestCase(CaptureOutputTestCase):
         model.return_value = Mock(return_value=torch.cat((self.a_prediction_vector_for_a_complete_address,
                                                           self.a_prediction_vector_for_a_complete_address), 1))
 
-    def setup_retrain_new_tags_model(self, address_components):
-        data_dict = {"address_tagger_model": {"a_key": 1, "another_key": 2}, "prediction_tags": address_components}
+    def setup_retrain_new_tags_model(self, address_components, model_type):
+        data_dict = {
+            "address_tagger_model": {
+                "a_key": 1,
+                "another_key": 2
+            },
+            "prediction_tags": address_components,
+            "model_type": model_type
+        }
         torch.save(data_dict, self.a_model_path)

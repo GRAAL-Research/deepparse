@@ -189,7 +189,8 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
             call(
                 {
                     'address_tagger_model': experiment_mock().model.network.state_dict(),
-                    'prediction_tags': self.address_components
+                    'prediction_tags': self.address_components,
+                    'model_type': self.a_fasttext_model_type
                 }, saving_model_path)
         ]
 
@@ -259,7 +260,8 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
             call(
                 {
                     'address_tagger_model': experiment_mock().model.network.state_dict(),
-                    'prediction_tags': self.address_components
+                    'prediction_tags': self.address_components,
+                    'model_type': self.a_bpemb_model_type
                 }, saving_model_path)
         ]
 

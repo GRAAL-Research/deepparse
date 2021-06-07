@@ -42,8 +42,5 @@ address_parser.retrain(training_container,
                        prediction_tags=tag_dictionary,
                        logging_path=logging_path)
 
-# The retrained model file name are formatted as retrained_{model_type}_address_parser.ckpt
-model_path = os.path.join(logging_path, f"retrained_{model}_address_parser.ckpt")
-
 # Now let's test our fine tuned model using the best checkpoint (default parameter).
-address_parser.test(test_container, batch_size=256, model_path=model_path)
+address_parser.test(test_container, batch_size=256)

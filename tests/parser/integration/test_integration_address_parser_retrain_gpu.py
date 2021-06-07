@@ -1,7 +1,6 @@
 # Bug with PyTorch source code makes torch.tensor as not callable for pylint.
 # pylint: disable=not-callable, too-many-public-methods
 
-import os
 import unittest
 from unittest import skipIf
 from unittest.mock import MagicMock, call, ANY
@@ -169,7 +168,6 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
         self.training(address_parser, self.a_zero_number_of_workers)
 
         performance_after_test = address_parser.test(self.test_container,
-                                                     model_path=self.a_fasttext_model_type,
                                                      batch_size=self.a_batch_size,
                                                      num_workers=self.a_number_of_workers)
 
@@ -182,7 +180,6 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
         self.training(address_parser, self.a_number_of_workers)
 
         performance_after_test = address_parser.test(self.test_container,
-                                                     model_path=self.a_fasttext_model_type,
                                                      batch_size=self.a_batch_size,
                                                      num_workers=self.a_number_of_workers)
 
@@ -196,7 +193,6 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
         self.training(address_parser, self.a_number_of_workers)
 
         performance_after_test = address_parser.test(self.test_container,
-                                                     model_path=self.a_fasttext_model_type,
                                                      batch_size=self.a_batch_size,
                                                      num_workers=self.a_number_of_workers)
 
@@ -210,7 +206,6 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
         self.training(address_parser, self.a_number_of_workers)
 
         performance_after_test = address_parser.test(self.test_container,
-                                                     model_path=self.a_fasttext_model_type,
                                                      batch_size=self.a_batch_size,
                                                      num_workers=self.a_number_of_workers)
 
@@ -225,7 +220,6 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
 
         callback_mock = MagicMock()
         performance_after_test = address_parser.test(self.test_container,
-                                                     model_path=self.a_fasttext_model_type,
                                                      batch_size=self.a_batch_size,
                                                      num_workers=self.a_number_of_workers,
                                                      callbacks=[callback_mock])
@@ -253,8 +247,7 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
 
         performance_after_test = address_parser.test(self.test_container,
                                                      batch_size=self.a_batch_size,
-                                                     num_workers=self.a_number_of_workers,
-                                                     model_path="fasttext")
+                                                     num_workers=self.a_number_of_workers)
 
         self.assertIsNotNone(performance_after_test)
 
@@ -265,12 +258,9 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
 
         self.training(address_parser, self.a_number_of_workers)
 
-        str_path = os.path.join(self.a_checkpoints_saving_dir, "checkpoint_epoch_1.ckpt")
-
         performance_after_test = address_parser.test(self.test_container,
                                                      batch_size=self.a_batch_size,
-                                                     num_workers=self.a_number_of_workers,
-                                                     model_path=str_path)
+                                                     num_workers=self.a_number_of_workers)
 
         self.assertIsNotNone(performance_after_test)
 
@@ -281,7 +271,6 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
         self.training(address_parser, self.a_zero_number_of_workers)
 
         performance_after_test = address_parser.test(self.test_container,
-                                                     model_path=self.a_bpemb_model_type,
                                                      batch_size=self.a_batch_size,
                                                      num_workers=self.a_number_of_workers)
 
@@ -294,7 +283,6 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
         self.training(address_parser, self.a_number_of_workers)
 
         performance_after_test = address_parser.test(self.test_container,
-                                                     model_path=self.a_bpemb_model_type,
                                                      batch_size=self.a_batch_size,
                                                      num_workers=self.a_number_of_workers)
 
@@ -308,7 +296,6 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
         self.training(address_parser, self.a_number_of_workers)
 
         performance_after_test = address_parser.test(self.test_container,
-                                                     model_path=self.a_bpemb_model_type,
                                                      batch_size=self.a_batch_size,
                                                      num_workers=self.a_number_of_workers)
 
@@ -322,7 +309,6 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
         self.training(address_parser, self.a_number_of_workers)
 
         performance_after_test = address_parser.test(self.test_container,
-                                                     model_path=self.a_bpemb_model_type,
                                                      batch_size=self.a_batch_size,
                                                      num_workers=self.a_number_of_workers)
 
@@ -337,7 +323,6 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
 
         callback_mock = MagicMock()
         performance_after_test = address_parser.test(self.test_container,
-                                                     model_path=self.a_bpemb_model_type,
                                                      batch_size=self.a_batch_size,
                                                      num_workers=self.a_number_of_workers,
                                                      callbacks=[callback_mock])
@@ -365,8 +350,7 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
 
         performance_after_test = address_parser.test(self.test_container,
                                                      batch_size=self.a_batch_size,
-                                                     num_workers=self.a_number_of_workers,
-                                                     model_path="bpemb")
+                                                     num_workers=self.a_number_of_workers)
 
         self.assertIsNotNone(performance_after_test)
 
@@ -377,12 +361,9 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
 
         self.training(address_parser, self.a_number_of_workers)
 
-        str_path = os.path.join(self.a_checkpoints_saving_dir, "checkpoint_epoch_1.ckpt")
-
         performance_after_test = address_parser.test(self.test_container,
                                                      batch_size=self.a_batch_size,
-                                                     num_workers=self.a_number_of_workers,
-                                                     model_path=str_path)
+                                                     num_workers=self.a_number_of_workers)
 
         self.assertIsNotNone(performance_after_test)
 

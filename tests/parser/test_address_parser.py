@@ -136,7 +136,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     def test_givenABPEmbModelType_whenInstantiatingParserWithUserComponent_thenCorrectNumberOfOutputDim(
             self, embeddings_model_mock):
         with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel") as model:
-            self.setup_retrain_new_tags_model(self.correct_address_components)
+            self.setup_retrain_new_tags_model(self.correct_address_components, self.a_bpemb_model_type)
             self.address_parser = AddressParser(model_type=self.a_bpemb_model_type,
                                                 device=self.a_device,
                                                 verbose=self.verbose,
@@ -152,7 +152,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     def test_givenAFasttextModelType_whenInstantiatingParserWithUserComponent_thenCorrectNumberOfOutputDim(
             self, download_weights_mock, model_mock):
         with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel") as model:
-            self.setup_retrain_new_tags_model(self.incorrect_address_components)
+            self.setup_retrain_new_tags_model(self.incorrect_address_components, self.a_fasttext_model_type)
             self.address_parser = AddressParser(model_type=self.a_fasttext_model_type,
                                                 device=self.a_device,
                                                 verbose=self.verbose,

@@ -1,6 +1,6 @@
 import os
 import re
-from typing import List, Union, Dict, Tuple, OrderedDict
+from typing import List, Union, Dict, Tuple
 
 import torch
 from poutyne.framework import Experiment
@@ -70,7 +70,7 @@ class AddressParser:
         rounding (int): The rounding to use when asking the probability of the tags. The default value is 4 digits.
         verbose (bool): Turn on/off the verbosity of the model weights download and loading. The default value is True.
         path_to_retrained_model (Union[str, None]): The path to the retrained model to use for prediction. We will
-            infer the `model_type` of the retrained model. Default is None, meaning we use our pre-trained model.
+            `infer` the ``model_type`` of the retrained model. Default is None, meaning we use our pre-trained model.
 
     Note:
         For both the networks, we will download the pre-trained weights and embeddings in the ``.cache`` directory
@@ -112,10 +112,6 @@ class AddressParser:
             - "Orientation": for the street orientation (e.g. west, east)
             - "GeneralDelivery": for other delivery information
 
-    Note:
-        If you have changed the `prediction_tags` dictionary during a fine-tuning of our model, don't forget to keep
-        the `prediction_tags.p` file at the same level of the checkpoint of your model.
-
     Example:
 
         .. code-block:: python
@@ -132,14 +128,15 @@ class AddressParser:
 
                 address_parser = AddressParser(model_type="fasttext",
                                                path_to_retrained_model='/path_to_a_retrain_fasttext_model')
+                parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
 
         Using a retrain model trained on different tags
 
         .. code-block:: python
 
                 # We don't give the model_type since it's ignored when using path_to_retrained_model
-                address_parser = AddressParser(path_to_retrained_model='/path_to_a_retrain_fasttext_model',
-                                               prediction_tags={"a_tag": 0, "a_second_tag": 1})
+                address_parser = AddressParser(path_to_retrained_model='/path_to_a_retrain_fasttext_model')
+                parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
     """
 
     def __init__(self,
@@ -161,14 +158,14 @@ class AddressParser:
 
         if path_to_retrained_model is not None:
             checkpoint_weights = torch.load(path_to_retrained_model, map_location='cpu')
-            if isinstance(checkpoint_weights, dict) and not isinstance(checkpoint_weights, OrderedDict):  # User tags
-                # We change the tags_to_idx
-                tags_to_idx = checkpoint_weights["prediction_tags"]
-                # we change the FIELDS
+            if self._validate_if_new_prediction_tags(checkpoint_weights):
+                # We load the new tags_to_idx
+                tags_to_idx = checkpoint_weights.get("prediction_tags")
+                # we change the FIELDS for the FormattedParsedAddress
                 fields = [field for field in tags_to_idx if field != "EOS"]
 
-                # We "infer" the model type
-                model_type = checkpoint_weights["model_type"]
+            # We "infer" the model type
+            model_type = checkpoint_weights.get("model_type")
 
         formated_parsed_address.FIELDS = fields
         self.tags_converter = TagsConverter(tags_to_idx)
@@ -205,11 +202,9 @@ class AddressParser:
             num_workers (int): Number of workers to use for the data loader (default is 0, which means that the data
                 will be loaded in the main process.).
 
-
         Return:
             Either a :class:`~deepparse.deepparse.parsed_address.FormattedParsedAddress` or a list of
             :class:`~deepparse.deepparse.parsed_address.FormattedParsedAddress` when given more than one address.
-
 
         Example:
 
@@ -273,10 +268,17 @@ class AddressParser:
         """
         Method to retrain the address parser model using a dataset with the same tags. We train using
         `experiment <https://poutyne.org/experiment.html>`_ from `poutyne <https://poutyne.org/index.html>`_
-        framework. The experiment module allow us to save checkpoints ``ckpt`` (pickle format) and a log.tsv where
-        the best epochs can be found (the best epoch is used in test). The retrained model file name are formatted as
-        'retrained_{model_type}_address_parser.ckpt'. For example, if you retrain a fasttext model, the file name
-        will be 'retrained_fasttext_address_parser.ckpt'.
+        framework. The experiment module allows us to save checkpoints ``ckpt`` (pickle format) and a log.tsv where
+        the best epochs can be found (the best epoch is used for the test). The retrained model file name are formatted
+        as 'retrained_{model_type}_address_parser.ckpt'. For example, if you retrain a fasttext model, the file name
+        will be 'retrained_fasttext_address_parser.ckpt'. The retrained saved model included, in a dictionary format,
+        the model weights, the model type, and if new ``prediction_tags`̀` were used, the new prediction tags.
+
+        ``address_tagger_model``
+
+                        "address_tagger_model": exp.model.network.state_dict(),
+                    "prediction_tags": prediction_tags,
+                    "model_type": self.model_type
 
         Args:
             dataset_container (~deepparse.deepparse.dataset_container.dataset_container.DatasetContainer): The
@@ -400,7 +402,10 @@ class AddressParser:
                     "model_type": self.model_type
                 }, file_path)
         else:
-            exp.model.save_weights(file_path)
+            torch.save({
+                "address_tagger_model": exp.model.network.state_dict(),
+                "model_type": self.model_type
+            }, file_path)
         return train_res
 
     def test(self,
@@ -411,11 +416,8 @@ class AddressParser:
              seed: int = 42) -> Dict:
         # pylint: disable=too-many-arguments, too-many-locals
         """
-        Method to test a retrained or a pre-trained model using a dataset with the same tags. We train using
-        `experiment <https://poutyne.org/experiment.html>`_ from `poutyne <https://poutyne.org/index.html>`_
-        framework. The experiment module allow us to save checkpoints ``ckpt`` (pickle format) and a log.tsv where
-        the best epochs can be found (the best epoch is use in test). If you have retrained with different
-        prediction tags, we load the new tags automatically used during the retrain.
+        Method to test a retrained or a pre-trained model using a dataset with the same tags. If you test a retrained
+        with different prediction tags, we will use those tags.
 
         Args:
             test_dataset_container (~deepparse.deepparse.dataset_container.dataset_container.DatasetContainer):
@@ -614,3 +616,7 @@ class AddressParser:
         Pipeline to process data in a data loader for prediction.
         """
         return self.data_converter(self.vectorizer(data))
+
+    @staticmethod
+    def _validate_if_new_prediction_tags(checkpoint_weights: dict) -> bool:
+        return checkpoint_weights.get("prediction_tags") is not None

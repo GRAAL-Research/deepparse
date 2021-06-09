@@ -19,21 +19,21 @@ class BPEmbEmbeddingsModelIntegrationTest(AddressParserIntegrationTestCase):
     @skipIf(platform.system() != "Windows", "Integration test on Windows env.")
     def test_givenAWindowsOS_whenBPEmbModelInit_thenLoadWithProperFunction(self):
         # we setup a smaller model for simplicity
-        model = BPEmbEmbeddingsModel(verbose=self.verbose, lang="fr", vs=1000, dim=25)
+        model = BPEmbEmbeddingsModel(verbose=self.verbose)
 
         self.assertIsInstance(model.model, BPEmb)
 
     @skipIf(platform.system() == "Windows", "Integration test not on Windows env.")
     def test_givenANotWindowsOS_whenBPEmbModelInit_thenLoadWithProperFunction(self):
         # we setup a smaller model for simplicity
-        model = BPEmbEmbeddingsModel(verbose=self.verbose, lang="fr", vs=1000, dim=25)
+        model = BPEmbEmbeddingsModel(verbose=self.verbose)
 
         self.assertIsInstance(model.model, BPEmb)
 
     @skipIf(platform.system() != "Windows", "Integration test on Windows env.")
     def test_givenAWindowsOS_whenBPEmbModelCollateFnInDataLoader_thenWorkProperly(self):
         # we setup a smaller model for simplicity
-        model = BPEmbEmbeddingsModel(verbose=self.verbose, lang="fr", vs=1000, dim=25)
+        model = BPEmbEmbeddingsModel(verbose=self.verbose)
         data_transform = MockedDataTransform(model)
 
         data_loader = DataLoader(self.training_container,
@@ -48,7 +48,7 @@ class BPEmbEmbeddingsModelIntegrationTest(AddressParserIntegrationTestCase):
     @skipIf(platform.system() != "Windows", "Integration test on Windows env.")
     def test_givenAWindowsOS_whenBPEmbModelCollateFnInDataLoaderNumWorkers1_thenWorkProperly(self):
         # we setup a smaller model for simplicity
-        model = BPEmbEmbeddingsModel(verbose=self.verbose, lang="fr", vs=1000, dim=25)
+        model = BPEmbEmbeddingsModel(verbose=self.verbose)
         data_transform = MockedDataTransform(model)
 
         data_loader = DataLoader(self.training_container,
@@ -63,7 +63,7 @@ class BPEmbEmbeddingsModelIntegrationTest(AddressParserIntegrationTestCase):
     @skipIf(platform.system() != "Windows", "Integration test on Windows env.")
     def test_givenAWindowsOS_whenBPEmbModelCollateFnInDataLoaderNumWorkers2_thenWorkProperly(self):
         # we setup a smaller model for simplicity
-        model = BPEmbEmbeddingsModel(verbose=self.verbose, lang="fr", vs=1000, dim=25)
+        model = BPEmbEmbeddingsModel(verbose=self.verbose)
         data_transform = MockedDataTransform(model)
 
         data_loader = DataLoader(self.training_container,
@@ -78,7 +78,7 @@ class BPEmbEmbeddingsModelIntegrationTest(AddressParserIntegrationTestCase):
     @skipIf(platform.system() == "Windows", "Integration test not on Windows env.")
     def test_givenANotWindowsOS_whenBPEmbModelCollateFnInDataLoaderForWindows_thenWorkProperly(self):
         # we setup a smaller model for simplicity
-        model = BPEmbEmbeddingsModel(verbose=self.verbose, lang="fr", vs=1000, dim=25)
+        model = BPEmbEmbeddingsModel(verbose=self.verbose)
 
         data_transform = MockedDataTransform(model)
 
@@ -94,7 +94,7 @@ class BPEmbEmbeddingsModelIntegrationTest(AddressParserIntegrationTestCase):
     @skipIf(platform.system() == "Windows", "Integration test not on Windows env.")
     def test_givenANotWindowsOS_whenBPEmbModelCollateFnInDataLoaderForWindowsNumWorkers1_thenWorkProperly(self):
         # we setup a smaller model for simplicity
-        model = BPEmbEmbeddingsModel(verbose=self.verbose, lang="fr", vs=1000, dim=25)
+        model = BPEmbEmbeddingsModel(verbose=self.verbose)
 
         data_transform = MockedDataTransform(model)
 
@@ -110,7 +110,7 @@ class BPEmbEmbeddingsModelIntegrationTest(AddressParserIntegrationTestCase):
     @skipIf(platform.system() == "Windows", "Integration test not on Windows env.")
     def test_givenANotWindowsOS_whenBPEmbModelCollateFnInDataLoaderForWindowsNumWorkers2_thenWorkProperly(self):
         # we setup a smaller model for simplicity
-        model = BPEmbEmbeddingsModel(verbose=self.verbose, lang="fr", vs=1000, dim=25)
+        model = BPEmbEmbeddingsModel(verbose=self.verbose)
 
         data_transform = MockedDataTransform(model)
 

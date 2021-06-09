@@ -14,16 +14,15 @@ class BPEmbEmbeddingsModel(EmbeddingsModel):
 
     Params:
         verbose (bool): Either or not to make the loading of the embeddings verbose.
-        kwargs: Same as the :class:`~bpemb.BPEmb` class.
     """
 
-    def __init__(self, verbose: bool = True, **kwargs) -> None:
+    def __init__(self, verbose: bool = True) -> None:
         super().__init__(verbose=verbose)
         with warnings.catch_warnings():
             # annoying scipy.sparcetools private module warnings removal
             # annoying boto warnings
             warnings.filterwarnings("ignore")
-            model = BPEmb(**kwargs)
+            model = BPEmb(lang="multi", vs=100000, dim=300)  # defaults parameters
         self.model = model
 
     def __call__(self, word: str) -> ndarray:

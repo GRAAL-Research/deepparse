@@ -45,7 +45,7 @@ PREDICTION_TIME_PERFORMANCE_THRESHOLD = 64
 class AddressParser:
     """
     Address parser to parse an address or a list of address using one of the seq2seq pre-trained
-    networks either with fastText or BPEmb. The default predictions tags are the following
+    networks either with fastText or BPEmb. The default prediction tags are the following
 
             - "StreetNumber": for the street number,
             - "StreetName": for the name of the street,

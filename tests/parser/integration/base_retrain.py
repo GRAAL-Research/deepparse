@@ -9,8 +9,8 @@ from unittest import TestCase
 import torch
 
 from deepparse import download_from_url
-from deepparse.dataset_container import PickleDatasetContainer
-from deepparse.parser import CACHE_PATH
+from deepparse.dataset_container import PickleDatasetContainer, DatasetContainer
+from deepparse.parser import CACHE_PATH, AddressParser
 
 
 class AddressParserRetrainTestCase(TestCase):
@@ -53,6 +53,8 @@ class AddressParserRetrainTestCase(TestCase):
         cls.fasttext_local_path = os.path.join(CACHE_PATH, "fasttext.ckpt")
         cls.bpemb_local_path = os.path.join(CACHE_PATH, "bpemb.ckpt")
 
+        cls.with_new_prediction_tags = {'ALastTag': 0, 'ATag': 1, 'AnotherTag': 2, "EOS": 3}
+
     def setUp(self) -> None:
         self.clean_checkpoints()
 
@@ -68,12 +70,16 @@ class AddressParserRetrainTestCase(TestCase):
         if os.path.exists(self.a_checkpoints_saving_dir):
             shutil.rmtree(self.a_checkpoints_saving_dir)
 
-    def training(self, address_parser, num_workers: int, with_new_prediction_tags=None):
+    def training(self,
+                 address_parser: AddressParser,
+                 data_container: DatasetContainer,
+                 num_workers: int,
+                 prediction_tags=None):
 
-        address_parser.retrain(self.training_container,
+        address_parser.retrain(data_container,
                                self.a_train_ratio,
                                epochs=self.a_single_epoch,
                                batch_size=self.a_batch_size,
                                num_workers=num_workers,
                                logging_path=self.a_checkpoints_saving_dir,
-                               prediction_tags=with_new_prediction_tags)
+                               prediction_tags=prediction_tags)

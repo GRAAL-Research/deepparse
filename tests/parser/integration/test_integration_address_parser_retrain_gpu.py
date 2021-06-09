@@ -165,7 +165,7 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
         address_parser = AddressParser(model_type=self.a_fasttext_model_type,
                                        device=self.a_torch_device,
                                        verbose=self.verbose)
-        self.training(address_parser, self.a_zero_number_of_workers)
+        self.training(address_parser, self.training_container, self.a_zero_number_of_workers)
 
         performance_after_test = address_parser.test(self.test_container,
                                                      batch_size=self.a_batch_size,
@@ -177,7 +177,7 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
         address_parser = AddressParser(model_type=self.a_fasttext_model_type,
                                        device=self.a_torch_device,
                                        verbose=self.verbose)
-        self.training(address_parser, self.a_number_of_workers)
+        self.training(address_parser, self.training_container, self.a_number_of_workers)
 
         performance_after_test = address_parser.test(self.test_container,
                                                      batch_size=self.a_batch_size,
@@ -190,7 +190,7 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
                                        device=self.a_torch_device,
                                        verbose=self.verbose)
 
-        self.training(address_parser, self.a_number_of_workers)
+        self.training(address_parser, self.training_container, self.a_number_of_workers)
 
         performance_after_test = address_parser.test(self.test_container,
                                                      batch_size=self.a_batch_size,
@@ -203,7 +203,7 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
                                        device=self.a_torch_device,
                                        verbose=self.verbose)
 
-        self.training(address_parser, self.a_number_of_workers)
+        self.training(address_parser, self.training_container, self.a_number_of_workers)
 
         performance_after_test = address_parser.test(self.test_container,
                                                      batch_size=self.a_batch_size,
@@ -216,7 +216,7 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
                                        device=self.a_torch_device,
                                        verbose=self.verbose)
 
-        self.training(address_parser, self.a_number_of_workers)
+        self.training(address_parser, self.training_container, self.a_number_of_workers)
 
         callback_mock = MagicMock()
         performance_after_test = address_parser.test(self.test_container,
@@ -243,7 +243,7 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
                                        device=self.a_torch_device,
                                        verbose=self.verbose)
 
-        self.training(address_parser, self.a_number_of_workers)
+        self.training(address_parser, self.training_container, self.a_number_of_workers)
 
         performance_after_test = address_parser.test(self.test_container,
                                                      batch_size=self.a_batch_size,
@@ -256,7 +256,7 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
                                        device=self.a_torch_device,
                                        verbose=self.verbose)
 
-        self.training(address_parser, self.a_number_of_workers)
+        self.training(address_parser, self.training_container, self.a_number_of_workers)
 
         performance_after_test = address_parser.test(self.test_container,
                                                      batch_size=self.a_batch_size,
@@ -268,7 +268,7 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
         address_parser = AddressParser(model_type=self.a_bpemb_model_type,
                                        device=self.a_torch_device,
                                        verbose=self.verbose)
-        self.training(address_parser, self.a_zero_number_of_workers)
+        self.training(address_parser, self.training_container, self.a_zero_number_of_workers)
 
         performance_after_test = address_parser.test(self.test_container,
                                                      batch_size=self.a_batch_size,
@@ -280,7 +280,7 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
         address_parser = AddressParser(model_type=self.a_bpemb_model_type,
                                        device=self.a_torch_device,
                                        verbose=self.verbose)
-        self.training(address_parser, self.a_number_of_workers)
+        self.training(address_parser, self.training_container, self.a_number_of_workers)
 
         performance_after_test = address_parser.test(self.test_container,
                                                      batch_size=self.a_batch_size,
@@ -293,7 +293,7 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
                                        device=self.a_torch_device,
                                        verbose=self.verbose)
 
-        self.training(address_parser, self.a_number_of_workers)
+        self.training(address_parser, self.training_container, self.a_number_of_workers)
 
         performance_after_test = address_parser.test(self.test_container,
                                                      batch_size=self.a_batch_size,
@@ -306,7 +306,7 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
                                        device=self.a_torch_device,
                                        verbose=self.verbose)
 
-        self.training(address_parser, self.a_number_of_workers)
+        self.training(address_parser, self.training_container, self.a_number_of_workers)
 
         performance_after_test = address_parser.test(self.test_container,
                                                      batch_size=self.a_batch_size,
@@ -319,7 +319,7 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
                                        device=self.a_torch_device,
                                        verbose=self.verbose)
 
-        self.training(address_parser, self.a_number_of_workers)
+        self.training(address_parser, self.training_container, self.a_number_of_workers)
 
         callback_mock = MagicMock()
         performance_after_test = address_parser.test(self.test_container,
@@ -346,7 +346,7 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
                                        device=self.a_torch_device,
                                        verbose=self.verbose)
 
-        self.training(address_parser, self.a_number_of_workers)
+        self.training(address_parser, self.training_container, self.a_number_of_workers)
 
         performance_after_test = address_parser.test(self.test_container,
                                                      batch_size=self.a_batch_size,
@@ -359,7 +359,7 @@ class AddressParserIntegrationTest(AddressParserRetrainTestCase):
                                        device=self.a_torch_device,
                                        verbose=self.verbose)
 
-        self.training(address_parser, self.a_number_of_workers)
+        self.training(address_parser, self.training_container, self.a_number_of_workers)
 
         performance_after_test = address_parser.test(self.test_container,
                                                      batch_size=self.a_batch_size,

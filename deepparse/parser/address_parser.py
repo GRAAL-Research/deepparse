@@ -274,7 +274,7 @@ class AddressParser:
         prediction tags.
 
         Args:
-            dataset_container (:class:`~deepparse.dataset_container.DatasetContainer`): The
+            dataset_container (~deepparse.dataset_container.DatasetContainer): The
                 dataset container of the data to use.
             train_ratio (float): The ratio to use of the dataset for the training. The rest of the data is used for the
                 validation (e.g. a train ratio of 0.8 mean a 80-20 train-valid split).
@@ -409,7 +409,7 @@ class AddressParser:
         retrained with different prediction tags, we will use those tags.
 
         Args:
-            test_dataset_container (:class:`~deepparse.dataset_container.DatasetContainer`):
+            test_dataset_container (~deepparse.dataset_container.DatasetContainer):
                 The test dataset container of the data to use.
             batch_size (int): The size of the batch (default is 32).
             num_workers (int): Number of workers to use for the data loader (default is 1 worker).

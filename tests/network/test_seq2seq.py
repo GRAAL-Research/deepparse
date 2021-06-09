@@ -63,6 +63,27 @@ class Seq2SeqTest(TestCase):
         self.assertEqual(self.decoder_output_size, seq2seq_model.decoder.linear.out_features)
         self.assertEqual(self.a_torch_device, seq2seq_model.decoder.lstm.all_weights[0][0].device)
 
+    def test_whenSameOutput_thenReturnTrue(self):
+        seq2seq_model = Seq2SeqModel(self.a_cpu_device, output_size=self.decoder_output_size)
+        self.assertTrue(seq2seq_model.same_output_dim(self.decoder_output_size))
+
+    def test_whenNotSameOutput_thenReturnFalse(self):
+        seq2seq_model = Seq2SeqModel(self.a_cpu_device, output_size=self.decoder_output_size)
+        self.assertFalse(seq2seq_model.same_output_dim(self.decoder_output_size - 1))
+
+    def test_whenHandleNewOutputDim_thenProperlyHandleNewDim(self):
+        seq2seq_model = Seq2SeqModel(self.a_cpu_device, output_size=self.decoder_output_size)
+
+        a_new_dim = 1
+        seq2seq_model.handle_new_output_dim(a_new_dim)
+
+        expected = a_new_dim
+        actual = seq2seq_model.output_size
+        self.assertEqual(expected, actual)
+
+        actual = seq2seq_model.decoder.linear.out_features
+        self.assertEqual(expected, actual)
+
     @patch("deepparse.network.seq2seq.latest_version")
     @patch("os.path.isfile")
     @patch("deepparse.network.seq2seq.torch")

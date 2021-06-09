@@ -14,7 +14,7 @@ class BPEmbEmbeddingsModel(EmbeddingsModel):
 
     Params:
         verbose (bool): Either or not to make the loading of the embeddings verbose.
-        kwargs: Same as the :class:`~bpemb.BPEmb` class.
+        kwargs: Same as the ~bpemb.BPEmb class.
     """
 
     def __init__(self, verbose: bool = True, **kwargs) -> None:

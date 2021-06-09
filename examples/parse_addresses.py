@@ -28,6 +28,6 @@ parsed_addresses = address_parser(test_data[0:300])
 
 # We can also put our parsed address into a pandas dataframe for analysis
 # You can choose the fields to use or use the default one
-fields = ['street_number', 'street_name', 'municipality', 'province', 'postal_code']
+fields = ['StreetNumber', 'StreetName', 'Municipality', 'Province', 'PostalCode']
 parsed_address_data_frame = pd.DataFrame([parsed_address.to_dict(fields=fields) for parsed_address in parsed_addresses],
                                          columns=fields)

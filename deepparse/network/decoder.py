@@ -25,8 +25,7 @@ class Decoder(nn.Module):
         self.lstm = nn.LSTM(input_size, hidden_size, num_layers=num_layers)
         self.lstm.apply(weight_init)
 
-        self.linear = nn.Linear(hidden_size, output_size)
-        self.linear.apply(weight_init)
+        self.linear_layer_set_up(output_size, hidden_size=hidden_size)
 
         self.softmax = nn.LogSoftmax(dim=1)
 
@@ -48,3 +47,7 @@ class Decoder(nn.Module):
         output_prob = self.softmax(self.linear(output[0]))
 
         return output_prob, hidden
+
+    def linear_layer_set_up(self, output_size: int, hidden_size: int = 1024):
+        self.linear = nn.Linear(hidden_size, output_size)
+        self.linear.apply(weight_init)

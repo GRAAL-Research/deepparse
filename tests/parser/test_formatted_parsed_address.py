@@ -1,13 +1,21 @@
+# pylint: disable=no-member
+
+import io
+import sys
 import unittest
+from unittest import TestCase
 
-from deepparse.parser import ParsedAddress
-from tests.base_capture_output import CaptureOutputTestCase
+from deepparse.parser import FormattedParsedAddress
 
 
-class ParsedAddressTest(CaptureOutputTestCase):
+class FormattedParsedAddressTest(TestCase):
 
     @classmethod
     def setUpClass(cls):
+        cls.address_components = [
+            "StreetNumber", "StreetName", "Unit", "Municipality", "Province", "PostalCode", "Orientation",
+            "GeneralDelivery"
+        ]
         cls.a_address_str = "3 test road"
         cls.a_complete_address_str = "3 test road unit west city province postal_code delivery"
         cls.a_parsed_address = [("3", "StreetNumber"), ("test", "StreetName"), ("road", "StreetName")]
@@ -16,36 +24,41 @@ class ParsedAddressTest(CaptureOutputTestCase):
                                          ("province", "Province"), ("postal_code", "PostalCode"),
                                          ("delivery", "GeneralDelivery")]
 
-        cls.a_address_repr = "ParsedAddress<street_number='3', street_name='test road'>"
+        cls.a_address_repr = "FormattedParsedAddress<StreetNumber='3', StreetName='test road'>"
         cls.a_address = {cls.a_address_str: cls.a_parsed_address}
         cls.a_complete_address = {cls.a_complete_address_str: cls.a_complete_parsed_address}
         cls.a_existing_tag = "3"
 
         cls.a_parsed_address_in_dict_format = {
-            'street_number': '3',
-            'unit': None,
-            'street_name': 'test road',
-            'orientation': None,
-            'municipality': None,
-            'province': None,
-            'postal_code': None,
-            'general_delivery': None
+            'StreetNumber': '3',
+            'Unit': None,
+            'StreetName': 'test road',
+            'Orientation': None,
+            'Municipality': None,
+            'Province': None,
+            'PostalCode': None,
+            'GeneralDelivery': None
         }
 
         cls.a_complete_parsed_address_in_dict_format = {
-            'street_number': '3',
-            'unit': 'unit',
-            'street_name': 'test road',
-            'orientation': 'west',
-            'municipality': 'city',
-            'province': 'province',
-            'postal_code': 'postal_code',
-            'general_delivery': 'delivery'
+            'StreetNumber': '3',
+            'Unit': 'unit',
+            'StreetName': 'test road',
+            'Orientation': 'west',
+            'Municipality': 'city',
+            'Province': 'province',
+            'PostalCode': 'postal_code',
+            'GeneralDelivery': 'delivery'
         }
 
+    def _capture_output(self):
+        self.test_out = io.StringIO()
+        self.original_output = sys.stdout
+        sys.stdout = self.test_out
+
     def setUp(self):
-        self.parsed_address = ParsedAddress(self.a_address)
-        self.complete_parsed_address = ParsedAddress(self.a_complete_address)
+        self.parsed_address = FormattedParsedAddress(self.a_address)
+        self.complete_parsed_address = FormattedParsedAddress(self.a_complete_address)
 
     def test_whenInstantiatedWithAddress_thenShouldReturnCorrectRawAddress(self):
         address = self.parsed_address.raw_address
@@ -57,19 +70,13 @@ class ParsedAddressTest(CaptureOutputTestCase):
 
         self.assertEqual(parsed_address, self.a_parsed_address)
 
-    def test_whenInstantiatedWithCompleteAddress_thenShouldReturnCorrectCompleteParsedAddress(self):
-        self.parsed_address = ParsedAddress(self.a_complete_address)
-        parsed_address = self.parsed_address.address_parsed_components
-
-        self.assertEqual(parsed_address, self.a_complete_parsed_address)
-
     def test_whenInstantiatedWithAddress_thenShouldReturnCorrectTagIfExists(self):
-        street_number = self.parsed_address.street_number
+        street_number = self.parsed_address.StreetNumber
 
         self.assertEqual(street_number, self.a_existing_tag)
 
     def test_whenInstantiatedWithAddress_thenShouldReturnNoneIfTagDoesntExist(self):
-        unit = self.parsed_address.unit
+        unit = self.parsed_address.Unit
 
         self.assertIsNone(unit)
 
@@ -97,12 +104,12 @@ class ParsedAddressTest(CaptureOutputTestCase):
         self.assertEqual(actual, expected)
 
     def test_whenToDictUserFields_thenReturnTheProperDict(self):
-        actual = self.parsed_address.to_dict(fields=["street_number"])
-        expected = {'street_number': '3'}
+        actual = self.parsed_address.to_dict(fields=["StreetNumber"])
+        expected = {'StreetNumber': '3'}
         self.assertEqual(actual, expected)
 
-        actual = self.complete_parsed_address.to_dict(fields=["street_number"])
-        expected = {'street_number': '3'}
+        actual = self.complete_parsed_address.to_dict(fields=["StreetNumber"])
+        expected = {'StreetNumber': '3'}
         self.assertEqual(actual, expected)
 
 

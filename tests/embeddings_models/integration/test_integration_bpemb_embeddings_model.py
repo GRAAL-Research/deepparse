@@ -6,10 +6,10 @@ from torch.utils.data import DataLoader
 
 from deepparse.embeddings_models import BPEmbEmbeddingsModel
 from tests.embeddings_models.integration.tools import MockedDataTransform
-from tests.parser.integration.base_integration import AddressParserIntegrationTestCase
+from tests.parser.integration.base_retrain import AddressParserRetrainTestCase
 
 
-class BPEmbEmbeddingsModelIntegrationTest(AddressParserIntegrationTestCase):
+class BPEmbEmbeddingsModelIntegrationTest(AddressParserRetrainTestCase):
 
     @classmethod
     def setUpClass(cls):

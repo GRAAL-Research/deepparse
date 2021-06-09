@@ -1,18 +1,19 @@
 # Since we use a patch as model mock we skip the unused argument error
-# pylint: disable=unused-argument
+# pylint: disable=unused-argument, no-member, too-many-public-methods
+
 import os
 import unittest
 from unittest.mock import patch, Mock
 
 from torch import device
 
-from deepparse.parser import ParsedAddress
+from deepparse.parser import FormattedParsedAddress
 from deepparse.parser.address_parser import AddressParser
 from tests.parser.base import AddressParserPredictTestCase
 
 
 class AddressParserTest(AddressParserPredictTestCase):
-    # pylint: disable=too-many-public-methods
+
     @classmethod
     def setUpClass(cls):
         super(AddressParserTest, cls).setUpClass()
@@ -23,6 +24,10 @@ class AddressParserTest(AddressParserPredictTestCase):
         cls.a_device = "cpu"
         cls.a_torch_device = device(cls.a_device)
         cls.verbose = False
+        cls.number_tags = 9
+
+        cls.correct_address_components = {"ATag": 0, "AnotherTag": 1, "EOS": 2}
+        cls.incorrect_address_components = {"ATag": 0, "AnotherTag": 1}
 
         cls.BPEmb_embeddings_model_param = {"lang": "multi", "vs": 100000, "dim": 300}
         cls.fasttext_download_path = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
@@ -122,7 +127,41 @@ class AddressParserTest(AddressParserPredictTestCase):
                                                 device=self.a_device,
                                                 verbose=self.verbose)
 
-            model.assert_called_with(self.a_torch_device, verbose=self.verbose, path_to_retrained_model=None)
+            model.assert_called_with(self.a_torch_device,
+                                     self.number_tags,
+                                     verbose=self.verbose,
+                                     path_to_retrained_model=None)
+
+    @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
+    def test_givenABPEmbModelType_whenInstantiatingParserWithUserComponent_thenCorrectNumberOfOutputDim(
+            self, embeddings_model_mock):
+        with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel") as model:
+            self.setup_retrain_new_tags_model(self.correct_address_components, self.a_bpemb_model_type)
+            self.address_parser = AddressParser(model_type=self.a_bpemb_model_type,
+                                                device=self.a_device,
+                                                verbose=self.verbose,
+                                                path_to_retrained_model=self.a_model_path)
+
+            model.assert_called_with(self.a_torch_device,
+                                     len(self.correct_address_components),
+                                     verbose=self.verbose,
+                                     path_to_retrained_model=self.a_model_path)
+
+    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
+    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
+    def test_givenAFasttextModelType_whenInstantiatingParserWithUserComponent_thenCorrectNumberOfOutputDim(
+            self, download_weights_mock, model_mock):
+        with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel") as model:
+            self.setup_retrain_new_tags_model(self.incorrect_address_components, self.a_fasttext_model_type)
+            self.address_parser = AddressParser(model_type=self.a_fasttext_model_type,
+                                                device=self.a_device,
+                                                verbose=self.verbose,
+                                                path_to_retrained_model=self.a_model_path)
+
+            model.assert_called_with(self.a_torch_device,
+                                     len(self.incorrect_address_components),
+                                     verbose=self.verbose,
+                                     path_to_retrained_model=self.a_model_path)
 
     @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
     def test_givenABPEmbModelType_whenInstantiatingParser_thenInstantiateModelWithCorrectParameters(
@@ -132,7 +171,10 @@ class AddressParserTest(AddressParserPredictTestCase):
                                                 device=self.a_device,
                                                 verbose=self.verbose)
 
-            model.assert_called_with(self.a_torch_device, verbose=self.verbose, path_to_retrained_model=None)
+            model.assert_called_with(self.a_torch_device,
+                                     self.number_tags,
+                                     verbose=self.verbose,
+                                     path_to_retrained_model=None)
 
     @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
     @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
@@ -257,7 +299,10 @@ class AddressParserTest(AddressParserPredictTestCase):
                                                 device=self.a_device,
                                                 verbose=self.verbose)
 
-            model.assert_called_with(self.a_torch_device, verbose=self.verbose, path_to_retrained_model=None)
+            model.assert_called_with(self.a_torch_device,
+                                     self.number_tags,
+                                     verbose=self.verbose,
+                                     path_to_retrained_model=None)
 
     @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
     @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
@@ -268,7 +313,10 @@ class AddressParserTest(AddressParserPredictTestCase):
                                                 device=self.a_device,
                                                 verbose=self.verbose)
 
-            model.assert_called_with(self.a_torch_device, verbose=self.verbose, path_to_retrained_model=None)
+            model.assert_called_with(self.a_torch_device,
+                                     self.number_tags,
+                                     verbose=self.verbose,
+                                     path_to_retrained_model=None)
 
     @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
     @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
@@ -285,7 +333,7 @@ class AddressParserTest(AddressParserPredictTestCase):
 
             parse_address = self.address_parser(self.a_complete_address)
 
-            self.assertIsInstance(parse_address, ParsedAddress)
+            self.assertIsInstance(parse_address, FormattedParsedAddress)
             self.assertEqual(parse_address.raw_address, self.a_complete_address)
 
     @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
@@ -303,7 +351,7 @@ class AddressParserTest(AddressParserPredictTestCase):
             parse_address = self.address_parser([self.a_complete_address, self.a_complete_address])
 
             self.assertIsInstance(parse_address, list)
-            self.assertIsInstance(parse_address[0], ParsedAddress)
+            self.assertIsInstance(parse_address[0], FormattedParsedAddress)
             self.assertEqual(parse_address[0].raw_address, self.a_complete_address)
             self.assertEqual(parse_address[1].raw_address, self.a_complete_address)
 
@@ -321,13 +369,13 @@ class AddressParserTest(AddressParserPredictTestCase):
 
             parse_address = self.address_parser(self.a_complete_address)
 
-            self.assertIsNone(parse_address.general_delivery)
-            self.assertEqual(parse_address.municipality, self.a_municipality)
-            self.assertIsNone(parse_address.orientation)
-            self.assertEqual(parse_address.postal_code, self.a_postal_code)
-            self.assertEqual(parse_address.province, self.a_province)
-            self.assertEqual(parse_address.street_name, self.a_street_name)
-            self.assertEqual(parse_address.street_number, self.a_street_number)
+            self.assertIsNone(parse_address.GeneralDelivery)
+            self.assertEqual(parse_address.Municipality, self.a_municipality)
+            self.assertIsNone(parse_address.Orientation)
+            self.assertEqual(parse_address.PostalCode, self.a_postal_code)
+            self.assertEqual(parse_address.Province, self.a_province)
+            self.assertEqual(parse_address.StreetName, self.a_street_name)
+            self.assertEqual(parse_address.StreetNumber, self.a_street_number)
 
     @patch("deepparse.parser.address_parser.download_fasttext_magnitude_embeddings")
     @patch("deepparse.parser.address_parser.MagnitudeEmbeddingsModel")
@@ -344,7 +392,7 @@ class AddressParserTest(AddressParserPredictTestCase):
 
             parse_address = self.address_parser(self.a_complete_address)
 
-            self.assertIsInstance(parse_address, ParsedAddress)
+            self.assertIsInstance(parse_address, FormattedParsedAddress)
             self.assertEqual(parse_address.raw_address, self.a_complete_address)
 
     @patch("deepparse.parser.address_parser.download_fasttext_magnitude_embeddings")
@@ -362,7 +410,7 @@ class AddressParserTest(AddressParserPredictTestCase):
             parse_address = self.address_parser([self.a_complete_address, self.a_complete_address])
 
             self.assertIsInstance(parse_address, list)
-            self.assertIsInstance(parse_address[0], ParsedAddress)
+            self.assertIsInstance(parse_address[0], FormattedParsedAddress)
             self.assertEqual(parse_address[0].raw_address, self.a_complete_address)
             self.assertEqual(parse_address[1].raw_address, self.a_complete_address)
 
@@ -380,13 +428,13 @@ class AddressParserTest(AddressParserPredictTestCase):
 
             parse_address = self.address_parser(self.a_complete_address)
 
-            self.assertIsNone(parse_address.general_delivery)
-            self.assertEqual(parse_address.municipality, self.a_municipality)
-            self.assertIsNone(parse_address.orientation)
-            self.assertEqual(parse_address.postal_code, self.a_postal_code)
-            self.assertEqual(parse_address.province, self.a_province)
-            self.assertEqual(parse_address.street_name, self.a_street_name)
-            self.assertEqual(parse_address.street_number, self.a_street_number)
+            self.assertIsNone(parse_address.GeneralDelivery)
+            self.assertEqual(parse_address.Municipality, self.a_municipality)
+            self.assertIsNone(parse_address.Orientation)
+            self.assertEqual(parse_address.PostalCode, self.a_postal_code)
+            self.assertEqual(parse_address.Province, self.a_province)
+            self.assertEqual(parse_address.StreetName, self.a_street_name)
+            self.assertEqual(parse_address.StreetNumber, self.a_street_number)
 
     @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
     @patch("deepparse.parser.address_parser.BPEmbVectorizer")
@@ -401,7 +449,7 @@ class AddressParserTest(AddressParserPredictTestCase):
 
             parse_address = self.address_parser(self.a_complete_address)
 
-            self.assertIsInstance(parse_address, ParsedAddress)
+            self.assertIsInstance(parse_address, FormattedParsedAddress)
             self.assertEqual(parse_address.raw_address, self.a_complete_address)
 
     @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
@@ -419,7 +467,7 @@ class AddressParserTest(AddressParserPredictTestCase):
             parse_address = self.address_parser([self.a_complete_address, self.a_complete_address])
 
             self.assertIsInstance(parse_address, list)
-            self.assertIsInstance(parse_address[0], ParsedAddress)
+            self.assertIsInstance(parse_address[0], FormattedParsedAddress)
             self.assertEqual(parse_address[0].raw_address, self.a_complete_address)
             self.assertEqual(parse_address[1].raw_address, self.a_complete_address)
 
@@ -437,13 +485,13 @@ class AddressParserTest(AddressParserPredictTestCase):
 
             parse_address = self.address_parser(self.a_complete_address)
 
-            self.assertIsNone(parse_address.general_delivery)
-            self.assertEqual(parse_address.municipality, self.a_municipality)
-            self.assertIsNone(parse_address.orientation)
-            self.assertEqual(parse_address.postal_code, self.a_postal_code)
-            self.assertEqual(parse_address.province, self.a_province)
-            self.assertEqual(parse_address.street_name, self.a_street_name)
-            self.assertEqual(parse_address.street_number, self.a_street_number)
+            self.assertIsNone(parse_address.GeneralDelivery)
+            self.assertEqual(parse_address.Municipality, self.a_municipality)
+            self.assertIsNone(parse_address.Orientation)
+            self.assertEqual(parse_address.PostalCode, self.a_postal_code)
+            self.assertEqual(parse_address.Province, self.a_province)
+            self.assertEqual(parse_address.StreetName, self.a_street_name)
+            self.assertEqual(parse_address.StreetNumber, self.a_street_number)
 
     @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
     @patch("deepparse.parser.address_parser.BPEmbVectorizer")
@@ -562,6 +610,27 @@ class AddressParserTest(AddressParserPredictTestCase):
             print(self.address_parser.__repr__())
 
             self.assertEqual(self.a_fasttext_light_name, self.test_out.getvalue().strip())
+
+    @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
+    def test_givenABPEmbModelType_whenRetrainWithIncorrectPredictionTags_thenRaiseValueError(
+            self, embeddings_model_mock):
+        with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel") as _:
+            self.address_parser = AddressParser(model_type=self.a_bpemb_model_type,
+                                                device=self.a_device,
+                                                verbose=self.verbose)
+            with self.assertRaises(ValueError):
+                self.address_parser.retrain(Mock(), 0.8, 1, 1, prediction_tags=self.incorrect_address_components)
+
+    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
+    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
+    def test_givenAFasttextModelType_whenInstantiatingParserWithUserComponent_thenRaiseValueError(
+            self, download_weights_mock, model_mock):
+        with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel") as _:
+            self.address_parser = AddressParser(model_type=self.a_fasttext_model_type,
+                                                device=self.a_device,
+                                                verbose=self.verbose)
+            with self.assertRaises(ValueError):
+                self.address_parser.retrain(Mock(), 0.8, 1, 1, prediction_tags=self.incorrect_address_components)
 
     # we do BPemb but can be fasttext or fasttext-light
     @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")

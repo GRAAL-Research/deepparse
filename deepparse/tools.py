@@ -7,7 +7,7 @@ import poutyne
 import requests
 import torch
 
-BASE_URL = "https://graal.ift.ulaval.ca/public/deepparse/"
+BASE_URL = "https://graal.ift.ulaval.ca/public/deepparse/{}.{}"
 CACHE_PATH = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
 
 
@@ -27,10 +27,18 @@ def download_from_url(file_name: str, saving_dir: str, file_extension: str):
     """
     Simple function to download the content of a file from a distant repository.
     """
-    model_url = BASE_URL + "{}." + file_extension
-    url = model_url.format(file_name)
-    r = requests.get(url)
-    r.raise_for_status()  # raise exception if 404 or other http error
+    url = BASE_URL.format(file_name, file_extension)
+    try:
+        r = requests.get(url, timeout=5)
+        r.raise_for_status()  # raise exception if 404 or other http error
+    except requests.exceptions.ConnectTimeout:
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.2.8) "
+            "Gecko/20100722 Firefox/3.6.8 GTB7.1 (.NET CLR 3.5.30729)",
+            "Referer": "http://example.com"
+        }
+        r = requests.get(url, timeout=5, headers=headers)
+        r.raise_for_status()  # raise exception if 404 or other http error
     os.makedirs(saving_dir, exist_ok=True)
     with open(os.path.join(saving_dir, f"{file_name}.{file_extension}"), "wb") as file:
         file.write(r.content)
@@ -86,29 +94,29 @@ def handle_pre_trained_checkpoint(model_type_checkpoint: str) -> str:
         raise NotImplementedError(
             f"To load the pre-trained {model_type_checkpoint} model, you need to have a Poutyne version"
             "greater than 1.1 (>1.1)")
-    if not latest_version(model_type_checkpoint, cache_path=CACHE_PATH):
+    model_path = os.path.join(CACHE_PATH, f"{model_type_checkpoint}.ckpt")
+
+    if not os.path.isfile(model_path):
+        download_weights(model_type_checkpoint, CACHE_PATH, verbose=True)
+    elif not latest_version(model_type_checkpoint, cache_path=CACHE_PATH):
         warnings.warn("A newer model of fasttext is available, you can download it using the download script.",
                       UserWarning)
     checkpoint = os.path.join(CACHE_PATH, f"{model_type_checkpoint}.ckpt")
     return checkpoint
 
 
-def handle_checkpoint(checkpoint: str) -> str:
+def handle_model_path(checkpoint: str) -> str:
     """
-    Handle the checkpoint format validity and path.
+    Handle the validity of path.
     """
-    if checkpoint in ("best", "last"):
-        pass
-    elif isinstance(checkpoint, int):
-        pass
-    elif checkpoint in ("fasttext", "bpemb"):
+    if checkpoint in ("fasttext", "bpemb"):
         checkpoint = handle_pre_trained_checkpoint(checkpoint)
     elif isinstance(checkpoint, str) and checkpoint.endswith(".ckpt"):
         if not valid_poutyne_version():
             raise NotImplementedError("To load a string path to a model, you need to have a Poutyne version"
                                       "greater than 1.1 (>1.1)")
     else:
-        raise ValueError("The checkpoint is not valid. Can be 'best', 'last', a int, a path in a string format, "
+        raise ValueError("The checkpoint is not valid. Can be a path in a string format (e.g. 'a_path_.ckpt'), "
                          "'fasttext' or 'bpemb'.")
 
     return checkpoint

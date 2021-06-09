@@ -27,6 +27,8 @@ class Seq2SeqTestCase(TestCase):
         cls.hidden_size = 300
         cls.projection_size = 300
 
+        cls.output_size = 9
+
     def setup_encoder_mocks(self):
         to_predict_mock = MagicMock()
         lengths_tensor_mock = MagicMock()
@@ -44,7 +46,7 @@ class Seq2SeqTestCase(TestCase):
 
     def assert_has_calls_tensor_equals(self, decoder_mock, expected_calls):
         # since we can't compare tensor in calls, we open it and compare each elements
-        decoder_mock_calls = decoder_mock.mock_calls[4:8]
+        decoder_mock_calls = decoder_mock.mock_calls[8:11]
         for decoder_mock_call, expected_call in zip(decoder_mock_calls, expected_calls):
             self.assertEqual(decoder_mock_call[1][0].tolist(), expected_call[1][0].tolist())  # the tensor
             self.assertEqual(decoder_mock_call[1][1], expected_call[1][1])  # The other element of the call

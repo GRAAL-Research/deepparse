@@ -1,3 +1,7 @@
+# Bug with PyTorch source code makes torch.tensor as not callable for pylint.
+# no-member skip is so because child define the training_container in setup
+# pylint: disable=not-callable, too-many-public-methods, no-member
+
 import os
 import shutil
 from unittest import TestCase
@@ -5,15 +9,15 @@ from unittest import TestCase
 import torch
 
 from deepparse import download_from_url
-from deepparse.dataset_container import PickleDatasetContainer
-from deepparse.parser import CACHE_PATH
+from deepparse.dataset_container import PickleDatasetContainer, DatasetContainer
+from deepparse.parser import CACHE_PATH, AddressParser
 
 
-class AddressParserIntegrationTestCase(TestCase):
+class AddressParserRetrainTestCase(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.a_data_saving_dir = "./data"
+        cls.a_data_saving_dir = "data"
         os.makedirs(cls.a_data_saving_dir, exist_ok=True)
         file_extension = "p"
         training_dataset_name = "sample_incomplete_data"
@@ -38,15 +42,18 @@ class AddressParserIntegrationTestCase(TestCase):
         cls.a_train_ratio = 0.8
         cls.a_batch_size = 128
         cls.a_number_of_workers = 2
-        cls.a_zero_number_of_workers = 0
         cls.a_learning_rate = 0.001
-        cls.a_checkpoints_saving_dir = "./chekpoints"
+        cls.a_checkpoints_saving_dir = "checkpoints"
+
+        cls.a_torch_device = torch.device("cuda:0")
+        cls.a_cpu_device = 'cpu'
+
+        cls.a_zero_number_of_workers = 0
 
         cls.fasttext_local_path = os.path.join(CACHE_PATH, "fasttext.ckpt")
         cls.bpemb_local_path = os.path.join(CACHE_PATH, "bpemb.ckpt")
 
-        cls.a_cpu_device = 'cpu'
-        cls.a_torch_device = torch.device("cuda:0")
+        cls.with_new_prediction_tags = {'ALastTag': 0, 'ATag': 1, 'AnotherTag': 2, "EOS": 3}
 
     def setUp(self) -> None:
         self.clean_checkpoints()
@@ -63,10 +70,16 @@ class AddressParserIntegrationTestCase(TestCase):
         if os.path.exists(self.a_checkpoints_saving_dir):
             shutil.rmtree(self.a_checkpoints_saving_dir)
 
-    def training(self, address_parser, num_workers):
-        address_parser.retrain(self.training_container,
+    def training(self,
+                 address_parser: AddressParser,
+                 data_container: DatasetContainer,
+                 num_workers: int,
+                 prediction_tags=None):
+
+        address_parser.retrain(data_container,
                                self.a_train_ratio,
                                epochs=self.a_single_epoch,
                                batch_size=self.a_batch_size,
                                num_workers=num_workers,
-                               logging_path=self.a_checkpoints_saving_dir)
+                               logging_path=self.a_checkpoints_saving_dir,
+                               prediction_tags=prediction_tags)

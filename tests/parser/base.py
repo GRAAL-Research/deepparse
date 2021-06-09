@@ -1,15 +1,18 @@
 # Bug with PyTorch source code makes torch.tensor as not callable for pylint.
-# pylint: disable=not-callable
+# pylint: disable=not-callable, too-many-public-methods
+
+import os
+import shutil
 from unittest.mock import Mock
 
 import torch
 from torch import tensor
 
+from deepparse.parser import nll_loss, accuracy
 from tests.base_capture_output import CaptureOutputTestCase
 
 
 class AddressParserPredictTestCase(CaptureOutputTestCase):
-    # pylint: disable=too-many-public-methods
 
     @classmethod
     def setUpClass(cls):
@@ -27,6 +30,13 @@ class AddressParserPredictTestCase(CaptureOutputTestCase):
         cls.a_province = "ontario"
         cls.a_street_name = "major st"
         cls.a_street_number = "15"
+
+        cls.a_logging_path = "data"
+
+    def tearDown(self) -> None:
+        # cleanup after the tests
+        if os.path.exists(self.a_model_root_path):
+            shutil.rmtree(self.a_model_root_path)
 
     def setUp(self):
         # a prediction vector with real values
@@ -60,9 +70,31 @@ class AddressParserPredictTestCase(CaptureOutputTestCase):
                  -2.7060e-05
              ]]])
 
+        self.a_loss_function = nll_loss
+        self.a_list_of_batch_metrics = [accuracy]
+
+        # to create the dirs for dumping the prediction tags since we mock Poutyne that usually will do it
+        os.makedirs(self.a_logging_path, exist_ok=True)
+
+        # to create the dir for the model and dump the prediction_tags.p if needed
+        self.a_model_root_path = "model"
+        os.makedirs(self.a_model_root_path, exist_ok=True)
+        self.a_model_path = os.path.join(self.a_model_root_path, "model.p")
+
     def mock_predictions_vectors(self, model):
         model.return_value = Mock(return_value=self.a_prediction_vector_for_a_complete_address)
 
     def mock_multiple_predictions_vectors(self, model):
         model.return_value = Mock(return_value=torch.cat((self.a_prediction_vector_for_a_complete_address,
                                                           self.a_prediction_vector_for_a_complete_address), 1))
+
+    def setup_retrain_new_tags_model(self, address_components, model_type):
+        data_dict = {
+            "address_tagger_model": {
+                "a_key": 1,
+                "another_key": 2
+            },
+            "prediction_tags": address_components,
+            "model_type": model_type
+        }
+        torch.save(data_dict, self.a_model_path)

@@ -2,7 +2,7 @@ import os
 import random
 import warnings
 from abc import ABC
-from typing import Tuple, Union
+from typing import Tuple, Union, OrderedDict
 
 import torch
 import torch.nn as nn
@@ -15,18 +15,21 @@ from ..tools import download_weights, latest_version
 
 class Seq2SeqModel(ABC, nn.Module):
     """
-    Abstract class for Seq2Seq network. The network use the config as design in our article for the encoder and
-    decoder:
+    Abstract class for Seq2Seq network. By default, the network uses the config as designed in our article for the
+    encoder and decoder:
 
         - Encoder: ``input_size = 300``, ``hidden_size = 1024`` and ``num_layers = 1``
         - Decoder: ``input_size = 1``, ``hidden_size = 1024``, ``num_layers = 1`` and ``output_size = 9``
 
+    When retraining with a different tag dictionary the output_size is changed to the size of that dictionary.
+
      Args:
         device (~torch.device): The device tu use for the prediction.
+        output_size (int): The size of the prediction layers (i.e. the number of tag to predict).
         verbose (bool): Turn on/off the verbosity of the model. The default value is True.
     """
 
-    def __init__(self, device: torch.device, verbose: bool = True) -> None:
+    def __init__(self, device: torch.device, output_size: int, verbose: bool = True) -> None:
         super().__init__()
         self.device = device
         self.verbose = verbose
@@ -34,8 +37,28 @@ class Seq2SeqModel(ABC, nn.Module):
         self.encoder = Encoder(input_size=300, hidden_size=1024, num_layers=1)
         self.encoder.to(self.device)
 
-        self.decoder = Decoder(input_size=1, hidden_size=1024, num_layers=1, output_size=9)
+        self.decoder = Decoder(input_size=1, hidden_size=1024, num_layers=1, output_size=output_size)
         self.decoder.to(self.device)
+
+        self.output_size = output_size
+
+    def same_output_dim(self, size: int) -> bool:
+        """
+        Verify if the output dimension is similar to ``size``.
+
+        Args:
+            size (int): The dimension size to compare the output dim to.
+
+        Return: A bool, True if output dim is equal to ``size``, False otherwise.
+        """
+        return size == self.output_size
+
+    def handle_new_output_dim(self, new_dim: int) -> None:
+        """
+        Update the new output dimension
+        """
+        self.decoder.linear_layer_set_up(output_size=new_dim)
+        self.output_size = new_dim
 
     def _load_pre_trained_weights(self, model_type: str) -> None:
         """
@@ -55,7 +78,6 @@ class Seq2SeqModel(ABC, nn.Module):
             download_weights(model_type, CACHE_PATH, verbose=self.verbose)
 
         all_layers_params = torch.load(model_path, map_location=self.device)
-
         self.load_state_dict(all_layers_params)
 
     def _load_weights(self, path_to_retrained_model: str) -> None:
@@ -66,7 +88,9 @@ class Seq2SeqModel(ABC, nn.Module):
             path_to_retrained_model (str): The path to the fine-tuned model.
         """
         all_layers_params = torch.load(path_to_retrained_model, map_location=self.device)
-
+        if isinstance(all_layers_params, dict) and not isinstance(all_layers_params, OrderedDict):
+            # Case where we have a retrained model with a different tagging space
+            all_layers_params = all_layers_params.get("address_tagger_model")
         self.load_state_dict(all_layers_params)
 
     def _encoder_step(self, to_predict: torch.Tensor, lengths_tensor: torch.Tensor, batch_size: int) -> Tuple:
@@ -109,8 +133,7 @@ class Seq2SeqModel(ABC, nn.Module):
         """
         # The empty prediction sequence
         # +1 for the EOS
-        # 9 for the output size (9 tokens)
-        prediction_sequence = torch.zeros(max_length + 1, batch_size, 9).to(self.device)
+        prediction_sequence = torch.zeros(max_length + 1, batch_size, self.output_size).to(self.device)
 
         # we decode the first token
         decoder_output, decoder_hidden = self.decoder(decoder_input, decoder_hidden)

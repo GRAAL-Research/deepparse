@@ -21,3 +21,7 @@ class TagsConverter:
         if isinstance(key, str):
             return self.tags_to_idx[key]
         return self.idx_to_tags[key]
+
+    @property
+    def dim(self):
+        return len(self.tags_to_idx)

@@ -154,20 +154,21 @@ man_pages = [(master_doc, 'deepparse', 'deepparse Documentation', [author], 1)]
 #  dir menu entry, description, category)
 texinfo_documents = [
     (master_doc, 'deepparse', 'deepparse Documentation', author, 'deepparse', 'One line description of project.',
-     'Miscellaneous'),
+     'Miscellaneous')
 ]
 
 # -- Intersphinx mappings ----------------------------------------------------
 
 intersphinx_mapping = {
-    'PyTorch': ('https://pytorch.org/docs/master/', None),
-    'python': ('https://docs.python.org/3', None)
+    'PyTorch': ('https://pytorch.org/docs/stable/', None),
+    'python': ('https://docs.python.org/3.8', None),
+    'numpy': ('http://docs.scipy.org/doc/numpy/', None)
 }
 
 # -- Extension configuration -------------------------------------------------
 
 autodoc_default_options = {
-    'member-order': 'bysource',
+    'member-order': 'bysource'
 }
 
 # -- Options for todo extension ----------------------------------------------

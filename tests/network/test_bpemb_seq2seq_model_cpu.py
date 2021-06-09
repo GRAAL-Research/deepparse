@@ -17,9 +17,6 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
     @classmethod
     def setUpClass(cls):
         super(BPEmbSeq2SeqCPUTest, cls).setUpClass()
-        cls.input_size = 300
-        cls.hidden_size = 300
-        cls.projection_size = 300
         cls.model_type = "bpemb"
 
         cls.a_target_vector = torch.tensor([[0, 1, 1, 4, 5, 8], [1, 0, 3, 8, 0, 0]], device=cls.a_cpu_device)
@@ -28,7 +25,7 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
     @patch("deepparse.network.seq2seq.Seq2SeqModel._load_pre_trained_weights")
     def test_whenInstantiatingABPEmbSeq2SeqModel_thenShouldInstantiateAEmbeddingNetwork(
             self, load_pre_trained_weights_mock):
-        seq2seq_model = BPEmbSeq2SeqModel(self.a_cpu_device, self.verbose)
+        seq2seq_model = BPEmbSeq2SeqModel(self.a_cpu_device, self.output_size, self.verbose)
 
         self.assertEqual(self.input_size, seq2seq_model.embedding_network.model.input_size)
         self.assertEqual(self.hidden_size, seq2seq_model.embedding_network.model.hidden_size)
@@ -41,7 +38,7 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
             self, load_state_dict_mock, torch_mock, isfile_mock):
         isfile_mock.return_value = False
         with patch("deepparse.network.seq2seq.download_weights") as download_weights_mock:
-            _ = BPEmbSeq2SeqModel(self.a_cpu_device, self.verbose)
+            _ = BPEmbSeq2SeqModel(self.a_cpu_device, self.output_size, self.verbose)
             download_weights_mock.assert_called_with(self.model_type, self.a_root_path, verbose=self.verbose)
 
     @patch("deepparse.network.seq2seq.latest_version")
@@ -53,7 +50,7 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
         isfile_mock.return_value = True
         last_version_mock.return_value = False
         with patch("deepparse.network.seq2seq.download_weights") as download_weights_mock:
-            _ = BPEmbSeq2SeqModel(self.a_cpu_device, self.verbose)
+            _ = BPEmbSeq2SeqModel(self.a_cpu_device, self.output_size, self.verbose)
             download_weights_mock.assert_called_with(self.model_type, self.a_root_path, verbose=self.verbose)
 
     @patch("deepparse.network.seq2seq.latest_version")
@@ -65,7 +62,7 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
         isfile_mock.return_value = True
         last_version_mock.return_value = True
         with patch("deepparse.network.seq2seq.download_weights") as download_weights_mock:
-            _ = BPEmbSeq2SeqModel(self.a_cpu_device, self.verbose)
+            _ = BPEmbSeq2SeqModel(self.a_cpu_device, self.output_size, self.verbose)
             download_weights_mock.assert_not_called()
 
     @patch("deepparse.network.seq2seq.torch")
@@ -74,7 +71,10 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
             self, load_state_dict_mock, torch_mock):
         all_layers_params = MagicMock()
         torch_mock.load.return_value = all_layers_params
-        _ = BPEmbSeq2SeqModel(self.a_cpu_device, self.verbose, path_to_retrained_model=self.a_path_to_retrained_model)
+        _ = BPEmbSeq2SeqModel(self.a_cpu_device,
+                              self.output_size,
+                              self.verbose,
+                              path_to_retrained_model=self.a_path_to_retrained_model)
 
         torch_load_call = [call.load(self.a_path_to_retrained_model, map_location=self.a_cpu_device)]
         torch_mock.assert_has_calls(torch_load_call)
@@ -91,7 +91,7 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
     def test_whenInstantiateASeq2SeqModel_thenEncoderIsCalledOnce(self, load_state_dict_mock, torch_mock, isfile_mock,
                                                                   last_version_mock, download_weights_mock,
                                                                   encoder_mock):
-        seq2seq_model = BPEmbSeq2SeqModel(self.a_cpu_device, self.verbose)
+        seq2seq_model = BPEmbSeq2SeqModel(self.a_cpu_device, self.output_size, self.verbose)
 
         to_predict_mock, lengths_tensor_mock = self.setup_encoder_mocks()
         seq2seq_model._encoder_step(to_predict_mock, lengths_tensor_mock, self.a_batch_size)
@@ -115,7 +115,7 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
         download_weights_mock,
         decoder_mock,
     ):
-        seq2seq_model = BPEmbSeq2SeqModel(self.a_cpu_device, self.verbose)
+        seq2seq_model = BPEmbSeq2SeqModel(self.a_cpu_device, self.output_size, self.verbose)
 
         decoder_input_mock, decoder_hidden_mock = self.setUp_decoder_mocks(decoder_mock)
         max_length = 4  # a sequence of 4 tokens
@@ -139,7 +139,7 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
                                                                         random_mock):
         random_mock.return_value = self.a_value_lower_than_threshold
 
-        seq2seq_model = BPEmbSeq2SeqModel(self.a_cpu_device, self.verbose)
+        seq2seq_model = BPEmbSeq2SeqModel(self.a_cpu_device, self.output_size, self.verbose)
 
         decoder_input_mock, decoder_hidden_mock = self.setUp_decoder_mocks(decoder_mock)
         max_length = 4  # a sequence of 4 tokens
@@ -183,7 +183,7 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
                     # we mock the return of the decoder output
                     encoder_mock().return_value = decoder_hidden_mock
                     with decoder_mock:
-                        seq2seq_model = BPEmbSeq2SeqModel(self.a_cpu_device, self.verbose)
+                        seq2seq_model = BPEmbSeq2SeqModel(self.a_cpu_device, self.output_size, self.verbose)
 
                         seq2seq_model.forward(to_predict=to_predict_mock,
                                               decomposition_lengths=decomposition_lengths_mock,
@@ -229,7 +229,7 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
                     # we mock the return of the decoder output
                     encoder_mock().return_value = decoder_hidden_mock
                     with decoder_mock:
-                        seq2seq_model = BPEmbSeq2SeqModel(self.a_cpu_device, self.verbose)
+                        seq2seq_model = BPEmbSeq2SeqModel(self.a_cpu_device, self.output_size, self.verbose)
 
                         seq2seq_model.forward(to_predict=to_predict_mock,
                                               decomposition_lengths=decomposition_lengths_mock,

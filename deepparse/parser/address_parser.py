@@ -405,8 +405,8 @@ class AddressParser:
              seed: int = 42) -> Dict:
         # pylint: disable=too-many-arguments, too-many-locals
         """
-        Method to test a retrained or a pre-trained model using a dataset with the defaults tags. If you test a
-        retrained with different prediction tags, we will use those tags.
+        Method to test a retrained or a pre-trained model using a dataset with the default tags. If you test a
+        retrained model with different prediction tags, we will use those tags.
 
         Args:
             test_dataset_container (~deepparse.dataset_container.DatasetContainer):

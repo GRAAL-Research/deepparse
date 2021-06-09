@@ -52,7 +52,7 @@ class FormattedParsedAddress:
 
     def to_dict(self, fields: Union[List, None] = None) -> dict:
         """
-        Method to convert an parsed address into a dictionary where the keys are the address components and the value
+        Method to convert a parsed address into a dictionary where the keys are the address components and the values
         are the value of those components. For example, the parsed address ``<StreetNumber> 305 <StreetName>
         rue des Lilas`` will be converted into the following dictionary:
         ``{'StreetNumber':'305', 'StreetName': 'rue des Lilas'}``.

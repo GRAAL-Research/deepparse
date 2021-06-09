@@ -287,12 +287,12 @@ class AddressParser:
                 default we set no callback.
             seed (int): Seed to use (by default 42).
             logging_path (str): The logging path for the checkpoints. By default the path is ``./checkpoints``.
-            prediction_tags (Union[dict, None]): A dictionary were the keys are the address components
-                (e.g. street name) and the value are the components idx (from 0 to N + 1) to use during retrain
-                of a model. The ``+ 1`` is the End Of Sequence (EOS) token that need to be include in the dictionary.
+            prediction_tags (Union[dict, None]): A dictionary where the keys are the address components
+                (e.g. street name) and the values are the components indices (from 0 to N + 1) to use during retraining
+                of a model. The ``+ 1`` corresponds to the End Of Sequence (EOS) token that needs to be included in the dictionary.
                 We will use the length of this dictionary for the output size of the prediction layer. We also save
-                the dictionary to be use later on when you will use the model. Default is None, meaning we use our
-                pre-trained  model prediction tags.
+                the dictionary to be used later on when you load the model. Default is None, meaning we use our
+                pre-trained model prediction tags.
 
         Return:
             A list of dictionary with the best epoch stats (see `Experiment class

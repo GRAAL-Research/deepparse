@@ -79,10 +79,10 @@
 - Added examples for parsing addresses and how to convert them into a DataFrame.
 - Fixed error with download module.
 
-## dev
+## 0.4
 
 - Added verbose flag to training and test base on the __init__ of address parser.
 - Added a feature to retrain our models with prediction tags dictionary different from the default one.
-- Added a feature to test our model with prediction tags dictionary different from the default one.
 - Added in-doc code examples.
 - Added code examples.
+- Small improvement of models implementation.

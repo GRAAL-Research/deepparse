@@ -146,6 +146,18 @@ address_parser.retrain(training_container, 0.8, epochs=5, batch_size=8)
 
 ```
 
+### Retrain a Model With New Tags
+
+> See [here](https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py>) for a complete example.
+
+```python
+
+address_components = {"ATag":0, "AnotherTag": 1, "EOS": 2}
+address_parser.retrain(training_container, 0.8, epochs=1, batch_size=128, prediction_tags=address_components)
+
+```
+
+
 ### Download our Models
 
 Here are the URLs to download our pre-trained models directly

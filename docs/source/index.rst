@@ -8,7 +8,12 @@
   :author: Marouane Yassine & David Beauchemin
   :property="og:image": https://deepparse.org/_static/logos/logo.png
 
-[![Download](https://img.shields.io/badge/Download%20Dataset-blue?style=for-the-badge&logo=download)](https://github.com/GRAAL-Research/deepparse-address-data)
+.. raw:: html
+
+    <center>
+    <a href="https://github.com/GRAAL-Research/deepparse-address-data">
+        <img src="https://img.shields.io/badge/Download%20Dataset-blue?style=for-the-badge&logo=download" alt="No message"/></a>
+    </center>
 
 Here is deepparse
 =================
@@ -354,25 +359,31 @@ Getting Started
 
 The predictions tags are the following
 
-    - "StreetNumber": for the street number
-    - "StreetName": for the name of the street
-    - "Unit": for the unit (such as apartment)
-    - "Municipality": for the municipality
-    - "Province": for the province or local region
-    - "PostalCode": for the postal code
-    - "Orientation": for the street orientation (e.g. west, east)
-    - "GeneralDelivery": for other delivery information
+    - "StreetNumber": for the street number,
+    - "StreetName": for the name of the street,
+    - "Unit": for the unit (such as apartment),
+    - "Municipality": for the municipality,
+    - "Province": for the province or local region,
+    - "PostalCode": for the postal code,
+    - "Orientation": for the street orientation (e.g. west, east),
+    - "GeneralDelivery": for other delivery information.
 
 Retrain a Model
 ***************
+See `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py>`_ for a complete example.
+
+.. code-block:: python
+
+    address_parser.retrain(training_container, 0.8, epochs=5, batch_size=8)
+
+Retrain a Model With New Tags
+*****************************
 See `this <https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py>`_ for a complete example.
 
 .. code-block:: python
 
-    # We will retrain the fasttext version of our pretrained model.
-    address_parser = AddressParser(model_type="fasttext", device=0)
-
-    address_parser.retrain(training_container, 0.8, epochs=5, batch_size=8)
+    address_components = {"ATag":0, "AnotherTag": 1, "EOS": 2}
+    address_parser.retrain(training_container, 0.8, epochs=1, batch_size=128, prediction_tags=address_components)
 
 Download our Models
 *******************

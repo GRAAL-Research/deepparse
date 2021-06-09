@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Index &mdash; deepparse 0.3.6 documentation</title>
+  <title>Index &mdash; deepparse 0.4 documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.3.6
+                0.4
               </div>
             
           
@@ -101,6 +101,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="examples/fine_tuning.html">Retrain a Pretrained Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/parse_addresses.html">Parse Addresses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
 </ul>
 
             
@@ -173,14 +174,10 @@
  <a href="#_"><strong>_</strong></a>
  | <a href="#A"><strong>A</strong></a>
  | <a href="#D"><strong>D</strong></a>
- | <a href="#G"><strong>G</strong></a>
- | <a href="#M"><strong>M</strong></a>
- | <a href="#O"><strong>O</strong></a>
+ | <a href="#F"><strong>F</strong></a>
  | <a href="#P"><strong>P</strong></a>
  | <a href="#R"><strong>R</strong></a>
- | <a href="#S"><strong>S</strong></a>
  | <a href="#T"><strong>T</strong></a>
- | <a href="#U"><strong>U</strong></a>
  
 </div>
 <h2 id="_">_</h2>
@@ -194,7 +191,7 @@
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parser.html#deepparse.parser.ParsedAddress.address_parsed_components">address_parsed_components (deepparse.parser.ParsedAddress attribute)</a>
+      <li><a href="parser.html#deepparse.parser.FormattedParsedAddress.address_parsed_components">address_parsed_components (deepparse.parser.FormattedParsedAddress attribute)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -211,26 +208,10 @@
   </ul></td>
 </tr></table>
 
-<h2 id="G">G</h2>
+<h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parser.html#deepparse.parser.ParsedAddress.general_delivery">general_delivery (deepparse.parser.ParsedAddress attribute)</a>
-</li>
-  </ul></td>
-</tr></table>
-
-<h2 id="M">M</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parser.html#deepparse.parser.ParsedAddress.municipality">municipality (deepparse.parser.ParsedAddress attribute)</a>
-</li>
-  </ul></td>
-</tr></table>
-
-<h2 id="O">O</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parser.html#deepparse.parser.ParsedAddress.orientation">orientation (deepparse.parser.ParsedAddress attribute)</a>
+      <li><a href="parser.html#deepparse.parser.FormattedParsedAddress">FormattedParsedAddress (class in deepparse.parser)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -238,15 +219,7 @@
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parser.html#deepparse.parser.ParsedAddress">ParsedAddress (class in deepparse.parser)</a>
-</li>
       <li><a href="dataset_container.html#deepparse.dataset_container.PickleDatasetContainer">PickleDatasetContainer (class in deepparse.dataset_container)</a>
-</li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parser.html#deepparse.parser.ParsedAddress.postal_code">postal_code (deepparse.parser.ParsedAddress attribute)</a>
-</li>
-      <li><a href="parser.html#deepparse.parser.ParsedAddress.province">province (deepparse.parser.ParsedAddress attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -254,23 +227,11 @@
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parser.html#deepparse.parser.ParsedAddress.raw_address">raw_address (deepparse.parser.ParsedAddress attribute)</a>
+      <li><a href="parser.html#deepparse.parser.FormattedParsedAddress.raw_address">raw_address (deepparse.parser.FormattedParsedAddress attribute)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="parser.html#deepparse.parser.AddressParser.retrain">retrain() (deepparse.parser.AddressParser method)</a>
-</li>
-  </ul></td>
-</tr></table>
-
-<h2 id="S">S</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parser.html#deepparse.parser.ParsedAddress.street_name">street_name (deepparse.parser.ParsedAddress attribute)</a>
-</li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parser.html#deepparse.parser.ParsedAddress.street_number">street_number (deepparse.parser.ParsedAddress attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -282,15 +243,7 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parser.html#deepparse.parser.ParsedAddress.to_dict">to_dict() (deepparse.parser.ParsedAddress method)</a>
-</li>
-  </ul></td>
-</tr></table>
-
-<h2 id="U">U</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parser.html#deepparse.parser.ParsedAddress.unit">unit (deepparse.parser.ParsedAddress attribute)</a>
+      <li><a href="parser.html#deepparse.parser.FormattedParsedAddress.to_dict">to_dict() (deepparse.parser.FormattedParsedAddress method)</a>
 </li>
   </ul></td>
 </tr></table>

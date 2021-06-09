@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Parser &mdash; deepparse 0.3.6 documentation</title>
+  <title>Parser &mdash; deepparse 0.4 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.3.6
+                0.4
               </div>
             
           
@@ -102,6 +102,8 @@
 <li class="toctree-l3"><a class="reference internal" href="#memory-usage-and-time-performance">Memory Usage and Time Performance</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#addressparser">AddressParser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#formatted-parsed-address">Formatted Parsed Address</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="dataset_container.html">Dataset Container</a></li>
@@ -110,6 +112,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="examples/fine_tuning.html">Retrain a Pretrained Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/parse_addresses.html">Parse Addresses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
 </ul>
 
             
@@ -215,7 +218,7 @@ are a little bit lower on trained country (around ~2%) but are similar on zero-s
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>fastText <a href="#id13"><span class="problematic" id="id2">[1]_</span></a></p></td>
+<tr class="row-even"><td><p>fastText <a class="footnote-reference brackets" href="#id3" id="id2">1</a></p></td>
 <td><p>~1</p></td>
 <td><p>~8</p></td>
 <td><p>~0.00236</p></td>
@@ -242,7 +245,7 @@ are a little bit lower on trained country (around ~2%) but are similar on zero-s
 </tbody>
 </table>
 <dl class="footnote brackets">
-<dt class="label" id="id3"><span class="brackets">1</span></dt>
+<dt class="label" id="id3"><span class="brackets"><a class="fn-backref" href="#id2">1</a></span></dt>
 <dd><p>Note that on Windows, we use the Gensim Fasttext models that use ~10 GO with similar performance.</p>
 </dd>
 </dl>
@@ -261,7 +264,7 @@ are a little bit lower on trained country (around ~2%) but are similar on zero-s
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>fastText <a href="#id14"><span class="problematic" id="id4">[1]_</span></a></p></td>
+<tr class="row-even"><td><p>fastText <a class="footnote-reference brackets" href="#id5" id="id4">2</a></p></td>
 <td><p>~8</p></td>
 <td><p>~0.0168</p></td>
 <td><p>~0.0026</p></td>
@@ -284,7 +287,7 @@ are a little bit lower on trained country (around ~2%) but are similar on zero-s
 </tbody>
 </table>
 <dl class="footnote brackets">
-<dt class="label" id="id5"><span class="brackets">1</span></dt>
+<dt class="label" id="id5"><span class="brackets"><a class="fn-backref" href="#id4">2</a></span></dt>
 <dd><p>Note that on Windows, we use the Gensim Fasttext models that use ~10 GO with similar performance.</p>
 </dd>
 </dl>
@@ -292,42 +295,55 @@ are a little bit lower on trained country (around ~2%) but are similar on zero-s
 Thus, the more there is address, the faster processing each address can be. You can also improve performance by
 using more worker for the data loader created with your data within the call. But note that this performance
 improvements is not linear.</p>
+</div>
+</div>
+<div class="section" id="addressparser">
+<h2>AddressParser<a class="headerlink" href="#addressparser" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="deepparse.parser.AddressParser">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">deepparse.parser.</span></span><span class="sig-name descname"><span class="pre">AddressParser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'best'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span> </span><span class="pre">torch.device</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rounding</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><span class="pre">bool</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_to_retrained_model</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deepparse/parser/address_parser.html#AddressParser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.parser.AddressParser" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">deepparse.parser.</span></span><span class="sig-name descname"><span class="pre">AddressParser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'best'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span> </span><span class="pre">torch.device</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rounding</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_to_retrained_model</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deepparse/parser/address_parser.html#AddressParser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.parser.AddressParser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Address parser to parse an address or a list of address using one of the seq2seq pre-trained
-networks either with fastText or BPEmb.</p>
+networks either with fastText or BPEmb. The default prediction tags are the following</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>“StreetNumber”: for the street number,</p></li>
+<li><p>“StreetName”: for the name of the street,</p></li>
+<li><p>“Unit”: for the unit (such as apartment),</p></li>
+<li><p>“Municipality”: for the municipality,</p></li>
+<li><p>“Province”: for the province or local region,</p></li>
+<li><p>“PostalCode”: for the postal code,</p></li>
+<li><p>“Orientation”: for the street orientation (e.g. west, east),</p></li>
+<li><p>“GeneralDelivery”: for other delivery information.</p></li>
+</ul>
+</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – <p>The network name to use, can be either:</p>
+<li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – <p>The network name to use, can be either:</p>
 <ul>
-<li><p>fasttext (need ~9 GO of RAM to be used);</p></li>
-<li><p>fasttext-light (need ~2 GO of RAM to be used, but slower than fasttext version);</p></li>
-<li><p>bpemb (need ~2 GO of RAM to be used);</p></li>
-<li><p>fastest (quicker to process one address) (equivalent to fasttext);</p></li>
-<li><p>lightest (the one using the less RAM and GPU usage) (equivalent to fasttext-light);</p></li>
+<li><p>fasttext (need ~9 GO of RAM to be used),</p></li>
+<li><p>fasttext-light (need ~2 GO of RAM to be used, but slower than fasttext version),</p></li>
+<li><p>bpemb (need ~2 GO of RAM to be used),</p></li>
+<li><p>fastest (quicker to process one address) (equivalent to fasttext),</p></li>
+<li><p>lightest (the one using the less RAM and GPU usage) (equivalent to fasttext-light),</p></li>
 <li><p>best (best accuracy performance) (equivalent to bpemb).</p></li>
 </ul>
-<p>The default value is “best” for the most accurate model.</p>
+<p>The default value is “best” for the most accurate model. Ignored if <code class="docutils literal notranslate"><span class="pre">path_to_retrained_model</span></code> is not
+<code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
 </p></li>
-<li><p><strong>device</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>torch.device</em><em>]</em>) – <p>The device to use can be either:</p>
+<li><p><strong>device</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><a class="reference external" href="https://pytorch.org/docs/stable/tensor_attributes.html#torch.torch.device" title="(in PyTorch v1.8.0a0+56b43f4)"><em>torch.torch.device</em></a><em>]</em>) – <p>The device to use can be either:</p>
 <ul>
-<li><p>a <code class="docutils literal notranslate"><span class="pre">GPU</span></code> index in int format (e.g. <code class="docutils literal notranslate"><span class="pre">0</span></code>);</p></li>
-<li><p>a complete device name in a string format (e.g. <code class="docutils literal notranslate"><span class="pre">'cuda:0'</span></code>);</p></li>
-<li><p>a <a class="reference external" href="https://pytorch.org/docs/master/tensor_attributes.html#torch.torch.device" title="(in PyTorch vmaster (1.9.0a0+git8149145 ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">device</span></code></a> object;</p></li>
+<li><p>a <code class="docutils literal notranslate"><span class="pre">GPU</span></code> index in int format (e.g. <code class="docutils literal notranslate"><span class="pre">0</span></code>),</p></li>
+<li><p>a complete device name in a string format (e.g. <code class="docutils literal notranslate"><span class="pre">'cuda:0'</span></code>),</p></li>
+<li><p>a <a class="reference external" href="https://pytorch.org/docs/stable/tensor_attributes.html#torch.torch.device" title="(in PyTorch v1.8.0a0+56b43f4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">device</span></code></a> object,</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'cpu'</span></code> for a  <code class="docutils literal notranslate"><span class="pre">CPU</span></code> use.</p></li>
 </ul>
 <p>The default value is GPU with the index <code class="docutils literal notranslate"><span class="pre">0</span></code> if it exist, otherwise the value is <code class="docutils literal notranslate"><span class="pre">CPU</span></code>.</p>
 </p></li>
-<li><p><strong>rounding</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – The rounding to use when asking the probability of the tags. The default value is 4 digits.</p></li>
-<li><p><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Turn on/off the verbosity of the model weights download and loading. The default value is True.</p></li>
-<li><p><strong>path_to_retrained_model</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><em>None</em></a><em>]</em>) – The path to the retrained model to use for prediction. Be sure to
-use the same model_type as the retrained model. For example, if you fine-tuned our pretrained fasttext model
-and want to use it, model_type=’fasttext’ and path_to_retrained_model=’/path/to/fasttext_model/’.
-Since the architecture of fasttext and fasttext-light are similar, one can interchange both
-(e.g. retrain a fasttext model and load the weights into a fasttext-light model).
-Default is None, meaning we use our pre-trained model.</p></li>
+<li><p><strong>rounding</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – The rounding to use when asking the probability of the tags. The default value is 4 digits.</p></li>
+<li><p><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Turn on/off the verbosity of the model weights download and loading. The default value is True.</p></li>
+<li><p><strong>path_to_retrained_model</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><em>None</em></a><em>]</em>) – The path to the retrained model to use for prediction. We will
+<cite>‘infer’</cite> the <code class="docutils literal notranslate"><span class="pre">model_type</span></code> of the retrained model. Default is None, meaning we use our pre-trained model.</p></li>
 </ul>
 </dd>
 </dl>
@@ -363,23 +379,7 @@ to the SQLite database behind <cite>pymagnitude</cite>. This approach create a c
 memory mapping is save between the runs, it’s more intensive the first time you call it and subsequent
 time this load doesn’t appear.</p>
 </div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The predictions tags are the following</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>“StreetNumber”: for the street number</p></li>
-<li><p>“StreetName”: for the name of the street</p></li>
-<li><p>“Unit”: for the unit (such as apartment)</p></li>
-<li><p>“Municipality”: for the municipality</p></li>
-<li><p>“Province”: for the province or local region</p></li>
-<li><p>“PostalCode”: for the postal code</p></li>
-<li><p>“Orientation”: for the street orientation (e.g. west, east)</p></li>
-<li><p>“GeneralDelivery”: for other delivery information</p></li>
-</ul>
-</div></blockquote>
-</div>
-<p class="rubric">Example</p>
+<p class="rubric">Examples</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="c1">#on gpu device 0</span>
 <span class="n">parse_address</span> <span class="o">=</span> <span class="n">address_parser</span><span class="p">(</span><span class="s2">&quot;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&quot;</span><span class="p">)</span>
 
@@ -390,34 +390,41 @@ time this load doesn’t appear.</p>
 <p>Using a retrain model</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;fasttext&quot;</span><span class="p">,</span>
                                <span class="n">path_to_retrained_model</span><span class="o">=</span><span class="s1">&#39;/path_to_a_retrain_fasttext_model&#39;</span><span class="p">)</span>
+<span class="n">parse_address</span> <span class="o">=</span> <span class="n">address_parser</span><span class="p">(</span><span class="s2">&quot;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Using a retrain model trained on different tags</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># We don&#39;t give the model_type since it&#39;s ignored when using path_to_retrained_model</span>
+<span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="n">path_to_retrained_model</span><span class="o">=</span><span class="s1">&#39;/path_to_a_retrain_fasttext_model&#39;</span><span class="p">)</span>
+<span class="n">parse_address</span> <span class="o">=</span> <span class="n">address_parser</span><span class="p">(</span><span class="s2">&quot;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="deepparse.parser.AddressParser.__call__">
-<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">addresses_to_parse</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">with_prob</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><span class="pre">bool</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_workers</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#deepparse.parser.ParsedAddress" title="deepparse.parser.parsed_address.ParsedAddress"><span class="pre">deepparse.parser.parsed_address.ParsedAddress</span></a><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#deepparse.parser.ParsedAddress" title="deepparse.parser.parsed_address.ParsedAddress"><span class="pre">deepparse.parser.parsed_address.ParsedAddress</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/deepparse/parser/address_parser.html#AddressParser.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.parser.AddressParser.__call__" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">addresses_to_parse</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">with_prob</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_workers</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#deepparse.parser.FormattedParsedAddress" title="deepparse.parser.formated_parsed_address.FormattedParsedAddress"><span class="pre">deepparse.parser.formated_parsed_address.FormattedParsedAddress</span></a><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#deepparse.parser.FormattedParsedAddress" title="deepparse.parser.formated_parsed_address.FormattedParsedAddress"><span class="pre">deepparse.parser.formated_parsed_address.FormattedParsedAddress</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/deepparse/parser/address_parser.html#AddressParser.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.parser.AddressParser.__call__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Callable method to parse the components of an address or a list of address.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>addresses_to_parse</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) – The addresses to be parse, can be either a single address
+<li><p><strong>addresses_to_parse</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>]</em>) – The addresses to be parse, can be either a single address
 (when using str) or a list of address. When using a list of addresses, the addresses are processed in
 batch, allowing a faster process. For example, using fastText model, a single address takes around
 0.003 seconds to be parsed using a batch of 1 (1 element at the time is processed).
 This time can be reduced to 0.00035 seconds per address when using a batch of 128
 (128 elements at the time are processed).</p></li>
-<li><p><strong>with_prob</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If true, return the probability of all the tags with the specified
+<li><p><strong>with_prob</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If true, return the probability of all the tags with the specified
 rounding.</p></li>
-<li><p><strong>batch_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – The size of the batch (default is 32).</p></li>
-<li><p><strong>num_workers</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Number of workers to use for the data loader (default is 0, which means that the data
+<li><p><strong>batch_size</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – The size of the batch (default is 32).</p></li>
+<li><p><strong>num_workers</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of workers to use for the data loader (default is 0, which means that the data
 will be loaded in the main process.).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Either a <code class="xref py py-class docutils literal notranslate"><span class="pre">ParsedAddress</span></code> or a list of
-<code class="xref py py-class docutils literal notranslate"><span class="pre">ParsedAddress</span></code> when given more than one address.</p>
+<dd class="field-even"><p>Either a <a class="reference internal" href="#deepparse.parser.FormattedParsedAddress" title="deepparse.parser.FormattedParsedAddress"><code class="xref py py-class docutils literal notranslate"><span class="pre">FormattedParsedAddress</span></code></a> or a list of
+<a class="reference internal" href="#deepparse.parser.FormattedParsedAddress" title="deepparse.parser.FormattedParsedAddress"><code class="xref py py-class docutils literal notranslate"><span class="pre">FormattedParsedAddress</span></code></a> when given more than one address.</p>
 </dd>
 </dl>
-<p class="rubric">Example</p>
+<p class="rubric">Examples</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="c1">#on gpu device 0</span>
 <span class="n">parse_address</span> <span class="o">=</span> <span class="n">address_parser</span><span class="p">(</span><span class="s2">&quot;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&quot;</span><span class="p">)</span>
 <span class="n">parse_address</span> <span class="o">=</span> <span class="n">address_parser</span><span class="p">(</span><span class="s2">&quot;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&quot;</span><span class="p">,</span>
@@ -435,28 +442,37 @@ will be loaded in the main process.).</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="deepparse.parser.AddressParser.retrain">
-<span class="sig-name descname"><span class="pre">retrain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_container</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="dataset_container.html#deepparse.dataset_container.DatasetContainer" title="deepparse.dataset_container.dataset_container.DatasetContainer"><span class="pre">deepparse.dataset_container.dataset_container.DatasetContainer</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_ratio</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_workers</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">learning_rate</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><span class="pre">float</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">42</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logging_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'./checkpoints'</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/deepparse/parser/address_parser.html#AddressParser.retrain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.parser.AddressParser.retrain" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">retrain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_container</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="dataset_container.html#deepparse.dataset_container.DatasetContainer" title="deepparse.dataset_container.dataset_container.DatasetContainer"><span class="pre">deepparse.dataset_container.dataset_container.DatasetContainer</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_ratio</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_workers</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">learning_rate</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><span class="pre">float</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">42</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logging_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'./checkpoints'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prediction_tags</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/deepparse/parser/address_parser.html#AddressParser.retrain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.parser.AddressParser.retrain" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to retrain the address parser model using a dataset with the same tags. We train using
 <a class="reference external" href="https://poutyne.org/experiment.html">experiment</a> from <a class="reference external" href="https://poutyne.org/index.html">poutyne</a>
-framework. The experiment module allow us to save checkpoints <code class="docutils literal notranslate"><span class="pre">ckpt</span></code> (pickle format) and a log.tsv where
-the best epochs can be found (the best epoch is used in test).</p>
+framework. The experiment module allows us to save checkpoints (<code class="docutils literal notranslate"><span class="pre">ckpt</span></code>, in a pickle format) and a log.tsv
+where the best epochs can be found (the best epoch is used for the test). The retrained model file name are
+formatted as <code class="docutils literal notranslate"><span class="pre">retrained_{model_type}_address_parser.ckpt</span></code>. For example, if you retrain a fasttext model,
+the file name will be <code class="docutils literal notranslate"><span class="pre">retrained_fasttext_address_parser.ckpt</span></code>. The retrained saved model included, in a
+dictionary format, the model weights, the model type, and if new <code class="docutils literal notranslate"><span class="pre">prediction_tags</span></code> were used, the new
+prediction tags.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dataset_container</strong> (<em>DatasetContainer</em>) – The
+<li><p><strong>dataset_container</strong> (<a class="reference internal" href="dataset_container.html#deepparse.dataset_container.DatasetContainer" title="deepparse.dataset_container.DatasetContainer"><em>DatasetContainer</em></a>) – The
 dataset container of the data to use.</p></li>
-<li><p><strong>train_ratio</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – The ratio to use of the dataset for the training. The rest of the data is used for the validation
-(e.g. a train ratio of 0.8 mean a 80-20 train-valid split).</p></li>
-<li><p><strong>batch_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – The size of the batch.</p></li>
-<li><p><strong>epochs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – number of training epochs.</p></li>
-<li><p><strong>num_workers</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Number of workers to use for the data loader (default is 1 worker).</p></li>
-<li><p><strong>learning_rate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – The learning rate (LR) to use for training (default 0.01). To reduce the LR during
-training, use <a class="reference external" href="https://github.com/GRAAL-Research/poutyne/blob/master/poutyne/framework/callbacks/lr_scheduler.py">Poutyne learning rate scheduler callback</a>.</p></li>
-<li><p><strong>callbacks</strong> (<em>Union</em><em>[</em><em>List</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><em>None</em></a><em>]</em>) – List of callbacks to use during training.
-See Poutyne <a class="reference external" href="https://poutyne.org/callbacks.html#callback-class">callback</a> for more information. By default
-we set no callback.</p></li>
-<li><p><strong>seed</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Seed to use (by default 42).</p></li>
-<li><p><strong>logging_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The logging path for the checkpoints. By default the path is <code class="docutils literal notranslate"><span class="pre">./checkpoints</span></code>.</p></li>
+<li><p><strong>train_ratio</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – The ratio to use of the dataset for the training. The rest of the data is used for the
+validation (e.g. a train ratio of 0.8 mean a 80-20 train-valid split).</p></li>
+<li><p><strong>batch_size</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – The size of the batch.</p></li>
+<li><p><strong>epochs</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – number of training epochs.</p></li>
+<li><p><strong>num_workers</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of workers to use for the data loader (default is 1 worker).</p></li>
+<li><p><strong>learning_rate</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – The learning rate (LR) to use for training (default 0.01).</p></li>
+<li><p><strong>callbacks</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><em>None</em></a><em>]</em>) – List of callbacks to use during training.
+See Poutyne <a class="reference external" href="https://poutyne.org/callbacks.html#callback-class">callback</a> for more information. By
+default we set no callback.</p></li>
+<li><p><strong>seed</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Seed to use (by default 42).</p></li>
+<li><p><strong>logging_path</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The logging path for the checkpoints. By default the path is <code class="docutils literal notranslate"><span class="pre">./checkpoints</span></code>.</p></li>
+<li><p><strong>prediction_tags</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><em>None</em></a><em>]</em>) – A dictionary where the keys are the address components
+(e.g. street name) and the values are the components indices (from 0 to N + 1) to use during retraining
+of a model. The <code class="docutils literal notranslate"><span class="pre">+</span> <span class="pre">1</span></code> corresponds to the End Of Sequence (EOS) token that needs to be included in the dictionary.
+We will use the length of this dictionary for the output size of the prediction layer. We also save
+the dictionary to be used later on when you load the model. Default is None, meaning we use our
+pre-trained model prediction tags.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -465,8 +481,8 @@ we set no callback.</p></li>
 </dl>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>We use SGD optimizer, NLL loss and accuracy as a metric, the data is shuffled and we use teacher forcing during
-training (with a prob of 0.5) as in the <a class="reference external" href="https://arxiv.org/abs/2006.16152">article</a>.</p>
+<p>We use SGD optimizer, NLL loss and accuracy as a metric, the data is shuffled and we use teacher forcing
+during training (with a prob of 0.5) as in the <a class="reference external" href="https://arxiv.org/abs/2006.16152">article</a>.</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -474,7 +490,7 @@ training (with a prob of 0.5) as in the <a class="reference external" href="http
 train using the fasttext-light model. But, since we don’t update the embeddings weights, one can retrain
 using the fasttext model and later on use the weights with the fasttext-light.</p>
 </div>
-<p class="rubric">Example</p>
+<p class="rubric">Examples</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="c1">#on gpu device 0</span>
 <span class="n">data_path</span> <span class="o">=</span> <span class="s1">&#39;path_to_a_pickle_dataset.p&#39;</span>
 
@@ -495,44 +511,43 @@ using the fasttext model and later on use the weights with the fasttext-light.</
 <span class="n">address_parser</span><span class="o">.</span><span class="n">retrain</span><span class="p">(</span><span class="n">container</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">lr_scheduler</span><span class="p">])</span>
 </pre></div>
 </div>
-<p>See <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py">this</a> for a fine
-tuning example.</p>
+<p>Using your own prediction tags dictionary.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_components</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ATag&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;AnotherTag&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;EOS&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+
+<span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="c1">#on gpu device 0</span>
+<span class="n">data_path</span> <span class="o">=</span> <span class="s1">&#39;path_to_a_pickle_dataset.p&#39;</span>
+
+<span class="n">container</span> <span class="o">=</span> <span class="n">PickleDatasetContainer</span><span class="p">(</span><span class="n">data_path</span><span class="p">)</span>
+
+<span class="n">address_parser</span><span class="o">.</span><span class="n">retrain</span><span class="p">(</span><span class="n">container</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">prediction_tags</span><span class="o">=</span><span class="n">address_components</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="deepparse.parser.AddressParser.test">
-<span class="sig-name descname"><span class="pre">test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_dataset_container</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="dataset_container.html#deepparse.dataset_container.DatasetContainer" title="deepparse.dataset_container.dataset_container.DatasetContainer"><span class="pre">deepparse.dataset_container.dataset_container.DatasetContainer</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_workers</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">42</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logging_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'./checkpoints'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">checkpoint</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'best'</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><a class="reference internal" href="_modules/deepparse/parser/address_parser.html#AddressParser.test"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.parser.AddressParser.test" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to test a retrained or a pre-trained model using a dataset with the same tags. We train using
-<a class="reference external" href="https://poutyne.org/experiment.html">experiment</a> from <a class="reference external" href="https://poutyne.org/index.html">poutyne</a>
-framework. The experiment module allow us to save checkpoints <code class="docutils literal notranslate"><span class="pre">ckpt</span></code> (pickle format) and a log.tsv where
-the best epochs can be found (the best epoch is use in test).</p>
+<span class="sig-name descname"><span class="pre">test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_dataset_container</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="dataset_container.html#deepparse.dataset_container.DatasetContainer" title="deepparse.dataset_container.dataset_container.DatasetContainer"><span class="pre">deepparse.dataset_container.dataset_container.DatasetContainer</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_workers</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">42</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><a class="reference internal" href="_modules/deepparse/parser/address_parser.html#AddressParser.test"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.parser.AddressParser.test" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to test a retrained or a pre-trained model using a dataset with the default tags. If you test a
+retrained model with different prediction tags, we will use those tags.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>test_dataset_container</strong> (<em>DatasetContainer</em>) – The test dataset container of the data to use.</p></li>
-<li><p><strong>batch_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – The size of the batch (default is 32).</p></li>
-<li><p><strong>num_workers</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Number of workers to use for the data loader (default is 1 worker).</p></li>
-<li><p><strong>callbacks</strong> (<em>Union</em><em>[</em><em>List</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><em>None</em></a><em>]</em>) – <p>List of callbacks to use during training.
+<li><p><strong>test_dataset_container</strong> (<a class="reference internal" href="dataset_container.html#deepparse.dataset_container.DatasetContainer" title="deepparse.dataset_container.DatasetContainer"><em>DatasetContainer</em></a>) – The test dataset container of the data to use.</p></li>
+<li><p><strong>batch_size</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – The size of the batch (default is 32).</p></li>
+<li><p><strong>num_workers</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of workers to use for the data loader (default is 1 worker).</p></li>
+<li><p><strong>callbacks</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><em>None</em></a><em>]</em>) – <p>List of callbacks to use during training.
 See Poutyne <a class="reference external" href="https://poutyne.org/callbacks.html#callback-class">callback</a> for more information.
 By default we set no callback.</p>
 </p></li>
-<li><p><strong>seed</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Seed to use (by default 42).</p></li>
-<li><p><strong>logging_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The logging path for the checkpoints. By default the path is <code class="docutils literal notranslate"><span class="pre">./checkpoints</span></code>.</p></li>
-<li><p><strong>checkpoint</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>]</em>) – Checkpoint to use for the test.
-- If ‘best’, will load the best weights.
-- If ‘last’, will load the last model checkpoint.
-- If int, will load a specific checkpoint (e.g. 3).
-- If ‘str’, will load a specific model (e.g. a retrained model), must be a path to a pickled format
-model i.e. ends with a ‘.p’ extension (e.g. retrained_model.p).
-- If ‘fasttext’, will load our pre-trained fasttext model and test it on your data.
-(Need to have Poutyne&gt;=1.2 to work)
-- If ‘bpemb’, will load our pre-trained bpemb model and test it on your data.
-(Need to have Poutyne&gt;=1.2 to work)
-By default we use best ‘best’.</p></li>
+<li><p><strong>seed</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Seed to use (by default 42).</p></li>
+<li><p><strong>callbacks</strong> – <p>List of callbacks to use during training.
+See Poutyne <a class="reference external" href="https://poutyne.org/callbacks.html#callback-class">callback</a> for more information.
+By default we set no callback.</p>
+</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><p>A dictionary with the best epoch stats (see <a class="reference external" href="https://poutyne.org/experiment.html#poutyne.Experiment.train">Experiment class</a> for details).</p>
+<dd class="field-even"><p><p>A dictionary with the stats (see <a class="reference external" href="https://poutyne.org/experiment.html#poutyne.Experiment.train">Experiment class</a> for details).</p>
 </p>
 </dd>
 </dl>
@@ -540,28 +555,49 @@ By default we use best ‘best’.</p></li>
 <p class="admonition-title">Note</p>
 <p>We use NLL loss and accuracy as in the <a class="reference external" href="https://arxiv.org/abs/2006.16152">article</a>.</p>
 </div>
-<p class="rubric">Example</p>
+<p class="rubric">Examples</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="c1">#on gpu device 0</span>
 <span class="n">data_path</span> <span class="o">=</span> <span class="s1">&#39;path_to_a_pickle_test_dataset.p&#39;</span>
 
 <span class="n">test_container</span> <span class="o">=</span> <span class="n">PickleDatasetContainer</span><span class="p">(</span><span class="n">data_path</span><span class="p">)</span>
 
-<span class="n">address_parser</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="n">test_container</span><span class="p">)</span> <span class="c1"># using the default best epoch</span>
-<span class="n">address_parser</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="n">test_container</span><span class="p">,</span> <span class="n">checkpoint</span><span class="o">=</span><span class="s1">&#39;last&#39;</span><span class="p">)</span> <span class="c1"># using the last epoch</span>
-<span class="n">address_parser</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="n">test_container</span><span class="p">,</span> <span class="n">checkpoint</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span> <span class="c1"># using the epoch 5 model</span>
+<span class="n">address_parser</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="n">test_container</span><span class="p">)</span> <span class="c1"># We test the model on the data</span>
+</pre></div>
+</div>
+<p>You can also test your fine tuned model</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_components</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ATag&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;AnotherTag&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;EOS&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+
+<span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="c1">#on gpu device 0</span>
+
+<span class="c1"># Train phase</span>
+<span class="n">data_path</span> <span class="o">=</span> <span class="s1">&#39;path_to_a_pickle_train_dataset.p&#39;</span>
+
+<span class="n">train_container</span> <span class="o">=</span> <span class="n">PickleDatasetContainer</span><span class="p">(</span><span class="n">data_path</span><span class="p">)</span>
+
+<span class="n">address_parser</span><span class="o">.</span><span class="n">retrain</span><span class="p">(</span><span class="n">container</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">prediction_tags</span><span class="o">=</span><span class="n">address_components</span><span class="p">)</span>
+
+<span class="c1"># Test phase</span>
+<span class="n">data_path</span> <span class="o">=</span> <span class="s1">&#39;path_to_a_pickle_test_dataset.p&#39;</span>
+
+<span class="n">test_container</span> <span class="o">=</span> <span class="n">PickleDatasetContainer</span><span class="p">(</span><span class="n">data_path</span><span class="p">)</span>
+
+<span class="n">address_parser</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="n">test_container</span><span class="p">)</span> <span class="c1"># Test the retrained model</span>
 </pre></div>
 </div>
 </dd></dl>
 
 </dd></dl>
 
+</div>
+<div class="section" id="formatted-parsed-address">
+<h2>Formatted Parsed Address<a class="headerlink" href="#formatted-parsed-address" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
-<dt class="sig sig-object py" id="deepparse.parser.ParsedAddress">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">deepparse.parser.</span></span><span class="sig-name descname"><span class="pre">ParsedAddress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deepparse/parser/parsed_address.html#ParsedAddress"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.parser.ParsedAddress" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="deepparse.parser.FormattedParsedAddress">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">deepparse.parser.</span></span><span class="sig-name descname"><span class="pre">FormattedParsedAddress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deepparse/parser/formated_parsed_address.html#FormattedParsedAddress"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.parser.FormattedParsedAddress" title="Permalink to this definition">¶</a></dt>
 <dd><p>A parsed address as commonly known returned by an address parser.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>address</strong> – A dictionary where the key is an address, and the value is a list of tuples where
+<dd class="field-odd"><p><strong>address</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – A dictionary where the key is an address, and the value is a list of tuples where
 the first elements are address components, and the second elements are the parsed address
 value. Also, the second tuple’s address value can either be the tag of the components
 (e.g. StreetName) or a tuple (<code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>) where <code class="docutils literal notranslate"><span class="pre">x</span></code> is the tag and <code class="docutils literal notranslate"><span class="pre">y</span></code> is the
@@ -569,71 +605,30 @@ probability (e.g. 0.9981) of the model prediction.</p>
 </dd>
 </dl>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="deepparse.parser.ParsedAddress.raw_address">
-<span class="sig-name descname"><span class="pre">raw_address</span></span><a class="headerlink" href="#deepparse.parser.ParsedAddress.raw_address" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="deepparse.parser.FormattedParsedAddress.raw_address">
+<span class="sig-name descname"><span class="pre">raw_address</span></span><a class="headerlink" href="#deepparse.parser.FormattedParsedAddress.raw_address" title="Permalink to this definition">¶</a></dt>
 <dd><p>The raw address (not parsed).</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="deepparse.parser.ParsedAddress.address_parsed_components">
-<span class="sig-name descname"><span class="pre">address_parsed_components</span></span><a class="headerlink" href="#deepparse.parser.ParsedAddress.address_parsed_components" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="deepparse.parser.FormattedParsedAddress.address_parsed_components">
+<span class="sig-name descname"><span class="pre">address_parsed_components</span></span><a class="headerlink" href="#deepparse.parser.FormattedParsedAddress.address_parsed_components" title="Permalink to this definition">¶</a></dt>
 <dd><p>The parsed address in a list of tuples where the first elements
 are the address components and the second elements are the tags.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="deepparse.parser.ParsedAddress.street_number">
-<span class="sig-name descname"><span class="pre">street_number</span></span><a class="headerlink" href="#deepparse.parser.ParsedAddress.street_number" title="Permalink to this definition">¶</a></dt>
-<dd><p>The street number.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="deepparse.parser.ParsedAddress.unit">
-<span class="sig-name descname"><span class="pre">unit</span></span><a class="headerlink" href="#deepparse.parser.ParsedAddress.unit" title="Permalink to this definition">¶</a></dt>
-<dd><p>The street unit component.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="deepparse.parser.ParsedAddress.street_name">
-<span class="sig-name descname"><span class="pre">street_name</span></span><a class="headerlink" href="#deepparse.parser.ParsedAddress.street_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>The street name.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="deepparse.parser.ParsedAddress.orientation">
-<span class="sig-name descname"><span class="pre">orientation</span></span><a class="headerlink" href="#deepparse.parser.ParsedAddress.orientation" title="Permalink to this definition">¶</a></dt>
-<dd><p>The street orientation.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="deepparse.parser.ParsedAddress.municipality">
-<span class="sig-name descname"><span class="pre">municipality</span></span><a class="headerlink" href="#deepparse.parser.ParsedAddress.municipality" title="Permalink to this definition">¶</a></dt>
-<dd><p>The city.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="deepparse.parser.ParsedAddress.province">
-<span class="sig-name descname"><span class="pre">province</span></span><a class="headerlink" href="#deepparse.parser.ParsedAddress.province" title="Permalink to this definition">¶</a></dt>
-<dd><p>The province (sometime known as district or local region).</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="deepparse.parser.ParsedAddress.postal_code">
-<span class="sig-name descname"><span class="pre">postal_code</span></span><a class="headerlink" href="#deepparse.parser.ParsedAddress.postal_code" title="Permalink to this definition">¶</a></dt>
-<dd><p>The street postal code.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="deepparse.parser.ParsedAddress.general_delivery">
-<span class="sig-name descname"><span class="pre">general_delivery</span></span><a class="headerlink" href="#deepparse.parser.ParsedAddress.general_delivery" title="Permalink to this definition">¶</a></dt>
-<dd><p>Additional delivery information.</p>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">&lt;Address</span> <span class="pre">tag&gt;</span></span></dt>
+<dd><p>All the possible address tag element of the model. For example, <code class="docutils literal notranslate"><span class="pre">StreetName</span></code> or
+<code class="docutils literal notranslate"><span class="pre">StreetNumber</span></code>.</p>
 </dd></dl>
 
 <p class="rubric">Example</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">()</span>
 <span class="n">parse_address</span> <span class="o">=</span> <span class="n">address_parser</span><span class="p">(</span><span class="s2">&quot;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">parse_address</span><span class="o">.</span><span class="n">street_number</span><span class="p">)</span> <span class="c1">#350</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">parse_address</span><span class="o">.</span><span class="n">postal_code</span><span class="p">)</span> <span class="c1"># G1L 1B6</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">parse_address</span><span class="o">.</span><span class="n">StreetNumber</span><span class="p">)</span> <span class="c1"># 350</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">parse_address</span><span class="o">.</span><span class="n">PostalCode</span><span class="p">)</span> <span class="c1"># G1L 1B6</span>
 </pre></div>
 </div>
 <div class="admonition note">
@@ -643,20 +638,20 @@ values are asked of the address parser, the address components don’t keep it. 
 <code class="docutils literal notranslate"><span class="pre">address_parsed_components</span></code> attribute.</p>
 </div>
 <dl class="py method">
-<dt class="sig sig-object py" id="deepparse.parser.ParsedAddress.to_dict">
-<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fields</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><span class="pre">dict</span></a><a class="reference internal" href="_modules/deepparse/parser/parsed_address.html#ParsedAddress.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.parser.ParsedAddress.to_dict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to convert an parsed address into a dictionary where the keys are the address components and the value
-are the value of those components. For example, the parsed address <code class="docutils literal notranslate"><span class="pre">&lt;street_number&gt;</span> <span class="pre">305</span> <span class="pre">&lt;street_name&gt;</span>
+<dt class="sig sig-object py" id="deepparse.parser.FormattedParsedAddress.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fields</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)"><span class="pre">dict</span></a><a class="reference internal" href="_modules/deepparse/parser/formated_parsed_address.html#FormattedParsedAddress.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.parser.FormattedParsedAddress.to_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to convert a parsed address into a dictionary where the keys are the address components and the values
+are the value of those components. For example, the parsed address <code class="docutils literal notranslate"><span class="pre">&lt;StreetNumber&gt;</span> <span class="pre">305</span> <span class="pre">&lt;StreetName&gt;</span>
 <span class="pre">rue</span> <span class="pre">des</span> <span class="pre">Lilas</span></code> will be converted into the following dictionary:
-<code class="docutils literal notranslate"><span class="pre">{'street_number':'305',</span> <span class="pre">'street_name':</span> <span class="pre">'rue</span> <span class="pre">des</span> <span class="pre">Lilas'}</span></code>.</p>
+<code class="docutils literal notranslate"><span class="pre">{'StreetNumber':'305',</span> <span class="pre">'StreetName':</span> <span class="pre">'rue</span> <span class="pre">des</span> <span class="pre">Lilas'}</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>fields</strong> (<em>Union</em><em>[</em><em>List</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><em>None</em></a><em>]</em>) – Optional argument to define the fields to extract from the address and the
-order of it. If None, will used the default order and value <cite>‘street_number, unit, street_name,
-orientation, municipality, province, postal_code, general_delivery’</cite>.</p>
+<dd class="field-odd"><p><strong>fields</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><em>None</em></a><em>]</em>) – Optional argument to define the fields to extract from the address and the
+order of it. If None, will used the default order and value <cite>‘StreetNumber, Unit, StreetName,
+Orientation, Municipality, Province, PostalCode, GeneralDelivery’</cite>.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A dictionary where the keys are the selected (or default) fields and the value are the corresponding value
+<dd class="field-even"><p>A dictionary where the keys are the selected (or default) fields and the values are the corresponding value
 of the address components.</p>
 </dd>
 </dl>
@@ -664,7 +659,6 @@ of the address components.</p>
 
 </dd></dl>
 
-</div>
 </div>
 </div>
 

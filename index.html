@@ -11,7 +11,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Here is deepparse &mdash; deepparse 0.3.6 documentation</title>
+  <title>Here is deepparse &mdash; deepparse 0.4 documentation</title>
   
 
   
@@ -72,7 +72,7 @@
             
             
               <div class="version">
-                0.3.6
+                0.4
               </div>
             
           
@@ -106,6 +106,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="examples/fine_tuning.html">Retrain a Pretrained Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/parse_addresses.html">Parse Addresses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
 </ul>
 
             
@@ -178,13 +179,17 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="here-is-deepparse">
+  <center>
+<a href="https://github.com/GRAAL-Research/deepparse-address-data">
+    <img src="https://img.shields.io/badge/Download%20Dataset-blue?style=for-the-badge&logo=download" alt="No message"/></a>
+</center><div class="section" id="here-is-deepparse">
 <h1>Here is deepparse<a class="headerlink" href="#here-is-deepparse" title="Permalink to this headline">¶</a></h1>
 <p>Deepparse is a state-of-the-art library for parsing multinational street addresses using deep learning.</p>
 <p>Use deepparse to:</p>
 <ul class="simple">
 <li><p>Use the pre-trained models to parse multinational addresses.</p></li>
 <li><p>Retrain our pre-trained models on new data to parse multinational addresses.</p></li>
+<li><p>Retrain our pre-trained models with your own prediction tags easily.</p></li>
 </ul>
 <p>Deepparse is compatible with the <strong>latest version of PyTorch</strong> and  <strong>Python &gt;= 3.7</strong>.</p>
 </div>
@@ -585,23 +590,28 @@ to achieve an interesting performance.</p>
 <p>The predictions tags are the following</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>“StreetNumber”: for the street number</p></li>
-<li><p>“StreetName”: for the name of the street</p></li>
-<li><p>“Unit”: for the unit (such as apartment)</p></li>
-<li><p>“Municipality”: for the municipality</p></li>
-<li><p>“Province”: for the province or local region</p></li>
-<li><p>“PostalCode”: for the postal code</p></li>
-<li><p>“Orientation”: for the street orientation (e.g. west, east)</p></li>
-<li><p>“GeneralDelivery”: for other delivery information</p></li>
+<li><p>“StreetNumber”: for the street number,</p></li>
+<li><p>“StreetName”: for the name of the street,</p></li>
+<li><p>“Unit”: for the unit (such as apartment),</p></li>
+<li><p>“Municipality”: for the municipality,</p></li>
+<li><p>“Province”: for the province or local region,</p></li>
+<li><p>“PostalCode”: for the postal code,</p></li>
+<li><p>“Orientation”: for the street orientation (e.g. west, east),</p></li>
+<li><p>“GeneralDelivery”: for other delivery information.</p></li>
 </ul>
 </div></blockquote>
 <div class="section" id="retrain-a-model">
 <h2>Retrain a Model<a class="headerlink" href="#retrain-a-model" title="Permalink to this headline">¶</a></h2>
+<p>See <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py">here</a> for a complete example.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span><span class="o">.</span><span class="n">retrain</span><span class="p">(</span><span class="n">training_container</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="retrain-a-model-with-new-tags">
+<h2>Retrain a Model With New Tags<a class="headerlink" href="#retrain-a-model-with-new-tags" title="Permalink to this headline">¶</a></h2>
 <p>See <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py">this</a> for a complete example.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># We will retrain the fasttext version of our pretrained model.</span>
-<span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;fasttext&quot;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-
-<span class="n">address_parser</span><span class="o">.</span><span class="n">retrain</span><span class="p">(</span><span class="n">training_container</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_components</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ATag&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;AnotherTag&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;EOS&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+<span class="n">address_parser</span><span class="o">.</span><span class="n">retrain</span><span class="p">(</span><span class="n">training_container</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">prediction_tags</span><span class="o">=</span><span class="n">address_components</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -678,6 +688,7 @@ details on this matter.</p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="examples/fine_tuning.html">Retrain a Pretrained Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/parse_addresses.html">Parse Addresses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
 </ul>
 </div>
 </div>

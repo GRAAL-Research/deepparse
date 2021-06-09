@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Retrain a Pretrained Model &mdash; deepparse 0.4 documentation</title>
+  <title>Retrain With New Prediction Tags &mdash; deepparse 0.4 documentation</title>
   
 
   
@@ -41,8 +41,7 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Parse Addresses" href="parse_addresses.html" />
-    <link rel="prev" title="Dataset Container" href="../dataset_container.html" /> 
+    <link rel="prev" title="Parse Addresses" href="parse_addresses.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -101,9 +100,9 @@
 </ul>
 <p class="caption"><span class="caption-text">Examples</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Retrain a Pretrained Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fine_tuning.html">Retrain a Pretrained Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parse_addresses.html">Parse Addresses</a></li>
-<li class="toctree-l1"><a class="reference internal" href="retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Retrain With New Prediction Tags</a></li>
 </ul>
 
             
@@ -152,13 +151,13 @@
     
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
-      <li>Retrain a Pretrained Model</li>
+      <li>Retrain With New Prediction Tags</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../_sources/examples/fine_tuning.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/examples/retrain_with_new_prediction_tags.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -171,20 +170,22 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="retrain-a-pretrained-model">
-<h1>Retrain a Pretrained Model<a class="headerlink" href="#retrain-a-pretrained-model" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">poutyne</span>
+  <div class="section" id="retrain-with-new-prediction-tags">
+<h1>Retrain With New Prediction Tags<a class="headerlink" href="#retrain-with-new-prediction-tags" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">import</span> <span class="nn">poutyne</span>
 
 <span class="kn">from</span> <span class="nn">deepparse</span> <span class="kn">import</span> <span class="n">download_from_url</span>
 <span class="kn">from</span> <span class="nn">deepparse.dataset_container</span> <span class="kn">import</span> <span class="n">PickleDatasetContainer</span>
 <span class="kn">from</span> <span class="nn">deepparse.parser</span> <span class="kn">import</span> <span class="n">AddressParser</span>
 </pre></div>
 </div>
-<p>First, let’s download the train and test data from the public repository.</p>
+<p>First, let’s download the train and test data with “new tags” from the public repository.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">saving_dir</span> <span class="o">=</span> <span class="s2">&quot;./data&quot;</span>
 <span class="n">file_extension</span> <span class="o">=</span> <span class="s2">&quot;p&quot;</span>
-<span class="n">training_dataset_name</span> <span class="o">=</span> <span class="s2">&quot;sample_incomplete_data&quot;</span>
-<span class="n">test_dataset_name</span> <span class="o">=</span> <span class="s2">&quot;test_sample_data&quot;</span>
+<span class="n">training_dataset_name</span> <span class="o">=</span> <span class="s2">&quot;sample_incomplete_data_new_prediction_tags&quot;</span>
+<span class="n">test_dataset_name</span> <span class="o">=</span> <span class="s2">&quot;test_sample_data_new_prediction_tags&quot;</span>
 <span class="n">download_from_url</span><span class="p">(</span><span class="n">training_dataset_name</span><span class="p">,</span> <span class="n">saving_dir</span><span class="p">,</span> <span class="n">file_extension</span><span class="o">=</span><span class="n">file_extension</span><span class="p">)</span>
 <span class="n">download_from_url</span><span class="p">(</span><span class="n">test_dataset_name</span><span class="p">,</span> <span class="n">saving_dir</span><span class="p">,</span> <span class="n">file_extension</span><span class="o">=</span><span class="n">file_extension</span><span class="p">)</span>
 </pre></div>
@@ -197,20 +198,32 @@
 </pre></div>
 </div>
 <p>We will retrain the fasttext version of our pretrained model.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;fasttext&quot;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="s2">&quot;fasttext&quot;</span>
+<span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="n">model_type</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Now let’s retrain for 5 epochs using a batch size of 8 since the dataset is really small for the example.
+<p>Now let’s retrain for 5 epochs using a batch size of 8 since the data is really small for the example.
 Let’s start with the default learning rate of 0.01 and use a learning rate scheduler to lower the learning rate as we progress.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># reduce LR by a factor of 10 each epoch</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Reduce LR by a factor of 10 each epoch</span>
 <span class="n">lr_scheduler</span> <span class="o">=</span> <span class="n">poutyne</span><span class="o">.</span><span class="n">StepLR</span><span class="p">(</span><span class="n">step_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+<span class="c1"># We need a EOS tag in the dictionary. EOS -&gt; End Of Sequence</span>
+<span class="n">tag_dictionary</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ATag&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;AnotherTag&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;EOS&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+
+<span class="c1"># The path to save our checkpoints</span>
+<span class="n">logging_path</span> <span class="o">=</span> <span class="s2">&quot;./checkpoints&quot;</span>
+
+<span class="n">address_parser</span><span class="o">.</span><span class="n">retrain</span><span class="p">(</span><span class="n">training_container</span><span class="p">,</span>
+                       <span class="mf">0.8</span><span class="p">,</span>
+                       <span class="n">epochs</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                       <span class="n">batch_size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+                       <span class="n">num_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                       <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">lr_scheduler</span><span class="p">],</span>
+                       <span class="n">prediction_tags</span><span class="o">=</span><span class="n">tag_dictionary</span><span class="p">,</span>
+                       <span class="n">logging_path</span><span class="o">=</span><span class="n">logging_path</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The checkpoints (ckpt) are saved in the default “./checkpoints” directory</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span><span class="o">.</span><span class="n">retrain</span><span class="p">(</span><span class="n">training_container</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">lr_scheduler</span><span class="p">])</span>
-</pre></div>
-</div>
-<p>Now let’s test our fine tuned model using the best ckeckpoint (default parameter).</p>
+<p>Now let’s test our fine tuned model using the best checkpoint (default parameter).</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="n">test_container</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -222,8 +235,7 @@ Let’s start with the default learning rate of 0.01 and use a learning rate sch
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="parse_addresses.html" class="btn btn-neutral float-right" title="Parse Addresses" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="../dataset_container.html" class="btn btn-neutral float-left" title="Dataset Container" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="parse_addresses.html" class="btn btn-neutral float-left" title="Parse Addresses" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

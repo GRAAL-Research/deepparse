@@ -45,32 +45,41 @@ PREDICTION_TIME_PERFORMANCE_THRESHOLD = 64
 class AddressParser:
     """
     Address parser to parse an address or a list of address using one of the seq2seq pre-trained
-    networks either with fastText or BPEmb.
+    networks either with fastText or BPEmb. The default predictions tags are the following
+
+            - "StreetNumber": for the street number,
+            - "StreetName": for the name of the street,
+            - "Unit": for the unit (such as apartment),
+            - "Municipality": for the municipality,
+            - "Province": for the province or local region,
+            - "PostalCode": for the postal code,
+            - "Orientation": for the street orientation (e.g. west, east),
+            - "GeneralDelivery": for other delivery information.
 
     Args:
         model_type (str): The network name to use, can be either:
 
-            - fasttext (need ~9 GO of RAM to be used);
-            - fasttext-light (need ~2 GO of RAM to be used, but slower than fasttext version);
-            - bpemb (need ~2 GO of RAM to be used);
-            - fastest (quicker to process one address) (equivalent to fasttext);
-            - lightest (the one using the less RAM and GPU usage) (equivalent to fasttext-light);
+            - fasttext (need ~9 GO of RAM to be used),
+            - fasttext-light (need ~2 GO of RAM to be used, but slower than fasttext version),
+            - bpemb (need ~2 GO of RAM to be used),
+            - fastest (quicker to process one address) (equivalent to fasttext),
+            - lightest (the one using the less RAM and GPU usage) (equivalent to fasttext-light),
             - best (best accuracy performance) (equivalent to bpemb).
 
             The default value is "best" for the most accurate model. Ignored if ``path_to_retrained_model`` is not
             ``None``.
-        device (Union[int, str, torch.device]): The device to use can be either:
+        device (Union[int, str, torch.torch.device]): The device to use can be either:
 
-            - a ``GPU`` index in int format (e.g. ``0``);
-            - a complete device name in a string format (e.g. ``'cuda:0'``);
-            - a :class:`~torch.torch.device` object;
+            - a ``GPU`` index in int format (e.g. ``0``),
+            - a complete device name in a string format (e.g. ``'cuda:0'``),
+            - a :class:`~torch.torch.device` object,
             - ``'cpu'`` for a  ``CPU`` use.
 
             The default value is GPU with the index ``0`` if it exist, otherwise the value is ``CPU``.
         rounding (int): The rounding to use when asking the probability of the tags. The default value is 4 digits.
         verbose (bool): Turn on/off the verbosity of the model weights download and loading. The default value is True.
         path_to_retrained_model (Union[str, None]): The path to the retrained model to use for prediction. We will
-            `infer` the ``model_type`` of the retrained model. Default is None, meaning we use our pre-trained model.
+            `'infer'` the ``model_type`` of the retrained model. Default is None, meaning we use our pre-trained model.
 
     Note:
         For both the networks, we will download the pre-trained weights and embeddings in the ``.cache`` directory
@@ -100,43 +109,32 @@ class AddressParser:
         memory mapping is save between the runs, it's more intensive the first time you call it and subsequent
         time this load doesn't appear.
 
-    Note:
-        The default predictions tags are the following
-
-            - "StreetNumber": for the street number
-            - "StreetName": for the name of the street
-            - "Unit": for the unit (such as apartment)
-            - "Municipality": for the municipality
-            - "Province": for the province or local region
-            - "PostalCode": for the postal code
-            - "Orientation": for the street orientation (e.g. west, east)
-            - "GeneralDelivery": for other delivery information
-
-    Example:
+    Examples:
 
         .. code-block:: python
 
-                address_parser = AddressParser(device=0) #on gpu device 0
-                parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
+            address_parser = AddressParser(device=0) #on gpu device 0
+            parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
 
-                address_parser = AddressParser(model_type="fasttext", device="cpu") # fasttext model on cpu
-                parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
+            address_parser = AddressParser(model_type="fasttext", device="cpu") # fasttext model on cpu
+            parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
 
         Using a retrain model
 
         .. code-block:: python
 
-                address_parser = AddressParser(model_type="fasttext",
-                                               path_to_retrained_model='/path_to_a_retrain_fasttext_model')
-                parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
+            address_parser = AddressParser(model_type="fasttext",
+                                           path_to_retrained_model='/path_to_a_retrain_fasttext_model')
+            parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
 
         Using a retrain model trained on different tags
 
         .. code-block:: python
 
-                # We don't give the model_type since it's ignored when using path_to_retrained_model
-                address_parser = AddressParser(path_to_retrained_model='/path_to_a_retrain_fasttext_model')
-                parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
+            # We don't give the model_type since it's ignored when using path_to_retrained_model
+            address_parser = AddressParser(path_to_retrained_model='/path_to_a_retrain_fasttext_model')
+            parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
+
     """
 
     def __init__(self,
@@ -203,26 +201,26 @@ class AddressParser:
                 will be loaded in the main process.).
 
         Return:
-            Either a :class:`~deepparse.deepparse.parsed_address.FormattedParsedAddress` or a list of
-            :class:`~deepparse.deepparse.parsed_address.FormattedParsedAddress` when given more than one address.
+            Either a :class:`~FormattedParsedAddress` or a list of
+            :class:`~FormattedParsedAddress` when given more than one address.
 
-        Example:
+        Examples:
 
             .. code-block:: python
 
-                    address_parser = AddressParser(device=0) #on gpu device 0
-                    parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
-                    parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6",
-                                                    with_prob=True)
+                address_parser = AddressParser(device=0) #on gpu device 0
+                parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
+                parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6",
+                                                with_prob=True)
 
             Using a larger batch size
 
             .. code-block:: python
 
-                    address_parser = AddressParser(device=0) #on gpu device 0
-                    parse_address = address_parser(a_large_dataset, batch_size=1024)
-                    # You can also use more worker
-                    parse_address = address_parser(a_large_dataset, batch_size=1024, num_workers=2)
+                address_parser = AddressParser(device=0) #on gpu device 0
+                parse_address = address_parser(a_large_dataset, batch_size=1024)
+                # You can also use more worker
+                parse_address = address_parser(a_large_dataset, batch_size=1024, num_workers=2)
 
         """
         if isinstance(addresses_to_parse, str):
@@ -268,37 +266,30 @@ class AddressParser:
         """
         Method to retrain the address parser model using a dataset with the same tags. We train using
         `experiment <https://poutyne.org/experiment.html>`_ from `poutyne <https://poutyne.org/index.html>`_
-        framework. The experiment module allows us to save checkpoints ``ckpt`` (pickle format) and a log.tsv where
-        the best epochs can be found (the best epoch is used for the test). The retrained model file name are formatted
-        as 'retrained_{model_type}_address_parser.ckpt'. For example, if you retrain a fasttext model, the file name
-        will be 'retrained_fasttext_address_parser.ckpt'. The retrained saved model included, in a dictionary format,
-        the model weights, the model type, and if new ``prediction_tags`̀` were used, the new prediction tags.
-
-        ``address_tagger_model``
-
-                        "address_tagger_model": exp.model.network.state_dict(),
-                    "prediction_tags": prediction_tags,
-                    "model_type": self.model_type
+        framework. The experiment module allows us to save checkpoints (``ckpt``, in a pickle format) and a log.tsv
+        where the best epochs can be found (the best epoch is used for the test). The retrained model file name are
+        formatted as ``retrained_{model_type}_address_parser.ckpt``. For example, if you retrain a fasttext model,
+        the file name will be ``retrained_fasttext_address_parser.ckpt``. The retrained saved model included, in a
+        dictionary format, the model weights, the model type, and if new ``prediction_tags`` were used, the new
+        prediction tags.
 
         Args:
-            dataset_container (~deepparse.deepparse.dataset_container.dataset_container.DatasetContainer): The
+            dataset_container (:class:`~deepparse.dataset_container.DatasetContainer`): The
                 dataset container of the data to use.
             train_ratio (float): The ratio to use of the dataset for the training. The rest of the data is used for the
                 validation (e.g. a train ratio of 0.8 mean a 80-20 train-valid split).
             batch_size (int): The size of the batch.
             epochs (int): number of training epochs.
             num_workers (int): Number of workers to use for the data loader (default is 1 worker).
-            learning_rate (float): The learning rate (LR) to use for training (default 0.01). To reduce the LR during
-                training, use `Poutyne learning rate scheduler callback
-                <https://github.com/GRAAL-Research/poutyne/blob/master/poutyne/framework/callbacks/lr_scheduler.py>`_.
-            callbacks (Union[List, None]): List of callbacks to use during training.
+            learning_rate (float): The learning rate (LR) to use for training (default 0.01).
+            callbacks (Union[list, None]): List of callbacks to use during training.
                 See Poutyne `callback <https://poutyne.org/callbacks.html#callback-class>`_ for more information. By
                 default we set no callback.
             seed (int): Seed to use (by default 42).
             logging_path (str): The logging path for the checkpoints. By default the path is ``./checkpoints``.
-            prediction_tags (Union[Dict, None]): A dictionary were the keys are the address components
+            prediction_tags (Union[dict, None]): A dictionary were the keys are the address components
                 (e.g. street name) and the value are the components idx (from 0 to N + 1) to use during retrain
-                of a model. The `+1` is the End Of Sequence (EOS) token that need to be include in the dictionary.
+                of a model. The ``+ 1`` is the End Of Sequence (EOS) token that need to be include in the dictionary.
                 We will use the length of this dictionary for the output size of the prediction layer. We also save
                 the dictionary to be use later on when you will use the model. Default is None, meaning we use our
                 pre-trained  model prediction tags.
@@ -316,46 +307,44 @@ class AddressParser:
             train using the fasttext-light model. But, since we don't update the embeddings weights, one can retrain
             using the fasttext model and later on use the weights with the fasttext-light.
 
-        Example:
+        Examples:
 
             .. code-block:: python
 
-                    address_parser = AddressParser(device=0) #on gpu device 0
-                    data_path = 'path_to_a_pickle_dataset.p'
+                address_parser = AddressParser(device=0) #on gpu device 0
+                data_path = 'path_to_a_pickle_dataset.p'
 
-                    container = PickleDatasetContainer(data_path)
+                container = PickleDatasetContainer(data_path)
 
-                    address_parser.retrain(container, 0.8, epochs=1, batch_size=128)
+                address_parser.retrain(container, 0.8, epochs=1, batch_size=128)
 
             Using learning rate scheduler callback.
 
             .. code-block:: python
 
-                    import poutyne
+                import poutyne
 
-                    address_parser = AddressParser(device=0)
-                    data_path = 'path_to_a_pickle_dataset.p'
+                address_parser = AddressParser(device=0)
+                data_path = 'path_to_a_pickle_dataset.p'
 
-                    container = PickleDatasetContainer(data_path)
+                container = PickleDatasetContainer(data_path)
 
-                    lr_scheduler = poutyne.StepLR(step_size=1, gamma=0.1) # reduce LR by a factor of 10 each epoch
-                    address_parser.retrain(container, 0.8, epochs=5, batch_size=128, callbacks=[lr_scheduler])
+                lr_scheduler = poutyne.StepLR(step_size=1, gamma=0.1) # reduce LR by a factor of 10 each epoch
+                address_parser.retrain(container, 0.8, epochs=5, batch_size=128, callbacks=[lr_scheduler])
 
             Using your own prediction tags dictionary.
 
             .. code-block:: python
-                    address_components = {"ATag":0, "AnotherTag": 1, "EOS": 2}
 
-                    address_parser = AddressParser(device=0) #on gpu device 0
-                    data_path = 'path_to_a_pickle_dataset.p'
+                address_components = {"ATag":0, "AnotherTag": 1, "EOS": 2}
 
-                    container = PickleDatasetContainer(data_path)
+                address_parser = AddressParser(device=0) #on gpu device 0
+                data_path = 'path_to_a_pickle_dataset.p'
 
-                    address_parser.retrain(container, 0.8, epochs=1, batch_size=128, prediction_tags=address_components)
+                container = PickleDatasetContainer(data_path)
 
+                address_parser.retrain(container, 0.8, epochs=1, batch_size=128, prediction_tags=address_components)
 
-        See `this <https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py>`_ for a fine
-        tuning example.
         """
         if self.model_type == "fasttext-light":
             raise ValueError("It's not possible to retrain a fasttext-light due to pymagnitude problem.")
@@ -416,63 +405,65 @@ class AddressParser:
              seed: int = 42) -> Dict:
         # pylint: disable=too-many-arguments, too-many-locals
         """
-        Method to test a retrained or a pre-trained model using a dataset with the same tags. If you test a retrained
-        with different prediction tags, we will use those tags.
+        Method to test a retrained or a pre-trained model using a dataset with the defaults tags. If you test a
+        retrained with different prediction tags, we will use those tags.
 
         Args:
-            test_dataset_container (~deepparse.deepparse.dataset_container.dataset_container.DatasetContainer):
+            test_dataset_container (:class:`~deepparse.dataset_container.DatasetContainer`):
                 The test dataset container of the data to use.
             batch_size (int): The size of the batch (default is 32).
             num_workers (int): Number of workers to use for the data loader (default is 1 worker).
-            callbacks (Union[List, None]): List of callbacks to use during training.
+            callbacks (Union[list, None]): List of callbacks to use during training.
                 See Poutyne `callback <https://poutyne.org/callbacks.html#callback-class>`_ for more information.
                 By default we set no callback.
             seed (int): Seed to use (by default 42).
-            callbacks (Union[List, None]): List of callbacks to use during training.
+            callbacks (Union[list, None]): List of callbacks to use during training.
                 See Poutyne `callback <https://poutyne.org/callbacks.html#callback-class>`_ for more information.
                 By default we set no callback.
         Return:
-            A dictionary with the best epoch stats (see `Experiment class
+            A dictionary with the stats (see `Experiment class
             <https://poutyne.org/experiment.html#poutyne.Experiment.train>`_ for details).
 
         Note:
             We use NLL loss and accuracy as in the `article <https://arxiv.org/abs/2006.16152>`_.
 
-        Example:
+        Examples:
 
             .. code-block:: python
 
-                    address_parser = AddressParser(device=0) #on gpu device 0
-                    data_path = 'path_to_a_pickle_test_dataset.p'
+                address_parser = AddressParser(device=0) #on gpu device 0
+                data_path = 'path_to_a_pickle_test_dataset.p'
 
-                    test_container = PickleDatasetContainer(data_path)
+                test_container = PickleDatasetContainer(data_path)
 
-                    address_parser.test(test_container) # We test the model on the data
+                address_parser.test(test_container) # We test the model on the data
 
             You can also test your fine tuned model
 
-                .. code-block:: python
-                    address_components = {"ATag":0, "AnotherTag": 1, "EOS": 2}
+            .. code-block:: python
 
-                    address_parser = AddressParser(device=0) #on gpu device 0
+                address_components = {"ATag":0, "AnotherTag": 1, "EOS": 2}
 
-                    # Train phase
-                    data_path = 'path_to_a_pickle_train_dataset.p'
+                address_parser = AddressParser(device=0) #on gpu device 0
 
-                    train_container = PickleDatasetContainer(data_path)
+                # Train phase
+                data_path = 'path_to_a_pickle_train_dataset.p'
 
-                    address_parser.retrain(container, 0.8, epochs=1, batch_size=128, prediction_tags=address_components)
+                train_container = PickleDatasetContainer(data_path)
 
-                    # Test phase
-                    data_path = 'path_to_a_pickle_test_dataset.p'
+                address_parser.retrain(container, 0.8, epochs=1, batch_size=128, prediction_tags=address_components)
 
-                    test_container = PickleDatasetContainer(data_path)
+                # Test phase
+                data_path = 'path_to_a_pickle_test_dataset.p'
 
-                    address_parser.test(test_container) # Test the retrained model
+                test_container = PickleDatasetContainer(data_path)
+
+                address_parser.test(test_container) # Test the retrained model
 
         """
         if self.model_type == "fasttext-light":
-            raise ValueError("It's not possible to test a fasttext-light due to pymagnitude problem.")
+            raise ValueError("It's not possible to test a fasttext-light due to pymagnitude problem. See Retrain method"
+                             "doc for more details.")
 
         callbacks = [] if callbacks is None else callbacks
         data_transform = self._set_data_transformer()

@@ -14,9 +14,9 @@ class DataTransform:
          (i.e. transform into word embedding and tag idx).
         model_type (str): The model type, can be either:
 
-            - fasttext (need ~8 GO of RAM to be used);
-            - bpemb (need ~2 GO of RAM to be used);
-            - fastest (quicker to process one address) (equivalent to fasttext);
+            - fasttext (need ~8 GO of RAM to be used),
+            - bpemb (need ~2 GO of RAM to be used),
+            - fastest (quicker to process one address) (equivalent to fasttext),
             - best (best accuracy performance) (equivalent to bpemb).
 
         Note:

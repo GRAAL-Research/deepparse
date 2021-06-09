@@ -8,6 +8,7 @@
   :author: Marouane Yassine & David Beauchemin
   :property="og:image": https://deepparse.org/_static/logos/logo.png
 
+[![Download](https://img.shields.io/badge/Download%20Dataset-blue?style=for-the-badge&logo=download)](https://github.com/GRAAL-Research/deepparse-address-data)
 
 Here is deepparse
 =================
@@ -453,6 +454,7 @@ API Reference
 
   examples/fine_tuning
   examples/parse_addresses
+  examples/retrain_with_new_prediction_tags
 
 Indices and tables
 ==================

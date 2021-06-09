@@ -20,16 +20,17 @@ class FormattedParsedAddress:
         raw_address: The raw address (not parsed).
         address_parsed_components: The parsed address in a list of tuples where the first elements
             are the address components and the second elements are the tags.
-        <Address tag>: All the possible address tag element of the model such as StreetName, StreetNumber, etc.
+        <Address tag>: All the possible address tag element of the model. For example, ``StreetName`` or
+            ``StreetNumber``.
 
     Example:
 
         .. code-block:: python
 
-                address_parser = AddressParser()
-                parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
-                print(parse_address.StreetNumber) # 350
-                print(parse_address.PostalCode) # G1L 1B6
+            address_parser = AddressParser()
+            parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
+            print(parse_address.StreetNumber) # 350
+            print(parse_address.PostalCode) # G1L 1B6
 
     Note:
         Since an address component can be composed of multiple elements (e.g. Wolfe street), when the probability
@@ -52,14 +53,14 @@ class FormattedParsedAddress:
     def to_dict(self, fields: Union[List, None] = None) -> dict:
         """
         Method to convert an parsed address into a dictionary where the keys are the address components and the value
-        are the value of those components. For example, the parsed address ``<street_number> 305 <street_name>
+        are the value of those components. For example, the parsed address ``<StreetNumber> 305 <StreetName>
         rue des Lilas`` will be converted into the following dictionary:
-        ``{'street_number':'305', 'street_name': 'rue des Lilas'}``.
+        ``{'StreetNumber':'305', 'StreetName': 'rue des Lilas'}``.
 
         Args:
-            fields (Union[List, None]): Optional argument to define the fields to extract from the address and the
-                order of it. If None, will used the default order and value `'street_number, unit, street_name,
-                orientation, municipality, province, postal_code, general_delivery'`.
+            fields (Union[list, None]): Optional argument to define the fields to extract from the address and the
+                order of it. If None, will used the default order and value `'StreetNumber, Unit, StreetName,
+                Orientation, Municipality, Province, PostalCode, GeneralDelivery'`.
 
         Return:
             A dictionary where the keys are the selected (or default) fields and the value are the corresponding value

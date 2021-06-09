@@ -1,9 +1,6 @@
 .. role:: hidden
     :class: hidden-section
 
-
-.. _intro:
-
 Parse Addresses
 ***************
 
@@ -33,13 +30,11 @@ Now let's load the pickled data (in a list format).
     with open(os.path.join(saving_dir, test_dataset_name + "." + file_extension), 'rb') as f:
         test_data = pickle.load(f)  # a 30000 addresses list
 
-
 Let's use the BPEmb model on a GPU.
 
 .. code-block:: python
 
     address_parser = AddressParser(model_type="bpemb", device=0)
-
 
 .. code-block:: python
 
@@ -50,6 +45,6 @@ default one.
 
 .. code-block:: python
 
-    fields = ['street_number', 'street_name', 'municipality', 'province', 'postal_code']
+    fields = ['StreetNumber', 'StreetName', 'Municipality', 'Province', 'PostalCode']
     parsed_address_data_frame = pd.DataFrame([parsed_address.to_dict(fields=fields) for parsed_address in parsed_addresses],
                                              columns=fields)

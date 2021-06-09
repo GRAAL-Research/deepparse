@@ -15,7 +15,7 @@ from ..tools import download_weights, latest_version
 
 class Seq2SeqModel(ABC, nn.Module):
     """
-    Abstract class for Seq2Seq network. By default, the network use the config as design in our article for the encoder
+    Abstract class for Seq2Seq network. By default, the network uses the config as designed in our article for the encoder
     and decoder:
 
         - Encoder: ``input_size = 300``, ``hidden_size = 1024`` and ``num_layers = 1``

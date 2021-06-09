@@ -21,7 +21,7 @@ class Seq2SeqModel(ABC, nn.Module):
         - Encoder: ``input_size = 300``, ``hidden_size = 1024`` and ``num_layers = 1``
         - Decoder: ``input_size = 1``, ``hidden_size = 1024``, ``num_layers = 1`` and ``output_size = 9``
 
-    When retraining with a different tag dictionary the output_size is change to the size of that dictionary.
+    When retraining with a different tag dictionary the output_size is changed to the size of that dictionary.
 
      Args:
         device (~torch.device): The device tu use for the prediction.

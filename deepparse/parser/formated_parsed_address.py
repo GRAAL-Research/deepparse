@@ -63,7 +63,7 @@ class FormattedParsedAddress:
                 Orientation, Municipality, Province, PostalCode, GeneralDelivery'`.
 
         Return:
-            A dictionary where the keys are the selected (or default) fields and the value are the corresponding value
+            A dictionary where the keys are the selected (or default) fields and the values are the corresponding value
             of the address components.
         """
         if fields is None:

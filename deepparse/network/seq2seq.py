@@ -44,7 +44,7 @@ class Seq2SeqModel(ABC, nn.Module):
 
     def same_output_dim(self, size: int) -> bool:
         """
-        Verify if the output dimension are similar as ``size``.
+        Verify if the output dimension is similar to ``size``.
 
         Args:
             size (int): The dimension size to compare the output dim to.

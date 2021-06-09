@@ -168,7 +168,7 @@ class AddressParser:
         formated_parsed_address.FIELDS = fields
         self.tags_converter = TagsConverter(tags_to_idx)
 
-        self.model_type = model_type.lower()
+        self._set_model_name(model_type)
         self._model_factory(verbose=self.verbose,
                             path_to_retrained_model=path_to_retrained_model,
                             prediction_layer_len=self.tags_converter.dim)
@@ -565,16 +565,14 @@ class AddressParser:
         """
         Model factory to create the vectorizer, the data converter and the pre-trained model
         """
-        if self.model_type in ("fasttext", "fastest", "fasttext-light", "lightest"):
-            if self.model_type in ("fasttext-light", "lightest"):
-                self.model_type = "fasttext-light"  # we change name to 'fasttext-light' since name can be lightest
-                file_name = download_fasttext_magnitude_embeddings(saving_dir=CACHE_PATH, verbose=verbose)
+        if "fasttext" in self.model_type:
+            if self.model_type == "fasttext-light":
+                file_name = download_fasttext_magnitude_embeddings(saving_dir=CACHE_PATH, verbose=self.verbose)
 
                 embeddings_model = MagnitudeEmbeddingsModel(file_name, verbose=verbose)
                 self.vectorizer = MagnitudeVectorizer(embeddings_model=embeddings_model)
             else:
-                self.model_type = "fasttext"  # we change name to fasttext since name can be fastest
-                file_name = download_fasttext_embeddings(saving_dir=CACHE_PATH, verbose=verbose)
+                file_name = download_fasttext_embeddings(saving_dir=CACHE_PATH, verbose=self.verbose)
 
                 embeddings_model = FastTextEmbeddingsModel(file_name, verbose=verbose)
                 self.vectorizer = FastTextVectorizer(embeddings_model=embeddings_model)
@@ -586,10 +584,8 @@ class AddressParser:
                                               verbose=verbose,
                                               path_to_retrained_model=path_to_retrained_model)
 
-        elif self.model_type in ("bpemb", "best"):
-            self.model_type = "bpemb"  # We change name to bpemb since name can be best
-            self.vectorizer = BPEmbVectorizer(
-                embeddings_model=BPEmbEmbeddingsModel(verbose=verbose, lang="multi", vs=100000, dim=300))
+        elif self.model_type == "bpemb":
+            self.vectorizer = BPEmbVectorizer(embeddings_model=BPEmbEmbeddingsModel(verbose=self.verbose))
 
             self.data_converter = bpemb_data_padding
 
@@ -611,3 +607,16 @@ class AddressParser:
     @staticmethod
     def _validate_if_new_prediction_tags(checkpoint_weights: dict) -> bool:
         return checkpoint_weights.get("prediction_tags") is not None
+
+    def _set_model_name(self, model_type: str):
+        """
+        Handle the model type name matching with proper seq2seq model type name.
+        """
+        model_type = model_type.lower()
+        if model_type == "lightest":
+            model_type = "fasttext-light"  # we change name to 'fasttext-light' since lightest = fasttext-light
+        elif model_type == "fastest":
+            model_type = "fasttext"  # we change name to fasttext since fastest = fasttext
+        elif model_type == "best":
+            model_type = "bpemb"  # we change name to bpemb since best = bpemb
+        self.model_type = model_type

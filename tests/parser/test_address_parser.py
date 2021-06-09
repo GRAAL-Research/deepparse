@@ -50,14 +50,14 @@ class AddressParserTest(AddressParserPredictTestCase):
                                                 device=self.a_device,
                                                 verbose=self.verbose)
 
-            embeddings_model.assert_called_with(verbose=self.verbose, **self.BPEmb_embeddings_model_param)
+            embeddings_model.assert_called_with(verbose=self.verbose)
 
         with patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel") as embeddings_model:
             self.address_parser = AddressParser(model_type=self.a_bpemb_model_type.capitalize(),
                                                 device=self.a_device,
                                                 verbose=self.verbose)
 
-            embeddings_model.assert_called_with(verbose=self.verbose, **self.BPEmb_embeddings_model_param)
+            embeddings_model.assert_called_with(verbose=self.verbose)
 
     @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
     @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
@@ -85,7 +85,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                                                 device=self.a_device,
                                                 verbose=self.verbose)
 
-            embeddings_model.assert_called_with(verbose=self.verbose, **self.BPEmb_embeddings_model_param)
+            embeddings_model.assert_called_with(verbose=self.verbose)
 
     @patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel")
     def test_givenABPEmbModelType_whenInstantiatingParser_thenInstantiateBPEmbEmbeddingsModelWithCorrectParameters(
@@ -95,7 +95,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                                                 device=self.a_device,
                                                 verbose=self.verbose)
 
-            embeddings_model.assert_called_with(verbose=self.verbose, **self.BPEmb_embeddings_model_param)
+            embeddings_model.assert_called_with(verbose=self.verbose)
 
     @patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel")
     def test_givenABestModelType_whenInstantiatingParser_thenInstantiateBPEmbVectorizerWithCorrectParameters(

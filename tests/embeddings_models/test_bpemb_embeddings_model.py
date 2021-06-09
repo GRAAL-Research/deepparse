@@ -18,13 +18,13 @@ class BPEmbEmbeddingsModelTest(TestCase):
 
     def test_whenInstantiatedWithPath_thenShouldLoadBPEmbModel(self):
         with patch("deepparse.embeddings_models.bpemb_embeddings_model.BPEmb", return_value=self.model) as loader:
-            _ = BPEmbEmbeddingsModel(verbose=False, lang="multi", vs=100000, dim=300)
+            _ = BPEmbEmbeddingsModel(verbose=False)
 
             loader.assert_called_with(lang="multi", vs=100000, dim=300)
 
     def test_whenCalledToEmbed_thenShouldCallLoadedModel(self):
         with patch("deepparse.embeddings_models.bpemb_embeddings_model.BPEmb", return_value=self.model):
-            embeddings_model = BPEmbEmbeddingsModel(verbose=False, lang="multi", vs=100000, dim=300)
+            embeddings_model = BPEmbEmbeddingsModel(verbose=False)
 
             embeddings_model(self.a_word)
 
@@ -32,7 +32,7 @@ class BPEmbEmbeddingsModelTest(TestCase):
 
     def test_givenADimOf9_whenAskDimProperty_thenReturnProperDim(self):
         with patch("deepparse.embeddings_models.bpemb_embeddings_model.BPEmb", return_value=self.model):
-            embeddings_model = BPEmbEmbeddingsModel(verbose=False, lang="multi", vs=100000, dim=300)
+            embeddings_model = BPEmbEmbeddingsModel(verbose=False)
 
             actual = embeddings_model.dim
             expected = self.dim

@@ -15,11 +15,11 @@
 
 Deepparse is a state-of-the-art library for parsing multinational street addresses using deep learning.
 
-Use deepparse to:
+Use deepparse to
 
-- Use the pre-trained models to parse multinational addresses.
-- Retrain our pre-trained models on new data to parse multinational addresses.
-- Retrain our pre-trained models with your own prediction tags easily.
+- Uuse the pre-trained models to parse multinational addresses,
+- retrain our pre-trained models on new data to parse multinational addresses,
+- retrain our pre-trained models with your own prediction tags easily.
 
 Read the documentation at [deepparse.org](https://deepparse.org).
 
@@ -27,7 +27,7 @@ Deepparse is compatible with the __latest version of PyTorch__ and  __Python >= 
 
 ### Countries and Results
 
-We evaluate our models on two forms of address data:
+We evaluate our models on two forms of address data
 
 - **clean data** which refers to addresses containing elements from four categories, namely a street name, a
   municipality, a province and a postal code,

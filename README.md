@@ -162,10 +162,10 @@ address_parser.retrain(training_container, 0.8, epochs=1, batch_size=128, predic
 
 Here are the URLs to download our pre-trained models directly
 
-- [FastText](https://graal.ift.ulaval.ca/public/deepparse/fasttext.ckpt)
-- [BPEmb](https://graal.ift.ulaval.ca/public/deepparse/bpemb.ckpt)
+- [FastText](https://graal.ift.ulaval.ca/public/deepparse/fasttext.ckpt),
+- [BPEmb](https://graal.ift.ulaval.ca/public/deepparse/bpemb.ckpt),
 - [FastText Light](https://graal.ift.ulaval.ca/public/deepparse/fasttext.magnitude.gz) (
-  using [Magnitude Light](https://github.com/davebulaval/magnitude-light))
+  using [Magnitude Light](https://github.com/davebulaval/magnitude-light)).
 
 ------------------
 

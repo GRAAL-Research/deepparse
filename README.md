@@ -125,14 +125,14 @@ parsed_address = address_parser("350 rue des Lilas Ouest Québec Québec G1L 1B6
 
 The predictions tags are the following
 
-- "StreetNumber": for the street number
-- "StreetName": for the name of the street
-- "Unit": for the unit (such as apartment)
-- "Municipality": for the municipality
-- "Province": for the province or local region
-- "PostalCode": for the postal code
-- "Orientation": for the street orientation (e.g. west, east)
-- "GeneralDelivery": for other delivery information
+- "StreetNumber": for the street number,
+- "StreetName": for the name of the street,
+- "Unit": for the unit (such as apartment),
+- "Municipality": for the municipality,
+- "Province": for the province or local region,
+- "PostalCode": for the postal code,
+- "Orientation": for the street orientation (e.g. west, east),
+- "GeneralDelivery": for other delivery information.
 
 ### Retrain a Model
 

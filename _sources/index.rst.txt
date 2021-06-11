@@ -20,21 +20,20 @@ Here is deepparse
 
 Deepparse is a state-of-the-art library for parsing multinational street addresses using deep learning.
 
-Use deepparse to:
+Use deepparse to
 
-- Use the pre-trained models to parse multinational addresses.
-- Retrain our pre-trained models on new data to parse multinational addresses.
-- Retrain our pre-trained models with your own prediction tags easily.
+- use the pre-trained models to parse multinational addresses,
+- retrain our pre-trained models on new data to parse multinational addresses,
+- retrain our pre-trained models with your own prediction tags easily.
 
 Deepparse is compatible with the **latest version of PyTorch** and  **Python >= 3.7**.
 
 Countries and Results
 =====================
 
-We evaluate our models on two forms of address data: 
+We evaluate our models on two forms of address data
 
-- **clean data** which refers to addresses containing elements from four categories, namely a street name, a municipality, a province and a postal code.
-
+- **clean data** which refers to addresses containing elements from four categories, namely a street name, a municipality, a province and a postal code,
 - **incomplete data** which is made up of addresses missing at least one category amongst the aforementioned ones.
 
 You can get our dataset `here <https://github.com/GRAAL-Research/deepparse-address-data)>`_.
@@ -389,9 +388,9 @@ Download our Models
 *******************
 
 Here are the URLs to download our pre-trained models directly
-    - `FastText <https://graal.ift.ulaval.ca/public/deepparse/fasttext.ckpt>`_
-    - `BPEmb <https://graal.ift.ulaval.ca/public/deepparse/bpemb.ckpt>`_
-    - `FastText Light <https://graal.ift.ulaval.ca/public/deepparse/fasttext.magnitude.gz>`_ (using `Magnitude Light <https://github.com/davebulaval/magnitude-light>`_)
+    - `FastText <https://graal.ift.ulaval.ca/public/deepparse/fasttext.ckpt>`_,
+    - `BPEmb <https://graal.ift.ulaval.ca/public/deepparse/bpemb.ckpt>`_,
+    - `FastText Light <https://graal.ift.ulaval.ca/public/deepparse/fasttext.magnitude.gz>`_ (using `Magnitude Light <https://github.com/davebulaval/magnitude-light>`_).
 
 
 Installation

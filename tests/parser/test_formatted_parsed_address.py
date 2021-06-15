@@ -120,7 +120,7 @@ class FormattedParsedAddressTest(TestCase):
         self.assertEqual(actual, expected)
 
         actual = self.complete_parsed_address.format_address()
-        expected = "3 unit test road west city province postal_code delivery"
+        expected = "3 test road unit west city province postal_code delivery"
 
         self.assertEqual(actual, expected)
 
@@ -146,7 +146,7 @@ class FormattedParsedAddressTest(TestCase):
         self.assertEqual(actual, expected)
 
         actual = self.complete_parsed_address.format_address(field_separator=", ")
-        expected = "3, unit, test road, west, city, province, postal_code, delivery"
+        expected = "3, test road, unit, west, city, province, postal_code, delivery"
 
         self.assertEqual(actual, expected)
 
@@ -157,7 +157,7 @@ class FormattedParsedAddressTest(TestCase):
         self.assertEqual(actual, expected)
 
         actual = self.complete_parsed_address.format_address(capitalize_fields=["PostalCode", "Province"])
-        expected = "3 unit test road west city Province Postal_code delivery"
+        expected = "3 test road unit west city Province Postal_code delivery"
 
         self.assertEqual(actual, expected)
 
@@ -175,7 +175,7 @@ class FormattedParsedAddressTest(TestCase):
         self.assertEqual(actual, expected)
 
         actual = self.complete_parsed_address.format_address(upper_case_fields=["PostalCode", "Province"])
-        expected = "3 unit test road west city PROVINCE POSTAL_CODE delivery"
+        expected = "3 test road unit west city PROVINCE POSTAL_CODE delivery"
 
         self.assertEqual(actual, expected)
 
@@ -197,6 +197,20 @@ class FormattedParsedAddressTest(TestCase):
                                                              capitalize_fields=["StreetName"],
                                                              upper_case_fields=["PostalCode", "Province"])
         expected = "delivery, unit, Test road, 3, west, city, PROVINCE, POSTAL_CODE"
+
+        self.assertEqual(actual, expected)
+
+    def test_whenFormattedParsedAddressInferredOrder_thenProperlyInferred(self):
+        actual = self.parsed_address.inferred_order
+        expected = ['StreetNumber', 'StreetName']
+
+        self.assertEqual(actual, expected)
+
+        actual = self.complete_parsed_address.inferred_order
+        expected = [
+            'StreetNumber', 'StreetName', 'Unit', 'Orientation', 'Municipality', 'Province', 'PostalCode',
+            'GeneralDelivery'
+        ]
 
         self.assertEqual(actual, expected)
 

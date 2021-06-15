@@ -45,10 +45,20 @@ class FormattedParsedAddress:
         self.raw_address = list(address.keys())[0]
         self.address_parsed_components = address[self.raw_address]
 
+        self._infer_tags_order()
+
         self._resolve_tagged_affectation(self.address_parsed_components)
 
     def __str__(self) -> str:
         return self.raw_address
+
+    def __repr__(self):
+        values = [
+            self._get_attr_repr(name) for name in self.__dict__
+            if name not in ("raw_address", "address_parsed_components", "inferred_order")
+        ]
+        joined_values = ", ".join(v for v in values if v != "")
+        return self.__class__.__name__ + "<" + joined_values + ">"
 
     def format_address(self,
                        fields: Union[List, None] = None,
@@ -62,8 +72,9 @@ class FormattedParsedAddress:
 
         Args:
             fields (Union[list, None]): Optional argument to define the fields to order the address components of
-                the address. If None, will use the default order `'StreetNumber, Unit, StreetName,
-                Orientation, Municipality, Province, PostalCode, GeneralDelivery'`.
+                the address. If None, we will use the inferred order base on the address tags appearance. For example,
+                if the parsed address is ``(305, StreetNumber), (rue, StreetName), (des, StreetName),
+                (Lilas, StreetName)``, the inferred order will be ``StreetNumber, StreetName``.
             capitalize_fields (Union[list, None]): Optional argument to define the capitalize fields for the formatted
                 address. If None, no fields are capitalize.
             upper_case_fields (Union[list, None]): Optional argument to define the upper cased fields for the
@@ -91,7 +102,7 @@ class FormattedParsedAddress:
                 # > 350 rue des lilas ouest quebec city quebec G1L 1B6
         """
         if fields is None:
-            fields = FIELDS
+            fields = self.inferred_order
         self._validate_argument(fields)
 
         if capitalize_fields is None:
@@ -161,15 +172,18 @@ class FormattedParsedAddress:
             return name + "=" + repr(getattr(self, name))
         return ""
 
-    def __repr__(self):
-        values = [
-            self._get_attr_repr(name) for name in self.__dict__
-            if name not in ("raw_address", "address_parsed_components")
-        ]
-        joined_values = ", ".join(v for v in values if v != "")
-        return self.__class__.__name__ + "<" + joined_values + ">"
-
-    def _validate_argument(self, arg):
+    def _validate_argument(self, arg: List) -> None:
         for arg_element in arg:
             if not hasattr(self, arg_element):
                 raise KeyError(arg_element + " not an attribute of the formatted parsed address.")
+
+    def _infer_tags_order(self) -> None:
+        """
+        Private method to infer the order of the tags base on the address order tag.
+        """
+        tags = [tag for _, tag in self.address_parsed_components]
+        inferred_order = []
+        for tag in tags:
+            if tag not in inferred_order:
+                inferred_order.append(tag)
+        self.inferred_order = inferred_order

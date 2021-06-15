@@ -86,3 +86,7 @@
 - Added in-doc code examples.
 - Added code examples.
 - Small improvement of models implementation.
+
+## dev
+
+- Added method to specify the format of address components of an `FormattedParsedAddress`. 

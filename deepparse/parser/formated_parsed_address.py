@@ -50,16 +50,40 @@ class FormattedParsedAddress:
     def __str__(self) -> str:
         return self.raw_address
 
+    def formatted_address(self, fields: Union[List, None] = None) -> str:
+        """
+        Method to format the address components in a specific order. We also filter the empty components (None).
+        By default, the order is `'StreetNumber, Unit, StreetName, Orientation, Municipality, Province, PostalCode,
+        GeneralDelivery'` and we filter the empty components.
+
+        Args:
+            fields (Union[list, None]): Optional argument to define the fields to order the address components of
+                the address. If None, will use the default order `'StreetNumber, Unit, StreetName,
+                Orientation, Municipality, Province, PostalCode, GeneralDelivery'`.
+
+        Return:
+            A string of the formatted address in the fields order.
+        """
+        if fields is None:
+            fields = FIELDS
+        print(fields)
+        formatted_parsed_address = ""
+        for field in fields:
+            address_component = getattr(self, field)
+            if address_component is not None:
+                formatted_parsed_address += address_component + " "
+        return formatted_parsed_address.strip()  # to remove last " "
+
     def to_dict(self, fields: Union[List, None] = None) -> dict:
         """
-        Method to convert a parsed address into a dictionary where the keys are the address components and the values
+        Method to convert a parsed address into a dictionary where the keys are the address components, and the values
         are the value of those components. For example, the parsed address ``<StreetNumber> 305 <StreetName>
         rue des Lilas`` will be converted into the following dictionary:
         ``{'StreetNumber':'305', 'StreetName': 'rue des Lilas'}``.
 
         Args:
             fields (Union[list, None]): Optional argument to define the fields to extract from the address and the
-                order of it. If None, will used the default order and value `'StreetNumber, Unit, StreetName,
+                order of it. If None, will use the default order and value `'StreetNumber, Unit, StreetName,
                 Orientation, Municipality, Province, PostalCode, GeneralDelivery'`.
 
         Return:

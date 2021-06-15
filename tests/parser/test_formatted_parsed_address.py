@@ -5,17 +5,13 @@ import sys
 import unittest
 from unittest import TestCase
 
-from deepparse.parser import FormattedParsedAddress
+from deepparse.parser import FormattedParsedAddress, formated_parsed_address
 
 
 class FormattedParsedAddressTest(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.address_components = [
-            "StreetNumber", "StreetName", "Unit", "Municipality", "Province", "PostalCode", "Orientation",
-            "GeneralDelivery"
-        ]
         cls.a_address_str = "3 test road"
         cls.a_complete_address_str = "3 test road unit west city province postal_code delivery"
         cls.a_parsed_address = [("3", "StreetNumber"), ("test", "StreetName"), ("road", "StreetName")]
@@ -50,6 +46,11 @@ class FormattedParsedAddressTest(TestCase):
             'PostalCode': 'postal_code',
             'GeneralDelivery': 'delivery'
         }
+        # we reset the FIELDS of the address to default values since we change it in some tests
+        formated_parsed_address.FIELDS = [
+            "StreetNumber", "Unit", "StreetName", "Orientation", "Municipality", "Province", "PostalCode",
+            "GeneralDelivery"
+        ]
 
     def _capture_output(self):
         self.test_out = io.StringIO()
@@ -110,6 +111,32 @@ class FormattedParsedAddressTest(TestCase):
 
         actual = self.complete_parsed_address.to_dict(fields=["StreetNumber"])
         expected = {'StreetNumber': '3'}
+        self.assertEqual(actual, expected)
+
+    def test_whenFormattedAddressDefaultSettings_thenReturnExpectedOrderAndDontReturnNoneComponents(self):
+        actual = self.parsed_address.formatted_address()
+        expected = self.a_address_str
+
+        self.assertEqual(actual, expected)
+
+        actual = self.complete_parsed_address.formatted_address()
+        expected = "3 unit test road west city province postal_code delivery"
+
+        self.assertEqual(actual, expected)
+
+    def test_whenFormattedAddressFieldsChanged_thenReturnNewOrderFields(self):
+        a_different_order = [
+            "GeneralDelivery", "Unit", "StreetName", "StreetNumber", "Orientation", "Municipality", "Province",
+            "PostalCode"
+        ]
+        actual = self.parsed_address.formatted_address(fields=a_different_order)
+        expected = "test road 3"
+
+        self.assertEqual(actual, expected)
+
+        actual = self.complete_parsed_address.formatted_address(fields=a_different_order)
+        expected = "delivery unit test road 3 west city province postal_code"
+
         self.assertEqual(actual, expected)
 
 

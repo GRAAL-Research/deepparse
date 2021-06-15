@@ -87,7 +87,8 @@
 - Added code examples.
 - Small improvement of models implementation.
 
-## dev
+## 0.4.1
 
 - Added method to specify the format of address components of an `FormattedParsedAddress`. Formatting can specify the
   field separator, the field to be capitalized, and the field to be upper case.
+

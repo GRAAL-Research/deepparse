@@ -50,7 +50,11 @@ class FormattedParsedAddress:
     def __str__(self) -> str:
         return self.raw_address
 
-    def formatted_address(self, fields: Union[List, None] = None) -> str:
+    def formatted_address(self,
+                          fields: Union[List, None] = None,
+                          capitalize_fields: Union[List[str], None] = None,
+                          upper_case_fields: Union[List[str], None] = None,
+                          field_separator: Union[str, None] = None) -> str:
         """
         Method to format the address components in a specific order. We also filter the empty components (None).
         By default, the order is `'StreetNumber, Unit, StreetName, Orientation, Municipality, Province, PostalCode,
@@ -60,19 +64,59 @@ class FormattedParsedAddress:
             fields (Union[list, None]): Optional argument to define the fields to order the address components of
                 the address. If None, will use the default order `'StreetNumber, Unit, StreetName,
                 Orientation, Municipality, Province, PostalCode, GeneralDelivery'`.
+            capitalize_fields (Union[list, None]): Optional argument to define the capitalize fields for the formatted
+                address. If None, no fields are capitalize.
+            upper_case_fields (Union[list, None]): Optional argument to define the upper cased fields for the
+                formatted address. If None, no fields are capitalize.
+            field_separator (Union[list, None]): Optional argument to define the field separator between address
+                components. If None, the default field separator is ``" "``.
 
         Return:
             A string of the formatted address in the fields order.
+
+        Examples:
+
+            .. code-block:: python
+
+            address_parser = AddressParser()
+            parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
+
+            parse_address.formatted_address(fields_separator=", ")
+            # > 350, rue des lilas, ouest, quebec city, quebec, g1l 1b6
+
+            parse_address.formatted_address(fields_separator=", ", capitalize_fields=["StreetName", "Orientation"])
+            # > 350, Rue des lilas, Ouest, quebec city, quebec, g1l 1b6
+
+            parse_address.formatted_address(fields_separator=", ", upper_case_fields=["PostalCode""])
+            # > 350 rue des lilas ouest quebec city quebec G1L 1B6
         """
         if fields is None:
             fields = FIELDS
-        print(fields)
+
+        if capitalize_fields is None:
+            capitalize_fields = []
+        for capitalize_field in capitalize_fields:
+            assert capitalize_field in FIELDS
+
+        if upper_case_fields is None:
+            upper_case_fields = []
+        for upper_case_field in upper_case_fields:
+            assert upper_case_field in FIELDS
+
+        if field_separator is None:
+            field_separator = " "
+
         formatted_parsed_address = ""
         for field in fields:
             address_component = getattr(self, field)
             if address_component is not None:
-                formatted_parsed_address += address_component + " "
-        return formatted_parsed_address.strip()  # to remove last " "
+                # Format address
+                address_component = address_component.capitalize() if field in capitalize_fields else address_component
+                address_component = address_component.upper() if field in upper_case_fields else address_component
+
+                formatted_parsed_address += address_component + field_separator
+
+        return formatted_parsed_address.strip(field_separator)  # To remove last field separator
 
     def to_dict(self, fields: Union[List, None] = None) -> dict:
         """

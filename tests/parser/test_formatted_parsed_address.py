@@ -139,6 +139,67 @@ class FormattedParsedAddressTest(TestCase):
 
         self.assertEqual(actual, expected)
 
+    def test_whenFormattedAddressFieldsSeparator_thenReturnAddressWithFieldsSeparator(self):
+        actual = self.parsed_address.formatted_address(field_separator=", ")
+        expected = "3, test road"
+
+        self.assertEqual(actual, expected)
+
+        actual = self.complete_parsed_address.formatted_address(field_separator=", ")
+        expected = "3, unit, test road, west, city, province, postal_code, delivery"
+
+        self.assertEqual(actual, expected)
+
+    def test_whenFormattedAddressCapitalizeFields_thenReturnAddressWithFieldsCapitalize(self):
+        actual = self.parsed_address.formatted_address(capitalize_fields=["StreetName"])
+        expected = "3 Test road"
+
+        self.assertEqual(actual, expected)
+
+        actual = self.complete_parsed_address.formatted_address(capitalize_fields=["PostalCode", "Province"])
+        expected = "3 unit test road west city Province Postal_code delivery"
+
+        self.assertEqual(actual, expected)
+
+    def test_whenFormattedAddressCapitalizeFieldsNotAddressFields_thenRaiseError(self):
+        with self.assertRaises(AssertionError):
+            self.parsed_address.formatted_address(capitalize_fields=["not_a_field"])
+
+        with self.assertRaises(AssertionError):
+            self.complete_parsed_address.formatted_address(capitalize_fields=["not_a_field"])
+
+    def test_whenFormattedAddressUpperCaseFields_thenReturnAddressWithFieldsUpperCase(self):
+        actual = self.parsed_address.formatted_address(upper_case_fields=["StreetName"])
+        expected = "3 TEST ROAD"
+
+        self.assertEqual(actual, expected)
+
+        actual = self.complete_parsed_address.formatted_address(upper_case_fields=["PostalCode", "Province"])
+        expected = "3 unit test road west city PROVINCE POSTAL_CODE delivery"
+
+        self.assertEqual(actual, expected)
+
+    def test_whenFormattedAddressUpperCaseFieldsNotAddressFields_thenRaiseError(self):
+        with self.assertRaises(AssertionError):
+            self.parsed_address.formatted_address(upper_case_fields=["not_a_field"])
+
+        with self.assertRaises(AssertionError):
+            self.complete_parsed_address.formatted_address(upper_case_fields=["not_a_field"])
+
+    def test_whenFormattedAddressAllArgsChanged_thenReturnAddressProperlyFormatted(self):
+        a_different_order = [
+            "GeneralDelivery", "Unit", "StreetName", "StreetNumber", "Orientation", "Municipality", "Province",
+            "PostalCode"
+        ]
+
+        actual = self.complete_parsed_address.formatted_address(fields=a_different_order,
+                                                                field_separator=", ",
+                                                                capitalize_fields=["StreetName"],
+                                                                upper_case_fields=["PostalCode", "Province"])
+        expected = "delivery, unit, Test road, 3, west, city, PROVINCE, POSTAL_CODE"
+
+        self.assertEqual(actual, expected)
+
 
 if __name__ == "__main__":
     unittest.main()

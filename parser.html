@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Parser &mdash; deepparse 0.4 documentation</title>
+  <title>Parser &mdash; deepparse 0.4.1 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.4
+                0.4.1
               </div>
             
           
@@ -331,11 +331,11 @@ networks either with fastText or BPEmb. The default prediction tags are the foll
 <p>The default value is “best” for the most accurate model. Ignored if <code class="docutils literal notranslate"><span class="pre">path_to_retrained_model</span></code> is not
 <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
 </p></li>
-<li><p><strong>device</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><a class="reference external" href="https://pytorch.org/docs/stable/tensor_attributes.html#torch.torch.device" title="(in PyTorch v1.8.0a0+56b43f4)"><em>torch.torch.device</em></a><em>]</em>) – <p>The device to use can be either:</p>
+<li><p><strong>device</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><a class="reference external" href="https://pytorch.org/docs/stable/tensor_attributes.html#torch.torch.device" title="(in PyTorch v1.9.0a0+gitd69c22d)"><em>torch.torch.device</em></a><em>]</em>) – <p>The device to use can be either:</p>
 <ul>
 <li><p>a <code class="docutils literal notranslate"><span class="pre">GPU</span></code> index in int format (e.g. <code class="docutils literal notranslate"><span class="pre">0</span></code>),</p></li>
 <li><p>a complete device name in a string format (e.g. <code class="docutils literal notranslate"><span class="pre">'cuda:0'</span></code>),</p></li>
-<li><p>a <a class="reference external" href="https://pytorch.org/docs/stable/tensor_attributes.html#torch.torch.device" title="(in PyTorch v1.8.0a0+56b43f4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">device</span></code></a> object,</p></li>
+<li><p>a <a class="reference external" href="https://pytorch.org/docs/stable/tensor_attributes.html#torch.torch.device" title="(in PyTorch v1.9.0a0+gitd69c22d)"><code class="xref py py-class docutils literal notranslate"><span class="pre">device</span></code></a> object,</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'cpu'</span></code> for a  <code class="docutils literal notranslate"><span class="pre">CPU</span></code> use.</p></li>
 </ul>
 <p>The default value is GPU with the index <code class="docutils literal notranslate"><span class="pre">0</span></code> if it exist, otherwise the value is <code class="docutils literal notranslate"><span class="pre">CPU</span></code>.</p>
@@ -638,16 +638,57 @@ values are asked of the address parser, the address components don’t keep it. 
 <code class="docutils literal notranslate"><span class="pre">address_parsed_components</span></code> attribute.</p>
 </div>
 <dl class="py method">
+<dt class="sig sig-object py" id="deepparse.parser.FormattedParsedAddress.format_address">
+<span class="sig-name descname"><span class="pre">format_address</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fields</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capitalize_fields</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_case_fields</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_separator</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><a class="reference internal" href="_modules/deepparse/parser/formated_parsed_address.html#FormattedParsedAddress.format_address"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.parser.FormattedParsedAddress.format_address" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to format the address components in a specific order. We also filter the empty components (None).
+By default, the order is <cite>‘StreetNumber, Unit, StreetName, Orientation, Municipality, Province, PostalCode,
+GeneralDelivery’</cite> and we filter the empty components.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fields</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><em>None</em></a><em>]</em>) – Optional argument to define the fields to order the address components of
+the address. If None, we will use the inferred order base on the address tags appearance. For example,
+if the parsed address is <code class="docutils literal notranslate"><span class="pre">(305,</span> <span class="pre">StreetNumber),</span> <span class="pre">(rue,</span> <span class="pre">StreetName),</span> <span class="pre">(des,</span> <span class="pre">StreetName),</span>
+<span class="pre">(Lilas,</span> <span class="pre">StreetName)</span></code>, the inferred order will be <code class="docutils literal notranslate"><span class="pre">StreetNumber,</span> <span class="pre">StreetName</span></code>.</p></li>
+<li><p><strong>capitalize_fields</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><em>None</em></a><em>]</em>) – Optional argument to define the capitalize fields for the formatted
+address. If None, no fields are capitalize.</p></li>
+<li><p><strong>upper_case_fields</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><em>None</em></a><em>]</em>) – Optional argument to define the upper cased fields for the
+formatted address. If None, no fields are capitalize.</p></li>
+<li><p><strong>field_separator</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><em>None</em></a><em>]</em>) – Optional argument to define the field separator between address
+components. If None, the default field separator is <code class="docutils literal notranslate"><span class="pre">&quot;</span> <span class="pre">&quot;</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A string of the formatted address in the fields order.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">()</span>
+<span class="n">parse_address</span> <span class="o">=</span> <span class="n">address_parser</span><span class="p">(</span><span class="s2">&quot;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&quot;</span><span class="p">)</span>
+
+<span class="n">parse_address</span><span class="o">.</span><span class="n">formatted_address</span><span class="p">(</span><span class="n">fields_separator</span><span class="o">=</span><span class="s2">&quot;, &quot;</span><span class="p">)</span>
+<span class="c1"># &gt; 350, rue des lilas, ouest, quebec city, quebec, g1l 1b6</span>
+
+<span class="n">parse_address</span><span class="o">.</span><span class="n">formatted_address</span><span class="p">(</span><span class="n">fields_separator</span><span class="o">=</span><span class="s2">&quot;, &quot;</span><span class="p">,</span> <span class="n">capitalize_fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;StreetName&quot;</span><span class="p">,</span> <span class="s2">&quot;Orientation&quot;</span><span class="p">])</span>
+<span class="c1"># &gt; 350, Rue des lilas, Ouest, quebec city, quebec, g1l 1b6</span>
+
+<span class="n">parse_address</span><span class="o">.</span><span class="n">formatted_address</span><span class="p">(</span><span class="n">fields_separator</span><span class="o">=</span><span class="s2">&quot;, &quot;</span><span class="p">,</span> <span class="n">upper_case_fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;PostalCode&quot;&quot;])</span>
+<span class="c1"># &gt; 350 rue des lilas ouest quebec city quebec G1L 1B6</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="deepparse.parser.FormattedParsedAddress.to_dict">
 <span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fields</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)"><span class="pre">dict</span></a><a class="reference internal" href="_modules/deepparse/parser/formated_parsed_address.html#FormattedParsedAddress.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.parser.FormattedParsedAddress.to_dict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method to convert a parsed address into a dictionary where the keys are the address components and the values
+<dd><p>Method to convert a parsed address into a dictionary where the keys are the address components, and the values
 are the value of those components. For example, the parsed address <code class="docutils literal notranslate"><span class="pre">&lt;StreetNumber&gt;</span> <span class="pre">305</span> <span class="pre">&lt;StreetName&gt;</span>
 <span class="pre">rue</span> <span class="pre">des</span> <span class="pre">Lilas</span></code> will be converted into the following dictionary:
 <code class="docutils literal notranslate"><span class="pre">{'StreetNumber':'305',</span> <span class="pre">'StreetName':</span> <span class="pre">'rue</span> <span class="pre">des</span> <span class="pre">Lilas'}</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>fields</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><em>None</em></a><em>]</em>) – Optional argument to define the fields to extract from the address and the
-order of it. If None, will used the default order and value <cite>‘StreetNumber, Unit, StreetName,
+order of it. If None, will use the default order and value <cite>‘StreetNumber, Unit, StreetName,
 Orientation, Municipality, Province, PostalCode, GeneralDelivery’</cite>.</p>
 </dd>
 <dt class="field-even">Returns</dt>

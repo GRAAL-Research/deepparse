@@ -1,5 +1,5 @@
 # Bug with PyTorch source code makes torch.tensor as not callable for pylint.
-# pylint: disable=not-callable, too-many-public-methods
+# pylint: disable=not-callable, too-many-public-methods, no-name-in-module
 
 import os
 import shutil

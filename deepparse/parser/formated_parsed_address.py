@@ -78,30 +78,29 @@ class FormattedParsedAddress:
 
             .. code-block:: python
 
-            address_parser = AddressParser()
-            parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
+                address_parser = AddressParser()
+                parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
 
-            parse_address.formatted_address(fields_separator=", ")
-            # > 350, rue des lilas, ouest, quebec city, quebec, g1l 1b6
+                parse_address.formatted_address(fields_separator=", ")
+                # > 350, rue des lilas, ouest, quebec city, quebec, g1l 1b6
 
-            parse_address.formatted_address(fields_separator=", ", capitalize_fields=["StreetName", "Orientation"])
-            # > 350, Rue des lilas, Ouest, quebec city, quebec, g1l 1b6
+                parse_address.formatted_address(fields_separator=", ", capitalize_fields=["StreetName", "Orientation"])
+                # > 350, Rue des lilas, Ouest, quebec city, quebec, g1l 1b6
 
-            parse_address.formatted_address(fields_separator=", ", upper_case_fields=["PostalCode""])
-            # > 350 rue des lilas ouest quebec city quebec G1L 1B6
+                parse_address.formatted_address(fields_separator=", ", upper_case_fields=["PostalCode""])
+                # > 350 rue des lilas ouest quebec city quebec G1L 1B6
         """
         if fields is None:
             fields = FIELDS
+        self._validate_argument(fields)
 
         if capitalize_fields is None:
             capitalize_fields = []
-        for capitalize_field in capitalize_fields:
-            assert capitalize_field in FIELDS
+        self._validate_argument(capitalize_fields)
 
         if upper_case_fields is None:
             upper_case_fields = []
-        for upper_case_field in upper_case_fields:
-            assert upper_case_field in FIELDS
+        self._validate_argument(upper_case_fields)
 
         if field_separator is None:
             field_separator = " "
@@ -169,3 +168,8 @@ class FormattedParsedAddress:
         ]
         joined_values = ", ".join(v for v in values if v != "")
         return self.__class__.__name__ + "<" + joined_values + ">"
+
+    def _validate_argument(self, arg):
+        for arg_element in arg:
+            if not hasattr(self, arg_element):
+                raise KeyError(arg_element + " not an attribute of the formatted parsed address.")

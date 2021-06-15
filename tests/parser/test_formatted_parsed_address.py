@@ -162,10 +162,10 @@ class FormattedParsedAddressTest(TestCase):
         self.assertEqual(actual, expected)
 
     def test_whenFormattedAddressCapitalizeFieldsNotAddressFields_thenRaiseError(self):
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(KeyError):
             self.parsed_address.formatted_address(capitalize_fields=["not_a_field"])
 
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(KeyError):
             self.complete_parsed_address.formatted_address(capitalize_fields=["not_a_field"])
 
     def test_whenFormattedAddressUpperCaseFields_thenReturnAddressWithFieldsUpperCase(self):
@@ -180,10 +180,10 @@ class FormattedParsedAddressTest(TestCase):
         self.assertEqual(actual, expected)
 
     def test_whenFormattedAddressUpperCaseFieldsNotAddressFields_thenRaiseError(self):
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(KeyError):
             self.parsed_address.formatted_address(upper_case_fields=["not_a_field"])
 
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(KeyError):
             self.complete_parsed_address.formatted_address(upper_case_fields=["not_a_field"])
 
     def test_whenFormattedAddressAllArgsChanged_thenReturnAddressProperlyFormatted(self):

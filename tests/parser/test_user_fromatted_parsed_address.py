@@ -76,14 +76,14 @@ class UserFormattedParsedAddressTest(TestCase):
         self.assertEqual(actual, expected)
 
     def test_whenFormattedAddressUpperCaseFields_thenReturnAddressWithFieldsUpperCase(self):
-        actual = self.parsed_address.formatted_address(upper_case_fields=["AnotherTag"])
+        actual = self.parsed_address.format_address(upper_case_fields=["AnotherTag"])
         expected = "3 TEST ROAD"
 
         self.assertEqual(actual, expected)
 
     def test_whenFormattedAddressUpperCaseFieldsNotAddressFields_thenRaiseError(self):
         with self.assertRaises(KeyError):
-            self.parsed_address.formatted_address(upper_case_fields=["not_a_field"])
+            self.parsed_address.format_address(upper_case_fields=["not_a_field"])
 
 
 if __name__ == "__main__":

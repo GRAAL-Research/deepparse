@@ -50,11 +50,11 @@ class FormattedParsedAddress:
     def __str__(self) -> str:
         return self.raw_address
 
-    def formatted_address(self,
-                          fields: Union[List, None] = None,
-                          capitalize_fields: Union[List[str], None] = None,
-                          upper_case_fields: Union[List[str], None] = None,
-                          field_separator: Union[str, None] = None) -> str:
+    def format_address(self,
+                       fields: Union[List, None] = None,
+                       capitalize_fields: Union[List[str], None] = None,
+                       upper_case_fields: Union[List[str], None] = None,
+                       field_separator: Union[str, None] = None) -> str:
         """
         Method to format the address components in a specific order. We also filter the empty components (None).
         By default, the order is `'StreetNumber, Unit, StreetName, Orientation, Municipality, Province, PostalCode,

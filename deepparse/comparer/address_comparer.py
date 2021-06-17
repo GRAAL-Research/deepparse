@@ -30,14 +30,17 @@ class AdressComparer:
         rebuilt_raw_address = " ".join([element[0] for element in address_to_compare])
         deepparsed_address = self.parser(rebuilt_raw_address)
 
-        list_of_attr = deepparsed_address.to_dict()
-        for key, value in list_of_attr:
-            print(key)
-            print(value)
-            #getattr(parsed_address, element)
-            #comparaison ...
+        dict_of_deepparse_attr = deepparsed_address.to_dict()
+        list_of_tuple_of_deepparse_attr = [(value, key) for key, value in dict_of_deepparse_attr.items()]
 
-        return True
+        args_delta_dict = {'name_list_one' : 'deepparse',
+                            'name_list_two': 'compared',
+                            'list_of_tuple_of_tags_one': list_of_tuple_of_deepparse_attr,
+                            'list_of_tuple_of_tags_two': address_to_compare}
+
+        delta_dict = self.delta_dict(**args_delta_dict)
+
+        return delta_dict
 
         
         #return (self._compare_streetNumber(compared_address.StreetNumber) and
@@ -74,34 +77,30 @@ class AdressComparer:
     #    return self.GeneralDelivery == compared_GeneralDelivery
 
     
-    #def delta_dict(self, compared_address: AddressParser) -> dict:
-    #    delta_dict = {}
-#
-    #    if not self._compare_streetNumber(compared_address.StreetNumber):
-    #        delta_dict['StreetNumber'] = {'base' : self.StreetNumber, 'compared' : compared_address.StreetNumber}
-#
-    #    if not self._compare_StreetName(compared_address.StreetName):
-    #        delta_dict['StreetName'] = {'base' : self.StreetName, 'compared' : compared_address.StreetName}
-#
-    #    if not self._compare_Unit(compared_address.Unit):
-    #        delta_dict['Unit'] = {'base' : self.Unit, 'compared' : compared_address.Unit}
-#
-    #    if not self._compare_Municipality(compared_address.Municipality):
-    #        delta_dict['Municipality'] = {'base' : self.Municipality, 'compared' : compared_address.Municipality}
-#
-    #    if not self._compare_Province(compared_address.Province):
-    #        delta_dict['Province'] = {'base' : self.Province, 'compared' : compared_address.Province}
-#
-    #    if not self._compare_PostalCode(compared_address.PostalCode):
-    #        delta_dict['PostalCode'] = {'base' : self.PostalCode, 'compared' : compared_address.PostalCode}
-#
-    #    if not self._compare_Orientation(compared_address.Orientation):
-    #        delta_dict['Orientation'] = {'base' : self.Orientation, 'compared' : compared_address.Orientation}
-#
-    #    if not self._compare_GeneralDelivery(compared_address.GeneralDelivery):
-    #        delta_dict['GeneralDelivery'] = {'base' : self.GeneralDelivery, 'compared' : compared_address.GeneralDelivery}
-#
-    #    return delta_dict
+    def delta_dict(self, name_list_one:str, name_list_two:str, 
+                    list_of_tuple_of_tags_one: List[tuple], list_of_tuple_of_tags_two: List[tuple]) -> dict:
+        delta_dict = {}
+
+        list_of_keys_one = [element[1] for element in list_of_tuple_of_tags_one]
+        list_of_keys_two = [element[1] for element in list_of_tuple_of_tags_two]
+
+        set_of_all_keys= set(list_of_keys_one + list_of_keys_two)
+
+        for key_iter in set_of_all_keys:
+            list_tag_one = [tag for (tag,key_tuple) in list_of_tuple_of_tags_one if key_tuple == key_iter and tag is not None]
+            list_tag_two = [tag for (tag,key_tuple) in list_of_tuple_of_tags_two if key_tuple == key_iter and tag is not None]
+
+            tag_one = " ".join(list_tag_one) if list_tag_one else None
+            tag_two = " ".join(list_tag_two) if list_tag_two else None
+
+
+            if tag_one != tag_two:
+                dict_diff = {name_list_one: tag_one, name_list_two: tag_two}
+                delta_dict[key_iter] = dict_diff
+
+
+        return delta_dict
+
 
 
 if __name__ == '__main__':
@@ -116,7 +115,7 @@ if __name__ == '__main__':
 
 
     address_comparer = AdressComparer(address_parser)
-    address_comparer.compare([("305", "StreetNumber"), ("rue des Lilas", "StreetName"), ("Ouest", "Orientation"),
+    delta_dict_output = address_comparer.compare([("305", "StreetNumber"), ("rue des Lilas", "StreetName"), ("Ouest", "Orientation"),
                                 ("Québec", "Municipality"), ("Québec", "Province"), ("G1L 1B6", "PostalCode")])
 
     #test == parsed_address_same

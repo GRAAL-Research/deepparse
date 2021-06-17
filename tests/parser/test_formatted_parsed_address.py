@@ -1,4 +1,4 @@
-# pylint: disable=no-member
+# pylint: disable=no-member, too-many-public-methods
 
 import io
 import sys
@@ -213,6 +213,14 @@ class FormattedParsedAddressTest(TestCase):
         ]
 
         self.assertEqual(actual, expected)
+
+    def test_whenEqualParsedAddress_then__eq__ReturnTrue(self):
+        self.assertTrue(self.parsed_address == self.parsed_address)
+        self.assertTrue(self.complete_parsed_address == self.complete_parsed_address)
+
+    def test_whenNotEqualParsedAddress_then__eq__ReturnFalse(self):
+        self.assertFalse(self.parsed_address == self.complete_parsed_address)
+        self.assertFalse(self.complete_parsed_address == self.parsed_address)
 
 
 if __name__ == "__main__":

@@ -50,15 +50,34 @@ class FormattedParsedAddress:
         self._resolve_tagged_affectation(self.address_parsed_components)
 
     def __str__(self) -> str:
+        """
+        Return raw address as a string.
+        """
         return self.raw_address
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         values = [
             self._get_attr_repr(name) for name in self.__dict__
             if name not in ("raw_address", "address_parsed_components", "inferred_order")
         ]
         joined_values = ", ".join(v for v in values if v != "")
         return self.__class__.__name__ + "<" + joined_values + ">"
+
+    def __eq__(self, other) -> bool:
+        """
+        Equal if all address components elements are equals. If attributes are not the same, will return False.
+        """
+        for field in self.__dict__:
+            address_component = getattr(self, field)
+            try:
+                other_address_component = other.__getattribute__(field)
+            except AttributeError:
+                # Attribute not the same.
+                return False
+            if address_component != other_address_component:
+                # An element is different.
+                return False
+        return True
 
     def format_address(self,
                        fields: Union[List, None] = None,

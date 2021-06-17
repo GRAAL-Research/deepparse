@@ -1,4 +1,4 @@
-# pylint: disable=no-member
+# pylint: disable=no-member, too-many-public-methods
 
 import io
 import sys
@@ -84,6 +84,26 @@ class UserFormattedParsedAddressTest(TestCase):
     def test_whenFormattedAddressUpperCaseFieldsNotAddressFields_thenRaiseError(self):
         with self.assertRaises(KeyError):
             self.parsed_address.format_address(upper_case_fields=["not_a_field"])
+
+    def test_whenEqualParsedAddress_then__eq__ReturnTrue(self):
+        self.assertTrue(self.parsed_address == self.parsed_address)
+
+    def test_whenNotEqualParsedAddressNotSameElements_then__eq__ReturnFalse(self):
+        a_different_address_str = "3 test road unit west city province postal_code delivery"
+
+        an_address_with_different_components_tags = [("3", "StreetNumber"), ("test", "StreetName"),
+                                                     ("road", "StreetName"), ("unit", "Unit"), ("west", "Orientation"),
+                                                     ("city", "Municipality"), ("province", "Province"),
+                                                     ("postal_code", "PostalCode"), ("delivery", "GeneralDelivery")]
+        another_address = {a_different_address_str: an_address_with_different_components_tags}
+        # We reset the FIELDS of the address to default values since we change it in some tests
+        formated_parsed_address.FIELDS = [
+            "StreetNumber", "Unit", "StreetName", "Orientation", "Municipality", "Province", "PostalCode",
+            "GeneralDelivery"
+        ]
+        different_parsed_address = FormattedParsedAddress(another_address)
+
+        self.assertFalse(self.parsed_address == different_parsed_address)
 
 
 if __name__ == "__main__":

@@ -166,7 +166,7 @@ class FormattedParsedAddress:
         if fields is None:
             fields = FIELDS
         return {field: getattr(self, field) for field in fields}
-
+    
     def _resolve_tagged_affectation(self, tagged_address: List[Tuple]) -> None:
         """
         Private method to resolve the parsing of the tagged address.

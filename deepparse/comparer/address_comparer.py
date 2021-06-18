@@ -14,6 +14,10 @@ class AdressComparer:
 
         self.parser = parser
 
+    def __str__(self) -> str:
+        return f"Compare addresses with {self.parser.model_type.capitalize()}AddressParser"
+
+    __repr__ = __str__  # to call __str__ when list of address
     
     def compare_with_deepparse(self, addresses_to_compare: Union[List[List[tuple]], List[tuple]]) -> dict:
         """

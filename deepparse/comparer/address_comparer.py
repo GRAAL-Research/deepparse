@@ -15,7 +15,7 @@ class AdressComparer:
         self.parser = parser
 
     
-    def compare(self, address_to_compare: List[tuple]) -> bool:
+    def deepparse_compare(self, address_to_compare: List[tuple]) -> dict:
         """
         305 rue des Lilas O, app 2 
         StreetNumber, StreetName ...
@@ -42,39 +42,37 @@ class AdressComparer:
 
         return delta_dict
 
+    def raw_compare(self, raw_address_one: str, raw_address_two) -> dict:
+        """
+        305 rue des Lilas O, app 2 
+        StreetNumber, StreetName ...
+        [(305, StreetNumber), (rue, StreetName), ...]
+        305 rue ...
+        #{305: StreetNumber} risque de colission keys
+
+        StreetName, StreetNumber
+
+        """
         
-        #return (self._compare_streetNumber(compared_address.StreetNumber) and
-        #    self._compare_StreetName(compared_address.StreetName) and
-        #    self._compare_Unit(compared_address.Unit) and
-        #    self._compare_Municipality(compared_address.Municipality) and
-        #    self._compare_Province(compared_address.Province) and
-        #    self._compare_PostalCode(compared_address.PostalCode) and
-        #    self._compare_Orientation(compared_address.Orientation) and
-        #    self._compare_GeneralDelivery(compared_address.GeneralDelivery))
+        deepparsed_address_one = self.parser(raw_address_one)
+        deepparsed_address_two = self.parser(raw_address_two)
 
-    #def _compare_streetNumber(self, compared_streetNumber: str) -> bool:
-    #    return self.StreetNumber == compared_streetNumber
+        dict_of_deepparse_attr_one = deepparsed_address_one.to_dict()
+        dict_of_deepparse_attr_two = deepparsed_address_two.to_dict()
+        
 
-    #def _compare_StreetName(self, compared_StreetName: str) -> bool:
-    #    return self.StreetName == compared_StreetName
+        list_of_tuple_of_deepparse_attr_one = [(value, key) for key, value in dict_of_deepparse_attr_one.items()]
+        list_of_tuple_of_deepparse_attr_two = [(value, key) for key, value in dict_of_deepparse_attr_two.items()]
 
-    #def _compare_Unit(self, compared_Unit: str) -> bool:
-    #    return self.Unit == compared_Unit
+        args_delta_dict = {'name_list_one' : 'raw_address_one',
+                            'name_list_two': 'raw_address_two',
+                            'list_of_tuple_of_tags_one': list_of_tuple_of_deepparse_attr_one,
+                            'list_of_tuple_of_tags_two': list_of_tuple_of_deepparse_attr_two}
 
-    #def _compare_Municipality(self, compared_Municipality: str) -> bool:
-    #    return self.Municipality == compared_Municipality
+        delta_dict = self.delta_dict(**args_delta_dict)
 
-    #def _compare_Province(self, compared_Province: str) -> bool:
-    #    return self.Province == compared_Province
+        return delta_dict
 
-    #def _compare_PostalCode(self, compared_PostalCode: str) -> bool:
-    #    return self.PostalCode == compared_PostalCode
-
-    #def _compare_Orientation(self, compared_Orientation: str) -> bool:
-    #    return self.Orientation == compared_Orientation
-
-    #def _compare_GeneralDelivery(self, compared_GeneralDelivery: str) -> bool:
-    #    return self.GeneralDelivery == compared_GeneralDelivery
 
     
     def delta_dict(self, name_list_one:str, name_list_two:str, 
@@ -103,6 +101,7 @@ class AdressComparer:
 
 
 
+
 if __name__ == '__main__':
 
     address_parser = AddressParser(model_type="bpemb", device=0)
@@ -115,7 +114,12 @@ if __name__ == '__main__':
 
 
     address_comparer = AdressComparer(address_parser)
-    delta_dict_output = address_comparer.compare([("305", "StreetNumber"), ("rue des Lilas", "StreetName"), ("Ouest", "Orientation"),
+    delta_dict_deeparse = address_comparer.deepparse_compare([("305", "StreetNumber"), ("rue des Lilas", "StreetName"), ("Ouest", "Orientation"),
+                                ("Québec", "Municipality"), ("Québec", "Province"), ("G1L 1B6", "PostalCode")])
+
+    delta_dict_raw_addresses = address_comparer.raw_compare([("305", "StreetNumber"), ("rue des Lilas", "StreetName"), ("Ouest", "Orientation"),
+                                ("Québec", "Municipality"), ("Québec", "Province"), ("G1L 1B6", "PostalCode")],
+                                [("306", "StreetNumber"), ("rue des Lilas", "StreetName"), ("Ouest", "Orientation"),
                                 ("Québec", "Municipality"), ("Québec", "Province"), ("G1L 1B6", "PostalCode")])
 
     #test == parsed_address_same
@@ -140,3 +144,7 @@ if __name__ == '__main__':
     #dict_parsed_address_diff_Province = test.delta_dict(parsed_address_diff_Province) 
     #dict_parsed_address_diff_PostalCode = test.delta_dict(parsed_address_diff_PostalCode) 
     #dict_parsed_address_diff_Orientation = test.delta_dict(parsed_address_diff_Orientation) 
+
+    a = {'a': 2, 'b' : 4}
+    b = {'b': 4, 'a' : 2}
+    a == b

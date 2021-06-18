@@ -112,8 +112,8 @@ if __name__ == '__main__':
                                 ("Québec", "Municipality"), ("Québec", "Province"), ("G1L 1B6", "PostalCode")]
 
     raw_address_one = "305 rue des Lilas Ouest Québec Québec G1L 1B6"
-    raw_address_two = "350 rue des Lilas Ouest Québec Québec G1L 1B6"
-    raw_address_three = "325 rue des Lilas Ouest Québec Québec G1L 1B6"
+    raw_address_two = "305 rue des Lilas Ouest Québec Québec G1L 1B6"
+    raw_address_three = "355 rue des Lilas Ouest Québec Québec G1L 1B6"
 
     address_parser = AddressParser(model_type="bpemb", device=0)
     address_comparer = AdressComparer(address_parser)

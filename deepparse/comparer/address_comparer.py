@@ -1,5 +1,5 @@
 from deepparse.parser import AddressParser
-from typing import List
+from typing import List, Union
 
 
 class AdressComparer:
@@ -15,7 +15,7 @@ class AdressComparer:
         self.parser = parser
 
     
-    def deepparse_compare(self, address_to_compare: List[tuple]) -> dict:
+    def compare_with_deepparse(self, addresses_to_compare: Union[List[List[tuple]], List[tuple]]) -> dict:
         """
         305 rue des Lilas O, app 2 
         StreetNumber, StreetName ...
@@ -26,23 +26,30 @@ class AdressComparer:
         StreetName, StreetNumber
 
         """
-        
-        rebuilt_raw_address = " ".join([element[0] for element in address_to_compare])
-        deepparsed_address = self.parser(rebuilt_raw_address)
+        if isinstance(addresses_to_compare[0], tuple):  # when tag is also the tag and the probability of the tag
+            addresses_to_compare = [addresses_to_compare]
 
-        dict_of_deepparse_attr = deepparsed_address.to_dict()
-        list_of_tuple_of_deepparse_attr = [(value, key) for key, value in dict_of_deepparse_attr.items()]
 
-        args_delta_dict = {'name_list_one' : 'deepparse',
-                            'name_list_two': 'compared',
-                            'list_of_tuple_of_tags_one': list_of_tuple_of_deepparse_attr,
-                            'list_of_tuple_of_tags_two': address_to_compare}
+        list_of_deepparsed_addresses = []
+        for address in addresses_to_compare:
+            rebuilt_raw_address = " ".join([element[0] for element in address])
+            list_of_deepparsed_addresses.append(self.parser(rebuilt_raw_address))
 
-        delta_dict = self.delta_dict(**args_delta_dict)
+        list_of_lists_of_tuple_of_deepparse_attr = []
+        for deeppasred_address in list_of_deepparsed_addresses:
+            list_of_lists_of_tuple_of_deepparse_attr.append(deeppasred_address.to_list_of_tuples()) 
 
-        return delta_dict
+        dict_of_delta_dicts = {}
+        for index, address_to_compare in enumerate(addresses_to_compare):
+            args_delta_dict = {'deepparse': list_of_lists_of_tuple_of_deepparse_attr[index],
+                                str(index): address_to_compare}
 
-    def raw_compare(self, raw_address_one: str, raw_address_two) -> dict:
+            dict_of_delta_dicts[str(index)] = self.delta_dict_from_dict(args_delta_dict)
+
+        return dict_of_delta_dicts
+
+
+    def compare_raw_addresses(self, raw_addresses_to_compare: List[str]) -> dict:
         """
         305 rue des Lilas O, app 2 
         StreetNumber, StreetName ...
@@ -53,74 +60,74 @@ class AdressComparer:
         StreetName, StreetNumber
 
         """
+
+
+        list_of_parsed_addresses = []
+        for raw_address in raw_addresses_to_compare:
+            list_of_parsed_addresses.append(self.parser(raw_address))
+
+        args_delta_dict = {}
+        for index, parsed_address in enumerate(list_of_parsed_addresses):
+            args_delta_dict[str(index)] = parsed_address.to_list_of_tuples()
         
-        deepparsed_address_one = self.parser(raw_address_one)
-        deepparsed_address_two = self.parser(raw_address_two)
-
-        dict_of_deepparse_attr_one = deepparsed_address_one.to_dict()
-        dict_of_deepparse_attr_two = deepparsed_address_two.to_dict()
-        
-
-        list_of_tuple_of_deepparse_attr_one = [(value, key) for key, value in dict_of_deepparse_attr_one.items()]
-        list_of_tuple_of_deepparse_attr_two = [(value, key) for key, value in dict_of_deepparse_attr_two.items()]
-
-        args_delta_dict = {'name_list_one' : 'raw_address_one',
-                            'name_list_two': 'raw_address_two',
-                            'list_of_tuple_of_tags_one': list_of_tuple_of_deepparse_attr_one,
-                            'list_of_tuple_of_tags_two': list_of_tuple_of_deepparse_attr_two}
-
-        delta_dict = self.delta_dict(**args_delta_dict)
-
+        delta_dict = self.delta_dict_from_dict(args_delta_dict)
         return delta_dict
 
 
-    
-    def delta_dict(self, name_list_one:str, name_list_two:str, 
-                    list_of_tuple_of_tags_one: List[tuple], list_of_tuple_of_tags_two: List[tuple]) -> dict:
+
+
+
+
+    def delta_dict_from_dict(self, dict_of_parsed_addresses) -> dict:
         delta_dict = {}
 
-        list_of_keys_one = [element[1] for element in list_of_tuple_of_tags_one]
-        list_of_keys_two = [element[1] for element in list_of_tuple_of_tags_two]
+        set_of_all_keys = set()
+        for tuple_values in dict_of_parsed_addresses.values():
+            for tag, key in tuple_values:
+                set_of_all_keys.add(key)
 
-        set_of_all_keys= set(list_of_keys_one + list_of_keys_two)
 
         for key_iter in set_of_all_keys:
-            list_tag_one = [tag for (tag,key_tuple) in list_of_tuple_of_tags_one if key_tuple == key_iter and tag is not None]
-            list_tag_two = [tag for (tag,key_tuple) in list_of_tuple_of_tags_two if key_tuple == key_iter and tag is not None]
+            dict_origin_string_tags = {}
+            for origin, list_of_tag_and_key in dict_of_parsed_addresses.items():
 
-            tag_one = " ".join(list_tag_one) if list_tag_one else None
-            tag_two = " ".join(list_tag_two) if list_tag_two else None
+                list_tag = [tag for (tag,key_tuple) in list_of_tag_and_key if key_tuple == key_iter and tag is not None]
+
+                dict_origin_string_tags[origin] = " ".join(list_tag)
 
 
-            if tag_one != tag_two:
-                dict_diff = {name_list_one: tag_one, name_list_two: tag_two}
-                delta_dict[key_iter] = dict_diff
+            if any (x != list(dict_origin_string_tags.values())[0] for x in dict_origin_string_tags.values()):
+                delta_dict[key_iter] = dict_origin_string_tags
 
 
         return delta_dict
-
-
 
 
 if __name__ == '__main__':
 
+    list_of_tuples_address_one = [("305", "StreetNumber"), ("rue des Lilas", "StreetName"), ("Ouest", "Orientation"),
+                                ("Québec", "Municipality"), ("Québec", "Province"), ("G1L 1B6", "PostalCode")]
+
+    list_of_tuples_address_two = [("350", "StreetNumber"), ("rue des Lilas", "StreetName"), ("Ouest", "Orientation"),
+                                ("Québec", "Municipality"), ("Québec", "Province"), ("G1L 1B6", "PostalCode")]
+
+    raw_address_one = "305 rue des Lilas Ouest Québec Québec G1L 1B6"
+    raw_address_two = "350 rue des Lilas Ouest Québec Québec G1L 1B6"
+    raw_address_three = "325 rue des Lilas Ouest Québec Québec G1L 1B6"
+
     address_parser = AddressParser(model_type="bpemb", device=0)
-
-    # you can parse one address
-    #parsed_address = address_parser("350 rue des Lilas Ouest Québec Québec G1L 1B6")
-
-    #parsed_address_same = address_parser("350 rue des Lilas Ouest Québec Québec G1L 1B6")
-    #parsed_address_diff = address_parser("450 rue des Lilas Ouest Québec Québec G1L 1B6")
-
-
     address_comparer = AdressComparer(address_parser)
-    delta_dict_deeparse = address_comparer.deepparse_compare([("305", "StreetNumber"), ("rue des Lilas", "StreetName"), ("Ouest", "Orientation"),
-                                ("Québec", "Municipality"), ("Québec", "Province"), ("G1L 1B6", "PostalCode")])
 
-    delta_dict_raw_addresses = address_comparer.raw_compare([("305", "StreetNumber"), ("rue des Lilas", "StreetName"), ("Ouest", "Orientation"),
-                                ("Québec", "Municipality"), ("Québec", "Province"), ("G1L 1B6", "PostalCode")],
-                                [("306", "StreetNumber"), ("rue des Lilas", "StreetName"), ("Ouest", "Orientation"),
-                                ("Québec", "Municipality"), ("Québec", "Province"), ("G1L 1B6", "PostalCode")])
+    delta_dict_deeparse_one = address_comparer.compare_with_deepparse(list_of_tuples_address_one)
+    delta_dict_deeparse_one_two = address_comparer.compare_with_deepparse([list_of_tuples_address_one, list_of_tuples_address_two])
+
+
+    delta_dict_raw_addresses_one_two = address_comparer.compare_raw_addresses([raw_address_one, raw_address_two])
+    delta_dict_raw_addresses_one_two_three = address_comparer.compare_raw_addresses([raw_address_one, raw_address_two, raw_address_three])
+
+
+    delta_dict_from_dict = address_comparer.delta_dict_from_dict({'deeparse_one' :list_of_tuples_address_one,
+                                'deeparse_two' :list_of_tuples_address_two})
 
     #test == parsed_address_same
     #test == parsed_address_diff
@@ -144,7 +151,3 @@ if __name__ == '__main__':
     #dict_parsed_address_diff_Province = test.delta_dict(parsed_address_diff_Province) 
     #dict_parsed_address_diff_PostalCode = test.delta_dict(parsed_address_diff_PostalCode) 
     #dict_parsed_address_diff_Orientation = test.delta_dict(parsed_address_diff_Orientation) 
-
-    a = {'a': 2, 'b' : 4}
-    b = {'b': 4, 'a' : 2}
-    a == b

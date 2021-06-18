@@ -20,15 +20,15 @@ class UserFormattedParsedAddressTest(TestCase):
 
         cls.a_parsed_address_in_dict_format = {'ALastTag': None, 'ATag': '3', 'AnotherTag': 'test road'}
 
-        # we set the FIELDS of the address base on the prediction tags
-        formated_parsed_address.FIELDS = ["ATag", "AnotherTag", "ALastTag"]
-
     def _capture_output(self):
         self.test_out = io.StringIO()
         self.original_output = sys.stdout
         sys.stdout = self.test_out
 
     def setUp(self):
+        # We set the FIELDS of the address base on the prediction tags
+        formated_parsed_address.FIELDS = ["ATag", "AnotherTag", "ALastTag"]
+
         self.parsed_address = FormattedParsedAddress(self.a_address)
 
     def test_whenInstantiatedWithAddress_thenShouldReturnCorrectRawAddress(self):
@@ -96,7 +96,8 @@ class UserFormattedParsedAddressTest(TestCase):
                                                      ("city", "Municipality"), ("province", "Province"),
                                                      ("postal_code", "PostalCode"), ("delivery", "GeneralDelivery")]
         another_address = {a_different_address_str: an_address_with_different_components_tags}
-        # We reset the FIELDS of the address to default values since we change it in some tests
+
+        # We reset the FIELDS of the address to default values since we change it in setup
         formated_parsed_address.FIELDS = [
             "StreetNumber", "Unit", "StreetName", "Orientation", "Municipality", "Province", "PostalCode",
             "GeneralDelivery"

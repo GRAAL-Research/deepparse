@@ -21,8 +21,7 @@ class AdressComparer:
     
     def compare_with_deepparse(self, addresses_to_compare: Union[List[List[tuple]], List[tuple]]) -> dict:
         """
-        Compare a list of already parsed addresses and then compare with the result 
-        it would be if it was parsed using deepparse 
+        Compare a list of already parsed addresses with our results using our parser.
 
         Args:
             addresses_to_compare (Union[List[List[tuple]], List[tuple]]): List of tuple where

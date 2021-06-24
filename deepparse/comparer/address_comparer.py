@@ -24,29 +24,31 @@ class AdressComparer:
         Compare a list of already parsed addresses with our results using our parser.
 
         Args:
-            addresses_to_compare (Union[List[List[tuple]], List[tuple]]): List of tuple where
-            the first element in the tuple is the value of the address component, and the 
-            second element is the name of the address component
+            addresses_to_compare (Union[List[List[tuple]], List[tuple]]): List of addresses to parse represented in
+            a lists of tuple where the first element in the tuple is the value of the address component, and the 
+            second element is the name of the address component.
 
         Return:
             Dictionnary that contains dictionnaries that contains all addresses components that differ from the original
             parsing and the deepparsed components
         """
-        if isinstance(addresses_to_compare[0], tuple):  # when tag is also the tag and the probability of the tag
+        if isinstance(addresses_to_compare[0], tuple):  
             addresses_to_compare = [addresses_to_compare]
 
         #rebuilding addresses by joining the values of the address components
         #and then parse the addresses with deepparse
-        list_of_deepparsed_addresses = []
-        for address in addresses_to_compare:
-            rebuilt_raw_address = " ".join([element[0] for element in address])
-            list_of_deepparsed_addresses.append(self.parser(rebuilt_raw_address))
+        
 
+        rebuilt_raw_address = [ " ".join([element[0] for element in address]) for address in addresses_to_compare]
+        
+        deepparsed_addresses = self.parser(rebuilt_raw_address)
+
+        if not isinstance(deepparsed_addresses, list):  
+            deepparsed_addresses = [deepparsed_addresses]
 
         #get the addresses components from deepparse
-        list_of_lists_of_tuple_of_deepparse_attr = []
-        for deepparsed_address in list_of_deepparsed_addresses:
-            list_of_lists_of_tuple_of_deepparse_attr.append(deepparsed_address.to_list_of_tuples()) 
+        list_of_lists_of_tuple_of_deepparse_attr = [deepparsed_address.to_list_of_tuples() for deepparsed_address in deepparsed_addresses]
+
 
         #a dictionnary that will contains the delta dict of the parsed addresses to compare
         dict_of_delta_dicts = {}
@@ -149,8 +151,8 @@ if __name__ == '__main__':
     address_comparer = AdressComparer(address_parser)
 
     #Compare with deepparse
-    delta_dict_deeparse_one = address_comparer.compare_with_deepparse(list_of_tuples_address_one)
-    delta_dict_deeparse_one_two = address_comparer.compare_with_deepparse([list_of_tuples_address_one, list_of_tuples_address_two])
+    delta_dict_deeparse_one_two = address_comparer.compare_addresses_tags([list_of_tuples_address_one, list_of_tuples_address_two])
+    delta_dict_deeparse_one = address_comparer.compare_addresses_tags(list_of_tuples_address_one)
 
     #Compare raw addresses
     #Cant only compare one address

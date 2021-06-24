@@ -43,7 +43,7 @@ class AdressComparer:
         
         deepparsed_addresses = self.parser(rebuilt_raw_address)
 
-        if not isinstance(deepparsed_addresses, list):  
+        if not isinstance(deepparsed_addresses, list):
             deepparsed_addresses = [deepparsed_addresses]
 
         #get the addresses components from deepparse

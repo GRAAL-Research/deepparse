@@ -484,7 +484,6 @@ class AddressParser:
 
         return test_res
 
-
     def _fill_tagged_addresses_components(
             self, tags_predictions: List, tags_predictions_prob: List, addresses_to_parse: List[str],
             with_prob: bool) -> Union[FormattedParsedAddress, List[FormattedParsedAddress]]:

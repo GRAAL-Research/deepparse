@@ -4,7 +4,7 @@ from typing import List, Union
 
 class AdressComparer:
     """
-        Compares addresses with each others and retrieve the the differences between them.
+        Compares addresses with each other and retrieves the differences between them.
     """
     
     def __init__(self, parser: AddressParser) -> None:

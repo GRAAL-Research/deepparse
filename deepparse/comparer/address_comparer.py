@@ -19,7 +19,7 @@ class AdressComparer:
 
     __repr__ = __str__  # to call __str__ when list of address
     
-    def compare_with_deepparse(self, addresses_to_compare: Union[List[List[tuple]], List[tuple]]) -> dict:
+    def compare_addresses_tags(self, addresses_to_compare: Union[List[List[tuple]], List[tuple]]) -> dict:
         """
         Compare a list of already parsed addresses with our results using our parser.
 

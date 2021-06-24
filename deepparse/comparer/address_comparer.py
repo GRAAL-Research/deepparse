@@ -62,8 +62,8 @@ class AdressComparer:
     def compare_raw_addresses(self, raw_addresses_to_compare: List[str]) -> dict:
         """
         Compare a list of raw addresses together, it starts by parsing the addresses
-        with deepparse and then return the differences between the addresses components
-        retrieved with deepparse.
+        with the setted parser and then return the differences between the addresses components
+        retrieved with our model.
 
         Args:
             raw_addresses_to_compare (List[str]): List of string that represent raw addresses.

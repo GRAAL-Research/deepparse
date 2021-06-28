@@ -107,7 +107,7 @@ html_extra_path = ['CNAME', 'favicon.ico']
 #
 # html_sidebars = {}
 
-html_logo = '_static/logos/logo.png'
+html_logo = '_static/logos/deepparse.png'
 
 # -- Options for HTMLHelp output ---------------------------------------------
 

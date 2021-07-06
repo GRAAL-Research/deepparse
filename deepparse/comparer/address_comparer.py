@@ -1,3 +1,4 @@
+from deepparse.comparer.formated_compared_address import FormatedComparedAddress
 from deepparse.parser import AddressParser
 from typing import List, Union
 
@@ -19,20 +20,20 @@ class AdressComparer:
 
     __repr__ = __str__  # to call __str__ when list of address
     
-    def compare_addresses_tags(self, addresses_to_compare: Union[List[List[tuple]], List[tuple]]) -> dict:
+    def compare_addresses_tags(self, addresses_to_compare: Union[List[List[tuple]], List[tuple]]) -> List:
         """
         Compare a list of already parsed addresses with our results using our parser.
 
         Args:
             addresses_to_compare (Union[List[List[tuple]], List[tuple]]): List of addresses to parse represented in
-            a lists of tuple where the first element in the tuple is the value of the address component, and the 
+            a lists of tuple where the first element in the tuple is the value of the address component, and the
             second element is the name of the address component.
 
         Return:
             Dictionnary that contains dictionnaries that contains all addresses components that differ from the original
             parsing and the deepparsed components
         """
-        if isinstance(addresses_to_compare[0], tuple):  
+        if isinstance(addresses_to_compare[0], tuple):
             addresses_to_compare = [addresses_to_compare]
 
         #rebuilding addresses by joining the values of the address components
@@ -46,22 +47,22 @@ class AdressComparer:
         if not isinstance(deepparsed_addresses, list):
             deepparsed_addresses = [deepparsed_addresses]
 
-        #get the addresses components from deepparse
-        list_of_lists_of_tuple_of_deepparse_attr = [deepparsed_address.to_list_of_tuples() for deepparsed_address in deepparsed_addresses]
+        list_of_list_of_tuple = []
+        for parsed_address in deepparsed_addresses:
+            dict_of_attr = parsed_address.to_dict()
+            list_of_list_of_tuple.append([(value, key) for key, value in dict_of_attr.items()]) 
+
+        list_of_source_tuple = [(formated_address, 'source') for formated_address in addresses_to_compare]
+        list_of_deepparsed_tuple = [(formated_address, 'deepparse') for formated_address in list_of_list_of_tuple]
+
+        diff_tuple = []
+        for already_parsed_address, deepparsed_address, raw_address in zip(list_of_source_tuple, list_of_deepparsed_tuple, rebuilt_raw_address):
+            diff_tuple.append([FormatedComparedAddress([already_parsed_address, deepparsed_address], self.parser), zip(raw_address, already_parsed_address, deepparsed_address)])
+        
+        return diff_tuple
 
 
-        #a dictionnary that will contains the delta dict of the parsed addresses to compare
-        dict_of_delta_dicts = {}
-        for index, address_to_compare in enumerate(addresses_to_compare):
-            args_delta_dict = {'deepparse': list_of_lists_of_tuple_of_deepparse_attr[index],
-                                str(index): address_to_compare}
-
-            dict_of_delta_dicts[str(index)] = self.delta_dict_from_dict(args_delta_dict)
-
-        return dict_of_delta_dicts
-
-
-    def compare_raw_addresses(self, raw_addresses_to_compare: List[str]) -> dict:
+    def compare_raw_addresses(self, raw_addresses_to_compare: Union[List[str], List[List[str]]]) -> dict:
         """
         Compare a list of raw addresses together, it starts by parsing the addresses
         with the setted parser and then return the differences between the addresses components
@@ -73,66 +74,27 @@ class AdressComparer:
         Return:
             Dictionnary that contains all addresses components that differ from each others
         """
-        if len(raw_addresses_to_compare) < 2:
-            raise ValueError("You need at least two addresses to compare") 
+        if isinstance(raw_addresses_to_compare[0], str):
+            raw_addresses_to_compare = [raw_addresses_to_compare]
 
-        #Parse addresses with deepparse
-        list_of_parsed_addresses = []
-        for raw_address in raw_addresses_to_compare:
-            list_of_parsed_addresses.append(self.parser(raw_address))
+        diff_tuple = []
+        for addresses_to_compare in raw_addresses_to_compare:
+            if len(addresses_to_compare) < 2:
+                raise ValueError("You need at least two addresses to compare")
 
-        #Dict of all the deepparsed addresses components
-        dict_of_parsed_addresses = {}
-        for index, parsed_address in enumerate(list_of_parsed_addresses):
-            dict_of_parsed_addresses[str(index)] = parsed_address.to_list_of_tuples()
-        
-        delta_dict = self.delta_dict_from_dict(dict_of_parsed_addresses)
-        return delta_dict
+            #Parse addresses with deepparse
+            deepparsed_addresses = self.parser(addresses_to_compare)
 
+            list_of_list_of_tuple = []
+            for parsed_address in deepparsed_addresses:
 
-
-    def delta_dict_from_dict(self, dict_of_parsed_addresses: dict) -> dict:
-        """
-        Compare addresses components and put the differences in a dict where the keys are the 
-        names of the addresses components and the value are the value of the addresses components
-
-        Args:
-            dict_of_parsed_addresses (dict): The keys are the name of the parsed addresses and
-            the values are the parsed address in the list of tupples format.
-
-        Return:
-            Dictionnary that contains all addresses components that differ from each others
-        """
-
-        delta_dict = {}
-
-        #get all the unique addresses components
-        set_of_all_keys = set()
-        for tuple_values in dict_of_parsed_addresses.values():
-            for tag, key in tuple_values:
-                set_of_all_keys.add(key)
-
-        #Iterate throught all the unique addresses components and retrieve the value
-        #of the component for each parsed adresses
-        for key_iter in set_of_all_keys:
-            dict_origin_string_tags = {}
-            for origin, list_of_tag_and_key in dict_of_parsed_addresses.items():
+                list_of_list_of_tuple.append(([(value, key) for key, value in parsed_address.to_dict().items()],'deepparse'))
                 
-                #if there is more than one value per address component, the values
-                #will be joined in a string.
-                list_tag = [tag for (tag,key_tuple) in list_of_tag_and_key if key_tuple == key_iter and tag is not None]
-                dict_origin_string_tags[origin] = " ".join(list_tag)
+            diff_tuple.append([FormatedComparedAddress(list_of_list_of_tuple, self.parser), zip(addresses_to_compare, list_of_list_of_tuple)])
+        
 
-            #For each address components, if there is one value that differs from the rest,
-            #the value of each parsed addresses with be added to the delta dict
-            #where the key will be the address component name and the value will
-            #be a dict that has the name of the parsed address as key and the
-            # value of the address component as value. 
-            if any (x != list(dict_origin_string_tags.values())[0] for x in dict_origin_string_tags.values()):
-                delta_dict[key_iter] = dict_origin_string_tags
-
-
-        return delta_dict
+        
+        return diff_tuple
 
 
 if __name__ == '__main__':
@@ -151,21 +113,26 @@ if __name__ == '__main__':
     address_comparer = AdressComparer(address_parser)
 
     #Compare with deepparse
-    delta_dict_deeparse_one_two = address_comparer.compare_addresses_tags([list_of_tuples_address_one, list_of_tuples_address_two])
     delta_dict_deeparse_one = address_comparer.compare_addresses_tags(list_of_tuples_address_one)
+    delta_dict_deeparse_one_two = address_comparer.compare_addresses_tags([list_of_tuples_address_one, list_of_tuples_address_two])
+
+    test = delta_dict_deeparse_one_two[0][1]
+
+    for i in test:
+        print(i)
 
     #Compare raw addresses
     #Cant only compare one address
-    delta_dict_raw_addresses_one = address_comparer.compare_raw_addresses([raw_address_one])
+    #delta_dict_raw_addresses_one = address_comparer.compare_raw_addresses([raw_address_one])
 
     #compare two addresses
-    delta_dict_raw_addresses_one_two = address_comparer.compare_raw_addresses([raw_address_one, raw_address_two])
+    delta_dict_raw_addresses_one_two = address_comparer.compare_raw_addresses([raw_address_one, raw_address_three])
 
     #compare three addresses
     delta_dict_raw_addresses_one_two_three = address_comparer.compare_raw_addresses([raw_address_one, raw_address_two, raw_address_three])
 
 
-    delta_dict_from_dict = address_comparer.delta_dict_from_dict({'deeparse_one' :list_of_tuples_address_one,
-                                'deeparse_two' :list_of_tuples_address_two})
+    #delta_dict_from_dict = address_comparer.delta_dict_from_dict({'deeparse_one' :list_of_tuples_address_one,
+    #                            'deeparse_two' :list_of_tuples_address_two})
 
     

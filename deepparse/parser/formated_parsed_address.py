@@ -192,7 +192,7 @@ class FormattedParsedAddress:
         """
         Private method to resolve the parsing of the tagged address.
         Args:
-             tagged_address: The tagged address where the keys are the address component and the values are the
+            tagged_address: The tagged address where the keys are the address component and the values are the
                 associated tag.
         """
         for address_component, tag in tagged_address:

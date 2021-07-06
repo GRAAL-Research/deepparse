@@ -95,3 +95,4 @@
 ## dev
 
 - Added `__eq__` method to `FormattedParsedAddress`.
+- Improved device management.

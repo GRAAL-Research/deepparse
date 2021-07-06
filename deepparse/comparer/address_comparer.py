@@ -3,6 +3,11 @@ from deepparse.parser import AddressParser
 from typing import List, Union
 
 
+# ça responsabilité est de comparer des adresses avec notre parsing d'adresse
+# AdressComparer().compare([(addresse_1, [parsing]), (addresse_2, [parsing]), ..., (addresse_n, [parsing])])
+# J'aimerai avoir à la sortie une liste de N objets d'adresse comparé
+# L'objet outputer est comme un conteneur qui contient l'adresse original, la différence en liste de bool de la longueur
+# du nombre de tag et une méthode __str__ pour afficher le output différent.
 class AdressComparer:
     """
         Compares addresses with each other and retrieves the differences between them.
@@ -33,6 +38,17 @@ class AdressComparer:
             Dictionnary that contains dictionnaries that contains all addresses components that differ from the original
             parsing and the deepparsed components
         """
+        # donc ici, je vais vouloir
+        # 1. parser les adresses avec notre approche
+        # 2. Pour chaque adresse, comparer les tags (par token) entre eux
+        # 3. Prendre cette liste de liste de booléen + les adresses originales, les parsings originaux et nos parsings
+        # (un tuple de 3 ??)
+        # et initiliazer un objet qui va avoir les attributs suivants (au moins)
+        # la liste [(tag_1: bool), (tag_2: bool), ...]
+        # l'adresse
+        # le parsing original
+        # notre parsing (avec les probs maybe???)
+        # if perfectly identical or not
         if isinstance(addresses_to_compare[0], tuple):
             addresses_to_compare = [addresses_to_compare]
 

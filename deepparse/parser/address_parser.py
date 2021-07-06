@@ -1,5 +1,6 @@
 import os
 import re
+import warnings
 from typing import List, Union, Dict, Tuple
 
 import torch
@@ -513,20 +514,27 @@ class AddressParser:
 
         Set the device as a torch device object.
         """
-        if isinstance(device, torch.device):
-            self.device = device
-        elif isinstance(device, str):
-            if re.fullmatch(r"cpu|cuda:\d+", device.lower()):
-                self.device = torch.device(device)
-            else:
-                raise ValueError("String value should be 'cpu' or follow the pattern 'cuda:[int]'.")
-        elif isinstance(device, int):
-            if device >= 0:
-                self.device = torch.device("cuda:%d" % device if torch.cuda.is_available() else "cpu")
-            else:
-                raise ValueError("Device should not be a negative number.")
+        if device == "cpu":
+            self.device = torch.device("cpu")
         else:
-            raise ValueError("Device should be a string, an int or a torch device.")
+            if torch.cuda.is_available():
+                if isinstance(device, torch.device):
+                    self.device = device
+                elif isinstance(device, str):
+                    if re.fullmatch(r"cuda:\d+", device.lower()):
+                        self.device = torch.device(device)
+                    else:
+                        raise ValueError("String value should follow the pattern 'cuda:[int]'.")
+                elif isinstance(device, int):
+                    if device >= 0:
+                        self.device = torch.device("cuda:%d" % device)
+                    else:
+                        raise ValueError("Device should not be a negative number.")
+                else:
+                    raise ValueError("Device should be a string, an int or a torch device.")
+            else:
+                warnings.warn("No CUDA device detected, device will be set to 'CPU'.")
+                self.device = torch.device("cpu")
 
     def _set_data_transformer(self) -> DataTransform:
         train_vectorizer = TrainVectorizer(self.vectorizer, self.tags_converter)  # Vectorize to provide also the target

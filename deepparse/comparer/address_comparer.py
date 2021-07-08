@@ -57,7 +57,7 @@ class AdressComparer:
 
         diff_tuple = []
         for already_parsed_address, deepparsed_address, raw_address in zip(list_of_source_tuple, list_of_deepparsed_tuple, rebuilt_raw_address):
-            diff_tuple.append([FormatedComparedAddress([already_parsed_address, deepparsed_address], self.parser), zip(raw_address, already_parsed_address, deepparsed_address)])
+            diff_tuple.append([FormatedComparedAddress([already_parsed_address, deepparsed_address], self.parser), (raw_address, already_parsed_address, deepparsed_address)])
         
         return diff_tuple
 
@@ -118,8 +118,7 @@ if __name__ == '__main__':
 
     test = delta_dict_deeparse_one_two[0][1]
 
-    for i in test:
-        print(i)
+
 
     #Compare raw addresses
     #Cant only compare one address

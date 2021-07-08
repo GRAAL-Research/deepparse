@@ -137,10 +137,10 @@ class AdressComparer:
 
     def get_raw_addresses(self, parsed_addresses):
             
-            if not isinstance(parsed_addresses[0], list):
-                parsed_addresses = [parsed_addresses]
+        if not isinstance(parsed_addresses[0], list):
+            parsed_addresses = [parsed_addresses]
 
-            return  [ " ".join([element[0] for element in address]) for address in parsed_addresses]
+        return  [ " ".join([element[0] for element in address]) for address in parsed_addresses]
             
     def bool_address_tags_are_the_same(self, parsed_addresses: Union[List[List[tuple]], List[tuple]]) -> List[tuple]:
         """
@@ -207,7 +207,7 @@ if __name__ == '__main__':
 
     #compare two addresses
     delta_dict_raw_addresses_one_two = address_comparer.compare_raw([raw_address_one, raw_address_two])
-    delta_dict_raw_addresses_one_two[0].equivalent
+    print(delta_dict_raw_addresses_one_two[0].equivalent)
     #compare three addresses
     delta_dict_raw_addresses_one_two_three = address_comparer.compare_raw([raw_address_one, raw_address_two, raw_address_three])
     print(delta_dict_raw_addresses_one_two_three[0].equivalent)

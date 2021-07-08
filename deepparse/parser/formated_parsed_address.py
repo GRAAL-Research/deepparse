@@ -187,6 +187,7 @@ class FormattedParsedAddress:
         """
         dict_of_attr = self.to_dict(fields)
         return [(value, key) for key, value in dict_of_attr.items()]
+
     
     def _resolve_tagged_affectation(self, tagged_address: List[Tuple]) -> None:
         """

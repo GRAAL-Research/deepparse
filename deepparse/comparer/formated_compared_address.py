@@ -2,7 +2,9 @@ from typing import List, Union, Tuple
 
 class FormatedComparedAddress:
 
-    def __init__(self, raw_address: Union[List[str], str], parsed_tuples : List[List[Tuple]], list_of_bool: List[Tuple[str, bool]]) -> None:
+    def __init__(self, raw_address: Union[List[str], str],
+                        parsed_tuples : List[List[Tuple]],
+                        list_of_bool: List[Tuple[str, bool]]) -> None:
         """
         Address parser used to parse the addresses
         """

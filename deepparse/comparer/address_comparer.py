@@ -1,6 +1,7 @@
+from typing import List, Union
 from deepparse.comparer.formated_compared_address import FormatedComparedAddress
 from deepparse.parser import AddressParser
-from typing import List, Union
+
 
 
 # ça responsabilité est de comparer des adresses avec notre parsing d'adresse
@@ -12,7 +13,6 @@ class AdressComparer:
     """
         Compares addresses with each other and retrieves the differences between them.
     """
-    
     def __init__(self, parser: AddressParser) -> None:
         """
         Address parser used to parse the addresses
@@ -193,17 +193,10 @@ if __name__ == '__main__':
     address_parser = AddressParser(model_type="bpemb", device=0)
     address_comparer = AdressComparer(address_parser)
 
-    #Compare with deepparse
+    #Compare with source tags with deepparse tags
     delta_dict_deeparse_one = address_comparer.compare_tags(list_of_tuples_address_one)
     delta_dict_deeparse_one_two = address_comparer.compare_tags([list_of_tuples_address_one, list_of_tuples_address_two])
 
-    test = delta_dict_deeparse_one_two[0].equivalent
-
-
-
-    #Compare raw addresses
-    #Cant only compare one address
-    #delta_dict_raw_addresses_one = address_comparer.compare_raw_addresses([raw_address_one])
 
     #compare two addresses
     delta_dict_raw_addresses_one_two = address_comparer.compare_raw([raw_address_one, raw_address_two])

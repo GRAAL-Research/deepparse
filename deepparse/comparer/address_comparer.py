@@ -3,7 +3,6 @@ from deepparse.comparer.formated_compared_address import FormatedComparedAddress
 from deepparse.parser import AddressParser
 
 
-
 # ça responsabilité est de comparer des adresses avec notre parsing d'adresse
 # AdressComparer().compare([(addresse_1, [parsing]), (addresse_2, [parsing]), ..., (addresse_n, [parsing])])
 # J'aimerai avoir à la sortie une liste de N objets d'adresse comparé
@@ -180,6 +179,8 @@ class AdressComparer:
 
 if __name__ == '__main__':
 
+
+    
     list_of_tuples_address_one = [("305", "StreetNumber"), ("rue des Lilas", "StreetName"), ("Ouest", "Orientation"),
                                 ("Québec", "Municipality"), ("Québec", "Province"), ("G1L 1B6", "PostalCode")]
 
@@ -190,17 +191,24 @@ if __name__ == '__main__':
     raw_address_two = "305 rue des Lilas Ouest Québec Québec G1L 1B6"
     raw_address_three = "355 rue des Lilas Ouest Québec Québec G1L 1B6"
 
+    #test = list(d.compare(raw_address_one, raw_address_three))
+    #pprint(test)
+    
+
     address_parser = AddressParser(model_type="bpemb", device=0)
     address_comparer = AdressComparer(address_parser)
 
     #Compare with source tags with deepparse tags
     delta_dict_deeparse_one = address_comparer.compare_tags(list_of_tuples_address_one)
     delta_dict_deeparse_one_two = address_comparer.compare_tags([list_of_tuples_address_one, list_of_tuples_address_two])
-
+    delta_dict_deeparse_one_two[0].print_tags_diff()
+    delta_dict_deeparse_one_two[0].print_tags_diff_color()
 
     #compare two addresses
     delta_dict_raw_addresses_one_two = address_comparer.compare_raw([raw_address_one, raw_address_two])
-    print(delta_dict_raw_addresses_one_two[0].equivalent)
+    delta_dict_raw_addresses_one_two[0].print_raw_diff_color()
+    delta_dict_raw_addresses_one_two[0].print_tags_diff()
     #compare three addresses
-    delta_dict_raw_addresses_one_two_three = address_comparer.compare_raw([raw_address_one, raw_address_two, raw_address_three])
-    print(delta_dict_raw_addresses_one_two_three[0].equivalent)
+    delta_dict_raw_addresses_one_two_three = address_comparer.compare_raw([[raw_address_one, raw_address_two], [raw_address_one, raw_address_two, raw_address_three]])
+    print(delta_dict_raw_addresses_one_two_three[1].equivalent)
+

@@ -164,8 +164,7 @@ Here are the URLs to download our pre-trained models directly
 
 - [FastText](https://graal.ift.ulaval.ca/public/deepparse/fasttext.ckpt),
 - [BPEmb](https://graal.ift.ulaval.ca/public/deepparse/bpemb.ckpt),
-- [FastText Light](https://graal.ift.ulaval.ca/public/deepparse/fasttext.magnitude.gz) (
-  using [Magnitude Light](https://github.com/davebulaval/magnitude-light)).
+- [FastText Light](https://graal.ift.ulaval.ca/public/deepparse/fasttext.magnitude.gz) (using [Magnitude Light](https://github.com/davebulaval/magnitude-light)).
 
 ------------------
 

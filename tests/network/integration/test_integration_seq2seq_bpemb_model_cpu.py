@@ -21,11 +21,6 @@ class BPEmbSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
         cls.models_setup(model="bpemb")
         cls.a_retrain_model_path = os.path.join(cls.path, cls.retrain_file_name_format.format("bpemb") + ".ckpt")
 
-    @classmethod
-    def tearDownClass(cls) -> None:
-        super(BPEmbSeq2SeqIntegrationTest, cls).tearDownClass()
-        cls.models_tear_down(model="bpemb")
-
     def setUp(self) -> None:
         # will load the weights if not local
         self.encoder_input_setUp("bpemb", self.a_cpu_device)

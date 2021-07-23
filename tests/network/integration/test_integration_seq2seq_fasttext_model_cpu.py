@@ -21,11 +21,6 @@ class FastTextSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
         cls.models_setup(model="fasttext")
         cls.a_retrain_model_path = os.path.join(cls.path, cls.retrain_file_name_format.format("fasttext") + ".ckpt")
 
-    @classmethod
-    def tearDownClass(cls) -> None:
-        super(FastTextSeq2SeqIntegrationTest, cls).tearDownClass()
-        cls.models_tear_down(model="fasttext")
-
     def setUp(self) -> None:
         super().setUp()
         # will load the weights if not local

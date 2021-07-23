@@ -1,5 +1,6 @@
 import os
 import platform
+from tempfile import TemporaryDirectory
 from unittest import skipIf
 from unittest.mock import patch
 
@@ -19,7 +20,8 @@ class FastTextEmbeddingsModelIntegrationTest(AddressParserRetrainTestCase):
     def setUpClass(cls):
         super(FastTextEmbeddingsModelIntegrationTest, cls).setUpClass()
         cls.file_name = "fake_embeddings_cc.fr.300"
-        cls.fake_cache_path = "./"
+        cls.temp_dir_obj = TemporaryDirectory()
+        cls.fake_cache_path = os.path.join(cls.temp_dir_obj.name, "fake_cache")
         download_from_url(cls.file_name, cls.fake_cache_path, "bin")
 
         cls.a_fasttext_model_path = os.path.join(cls.fake_cache_path, cls.file_name + ".bin")
@@ -28,8 +30,7 @@ class FastTextEmbeddingsModelIntegrationTest(AddressParserRetrainTestCase):
 
     @classmethod
     def tearDownClass(cls) -> None:
-        if os.path.exists(cls.a_fasttext_model_path):
-            os.remove(cls.a_fasttext_model_path)
+        cls.temp_dir_obj.cleanup()
 
     @skipIf(platform.system() != "Windows", "Integration test on Windows env.")
     def test_givenAWindowsOS_whenFasttextModelInit_thenLoadWithProperFunction(self):

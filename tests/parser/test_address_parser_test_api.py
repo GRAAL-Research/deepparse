@@ -1,6 +1,7 @@
 # Since we use a patch as model mock we skip the unused argument error
 # pylint: disable=unused-argument, too-many-arguments
 import unittest
+from unittest import skipIf
 from unittest.mock import patch, call
 
 import torch
@@ -17,8 +18,6 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         super(AddressParserRetrainTest, cls).setUpClass()
         cls.a_device = "cpu"
 
-        cls.a_device = "cpu"
-
         cls.a_train_ratio = 0.8
         cls.a_batch_size = BATCH_SIZE
         cls.a_epoch_number = 1
@@ -26,7 +25,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         cls.a_learning_rate = 0.01
         cls.a_callbacks_list = []
         cls.a_seed = 42
-        cls.a_torch_device = torch.device(cls.a_device)
+        cls.a_torch_device = torch.device("cuda:0")
 
         cls.a_loss_function = nll_loss
         cls.a_list_of_batch_metrics = [accuracy]
@@ -45,6 +44,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
                                  callbacks=self.a_callbacks_list,
                                  seed=self.a_seed)
 
+    @skipIf(not torch.cuda.is_available(), "no gpu available")
     def assert_experiment_test(self, experiment_mock, model_mock):
         experiment_mock.assert_called_with(
             "./checkpoint",  # we always use this as default logging dir.

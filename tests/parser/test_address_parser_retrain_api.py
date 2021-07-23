@@ -1,8 +1,9 @@
 # Since we use a patch as model mock we skip the unused argument error
 # pylint: disable=unused-argument, too-many-arguments, too-many-public-methods
 import os
-import shutil
 import unittest
+from tempfile import TemporaryDirectory
+from unittest import skipIf
 from unittest.mock import patch, call, MagicMock
 
 import torch
@@ -27,8 +28,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         cls.a_learning_rate = 0.01
         cls.a_callbacks_list = []
         cls.a_seed = 42
-        cls.a_logging_path = "ckpts"
-        cls.a_torch_device = torch.device(cls.a_device)
+        cls.a_torch_device = torch.device("cuda:0")
 
         cls.mocked_data_container = ADataContainer()
 
@@ -38,10 +38,12 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
 
         cls.address_components = {"ATag": 0, "AnotherTag": 1, "EOS": 2}
 
+        cls.temp_dir_obj = TemporaryDirectory()
+        cls.a_logging_path = os.path.join(cls.temp_dir_obj.name, "ckpts")
         cls.saving_template_path = os.path.join(cls.a_logging_path, "retrained_{}_address_parser.ckpt")
 
     def tearDown(self) -> None:
-        shutil.rmtree(self.a_logging_path)
+        self.temp_dir_obj.cleanup()
 
     def address_parser_retrain_call(self, prediction_tags=None):
         self.address_parser.retrain(self.mocked_data_container,
@@ -55,6 +57,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
                                     logging_path=self.a_logging_path,
                                     prediction_tags=prediction_tags)
 
+    @skipIf(not torch.cuda.is_available(), "no gpu available")
     def assert_experiment_retrain(self, experiment_mock, model_mock, optimizer_mock):
         experiment_mock.assert_called_with(self.a_logging_path,
                                            model_mock(),

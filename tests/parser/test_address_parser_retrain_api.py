@@ -19,7 +19,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
     @classmethod
     def setUpClass(cls):
         super(AddressParserRetrainTest, cls).setUpClass()
-        cls.a_device = "cpu"
+        cls.a_device = torch.device("cpu")
 
         cls.a_train_ratio = 0.8
         cls.a_batch_size = BATCH_SIZE
@@ -57,11 +57,10 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
                                     logging_path=self.a_logging_path,
                                     prediction_tags=prediction_tags)
 
-    @skipIf(not torch.cuda.is_available(), "no gpu available")
-    def assert_experiment_retrain(self, experiment_mock, model_mock, optimizer_mock):
+    def assert_experiment_retrain(self, experiment_mock, model_mock, optimizer_mock, device):
         experiment_mock.assert_called_with(self.a_logging_path,
                                            model_mock(),
-                                           device=self.a_torch_device,
+                                           device=device,
                                            optimizer=optimizer_mock(),
                                            loss_function=self.a_loss_function,
                                            batch_metrics=self.a_list_of_batch_metrics)
@@ -125,9 +124,10 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
     @patch("deepparse.parser.address_parser.FastTextVectorizer")
     @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
     @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
-    def test_givenAFasttextModel_whenRetrain_thenInstantiateExperimentProperly(
-            self, download_weights_mock, embeddings_model_mock, vectorizer_model_mock, data_padding_mock, model_mock,
-            data_transform_mock, optimizer_mock, experiment_mock, dataloader_mock, torch_save_mock):
+    def test_givenAFasttextModel_whenRetrain_thenSaveModelProperly(self, download_weights_mock, embeddings_model_mock,
+                                                                   vectorizer_model_mock, data_padding_mock, model_mock,
+                                                                   data_transform_mock, optimizer_mock, experiment_mock,
+                                                                   dataloader_mock, torch_save_mock):
         self.address_parser = AddressParser(model_type=self.a_fasttext_model_type,
                                             device=self.a_device,
                                             verbose=self.verbose)
@@ -154,7 +154,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
     @patch("deepparse.parser.address_parser.FastTextVectorizer")
     @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
     @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
-    def test_givenAFasttextModel_whenRetrain_thenInstantiateDataLoaderAndTrainProperly(
+    def test_givenFastTextModel_whenRetrainCPU_thenInstantiateExperimentProperly(
             self, download_weights_mock, embeddings_model_mock, vectorizer_model_mock, data_padding_mock, model_mock,
             data_transform_mock, optimizer_mock, experiment_mock, dataloader_mock, torch_save_mock):
         self.address_parser = AddressParser(model_type=self.a_fasttext_model_type,
@@ -162,7 +162,28 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
                                             verbose=self.verbose)
         self.address_parser_retrain_call()
 
-        self.assert_experiment_train_method_is_call(dataloader_mock, experiment_mock)
+        self.assert_experiment_retrain(experiment_mock, model_mock, optimizer_mock, device=self.a_device)
+
+    @patch("deepparse.parser.address_parser.torch.save")
+    @patch("deepparse.parser.address_parser.DataLoader")
+    @patch("deepparse.parser.address_parser.Experiment")
+    @patch("deepparse.parser.address_parser.SGD")
+    @patch("deepparse.parser.address_parser.DataTransform")
+    @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
+    @patch("deepparse.parser.address_parser.fasttext_data_padding")
+    @patch("deepparse.parser.address_parser.FastTextVectorizer")
+    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
+    @skipIf(not torch.cuda.is_available(), "no gpu available")
+    def test_givenFastTextModel_whenRetrainGPU_thenInstantiateExperimentProperly(
+            self, download_weights_mock, embeddings_model_mock, vectorizer_model_mock, data_padding_mock, model_mock,
+            data_transform_mock, optimizer_mock, experiment_mock, dataloader_mock, torch_save_mock):
+        self.address_parser = AddressParser(model_type=self.a_fasttext_model_type,
+                                            device=self.a_torch_device,
+                                            verbose=self.verbose)
+        self.address_parser_retrain_call()
+
+        self.assert_experiment_retrain(experiment_mock, model_mock, optimizer_mock, device=self.a_torch_device)
 
     @patch("deepparse.parser.address_parser.torch.save")
     @patch("deepparse.parser.address_parser.DataLoader")
@@ -203,17 +224,17 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
     @patch("deepparse.parser.address_parser.bpemb_data_padding")
     @patch("deepparse.parser.address_parser.BPEmbVectorizer")
     @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
-    def test_givenABPEmbModel_whenRetrain_thenInstantiateExperimentProperly(self, embeddings_model_mock,
-                                                                            vectorizer_model_mock, data_padding_mock,
-                                                                            model_mock, data_transform_mock,
-                                                                            optimizer_mock, experiment_mock,
-                                                                            dataloader_mock, torch_save_mock):
+    def test_givenABPEmbModel_whenRetrainCPU_thenInstantiateExperimentProperly(self, embeddings_model_mock,
+                                                                               vectorizer_model_mock, data_padding_mock,
+                                                                               model_mock, data_transform_mock,
+                                                                               optimizer_mock, experiment_mock,
+                                                                               dataloader_mock, torch_save_mock):
         self.address_parser = AddressParser(model_type=self.a_bpemb_model_type,
                                             device=self.a_device,
                                             verbose=self.verbose)
         self.address_parser_retrain_call()
 
-        self.assert_experiment_retrain(experiment_mock, model_mock, optimizer_mock)
+        self.assert_experiment_retrain(experiment_mock, model_mock, optimizer_mock, device=self.a_device)
 
     @patch("deepparse.parser.address_parser.torch.save")
     @patch("deepparse.parser.address_parser.DataLoader")
@@ -224,7 +245,29 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
     @patch("deepparse.parser.address_parser.bpemb_data_padding")
     @patch("deepparse.parser.address_parser.BPEmbVectorizer")
     @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
-    def test_givenABPEmbModel_whenRetrain_thenInstantiateDataLoaderAndTrainProperly(
+    @skipIf(not torch.cuda.is_available(), "no gpu available")
+    def test_givenABPEmbModel_whenRetrainGPU_thenInstantiateExperimentProperly(self, embeddings_model_mock,
+                                                                               vectorizer_model_mock, data_padding_mock,
+                                                                               model_mock, data_transform_mock,
+                                                                               optimizer_mock, experiment_mock,
+                                                                               dataloader_mock, torch_save_mock):
+        self.address_parser = AddressParser(model_type=self.a_bpemb_model_type,
+                                            device=self.a_torch_device,
+                                            verbose=self.verbose)
+        self.address_parser_retrain_call()
+
+        self.assert_experiment_retrain(experiment_mock, model_mock, optimizer_mock, device=self.a_torch_device)
+
+    @patch("deepparse.parser.address_parser.torch.save")
+    @patch("deepparse.parser.address_parser.DataLoader")
+    @patch("deepparse.parser.address_parser.Experiment")
+    @patch("deepparse.parser.address_parser.SGD")
+    @patch("deepparse.parser.address_parser.DataTransform")
+    @patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel")
+    @patch("deepparse.parser.address_parser.bpemb_data_padding")
+    @patch("deepparse.parser.address_parser.BPEmbVectorizer")
+    @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
+    def test_givenABPEmbModel_whenRetrainCPU_thenInstantiateDataLoaderAndTrainProperly(
             self, embeddings_model_mock, vectorizer_model_mock, data_padding_mock, model_mock, data_transform_mock,
             optimizer_mock, experiment_mock, dataloader_mock, torch_save_mock):
         self.address_parser = AddressParser(model_type=self.a_bpemb_model_type,
@@ -232,7 +275,27 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
                                             verbose=self.verbose)
         self.address_parser_retrain_call()
 
-        self.assert_experiment_train_method_is_call(dataloader_mock, experiment_mock)
+        self.assert_experiment_retrain(experiment_mock, model_mock, optimizer_mock, device=self.a_device)
+
+    @patch("deepparse.parser.address_parser.torch.save")
+    @patch("deepparse.parser.address_parser.DataLoader")
+    @patch("deepparse.parser.address_parser.Experiment")
+    @patch("deepparse.parser.address_parser.SGD")
+    @patch("deepparse.parser.address_parser.DataTransform")
+    @patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel")
+    @patch("deepparse.parser.address_parser.bpemb_data_padding")
+    @patch("deepparse.parser.address_parser.BPEmbVectorizer")
+    @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
+    @skipIf(not torch.cuda.is_available(), "no gpu available")
+    def test_givenABPEmbModel_whenRetrainGPU_thenInstantiateDataLoaderAndTrainProperly(
+            self, embeddings_model_mock, vectorizer_model_mock, data_padding_mock, model_mock, data_transform_mock,
+            optimizer_mock, experiment_mock, dataloader_mock, torch_save_mock):
+        self.address_parser = AddressParser(model_type=self.a_bpemb_model_type,
+                                            device=self.a_torch_device,
+                                            verbose=self.verbose)
+        self.address_parser_retrain_call()
+
+        self.assert_experiment_retrain(experiment_mock, model_mock, optimizer_mock, device=self.a_device)
 
     @patch("deepparse.parser.address_parser.torch.save")
     @patch("deepparse.parser.address_parser.DataLoader")

@@ -204,11 +204,20 @@ if __name__ == '__main__':
     delta_dict_deeparse_one_two[0].print_tags_diff()
     delta_dict_deeparse_one_two[0].print_tags_diff_color()
 
-    #compare two addresses
+    delta_dict_deeparse_one_two[0].comparison_report()
+
+    #compare two equivalent addresses
     delta_dict_raw_addresses_one_two = address_comparer.compare_raw([raw_address_one, raw_address_two])
-    delta_dict_raw_addresses_one_two[0].print_raw_diff_color()
-    delta_dict_raw_addresses_one_two[0].print_tags_diff()
+    delta_dict_raw_addresses_one_two[0].comparison_report()
+    #delta_dict_raw_addresses_one_two[0].print_raw_diff_color()
+    #delta_dict_raw_addresses_one_two[0].print_tags_diff()
+    #delta_dict_raw_addresses_one_two[0].raw_addresses
+
+    #compare two not equivalent addresses
+    delta_dict_raw_addresses_one_three = address_comparer.compare_raw([raw_address_one, raw_address_three])
+    delta_dict_raw_addresses_one_three[0].comparison_report()
+
     #compare three addresses
-    delta_dict_raw_addresses_one_two_three = address_comparer.compare_raw([[raw_address_one, raw_address_two], [raw_address_one, raw_address_two, raw_address_three]])
-    print(delta_dict_raw_addresses_one_two_three[1].equivalent)
+    #delta_dict_raw_addresses_one_two_three = address_comparer.compare_raw([[raw_address_one, raw_address_two], [raw_address_one, raw_address_two, raw_address_three]])
+    #print(delta_dict_raw_addresses_one_two_three[1].equivalent)
 

@@ -7,13 +7,13 @@ import sys
 
 class FormatedComparedAddress:
 
-    def __init__(self, raw_address: Union[List[str], str],
+    def __init__(self, raw_addresses: Union[List[str], str],
                         parsed_tuples : List[List[Tuple]],
                         list_of_bool: List[Tuple[str, bool]]) -> None:
         """
         Address parser used to parse the addresses
         """
-        self.raw_address = raw_address
+        self.raw_addresses = raw_addresses
         self.parsed_tuples = parsed_tuples
         self.list_of_bool = list_of_bool
         self.equivalent = self._equivalent()
@@ -28,6 +28,7 @@ class FormatedComparedAddress:
 
     def _equivalent(self) ->bool:
         return all([bool_address[1] for bool_address in self.list_of_bool])
+
 
     def print_tags_diff(self) -> None:
         if len(self.parsed_tuples) != 2:
@@ -45,9 +46,10 @@ class FormatedComparedAddress:
 
     
             result = list(Differ().compare(list_of_list_tag[0], list_of_list_tag[1]))
-            pprint(address_component_name + " : ")
+            print(address_component_name + ": ")
             sys.stdout.writelines(result)
-            print("")
+            print(" ")
+
 
 
     def print_tags_diff_color(self) -> None:
@@ -66,28 +68,28 @@ class FormatedComparedAddress:
 
     
             result = self.get_color_diff(list_of_list_tag[0], list_of_list_tag[1])
-            pprint(address_component_name + " : ")
+            print(address_component_name + ": ")
             sys.stdout.writelines(result)
-            print("")
+            print(" ")
         
 
     def print_raw_diff(self) -> None:
-        if len(self.raw_address) != 2:
+        if len(self.raw_addresses) != 2:
             raise ValueError("Can only compare two adresses")
             
         
-        result = list(Differ().compare(self.raw_address[0], self.raw_address[1]))
-        pprint("Raw addresses : ")
+        result = list(Differ().compare(self.raw_addresses[0], self.raw_addresses[1]))
+        pprint("Raw addresses: ")
         sys.stdout.writelines(result)
         print("")
     
     def print_raw_diff_color(self) -> None:
-        if len(self.raw_address) != 2:
+        if len(self.raw_addresses) != 2:
             raise ValueError("Can only compare two adresses")
             
         
-        result = self.get_color_diff(self.raw_address[0], self.raw_address[1])
-        pprint("Raw addresses : ")
+        result = self.get_color_diff(self.raw_addresses[0], self.raw_addresses[1])
+        print("Raw addresses: ")
         sys.stdout.writelines(result)
         print("")
 
@@ -112,6 +114,30 @@ class FormatedComparedAddress:
             elif code[0] == "replace":
                 result += (red(string_one[code[1]:code[2]]) + green(string_two[code[3]:code[4]]))
         return result
+
+    def comparison_report(self):
+        print("Comparison report:")
+        print(" ")
+        if self.equivalent:
+            print("Equivalent")
+        else:
+            print("Not equivalent")
+            print(" ")
+            print("Addresses tags differences")
+            self.print_tags_diff_color()
+
+            print("")
+            
+            if isinstance(self.raw_addresses, str):
+                print("Raw address:")
+                print(self.raw_addresses)
+
+            else:
+                print("Raw addresses:")
+                for address in self.raw_addresses:
+                    print(address)
+
+
 
 if __name__ == '__main__':
 

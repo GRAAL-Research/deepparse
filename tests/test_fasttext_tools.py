@@ -4,6 +4,7 @@
 import gzip
 import os
 import unittest
+from tempfile import TemporaryDirectory
 from unittest.mock import patch, mock_open
 
 from fasttext.FastText import _FastText
@@ -19,7 +20,8 @@ class ToolsTests(CaptureOutputTestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-        cls.a_directory_path = "./"
+        cls.temp_dir_obj = TemporaryDirectory()
+        cls.a_directory_path = os.path.join(cls.temp_dir_obj.name, "./")
         cls.a_fasttext_file_name_path = os.path.join(cls.a_directory_path, "cc.fr.300.bin")
         cls.a_fasttext_gz_file_name_path = os.path.join(cls.a_directory_path, "cc.fr.300.bin.gz")
         cls.a_fasttext_light_name_path = os.path.join(cls.a_directory_path, "fasttext.magnitude")
@@ -28,21 +30,10 @@ class ToolsTests(CaptureOutputTestCase):
         # the payload is a first "chunk" a, a second chunk "b" and a empty chunk "" to end the loop
         cls.a_response_payload = ["a", "b", ""]
 
-        cls.a_fake_embeddings_path = "fake_embeddings_cc.fr.300.bin"
+        cls.a_fake_embeddings_path = os.path.join(cls.temp_dir_obj.name, "fake_embeddings_cc.fr.300.bin")
 
     def tearDown(self) -> None:
-        if os.path.exists(self.a_fasttext_file_name_path):
-            os.remove(self.a_fasttext_file_name_path)
-        if os.path.exists(self.a_fasttext_gz_file_name_path):
-            os.remove(self.a_fasttext_gz_file_name_path)
-
-        if os.path.exists(self.a_fasttext_light_name_path):
-            os.remove(self.a_fasttext_light_name_path)
-        if os.path.exists(self.a_fasttext_light_gz_file_name_path):
-            os.remove(self.a_fasttext_light_gz_file_name_path)
-
-        if os.path.exists(self.a_fake_embeddings_path):
-            os.remove(self.a_fake_embeddings_path)
+        self.temp_dir_obj.cleanup()
 
     def assertStdoutContains(self, values):
         for value in values:

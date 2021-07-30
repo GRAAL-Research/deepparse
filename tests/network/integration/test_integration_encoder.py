@@ -2,8 +2,8 @@
 # pylint: disable=not-callable
 import os
 import pickle
-import shutil
 import unittest
+from tempfile import TemporaryDirectory
 from unittest import TestCase, skipIf
 
 import torch
@@ -24,13 +24,13 @@ class EncoderCase(TestCase):
         cls.num_layers = 1
         cls.a_batch_size = 2
 
-        cls.weights_dir = "./weights"
+        cls.temp_dir_obj = TemporaryDirectory()
+        cls.weights_dir = os.path.join(cls.temp_dir_obj.name, "weights")
         download_from_url(file_name="to_predict_fasttext", saving_dir=cls.weights_dir, file_extension="p")
 
     @classmethod
     def tearDownClass(cls) -> None:
-        if os.path.exists(cls.weights_dir):
-            shutil.rmtree(cls.weights_dir)
+        cls.temp_dir_obj.cleanup()
 
     def setUp_encoder(self, device: torch.device) -> None:
         self.encoder = Encoder(self.input_size_dim, self.hidden_size, self.num_layers)

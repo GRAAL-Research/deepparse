@@ -2,7 +2,6 @@
 # pylint: disable=not-callable, too-many-public-methods, no-name-in-module
 
 import os
-import shutil
 from unittest.mock import Mock
 
 import torch
@@ -32,11 +31,6 @@ class AddressParserPredictTestCase(CaptureOutputTestCase):
         cls.a_street_number = "15"
 
         cls.a_logging_path = "data"
-
-    def tearDown(self) -> None:
-        # cleanup after the tests
-        if os.path.exists(self.a_model_root_path):
-            shutil.rmtree(self.a_model_root_path)
 
     def setUp(self):
         # a prediction vector with real values

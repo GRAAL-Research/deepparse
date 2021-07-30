@@ -11,7 +11,7 @@ from deepparse.metrics import accuracy
 class AccuracyTest(TestCase):
 
     def setUp(self) -> None:
-        self.a_device = "cpu"
+        self.a_device = torch.device("cpu")
 
         # 2 address of six elements each
         self.ground_truth = torch.tensor([[0, 1, 1, 4, 5, 8], [1, 0, 3, 8, 0, 0]], device=self.a_device)

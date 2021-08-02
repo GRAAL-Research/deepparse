@@ -7,7 +7,7 @@ import torch
 import torch.nn as nn
 from torch.nn.utils.rnn import pack_padded_sequence
 
-from ..weight_init import weight_init
+from ..weights_init import weights_init
 
 
 class Encoder(nn.Module):
@@ -24,7 +24,7 @@ class Encoder(nn.Module):
         super().__init__()
 
         self.lstm = nn.LSTM(input_size, hidden_size, num_layers=num_layers, batch_first=True)
-        self.lstm.apply(weight_init)
+        self.lstm.apply(weights_init)
 
     def forward(self, to_predict: torch.Tensor, lengths_tensor: torch.Tensor) -> Tuple:
         """

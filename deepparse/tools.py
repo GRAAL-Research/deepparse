@@ -59,6 +59,7 @@ def download_weights(model: str, saving_dir: str, verbose: bool = True) -> None:
 
 
 def load_tuple_to_device(padded_address, device):
+    # pylint: disable=consider-using-generator
     """
     Function to load the torch components of a tuple to a device. Since tuple are immutable we return a new tuple with
     the tensor loaded to the device.

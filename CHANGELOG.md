@@ -92,6 +92,8 @@
 - Added method to specify the format of address components of an `FormattedParsedAddress`. Formatting can specify the
   field separator, the field to be capitalized, and the field to be upper case.
 
-## dev
+## 0.4.2
 
 - Added `__eq__` method to `FormattedParsedAddress`.
+- Improved device management.
+- Improved testing.

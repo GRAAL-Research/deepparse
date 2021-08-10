@@ -4,6 +4,7 @@
 import os
 import pickle
 import unittest
+from tempfile import TemporaryDirectory
 from unittest import TestCase
 
 import numpy as np
@@ -30,11 +31,11 @@ def create_pickle_file(path: str, number_of_data_points: int = 4, number_of_feat
 class DataSetContainerTest(TestCase):
 
     def setUp(self) -> None:
-        self.a_pickle_data_container_path = "./fake_pickle_data_container.p"
+        self.temp_dir_obj = TemporaryDirectory()
+        self.a_pickle_data_container_path = os.path.join(self.temp_dir_obj.name, 'fake_pickle_data_container.p')
 
     def tearDown(self) -> None:
-        if os.path.exists(self.a_pickle_data_container_path):
-            os.remove(self.a_pickle_data_container_path)
+        self.temp_dir_obj.cleanup()
 
     def assertListOfArraysEqual(self, expected_list_arrays, actual_list_arrays):
         self.assertEqual(len(expected_list_arrays), len(actual_list_arrays))

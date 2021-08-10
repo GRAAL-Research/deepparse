@@ -3,6 +3,7 @@
 
 import os
 import unittest
+from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
 import requests
@@ -14,20 +15,11 @@ from tests.base_capture_output import CaptureOutputTestCase
 from tests.tools import create_file
 
 
-def delete_cache_files(model_name):
-    version_name = f"{model_name}.version"
-    if os.path.exists(version_name):
-        os.remove(version_name)
-
-    ckpt_name = f"{model_name}.ckpt"
-    if os.path.exists(ckpt_name):
-        os.remove(ckpt_name)
-
-
 class ToolsTests(CaptureOutputTestCase):
 
     def setUp(self) -> None:
-        self.fake_cache_path = "./"
+        self.temp_dir_obj = TemporaryDirectory()
+        self.fake_cache_path = self.temp_dir_obj.name
         self.a_file_extension = "version"
         self.latest_fasttext_version = "b4f098bb8909b1c8a8d24eea07df3435"
         self.latest_bpemb_version = "ac0dc019748b6853dca412add7234203"
@@ -39,8 +31,7 @@ class ToolsTests(CaptureOutputTestCase):
         self.a_bpemb_model_type_checkpoint = "bpemb"
 
     def tearDown(self) -> None:
-        delete_cache_files("fasttext")
-        delete_cache_files("bpemb")
+        self.temp_dir_obj.cleanup()
 
     def create_cache_version(self, model_name, content):
         version_file_path = os.path.join(self.fake_cache_path, model_name + ".version")

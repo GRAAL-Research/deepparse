@@ -3,7 +3,7 @@
 # pylint: disable=not-callable, too-many-public-methods, no-member
 
 import os
-import shutil
+from tempfile import TemporaryDirectory
 from unittest import TestCase
 
 import torch
@@ -17,7 +17,8 @@ class AddressParserRetrainTestCase(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.a_data_saving_dir = "data"
+        cls.data_temp_dir_obj = TemporaryDirectory()
+        cls.a_data_saving_dir = os.path.join(cls.data_temp_dir_obj.name, "data")
         os.makedirs(cls.a_data_saving_dir, exist_ok=True)
         file_extension = "p"
         training_dataset_name = "sample_incomplete_data"
@@ -43,7 +44,9 @@ class AddressParserRetrainTestCase(TestCase):
         cls.a_batch_size = 128
         cls.a_number_of_workers = 2
         cls.a_learning_rate = 0.001
-        cls.a_checkpoints_saving_dir = "checkpoints"
+
+        cls.training_temp_dir_obj = TemporaryDirectory()
+        cls.a_checkpoints_saving_dir = os.path.join(cls.training_temp_dir_obj.name, "checkpoints")
 
         cls.a_torch_device = torch.device("cuda:0")
         cls.a_cpu_device = 'cpu'
@@ -56,26 +59,20 @@ class AddressParserRetrainTestCase(TestCase):
         cls.with_new_prediction_tags = {'ALastTag': 0, 'ATag': 1, 'AnotherTag': 2, "EOS": 3}
 
     def setUp(self) -> None:
-        self.clean_checkpoints()
+        self.training_temp_dir_obj.cleanup()
 
     @classmethod
     def tearDownClass(cls) -> None:
-        if os.path.exists(cls.a_data_saving_dir):
-            shutil.rmtree(cls.a_data_saving_dir)
+        cls.data_temp_dir_obj.cleanup()
 
     def tearDown(self) -> None:
-        self.clean_checkpoints()
-
-    def clean_checkpoints(self):
-        if os.path.exists(self.a_checkpoints_saving_dir):
-            shutil.rmtree(self.a_checkpoints_saving_dir)
+        self.training_temp_dir_obj.cleanup()
 
     def training(self,
                  address_parser: AddressParser,
                  data_container: DatasetContainer,
                  num_workers: int,
                  prediction_tags=None):
-
         address_parser.retrain(data_container,
                                self.a_train_ratio,
                                epochs=self.a_single_epoch,

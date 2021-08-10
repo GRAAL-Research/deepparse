@@ -68,7 +68,7 @@ class AdressComparer:
 
         rebuilt_raw_addresses = self.get_raw_addresses(addresses_to_compare)
 
-        deepparsed_addresses = self.parser(rebuilt_raw_addresses)
+        deepparsed_addresses = self.parser(rebuilt_raw_addresses, with_prob=True)
 
         if not isinstance(deepparsed_addresses, list):
             deepparsed_addresses = [deepparsed_addresses]
@@ -109,7 +109,7 @@ class AdressComparer:
             if len(addresses_to_compare) < 2:
                 raise ValueError("You need at least two addresses to compare")
 
-            deepparsed_addresses = self.parser(addresses_to_compare)
+            deepparsed_addresses = self.parser(addresses_to_compare, with_prob=True)
 
             list_of_deepparse_tuple = []
             for parsed_address in deepparsed_addresses:

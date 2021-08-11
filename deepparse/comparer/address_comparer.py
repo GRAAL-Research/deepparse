@@ -74,17 +74,21 @@ class AdressComparer:
             deepparsed_addresses = [deepparsed_addresses]
 
         list_of_deepparse_tuple = []
+        List_of_list_of_prob = []
         for parsed_address in deepparsed_addresses:
             dict_of_attr = parsed_address.to_dict()
             list_of_deepparse_tuple.append([(value, key) for key, value in dict_of_attr.items()])
+            List_of_list_of_prob.append(parsed_address.address_parsed_components)
 
-        list_of_addresses_informations = [(raw_address,
+
+        list_of_addresses_informations = [([raw_address],
                                            [(address_to_compare, "source"), (
                                                deepparsed_tuple,
-                                               "deepparse using " + self.parser.model_type.capitalize())]
+                                               "deepparse using " + self.parser.model_type.capitalize(), list_of_prob)]
                                            )
-                                          for raw_address, address_to_compare, deepparsed_tuple
-                                          in zip(rebuilt_raw_addresses, addresses_to_compare, list_of_deepparse_tuple)]
+                                          for raw_address, address_to_compare, deepparsed_tuple, list_of_prob
+                                          in zip(rebuilt_raw_addresses, addresses_to_compare,
+                                                    list_of_deepparse_tuple, List_of_list_of_prob)]
 
         return self.compare(list_of_addresses_informations)
 
@@ -112,14 +116,17 @@ class AdressComparer:
             deepparsed_addresses = self.parser(addresses_to_compare, with_prob=True)
 
             list_of_deepparse_tuple = []
+            List_of_list_of_prob = []
             for parsed_address in deepparsed_addresses:
                 dict_of_attr = parsed_address.to_dict()
                 list_of_deepparse_tuple.append([(value, key) for key, value in dict_of_attr.items()])
+                List_of_list_of_prob.append(parsed_address.address_parsed_components)
 
             list_of_addresses_informations.append((addresses_to_compare,
-                                                   [(deepparsed_tuple, repr(deepparsed_address))
-                                                    for deepparsed_tuple, deepparsed_address
-                                                    in zip(list_of_deepparse_tuple, deepparsed_addresses)]))
+                                                   [(deepparsed_tuple, repr(deepparsed_address), list_of_prob)
+                                                    for deepparsed_tuple, deepparsed_address, list_of_prob
+                                                    in zip(list_of_deepparse_tuple, deepparsed_addresses, List_of_list_of_prob)]
+                                                    ))
 
         return self.compare(list_of_addresses_informations)
 
@@ -195,6 +202,8 @@ if __name__ == '__main__':
 
     # Compare with source tags with deepparse tags
     delta_dict_deeparse_one = address_comparer.compare_tags(list_of_tuples_address_one)
+    delta_dict_deeparse_one[0].get_probs()
+
     delta_dict_deeparse_one_two = address_comparer.compare_tags(
         [list_of_tuples_address_one, list_of_tuples_address_two])
     delta_dict_deeparse_one_two[0].print_tags_diff()
@@ -205,6 +214,7 @@ if __name__ == '__main__':
 
     #compare two equivalent addresses
     delta_dict_raw_addresses_one_two = address_comparer.compare_raw([raw_address_one, raw_address_two])
+    delta_dict_raw_addresses_one_two[0].get_probs()
     delta_dict_raw_addresses_one_two[0].comparison_report()
     #delta_dict_raw_addresses_one_two[0].print_raw_diff_color()
     #delta_dict_raw_addresses_one_two[0].print_tags_diff()

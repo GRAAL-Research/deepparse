@@ -9,7 +9,8 @@ class FormatedComparedAddress:
 
     def __init__(self, raw_addresses: Union[List[str], str],
                         parsed_tuples : List[List[Tuple]],
-                        list_of_bool: List[Tuple[str, bool]]) -> None:
+                        list_of_bool: List[Tuple[str, bool]]
+                        ) -> None:
         """
         Address parser used to parse the addresses
         """
@@ -93,6 +94,15 @@ class FormatedComparedAddress:
         sys.stdout.writelines(result)
         print("")
 
+    def get_probs(self):
+        raw_address_prob = {}
+        nb_raw_addresses = len(self.raw_addresses)
+        for index, raw_address in enumerate(self.raw_addresses):
+            raw_address_prob[raw_address] = self.parsed_tuples[2 - nb_raw_addresses + index][2]
+            
+        return raw_address_prob
+        
+
         
     def get_color_diff(self, string_one, string_two):
 
@@ -116,26 +126,33 @@ class FormatedComparedAddress:
         return result
 
     def comparison_report(self):
+        print("-" * 50)
         print("Comparison report:")
         print(" ")
         if self.equivalent:
             print("Equivalent")
+
+            print(" ")
+            print("Probabilities of tags:")
+            for index, tuple_dict in enumerate(self.get_probs().items()):
+                key, value = tuple_dict
+                print("Raw address " + str(index) +": " + key)
+                print(value)
+                print(" ")
         else:
             print("Not equivalent")
             print(" ")
+            print("Probabilities of tags:")
+            for index, tuple_dict in enumerate(self.get_probs().items()):
+                key, value = tuple_dict
+                print("Raw address " + str(index) +": " + key)
+                print(value)
+                print(" ")
             print("Addresses tags differences")
             self.print_tags_diff_color()
 
-            print("")
-            
-            if isinstance(self.raw_addresses, str):
-                print("Raw address:")
-                print(self.raw_addresses)
+        print("-" * 50)
 
-            else:
-                print("Raw addresses:")
-                for address in self.raw_addresses:
-                    print(address)
 
 
 

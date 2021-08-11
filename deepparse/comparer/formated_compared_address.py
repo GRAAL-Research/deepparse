@@ -4,12 +4,12 @@ from pprint import pprint
 import sys
 
 
-
 class FormatedComparedAddress:
 
     def __init__(self, raw_addresses: Union[List[str], str],
                         parsed_tuples : List[List[Tuple]],
-                        list_of_bool: List[Tuple[str, bool]]
+                        list_of_bool: List[Tuple[str, bool]],
+                        type_of_comparison: str
                         ) -> None:
         """
         Address parser used to parse the addresses
@@ -17,7 +17,9 @@ class FormatedComparedAddress:
         self.raw_addresses = raw_addresses
         self.parsed_tuples = parsed_tuples
         self.list_of_bool = list_of_bool
+        self.__type_of_comparison = type_of_comparison
         self.equivalent = self._equivalent()
+        self.indentical = self._indentical()
 
 
 
@@ -29,6 +31,14 @@ class FormatedComparedAddress:
 
     def _equivalent(self) ->bool:
         return all([bool_address[1] for bool_address in self.list_of_bool])
+
+    def _indentical(self) ->bool:
+        is_identical = False
+        if self._equivalent():
+            if all(x == self.raw_addresses[0] for x in self.raw_addresses):
+                is_identical = True
+            
+        return is_identical
 
 
     def print_tags_diff(self) -> None:
@@ -125,34 +135,92 @@ class FormatedComparedAddress:
                 result += (red(string_one[code[1]:code[2]]) + green(string_two[code[3]:code[4]]))
         return result
 
-    def comparison_report(self):
+    def _comparison_report_of_raw_addresses(self):
+        if len(self.raw_addresses) < 2:
+            raise ValueError("Must compare two raw addresses")
         print("-" * 50)
-        print("Comparison report:")
-        print(" ")
-        if self.equivalent:
-            print("Equivalent")
 
-            print(" ")
-            print("Probabilities of tags:")
-            for index, tuple_dict in enumerate(self.get_probs().items()):
-                key, value = tuple_dict
-                print("Raw address " + str(index) +": " + key)
-                print(value)
-                print(" ")
+        intro_str = "Comparison report of the two raw addresses: "
+        if self.indentical:
+            print(intro_str +  "Identical")
         else:
-            print("Not equivalent")
-            print(" ")
-            print("Probabilities of tags:")
-            for index, tuple_dict in enumerate(self.get_probs().items()):
-                key, value = tuple_dict
-                print("Raw address " + str(index) +": " + key)
-                print(value)
+            if self.equivalent:
+                print(intro_str +  "Equivalent")
+            else:
+                print(intro_str +  "Not equivalent")
+        print(" ")
+        print("Address one: " + self.raw_addresses[0])
+        print("and")
+        print("Address two: " +self.raw_addresses[1])
+        print(" ")
+
+
+        print(" ")
+        print("Probabilities of parsed tags for the addresses with " +self.parsed_tuples[0][1][1] +": ")
+        print(" ")
+        for index, tuple_dict in enumerate(self.get_probs().items()):
+            key, value = tuple_dict
+            print("Raw address: " + key)
+            print(value)
+            if index == 0:
                 print(" ")
-            print("Addresses tags differences")
+
+        if not self.equivalent:
+            print(" ")
+            print(" ")
+            print("Addresses tags differences between the two addresses: ")
+            print("Red: Address one has more")
+            print("Green: Address two has more")
+            print(" ")
             self.print_tags_diff_color()
 
         print("-" * 50)
+        print(" ")
 
+    def _comparison_report_of_tags(self):
+        if len(self.raw_addresses) > 1:
+            raise ValueError("Must compare two parsings for the same raw address")
+        print("-" * 50)
+        intro_str = "Comparison report of tags for parsed address: "
+        if self.indentical:
+            print(intro_str +"Identical")
+        else:
+            print(intro_str +"Not identical")
+        print("Raw address: " + self.raw_addresses[0])
+
+        print(" ")
+        print("Tags: ")
+        print(self.parsed_tuples[0][1] + ": ", self.parsed_tuples[0][0])
+        print(" ")
+        print(self.parsed_tuples[1][1][1] + ": ", self.parsed_tuples[1][0])
+        print(" ")
+        print(" ")
+        print("Probabilities of parsed tags for the address:")
+        print(" ")
+        for index, tuple_dict in enumerate(self.get_probs().items()):
+            key, value = tuple_dict
+            print("Raw address: " + key)
+            print(value)
+            if index > 0:
+                print(" ")
+
+        if not self.indentical:
+            print(" ")
+            print(" ")
+            print("Addresses tags differences between the two parsing:")
+            print("Red: " + self.parsed_tuples[0][1] + " has more")
+            print("Green: " + self.parsed_tuples[1][1][1] + " has more")
+            print(" ")
+            self.print_tags_diff_color()
+
+        print("-" * 50)
+        print(" ")
+
+    def comparison_report(self):
+        if self.__type_of_comparison == "raw":
+            self._comparison_report_of_raw_addresses()
+        elif self.__type_of_comparison == "tag":
+            self._comparison_report_of_tags()
 
 
 

@@ -26,7 +26,7 @@ class AdressComparer:
 
     __repr__ = __str__  # to call __str__ when list of address
 
-    def compare(self, addresses_to_compare: Union[List[tuple], List[List[tuple]]]) -> List[FormatedComparedAddress]:
+    def compare(self, addresses_to_compare: Union[List[tuple], List[List[tuple]]], type_of_comparison:str) -> List[FormatedComparedAddress]:
 
         list_of_formated_compared_address = []
         for address_to_compare in addresses_to_compare:
@@ -35,7 +35,7 @@ class AdressComparer:
             list_of_bool_tuple = self.bool_address_tags_are_the_same([parsed_tuple[0] for parsed_tuple in parsing_info])
 
             list_of_formated_compared_address.append(
-                FormatedComparedAddress(raw_address, parsing_info, list_of_bool_tuple))
+                FormatedComparedAddress(raw_address, parsing_info, list_of_bool_tuple, type_of_comparison))
         return list_of_formated_compared_address
 
     def compare_tags(self, addresses_to_compare: Union[List[tuple], List[List[tuple]]]) -> List[
@@ -84,13 +84,13 @@ class AdressComparer:
         list_of_addresses_informations = [([raw_address],
                                            [(address_to_compare, "source"), (
                                                deepparsed_tuple,
-                                               "deepparse using " + self.parser.model_type.capitalize(), list_of_prob)]
+                                               (repr(deepparsed_address), "deepparse using " + self.parser.model_type.capitalize()), list_of_prob)]
                                            )
-                                          for raw_address, address_to_compare, deepparsed_tuple, list_of_prob
+                                          for raw_address, address_to_compare, deepparsed_tuple, list_of_prob, deepparsed_address
                                           in zip(rebuilt_raw_addresses, addresses_to_compare,
-                                                    list_of_deepparse_tuple, List_of_list_of_prob)]
+                                                    list_of_deepparse_tuple, List_of_list_of_prob, deepparsed_addresses)]
 
-        return self.compare(list_of_addresses_informations)
+        return self.compare(list_of_addresses_informations, "tag")
 
     def compare_raw(self, list_of_addresses_to_compare: Union[List[str], List[List[str]]]) -> List[
         FormatedComparedAddress]:
@@ -123,12 +123,12 @@ class AdressComparer:
                 List_of_list_of_prob.append(parsed_address.address_parsed_components)
 
             list_of_addresses_informations.append((addresses_to_compare,
-                                                   [(deepparsed_tuple, repr(deepparsed_address), list_of_prob)
+                                                    [(deepparsed_tuple, (repr(deepparsed_address), "deepparse using " + self.parser.model_type.capitalize()), list_of_prob)
                                                     for deepparsed_tuple, deepparsed_address, list_of_prob
                                                     in zip(list_of_deepparse_tuple, deepparsed_addresses, List_of_list_of_prob)]
                                                     ))
 
-        return self.compare(list_of_addresses_informations)
+        return self.compare(list_of_addresses_informations, "raw")
 
     def addresses_component_names(self, parsed_addresses: Union[List[List[tuple]], List[tuple]]) -> set:
         if isinstance(parsed_addresses[0], tuple):
@@ -225,7 +225,8 @@ if __name__ == '__main__':
     delta_dict_raw_addresses_one_three[0].comparison_report()
 
     #compare three addresses
-    #delta_dict_raw_addresses_one_two_three = address_comparer.compare_raw([[raw_address_one, raw_address_two], [raw_address_one, raw_address_two, raw_address_three]])
-    #print(delta_dict_raw_addresses_one_two_three[1].equivalent)
+    #from itertools import combinations
+    delta_dict_raw_addresses_one_two_three = address_comparer.compare_raw([[raw_address_one, raw_address_two], [raw_address_one, raw_address_two, raw_address_three]])
+    #delta_dict_raw_addresses_one_two_three[1].comparison_report()
 
 

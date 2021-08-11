@@ -190,7 +190,7 @@ if __name__ == '__main__':
     list_of_tuples_address_two = [("350", "StreetNumber"), ("rue des Lilas", "StreetName"), ("Ouest", "Orientation"),
                                   ("Québec", "Municipality"), ("Québec", "Province"), ("G1L 1B6", "PostalCode")]
 
-    raw_address_one = "305 rue des Lilas Ouest Québec Québec G1L 1B6"
+    raw_address_one = "305, rue des Lilas Ouest Québec Québec G1L 1B6"
     raw_address_two = "305 rue des Lilas Ouest Québec Québec G1L 1B6"
     raw_address_three = "355 rue des Lilas Ouest Québec Québec G1L 1B6"
 
@@ -227,6 +227,6 @@ if __name__ == '__main__':
     #compare three addresses
     #from itertools import combinations
     delta_dict_raw_addresses_one_two_three = address_comparer.compare_raw([[raw_address_one, raw_address_two], [raw_address_one, raw_address_two, raw_address_three]])
-    #delta_dict_raw_addresses_one_two_three[1].comparison_report()
+    delta_dict_raw_addresses_one_two_three[1].comparison_report()
 
 

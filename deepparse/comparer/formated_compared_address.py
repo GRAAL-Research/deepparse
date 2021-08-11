@@ -43,7 +43,7 @@ class FormatedComparedAddress:
 
     def print_tags_diff(self) -> None:
         if len(self.parsed_tuples) != 2:
-            raise ValueError("Cannot compare more than two parsed adresses")
+            raise ValueError("Cannot compare more than two parsed addresses")
 
         address_component_names = [tag[0] for tag in self.list_of_bool if not tag[1]]
         
@@ -158,9 +158,8 @@ class FormatedComparedAddress:
         print(" ")
         print("Probabilities of parsed tags for the addresses with " +self.parsed_tuples[0][1][1] +": ")
         print(" ")
-        for index, tuple_dict in enumerate(self.get_probs().items()):
-            key, value = tuple_dict
-            print("Raw address: " + key)
+        for index, value in enumerate(self.get_probs().values()):
+            print("parsed address: "+ self.parsed_tuples[index][1][0])
             print(value)
             if index == 0:
                 print(" ")
@@ -235,7 +234,7 @@ if __name__ == '__main__':
     list_of_tuples_address_two = [("350", "StreetNumber"), ("rue des Lilas", "StreetName"), ("Ouest", "Orientation"),
                                 ("Québec", "Municipality"), ("Québec", "Province"), ("G1L 1B6", "PostalCode")]
 
-    raw_address_one = "305 rue des Lilas Ouest Québec Québec G1L 1B6"
+    raw_address_one = "305  rue des Lilas Ouest Québec Québec G1L 1B6"
     raw_address_two = "305 rue des Lilas Ouest Québec Québec G1L 1B6"
     raw_address_three = "355 rue des Chemins Ouest Québec Québec G1L 1B6"
     

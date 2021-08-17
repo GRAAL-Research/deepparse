@@ -9,8 +9,8 @@ class FormatedComparedAddress:
     def __init__(self, raw_addresses: Union[List[str], str],
                         parsed_tuples : List[List[Tuple]],
                         list_of_bool: List[Tuple[str, bool]],
-                        type_of_comparison: str
-                        ) -> None:
+                        type_of_comparison: str,
+                        colorblind:bool = None) -> None:
         """
         Address parser used to parse the addresses
         """
@@ -21,7 +21,7 @@ class FormatedComparedAddress:
         self.equivalent = self._equivalent()
         self.indentical = self._indentical()
 
-
+        self.__colorblind = False if colorblind is None else colorblind
 
 
     def __str__(self) -> str:
@@ -65,7 +65,7 @@ class FormatedComparedAddress:
 
     def print_tags_diff_color(self) -> None:
         if len(self.parsed_tuples) != 2:
-            raise ValueError("Cannot compare more than two parsed adresses")
+            raise ValueError("Cannot compare other than two parsed adresses")
 
         address_component_names = [tag[0] for tag in self.list_of_bool if not tag[1]]
         
@@ -115,24 +115,32 @@ class FormatedComparedAddress:
 
         
     def get_color_diff(self, string_one, string_two):
+        if not self.__colorblind:
+            color_1 = lambda text: f"\033[38;2;255;0;0m{text}\033[38;2;255;255;255m" #red
+            color_2 = lambda text: f"\033[38;2;0;255;0m{text}\033[38;2;255;255;255m" #green
+        else:
+            #https://davidmathlogic.com/colorblind/#%23D81B60-%231E88E5-%23FFC107-%23004D40
+            color_1 = lambda text: f"\033[38;2;26;123;220m{text}\033[38;2;255;255;255m" #blue
+            color_2 = lambda text: f"\033[38;2;255;194;10m{text}\033[38;2;255;255;255m" #yellow
 
-        red = lambda text: f"\033[38;2;255;0;0m{text}\033[38;2;255;255;255m"
-        green = lambda text: f"\033[38;2;0;255;0m{text}\033[38;2;255;255;255m"
-        blue = lambda text: f"\033[38;2;0;0;255m{text}\033[38;2;255;255;255m"
         white = lambda text: f"\033[38;2;255;255;255m{text}\033[38;2;255;255;255m"
 
 
         result = ""
         codes = SequenceMatcher(a=string_one, b=string_two).get_opcodes()
         for code in codes:
-            if code[0] == "equal": 
+            if code[0] == "equal":
                 result += white(string_one[code[1]:code[2]])
             elif code[0] == "delete":
-                result += red(string_one[code[1]:code[2]])
+                result += color_1(string_one[code[1]:code[2]])
             elif code[0] == "insert":
-                result += green(string_two[code[3]:code[4]])
+                result += color_2(string_two[code[3]:code[4]])
             elif code[0] == "replace":
-                result += (red(string_one[code[1]:code[2]]) + green(string_two[code[3]:code[4]]))
+
+                if code[1] <= code[3]:
+                    result += (color_1(string_one[code[1]:code[2]]) + color_2(string_two[code[3]:code[4]]))
+                else:
+                    result += (color_2(string_two[code[3]:code[4]]) + color_1(string_one[code[1]:code[2]]))
         return result
 
     def _comparison_report_of_raw_addresses(self):
@@ -168,8 +176,13 @@ class FormatedComparedAddress:
             print(" ")
             print(" ")
             print("Addresses tags differences between the two addresses: ")
-            print("Red: Address one has more")
-            print("Green: Address two has more")
+            print("White: Shared")
+            if not self.__colorblind:
+                print("Red: Belongs only to Address one")
+                print("Green: Belongs only to Address two")
+            else:
+                print("Blue: Belongs only to Address one")
+                print("Yellow: Belongs only to Address two")
             print(" ")
             self.print_tags_diff_color()
 
@@ -207,8 +220,14 @@ class FormatedComparedAddress:
             print(" ")
             print(" ")
             print("Addresses tags differences between the two parsing:")
-            print("Red: " + self.parsed_tuples[0][1] + " has more")
-            print("Green: " + self.parsed_tuples[1][1][1] + " has more")
+            print("White: Shared")
+            if not self.__colorblind:
+                print("Red: Belongs only to " + self.parsed_tuples[0][1])
+                print("Green: Belongs only to " + self.parsed_tuples[1][1][1])
+            else:
+                print("Blue: Belongs only to " + self.parsed_tuples[0][1])
+                print("Yellow: Belongs only to " + self.parsed_tuples[1][1][1])
+
             print(" ")
             self.print_tags_diff_color()
 

@@ -14,19 +14,20 @@ class AdressComparer:
         Compares addresses with each other and retrieves the differences between them.
     """
 
-    def __init__(self, parser: AddressParser) -> None:
+    def __init__(self, parser: AddressParser, colorblind:bool = None) -> None:
         """
         Address parser used to parse the addresses
         """
 
         self.parser = parser
+        self.__colorblind = False if colorblind is None else colorblind
 
     def __str__(self) -> str:
         return f"Compare addresses with {self.parser.model_type.capitalize()}AddressParser"
 
     __repr__ = __str__  # to call __str__ when list of address
 
-    def compare(self, addresses_to_compare: Union[List[tuple], List[List[tuple]]], type_of_comparison:str) -> List[FormatedComparedAddress]:
+    def _compare(self, addresses_to_compare: Union[List[tuple], List[List[tuple]]], type_of_comparison:str) -> List[FormatedComparedAddress]:
 
         list_of_formated_compared_address = []
         for address_to_compare in addresses_to_compare:
@@ -35,7 +36,7 @@ class AdressComparer:
             list_of_bool_tuple = self.bool_address_tags_are_the_same([parsed_tuple[0] for parsed_tuple in parsing_info])
 
             list_of_formated_compared_address.append(
-                FormatedComparedAddress(raw_address, parsing_info, list_of_bool_tuple, type_of_comparison))
+                FormatedComparedAddress(raw_address, parsing_info, list_of_bool_tuple, type_of_comparison, self.__colorblind))
         return list_of_formated_compared_address
 
     def compare_tags(self, addresses_to_compare: Union[List[tuple], List[List[tuple]]]) -> List[
@@ -63,6 +64,8 @@ class AdressComparer:
         # le parsing original
         # notre parsing (avec les probs maybe???)
         # if perfectly identical or not
+        
+
         if isinstance(addresses_to_compare[0], tuple):
             addresses_to_compare = [addresses_to_compare]
 
@@ -82,15 +85,15 @@ class AdressComparer:
 
 
         list_of_addresses_informations = [([raw_address],
-                                           [(address_to_compare, "source"), (
-                                               deepparsed_tuple,
-                                               (repr(deepparsed_address), "deepparse using " + self.parser.model_type.capitalize()), list_of_prob)]
-                                           )
-                                          for raw_address, address_to_compare, deepparsed_tuple, list_of_prob, deepparsed_address
-                                          in zip(rebuilt_raw_addresses, addresses_to_compare,
+                                            [(address_to_compare, "source"), (
+                                                deepparsed_tuple,
+                                                (repr(deepparsed_address), "deepparse using " + self.parser.model_type.capitalize()), list_of_prob)]
+                                            )
+                                            for raw_address, address_to_compare, deepparsed_tuple, list_of_prob, deepparsed_address
+                                                in zip(rebuilt_raw_addresses, addresses_to_compare,
                                                     list_of_deepparse_tuple, List_of_list_of_prob, deepparsed_addresses)]
 
-        return self.compare(list_of_addresses_informations, "tag")
+        return self._compare(list_of_addresses_informations, "tag")
 
     def compare_raw(self, list_of_addresses_to_compare: Union[List[str], List[List[str]]]) -> List[
         FormatedComparedAddress]:
@@ -110,8 +113,8 @@ class AdressComparer:
 
         list_of_addresses_informations = []
         for addresses_to_compare in list_of_addresses_to_compare:
-            if len(addresses_to_compare) < 2:
-                raise ValueError("You need at least two addresses to compare")
+            if len(addresses_to_compare) != 2:
+                raise ValueError("You need to compare two addresses")
 
             deepparsed_addresses = self.parser(addresses_to_compare, with_prob=True)
 
@@ -128,7 +131,7 @@ class AdressComparer:
                                                     in zip(list_of_deepparse_tuple, deepparsed_addresses, List_of_list_of_prob)]
                                                     ))
 
-        return self.compare(list_of_addresses_informations, "raw")
+        return self._compare(list_of_addresses_informations, "raw")
 
     def addresses_component_names(self, parsed_addresses: Union[List[List[tuple]], List[tuple]]) -> set:
         if isinstance(parsed_addresses[0], tuple):
@@ -185,12 +188,12 @@ class AdressComparer:
 
 if __name__ == '__main__':
     list_of_tuples_address_one = [("305", "StreetNumber"), ("rue des Lilas", "StreetName"), ("Ouest", "Orientation"),
-                                  ("Québec", "Municipality"), ("Québec", "Province"), ("G1L 1B6", "PostalCode")]
+                                    ("Québec", "Municipality"), ("Québec", "Province"), ("G1L 1B6", "PostalCode")]
 
     list_of_tuples_address_two = [("350", "StreetNumber"), ("rue des Lilas", "StreetName"), ("Ouest", "Orientation"),
-                                  ("Québec", "Municipality"), ("Québec", "Province"), ("G1L 1B6", "PostalCode")]
+                                    ("Québec", "Municipality"), ("Québec", "Province"), ("G1L 1B6", "PostalCode")]
 
-    raw_address_one = "305, rue des Lilas Ouest Québec Québec G1L 1B6"
+    raw_address_one = "305 rue des Lilas Ouest Québec Québec G1L 1B6"
     raw_address_two = "305 rue des Lilas Ouest Québec Québec G1L 1B6"
     raw_address_three = "355 rue des Lilas Ouest Québec Québec G1L 1B6"
 
@@ -202,31 +205,40 @@ if __name__ == '__main__':
 
     # Compare with source tags with deepparse tags
     delta_dict_deeparse_one = address_comparer.compare_tags(list_of_tuples_address_one)
-    delta_dict_deeparse_one[0].get_probs()
 
     delta_dict_deeparse_one_two = address_comparer.compare_tags(
         [list_of_tuples_address_one, list_of_tuples_address_two])
-    delta_dict_deeparse_one_two[0].print_tags_diff()
-    delta_dict_deeparse_one_two[0].print_tags_diff_color()
-
 
     delta_dict_deeparse_one_two[0].comparison_report()
+    delta_dict_deeparse_one_two[1].comparison_report()
 
     #compare two equivalent addresses
     delta_dict_raw_addresses_one_two = address_comparer.compare_raw([raw_address_one, raw_address_two])
-    delta_dict_raw_addresses_one_two[0].get_probs()
     delta_dict_raw_addresses_one_two[0].comparison_report()
-    #delta_dict_raw_addresses_one_two[0].print_raw_diff_color()
-    #delta_dict_raw_addresses_one_two[0].print_tags_diff()
-    #delta_dict_raw_addresses_one_two[0].raw_addresses
 
     #compare two not equivalent addresses
     delta_dict_raw_addresses_one_three = address_comparer.compare_raw([raw_address_one, raw_address_three])
     delta_dict_raw_addresses_one_three[0].comparison_report()
 
-    #compare three addresses
-    #from itertools import combinations
-    delta_dict_raw_addresses_one_two_three = address_comparer.compare_raw([[raw_address_one, raw_address_two], [raw_address_one, raw_address_two, raw_address_three]])
-    delta_dict_raw_addresses_one_two_three[1].comparison_report()
+
+
+
+    address_comparer_cb = AdressComparer(address_parser, colorblind=True)
+    # Compare with source tags with deepparse tags
+    delta_dict_deeparse_one = address_comparer_cb.compare_tags(list_of_tuples_address_one)
+
+    delta_dict_deeparse_one_two = address_comparer_cb.compare_tags(
+        [list_of_tuples_address_one, list_of_tuples_address_two])
+
+    delta_dict_deeparse_one_two[0].comparison_report()
+    delta_dict_deeparse_one_two[1].comparison_report()
+
+    #compare two equivalent addresses
+    delta_dict_raw_addresses_one_two = address_comparer_cb.compare_raw([raw_address_one, raw_address_two])
+    delta_dict_raw_addresses_one_two[0].comparison_report()
+
+    #compare two not equivalent addresses
+    delta_dict_raw_addresses_one_three = address_comparer_cb.compare_raw([raw_address_one, raw_address_three])
+    delta_dict_raw_addresses_one_three[0].comparison_report()
 
 

@@ -11,14 +11,28 @@ from ..parser import AddressParser
 # du nombre de tag et une méthode __str__ pour afficher le output différent.
 class AdressComparer:
     """
-        Compares addresses with each other and retrieves the differences between them.
+        Address comparer to compare addresses with each other and retrieves the differences between them. The addresses
+        are parsed using an address parser based on one of the seq2seq pre-trained
+        networks either with fastText or BPEmb
+
+        The address comparer is able to compare already parsed addresses,
+        the address parser first recompose the raw address then suggests its own tags,
+        then it makes a comparison with the tags of the source parsing and the
+        newly parsed address
+
+        The address comparer is also able to compare raw addresses.
+        First it parse the addresses and then bring out the differences
+        among the parsed addresses
+
+    Args:
+        parser (AddressParser): the AddressParser used to parse the addresses
+        colorblind (bool): if True, the differences among the parsed addresses will
+                            be shown in a colorblind friendly mode, default value is False
+    
+    Exemples::
     """
 
     def __init__(self, parser: AddressParser, colorblind:bool = None) -> None:
-        """
-        Address parser used to parse the addresses
-        """
-
         self.parser = parser
         self.__colorblind = False if colorblind is None else colorblind
 
@@ -27,8 +41,28 @@ class AdressComparer:
 
     __repr__ = __str__  # to call __str__ when list of address
 
-    def _compare(self, addresses_to_compare: Union[List[tuple], List[List[tuple]]], type_of_comparison:str) -> List[FormatedComparedAddress]:
+    def _compare(self,
+                    addresses_to_compare: Union[List[tuple],List[List[tuple]]],
+                    type_of_comparison:str) -> Union[List[FormatedComparedAddress],FormatedComparedAddress]:
+        """Fonction to create a list of FormatedComparedAddress object with the addresses
+        to be compared, it is the same process either it is tags comparison or raw addresses
+        comparison
 
+        Args:
+            addresses_to_compare (Union[List[tuple], List[List[tuple]]]): formated addresses information
+                for the addresses to be compared, either it is a tags comparison or a raw addreses comparison.
+                it is possible to have only one comparison to make and it will be in the List[tuple]
+                format, on it is possible to make multiples comparisons and it will take the
+                List[List[tuple]] format.
+                Inside a tuple, the first element represent the raw address if it is a tags comparison
+                or a list of the two raw addresses if it is a raw addresses comparison
+                
+            type_of_comparison (str): either it is tags comparison or raw addresses comparison
+
+        Return:
+            Either a :class:`~FormattedComparedAddress` or a list of
+            :class:`~FormattedComparedAddress` when given more than one comparison to make.
+        """
         list_of_formated_compared_address = []
         for address_to_compare in addresses_to_compare:
             raw_address = address_to_compare[0]
@@ -37,7 +71,8 @@ class AdressComparer:
 
             list_of_formated_compared_address.append(
                 FormatedComparedAddress(raw_address, parsing_info, list_of_bool_tuple, type_of_comparison, self.__colorblind))
-        return list_of_formated_compared_address
+
+        return list_of_formated_compared_address if len(list_of_formated_compared_address) > 1 else list_of_formated_compared_address[0]
 
     def compare_tags(self, addresses_to_compare: Union[List[tuple], List[List[tuple]]]) -> List[
         FormatedComparedAddress]:

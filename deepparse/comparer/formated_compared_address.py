@@ -1,4 +1,4 @@
-from typing import List, Union, Tuple
+from typing import List, Union, Tuple, Dict
 from difflib import Differ, SequenceMatcher
 from pprint import pprint
 import sys
@@ -6,18 +6,15 @@ import sys
 
 class FormatedComparedAddress:
 
-    def __init__(self, raw_addresses: Union[List[str], str],
-                        parsed_tuples : List[List[Tuple]],
-                        list_of_bool: List[Tuple[str, bool]],
-                        type_of_comparison: str,
+    def __init__(self, addresses_dict:Union[Dict, List[Dict]],
                         colorblind:bool = None) -> None:
         """
         Address parser used to parse the addresses
         """
-        self.raw_addresses = raw_addresses
-        self.parsed_tuples = parsed_tuples
-        self.list_of_bool = list_of_bool
-        self.__type_of_comparison = type_of_comparison
+        self.raw_addresses = addresses_dict["raw_addresses"]
+        self.parsed_tuples = [addresses_dict["address_one"]["tags"], addresses_dict["address_two"]["tags"]]
+        self.__type_of_comparison = addresses_dict["type_of_comparison"]
+        self.list_of_bool = self._bool_address_tags_are_the_same(self.parsed_tuples)
         self.equivalent = self._equivalent()
         self.indentical = self._indentical()
 
@@ -190,7 +187,7 @@ class FormatedComparedAddress:
         print(" ")
 
     def _comparison_report_of_tags(self):
-        if len(self.raw_addresses) > 1:
+        if len([self.raw_addresses]) > 1:
             raise ValueError("Must compare two parsings for the same raw address")
         print("-" * 50)
         intro_str = "Comparison report of tags for parsed address: "
@@ -241,6 +238,52 @@ class FormatedComparedAddress:
             self._comparison_report_of_tags()
 
 
+
+
+    def _bool_address_tags_are_the_same(self, parsed_addresses: Union[List[List[tuple]], List[tuple]]) -> List[tuple]:
+        """
+        Compare addresses components and put the differences in a dict where the keys are the
+        names of the addresses components and the value are the value of the addresses components
+
+        Return:
+            Dictionnary that contains all addresses components that differ from each others
+        """
+
+        list_of_bool_and_tag = []
+
+        # get all the unique addresses components
+        set_of_all_address_component_names = self._addresses_component_names(parsed_addresses)
+
+        # Iterate throught all the unique addresses components and retrieve the value
+        # of the component for each parsed adresses
+        for address_component_name in set_of_all_address_component_names:
+            list_of_list_tag = []
+            for parsed_address in parsed_addresses:
+                # if there is more than one value per address component, the values
+                # will be joined in a string.
+                list_of_list_tag.append(" ".join([tag for (tag, tag_name) in parsed_address if
+                                                tag_name == address_component_name and tag is not None]))
+
+                # For each address components, if there is one value that differs from the rest,
+                # the value of each parsed addresses with be added to the delta dict
+                # where the key will be the address component name and the value will
+                # be a dict that has the name of the parsed address as key and the
+                # value of the address component as value.
+            list_of_bool_and_tag.append(
+                (address_component_name, all(x == list_of_list_tag[0] for x in list_of_list_tag)))
+
+        return list_of_bool_and_tag
+
+    def _addresses_component_names(self, parsed_addresses: Union[List[List[tuple]], List[tuple]]) -> set:
+        if isinstance(parsed_addresses[0], tuple):
+            parsed_addresses = [parsed_addresses]
+
+        set_of_all_address_component_names = set()
+        for tuple_values in parsed_addresses:
+            for address_component in tuple_values:
+                set_of_all_address_component_names.add(address_component[1])
+
+        return set_of_all_address_component_names
 
 if __name__ == '__main__':
 

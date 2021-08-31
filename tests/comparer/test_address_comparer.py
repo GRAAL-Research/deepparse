@@ -4,74 +4,55 @@ import unittest
 from unittest import TestCase
 
 from deepparse.comparer import AdressComparer
+from deepparse.comparer import FormatedComparedAddress
 from deepparse.parser.address_parser import AddressParser
 
 class TestAdressComparer(TestCase):
 
         
     def setUp(self) -> None:
-        self.address_parser = AddressParser(model_type="bpemb", device=0)
-        self.parsed_address_one = AdressComparer(self.address_parser("350 rue des Lilas Ouest Québec Québec G1L 1B6"))
-        self.parsed_address_same = self.address_parser("350 rue des Lilas Ouest Québec Québec G1L 1B6")
-        self.parsed_address_diff_streetNumber = self.address_parser("450 rue des Lilas Ouest Québec Québec G1L 1B6")
-        self.parsed_address_diff_streetName = self.address_parser("350 Boulevard des Lilas Ouest Québec Québec G1L 1B6")
-        self.parsed_address_diff_Unit = self.address_parser("350 rue des Lilas Ouest app 105 Québec Québec G1L 1B6")
-        self.parsed_address_diff_Municipality = self.address_parser("350 rue des Lilas Ouest Ste-Foy Québec G1L 1B6")
-        self.parsed_address_diff_Province = self.address_parser("350 rue des Lilas Ouest Québec Ontario G1L 1B6")
-        self.parsed_address_diff_PostalCode = self.address_parser("350 rue des Lilas Ouest Québec Québec G1P 1B6")
-        self.parsed_address_diff_Orientation = self.address_parser("350 rue des Lilas Est Québec Québec G1L 1B6")
+        self.list_of_tuples_address_original = [("305", "StreetNumber"), ("rue des Lilas", "StreetName"), ("Ouest", "Orientation"),
+                                    ("Québec", "Municipality"), ("Québec", "Province"), ("G1L 1B6", "PostalCode")]
+
+        self.list_of_tuples_address_diff_StreetNumber = [("350", "StreetNumber"), ("rue des Lilas", "StreetName"), ("Ouest", "Orientation"),
+                                    ("Québec", "Municipality"), ("Québec", "Province"), ("G1L 1B6", "PostalCode")]
+
+        self.raw_address_original = "305 rue des Lilas Ouest Québec Québec G1L 1B6"
+        self.raw_address_identical = "305 rue des Lilas Ouest Québec Québec G1L 1B6"
+        self.raw_address_diff_StreetNumber = "355 rue des Lilas Ouest Québec Québec G1L 1B6"
 
 
-    def test_sameAddress_comparison(self):
-        self.assertTrue(self.parsed_address_one == self.parsed_address_same)
+        self.address_parser_bpemb_device_0 = AddressParser(model_type="bpemb", device=0)
+        self.address_comparer = AdressComparer(self.address_parser_bpemb_device_0)
 
-    def test_diff_streetNumber_comparison(self):
-        self.assertFalse(self.parsed_address_one == self.parsed_address_diff_streetNumber)
+        self.raw_one_comparison = self.address_comparer.compare_raw((self.raw_address_original, self.raw_address_identical))
+        self.raw_multiple_comparisons = self.address_comparer.compare_raw([(self.raw_address_original, self.raw_address_identical),
+                                                                            (self.raw_address_original, self.raw_address_diff_StreetNumber)])
 
-    def test_diff_streetName_comparison(self):
-        self.assertFalse(self.parsed_address_one == self.parsed_address_diff_streetName)
+        self.tags_one_comparison = self.address_comparer.compare_tags(self.list_of_tuples_address_original)
+        self.tags_multiple_comparisons = self.address_comparer.compare_tags([self.list_of_tuples_address_original, self.list_of_tuples_address_diff_StreetNumber])
 
-    def test_diff_Unit_comparison(self):
-        self.assertFalse(self.parsed_address_one == self.parsed_address_diff_Unit)
 
-    def test_diff_Municipality_comparison(self):
-        self.assertFalse(self.parsed_address_one == self.parsed_address_diff_Municipality)
+
         
-    def test_diff_Province_comparison(self):
-        self.assertFalse(self.parsed_address_one == self.parsed_address_diff_Province)
-        
-    def test_diff_PostalCode_comparison(self):
-        self.assertFalse(self.parsed_address_one == self.parsed_address_diff_PostalCode)
-        
-    def test_diff_Orientation_comparison(self):
-        self.assertFalse(self.parsed_address_one == self.parsed_address_diff_Orientation)
+
+    def test_raw_one_comparison(self):
+        self.assertIsInstance(self.raw_one_comparison, FormatedComparedAddress)
     
+    def test_raw_multiple_comparisons(self):
+        self.assertIsInstance(self.raw_multiple_comparisons, list)
+        self.assertIsInstance(self.raw_multiple_comparisons[0], FormatedComparedAddress)
+        self.assertIsInstance(self.raw_multiple_comparisons[1], FormatedComparedAddress)
 
 
+    def test_tags_one_comparison(self):
+        self.assertIsInstance(self.tags_one_comparison, FormatedComparedAddress)
+    
+    def test_tags_multiple_comparisons(self):
+        self.assertIsInstance(self.tags_multiple_comparisons, list)
+        self.assertIsInstance(self.tags_multiple_comparisons[0], FormatedComparedAddress)
+        self.assertIsInstance(self.tags_multiple_comparisons[1], FormatedComparedAddress)
 
-    def test_sameAddress_emptyDeltaDict(self):
-        self.assertEqual(self.parsed_address_one.delta_dict(self.parsed_address_same), {})
-
-    def test_diff_streetNumberDeltaDict(self):
-        self.assertEqual(self.parsed_address_one.delta_dict(self.parsed_address_diff_streetNumber), {'StreetNumber': {'base': '350', 'compared': '450'}})
-
-    def test_diff_streetNameDeltaDict(self):
-        self.assertEqual(self.parsed_address_one.delta_dict(self.parsed_address_diff_streetName), {'StreetName': {'base': 'rue des Lilas', 'compared': 'Boulevard des Lilas'}})
-
-    #def test_diff_UnitDeltaDict(self):
-    #    self.assertEqual(self.parsed_address_one == self.parsed_address_diff_Unit, )
-
-    #def test_diff_MunicipalityDeltaDict(self):
-    #    self.assertEqual(self.parsed_address_one == self.parsed_address_diff_Municipality)
-        
-    def test_diff_ProvinceDeltaDict(self):
-        self.assertEqual(self.parsed_address_one.delta_dict(self.parsed_address_diff_Province), {'Province': {'base': 'Québec', 'compared': 'Ontario'}})
-        
-    def test_diff_PostalCodeDeltaDict(self):
-        self.assertEqual(self.parsed_address_one.delta_dict(self.parsed_address_diff_PostalCode), {'PostalCode': {'base': 'G1L 1B6', 'compared': 'G1P 1B6'}})
-        
-    #def test_diff_OrientationDeltaDict(self):
-    #    self.assertEqual(self.parsed_address_one == self.parsed_address_diff_Orientation)
 
 
 if __name__ == "__main__":

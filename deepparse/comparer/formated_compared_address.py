@@ -1,24 +1,55 @@
-from typing import List, Union, Tuple, Dict
-from difflib import Differ, SequenceMatcher
-from pprint import pprint
+from typing import List, Union, Dict
+from difflib import  SequenceMatcher
 import sys
+import os
 
 
 class FormatedComparedAddress:
+    """
+    A comparison for addresses returned by the address comparer
 
-    def __init__(self, addresses_dict:Union[Dict, List[Dict]],
-                        colorblind:bool = None) -> None:
-        """
-        Address parser used to parse the addresses
-        """
-        self.raw_addresses = addresses_dict["raw_addresses"]
-        self.parsed_tuples = [addresses_dict["address_one"]["tags"], addresses_dict["address_two"]["tags"]]
-        self.__type_of_comparison = addresses_dict["type_of_comparison"]
-        self.list_of_bool = self._bool_address_tags_are_the_same(self.parsed_tuples)
-        self.equivalent = self._equivalent()
-        self.indentical = self._indentical()
+    Args:
+        addresses (Union[Dict, List[Dict]]): A dictionnary where the keys are the name of
+        the addresses components and the values contain the information for this specific
+        component.
+    
+        colorblind (bool, optional): A flag that will print the comparison report in
+        colorblind friendly colors if set to True. Defaults to False.
 
-        self.__colorblind = False if colorblind is None else colorblind
+    Attributes:
+        raw_addresses: The raw addresses (not parsed)
+        address_parsed_components: The parsed address in a list of tuples where the first elements
+            are the address components and the second elements are the tags.
+
+    Example:
+
+        .. code-block:: python
+
+            address_comparer = AdressComparer(AddressParser())
+            raw_identical_comparison = address_comparer.compare_raw(("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6",
+                                                                    "450 rue des Lilas Ouest Quebec city Quebec G1L 1B6"))
+            
+            print(raw_identical_comparison.raw_addresses) # [350 rue des Lilas Ouest Quebec city Quebec G1L 1B6,
+                                                            450 rue des Lilas Ouest Quebec city Quebec G1L 1B6]
+
+            print(raw_identical_comparison.address_parsed_components)
+            #[[('350', 'StreetNumber'), ('rue des Lilas', 'StreetName'), (None, 'Unit'), ('Ouest Quebec city', 'Municipality'),
+            #   ('Quebec', 'Province'), ('G1L 1B6', 'PostalCode'), (None, 'Orientation'), (None, 'GeneralDelivery')],
+            #[('450', 'StreetNumber'), ('rue des Lilas', 'StreetName'), (None, 'Unit'), ('Ouest Quebec city', 'Municipality'),
+            #  ('Quebec', 'Province'), ('G1L 1B6', 'PostalCode'), (None, 'Orientation'), (None, 'GeneralDelivery')]]
+
+    """
+    def __init__(self, addresses:Dict,
+                        colorblind:bool = False) -> None:
+
+        
+        self.raw_addresses = addresses["raw_addresses"]
+        self.address_parsed_components = [addresses["address_one"]["tags"], addresses["address_two"]["tags"]]
+        
+        self.__list_of_bool = self._bool_address_tags_are_the_same(self.address_parsed_components)
+        self.__type_of_comparison = addresses["type_of_comparison"]
+        self.__address_dict = addresses
+        self.__colorblind = colorblind
 
 
     def __str__(self) -> str:
@@ -26,92 +57,99 @@ class FormatedComparedAddress:
 
     __repr__ = __str__  # to call __str__ when list of address
 
-    def _equivalent(self) ->bool:
-        return all([bool_address[1] for bool_address in self.list_of_bool])
+    @property
+    def equivalent(self) ->bool:
+        """[summary]
 
-    def _indentical(self) ->bool:
+        Returns:
+            bool: [description]
+        """
+        return all([bool_address[1] for bool_address in self.__list_of_bool])
+
+    @property
+    def indentical(self) ->bool:
+        """[summary]
+
+        Returns:
+            bool: [description]
+        """
         is_identical = False
-        if self._equivalent():
+        if self.equivalent:
             if all(x == self.raw_addresses[0] for x in self.raw_addresses):
                 is_identical = True
-            
+
         return is_identical
 
 
-    def print_tags_diff(self) -> None:
-        if len(self.parsed_tuples) != 2:
-            raise ValueError("Cannot compare more than two parsed addresses")
 
-        address_component_names = [tag[0] for tag in self.list_of_bool if not tag[1]]
-        
-        for address_component_name in address_component_names:
-            list_of_list_tag = []
-            for parsed_address in self.parsed_tuples:
+    def _print_raw_diff_color(self) -> None:
+        """[summary]
 
-                #if there is more than one value per address component, the values
-                #will be joined in a string.
-                list_of_list_tag.append(" ".join([tag for (tag,tag_name) in parsed_address[0] if tag_name == address_component_name and tag is not None]))
-
-    
-            result = list(Differ().compare(list_of_list_tag[0], list_of_list_tag[1]))
-            print(address_component_name + ": ")
-            sys.stdout.writelines(result)
-            print(" ")
-
-
-
-    def print_tags_diff_color(self) -> None:
-        if len(self.parsed_tuples) != 2:
-            raise ValueError("Cannot compare other than two parsed adresses")
-
-        address_component_names = [tag[0] for tag in self.list_of_bool if not tag[1]]
-        
-        for address_component_name in address_component_names:
-            list_of_list_tag = []
-            for parsed_address in self.parsed_tuples:
-
-                #if there is more than one value per address component, the values
-                #will be joined in a string.
-                list_of_list_tag.append(" ".join([tag for (tag,tag_name) in parsed_address[0] if tag_name == address_component_name and tag is not None]))
-
-    
-            result = self.get_color_diff(list_of_list_tag[0], list_of_list_tag[1])
-            print(address_component_name + ": ")
-            sys.stdout.writelines(result)
-            print(" ")
-        
-
-    def print_raw_diff(self) -> None:
+        Raises:
+            ValueError: [description]
+        """
         if len(self.raw_addresses) != 2:
             raise ValueError("Can only compare two adresses")
-            
-        
-        result = list(Differ().compare(self.raw_addresses[0], self.raw_addresses[1]))
-        pprint("Raw addresses: ")
-        sys.stdout.writelines(result)
-        print("")
-    
-    def print_raw_diff_color(self) -> None:
-        if len(self.raw_addresses) != 2:
-            raise ValueError("Can only compare two adresses")
-            
-        
-        result = self.get_color_diff(self.raw_addresses[0], self.raw_addresses[1])
+
+        result = self._get_color_diff(self.raw_addresses[0], self.raw_addresses[1])
         print("Raw addresses: ")
         sys.stdout.writelines(result)
         print("")
 
+    def _print_tags_diff_color(self) -> None:
+        """[summary]
+
+        Raises:
+            ValueError: [description]
+        """
+        if len(self.address_parsed_components) != 2:
+            raise ValueError("Can only compare two adresses")
+
+        address_component_names = [tag[0] for tag in self.__list_of_bool if not tag[1]]
+
+        for address_component_name in address_component_names:
+            list_of_list_tag = []
+            for parsed_address in self.address_parsed_components:
+
+                #if there is more than one value per address component, the values
+                #will be joined in a string.
+                list_of_list_tag.append(" ".join([tag for (tag,tag_name) in parsed_address \
+                if tag_name == address_component_name and tag is not None]))
+
+            result = self._get_color_diff(list_of_list_tag[0], list_of_list_tag[1])
+            print(address_component_name + ": ")
+            sys.stdout.writelines(result)
+            print(" ")
+
+
+
+
     def get_probs(self):
+        """[summary]
+
+        Returns:
+            [type]: [description]
+        """
         raw_address_prob = {}
         nb_raw_addresses = len(self.raw_addresses)
-        for index, raw_address in enumerate(self.raw_addresses):
-            raw_address_prob[raw_address] = self.parsed_tuples[2 - nb_raw_addresses + index][2]
-            
-        return raw_address_prob
-        
+        if nb_raw_addresses == 1 :
+            raw_address_prob[self.raw_addresses[0]] = self.__address_dict["address_two"]["probs"]
+        else:
+            raw_address_prob[self.raw_addresses[0]] = self.__address_dict["address_one"]["probs"]
+            raw_address_prob[self.raw_addresses[1]] = self.__address_dict["address_two"]["probs"]
 
-        
-    def get_color_diff(self, string_one, string_two):
+        return raw_address_prob
+
+    def _get_color_diff(self, string_one, string_two):
+        """[summary]
+
+        Args:
+            string_one ([type]): [description]
+            string_two ([type]): [description]
+
+        Returns:
+            [type]: [description]
+        """
         if not self.__colorblind:
             color_1 = lambda text: f"\033[38;2;255;0;0m{text}\033[38;2;255;255;255m" #red
             color_2 = lambda text: f"\033[38;2;0;255;0m{text}\033[38;2;255;255;255m" #green
@@ -141,9 +179,14 @@ class FormatedComparedAddress:
         return result
 
     def _comparison_report_of_raw_addresses(self):
+        """[summary]
+
+        Raises:
+            ValueError: [description]
+        """
         if len(self.raw_addresses) < 2:
             raise ValueError("Must compare two raw addresses")
-        print("-" * 50)
+
 
         intro_str = "Comparison report of the two raw addresses: "
         if self.indentical:
@@ -160,14 +203,17 @@ class FormatedComparedAddress:
         print(" ")
 
 
+
         print(" ")
-        print("Probabilities of parsed tags for the addresses with " +self.parsed_tuples[0][1][1] +": ")
+        print("Probabilities of parsed tags for the addresses with "+self.__address_dict["address_one"]["origin"] +": ")
         print(" ")
-        for index, value in enumerate(self.get_probs().values()):
-            print("parsed address: "+ self.parsed_tuples[index][1][0])
-            print(value)
-            if index == 0:
-                print(" ")
+        probs = list(self.get_probs().values())
+        print("Parsed address: "+ self.__address_dict["address_one"]["repr"])
+        print(probs[0])
+        if not self.indentical:
+            print(" ")
+            print("Parsed address: "+ self.__address_dict["address_two"]["repr"])
+            print(probs[1])
 
         if not self.equivalent:
             print(" ")
@@ -181,15 +227,17 @@ class FormatedComparedAddress:
                 print("Blue: Belongs only to Address one")
                 print("Yellow: Belongs only to Address two")
             print(" ")
-            self.print_tags_diff_color()
-
-        print("-" * 50)
-        print(" ")
+            self._print_tags_diff_color()
 
     def _comparison_report_of_tags(self):
-        if len([self.raw_addresses]) > 1:
+        """[summary]
+
+        Raises:
+            ValueError: [description]
+        """
+        if len(self.raw_addresses) > 1:
             raise ValueError("Must compare two parsings for the same raw address")
-        print("-" * 50)
+
         intro_str = "Comparison report of tags for parsed address: "
         if self.indentical:
             print(intro_str +"Identical")
@@ -199,9 +247,9 @@ class FormatedComparedAddress:
 
         print(" ")
         print("Tags: ")
-        print(self.parsed_tuples[0][1] + ": ", self.parsed_tuples[0][0])
+        print(self.__address_dict["address_one"]["origin"] + ": ", self.address_parsed_components[0])
         print(" ")
-        print(self.parsed_tuples[1][1][1] + ": ", self.parsed_tuples[1][0])
+        print(self.__address_dict["address_two"]["origin"]  + ": ", self.address_parsed_components[1])
         print(" ")
         print(" ")
         print("Probabilities of parsed tags for the address:")
@@ -219,23 +267,35 @@ class FormatedComparedAddress:
             print("Addresses tags differences between the two parsing:")
             print("White: Shared")
             if not self.__colorblind:
-                print("Red: Belongs only to " + self.parsed_tuples[0][1])
-                print("Green: Belongs only to " + self.parsed_tuples[1][1][1])
+                print("Red: Belongs only to " + self.__address_dict["address_one"]["origin"])
+                print("Green: Belongs only to " + self.__address_dict["address_two"]["origin"])
             else:
-                print("Blue: Belongs only to " + self.parsed_tuples[0][1])
-                print("Yellow: Belongs only to " + self.parsed_tuples[1][1][1])
+                print("Blue: Belongs only to " + self.__address_dict["address_one"]["origin"])
+                print("Yellow: Belongs only to " + self.__address_dict["address_two"]["origin"])
 
             print(" ")
-            self.print_tags_diff_color()
+            self._print_tags_diff_color()
 
-        print("-" * 50)
         print(" ")
 
-    def comparison_report(self):
+
+    def comparison_report(self, nb_delimiters:int = None) -> None:
+        """[summary]
+
+        Args:
+            nb_delimiters (int, optional): [description]. Defaults to None.
+        """
+        #get terminal size to adapt the output to the user
+        nb_delimiters = os.get_terminal_size().columns if nb_delimiters is None else nb_delimiters
+
+        comparison_report_signal = "=" * nb_delimiters
+        print(comparison_report_signal)
         if self.__type_of_comparison == "raw":
             self._comparison_report_of_raw_addresses()
         elif self.__type_of_comparison == "tag":
             self._comparison_report_of_tags()
+        print(comparison_report_signal)
+        print(" ")
 
 
 
@@ -246,10 +306,10 @@ class FormatedComparedAddress:
         names of the addresses components and the value are the value of the addresses components
 
         Return:
-            Dictionnary that contains all addresses components that differ from each others
+            List of tuples that contains all addresses components that differ from each others
         """
 
-        list_of_bool_and_tag = []
+        __list_of_bool_and_tag = []
 
         # get all the unique addresses components
         set_of_all_address_component_names = self._addresses_component_names(parsed_addresses)
@@ -269,12 +329,20 @@ class FormatedComparedAddress:
                 # where the key will be the address component name and the value will
                 # be a dict that has the name of the parsed address as key and the
                 # value of the address component as value.
-            list_of_bool_and_tag.append(
+            __list_of_bool_and_tag.append(
                 (address_component_name, all(x == list_of_list_tag[0] for x in list_of_list_tag)))
 
-        return list_of_bool_and_tag
+        return __list_of_bool_and_tag
 
     def _addresses_component_names(self, parsed_addresses: Union[List[List[tuple]], List[tuple]]) -> set:
+        """[summary]
+
+        Args:
+            parsed_addresses (Union[List[List[tuple]], List[tuple]]): [description]
+
+        Returns:
+            set: [description]
+        """
         if isinstance(parsed_addresses[0], tuple):
             parsed_addresses = [parsed_addresses]
 
@@ -285,11 +353,10 @@ class FormatedComparedAddress:
 
         return set_of_all_address_component_names
 
+
+
+
 if __name__ == '__main__':
-
-    
-
-    
     list_of_tuples_address_one = [("305", "StreetNumber"), ("rue des Lilas", "StreetName"), ("Ouest", "Orientation"),
                                 ("Québec", "Municipality"), ("Québec", "Province"), ("G1L 1B6", "PostalCode")]
 
@@ -299,7 +366,6 @@ if __name__ == '__main__':
     raw_address_one = "305  rue des Lilas Ouest Québec Québec G1L 1B6"
     raw_address_two = "305 rue des Lilas Ouest Québec Québec G1L 1B6"
     raw_address_three = "355 rue des Chemins Ouest Québec Québec G1L 1B6"
-    
     #result = list(Differ().compare(raw_address_one, raw_address_three))
     #
     #def test():
@@ -308,12 +374,3 @@ if __name__ == '__main__':
     #    print("")
     #
     #test()
-
-
-
-
-
-
-
-
-

@@ -233,9 +233,10 @@ if __name__ == '__main__':
     list_of_tuples_address_two = [("350", "StreetNumber"), ("rue des Lilas", "StreetName"), ("Ouest", "Orientation"),
                                     ("Québec", "Municipality"), ("Québec", "Province"), ("G1L 1B6", "PostalCode")]
 
-    raw_address_one = "350 rue des Lilas Ouest Quebec city Quebec G1L 1B6"
-    raw_address_two = "350 rue des Lilas Ouest Québec Québec G1L 1B6"
-    raw_address_three = "450 rue des Lilas Ouest Quebec city Quebec G1L 1B6"
+    raw_address_original = "350 rue des Lilas Ouest Quebec city Quebec G1L 1B6"
+    raw_address_identical = "350 rue des Lilas Ouest Quebec city Quebec G1L 1B6"
+    raw_address_equivalent = "350  rue des Lilas Ouest Quebec city Quebec G1L 1B6"
+    raw_address_diff_streetNumber = "450 rue des Lilas Ouest Quebec city Quebec G1L 1B6"
 
     # test = list(d.compare(raw_address_one, raw_address_three))
     # pprint(test)
@@ -252,32 +253,36 @@ if __name__ == '__main__':
     #delta_dict_deeparse_one_two[0].comparison_report()
     #delta_dict_deeparse_one_two[1].comparison_report()
 
+    #compare two identical addresses
+    raw_addresses_identical_comparison = address_comparer.compare_raw((raw_address_original, raw_address_identical))
+    raw_addresses_identical_comparison.comparison_report()
+
+
     #compare two equivalent addresses
-    delta_dict_raw_addresses_one_two = address_comparer.compare_raw((raw_address_one, raw_address_three))
-    delta_dict_raw_addresses_one_two.comparison_report()
+    raw_addresses_equivalent_comparison = address_comparer.compare_raw((raw_address_original, raw_address_equivalent))
+    raw_addresses_equivalent_comparison.comparison_report()
+
+    #compare two diff addresses
+    raw_addresses_diff_street_comparison = address_comparer.compare_raw((raw_address_original, raw_address_diff_streetNumber))
+    raw_addresses_diff_street_comparison.comparison_report()
 
 
-    #compare two not equivalent addresses
-    delta_dict_raw_addresses_one_three = address_comparer.compare_raw((raw_address_one, raw_address_three))
-    delta_dict_raw_addresses_one_three.comparison_report()
 
 
-
-
-    address_comparer_cb = AdressComparer(address_parser, colorblind=True)
+    #address_comparer_cb = AdressComparer(address_parser, colorblind=True)
     # Compare with source tags with deepparse tags
-    delta_dict_deeparse_one = address_comparer_cb.compare_tags(list_of_tuples_address_one)
+    #delta_dict_deeparse_one = address_comparer_cb.compare_tags(list_of_tuples_address_one)
 
-    delta_dict_deeparse_one_two = address_comparer_cb.compare_tags(
-        [list_of_tuples_address_one, list_of_tuples_address_two])
+    #delta_dict_deeparse_one_two = address_comparer_cb.compare_tags(
+    #    [list_of_tuples_address_one, list_of_tuples_address_two])
 
-    delta_dict_deeparse_one_two[0].comparison_report()
-    delta_dict_deeparse_one_two[1].comparison_report()
+    #delta_dict_deeparse_one_two[0].comparison_report()
+    #delta_dict_deeparse_one_two[1].comparison_report()
 
     #compare two equivalent addresses
-    delta_dict_raw_addresses_one_two = address_comparer_cb.compare_raw((raw_address_one, raw_address_two))
-    delta_dict_raw_addresses_one_two.comparison_report()
+    #delta_dict_raw_addresses_one_two = address_comparer_cb.compare_raw((raw_address_one, raw_address_two))
+    #delta_dict_raw_addresses_one_two.comparison_report()
 
     #compare two not equivalent addresses
-    delta_dict_raw_addresses_one_three = address_comparer_cb.compare_raw((raw_address_one, raw_address_three))
-    delta_dict_raw_addresses_one_three.comparison_report()
+    #delta_dict_raw_addresses_one_three = address_comparer_cb.compare_raw((raw_address_one, raw_address_three))
+    #delta_dict_raw_addresses_one_three.comparison_report()

@@ -5,6 +5,7 @@ from unittest import TestCase
 
 from deepparse.comparer import AdressComparer
 from deepparse.parser.address_parser import AddressParser
+from tests.base_capture_output import CaptureOutputTestCase
 
 class TestAdressComparer(TestCase):
 
@@ -59,30 +60,100 @@ class TestAdressComparer(TestCase):
     
 
 
-    #def test_sameAddress_emptyDeltaDict(self):
-    #    self.assertEqual(self.parsed_address_one.delta_dict(self.parsed_address_same), {})
+class addressComparisonOutputTests(CaptureOutputTestCase):
 
-    #def test_diff_streetNumberDeltaDict(self):
-    #    self.assertEqual(self.parsed_address_one.delta_dict(self.parsed_address_diff_streetNumber), {'StreetNumber': {'base': '350', 'compared': '450'}})
+    def setUp(self) -> None:
+        self.maxDiff = None
+        self.raw_address_original = "350 rue des Lilas Ouest Quebec city Quebec G1L 1B6"
+        self.raw_address_identical = "350 rue des Lilas Ouest Quebec city Quebec G1L 1B6"
+        self.raw_address_equivalent = "350  rue des Lilas Ouest Quebec city Quebec G1L 1B6"
+        self.raw_address_diff_streetNumber = "450 rue des Lilas Ouest Quebec city Quebec G1L 1B6"
 
-    #def test_diff_streetNameDeltaDict(self):
-    #    self.assertEqual(self.parsed_address_one.delta_dict(self.parsed_address_diff_streetName), {'StreetName': {'base': 'rue des Lilas', 'compared': 'Boulevard des Lilas'}})
+        self.address_parser = AddressParser(model_type="bpemb", device=1)
+        self.address_comparer = AdressComparer(self.address_parser)
 
-    #def test_diff_UnitDeltaDict(self):
-    #    self.assertEqual(self.parsed_address_one == self.parsed_address_diff_Unit, )
+    def test_raw_identical_comparison_report_print_output(self):
+        raw_compare_identical = self.address_comparer.compare_raw((self.raw_address_original, self.raw_address_identical))
+        self._capture_output()
+        raw_compare_identical.comparison_report()
+        expected = """=============================================================================================================================
+Comparison report of the two raw addresses: Identical
 
-    #def test_diff_MunicipalityDeltaDict(self):
-    #    self.assertEqual(self.parsed_address_one == self.parsed_address_diff_Municipality)
-        
-    #def test_diff_ProvinceDeltaDict(self):
-    #    self.assertEqual(self.parsed_address_one.delta_dict(self.parsed_address_diff_Province), {'Province': {'base': 'Québec', 'compared': 'Ontario'}})
-        
-    #def test_diff_PostalCodeDeltaDict(self):
-    #    self.assertEqual(self.parsed_address_one.delta_dict(self.parsed_address_diff_PostalCode), {'PostalCode': {'base': 'G1L 1B6', 'compared': 'G1P 1B6'}})
-        
-    #def test_diff_OrientationDeltaDict(self):
-    #    self.assertEqual(self.parsed_address_one == self.parsed_address_diff_Orientation)
+Address one: 350 rue des Lilas Ouest Quebec city Quebec G1L 1B6
+and
+Address two: 350 rue des Lilas Ouest Quebec city Quebec G1L 1B6
 
 
+Probabilities of parsed tags for the addresses with deepparse using Bpemb: 
+
+Parsed address: FormattedParsedAddress<StreetNumber='350', StreetName='rue des Lilas', Municipality='Ouest Quebec city', Province='Quebec', PostalCode='G1L 1B6'>
+[('350', ('StreetNumber', 1.0)), ('rue', ('StreetName', 0.9987)), ('des', ('StreetName', 0.9993)), ('Lilas', ('StreetName', 0.8176)), ('Ouest', ('Municipality', 0.4356)), ('Quebec', ('Municipality', 0.9768)), ('city', ('Municipality', 0.6637)), ('Quebec', ('Province', 1.0)), ('G1L', ('PostalCode', 0.9993)), ('1B6', ('PostalCode', 1.0))]
+============================================================================================================================="""
+        actual = self.test_out.getvalue().strip()
+        self.assertEqual(expected, actual)
+
+
+    def test_raw_equivalent_comparison_report_print_output(self):
+        raw_compare_identical = self.address_comparer.compare_raw((self.raw_address_original, self.raw_address_equivalent))
+        self._capture_output()
+        raw_compare_identical.comparison_report()
+        expected = """=============================================================================================================================
+Comparison report of the two raw addresses: Equivalent
+
+Address one: 350 rue des Lilas Ouest Quebec city Quebec G1L 1B6
+and
+Address two: 350  rue des Lilas Ouest Quebec city Quebec G1L 1B6
+
+
+Probabilities of parsed tags for the addresses with deepparse using Bpemb: 
+
+Parsed address: FormattedParsedAddress<StreetNumber='350', StreetName='rue des Lilas', Municipality='Ouest Quebec city', Province='Quebec', PostalCode='G1L 1B6'>
+[('350', ('StreetNumber', 1.0)), ('rue', ('StreetName', 0.9987)), ('des', ('StreetName', 0.9993)), ('Lilas', ('StreetName', 0.8176)), ('Ouest', ('Municipality', 0.4356)), ('Quebec', ('Municipality', 0.9768)), ('city', ('Municipality', 0.6637)), ('Quebec', ('Province', 1.0)), ('G1L', ('PostalCode', 0.9993)), ('1B6', ('PostalCode', 1.0))]
+
+Parsed address: FormattedParsedAddress<StreetNumber='350', StreetName='rue des Lilas', Municipality='Ouest Quebec city', Province='Quebec', PostalCode='G1L 1B6'>
+[('350', ('StreetNumber', 1.0)), ('rue', ('StreetName', 0.9987)), ('des', ('StreetName', 0.9993)), ('Lilas', ('StreetName', 0.8176)), ('Ouest', ('Municipality', 0.4356)), ('Quebec', ('Municipality', 0.9768)), ('city', ('Municipality', 0.6637)), ('Quebec', ('Province', 1.0)), ('G1L', ('PostalCode', 0.9993)), ('1B6', ('PostalCode', 1.0))]
+
+
+Raw differences between the two addresses: 
+White: Shared
+Red: Belongs only to Address one
+Green: Belongs only to Address two
+
+350  rue des Lilas Ouest Quebec city Quebec G1L 1B6
+============================================================================================================================="""
+        actual = self.test_out.getvalue().strip()
+        self.assertEqual(expected, actual)
+
+    def test_raw_not_equivalent_diff_streetNumber_comparison_report_print_output(self):
+        raw_compare_identical = self.address_comparer.compare_raw((self.raw_address_original, self.raw_address_diff_streetNumber))
+        self._capture_output()
+        raw_compare_identical.comparison_report()
+        expected = """=============================================================================================================================
+Comparison report of the two raw addresses: Not equivalent
+
+Address one: 350 rue des Lilas Ouest Quebec city Quebec G1L 1B6
+and
+Address two: 450 rue des Lilas Ouest Quebec city Quebec G1L 1B6
+
+
+Probabilities of parsed tags for the addresses with deepparse using Bpemb: 
+
+Parsed address: FormattedParsedAddress<StreetNumber='350', StreetName='rue des Lilas', Municipality='Ouest Quebec city', Province='Quebec', PostalCode='G1L 1B6'>
+[('350', ('StreetNumber', 1.0)), ('rue', ('StreetName', 0.9987)), ('des', ('StreetName', 0.9993)), ('Lilas', ('StreetName', 0.8176)), ('Ouest', ('Municipality', 0.4356)), ('Quebec', ('Municipality', 0.9768)), ('city', ('Municipality', 0.6637)), ('Quebec', ('Province', 1.0)), ('G1L', ('PostalCode', 0.9993)), ('1B6', ('PostalCode', 1.0))]
+
+Parsed address: FormattedParsedAddress<StreetNumber='450', StreetName='rue des Lilas', Municipality='Ouest Quebec city', Province='Quebec', PostalCode='G1L 1B6'>
+[('450', ('StreetNumber', 1.0)), ('rue', ('StreetName', 0.9987)), ('des', ('StreetName', 0.9993)), ('Lilas', ('StreetName', 0.8176)), ('Ouest', ('Municipality', 0.4356)), ('Quebec', ('Municipality', 0.9768)), ('city', ('Municipality', 0.6637)), ('Quebec', ('Province', 1.0)), ('G1L', ('PostalCode', 0.9993)), ('1B6', ('PostalCode', 1.0))]
+
+
+Addresses tags differences between the two addresses: 
+White: Shared
+Red: Belongs only to Address one
+Green: Belongs only to Address two
+
+StreetNumber: 
+3450
+============================================================================================================================="""
+        actual = self.test_out.getvalue().strip()
+        self.assertEqual(expected, actual)
 if __name__ == "__main__":
     unittest.main()

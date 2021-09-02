@@ -82,7 +82,7 @@ class FormatedComparedAddress:
 
 
 
-    def _print_raw_diff_color(self) -> None:
+    def _print_raw_diff_color(self, address_one_name: str, address_two_name:str, verbose = True) -> None:
         """[summary]
 
         Raises:
@@ -91,12 +91,21 @@ class FormatedComparedAddress:
         if len(self.raw_addresses) != 2:
             raise ValueError("Can only compare two adresses")
 
-        result = self._get_color_diff(self.raw_addresses[0], self.raw_addresses[1])
-        print("Raw addresses: ")
+        result = self._get_color_diff(self.raw_addresses[0], self.raw_addresses[1], highlight=True)
+        if verbose:
+            print("White: Shared")
+            if not self.__colorblind:
+                print("Red: Belongs only to " + address_one_name)
+                print("Green: Belongs only to " + address_two_name)
+            else:
+                print("Blue: Belongs only to " + address_one_name)
+                print("Yellow: Belongs only to " + address_two_name)
+            print("")
         sys.stdout.writelines(result)
         print("")
 
-    def _print_tags_diff_color(self) -> None:
+
+    def _print_tags_diff_color(self, address_one_name: str, address_two_name:str, verbose = True) -> None:
         """[summary]
 
         Raises:
@@ -105,6 +114,15 @@ class FormatedComparedAddress:
         if len(self.address_parsed_components) != 2:
             raise ValueError("Can only compare two adresses")
 
+        if verbose:
+            print("White: Shared")
+            if not self.__colorblind:
+                print("Red: Belongs only to " + address_one_name)
+                print("Green: Belongs only to " + address_two_name)
+            else:
+                print("Blue: Belongs only to " + address_one_name)
+                print("Yellow: Belongs only to " + address_two_name)
+            print("")
         address_component_names = [tag[0] for tag in self.__list_of_bool if not tag[1]]
 
         for address_component_name in address_component_names:
@@ -117,9 +135,11 @@ class FormatedComparedAddress:
                 if tag_name == address_component_name and tag is not None]))
 
             result = self._get_color_diff(list_of_list_tag[0], list_of_list_tag[1])
+
+                
             print(address_component_name + ": ")
             sys.stdout.writelines(result)
-            print(" ")
+            print("")
 
 
 
@@ -140,7 +160,7 @@ class FormatedComparedAddress:
 
         return raw_address_prob
 
-    def _get_color_diff(self, string_one, string_two):
+    def _get_color_diff(self, string_one, string_two, highlight = False):
         """[summary]
 
         Args:
@@ -150,15 +170,22 @@ class FormatedComparedAddress:
         Returns:
             [type]: [description]
         """
-        if not self.__colorblind:
-            color_1 = lambda text: f"\033[38;2;255;0;0m{text}\033[38;2;255;255;255m" #red
-            color_2 = lambda text: f"\033[38;2;0;255;0m{text}\033[38;2;255;255;255m" #green
-        else:
-            #https://davidmathlogic.com/colorblind/#%23D81B60-%231E88E5-%23FFC107-%23004D40
-            color_1 = lambda text: f"\033[38;2;26;123;220m{text}\033[38;2;255;255;255m" #blue
-            color_2 = lambda text: f"\033[38;2;255;194;10m{text}\033[38;2;255;255;255m" #yellow
 
-        white = lambda text: f"\033[38;2;255;255;255m{text}\033[38;2;255;255;255m"
+
+        
+        code_type = 48 if highlight else 38
+
+
+        if self.__colorblind:
+            #https://davidmathlogic.com/colorblind/#%23D81B60-%231E88E5-%23FFC107-%23004D40
+            color_1 = lambda text: f"\033[{code_type};2;26;123;220m{text}\033[0m" #blue
+            color_2 = lambda text: f"\033[{code_type};2;255;194;10m{text}\033[0m" #yellow
+        else:
+            color_1 = lambda text: f"\033[{code_type};2;255;0;0m{text}\033[0m" #red
+            color_2 = lambda text: f"\033[{code_type};2;0;255;0m{text}\033[0m" #green
+
+
+        white = lambda text: f"\033[38;2;255;255;255m{text}\033[0m"
 
 
         result = ""
@@ -196,38 +223,35 @@ class FormatedComparedAddress:
                 print(intro_str +  "Equivalent")
             else:
                 print(intro_str +  "Not equivalent")
-        print(" ")
+        print("")
         print("Address one: " + self.raw_addresses[0])
         print("and")
         print("Address two: " +self.raw_addresses[1])
-        print(" ")
+        print("")
 
 
 
-        print(" ")
+        print("")
         print("Probabilities of parsed tags for the addresses with "+self.__address_dict["address_one"]["origin"] +": ")
-        print(" ")
+        print("")
         probs = list(self.get_probs().values())
         print("Parsed address: "+ self.__address_dict["address_one"]["repr"])
         print(probs[0])
         if not self.indentical:
-            print(" ")
+            print("")
             print("Parsed address: "+ self.__address_dict["address_two"]["repr"])
             print(probs[1])
 
-        if not self.equivalent:
-            print(" ")
-            print(" ")
-            print("Addresses tags differences between the two addresses: ")
-            print("White: Shared")
-            if not self.__colorblind:
-                print("Red: Belongs only to Address one")
-                print("Green: Belongs only to Address two")
+            if self.equivalent:
+                print("")
+                print("")
+                print("Raw differences between the two addresses: ")
+                self._print_raw_diff_color("Address one", "Address two")
             else:
-                print("Blue: Belongs only to Address one")
-                print("Yellow: Belongs only to Address two")
-            print(" ")
-            self._print_tags_diff_color()
+                print("")
+                print("")
+                print("Addresses tags differences between the two addresses: ")
+                self._print_tags_diff_color("Address one", "Address two")
 
     def _comparison_report_of_tags(self):
         """[summary]
@@ -245,48 +269,33 @@ class FormatedComparedAddress:
             print(intro_str +"Not identical")
         print("Raw address: " + self.raw_addresses[0])
 
-        print(" ")
+        print("")
         print("Tags: ")
         print(self.__address_dict["address_one"]["origin"] + ": ", self.address_parsed_components[0])
-        print(" ")
+        print("")
         print(self.__address_dict["address_two"]["origin"]  + ": ", self.address_parsed_components[1])
-        print(" ")
-        print(" ")
-        print("Probabilities of parsed tags for the address:")
-        print(" ")
-        for index, tuple_dict in enumerate(self.get_probs().items()):
-            key, value = tuple_dict
-            print("Raw address: " + key)
-            print(value)
-            if index > 0:
-                print(" ")
+        print("")
+        print("")
+        
+        self._print_probs_of_tags()
 
         if not self.indentical:
-            print(" ")
-            print(" ")
+            print("")
+            print("")
             print("Addresses tags differences between the two parsing:")
-            print("White: Shared")
-            if not self.__colorblind:
-                print("Red: Belongs only to " + self.__address_dict["address_one"]["origin"])
-                print("Green: Belongs only to " + self.__address_dict["address_two"]["origin"])
-            else:
-                print("Blue: Belongs only to " + self.__address_dict["address_one"]["origin"])
-                print("Yellow: Belongs only to " + self.__address_dict["address_two"]["origin"])
-
-            print(" ")
-            self._print_tags_diff_color()
-
-        print(" ")
+            self._print_tags_diff_color(self.__address_dict["address_one"]["origin"], self.__address_dict["address_two"]["origin"])
+        print("")
 
 
-    def comparison_report(self, nb_delimiters:int = None) -> None:
+    def comparison_report(self) -> None:
         """[summary]
 
         Args:
             nb_delimiters (int, optional): [description]. Defaults to None.
         """
         #get terminal size to adapt the output to the user
-        nb_delimiters = os.get_terminal_size().columns if nb_delimiters is None else nb_delimiters
+        #nb_delimiters = os.get_terminal_size().columns if nb_delimiters is None else nb_delimiters
+        nb_delimiters = 125
 
         comparison_report_signal = "=" * nb_delimiters
         print(comparison_report_signal)
@@ -295,10 +304,20 @@ class FormatedComparedAddress:
         elif self.__type_of_comparison == "tag":
             self._comparison_report_of_tags()
         print(comparison_report_signal)
-        print(" ")
+        print("")
 
 
-
+    def _print_probs_of_tags(self, verbose = True) -> None:
+        if verbose:
+            print("Probabilities of parsed tags for the address:")
+            print("")
+        for index, tuple_dict in enumerate(self.get_probs().items()):
+            key, value = tuple_dict
+            print("Raw address: " + key)
+            print(value)
+            if index > 0:
+                print("")
+        
 
     def _bool_address_tags_are_the_same(self, parsed_addresses: Union[List[List[tuple]], List[tuple]]) -> List[tuple]:
         """

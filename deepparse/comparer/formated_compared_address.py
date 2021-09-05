@@ -42,7 +42,6 @@ class FormatedComparedAddress:
     def __init__(self, addresses:Dict,
                         colorblind:bool = False) -> None:
 
-        
         self.raw_addresses = addresses["raw_addresses"]
         self.address_parsed_components = [addresses["address_one"]["tags"], addresses["address_two"]["tags"]]
         
@@ -83,15 +82,17 @@ class FormatedComparedAddress:
 
 
     def _print_raw_diff_color(self, address_one_name: str, address_two_name:str, verbose = True) -> None:
-        """[summary]
+        """Print the raw addresses and highlight the differences between them.
 
         Raises:
-            ValueError: [description]
+            ValueError: Can only use the method if the comparison is for raw addresses, meaning at least
+            two raw addresses has been passed in arguments.
         """
         if len(self.raw_addresses) != 2:
             raise ValueError("Can only compare two adresses")
 
         result = self._get_color_diff(self.raw_addresses[0], self.raw_addresses[1], highlight=True)
+
         if verbose:
             print("White: Shared")
             if not self.__colorblind:
@@ -106,10 +107,11 @@ class FormatedComparedAddress:
 
 
     def _print_tags_diff_color(self, address_one_name: str, address_two_name:str, verbose = True) -> None:
-        """[summary]
+        """Print the addresses tags and highlight the differences between them.
 
         Raises:
-            ValueError: [description]
+            ValueError: Can only use the method if the comparison is for raw addresses, meaning at least
+            two raw addresses has been passed in arguments.
         """
         if len(self.address_parsed_components) != 2:
             raise ValueError("Can only compare two adresses")

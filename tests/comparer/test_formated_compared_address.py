@@ -157,3 +157,48 @@ StreetNumber:
         self.assertEqual(expected, actual)
 if __name__ == "__main__":
     unittest.main()
+
+
+
+
+    @classmethod
+    def setUpClass(cls):
+        cls.a_address_str = "3 test road"
+        cls.a_complete_address_str = "3 test road unit west city province postal_code delivery"
+        cls.a_parsed_address = [("3", "StreetNumber"), ("test", "StreetName"), ("road", "StreetName")]
+        cls.a_complete_parsed_address = [("3", "StreetNumber"), ("test", "StreetName"), ("road", "StreetName"),
+                                         ("unit", "Unit"), ("west", "Orientation"), ("city", "Municipality"),
+                                         ("province", "Province"), ("postal_code", "PostalCode"),
+                                         ("delivery", "GeneralDelivery")]
+
+        cls.a_address_repr = "FormattedParsedAddress<StreetNumber='3', StreetName='test road'>"
+        cls.a_address = {cls.a_address_str: cls.a_parsed_address}
+        cls.a_complete_address = {cls.a_complete_address_str: cls.a_complete_parsed_address}
+        cls.a_existing_tag = "3"
+
+        cls.a_parsed_address_in_dict_format = {
+            'StreetNumber': '3',
+            'Unit': None,
+            'StreetName': 'test road',
+            'Orientation': None,
+            'Municipality': None,
+            'Province': None,
+            'PostalCode': None,
+            'GeneralDelivery': None
+        }
+
+        cls.a_complete_parsed_address_in_dict_format = {
+            'StreetNumber': '3',
+            'Unit': 'unit',
+            'StreetName': 'test road',
+            'Orientation': 'west',
+            'Municipality': 'city',
+            'Province': 'province',
+            'PostalCode': 'postal_code',
+            'GeneralDelivery': 'delivery'
+        }
+        # we reset the FIELDS of the address to default values since we change it in some tests
+        formated_parsed_address.FIELDS = [
+            "StreetNumber", "Unit", "StreetName", "Orientation", "Municipality", "Province", "PostalCode",
+            "GeneralDelivery"
+        ]

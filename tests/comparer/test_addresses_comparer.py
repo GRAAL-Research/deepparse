@@ -3,9 +3,10 @@
 import unittest
 from unittest import TestCase
 
-from deepparse.comparer import AdressComparer
-from deepparse.comparer import FormatedComparedAddress
-from deepparse.parser.address_parser import AddressParser
+from deepparse.comparer.addresses_comparer import AdressesComparer
+from deepparse.comparer.formatted_compared_addresses_raw import FormattedComparedAddressesRaw
+from deepparse.comparer.formatted_compared_addresses_tags import FormattedComparedAddressesTags
+from deepparse.parser import AddressParser
 
 class TestAdressComparer(TestCase):
 
@@ -23,7 +24,7 @@ class TestAdressComparer(TestCase):
 
 
         self.address_parser_bpemb_device_0 = AddressParser(model_type="bpemb", device=0)
-        self.address_comparer = AdressComparer(self.address_parser_bpemb_device_0)
+        self.address_comparer = AdressesComparer(self.address_parser_bpemb_device_0)
 
         self.raw_one_comparison = self.address_comparer.compare_raw((self.raw_address_original, self.raw_address_identical))
         self.raw_multiple_comparisons = self.address_comparer.compare_raw([(self.raw_address_original, self.raw_address_identical),
@@ -37,21 +38,21 @@ class TestAdressComparer(TestCase):
         
 
     def test_raw_one_comparison(self):
-        self.assertIsInstance(self.raw_one_comparison, FormatedComparedAddress)
+        self.assertIsInstance(self.raw_one_comparison, FormattedComparedAddressesRaw)
     
     def test_raw_multiple_comparisons(self):
         self.assertIsInstance(self.raw_multiple_comparisons, list)
-        self.assertIsInstance(self.raw_multiple_comparisons[0], FormatedComparedAddress)
-        self.assertIsInstance(self.raw_multiple_comparisons[1], FormatedComparedAddress)
+        self.assertIsInstance(self.raw_multiple_comparisons[0], FormattedComparedAddressesRaw)
+        self.assertIsInstance(self.raw_multiple_comparisons[1], FormattedComparedAddressesRaw)
 
 
     def test_tags_one_comparison(self):
-        self.assertIsInstance(self.tags_one_comparison, FormatedComparedAddress)
+        self.assertIsInstance(self.tags_one_comparison, FormattedComparedAddressesTags)
     
     def test_tags_multiple_comparisons(self):
         self.assertIsInstance(self.tags_multiple_comparisons, list)
-        self.assertIsInstance(self.tags_multiple_comparisons[0], FormatedComparedAddress)
-        self.assertIsInstance(self.tags_multiple_comparisons[1], FormatedComparedAddress)
+        self.assertIsInstance(self.tags_multiple_comparisons[0], FormattedComparedAddressesTags)
+        self.assertIsInstance(self.tags_multiple_comparisons[1], FormattedComparedAddressesTags)
 
 
 

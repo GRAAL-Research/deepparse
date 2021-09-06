@@ -63,7 +63,7 @@ class AdressesComparer:
         if isinstance(addresses_tags_to_compare[0], tuple):
             addresses_tags_to_compare = [addresses_tags_to_compare]
 
-        raw_addresses = self._get_raw_addresses(addresses_tags_to_compare)
+        raw_addresses =  [" ".join([element[0] for element in address]) for address in addresses_tags_to_compare]
         
         formatted_addresses = []
         for raw_address, address_tags in zip(raw_addresses, addresses_tags_to_compare):
@@ -140,27 +140,7 @@ class AdressesComparer:
 
         return list_of_formatted_comparisons
 
-    def _get_addresses_dict(self, parsed_addresses, raw_addresses):
-        
-        if isinstance(parsed_addresses[0], tuple):
-            parsed_addresses = [parsed_addresses]
-        
-        if isinstance(raw_addresses, str):
-            raw_addresses = [raw_addresses]
 
-
-        address_dict_list = []
-        for raw_address, parsed_address in zip(raw_addresses, parsed_addresses):
-            address_dict_list.append({str(raw_address): parsed_address})
-
-        return address_dict_list
-
-    def _get_raw_addresses(self, parsed_addresses:List[Tuple]):
-
-        if not isinstance(parsed_addresses[0], list):
-            parsed_addresses = [parsed_addresses]
-
-        return [" ".join([element[0] for element in address]) for address in parsed_addresses]
 
 
 

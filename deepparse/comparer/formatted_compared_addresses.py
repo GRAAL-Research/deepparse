@@ -1,0 +1,239 @@
+from dataclasses import dataclass
+from typing import List, Union, Dict
+from difflib import  SequenceMatcher
+from abc import ABC, abstractclassmethod
+import sys
+
+@dataclass
+class FormatedComparedAddresses(ABC):
+    """
+    A comparison for addresses returned by the address comparer
+
+    Args:
+        addresses (Union[Dict, List[Dict]]): A dictionnary where the keys are the name of
+        the addresses components and the values contain the information for this specific
+        component.
+    
+        colorblind (bool, optional): A flag that will print the comparison report in
+        colorblind friendly colors if set to True. Defaults to False.
+
+    Attributes:
+        raw_addresses: The raw addresses (not parsed)
+        address_parsed_components: The parsed address in a list of tuples where the first elements
+            are the address components and the second elements are the tags.
+
+    Example:
+
+        .. code-block:: python
+
+            address_comparer = AdressComparer(AddressParser())
+            raw_identical_comparison = address_comparer.compare_raw(("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6",
+                                                                    "450 rue des Lilas Ouest Quebec city Quebec G1L 1B6"))
+            
+            print(raw_identical_comparison.raw_addresses) # [350 rue des Lilas Ouest Quebec city Quebec G1L 1B6,
+                                                            450 rue des Lilas Ouest Quebec city Quebec G1L 1B6]
+
+            print(raw_identical_comparison.address_parsed_components)
+            #[[('350', 'StreetNumber'), ('rue des Lilas', 'StreetName'), (None, 'Unit'), ('Ouest Quebec city', 'Municipality'),
+            #   ('Quebec', 'Province'), ('G1L 1B6', 'PostalCode'), (None, 'Orientation'), (None, 'GeneralDelivery')],
+            #[('450', 'StreetNumber'), ('rue des Lilas', 'StreetName'), (None, 'Unit'), ('Ouest Quebec city', 'Municipality'),
+            #  ('Quebec', 'Province'), ('G1L 1B6', 'PostalCode'), (None, 'Orientation'), (None, 'GeneralDelivery')]]
+
+    """
+    address_one:Dict
+    address_two:Dict
+    metadata: Dict
+
+    def __post_init__(self):  
+        self.metadata["list_of_bool"] = self._bool_address_tags_are_the_same([self.address_one.to_list_of_tuples(),
+                                                                            self.address_two.to_list_of_tuples()])
+
+
+    @property
+    def equivalent(self) ->bool:
+        """[summary]
+
+        Returns:
+            bool: [description]
+        """
+        return all([bool_address[1] for bool_address in self.metadata["list_of_bool"]])
+
+    @property
+    def indentical(self) ->bool:
+        """[summary]
+
+        Returns:
+            bool: [description]
+        """
+        is_identical = False
+        if self.equivalent:
+            if self.address_one.raw_address == self.address_two.raw_address:
+                is_identical = True
+
+        return is_identical
+
+
+    @abstractclassmethod
+    def comparison_report(cls) -> None:
+        pass
+
+    @abstractclassmethod
+    def get_probs(cls):
+        """[summary]
+[summary]
+        Returns:
+            [type]: [description]
+        """
+
+    def _get_color_diff(self, string_one, string_two, highlight = False):
+        """[summary]
+
+        Args:
+            string_one ([type]): [description]
+            string_two ([type]): [description]
+
+        Returns:
+            [type]: [description]
+        """
+        
+        code_type = 48 if highlight else 38
+
+
+        if self.metadata["colorblind"]:
+            #https://davidmathlogic.com/colorblind/#%23D81B60-%231E88E5-%23FFC107-%23004D40
+            color_1 = lambda text: f"\033[{code_type};2;26;123;220m{text}\033[0m" #blue
+            color_2 = lambda text: f"\033[{code_type};2;255;194;10m{text}\033[0m" #yellow
+        else:
+            color_1 = lambda text: f"\033[{code_type};2;255;0;0m{text}\033[0m" #red
+            color_2 = lambda text: f"\033[{code_type};2;0;255;0m{text}\033[0m" #green
+
+
+        white = lambda text: f"\033[38;2;255;255;255m{text}\033[0m"
+
+
+        result = ""
+        codes = SequenceMatcher(a=string_one, b=string_two).get_opcodes()
+        for code in codes:
+            if code[0] == "equal":
+                result += white(string_one[code[1]:code[2]])
+            elif code[0] == "delete":
+                result += color_1(string_one[code[1]:code[2]])
+            elif code[0] == "insert":
+                result += color_2(string_two[code[3]:code[4]])
+            elif code[0] == "replace":
+
+                if code[1] <= code[3]:
+                    result += (color_1(string_one[code[1]:code[2]]) + color_2(string_two[code[3]:code[4]]))
+                else:
+                    result += (color_2(string_two[code[3]:code[4]]) + color_1(string_one[code[1]:code[2]]))
+        return result
+
+
+
+
+    def _print_probs_of_tags(self, verbose = True) -> None:
+        """[summary]
+
+        Args:
+            verbose (bool, optional): [description]. Defaults to True.
+        """
+        if verbose:
+            print("Probabilities of parsed tags for the address:")
+            print("")
+        for index, tuple_dict in enumerate(self.get_probs().items()):
+            key, value = tuple_dict
+            print("Raw address: " + key)
+            print(value)
+            if index > 0:
+                print("")
+        
+
+    def _print_tags_diff_color(self, verbose = True) -> None:
+        """[summary]
+        Raises:
+            ValueError: [description]
+        """
+        if verbose:
+            print("White: Shared")
+            if not self.metadata["colorblind"]:
+                print("Red: Belongs only to " + self.metadata["origin"][0])
+                print("Green: Belongs only to " + self.metadata["origin"][1])
+            else:
+                print("Blue: Belongs only to " + self.metadata["origin"][0])
+                print("Yellow: Belongs only to " + self.metadata["origin"][1])
+            print("")
+        address_component_names = [tag[0] for tag in self.metadata["list_of_bool"] if not tag[1]]
+
+        for address_component_name in address_component_names:
+            list_of_list_tag = []
+            for parsed_address in [self.address_one.to_list_of_tuples(), self.address_two.to_list_of_tuples()]:
+
+                #if there is more than one value per address component, the values
+                #will be joined in a string.
+                list_of_list_tag.append(" ".join([tag for (tag,tag_name) in parsed_address if tag_name == address_component_name and tag is not None]))
+
+            result = self._get_color_diff(list_of_list_tag[0], list_of_list_tag[1])
+
+            
+            print(address_component_name + ": ")
+            sys.stdout.writelines(result)
+            print("")
+
+    def _bool_address_tags_are_the_same(self, parsed_addresses: Union[List[List[tuple]], List[tuple]]) -> List[tuple]:
+        """
+        Compare addresses components and put the differences in a dict where the keys are the
+        names of the addresses components and the value are the value of the addresses components
+
+        Return:
+            List of tuples that contains all addresses components that differ from each others
+        """
+
+        list_of_bool_and_tag = []
+
+        # get all the unique addresses components
+        set_of_all_address_component_names = self._addresses_component_names(parsed_addresses)
+
+        # Iterate throught all the unique addresses components and retrieve the value
+        # of the component for each parsed adresses
+        for address_component_name in set_of_all_address_component_names:
+            list_of_list_tag = []
+            for parsed_address in parsed_addresses:
+                # if there is more than one value per address component, the values
+                # will be joined in a string.
+
+                list_of_list_tag.append(" ".join([tag for (tag, tag_name) in parsed_address if
+                                                tag_name == address_component_name and tag is not None]))
+
+                # For each address components, if there is one value that differs from the rest,
+                # the value of each parsed addresses with be added to the delta dict
+                # where the key will be the address component name and the value will
+                # be a dict that has the name of the parsed address as key and the
+                # value of the address component as value.
+            list_of_bool_and_tag.append(
+                (address_component_name, all(x == list_of_list_tag[0] for x in list_of_list_tag)))
+
+        return list_of_bool_and_tag
+    
+    def _addresses_component_names(self, parsed_addresses: Union[List[List[tuple]], List[tuple]]) -> set:
+        """[summary]
+
+        Args:
+            parsed_addresses (Union[List[List[tuple]], List[tuple]]): [description]
+
+        Returns:
+            set: [description]
+        """
+        if isinstance(parsed_addresses[0], tuple):
+            parsed_addresses = [parsed_addresses]
+
+        set_of_all_address_component_names = set()
+        for tuple_values in parsed_addresses:
+            for address_component in tuple_values:
+
+                if isinstance(address_component[1], tuple):
+                    address_component = address_component[1][0]
+                else:
+                    address_component = address_component[1]
+                set_of_all_address_component_names.add(address_component)
+
+        return set_of_all_address_component_names

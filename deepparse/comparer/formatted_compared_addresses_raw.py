@@ -1,6 +1,8 @@
 from dataclasses import dataclass
-from .formatted_compared_addresses import FormatedComparedAddresses
 import sys
+
+from .formatted_compared_addresses import FormatedComparedAddresses
+
 
 @dataclass
 class FormattedComparedAddressesRaw(FormatedComparedAddresses):
@@ -79,3 +81,4 @@ class FormattedComparedAddressesRaw(FormatedComparedAddresses):
                 print("Addresses tags differences between the two addresses: ")
                 self._print_tags_diff_color()
         print(comparison_report_signal)
+        

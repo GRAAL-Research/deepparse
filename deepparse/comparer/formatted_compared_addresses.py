@@ -16,19 +16,20 @@ class FormatedComparedAddresses(ABC):
                                                 for the first address
         address_two(FormattedParsedAddress) : A FormatedParsedAddress that contains the parsing information
                                                 for the second address
-        metadata: (Dict) : A dict that contains information about the comparison, including:
-                            - the origin of the parsing, either it is from source or from deepparse.
-                            - a colorbind flag, weither the use wants a colorblind friendly output or not
+        origin: (Tuple[str]) : the origin of the parsing (ex : from source or from deepparse)
+
+        colorblind (bool) :  a colorbind flag, weither the use wants a colorblind friendly output or not
 
     Attributes:
         address_one(FormattedParsedAddress) : A FormatedParsedAddress that contains the parsing information
                                                 for the first address
         address_two(FormattedParsedAddress) : A FormatedParsedAddress that contains the parsing information
                                                 for the second address
-        metadata: (Dict) : A dict that contains information about the comparison, including:
-                            - the origin of the parsing, either it is from source or from deepparse.
-                            - a colorbind flag, weither the use wants a colorblind friendly output or not
-                            - list_of_bool that contains all the address components name and indicates if it
+        origin: (Tuple[str]) : the origin of the parsing (ex : from source or from deepparse)
+
+        colorblind (bool) :  a colorbind flag, weither the use wants a colorblind friendly output or not
+
+        list_of_bool (List[Tuple]): list_of_bool that contains all the address components name and indicates if it
                                 is the same for the two addresses
 
     Example:

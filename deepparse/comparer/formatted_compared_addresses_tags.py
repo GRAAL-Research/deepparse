@@ -1,30 +1,22 @@
-from .formatted_compared_addresses import FormatedComparedAddresses
+from typing import Dict
 from dataclasses import dataclass
+from .formatted_compared_addresses import FormatedComparedAddresses
 
 @dataclass
 class FormattedComparedAddressesTags(FormatedComparedAddresses):
-    """[summary]
-
-    Args:
-        FormatedComparedAddresses ([type]): [description]
-    """
+    """class that inherits from abstract class FormatedComparedAddresses and implements its comparison report."""
 
 
-    def get_probs(self):
-        """[summary]
+    def get_probs(self) -> Dict:
+        """get probs of tags for the parsing made with deepparse
 
         Returns:
-            [type]: [description]
+            Dict: the key is the raw address and the value is the tags with thei associated probabilities.
         """
-
         return {self.address_two.raw_address: self.address_two.address_parsed_components}
 
-    def comparison_report(self):
-        """[summary]
-
-        Args:
-            nb_delimiters (int, optional): [description]. Defaults to None.
-        """
+    def comparison_report(self) -> None:
+        """print a comparison report for addresses tags comparison"""
         # get terminal size to adapt the output to the user
         # nb_delimiters = os.get_terminal_size().columns if nb_delimiters is None else nb_delimiters
         nb_delimiters = 125
@@ -41,9 +33,9 @@ class FormattedComparedAddressesTags(FormatedComparedAddresses):
 
         print("")
         print("Tags: ")
-        print(self.metadata["origin"][0] + ": ", self.address_one.to_list_of_tuples())
+        print(self.origin[0] + ": ", self.address_one.to_list_of_tuples())
         print("")
-        print(self.metadata["origin"][1] + ": ", self.address_two.to_list_of_tuples())
+        print(self.origin[1] + ": ", self.address_two.to_list_of_tuples())
         print("")
         print("")
 

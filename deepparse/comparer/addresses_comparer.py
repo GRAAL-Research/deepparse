@@ -47,18 +47,18 @@ class AdressesComparer:
     def compare_tags(self,
                     addresses_tags_to_compare: Union[List[tuple], List[List[tuple]]]
                     )-> Union[List[FormattedComparedAddressesTags],FormattedComparedAddressesTags]:
-        """
-        Compare tags of a source parsing with the parsing from addressParser. First it recontructs the
-        raw address from the parsing, then addressParser generates tags and then compare the tags
+
+        """ Compare tags of a source parsing with the parsing from AddressParser. First it recontructs the
+        raw address from the parsing, then AddressParser generates tags and then compare the two parsing.
 
         Args:
-            addresses_to_compare (Union[List[List[tuple]], List[tuple]]): Takes a list of tuple that contains
+            addresses_tags_to_compare (Union[List[tuple], List[List[tuple]]]): list of tuple that contains
             the tags for the address components from the source. Can compare multiples parsings if passed as a
             list of list of tuples
 
         Return:
-            Either a :class:`~FormattedComparedAddress` or a list of
-            :class:`~FormattedComparedAddress` when given more than one comparison to make.
+            Either a :class:`~FormattedComparedAddressesTags` or a list of
+            :class:`~FormattedComparedAddressTags` when given more than one comparison to make.
         """
 
         if isinstance(addresses_tags_to_compare[0], tuple):
@@ -74,79 +74,71 @@ class AdressesComparer:
 
         comparison_tuples = list(zip(formatted_addresses, deepparsed_formatted_addresses))
 
-        formatted_comparisons =  self._format_tags_comparisons(comparison_tuples)
+        list_of_comparison_dict = self._format_comparisons_dict(comparison_tuples, ("source",
+                                                                            "deepparse using " + self.parser.model_type.capitalize()))
 
+        formatted_comparisons = [FormattedComparedAddressesTags(**comparison_info) for comparison_info in list_of_comparison_dict]
         return formatted_comparisons if len(formatted_comparisons) > 1 else formatted_comparisons[0]
 
             
-    def compare_raw(self, list_of_addresses_to_compare: Union[Tuple[str], List[Tuple[str]]]) -> List[
+    def compare_raw(self, raw_addresses_to_compare: Union[Tuple[str], List[Tuple[str]]]) -> List[
         FormattedComparedAddressesRaw]:
-        """
-        Compare a list of raw addresses together, it starts by parsing the addresses
+
+        """Compare a list of raw addresses together, it starts by parsing the addresses
         with the setted parser and then return the differences between the addresses components
         retrieved with our model.
 
         Args:
-            raw_addresses_to_compare (List[str]): List of string that represent raw addresses.
+            raw_addresses_to_compare (Union[Tuple[str], List[Tuple[str]]]):  List of string that represent raw addresses.
+
+        Raises:
+            ValueError: [description]
+
         Return:
-            Dictionnary that contains all addresses components that differ from each others
+            Either a :class:`~FormattedComparedAddressesRaw` or a list of
+            :class:`~FormattedComparedAddressesRaw` when given more than one comparison to make.
         """
-        if isinstance(list_of_addresses_to_compare[0], str):
-            list_of_addresses_to_compare = [list_of_addresses_to_compare]
+        if isinstance(raw_addresses_to_compare[0], str):
+            raw_addresses_to_compare = [raw_addresses_to_compare]
 
         list_of_deeparsed_addresses = []
-        for addresses_to_compare in list_of_addresses_to_compare:
+        for addresses_to_compare in raw_addresses_to_compare:
             if len(addresses_to_compare) != 2:
                 raise ValueError("You need to compare two addresses")
             list_of_deeparsed_addresses.append(self.parser(addresses_to_compare, with_prob=True))
 
-        comparisons = self._format_raw_comparisons(list_of_deeparsed_addresses)
-        return comparisons if len(comparisons) > 1 else comparisons[0]
+        list_of_comparison_dict = self._format_comparisons_dict(list_of_deeparsed_addresses, ("deepparse using " + self.parser.model_type.capitalize(),
+                                                                            "deepparse using " + self.parser.model_type.capitalize()))
+        
+        formatted_comparisons = [FormattedComparedAddressesRaw(**comparison_info) for comparison_info in list_of_comparison_dict]
+
+        return formatted_comparisons if len(formatted_comparisons) > 1 else formatted_comparisons[0]
 
 
-    def _format_tags_comparisons(self, comparison_tuples):
-        """[summary]
+    def _format_comparisons_dict(self, comparison_tuples: Tuple[FormattedParsedAddress, FormattedParsedAddress],
+                                        origin_tuple: Tuple[str, str]) -> List[Dict]:
+        """Return formated dict that contains the two FormatedParsedAddress and the origin name
+            tuple and output it in a dict.
 
         Args:
-            comparison_tuples ([type]): [description]
+            comparison_tuples (Tuple[FormattedParsedAddress, FormattedParsedAddress]): A tuple that contains the two FormattedParsedAddress 
+            origin_tuple (Tuple[str, str]): A tuple that contains the two origin name for the parsed addreses.
 
         Returns:
-            [type]: [description]
+            List[Dict]: list that contrains the formated information to construct the FormatedComparedAddress object.
         """
-        list_of_formatted_comparisons = []
-        
-        for address_one, address_two in comparison_tuples:
-            comparison_info = {"address_one": address_one,
-                            "address_two": address_two,
-                            "metadata": {"colorblind":self.colorblind,
-                                        "origin":("source", "deepparse using " + self.parser.model_type.capitalize())}
-                            }
-
-                
-            list_of_formatted_comparisons.append(FormattedComparedAddressesTags(**comparison_info))
-
-        return list_of_formatted_comparisons
-
-    def _format_raw_comparisons(self, comparison_tuples):
-        list_of_formatted_comparisons = []
+        list_of_formatted_comparisons_dict = []
         
         for comparison_tuple in comparison_tuples:
             comparison_info = {"address_one": comparison_tuple[0],
                             "address_two": comparison_tuple[1],
-                            "metadata": {"colorblind":self.colorblind,
-                                        "origin":("deepparse using " + self.parser.model_type.capitalize(),
-                                                    "deepparse using " + self.parser.model_type.capitalize()),
-                                        "repr": (repr(comparison_tuple[0]), repr(comparison_tuple[1]))}
+                            "colorblind":self.colorblind,
+                            "origin": origin_tuple,
                             }
 
-            formatted_comparison = FormattedComparedAddressesRaw(**comparison_info)
-            list_of_formatted_comparisons.append(formatted_comparison)
+            list_of_formatted_comparisons_dict.append(comparison_info)
 
-        return list_of_formatted_comparisons
-
-
-
-
+        return list_of_formatted_comparisons_dict
 
 
 if __name__ == '__main__':

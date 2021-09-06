@@ -4,23 +4,30 @@ from difflib import  SequenceMatcher
 from abc import ABC, abstractclassmethod
 import sys
 
+from ..parser import FormattedParsedAddress
+
 @dataclass
 class FormatedComparedAddresses(ABC):
     """
     A comparison for addresses returned by the address comparer
 
     Args:
-        addresses (Union[Dict, List[Dict]]): A dictionnary where the keys are the name of
-        the addresses components and the values contain the information for this specific
-        component.
-    
-        colorblind (bool, optional): A flag that will print the comparison report in
-        colorblind friendly colors if set to True. Defaults to False.
+        address_one(FormattedParsedAddress) : A FormatedParsedAddress that contains the parsing information
+                                                for the first address
+        address_two(FormattedParsedAddress) : A FormatedParsedAddress that contains the parsing information
+                                                for the second address
+        metadata: (Dict) : A dict that contains information about the comparison, including:
+                            - the origin of the parsing, either it is from source or from deepparse.
+                            - a colorbind flag, weither the use wants a colorblind friendly output or not
 
     Attributes:
-        raw_addresses: The raw addresses (not parsed)
-        address_parsed_components: The parsed address in a list of tuples where the first elements
-            are the address components and the second elements are the tags.
+        address_one(FormattedParsedAddress) : A FormatedParsedAddress that contains the parsing information
+                                                for the first address
+        address_two(FormattedParsedAddress) : A FormatedParsedAddress that contains the parsing information
+                                                for the second address
+        metadata: (Dict) : A dict that contains information about the comparison, including:
+                            - the origin of the parsing, either it is from source or from deepparse.
+                            - a colorbind flag, weither the use wants a colorblind friendly output or not
 
     Example:
 
@@ -40,8 +47,8 @@ class FormatedComparedAddresses(ABC):
             #  ('Quebec', 'Province'), ('G1L 1B6', 'PostalCode'), (None, 'Orientation'), (None, 'GeneralDelivery')]]
 
     """
-    address_one:Dict
-    address_two:Dict
+    address_one: FormattedParsedAddress
+    address_two: FormattedParsedAddress
     metadata: Dict
 
     def __post_init__(self):  

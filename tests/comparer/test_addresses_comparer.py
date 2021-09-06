@@ -2,14 +2,20 @@
 # pylint: disable=not-callable, too-many-public-methods
 import unittest
 from unittest import TestCase
+import torch
 
 from deepparse.comparer.addresses_comparer import AdressesComparer
 from deepparse.comparer.formatted_compared_addresses_raw import FormattedComparedAddressesRaw
 from deepparse.comparer.formatted_compared_addresses_tags import FormattedComparedAddressesTags
-from deepparse.parser import AddressParser
+from deepparse.parser.address_parser import AddressParser
 
-class TestAdressComparer(TestCase):
+class TestAdressesComparer(TestCase):
 
+    @classmethod
+    def setUpClass(cls):
+        cls.model_type = "bpemb"
+        cls.tagged_addresses_components_with_prob = [('305', ('StreetNumber', 1.0)), ('rue', ('StreetName', 0.9989)), ('des', ('StreetName', 0.9998)), ('Lilas', ('StreetName', 0.9343)), ('Ouest', ('Municipality', 0.781)), ('Québec', ('Municipality', 0.9467)), ('Québec', ('Province', 1.0)), ('G1L', ('PostalCode', 0.9997)), ('1B6', ('PostalCode', 1.0))]
+        cls.tagged_addresses_components = [('305', 'StreetNumber'), ('rue des Lilas', 'StreetName'), (None, 'Unit'), ('Ouest Québec', 'Municipality'), ('Québec', 'Province'), ('G1L 1B6', 'PostalCode'), (None, 'Orientation'), (None, 'GeneralDelivery')]
         
     def setUp(self) -> None:
         self.list_of_tuples_address_original = [("305", "StreetNumber"), ("rue des Lilas", "StreetName"), ("Ouest", "Orientation"),

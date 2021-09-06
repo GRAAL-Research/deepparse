@@ -1,10 +1,11 @@
-import dataclasses
-from ..parser.formated_parsed_address import FormattedParsedAddress
 from typing import List, Tuple, Union, Dict
 from dataclasses import dataclass
+
+from ..parser import AddressParser
+from ..parser.formated_parsed_address import FormattedParsedAddress
 from .formatted_compared_addresses_raw import FormattedComparedAddressesRaw
 from .formatted_compared_addresses_tags import FormattedComparedAddressesTags
-from ..parser import AddressParser
+
 
 
 # ça responsabilité est de comparer des adresses avec notre parsing d'adresse
@@ -65,22 +66,17 @@ class AdressesComparer:
 
         raw_addresses =  [" ".join([element[0] for element in address]) for address in addresses_tags_to_compare]
         
-        formatted_addresses = []
-        for raw_address, address_tags in zip(raw_addresses, addresses_tags_to_compare):
-
-            formatted_addresses.append(FormattedParsedAddress({raw_address: address_tags}))
-
+        formatted_addresses = [FormattedParsedAddress({raw_address: address_tags}) for raw_address, address_tags in zip(raw_addresses, addresses_tags_to_compare)]
         deepparsed_formatted_addresses = self.parser(raw_addresses, with_prob=True)
 
         if isinstance(deepparsed_formatted_addresses, FormattedParsedAddress):
             deepparsed_formatted_addresses = [deepparsed_formatted_addresses]
-        
-        comparison_tuples = [(formated_address, deepparsed_formatted_address) \
-                                for formated_address, deepparsed_formatted_address in \
-                                zip(formatted_addresses, deepparsed_formatted_addresses)]
-        
-        comparisons =  self._format_tags_comparisons(comparison_tuples)
-        return comparisons if len(comparisons) > 1 else comparisons[0]
+
+        comparison_tuples = list(zip(formatted_addresses, deepparsed_formatted_addresses))
+
+        formatted_comparisons =  self._format_tags_comparisons(comparison_tuples)
+
+        return formatted_comparisons if len(formatted_comparisons) > 1 else formatted_comparisons[0]
 
             
     def compare_raw(self, list_of_addresses_to_compare: Union[Tuple[str], List[Tuple[str]]]) -> List[
@@ -109,11 +105,19 @@ class AdressesComparer:
 
 
     def _format_tags_comparisons(self, comparison_tuples):
+        """[summary]
+
+        Args:
+            comparison_tuples ([type]): [description]
+
+        Returns:
+            [type]: [description]
+        """
         list_of_formatted_comparisons = []
         
-        for comparison_tuple in comparison_tuples:
-            comparison_info = {"address_one": comparison_tuple[0],
-                            "address_two": comparison_tuple[1],
+        for address_one, address_two in comparison_tuples:
+            comparison_info = {"address_one": address_one,
+                            "address_two": address_two,
                             "metadata": {"colorblind":self.colorblind,
                                         "origin":("source", "deepparse using " + self.parser.model_type.capitalize())}
                             }
@@ -161,10 +165,13 @@ if __name__ == '__main__':
     addresses_comparer = AdressesComparer(address_parser)
 
     # Compare with source tags with deepparse tags
+    delta_dict_deeparse_one = addresses_comparer.compare_tags(list_of_tuples_address_one)
+    delta_dict_deeparse_one.comparison_report()
+
     delta_dict_deeparse_one_two = addresses_comparer.compare_tags([list_of_tuples_address_one,list_of_tuples_address_two])
 
-    #delta_dict_deeparse_one_two[0].comparison_report()
-    #delta_dict_deeparse_one_two[1].comparison_report()
+    delta_dict_deeparse_one_two[0].comparison_report()
+    delta_dict_deeparse_one_two[1].comparison_report()
 
     #compare two identical addresses
     raw_addresses_identical_comparison = addresses_comparer.compare_raw((raw_address_original, raw_address_identical))
@@ -178,6 +185,11 @@ if __name__ == '__main__':
     #compare two diff addresses
     raw_addresses_diff_street_comparison = addresses_comparer.compare_raw((raw_address_original, raw_address_diff_streetNumber))
     raw_addresses_diff_street_comparison.comparison_report()
+
+    #two comparisons two diff addresses
+    raw_addresses_diff_street_comparison = addresses_comparer.compare_raw([(raw_address_original, raw_address_equivalent),(raw_address_original, raw_address_diff_streetNumber)])
+    raw_addresses_diff_street_comparison[0].comparison_report()
+    raw_addresses_diff_street_comparison[1].comparison_report()
 
 
 

@@ -36,16 +36,19 @@ class FormatedComparedAddresses(ABC):
         .. code-block:: python
 
             address_comparer = AdressComparer(AddressParser())
-            raw_identical_comparison = address_comparer.compare_raw(("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6",
-                                                                    "450 rue des Lilas Ouest Quebec city Quebec G1L 1B6"))
-            
+            raw_identical_comparison = address_comparer.compare_raw(
+                                                        ("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6",
+                                                        "450 rue des Lilas Ouest Quebec city Quebec G1L 1B6"))
+
             print(raw_identical_comparison.raw_addresses) # [350 rue des Lilas Ouest Quebec city Quebec G1L 1B6,
                                                             450 rue des Lilas Ouest Quebec city Quebec G1L 1B6]
 
             print(raw_identical_comparison.address_parsed_components)
-            #[[('350', 'StreetNumber'), ('rue des Lilas', 'StreetName'), (None, 'Unit'), ('Ouest Quebec city', 'Municipality'),
+            #[[('350', 'StreetNumber'), ('rue des Lilas', 'StreetName'), (None, 'Unit'),
+            #  ('Ouest Quebec city', 'Municipality'),
             #   ('Quebec', 'Province'), ('G1L 1B6', 'PostalCode'), (None, 'Orientation'), (None, 'GeneralDelivery')],
-            #[('450', 'StreetNumber'), ('rue des Lilas', 'StreetName'), (None, 'Unit'), ('Ouest Quebec city', 'Municipality'),
+            #[('450', 'StreetNumber'), ('rue des Lilas', 'StreetName'), (None, 'Unit'),
+            # ('Ouest Quebec city', 'Municipality'),
             #  ('Quebec', 'Province'), ('G1L 1B6', 'PostalCode'), (None, 'Orientation'), (None, 'GeneralDelivery')]]
 
     """
@@ -53,7 +56,7 @@ class FormatedComparedAddresses(ABC):
     address_two: FormattedParsedAddress
     origin: Tuple[str]
     colorblind: bool
-    
+
 
 
     def __post_init__(self) -> None:
@@ -137,7 +140,7 @@ class FormatedComparedAddresses(ABC):
         Returns:
             str: the two strings joined and the differences are noted in color codes
         """
-        
+
         code_type = 48 if highlight else 38
 
 
@@ -188,11 +191,11 @@ class FormatedComparedAddresses(ABC):
             print(value)
             if index > 0:
                 print("")
-        
+
 
     def _print_tags_diff_color(self, verbose = True) -> None:
         """Print the output of the string with color codes that represent
-        the differences among the two strings. 
+        the differences among the two strings.
 
         Args:
             verbose (bool, optional): If True, it will print a presentation of the colors
@@ -208,7 +211,6 @@ class FormatedComparedAddresses(ABC):
                 print("Yellow: Belongs only to " + self.origin[1])
             print("")
 
-        
         address_component_names = [tag[0] for tag in self.list_of_bool if not tag[1]]
 
         for address_component_name in address_component_names:
@@ -217,11 +219,11 @@ class FormatedComparedAddresses(ABC):
 
                 #if there is more than one value per address component, the values
                 #will be joined in a string.
-                list_of_list_tag.append(" ".join([tag for (tag,tag_name) in parsed_address if tag_name == address_component_name and tag is not None]))
+                list_of_list_tag.append(" ".join([tag for (tag,tag_name) in parsed_address \
+                                            if tag_name == address_component_name and tag is not None]))
 
             result = self._get_color_diff(list_of_list_tag[0], list_of_list_tag[1])
 
-            
             print(address_component_name + ": ")
             sys.stdout.writelines(result)
             print("")
@@ -252,7 +254,7 @@ class FormatedComparedAddresses(ABC):
                 (address_component_name, all(x == list_of_list_tag[0] for x in list_of_list_tag)))
 
         return list_of_bool_and_tag
-    
+
     def _addresses_component_names(self, parsed_addresses: Union[List[List[tuple]], List[tuple]]) -> set:
         """Retrieves all the unique address components names from the comparison then returns it.
 

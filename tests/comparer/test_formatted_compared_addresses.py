@@ -3,13 +3,13 @@
 import unittest
 from unittest import TestCase
 
-from deepparse.comparer import AdressComparer
+from deepparse.comparer import AddressesComparer
 from deepparse.parser.address_parser import AddressParser
 from tests.base_capture_output import CaptureOutputTestCase
 
-class TestAdressComparer(TestCase):
 
-        
+class TestAddressComparer(TestCase):
+
     def setUp(self) -> None:
         self.raw_address_original = "350 rue des Lilas Ouest Québec Québec G1L 1B6"
         self.raw_address_identical = "350 rue des Lilas Ouest Québec Québec G1L 1B6"
@@ -22,45 +22,49 @@ class TestAdressComparer(TestCase):
         self.raw_address_diff_PostalCode = "350 rue des Lilas Ouest Québec Québec G1P 1B6"
         self.raw_address_diff_Orientation = "350 rue des Lilas Est Québec Québec G1L 1B6"
 
-
         self.address_parser_bpemb_device_0 = AddressParser(model_type="bpemb", device=0)
-        self.address_comparer = AdressComparer(self.address_parser_bpemb_device_0)
+        self.address_comparer = AddressesComparer(self.address_parser_bpemb_device_0)
 
-        self.raw_identical_comparison = self.address_comparer.compare_raw((self.raw_address_original, self.raw_address_identical))
-        self.raw_equivalent_comparison = self.address_comparer.compare_raw((self.raw_address_original, self.raw_address_equivalent))
-        self.raw_address_diff_streetNumber_comparison = self.address_comparer.compare_raw((self.raw_address_original, self.raw_address_diff_streetNumber))
-        self.raw_address_diff_streetName_comparison  = self.address_comparer.compare_raw((self.raw_address_original, self.raw_address_diff_streetName))
-        self.raw_address_diff_Unit_comparison  = self.address_comparer.compare_raw((self.raw_address_original, self.raw_address_diff_Unit))
-        self.raw_address_diff_Municipality_comparison  = self.address_comparer.compare_raw((self.raw_address_original, self.raw_address_diff_Municipality))
-        self.raw_address_diff_Province_comparison  = self.address_comparer.compare_raw((self.raw_address_original, self.raw_address_diff_Province))
-        self.raw_address_diff_PostalCode_comparison  = self.address_comparer.compare_raw((self.raw_address_original, self.raw_address_diff_PostalCode))
-        self.raw_address_diff_Orientation_comparison  = self.address_comparer.compare_raw((self.raw_address_original, self.raw_address_diff_Orientation))
-
+        self.raw_identical_comparison = self.address_comparer.compare_raw(
+            (self.raw_address_original, self.raw_address_identical))
+        self.raw_equivalent_comparison = self.address_comparer.compare_raw(
+            (self.raw_address_original, self.raw_address_equivalent))
+        self.raw_address_diff_streetNumber_comparison = self.address_comparer.compare_raw(
+            (self.raw_address_original, self.raw_address_diff_streetNumber))
+        self.raw_address_diff_streetName_comparison = self.address_comparer.compare_raw(
+            (self.raw_address_original, self.raw_address_diff_streetName))
+        self.raw_address_diff_Unit_comparison = self.address_comparer.compare_raw(
+            (self.raw_address_original, self.raw_address_diff_Unit))
+        self.raw_address_diff_Municipality_comparison = self.address_comparer.compare_raw(
+            (self.raw_address_original, self.raw_address_diff_Municipality))
+        self.raw_address_diff_Province_comparison = self.address_comparer.compare_raw(
+            (self.raw_address_original, self.raw_address_diff_Province))
+        self.raw_address_diff_PostalCode_comparison = self.address_comparer.compare_raw(
+            (self.raw_address_original, self.raw_address_diff_PostalCode))
+        self.raw_address_diff_Orientation_comparison = self.address_comparer.compare_raw(
+            (self.raw_address_original, self.raw_address_diff_Orientation))
 
     def test_identical_raw_address_identical_comparison(self):
         self.assertTrue(self.raw_identical_comparison.indentical)
-    
+
     def test_identical_raw_address_equivalent_comparison(self):
         self.assertTrue(self.raw_identical_comparison.equivalent)
 
-
     def test_equivalent_raw_address_identical_comparison(self):
         self.assertFalse(self.raw_equivalent_comparison.indentical)
-    
+
     def test_equivalent_raw_address_equivalent_comparison(self):
         self.raw_equivalent_comparison.comparison_report()
         self.assertTrue(self.raw_equivalent_comparison.equivalent)
 
-
     def test_streetNumber_diff_raw_address_identical_comparison(self):
         self.assertFalse(self.raw_address_diff_streetNumber_comparison.indentical)
-    
+
     def test_streetNumber_diff_raw_address_equivalent_comparison(self):
         self.assertFalse(self.raw_address_diff_streetNumber_comparison.equivalent)
-    
 
 
-class addressComparisonOutputTests(CaptureOutputTestCase):
+class AddressComparisonOutputTests(CaptureOutputTestCase):
 
     def setUp(self) -> None:
         self.maxDiff = None
@@ -70,10 +74,11 @@ class addressComparisonOutputTests(CaptureOutputTestCase):
         self.raw_address_diff_streetNumber = "450 rue des Lilas Ouest Quebec city Quebec G1L 1B6"
 
         self.address_parser = AddressParser(model_type="bpemb", device=1)
-        self.address_comparer = AdressComparer(self.address_parser)
+        self.address_comparer = AddressesComparer(self.address_parser)
 
     def test_raw_identical_comparison_report_print_output(self):
-        raw_compare_identical = self.address_comparer.compare_raw((self.raw_address_original, self.raw_address_identical))
+        raw_compare_identical = self.address_comparer.compare_raw(
+            (self.raw_address_original, self.raw_address_identical))
         self._capture_output()
         raw_compare_identical.comparison_report()
         expected = """=============================================================================================================================
@@ -91,10 +96,11 @@ Parsed address: FormattedParsedAddress<StreetNumber='350', StreetName='rue des L
 ============================================================================================================================="""
         actual = self.test_out.getvalue().strip()
         self.assertEqual(expected, actual)
-
+        # self.assertNotIn(#Code couleur vert et rouge)
 
     def test_raw_equivalent_comparison_report_print_output(self):
-        raw_compare_identical = self.address_comparer.compare_raw((self.raw_address_original, self.raw_address_equivalent))
+        raw_compare_identical = self.address_comparer.compare_raw(
+            (self.raw_address_original, self.raw_address_equivalent))
         self._capture_output()
         raw_compare_identical.comparison_report()
         expected = """=============================================================================================================================
@@ -123,9 +129,11 @@ Green: Belongs only to Address two
 ============================================================================================================================="""
         actual = self.test_out.getvalue().strip()
         self.assertEqual(expected, actual)
+        # self.assertIn(#Code couleur vert et rouge)
 
     def test_raw_not_equivalent_diff_streetNumber_comparison_report_print_output(self):
-        raw_compare_identical = self.address_comparer.compare_raw((self.raw_address_original, self.raw_address_diff_streetNumber))
+        raw_compare_identical = self.address_comparer.compare_raw(
+            (self.raw_address_original, self.raw_address_diff_streetNumber))
         self._capture_output()
         raw_compare_identical.comparison_report()
         expected = """=============================================================================================================================
@@ -155,10 +163,10 @@ StreetNumber:
 ============================================================================================================================="""
         actual = self.test_out.getvalue().strip()
         self.assertEqual(expected, actual)
+
+
 if __name__ == "__main__":
     unittest.main()
-
-
 
 
     @classmethod

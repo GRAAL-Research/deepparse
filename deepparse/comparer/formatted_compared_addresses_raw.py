@@ -1,11 +1,11 @@
-from dataclasses import dataclass
 import sys
+from dataclasses import dataclass
 
-from .formatted_compared_addresses import FormatedComparedAddresses
+from .formatted_compared_addresses import FormattedComparedAddresses
 
 
 @dataclass
-class FormattedComparedAddressesRaw(FormatedComparedAddresses):
+class FormattedComparedAddressesRaw(FormattedComparedAddresses):
 
     def get_probs(self):
         """get probs of tags for the parsing made with deepparse
@@ -16,8 +16,7 @@ class FormattedComparedAddressesRaw(FormatedComparedAddresses):
         return {self.address_one.raw_address: self.address_one.address_parsed_components,
                 self.address_two.raw_address: self.address_two.address_parsed_components}
 
-
-    def _print_raw_diff_color(self, verbose = True) -> None:
+    def _print_raw_diff_color(self, verbose=True) -> None:
         """Print the raw addresses and highlight the differences between them."""
         result = self._get_color_diff(self.address_one.raw_address, self.address_two.raw_address, highlight=True)
 
@@ -33,7 +32,6 @@ class FormattedComparedAddressesRaw(FormatedComparedAddresses):
         sys.stdout.writelines(result)
         print("")
 
-
     def comparison_report(self):
         """print a comparison report for raw addresses comparison"""
         # get terminal size to adapt the output to the user
@@ -44,30 +42,28 @@ class FormattedComparedAddressesRaw(FormatedComparedAddresses):
         print(comparison_report_signal)
 
         intro_str = "Comparison report of the two raw addresses: "
-        if self.indentical:
-            print(intro_str +  "Identical")
+        if self.identical:
+            print(intro_str + "Identical")
         else:
             if self.equivalent:
-                print(intro_str +  "Equivalent")
+                print(intro_str + "Equivalent")
             else:
-                print(intro_str +  "Not equivalent")
+                print(intro_str + "Not equivalent")
         print("")
         print("Address one: " + self.address_one.raw_address)
         print("and")
-        print("Address two: " +self.address_two.raw_address)
+        print("Address two: " + self.address_two.raw_address)
         print("")
 
-
-
         print("")
-        print("Probabilities of parsed tags for the addresses with " + self.origin[0] +": ")
+        print("Probabilities of parsed tags for the addresses with " + self.origin[0] + ": ")
         print("")
         probs = list(self.get_probs().values())
-        print("Parsed address: "+ repr(self.address_one))
+        print("Parsed address: " + repr(self.address_one))
         print(probs[0])
-        if not self.indentical:
+        if not self.identical:
             print("")
-            print("Parsed address: "+ repr(self.address_two))
+            print("Parsed address: " + repr(self.address_two))
             print(probs[1])
 
             if self.equivalent:
@@ -81,4 +77,3 @@ class FormattedComparedAddressesRaw(FormatedComparedAddresses):
                 print("Addresses tags differences between the two addresses: ")
                 self._print_tags_diff_color()
         print(comparison_report_signal)
-        

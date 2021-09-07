@@ -1,13 +1,14 @@
-from dataclasses import dataclass
-from typing import List, Union, Tuple
-from difflib import  SequenceMatcher
-from abc import ABC, abstractclassmethod
 import sys
+from abc import ABC, abstractmethod
+from dataclasses import dataclass
+from difflib import SequenceMatcher
+from typing import List, Union, Tuple
 
 from ..parser import FormattedParsedAddress
 
+
 @dataclass
-class FormatedComparedAddresses(ABC):
+class FormattedComparedAddresses(ABC):
     """
     A comparison for addresses returned by the address comparer
 
@@ -58,15 +59,12 @@ class FormatedComparedAddresses(ABC):
     origin: Tuple[str]
     colorblind: bool
 
-
-
     def __post_init__(self) -> None:
         self.list_of_bool = self._bool_address_tags_are_the_same([self.address_one.to_list_of_tuples(),
-                                                                            self.address_two.to_list_of_tuples()])
-
+                                                                  self.address_two.to_list_of_tuples()])
 
     @property
-    def equivalent(self) ->bool:
+    def equivalent(self) -> bool:
         """Check if the parsing is the same for the two addresses
 
         Returns:
@@ -75,7 +73,7 @@ class FormatedComparedAddresses(ABC):
         return all([bool_address[1] for bool_address in self.list_of_bool])
 
     @property
-    def indentical(self) ->bool:
+    def identical(self) -> bool:
         """Check if the parsing is the same for the two addresses and if
             the raw addresses are identical
 
@@ -90,16 +88,15 @@ class FormatedComparedAddresses(ABC):
 
         return is_identical
 
-
-    @abstractclassmethod
-    def comparison_report(cls) -> None:
+    @abstractmethod
+    def comparison_report(self) -> None:
         """print a comparison report for the different comparisons, since the procedure in order
             to make a tags comparison and the raw addresses comparison is different, the comparison
             report are not the same for the two. It is then implemented in each specific classes.
         """
 
-    @abstractclassmethod
-    def get_probs(cls):
+    @abstractmethod
+    def get_probs(self):
         """get the tags from the parsin with their associated probabilities, the method
             needs to be implemented in each class because they dont use the probabilities
             the same way.
@@ -109,7 +106,7 @@ class FormatedComparedAddresses(ABC):
                     the tags with their associated probabilities
         """
 
-    def _get_color_diff(self, string_one:str, string_two:str, highlight = False) -> str:
+    def _get_color_diff(self, string_one: str, string_two: str, highlight=False) -> str:
         """compare two string and determine the difference between the two.
             the differences are noted with color code, if the first string has
             more element than the second one it will be noted in one color, but
@@ -144,18 +141,21 @@ class FormatedComparedAddresses(ABC):
 
         code_type = 48 if highlight else 38
 
-
         if self.colorblind:
-            #https://davidmathlogic.com/colorblind/#%23D81B60-%231E88E5-%23FFC107-%23004D40
-            color_1 = lambda text: f"\033[{code_type};2;26;123;220m{text}\033[0m" #blue
-            color_2 = lambda text: f"\033[{code_type};2;255;194;10m{text}\033[0m" #yellow
-        else:
-            color_1 = lambda text: f"\033[{code_type};2;255;0;0m{text}\033[0m" #red
-            color_2 = lambda text: f"\033[{code_type};2;0;255;0m{text}\033[0m" #green
+            # https://davidmathlogic.com/colorblind/#%23D81B60-%231E88E5-%23FFC107-%23004D40
+            # pas une bonne pratique de sauvegarder des lambdas, en fait c'est plutôt juste du
+            # formatting de string de la string f"\033[{code_type};2;26;123;220m{text}\033[0m"
+            # donc je ferai de quoi du genre
+            # f"\033[{code_type};2;26;123;220m{}\033[0m"
+            # et plus tard color_1.format(text)
 
+            color_1 = lambda text: f"\033[{code_type};2;26;123;220m{text}\033[0m"  # blue
+            color_2 = lambda text: f"\033[{code_type};2;255;194;10m{text}\033[0m"  # yellow
+        else:
+            color_1 = lambda text: f"\033[{code_type};2;255;0;0m{text}\033[0m"  # red
+            color_2 = lambda text: f"\033[{code_type};2;0;255;0m{text}\033[0m"  # green
 
         white = lambda text: f"\033[38;2;255;255;255m{text}\033[0m"
-
 
         result = ""
         codes = SequenceMatcher(a=string_one, b=string_two).get_opcodes()
@@ -174,10 +174,7 @@ class FormatedComparedAddresses(ABC):
                     result += (color_2(string_two[code[3]:code[4]]) + color_1(string_one[code[1]:code[2]]))
         return result
 
-
-
-
-    def _print_probs_of_tags(self, verbose = True) -> None:
+    def _print_probs_of_tags(self, verbose=True) -> None:
         """takes the tags and their probabilities and print them to console
 
         Args:
@@ -193,8 +190,7 @@ class FormatedComparedAddresses(ABC):
             if index > 0:
                 print("")
 
-
-    def _print_tags_diff_color(self, verbose = True) -> None:
+    def _print_tags_diff_color(self, verbose=True) -> None:
         """Print the output of the string with color codes that represent
         the differences among the two strings.
 
@@ -217,11 +213,10 @@ class FormatedComparedAddresses(ABC):
         for address_component_name in address_component_names:
             list_of_list_tag = []
             for parsed_address in [self.address_one.to_list_of_tuples(), self.address_two.to_list_of_tuples()]:
-
-                #if there is more than one value per address component, the values
-                #will be joined in a string.
-                list_of_list_tag.append(" ".join([tag for (tag,tag_name) in parsed_address \
-                                            if tag_name == address_component_name and tag is not None]))
+                # if there is more than one value per address component, the values
+                # will be joined in a string.
+                list_of_list_tag.append(" ".join([tag for (tag, tag_name) in parsed_address \
+                                                  if tag_name == address_component_name and tag is not None]))
 
             result = self._get_color_diff(list_of_list_tag[0], list_of_list_tag[1])
 
@@ -247,16 +242,17 @@ class FormatedComparedAddresses(ABC):
         for address_component_name in set_of_all_address_component_names:
             list_of_list_tag = []
             for parsed_address in parsed_addresses:
-
                 list_of_list_tag.append(" ".join([tag for (tag, tag_name) in parsed_address if
-                                                tag_name == address_component_name and tag is not None]))
+                                                  tag_name == address_component_name and tag is not None]))
 
             list_of_bool_and_tag.append(
                 (address_component_name, all(x == list_of_list_tag[0] for x in list_of_list_tag)))
 
         return list_of_bool_and_tag
 
-    def _addresses_component_names(self, parsed_addresses: Union[List[List[tuple]], List[tuple]]) -> set:
+    # C'est une méthode statique
+    @staticmethod
+    def _addresses_component_names(parsed_addresses: Union[List[List[tuple]], List[tuple]]) -> set:
         """Retrieves all the unique address components names from the comparison then returns it.
 
         Args:

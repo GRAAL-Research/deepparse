@@ -1,17 +1,18 @@
-from typing import Dict
 from dataclasses import dataclass
-from .formatted_compared_addresses import FormatedComparedAddresses
+from typing import Dict
+
+from .formatted_compared_addresses import FormattedComparedAddresses
+
 
 @dataclass
-class FormattedComparedAddressesTags(FormatedComparedAddresses):
-    """class that inherits from abstract class FormatedComparedAddresses and implements its comparison report."""
-
+class FormattedComparedAddressesTags(FormattedComparedAddresses):
+    """class that inherits from abstract class FormattedComparedAddresses and implements its comparison report."""
 
     def get_probs(self) -> Dict:
         """get probs of tags for the parsing made with deepparse
 
         Returns:
-            Dict: the key is the raw address and the value is the tags with thei associated probabilities.
+            Dict: the key is the raw address and the value is the tags with their associated probabilities.
         """
         return {self.address_two.raw_address: self.address_two.address_parsed_components}
 
@@ -25,7 +26,7 @@ class FormattedComparedAddressesTags(FormatedComparedAddresses):
         print(comparison_report_signal)
 
         intro_str = "Comparison report of tags for parsed address: "
-        if self.indentical:
+        if self.identical:
             print(intro_str + "Identical")
         else:
             print(intro_str + "Not identical")
@@ -41,7 +42,7 @@ class FormattedComparedAddressesTags(FormatedComparedAddresses):
 
         self._print_probs_of_tags()
 
-        if not self.indentical:
+        if not self.identical:
             print("")
             print("")
             print("Addresses tags differences between the two parsing:")

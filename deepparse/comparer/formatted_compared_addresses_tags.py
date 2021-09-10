@@ -46,7 +46,7 @@ class FormattedComparedAddressesTags(FormattedComparedAddresses):
             print("")
             print("")
             print("Addresses tags differences between the two parsing:")
-            self._print_tags_diff_color()
+            self._print_tags_diff_color(self.origin[0], self.origin[1])
         print("")
 
         print(comparison_report_signal)

@@ -149,29 +149,29 @@ class FormattedComparedAddresses(ABC):
             # f"\033[{code_type};2;26;123;220m{}\033[0m"
             # et plus tard color_1.format(text)
 
-            color_1 = lambda text: f"\033[{code_type};2;26;123;220m{text}\033[0m"  # blue
-            color_2 = lambda text: f"\033[{code_type};2;255;194;10m{text}\033[0m"  # yellow
+            color_1 = "\033[{code_type};2;26;123;220m{text}\033[0m"  # blue
+            color_2 = "\033[{code_type};2;255;194;10m{text}\033[0m"  # yellow
         else:
-            color_1 = lambda text: f"\033[{code_type};2;255;0;0m{text}\033[0m"  # red
-            color_2 = lambda text: f"\033[{code_type};2;0;255;0m{text}\033[0m"  # green
+            color_1 = "\033[{code_type};2;255;0;0m{text}\033[0m"  # red
+            color_2 = "\033[{code_type};2;0;255;0m{text}\033[0m"  # green
 
-        white = lambda text: f"\033[38;2;255;255;255m{text}\033[0m"
+        white = "\033[38;2;255;255;255m{text}\033[0m"
 
         result = ""
         codes = SequenceMatcher(a=string_one, b=string_two).get_opcodes()
         for code in codes:
             if code[0] == "equal":
-                result += white(string_one[code[1]:code[2]])
+                result += white.format(text = (string_one[code[1]:code[2]]))
             elif code[0] == "delete":
-                result += color_1(string_one[code[1]:code[2]])
+                result += color_1.format(code_type = code_type, text= string_one[code[1]:code[2]])
             elif code[0] == "insert":
-                result += color_2(string_two[code[3]:code[4]])
+                result += color_2.format(code_type = code_type, text= string_two[code[3]:code[4]])
             elif code[0] == "replace":
 
                 if code[1] <= code[3]:
-                    result += (color_1(string_one[code[1]:code[2]]) + color_2(string_two[code[3]:code[4]]))
+                    result += (color_1.format(code_type = code_type, text= string_one[code[1]:code[2]]) + color_2.format(code_type = code_type, text= string_two[code[3]:code[4]]))
                 else:
-                    result += (color_2(string_two[code[3]:code[4]]) + color_1(string_one[code[1]:code[2]]))
+                    result += (color_2.format(code_type = code_type, text= string_two[code[3]:code[4]]) + color_1.format(code_type = code_type, text= string_one[code[1]:code[2]]))
         return result
 
     def _print_probs_of_tags(self, verbose=True) -> None:
@@ -190,22 +190,24 @@ class FormattedComparedAddresses(ABC):
             if index > 0:
                 print("")
 
-    def _print_tags_diff_color(self, verbose=True) -> None:
+    def _print_tags_diff_color(self, name_one: str = "address one" , name_two: str = "address two", verbose=True) -> None:
         """Print the output of the string with color codes that represent
         the differences among the two strings.
 
         Args:
+            name_one (str, optional) : Name associated with first color. Defaults to address one.
+            name_two (str, optional) : Name associated with second color. Defaults to address two.
             verbose (bool, optional): If True, it will print a presentation of the colors
             and what they mean. Defaults to True.
         """
         if verbose:
             print("White: Shared")
             if not self.colorblind:
-                print("Red: Belongs only to " + self.origin[0])
-                print("Green: Belongs only to " + self.origin[1])
+                print("Red: Belongs only to " + name_one)
+                print("Green: Belongs only to " + name_two)
             else:
-                print("Blue: Belongs only to " + self.origin[0])
-                print("Yellow: Belongs only to " + self.origin[1])
+                print("Blue: Belongs only to " + name_one)
+                print("Yellow: Belongs only to " + name_two)
             print("")
 
         address_component_names = [tag[0] for tag in self.list_of_bool if not tag[1]]

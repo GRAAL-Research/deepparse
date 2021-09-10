@@ -196,21 +196,21 @@ if __name__ == '__main__':
     address_comparer_cb = AddressesComparer(address_parser, colorblind=True)
 
     # Compare with source tags with deepparse tags
-    delta_dict_deeparse_one_two = addresses_comparer.compare_tags([list_of_tuples_address_one,
+    delta_dict_deeparse_one_two = address_comparer_cb.compare_tags([list_of_tuples_address_one,
                                                                    list_of_tuples_address_two])
 
     # delta_dict_deeparse_one_two[0].comparison_report()
     # delta_dict_deeparse_one_two[1].comparison_report()
 
     # compare two identical addresses
-    raw_addresses_identical_comparison = addresses_comparer.compare_raw((raw_address_original, raw_address_identical))
+    raw_addresses_identical_comparison = address_comparer_cb.compare_raw((raw_address_original, raw_address_identical))
     raw_addresses_identical_comparison.comparison_report()
 
     # compare two equivalent addresses
-    raw_addresses_equivalent_comparison = addresses_comparer.compare_raw((raw_address_original, raw_address_equivalent))
+    raw_addresses_equivalent_comparison = address_comparer_cb.compare_raw((raw_address_original, raw_address_equivalent))
     raw_addresses_equivalent_comparison.comparison_report()
 
     # compare two diff addresses
-    raw_addresses_diff_street_comparison = addresses_comparer.compare_raw((raw_address_original,
+    raw_addresses_diff_street_comparison = address_comparer_cb.compare_raw((raw_address_original,
                                                                            raw_address_diff_streetNumber))
     raw_addresses_diff_street_comparison.comparison_report()

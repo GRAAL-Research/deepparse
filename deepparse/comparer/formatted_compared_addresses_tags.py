@@ -16,38 +16,30 @@ class FormattedComparedAddressesTags(FormattedComparedAddresses):
         """
         return {self.address_two.raw_address: self.address_two.address_parsed_components}
 
-    def comparison_report(self) -> None:
-        """print a comparison report for addresses tags comparison"""
-        # get terminal size to adapt the output to the user
-        # nb_delimiters = os.get_terminal_size().columns if nb_delimiters is None else nb_delimiters
-        nb_delimiters = 125
+    def _comparison_report_builder(self) -> str:
+        """Builds a formatted string that represents a comparison report for addresses tags comparison
 
-        comparison_report_signal = "=" * nb_delimiters
-        print(comparison_report_signal)
+        Returns:
+            str: A formatted string that represents a comparison report for addresses tags comparison
+        """
 
+        formatted_str = ""
         intro_str = "Comparison report of tags for parsed address: "
         if self.identical:
-            print(intro_str + "Identical")
+            formatted_str +=  intro_str + "Identical\n"
         else:
-            print(intro_str + "Not identical")
-        print("Raw address: " + self.address_one.raw_address)
+            formatted_str +=  intro_str + "Not identical\n"
+        formatted_str += "Raw address: " + self.address_one.raw_address +"\n\n"
 
-        print("")
-        print("Tags: ")
-        print(self.origin[0] + ": ", self.address_one.to_list_of_tuples())
-        print("")
-        print(self.origin[1] + ": ", self.address_two.to_list_of_tuples())
-        print("")
-        print("")
+        formatted_str += "Tags: \n"
+        formatted_str += self.origin[0] + ": " + str(self.address_one.to_list_of_tuples()) + "\n\n"
+        formatted_str += self.origin[1] + ": " + str(self.address_two.to_list_of_tuples()) + "\n\n"
 
-        self._print_probs_of_tags()
+        formatted_str += self._get_probs_of_tags()
 
         if not self.identical:
-            print("")
-            print("")
-            print("Addresses tags differences between the two parsing:")
-            self._print_tags_diff_color(self.origin[0], self.origin[1])
-        print("")
-
-        print(comparison_report_signal)
-        print("")
+            formatted_str += "\n\n"
+            formatted_str += "Addresses tags differences between the two parsing:\n"
+            formatted_str += self._get_tags_diff_color(self.origin[0], self.origin[1])
+        
+        return formatted_str

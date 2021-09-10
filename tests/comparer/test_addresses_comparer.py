@@ -42,8 +42,7 @@ class TestAdressesComparer(TestCase):
         self.address_parser_bpemb_device_0 = AddressParser(model_type="bpemb", device=0)
         self.address_comparer = AddressesComparer(self.address_parser_bpemb_device_0)
 
-        self.raw_one_comparison = self.address_comparer.compare_raw(
-            (self.raw_address_original, self.raw_address_identical))
+
         self.raw_multiple_comparisons = self.address_comparer.compare_raw(
             [(self.raw_address_original, self.raw_address_identical),
              (self.raw_address_original, self.raw_address_diff_StreetNumber)])
@@ -56,23 +55,31 @@ class TestAdressesComparer(TestCase):
     # def test_givenARawAddress_whenCompareRaw_thenReturnProperClass
     # Et ça: self.address_comparer.compare_raw((self.raw_address_original, self.raw_address_identical))
     # ça doit être fait dans le test c'est le setup du test.
-    def test_raw_one_comparison(self):
-        self.assertIsInstance(self.raw_one_comparison, FormattedComparedAddressesRaw)
+    def test_givenARawAddress_whenCompareRaw_thenReturnProperClass(self):
+        raw_one_comparison = self.address_comparer.compare_raw(
+            (self.raw_address_original, self.raw_address_identical))
+        self.assertIsInstance(raw_one_comparison, FormattedComparedAddressesRaw)
 
-    def test_raw_multiple_comparisons(self):
-        self.assertIsInstance(self.raw_multiple_comparisons, list)
-        self.assertIsInstance(self.raw_multiple_comparisons[0], FormattedComparedAddressesRaw)
-        self.assertIsInstance(self.raw_multiple_comparisons[1], FormattedComparedAddressesRaw)
+    def test_givenMultipleRawAddresses_whenCompareRaw_thenReturnProperClass(self):
+        raw_multiple_comparisons = self.address_comparer.compare_raw(
+            [(self.raw_address_original, self.raw_address_identical),
+             (self.raw_address_original, self.raw_address_diff_StreetNumber)])
+        self.assertIsInstance(raw_multiple_comparisons, list)
+        self.assertIsInstance(raw_multiple_comparisons[0], FormattedComparedAddressesRaw)
+        self.assertIsInstance(raw_multiple_comparisons[1], FormattedComparedAddressesRaw)
 
     # il va manquer aussi des tests à savoir si le formatted_comparisons est correct.
 
-    def test_tags_one_comparison(self):
-        self.assertIsInstance(self.tags_one_comparison, FormattedComparedAddressesTags)
+    def test_givenATaggedAddress_whenCompareTags_thenReturnProperClass(self):
+        tags_one_comparison = self.address_comparer.compare_tags(self.list_of_tuples_address_original)
+        self.assertIsInstance(tags_one_comparison, FormattedComparedAddressesTags)
 
-    def test_tags_multiple_comparisons(self):
-        self.assertIsInstance(self.tags_multiple_comparisons, list)
-        self.assertIsInstance(self.tags_multiple_comparisons[0], FormattedComparedAddressesTags)
-        self.assertIsInstance(self.tags_multiple_comparisons[1], FormattedComparedAddressesTags)
+    def test_givenMultipleTaggedAddresses_whenCompareTags_thenReturnProperClass(self):
+        tags_multiple_comparisons = self.address_comparer.compare_tags(
+            [self.list_of_tuples_address_original, self.list_of_tuples_address_diff_StreetNumber])
+        self.assertIsInstance(tags_multiple_comparisons, list)
+        self.assertIsInstance(tags_multiple_comparisons[0], FormattedComparedAddressesTags)
+        self.assertIsInstance(tags_multiple_comparisons[1], FormattedComparedAddressesTags)
 
     # il va manquer aussi des tests à savoir si le formatted_comparisons est correct.
 

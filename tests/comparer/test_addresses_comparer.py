@@ -6,7 +6,6 @@ from unittest import TestCase
 from deepparse.comparer.addresses_comparer import AddressesComparer
 from deepparse.comparer.formatted_compared_addresses_raw import FormattedComparedAddressesRaw
 from deepparse.comparer.formatted_compared_addresses_tags import FormattedComparedAddressesTags
-from deepparse.parser.address_parser import AddressParser
 
 
 class TestAdressesComparer(TestCase):
@@ -41,15 +40,6 @@ class TestAdressesComparer(TestCase):
 
         self.address_parser_bpemb_device_0 = AddressParser(model_type="bpemb", device=0)
         self.address_comparer = AddressesComparer(self.address_parser_bpemb_device_0)
-
-
-        self.raw_multiple_comparisons = self.address_comparer.compare_raw(
-            [(self.raw_address_original, self.raw_address_identical),
-             (self.raw_address_original, self.raw_address_diff_StreetNumber)])
-
-        self.tags_one_comparison = self.address_comparer.compare_tags(self.list_of_tuples_address_original)
-        self.tags_multiple_comparisons = self.address_comparer.compare_tags(
-            [self.list_of_tuples_address_original, self.list_of_tuples_address_diff_StreetNumber])
 
     # la nomenclature du nom d'un test c'est comme ça
     # def test_givenARawAddress_whenCompareRaw_thenReturnProperClass

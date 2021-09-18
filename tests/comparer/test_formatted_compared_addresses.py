@@ -10,6 +10,52 @@ from tests.base_capture_output import CaptureOutputTestCase
 
 class TestAddressComparer(TestCase):
 
+    @classmethod
+    def setUpClass(cls):
+        cls.a_addresses_comparer_model = "bpemb"
+        cls.a_addresses_comparer__repr__ =  f"Compare addresses with {cls.a_addresses_comparer_model.capitalize()}AddressParser"
+
+        cls.a_address_str = "3 test road"
+        cls.a_complete_address_str = "3 test road unit west city province postal_code delivery"
+        cls.a_parsed_address = [("3", "StreetNumber"), ("test", "StreetName"), ("road", "StreetName")]
+        cls.a_complete_parsed_address = [("3", "StreetNumber"), ("test", "StreetName"), ("road", "StreetName"),
+                                         ("unit", "Unit"), ("west", "Orientation"), ("city", "Municipality"),
+                                         ("province", "Province"), ("postal_code", "PostalCode"),
+                                         ("delivery", "GeneralDelivery")]
+
+        cls.a_address_repr = "FormattedParsedAddress<StreetNumber='3', StreetName='test road'>"
+        cls.a_address = {cls.a_address_str: cls.a_parsed_address}
+        cls.a_complete_address = {cls.a_complete_address_str: cls.a_complete_parsed_address}
+        cls.a_existing_tag = "3"
+
+        cls.a_parsed_address_in_dict_format = {
+            'StreetNumber': '3',
+            'Unit': None,
+            'StreetName': 'test road',
+            'Orientation': None,
+            'Municipality': None,
+            'Province': None,
+            'PostalCode': None,
+            'GeneralDelivery': None
+        }
+
+        cls.a_complete_parsed_address_in_dict_format = {
+            'StreetNumber': '3',
+            'Unit': 'unit',
+            'StreetName': 'test road',
+            'Orientation': 'west',
+            'Municipality': 'city',
+            'Province': 'province',
+            'PostalCode': 'postal_code',
+            'GeneralDelivery': 'delivery'
+        }
+        # we reset the FIELDS of the address to default values since we change it in some tests
+        formated_parsed_address.FIELDS = [
+            "StreetNumber", "Unit", "StreetName", "Orientation", "Municipality", "Province", "PostalCode",
+            "GeneralDelivery"
+        ]
+
+
     def setUp(self) -> None:
         self.raw_address_original = "350 rue des Lilas Ouest Québec Québec G1L 1B6"
         self.raw_address_identical = "350 rue des Lilas Ouest Québec Québec G1L 1B6"
@@ -22,11 +68,10 @@ class TestAddressComparer(TestCase):
         self.raw_address_diff_PostalCode = "350 rue des Lilas Ouest Québec Québec G1P 1B6"
         self.raw_address_diff_Orientation = "350 rue des Lilas Est Québec Québec G1L 1B6"
 
-        self.address_parser_bpemb_device_0 = AddressParser(model_type="bpemb", device=0)
+        
         self.address_comparer = AddressesComparer(self.address_parser_bpemb_device_0)
 
-        self.raw_identical_comparison = self.address_comparer.compare_raw(
-            (self.raw_address_original, self.raw_address_identical))
+
         self.raw_equivalent_comparison = self.address_comparer.compare_raw(
             (self.raw_address_original, self.raw_address_equivalent))
         self.raw_address_diff_streetNumber_comparison = self.address_comparer.compare_raw(
@@ -43,6 +88,15 @@ class TestAddressComparer(TestCase):
             (self.raw_address_original, self.raw_address_diff_PostalCode))
         self.raw_address_diff_Orientation_comparison = self.address_comparer.compare_raw(
             (self.raw_address_original, self.raw_address_diff_Orientation))
+
+
+    def test_givenIdenticalRawAddresses_whenCompareRaw_thenReturnIdentical(self):
+        raw_address_original = "350 rue des Lilas Ouest Québec Québec G1L 1B6"
+        raw_address_identical = "350 rue des Lilas Ouest Québec Québec G1L 1B6"
+        raw_identical_comparison = self.address_comparer.compare_raw(
+            (raw_address_original, raw_address_identical))
+        self.assertTrue(raw_identical_comparison.indentical)
+
 
     def test_identical_raw_address_identical_comparison(self):
         self.assertTrue(self.raw_identical_comparison.indentical)

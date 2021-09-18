@@ -148,49 +148,49 @@ class AddressesComparer:
 # à deleter pour la release finale
 # à transformer aussi en exemple dans "examples".
 if __name__ == '__main__':
-    list_of_tuples_address_one = [("305", "StreetNumber"), ("rue des Lilas", "StreetName"), ("Ouest", "Orientation"),
+    list_of_tuples_address_one = [("350", "StreetNumber"), ("rue des Lilas", "StreetName"), ("Ouest", "Orientation"),
                                   ("Québec", "Municipality"), ("Québec", "Province"), ("G1L 1B6", "PostalCode")]
 
     list_of_tuples_address_two = [("350", "StreetNumber"), ("rue des Lilas", "StreetName"), ("Ouest", "Orientation"),
                                   ("Québec", "Municipality"), ("Québec", "Province"), ("G1L 1B6", "PostalCode")]
 
-    raw_address_original = "350 rue des Lilas Ouest Quebec city Quebec G1L 1B6"
-    raw_address_identical = "350 rue des Lilas Ouest Quebec city Quebec G1L 1B6"
-    raw_address_equivalent = "350  rue des Lilas Ouest Quebec city Quebec G1L 1B6"
-    raw_address_diff_streetNumber = "450 rue des Lilas Ouest Quebec city Quebec G1L 1B6"
+    raw_address_original = "350 rue des Lilas Ouest Quebec Quebec G1L 1B6"
+    raw_address_identical = "350 rue des Lilas Ouest Quebec Quebec G1L 1B6"
+    raw_address_equivalent = "350  rue des Lilas Ouest Quebec Quebec G1L 1B6"
+    raw_address_diff_streetNumber = "450 rue des Lilas Ouest Quebec Quebec G1L 1B6"
 
     address_parser = AddressParser(model_type="bpemb", device=1)
     addresses_comparer = AddressesComparer(address_parser)
 
     # Compare with source tags with deepparse tags
-    delta_dict_deeparse_one = addresses_comparer.compare_tags(list_of_tuples_address_one)
-    delta_dict_deeparse_one.comparison_report()
+    #delta_dict_deeparse_one = addresses_comparer.compare_tags(list_of_tuples_address_one)
+    #delta_dict_deeparse_one.comparison_report()
 
-    delta_dict_deeparse_one_two = addresses_comparer.compare_tags([list_of_tuples_address_one,
-                                                                   list_of_tuples_address_two])
+    #delta_dict_deeparse_one_two = addresses_comparer.compare_tags([list_of_tuples_address_one,
+    #                                                               list_of_tuples_address_two])
 
-    delta_dict_deeparse_one_two[0].comparison_report()
-    delta_dict_deeparse_one_two[1].comparison_report()
+    #delta_dict_deeparse_one_two[0].comparison_report()
+    #delta_dict_deeparse_one_two[1].comparison_report()
 
     # compare two identical addresses
-    raw_addresses_identical_comparison = addresses_comparer.compare_raw((raw_address_original, raw_address_identical))
-    raw_addresses_identical_comparison.comparison_report()
+    #raw_addresses_identical_comparison = addresses_comparer.compare_raw((raw_address_original, raw_address_identical))
+    #raw_addresses_identical_comparison.comparison_report()
 
     # compare two equivalent addresses
-    raw_addresses_equivalent_comparison = addresses_comparer.compare_raw((raw_address_original, raw_address_equivalent))
-    raw_addresses_equivalent_comparison.comparison_report()
+    #raw_addresses_equivalent_comparison = addresses_comparer.compare_raw((raw_address_original, raw_address_equivalent))
+    #raw_addresses_equivalent_comparison.comparison_report()
 
     # compare two diff addresses
-    raw_addresses_diff_street_comparison = addresses_comparer.compare_raw((raw_address_original,
-                                                                           raw_address_diff_streetNumber))
-    raw_addresses_diff_street_comparison.comparison_report()
+    #raw_addresses_diff_street_comparison = addresses_comparer.compare_raw((raw_address_original,
+    #                                                                       raw_address_diff_streetNumber))
+    #raw_addresses_diff_street_comparison.comparison_report()
 
     # two comparisons two diff addresses
     raw_addresses_diff_street_comparison = addresses_comparer.compare_raw([(raw_address_original,
                                                                             raw_address_equivalent),
                                                                            (raw_address_original,
                                                                             raw_address_diff_streetNumber)])
-    raw_addresses_diff_street_comparison[0].comparison_report()
+    #raw_addresses_diff_street_comparison[0].comparison_report()
     raw_addresses_diff_street_comparison[1].comparison_report()
 
     address_comparer_cb = AddressesComparer(address_parser, colorblind=True)

@@ -2,6 +2,7 @@
 # pylint: disable=not-callable, too-many-public-methods
 import unittest
 from unittest import TestCase
+from unittest.mock import MagicMock
 
 from deepparse.comparer import AddressesComparer
 from deepparse.parser.address_parser import AddressParser
@@ -13,7 +14,7 @@ class TestAddressComparer(TestCase):
     @classmethod
     def setUpClass(cls):
         cls.a_addresses_comparer_model = "bpemb"
-        cls.a_addresses_comparer__repr__ =  f"Compare addresses with {cls.a_addresses_comparer_model.capitalize()}AddressParser"
+        cls.a_addresses_comparer__repr__ = f"Compare addresses with {cls.a_addresses_comparer_model.capitalize()}AddressParser"
 
         cls.a_address_str = "3 test road"
         cls.a_complete_address_str = "3 test road unit west city province postal_code delivery"
@@ -55,7 +56,6 @@ class TestAddressComparer(TestCase):
             "GeneralDelivery"
         ]
 
-
     def setUp(self) -> None:
         self.raw_address_original = "350 rue des Lilas Ouest Québec Québec G1L 1B6"
         self.raw_address_identical = "350 rue des Lilas Ouest Québec Québec G1L 1B6"
@@ -68,12 +68,26 @@ class TestAddressComparer(TestCase):
         self.raw_address_diff_PostalCode = "350 rue des Lilas Ouest Québec Québec G1P 1B6"
         self.raw_address_diff_Orientation = "350 rue des Lilas Est Québec Québec G1L 1B6"
 
-        
-        self.address_comparer = AddressesComparer(self.address_parser_bpemb_device_0)
+        # Ah tu vois c'est ici que l'on doit ce détacher de AddressComparer
+        # tu peux aussi juste affecter aux raw_equivalent_comparison etc juste la valeur de retour
+        # sinon ça rend le test lourd
 
+        # self.address_comparer = AddressesComparer(self.address_parser_bpemb_device_0)
+        first_address = "350 rue des Lilas Ouest Quebec Quebec G1L 1B6"
+        first_address_parsing = [
+            ('350', ('StreetNumber', 1.0)),
+            ('rue', ('StreetName', 0.9987)),
+            ('des', ('StreetName', 0.9993)),
+            ('Lilas', ('StreetName', 0.8176)),
+            ('Ouest', ('Orientation', 0.781)),
+            ('Quebec', ('Municipality', 0.9768)),
+            ('Quebec', ('Province', 1.0)),
+            ('G1L', ('PostalCode', 0.9993)),
+            ('1B6', ('PostalCode', 1.0))]
 
-        self.raw_equivalent_comparison = self.address_comparer.compare_raw(
-            (self.raw_address_original, self.raw_address_equivalent))
+        first_formatted_parsed_address = FormattedParsedAddress({first_address: first_address_parsing})
+
+        self.raw_equivalent_comparison =
         self.raw_address_diff_streetNumber_comparison = self.address_comparer.compare_raw(
             (self.raw_address_original, self.raw_address_diff_streetNumber))
         self.raw_address_diff_streetName_comparison = self.address_comparer.compare_raw(
@@ -89,6 +103,12 @@ class TestAddressComparer(TestCase):
         self.raw_address_diff_Orientation_comparison = self.address_comparer.compare_raw(
             (self.raw_address_original, self.raw_address_diff_Orientation))
 
+    def setup_address_comparer_mock(self, address_one, address_two, model_type="BPEMB"):
+        address_parser_mock = MagicMock()
+        address_parser_mock.__call__.return_value = [address_one, address_two]
+        address_parser_mock.model_type.capitalize.return_value = model_type
+
+        return address_parser_mock
 
     def test_givenIdenticalRawAddresses_whenCompareRaw_thenReturnIdentical(self):
         raw_address_original = "350 rue des Lilas Ouest Québec Québec G1L 1B6"
@@ -97,8 +117,17 @@ class TestAddressComparer(TestCase):
             (raw_address_original, raw_address_identical))
         self.assertTrue(raw_identical_comparison.indentical)
 
+    def test_givenIdenticalRawAddresses_whenCompareRaw_thenReturnIdentical(self):
+        address_parser_mock = self.setup_address_comparer_mock(address_one, address_two)
+
+        address_comparer = AddressesComparer(address_parser_mock)
+        expected = ""
+        actual = address_comparer.compare_raw((address_one, address_two))
+        self.assertEqual(expected, actual)
 
     def test_identical_raw_address_identical_comparison(self):
+        self.raw_address_original = "350 rue des Lilas Ouest Québec Québec G1L 1B6"
+
         self.assertTrue(self.raw_identical_comparison.indentical)
 
     def test_identical_raw_address_equivalent_comparison(self):
@@ -116,6 +145,8 @@ class TestAddressComparer(TestCase):
 
     def test_streetNumber_diff_raw_address_equivalent_comparison(self):
         self.assertFalse(self.raw_address_diff_streetNumber_comparison.equivalent)
+
+    # des tests pour model type
 
 
 class AddressComparisonOutputTests(CaptureOutputTestCase):

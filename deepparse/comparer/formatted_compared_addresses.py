@@ -163,7 +163,6 @@ class FormattedComparedAddresses(ABC):
         code_type = 48 if highlight else 38
 
         if self.colorblind:
-            
             color_1 = "\033[{code_type};2;26;123;220m{text}\033[0m"  # blue
             color_2 = "\033[{code_type};2;255;194;10m{text}\033[0m"  # yellow
         else:

@@ -6,6 +6,10 @@ from .formatted_compared_addresses import FormattedComparedAddresses
 
 @dataclass
 class FormattedComparedAddressesRaw(FormattedComparedAddresses):
+    # commentaires
+    # Je pense que get_probs devrait être _get_probs
+    # Je pense que ce serait mieux comme nom d'attribut, first_address and second_address
+    # Je pense que ce serait intéressant un attribut self.with_probs?
 
     def get_probs(self) -> Dict:
         """get probs of tags for the parsing made with deepparse

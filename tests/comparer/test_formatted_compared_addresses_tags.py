@@ -11,7 +11,7 @@ from deepparse.comparer.formatted_compared_addresses_tags import FormattedCompar
 mock = Mock()
 FormattedParsedAddress = mock
 
-
+# voir addresses_raw_2 même commentaire
 class FormattedTest():
     def __init__(self, StreetNumber, StreetName, Unit, Municipality, Province, PostalCode, Orientation, GeneralDelivery, raw_adress, address_parsed_components):
         self.StreetNumber = StreetNumber

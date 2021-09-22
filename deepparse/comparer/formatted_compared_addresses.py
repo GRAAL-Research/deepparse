@@ -1,3 +1,4 @@
+import os
 import sys
 import os
 from abc import ABC, abstractmethod
@@ -89,15 +90,17 @@ class FormattedComparedAddresses(ABC):
 
         return is_identical
 
-    def comparison_report(self, nb_delimiters: Union[None, int] = None) -> None:
+
+    def comparison_report(self, nb_delimiters: Union[int, None] = None) -> None:
+
         """print a comparison report"""
         sys.stdout.writelines(self._comparison_report(nb_delimiters))
 
-    def _comparison_report(self, nb_delimiters: int = 125) -> str:
+    def _comparison_report(self, nb_delimiters: Union[int, None]) -> str:
         """builds a comparison_report with delimiters to make the begining and the end
         of the comparison easier to spot."""
 
-        # get terminal size to adapt the output to the user
+        # Get terminal size to adapt the output to the user
         nb_delimiters = os.get_terminal_size().columns if nb_delimiters is None else nb_delimiters
 
         formatted_str = ""

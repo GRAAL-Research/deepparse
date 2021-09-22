@@ -200,3 +200,42 @@ class AddressesComparer:
     @staticmethod
     def _check_if_with_prob(list_of_tuple):
         return len(list_of_tuple[0][1]) == 2 and isinstance(list_of_tuple[0][1][1], float)
+
+if __name__ == '__main__':
+    list_of_tuples = [("350", "StreetNumber"), ("rue des Lilas", "StreetName"),
+                                  ("Ouest Québec", "Municipality"), ("Québec", "Province"), ("G1L 1B6", "PostalCode")]
+
+    list_of_tuples_with_probs =  [
+            ('350', ('StreetNumber', 1.0)),
+            ('rue', ('StreetName', 0.9987)),
+            ('des', ('StreetName', 0.9993)),
+            ('Lilas', ('StreetName', 0.8176)),
+            ('Ouest', ('Orientation', 0.781)),
+            ('Quebec', ('Municipality', 0.9768)),
+            ('Quebec', ('Province', 1.0)),
+            ('G1L', ('PostalCode', 0.9993)),
+            ('1B6', ('PostalCode', 1.0))]
+
+    address_parser = AddressParser(model_type="bpemb", device=1)
+    addresses_comparer = AddressesComparer(address_parser)
+
+    delta_dict_deeparse_one_two = addresses_comparer.compare_tags([list_of_tuples,
+                                                                   list_of_tuples_with_probs])
+
+    delta_dict_deeparse_one_two[0].comparison_report()
+    delta_dict_deeparse_one_two[1].comparison_report()
+
+    raw_address_original = "350 rue des Lilas Ouest Quebec Quebec G1L 1B6"
+    raw_address_identical = "350 rue des Lilas Ouest Quebec Quebec G1L 1B6"
+    raw_address_equivalent = "350  rue des Lilas Ouest Quebec Quebec G1L 1B6"
+    raw_address_diff_streetNumber = "450 rue des Lilas Ouest Quebec Quebec G1L 1B6"
+
+    raw_addresses_multiples_comparisons = addresses_comparer.compare_raw([(raw_address_original,
+                                                                            raw_address_identical)
+                                                                            ,(raw_address_original,
+                                                                            raw_address_equivalent),
+                                                                           (raw_address_original,
+                                                                            raw_address_diff_streetNumber)])
+    raw_addresses_multiples_comparisons[0].comparison_report()
+    raw_addresses_multiples_comparisons[1].comparison_report()
+    raw_addresses_multiples_comparisons[2].comparison_report()

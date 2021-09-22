@@ -1,4 +1,5 @@
 import sys
+import os
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from difflib import SequenceMatcher
@@ -7,31 +8,24 @@ from typing import List, Union, Tuple, Dict
 from ..parser import FormattedParsedAddress
 
 
-@dataclass
+@dataclass(frozen=True)
 class FormattedComparedAddresses(ABC):
     """
     A comparison for addresses returned by the address comparer
 
     Args:
-        address_one(FormattedParsedAddress) : A FormatedParsedAddress that contains the parsing information
+        first_address(FormattedParsedAddress) : A FormatedParsedAddress that contains the parsing information
                                                 for the first address
-        address_two(FormattedParsedAddress) : A FormatedParsedAddress that contains the parsing information
+        second_address(FormattedParsedAddress) : A FormatedParsedAddress that contains the parsing information
                                                 for the second address
         origin: (Tuple[str]) : the origin of the parsing (ex : from source or from deepparse)
-
-        colorblind (bool) :  a colorbind flag, weither the use wants a colorblind friendly output or not
 
     Attributes:
-        address_one(FormattedParsedAddress) : A FormatedParsedAddress that contains the parsing information
+        first_address(FormattedParsedAddress) : A FormatedParsedAddress that contains the parsing information
                                                 for the first address
-        address_two(FormattedParsedAddress) : A FormatedParsedAddress that contains the parsing information
+        second_address(FormattedParsedAddress) : A FormatedParsedAddress that contains the parsing information
                                                 for the second address
         origin: (Tuple[str]) : the origin of the parsing (ex : from source or from deepparse)
-
-        colorblind (bool) :  a colorbind flag, weither the use wants a colorblind friendly output or not
-
-        list_of_bool (List[Tuple]): list_of_bool that contains all the address components name and indicates if it
-                                is the same for the two addresses
 
     Example:
 
@@ -54,14 +48,21 @@ class FormattedComparedAddresses(ABC):
             #  ('Quebec', 'Province'), ('G1L 1B6', 'PostalCode'), (None, 'Orientation'), (None, 'GeneralDelivery')]]
 
     """
-    address_one: FormattedParsedAddress
-    address_two: FormattedParsedAddress
+    first_address: FormattedParsedAddress
+    second_address: FormattedParsedAddress
     origin: Tuple[str]
-    colorblind: bool
+    with_probs: bool
 
-    def __post_init__(self) -> None:
-        self.list_of_bool = self._bool_address_tags_are_the_same([self.address_one.to_list_of_tuples(),
-                                                                  self.address_two.to_list_of_tuples()])
+    @property
+    def list_of_bool(self) -> List:
+        """list_of_bool that contains all the address components name and indicates if it
+                                is the same for the two addresses
+
+        Returns:
+            List: [description]
+        """
+        return self._bool_address_tags_are_the_same([self.first_address.to_list_of_tuples(),
+                                                                  self.second_address.to_list_of_tuples()])
 
     @property
     def equivalent(self) -> bool:
@@ -83,21 +84,21 @@ class FormattedComparedAddresses(ABC):
         """
         is_identical = False
         if self.equivalent:
-            if self.address_one.raw_address == self.address_two.raw_address:
+            if self.first_address.raw_address == self.second_address.raw_address:
                 is_identical = True
 
         return is_identical
 
-    def comparison_report(self) -> None:
+    def comparison_report(self, nb_delimiters: Union[None, int] = None) -> None:
         """print a comparison report"""
-        sys.stdout.writelines(self._comparison_report())
+        sys.stdout.writelines(self._comparison_report(nb_delimiters))
 
     def _comparison_report(self, nb_delimiters: int = 125) -> str:
         """builds a comparison_report with delimiters to make the begining and the end
         of the comparison easier to spot."""
 
         # get terminal size to adapt the output to the user
-        # nb_delimiters = os.get_terminal_size().columns if nb_delimiters is None else nb_delimiters
+        nb_delimiters = os.get_terminal_size().columns if nb_delimiters is None else nb_delimiters
 
         formatted_str = ""
         comparison_report_signal = "=" * nb_delimiters
@@ -112,15 +113,17 @@ class FormattedComparedAddresses(ABC):
             to make a tags comparison and the raw addresses comparison is different, the comparison
             report are not the same for the two. It is then implemented in each specific classes.
         """
+
+
     @abstractmethod
-    def get_probs(self) -> Dict:
+    def _get_probs(self) -> Dict:
         """get the tags from the parsin with their associated probabilities, the method
             needs to be implemented in each class because they dont use the probabilities
             the same way.
 
         Returns:
-            Dict: A dict where the keys are the raw addresses and the values are
-                    the tags with their associated probabilities
+            Dict: A dict where the values are
+            the tags with their associated probabilities
         """
 
     def _get_color_diff(self, string_one: str, string_two: str, highlight=False) -> str:
@@ -139,15 +142,14 @@ class FormattedComparedAddresses(ABC):
                                         spaces. Defaults to False.
 
         Notes:
-            the method is colorblind friendly, if the colorblind flag is raised,
-            the output will be in colors that minimize the risk that a user cannot
-            see the difference.
+            the method is colorblind friendly, that means that the output will be
+            in colors that minimize the risk that a user cannot see the difference.
 
             If both the strings share the same charachter, it will be noted in white.
             If the first string has something more than the second one, it will be noted in
-            red (or in blue for the colorblind mode).
+            blue.
             If the second string has something more than the first one, it will be noted in
-            green (or in yellow for the colorblind mode).
+            yellow.
 
             The uses the SequenceMatcher to get the differences codes that are then converted to
             color codes.
@@ -162,12 +164,8 @@ class FormattedComparedAddresses(ABC):
 
         code_type = 48 if highlight else 38
 
-        if self.colorblind:
-            color_1 = "\033[{code_type};2;26;123;220m{text}\033[0m"  # blue
-            color_2 = "\033[{code_type};2;255;194;10m{text}\033[0m"  # yellow
-        else:
-            color_1 = "\033[{code_type};2;255;0;0m{text}\033[0m"  # red
-            color_2 = "\033[{code_type};2;0;255;0m{text}\033[0m"  # green
+        color_1 = "\033[{code_type};2;26;123;220m{text}\033[0m"  # blue
+        color_2 = "\033[{code_type};2;255;194;10m{text}\033[0m"  # yellow
 
         white = "\033[38;2;255;255;255m{text}\033[0m"
 
@@ -192,30 +190,14 @@ class FormattedComparedAddresses(ABC):
                         color_1.format(code_type = code_type, text= string_one[code[1]:code[2]]))
         return result
 
-    def _get_probs_of_tags(self, verbose=True) -> str:
-        """takes the tags and their probabilities and print them to console
 
-        Args:
-            verbose (bool, optional): If true, the results are presented. Defaults to True.
-        """
-        formatted_str = ""
-        if verbose:
-            formatted_str += "Probabilities of parsed tags for the address:\n\n"
-        for index, tuple_dict in enumerate(self.get_probs().items()):
-            key, value = tuple_dict
-            formatted_str += "Raw address: " + key + "\n"
-            formatted_str += str(value) + "\n"
-            if index > 0:
-                formatted_str += "\n"
-        return formatted_str
-
-    def _get_tags_diff_color(self, name_one: str = "address one" , name_two: str = "address two", verbose=True) -> str:
+    def _get_tags_diff_color(self, name_one: str = "first address" , name_two: str = "second address", verbose=True) -> str:
         """Print the output of the string with color codes that represent
         the differences among the two strings.
 
         Args:
-            name_one (str, optional) : Name associated with first color. Defaults to address one.
-            name_two (str, optional) : Name associated with second color. Defaults to address two.
+            name_one (str, optional) : Name associated with first color. Defaults to first address.
+            name_two (str, optional) : Name associated with second color. Defaults to second address.
             verbose (bool, optional): If True, it will print a presentation of the colors
             and what they mean. Defaults to True.
         """
@@ -223,19 +205,15 @@ class FormattedComparedAddresses(ABC):
         formatted_str = ""
         if verbose:
             formatted_str +="White: Shared\n"
-            if self.colorblind:
-                formatted_str += "Blue: Belongs only to " + name_one + "\n"
-                formatted_str += "Yellow: Belongs only to " + name_two + "\n"
-            else:
-                formatted_str += "Red: Belongs only to " + name_one + "\n"
-                formatted_str += "Green: Belongs only to " + name_two + "\n"
+            formatted_str += "Blue: Belongs only to the " + name_one + "\n"
+            formatted_str += "Yellow: Belongs only to the " + name_two + "\n"
             formatted_str += "\n"
 
         address_component_names = [tag[0] for tag in self.list_of_bool if not tag[1]]
 
         for address_component_name in address_component_names:
             list_of_list_tag = []
-            for parsed_address in [self.address_one.to_list_of_tuples(), self.address_two.to_list_of_tuples()]:
+            for parsed_address in [self.first_address.to_list_of_tuples(), self.second_address.to_list_of_tuples()]:
 
                 list_of_list_tag.append(" ".join([tag for (tag, tag_name) in parsed_address \
                                                   if tag_name == address_component_name and tag is not None]))

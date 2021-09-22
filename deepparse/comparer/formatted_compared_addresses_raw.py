@@ -4,21 +4,19 @@ from typing import Dict
 from .formatted_compared_addresses import FormattedComparedAddresses
 
 
-@dataclass
+@dataclass(frozen=True)
 class FormattedComparedAddressesRaw(FormattedComparedAddresses):
-    # commentaires
-    # Je pense que get_probs devrait être _get_probs
-    # Je pense que ce serait mieux comme nom d'attribut, first_address and second_address
-    # Je pense que ce serait intéressant un attribut self.with_probs?
+    """class that inherits from abstract class FormattedComparedAddresses and implements its methods in order to build
+        a comparison report."""
 
-    def get_probs(self) -> Dict:
-        """get probs of tags for the parsing made with deepparse
+    def _get_probs(self) -> Dict:
+        """get the tags from the parsing with their associated probabilities
 
         Returns:
             Dict: the key is the raw address and the value is the tags with thei associated probabilities.
         """
-        return {self.address_one.raw_address: self.address_one.address_parsed_components,
-                self.address_two.raw_address: self.address_two.address_parsed_components}
+        return {self.first_address.raw_address: self.first_address.address_parsed_components,
+                self.second_address.raw_address: self.second_address.address_parsed_components}
 
     def _get_raw_diff_color(self, verbose=True) -> str:
         """Print the raw addresses and highlight the differences between them."""
@@ -27,14 +25,11 @@ class FormattedComparedAddressesRaw(FormattedComparedAddresses):
 
         if verbose:
             str_formattted +="White: Shared\n"
-            if not self.colorblind:
-                str_formattted += "Red: Belongs only to address one\n"
-                str_formattted += "Green: Belongs only to address two\n"
-            else:
-                str_formattted += "Blue: Belongs only to address one\n"
-                str_formattted += "Yellow: Belongs only to address two\n"
+            str_formattted += "Blue: Belongs only to the first address\n"
+            str_formattted += "Yellow: Belongs only to the second address\n"
             str_formattted += "\n"
-        str_formattted += self._get_color_diff(self.address_one.raw_address, self.address_two.raw_address, highlight=True) + "\n"
+
+        str_formattted += self._get_color_diff(self.first_address.raw_address, self.second_address.raw_address, highlight=True) + "\n"
         return str_formattted
 
     def _comparison_report_builder(self) -> str:
@@ -46,23 +41,25 @@ class FormattedComparedAddressesRaw(FormattedComparedAddresses):
         str_formattted = ""
         intro_str = "Comparison report of the two raw addresses: "
         if self.identical:
-            str_formattted += intro_str + "Identical\n"
+            str_formattted += intro_str + "Identical\n\n"
+            str_formattted += "Address : " + self.first_address.raw_address + "\n\n\n"
         else:
             if self.equivalent:
-                str_formattted += intro_str + "Equivalent\n"
+                str_formattted += intro_str + "Equivalent\n\n"
             else:
-                str_formattted += intro_str + "Not equivalent\n"
-        str_formattted += "\n"
-        str_formattted += "Address one: " + self.address_one.raw_address + "\n"
-        str_formattted += "and\n"
-        str_formattted += "Address two: " + self.address_two.raw_address + "\n\n\n"
-        str_formattted += "Probabilities of parsed tags for the addresses with " + self.origin[0] + ": \n\n"
-        probs = list(self.get_probs().values())
-        str_formattted += "Parsed address: " + repr(self.address_one) + "\n"
+                str_formattted += intro_str + "Not equivalent\n\n"
+        
+        
+            str_formattted += "First address : " + self.first_address.raw_address + "\n"
+            str_formattted += "and\n"
+            str_formattted += "Second address: " + self.second_address.raw_address + "\n\n\n"
+        str_formattted += "Probabilities of parsed tags for the addresses with " + self.origin[0] + ": \n"
+        probs = list(self._get_probs().values())
+        str_formattted += "Parsed address: " + repr(self.first_address) + "\n"
         str_formattted += str(probs[0]) + "\n"
         if not self.identical:
             
-            str_formattted += "\nParsed address: " + repr(self.address_two) +"\n"
+            str_formattted += "\nParsed address: " + repr(self.second_address) +"\n"
             str_formattted += str(probs[1]) + "\n"
 
             if self.equivalent:

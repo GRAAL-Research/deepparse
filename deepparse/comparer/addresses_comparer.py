@@ -7,12 +7,8 @@ from ..parser import AddressParser
 from ..parser.formated_parsed_address import FormattedParsedAddress
 
 
-# ça responsabilité est de comparer des adresses avec notre parsing d'adresse
-# AdressComparer().compare([(addresse_1, [parsing]), (addresse_2, [parsing]), ..., (addresse_n, [parsing])])
-# J'aimerai avoir à la sortie une liste de N objets d'adresse comparé
-# L'objet outputer est comme un conteneur qui contient l'adresse original, la différence en liste de bool de la longueur
-# du nombre de tag et une méthode __str__ pour afficher le output différent.
 @dataclass
+#todo @dataclass(frozen=True)
 class AddressesComparer:
     """
         Address comparer to compare addresses with each other and retrieves the differences between them. The addresses
@@ -45,7 +41,7 @@ class AddressesComparer:
             ('Quebec', ('Province', 1.0)),
             ('G1L', ('PostalCode', 0.9993)),
             ('1B6', ('PostalCode', 1.0))]
-
+12
     address_parser = AddressParser(model_type="bpemb", device=1)
     addresses_comparer = AddressesComparer(address_parser)
 
@@ -102,6 +98,7 @@ class AddressesComparer:
         if with_probs is None:
             with_probs = [self._check_if_with_prob(address) for address in addresses_tags_to_compare]
         else:
+            #todo pas besoin de faire un vecteur, juste un seu bool.
             with_probs = [with_probs] * len(addresses_tags_to_compare)
         
         raw_addresses = [" ".join([element[0] for element in address]) for address in addresses_tags_to_compare]
@@ -110,6 +107,7 @@ class AddressesComparer:
                                in zip(raw_addresses, addresses_tags_to_compare)]
                                
         deepparsed_formatted_addresses = [self.parser(raw_addess, with_prob=prob) for raw_addess, prob in zip(raw_addresses, with_probs)]
+        #todo deepparsed_formatted_addresses = [self.parser(raw_addess, with_prob=with_probs) for raw_addess in raw_addresses]
 
         if isinstance(deepparsed_formatted_addresses, FormattedParsedAddress):
             deepparsed_formatted_addresses = [deepparsed_formatted_addresses]
@@ -187,11 +185,12 @@ class AddressesComparer:
         """
         list_of_formatted_comparisons_dict = []
 
-        for comparison_tuple, prob in zip(comparison_tuples, with_probs):
+        for comparison_tuple, prob in zip(comparison_tuples, with_probs): #todo ici c'Est bizzare, c'Est un bool mais
+            #todo tu t'en sert sur une loop. L'idée je crois c'Est plutôt si t'a fait with_probs, on l'applique partout.
             comparison_info = {"first_address": comparison_tuple[0],
                                "second_address": comparison_tuple[1],
                                "origin": origin_tuple,
-                               "with_probs": prob}
+                               "with_probs": prob} #todo "with_probs": with_probs
 
             list_of_formatted_comparisons_dict.append(comparison_info)
 

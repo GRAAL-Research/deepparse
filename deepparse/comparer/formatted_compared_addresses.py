@@ -216,7 +216,11 @@ class FormattedComparedAddresses(ABC):
         for address_component_name in address_component_names:
             list_of_list_tag = []
             for parsed_address in [self.first_address.to_list_of_tuples(), self.second_address.to_list_of_tuples()]:
-
+# ça responsabilité est de comparer des adresses avec notre parsing d'adresse
+# AdressComparer().compare([(addresse_1, [parsing]), (addresse_2, [parsing]), ..., (addresse_n, [parsing])])
+# J'aimerai avoir à la sortie une liste de N objets d'adresse comparé
+# L'objet outputer est comme un conteneur qui contient l'adresse original, la différence en liste de bool de la longueur
+# du nombre de tag et une méthode __str__ pour afficher le output différent.
                 list_of_list_tag.append(" ".join([tag for (tag, tag_name) in parsed_address \
                                                   if tag_name == address_component_name and tag is not None]))
 

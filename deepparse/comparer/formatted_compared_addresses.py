@@ -51,7 +51,7 @@ class FormattedComparedAddresses(ABC):
     first_address: FormattedParsedAddress
     second_address: FormattedParsedAddress
     origin: Tuple[str]
-    with_probs: bool
+    with_prob: bool
 
     @property
     def list_of_bool(self) -> List:

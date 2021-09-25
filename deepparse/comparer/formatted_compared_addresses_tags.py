@@ -29,8 +29,8 @@ class FormattedComparedAddressesTags(FormattedComparedAddresses):
         for index, tuple_dict in enumerate(self._get_probs().items()):
             key, value = tuple_dict
             formatted_str += key + ": "
-            formatted_str += str(value) + "\n\n"
-            if index > 0:
+            formatted_str += str(value) + "\n"
+            if index == 0:
                 formatted_str += "\n"
         return formatted_str
 
@@ -46,18 +46,19 @@ class FormattedComparedAddressesTags(FormattedComparedAddresses):
         if self.identical:
             formatted_str +=  intro_str + "Identical\n\n"
         else:
-            formatted_str +=  intro_str + "Not identical\n\n"
-        formatted_str += "Raw address: " + self.first_address.raw_address +"\n\n"
+            formatted_str +=  intro_str + "Not equivalent\n\n"
+        formatted_str += "Raw address: " + self.first_address.raw_address +"\n\n\n"
 
         formatted_str += "Tags: \n"
         formatted_str += self.origin[0] + ": " + str(self.first_address.to_list_of_tuples()) + "\n\n"
         formatted_str += self.origin[1] + ": " + str(self.second_address.to_list_of_tuples()) + "\n\n\n"
 
 
-        if self.with_probs:
+        if self.with_prob:
             formatted_str += self._get_probs_of_tags()
 
         if not self.identical:
+            formatted_str += "\n"
             formatted_str += "Addresses tags differences between the two parsing:\n"
             formatted_str += self._get_tags_diff_color(self.origin[0], self.origin[1])
         

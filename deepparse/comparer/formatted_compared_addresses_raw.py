@@ -53,7 +53,7 @@ class FormattedComparedAddressesRaw(FormattedComparedAddresses):
             str_formattted += "First address : " + self.first_address.raw_address + "\n"
             str_formattted += "and\n"
             str_formattted += "Second address: " + self.second_address.raw_address + "\n\n\n"
-        str_formattted += "Probabilities of parsed tags for the addresses with " + self.origin[0] + ": \n"
+        str_formattted += "Probabilities of parsed tags for the addresses with " + self.origin[0] + ": \n\n"
         probs = list(self._get_probs().values())
         str_formattted += "Parsed address: " + repr(self.first_address) + "\n"
         str_formattted += str(probs[0]) + "\n"

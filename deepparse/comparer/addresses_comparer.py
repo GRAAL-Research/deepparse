@@ -101,11 +101,7 @@ class AddressesComparer:
         formatted_addresses = [FormattedParsedAddress({raw_address: address_tags}) for raw_address, address_tags \
                                in zip(raw_addresses, addresses_tags_to_compare)]
                                
-        deepparsed_formatted_addresses = self.parser(raw_addresses, with_prob=with_prob)
-
-
-        if isinstance(deepparsed_formatted_addresses, FormattedParsedAddress):
-            deepparsed_formatted_addresses = [deepparsed_formatted_addresses]
+        deepparsed_formatted_addresses = [self.parser(raw_address, with_prob=with_prob) for raw_address in raw_addresses]
 
         comparison_tuples = list(zip(formatted_addresses, deepparsed_formatted_addresses))
 
@@ -141,7 +137,7 @@ class AddressesComparer:
             raw_addresses_to_compare = [raw_addresses_to_compare]
 
         with_prob = True if with_prob is None else with_prob
-     
+
         list_of_deeparsed_addresses = []
         for addresses_to_compare in raw_addresses_to_compare:
             if len(addresses_to_compare) != 2:

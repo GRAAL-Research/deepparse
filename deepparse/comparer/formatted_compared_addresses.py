@@ -91,7 +91,6 @@ class FormattedComparedAddresses(ABC):
 
 
     def comparison_report(self, nb_delimiters: Union[int, None] = None) -> None:
-
         """print a comparison report"""
         sys.stdout.writelines(self._comparison_report(nb_delimiters))
 

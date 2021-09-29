@@ -2,162 +2,123 @@
 # pylint: disable=not-callable, too-many-public-methods
 import unittest
 from unittest import TestCase
-from unittest.mock import patch, Mock
 
 from deepparse.comparer.formatted_compared_addresses_tags import FormattedComparedAddressesTags
+from deepparse.parser import FormattedParsedAddress
 
-
-
-mock = Mock()
-FormattedParsedAddress = mock
-
-# voir addresses_raw_2 même commentaire
-class FormattedTest():
-    def __init__(self, StreetNumber, StreetName, Unit, Municipality, Province, PostalCode, Orientation, GeneralDelivery, raw_adress, address_parsed_components):
-        self.StreetNumber = StreetNumber
-        self.StreetName = StreetName
-        self.Unit = Unit
-        self.Municipality = Municipality
-        self.Province = Province
-        self.PostalCode = PostalCode
-        self.Orientation = Orientation
-        self.GeneralDelivery = GeneralDelivery
-        self.raw_address =  raw_adress
-        self.address_parsed_components = address_parsed_components
-
-class FormattedTestIdentical(FormattedTest):
-    def to_list_of_tuples(self):
-        return [('350', 'StreetNumber'), ('rue des Lilas', 'StreetName'), (None, 'Unit'), ('Quebec', 'Municipality'), ('Quebec', 'Province'), ('G1L 1B6', 'PostalCode'), ('Ouest', 'Orientation'), (None, 'GeneralDelivery')]
-
-
-class FormattedTestNotIdentical(FormattedTest):
-
-    def to_list_of_tuples(self):
-        return [('350', 'StreetNumber'), ('rue des Lilas', 'StreetName'), (None, 'Unit'), ('Ouest Quebec', 'Municipality'), ('Quebec', 'Province'), ('G1L 1B6', 'PostalCode'), (None, 'Orientation'), (None, 'GeneralDelivery')]
-
-
-
-
-class FormattedComparedAdressesesTagsTest(TestCase):
-    
-
+# Ici, nous n'avons pas besoin de mock, car on fait juste créer le parsing manuellement.
+class TestFormattedComparedAddressesTags(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.maxDiff = None
 
     def test_givenIdenticalAddressesTags_whenCompareTags_thenReturnIdenticalComparison_report(self):
-        self.maxDiff = None
+        original_raw_address = "350 rue des Lilas Ouest Quebec Quebec G1L 1B6"
+        original_parsed_address =  [("350", "StreetNumber"), ("rue des Lilas", "StreetName"),
+                                  ("Ouest", "Orientation"), ("Quebec", "Municipality"), ("Quebec", "Province"), 
+                                  ("G1L 1B6", "PostalCode")]
 
-        FormattedParsedAddressOne = FormattedTestIdentical(StreetNumber = '350',
-                                  StreetName = 'rue des Lilas',
-                                  Unit = None,
-                                  Municipality = 'Quebec',
-                                  Province = 'Quebec',
-                                  PostalCode = 'G1L 1B6',
-                                  Orientation = 'Ouest',
-                                  GeneralDelivery = None,
-                                  raw_adress="350 rue des Lilas Ouest Quebec Quebec G1L 1B6",
-                                  address_parsed_components =[('350', ('StreetNumber', 1.0)),
-                                        ('rue', ('StreetName', 0.9989)),
-                                        ('des', ('StreetName', 0.9998)),
-                                        ('Lilas', ('StreetName', 0.9343)),
-                                        ('Ouest', ('Orientation', 0.781)),
-                                        ('Quebec', ('Municipality', 0.9467)),
-                                        ('Quebec', ('Province', 1.0)),
-                                        ('G1L', ('PostalCode', 0.9997)),
-                                        ('1B6', ('PostalCode', 1.0))])
+        original_formatted_parsed_address = FormattedParsedAddress({original_raw_address: original_parsed_address})
 
+        identical_address = "350 rue des Lilas Ouest Quebec Quebec G1L 1B6"
+        identical_address_parsing_with_probs = [
+            ('350', ('StreetNumber', 1.0)),
+            ('rue', ('StreetName', 0.9987)),
+            ('des', ('StreetName', 0.9993)),
+            ('Lilas', ('StreetName', 0.8176)),
+            ('Ouest', ('Orientation', 0.781)),
+            ('Quebec', ('Municipality', 0.9768)),
+            ('Quebec', ('Province', 1.0)),
+            ('G1L', ('PostalCode', 0.9993)),
+            ('1B6', ('PostalCode', 1.0))]
+
+        identical_formatted_parsed_address = FormattedParsedAddress({identical_address: identical_address_parsing_with_probs})
+
+        identical_formatted_compared_addresses_tags = FormattedComparedAddressesTags(first_address = original_formatted_parsed_address,
+                                                                        second_address = identical_formatted_parsed_address,
+                                                                        origin = ('source',
+                                                                                    'deepparse using Bpemb'),
+                                                                        with_prob=True)
+
+
+        expected = "Comparison report of tags for parsed address: Identical\n\nRaw address: 350 rue des Lilas Ouest "\
+                    "Quebec Quebec G1L 1B6\n\n\nTags: \nsource: [('350', 'StreetNumber'), (None, 'Unit'), ('rue des Lilas', 'StreetName'),"\
+                    " ('Ouest', 'Orientation'), ('Quebec', 'Municipality'), ('Quebec', 'Province'), ('G1L 1B6', 'PostalCode'), "\
+                    "(None, 'GeneralDelivery')]\n\ndeepparse using Bpemb: [('350', 'StreetNumber'), (None, 'Unit'), "\
+                    "('rue des Lilas', 'StreetName'), ('Ouest', 'Orientation'), ('Quebec', 'Municipality'), ('Quebec', 'Province'), "\
+                    "('G1L 1B6', 'PostalCode'), (None, 'GeneralDelivery')]\n\n\nProbabilities of "\
+                    "parsed tags: \nsource: [('350', 'StreetNumber'), ('rue des Lilas', 'StreetName'), ('Ouest', 'Orientation'), "\
+                    "('Quebec', 'Municipality'), ('Quebec', 'Province'), ('G1L 1B6', 'PostalCode')]\n\ndeepparse using Bpemb:"\
+                    " [('350', ('StreetNumber', 1.0)), ('rue', ('StreetName', 0.9987)), ('des', ('StreetName', 0.9993)), ('Lilas',"\
+                    " ('StreetName', 0.8176)), ('Ouest', ('Orientation', 0.781)), ('Quebec', ('Municipality', 0.9768)), ('Quebec',"\
+                    " ('Province', 1.0)), ('G1L', ('PostalCode', 0.9993)), ('1B6', ('PostalCode', 1.0))]\n"
+
+
+
+        actual = identical_formatted_compared_addresses_tags._comparison_report_builder()
+
+        self.assertEqual(expected, actual)
+
+
+    def test_givenNotEquivalentAddressestags_whenCompareTags_thenReturnNotEquivalentComparison_report(self):
+
+        original_raw_address = "350 rue des Lilas Ouest Quebec Quebec G1L 1B6"
+        original_raw_address_with_probs = [
+            ('350', ('StreetNumber', 1.0)),
+            ('rue', ('StreetName', 0.9987)),
+            ('des', ('StreetName', 0.9993)),
+            ('Lilas', ('StreetName', 0.8176)),
+            ('Ouest', ('Orientation', 0.781)),
+            ('Quebec', ('Municipality', 0.9768)),
+            ('Quebec', ('Province', 1.0)),
+            ('G1L', ('PostalCode', 0.9993)),
+            ('1B6', ('PostalCode', 1.0))]
+    
+        original_formatted_parsed_address = FormattedParsedAddress({original_raw_address: original_raw_address_with_probs})
+    
+        not_equivalent_address = "350 rue des Lilas Ouest Quebec Quebec G1L 1B6"  # not identical address with the preceding
+        not_equivalent_address_parsing = [
+            ('350', ('StreetNumber', 1.0)),
+            ('rue', ('StreetName', 0.9987)),
+            ('des', ('StreetName', 0.9993)),
+            ('Lilas', ('StreetName', 0.8176)),
+            ('Ouest', ('Municipality', 0.781)),
+            ('Quebec', ('Municipality', 0.9768)),
+            ('Quebec', ('Province', 1.0)),
+            ('G1L', ('PostalCode', 0.9993)),
+            ('1B6', ('PostalCode', 1.0))]
+    
         
+        not_equivalent_formatted_parsed_address = FormattedParsedAddress({not_equivalent_address: not_equivalent_address_parsing})
+    
+        not_equivalent_formatted_compared_addresses_raw_ = FormattedComparedAddressesTags(first_address = original_formatted_parsed_address,
+                                                                                     second_address = not_equivalent_formatted_parsed_address,
+                                                                                     origin = ('source',
+                                                                                               'deepparse using Bpemb'),
+                                                                                     with_prob=True)
 
-        FormattedParsedAddressTwo = FormattedTestIdentical(StreetNumber = '350',
-                                  StreetName = 'rue des Lilas',
-                                  Unit = None,
-                                  Municipality = 'Quebec',
-                                  Province = 'Quebec',
-                                  PostalCode = 'G1L 1B6',
-                                  Orientation = 'Ouest',
-                                  GeneralDelivery = None,
-                                  raw_adress= "350 rue des Lilas Ouest Quebec Quebec G1L 1B6",
-                                  address_parsed_components =[('350', ('StreetNumber', 1.0)),
-                                        ('rue', ('StreetName', 0.9989)),
-                                        ('des', ('StreetName', 0.9998)),
-                                        ('Lilas', ('StreetName', 0.9343)),
-                                        ('Ouest', ('Orientation', 0.781)),
-                                        ('Quebec', ('Municipality', 0.9467)),
-                                        ('Quebec', ('Province', 1.0)),
-                                        ('G1L', ('PostalCode', 0.9997)),
-                                        ('1B6', ('PostalCode', 1.0))])
 
-        formatted_identical_dict = {'address_one': FormattedParsedAddressOne,
-                                    'address_two':FormattedParsedAddressTwo,
-                                    'colorblind': False,
-                                    'origin': ('source',
-                                            'deepparse using Bpemb')
-}
-
-        formatted_compared_addresses_tags = FormattedComparedAddressesTags(**formatted_identical_dict)
+        expected =  "Comparison report of tags for parsed address: Not equivalent\n\nRaw address: 350 "\
+            "rue des Lilas Ouest Quebec Quebec G1L 1B6\n\n\nTags: \nsource: [('350', 'StreetNumber'), "\
+            "(None, 'Unit'), ('rue des Lilas', 'StreetName'), ('Ouest', 'Orientation'), ('Quebec', 'Municipality'), ('Quebec', 'Province'),"\
+            " ('G1L 1B6', 'PostalCode'), (None, 'GeneralDelivery')]\n\ndeepparse using "\
+            "Bpemb: [('350', 'StreetNumber'), (None, 'Unit'), ('rue des Lilas', 'StreetName'), (None, 'Orientation'),"\
+            " ('Ouest Quebec', 'Municipality'), ('Quebec', 'Province'), ('G1L 1B6', 'PostalCode'), (None, "\
+            "'GeneralDelivery')]\n\n\nProbabilities of parsed tags: \nsource: [('350', ('StreetNumber', 1.0)), "\
+            "('rue', ('StreetName', 0.9987)), ('des', ('StreetName', 0.9993)), ('Lilas', ('StreetName', 0.8176)),"\
+            " ('Ouest', ('Orientation', 0.781)), ('Quebec', ('Municipality', 0.9768)), ('Quebec', ('Province', 1.0)),"\
+            " ('G1L', ('PostalCode', 0.9993)), ('1B6', ('PostalCode', 1.0))]\n\ndeepparse using Bpemb: [('350',"\
+            " ('StreetNumber', 1.0)), ('rue', ('StreetName', 0.9987)), ('des', ('StreetName', 0.9993)), ('Lilas',"\
+            " ('StreetName', 0.8176)), ('Ouest', ('Municipality', 0.781)), ('Quebec', ('Municipality', 0.9768)), "\
+            "('Quebec', ('Province', 1.0)), ('G1L', ('PostalCode', 0.9993)), ('1B6', ('PostalCode', 1.0))]\n\nAddresses"\
+            " tags differences between the two parsing:\nWhite: Shared\nBlue: Belongs only to the source\nYellow: Belongs"\
+            " only to the deepparse using Bpemb\n\nMunicipality: \n\x1b[38;2;255;194;10mOuest \x1b[0m\x1b[38;2;255;255;255m"\
+            "Quebec\x1b[0m\nOrientation: \n\x1b[38;2;26;123;220mOuest\x1b[0m\n"
 
 
 
-        self.assertEqual("Comparison report of tags for parsed address: Identical\nRaw address: 350 rue des Lilas Ouest Quebec Quebec G1L 1B6\n\nTags: \nsource: [('350', 'StreetNumber'), ('rue des Lilas', 'StreetName'), (None, 'Unit'), ('Quebec', 'Municipality'), ('Quebec', 'Province'), ('G1L 1B6', 'PostalCode'), ('Ouest', 'Orientation'), (None, 'GeneralDelivery')]\n\ndeepparse using Bpemb: [('350', 'StreetNumber'), ('rue des Lilas', 'StreetName'), (None, 'Unit'), ('Quebec', 'Municipality'), ('Quebec', 'Province'), ('G1L 1B6', 'PostalCode'), ('Ouest', 'Orientation'), (None, 'GeneralDelivery')]\n\nProbabilities of parsed tags for the address:\n\nRaw address: 350 rue des Lilas Ouest Quebec Quebec G1L 1B6\n[('350', ('StreetNumber', 1.0)), ('rue', ('StreetName', 0.9989)), ('des', ('StreetName', 0.9998)), ('Lilas', ('StreetName', 0.9343)), ('Ouest', ('Orientation', 0.781)), ('Quebec', ('Municipality', 0.9467)), ('Quebec', ('Province', 1.0)), ('G1L', ('PostalCode', 0.9997)), ('1B6', ('PostalCode', 1.0))]\n", formatted_compared_addresses_tags._comparison_report_builder())
-
-
-
-
-    def test_givenDifferentAddressesTags_whenCompareTags_thenReturnNotIdenticalComparison_report(self):
-        self.maxDiff = None
-
-        FormattedParsedAddressOneDiff = FormattedTestIdentical(StreetNumber = '350',
-                                  StreetName = 'rue des Lilas',
-                                  Unit = None,
-                                  Municipality = 'Quebec',
-                                  Province = 'Quebec',
-                                  PostalCode = 'G1L 1B6',
-                                  Orientation = 'Ouest',
-                                  GeneralDelivery = None,
-                                  raw_adress="350 rue des Lilas Ouest Quebec Quebec G1L 1B6",
-                                  address_parsed_components =[('350', ('StreetNumber', 1.0)),
-                                        ('rue', ('StreetName', 0.9989)),
-                                        ('des', ('StreetName', 0.9998)),
-                                        ('Lilas', ('StreetName', 0.9343)),
-                                        ('Ouest', ('Orientation', 0.781)),
-                                        ('Quebec', ('Municipality', 0.9467)),
-                                        ('Quebec', ('Province', 1.0)),
-                                        ('G1L', ('PostalCode', 0.9997)),
-                                        ('1B6', ('PostalCode', 1.0))])
-
-
-        FormattedParsedAddressTwoDiff = FormattedTestNotIdentical(StreetNumber = '350',
-                                  StreetName = 'rue des Lilas',
-                                  Unit = None,
-                                  Municipality = 'Ouest Quebec',
-                                  Province = 'Quebec',
-                                  PostalCode = 'G1L 1B6',
-                                  Orientation = None,
-                                  GeneralDelivery = None,
-                                  raw_adress= "350 rue des Lilas Ouest Quebec Quebec G1L 1B6",
-                                  address_parsed_components =[('350', ('StreetNumber', 1.0)),
-                                        ('rue', ('StreetName', 0.9989)),
-                                        ('des', ('StreetName', 0.9998)),
-                                        ('Lilas', ('StreetName', 0.9343)),
-                                        ('Ouest', ('Municipality', 0.781)),
-                                        ('Quebec', ('Municipality', 0.9467)),
-                                        ('Quebec', ('Province', 1.0)),
-                                        ('G1L', ('PostalCode', 0.9997)),
-                                        ('1B6', ('PostalCode', 1.0))])
-
-        formatted_different_dict = {'address_one': FormattedParsedAddressOneDiff,
-                                    'address_two':FormattedParsedAddressTwoDiff,
-                                    'colorblind': False,
-                                    'origin': ('source',
-                                            'deepparse using Bpemb')
-}
-
-        formatted_compared_addresses_tags = FormattedComparedAddressesTags(**formatted_different_dict)
-
-
-
-        self.assertEqual("Comparison report of tags for parsed address: Not identical\nRaw address: 350 rue des Lilas Ouest Quebec Quebec G1L 1B6\n\nTags: \nsource: [('350', 'StreetNumber'), ('rue des Lilas', 'StreetName'), (None, 'Unit'), ('Quebec', 'Municipality'), ('Quebec', 'Province'), ('G1L 1B6', 'PostalCode'), ('Ouest', 'Orientation'), (None, 'GeneralDelivery')]\n\ndeepparse using Bpemb: [('350', 'StreetNumber'), ('rue des Lilas', 'StreetName'), (None, 'Unit'), ('Ouest Quebec', 'Municipality'), ('Quebec', 'Province'), ('G1L 1B6', 'PostalCode'), (None, 'Orientation'), (None, 'GeneralDelivery')]\n\nProbabilities of parsed tags for the address:\n\nRaw address: 350 rue des Lilas Ouest Quebec Quebec G1L 1B6\n[('350', ('StreetNumber', 1.0)), ('rue', ('StreetName', 0.9989)), ('des', ('StreetName', 0.9998)), ('Lilas', ('StreetName', 0.9343)), ('Ouest', ('Municipality', 0.781)), ('Quebec', ('Municipality', 0.9467)), ('Quebec', ('Province', 1.0)), ('G1L', ('PostalCode', 0.9997)), ('1B6', ('PostalCode', 1.0))]\n\n\nAddresses tags differences between the two parsing:\nWhite: Shared\nRed: Belongs only to source\nGreen: Belongs only to deepparse using Bpemb\n\nOrientation: \n\x1b[38;2;255;0;0mOuest\x1b[0m\nMunicipality: \n\x1b[38;2;0;255;0mOuest \x1b[0m\x1b[38;2;255;255;255mQuebec\x1b[0m\n", formatted_compared_addresses_tags._comparison_report_builder())
+        actual = not_equivalent_formatted_compared_addresses_raw_._comparison_report_builder()
+        self.assertEqual(expected, actual)
 
 if __name__ == "__main__":
     unittest.main()
-
-
-

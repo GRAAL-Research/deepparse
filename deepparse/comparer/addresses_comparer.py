@@ -41,7 +41,7 @@ class AddressesComparer:
             ('G1L', ('PostalCode', 0.9993)),
             ('1B6', ('PostalCode', 1.0))]
 
-    address_parser = AddressParser(model_type="bpemb", device=1)
+    address_parser = AddressParser(model_type="bpemb")
     addresses_comparer = AddressesComparer(address_parser)
 
     tagged_addresses_multiples_comparisons = addresses_comparer.compare_tags([list_of_tuples,

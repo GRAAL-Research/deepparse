@@ -295,7 +295,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
                                             verbose=self.verbose)
         self.address_parser_retrain_call()
 
-        self.assert_experiment_retrain(experiment_mock, model_mock, optimizer_mock, device=self.a_device)
+        self.assert_experiment_retrain(experiment_mock, model_mock, optimizer_mock, device=self.a_torch_device)
 
     @patch("deepparse.parser.address_parser.torch.save")
     @patch("deepparse.parser.address_parser.DataLoader")

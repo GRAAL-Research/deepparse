@@ -2,10 +2,10 @@ import torch.nn as nn
 import torch.nn.init as init
 
 
-def weight_init(m):
+def weights_init(m):
     # pylint: disable=too-many-branches, too-many-statements
     """
-    Function to initialize the weight of a layer.
+    Function to initialize the weights of a layer.
     Usage:
         network = Model()
         network.apply(weight_init)

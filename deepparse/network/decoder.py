@@ -5,7 +5,7 @@ from typing import Tuple
 import torch
 import torch.nn as nn
 
-from ..weight_init import weight_init
+from ..weights_init import weights_init
 
 
 class Decoder(nn.Module):
@@ -23,7 +23,7 @@ class Decoder(nn.Module):
     def __init__(self, input_size: int, hidden_size: int, num_layers: int, output_size: int) -> None:
         super().__init__()
         self.lstm = nn.LSTM(input_size, hidden_size, num_layers=num_layers)
-        self.lstm.apply(weight_init)
+        self.lstm.apply(weights_init)
 
         self.linear_layer_set_up(output_size, hidden_size=hidden_size)
 
@@ -50,4 +50,4 @@ class Decoder(nn.Module):
 
     def linear_layer_set_up(self, output_size: int, hidden_size: int = 1024):
         self.linear = nn.Linear(hidden_size, output_size)
-        self.linear.apply(weight_init)
+        self.linear.apply(weights_init)

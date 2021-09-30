@@ -38,9 +38,10 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
 
         cls.address_components = {"ATag": 0, "AnotherTag": 1, "EOS": 2}
 
-        cls.temp_dir_obj = TemporaryDirectory()
-        cls.a_logging_path = os.path.join(cls.temp_dir_obj.name, "ckpts")
-        cls.saving_template_path = os.path.join(cls.a_logging_path, "retrained_{}_address_parser.ckpt")
+    def setUp(self):
+        self.temp_dir_obj = TemporaryDirectory()
+        self.a_logging_path = os.path.join(self.temp_dir_obj.name, "ckpts")
+        self.saving_template_path = os.path.join(self.a_logging_path, "retrained_{}_address_parser.ckpt")
 
     def tearDown(self) -> None:
         self.temp_dir_obj.cleanup()

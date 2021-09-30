@@ -45,9 +45,6 @@ class AddressParserRetrainTestCase(TestCase):
         cls.a_number_of_workers = 2
         cls.a_learning_rate = 0.001
 
-        cls.training_temp_dir_obj = TemporaryDirectory()
-        cls.a_checkpoints_saving_dir = os.path.join(cls.training_temp_dir_obj.name, "checkpoints")
-
         cls.a_torch_device = torch.device("cuda:0")
         cls.a_cpu_device = 'cpu'
 
@@ -59,7 +56,8 @@ class AddressParserRetrainTestCase(TestCase):
         cls.with_new_prediction_tags = {'ALastTag': 0, 'ATag': 1, 'AnotherTag': 2, "EOS": 3}
 
     def setUp(self) -> None:
-        self.training_temp_dir_obj.cleanup()
+        self.training_temp_dir_obj = TemporaryDirectory()
+        self.a_checkpoints_saving_dir = os.path.join(self.training_temp_dir_obj.name, "checkpoints")
 
     @classmethod
     def tearDownClass(cls) -> None:

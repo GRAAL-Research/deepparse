@@ -6,7 +6,8 @@ from unittest.mock import patch, call
 
 import torch
 
-from deepparse.parser import AddressParser, nll_loss, accuracy
+from deepparse.metrics import accuracy, nll_loss
+from deepparse.parser import AddressParser
 from tests.parser.base import AddressParserPredictTestCase
 from tests.tools import BATCH_SIZE, ADataContainer
 
@@ -27,9 +28,6 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         cls.a_seed = 42
         cls.a_torch_device = torch.device("cuda:0")
 
-        cls.a_loss_function = nll_loss
-        cls.a_list_of_batch_metrics = [accuracy]
-
         cls.mocked_data_container = ADataContainer()
 
         cls.a_fasttext_path = "fasttext"
@@ -46,15 +44,18 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
 
     def assert_experiment_test(self, experiment_mock, model_mock, device):
         experiment_mock.assert_called_with(
-            "./checkpoint",  # we always use this as default logging dir.
+            "./checkpoint",  # We always use this as default logging dir.
             model_mock(),
             device=device,
-            loss_function=self.a_loss_function,
-            batch_metrics=self.a_list_of_batch_metrics,
+            # For a reason I don't understand if I use self.nll_loss and set it in the
+            # class setup, it return a bound method for the nll_loss but it work for
+            # the accuracy. So fuck it, here a fix.
+            loss_function=nll_loss,
+            batch_metrics=[accuracy],
             logging=False)
 
-    def assert_experiment_test_method_is_call(self, dataloader_mock, experiment_mock, verbose):
-        test_call = [call().test(dataloader_mock(), seed=self.a_seed, callbacks=[], verbose=verbose)]
+    def assert_experiment_test_method_is_call(self, data_loader_mock, experiment_mock, verbose):
+        test_call = [call().test(data_loader_mock(), seed=self.a_seed, callbacks=[], verbose=verbose)]
         experiment_mock.assert_has_calls(test_call)
 
     @patch("deepparse.parser.address_parser.DataLoader")
@@ -68,7 +69,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
     @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
     def test_givenAFasttextModel_whenTestCPU_thenInstantiateExperimentProperly(
             self, download_weights_mock, embeddings_model_mock, vectorizer_model_mock, data_padding_mock, model_mock,
-            data_transform_mock, optimizer_mock, experiment_mock, dataloader_mock):
+            data_transform_mock, optimizer_mock, experiment_mock, data_loader_mock):
         self.address_parser = AddressParser(model_type=self.a_fasttext_model_type,
                                             device=self.a_device,
                                             verbose=self.verbose)
@@ -88,7 +89,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
     @skipIf(not torch.cuda.is_available(), "no gpu available")
     def test_givenAFasttextModel_whenTestGPU_thenInstantiateExperimentProperly(
             self, download_weights_mock, embeddings_model_mock, vectorizer_model_mock, data_padding_mock, model_mock,
-            data_transform_mock, optimizer_mock, experiment_mock, dataloader_mock):
+            data_transform_mock, optimizer_mock, experiment_mock, data_loader_mock):
         self.address_parser = AddressParser(model_type=self.a_fasttext_model_type,
                                             device=self.a_torch_device,
                                             verbose=self.verbose)
@@ -107,13 +108,13 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
     @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
     def test_givenAFasttextModel_whenTest_thenInstantiateDataLoaderAndTestProperly(
             self, download_weights_mock, embeddings_model_mock, vectorizer_model_mock, data_padding_mock, model_mock,
-            data_transform_mock, optimizer_mock, experiment_mock, dataloader_mock):
+            data_transform_mock, optimizer_mock, experiment_mock, data_loader_mock):
         self.address_parser = AddressParser(model_type=self.a_fasttext_model_type,
                                             device=self.a_device,
                                             verbose=self.verbose)
         self.address_parser_test_call()
 
-        self.assert_experiment_test_method_is_call(dataloader_mock, experiment_mock, verbose=self.verbose)
+        self.assert_experiment_test_method_is_call(data_loader_mock, experiment_mock, verbose=self.verbose)
 
     @patch("deepparse.parser.address_parser.DataLoader")
     @patch("deepparse.parser.address_parser.Experiment")
@@ -126,14 +127,14 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
     @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
     def test_givenAFasttextModel_whenTestVerbose_thenInstantiateWithVerbose(
             self, download_weights_mock, embeddings_model_mock, vectorizer_model_mock, data_padding_mock, model_mock,
-            data_transform_mock, optimizer_mock, experiment_mock, dataloader_mock):
+            data_transform_mock, optimizer_mock, experiment_mock, data_loader_mock):
         verbose = True
         self.address_parser = AddressParser(model_type=self.a_fasttext_model_type,
                                             device=self.a_device,
                                             verbose=verbose)
         self.address_parser_test_call()
 
-        self.assert_experiment_test_method_is_call(dataloader_mock, experiment_mock, verbose=verbose)
+        self.assert_experiment_test_method_is_call(data_loader_mock, experiment_mock, verbose=verbose)
 
     @patch("deepparse.parser.address_parser.DataLoader")
     @patch("deepparse.parser.address_parser.Experiment")
@@ -147,7 +148,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
                                                                             vectorizer_model_mock, data_padding_mock,
                                                                             model_mock, data_transform_mock,
                                                                             optimizer_mock, experiment_mock,
-                                                                            dataloader_mock):
+                                                                            data_loader_mock):
         self.address_parser = AddressParser(model_type=self.a_bpemb_model_type,
                                             device=self.a_device,
                                             verbose=self.verbose)
@@ -168,7 +169,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
                                                                             vectorizer_model_mock, data_padding_mock,
                                                                             model_mock, data_transform_mock,
                                                                             optimizer_mock, experiment_mock,
-                                                                            dataloader_mock):
+                                                                            data_loader_mock):
         self.address_parser = AddressParser(model_type=self.a_bpemb_model_type,
                                             device=self.a_torch_device,
                                             verbose=self.verbose)
@@ -188,13 +189,13 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
                                                                                 vectorizer_model_mock,
                                                                                 data_padding_mock, model_mock,
                                                                                 data_transform_mock, optimizer_mock,
-                                                                                experiment_mock, dataloader_mock):
+                                                                                experiment_mock, data_loader_mock):
         self.address_parser = AddressParser(model_type=self.a_bpemb_model_type,
                                             device=self.a_device,
                                             verbose=self.verbose)
         self.address_parser_test_call()
 
-        self.assert_experiment_test_method_is_call(dataloader_mock, experiment_mock, verbose=self.verbose)
+        self.assert_experiment_test_method_is_call(data_loader_mock, experiment_mock, verbose=self.verbose)
 
     @patch("deepparse.parser.address_parser.DataLoader")
     @patch("deepparse.parser.address_parser.Experiment")
@@ -208,12 +209,12 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
                                                                              vectorizer_model_mock, data_padding_mock,
                                                                              model_mock, data_transform_mock,
                                                                              optimizer_mock, experiment_mock,
-                                                                             dataloader_mock):
+                                                                             data_loader_mock):
         verbose = True
         self.address_parser = AddressParser(model_type=self.a_bpemb_model_type, device=self.a_device, verbose=verbose)
         self.address_parser_test_call()
 
-        self.assert_experiment_test_method_is_call(dataloader_mock, experiment_mock, verbose=verbose)
+        self.assert_experiment_test_method_is_call(data_loader_mock, experiment_mock, verbose=verbose)
 
 
 if __name__ == "__main__":

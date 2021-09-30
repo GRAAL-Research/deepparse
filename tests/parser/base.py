@@ -7,7 +7,6 @@ from unittest.mock import Mock
 import torch
 from torch import tensor
 
-from deepparse.parser import nll_loss, accuracy
 from tests.base_capture_output import CaptureOutputTestCase
 
 
@@ -63,9 +62,6 @@ class AddressParserPredictTestCase(CaptureOutputTestCase):
                  -1.7509e+01, -1.8191e+01, -1.7853e+01, -2.6309e+01, -1.7179e+01, -1.0518e+01, -1.9438e+01, -1.9542e+01,
                  -2.7060e-05
              ]]])
-
-        self.a_loss_function = nll_loss
-        self.a_list_of_batch_metrics = [accuracy]
 
         # to create the dirs for dumping the prediction tags since we mock Poutyne that usually will do it
         os.makedirs(self.a_logging_path, exist_ok=True)

@@ -5,7 +5,7 @@ import sys
 import unittest
 from unittest import TestCase
 
-from deepparse.parser import FormattedParsedAddress, formated_parsed_address
+from deepparse.parser import FormattedParsedAddress, formatted_parsed_address
 
 
 class UserFormattedParsedAddressTest(TestCase):
@@ -27,7 +27,7 @@ class UserFormattedParsedAddressTest(TestCase):
 
     def setUp(self):
         # We set the FIELDS of the address base on the prediction tags
-        formated_parsed_address.FIELDS = ["ATag", "AnotherTag", "ALastTag"]
+        formatted_parsed_address.FIELDS = ["ATag", "AnotherTag", "ALastTag"]
 
         self.parsed_address = FormattedParsedAddress(self.a_address)
 
@@ -98,7 +98,7 @@ class UserFormattedParsedAddressTest(TestCase):
         another_address = {a_different_address_str: an_address_with_different_components_tags}
 
         # We reset the FIELDS of the address to default values since we change it in setup
-        formated_parsed_address.FIELDS = [
+        formatted_parsed_address.FIELDS = [
             "StreetNumber", "Unit", "StreetName", "Orientation", "Municipality", "Province", "PostalCode",
             "GeneralDelivery"
         ]

@@ -5,7 +5,7 @@ import sys
 import unittest
 from unittest import TestCase
 
-from deepparse.parser import FormattedParsedAddress, formated_parsed_address
+from deepparse.parser import FormattedParsedAddress, formatted_parsed_address
 
 
 class FormattedParsedAddressTest(TestCase):
@@ -47,7 +47,7 @@ class FormattedParsedAddressTest(TestCase):
             'GeneralDelivery': 'delivery'
         }
         # we reset the FIELDS of the address to default values since we change it in some tests
-        formated_parsed_address.FIELDS = [
+        formatted_parsed_address.FIELDS = [
             "StreetNumber", "Unit", "StreetName", "Orientation", "Municipality", "Province", "PostalCode",
             "GeneralDelivery"
         ]

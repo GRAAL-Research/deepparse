@@ -2,32 +2,30 @@
     :class: hidden-section
 
 Comparer
-======
+========
 
 .. currentmodule:: deepparse.comparer
 
 AddressesComparer
--------------
+-----------------
 
 .. autoclass:: AddressesComparer
     :members:
 
-    .. automethod:: __call__
-
 Formatted Compared Addresses
-------------------------
+----------------------------
 
-.. autoclass:: FormattedParsedAddressRaw
+.. autoclass:: FormattedComparedAddresses
     :members:
 
 Formatted Compared Addresses Raw
-------------------------
+--------------------------------
 
-.. autoclass:: FormattedParsedAddress
+.. autoclass:: FormattedComparedAddressesRaw
     :members:
 
 Formatted Compared Addresses Tags
-------------------------
+---------------------------------
 
-.. autoclass:: FormattedParsedAddressTags
+.. autoclass:: FormattedComparedAddressesTags
     :members:

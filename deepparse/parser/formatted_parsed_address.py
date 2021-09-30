@@ -170,25 +170,24 @@ class FormattedParsedAddress:
     def to_list_of_tuples(self, fields: Union[List, None] = None) -> List[tuple]:
         """
         Method to convert a parsed address into a list of tuples where the first element of the tuples
-        are the value of the components. and the second values are the the name of the components
-        
-        For example, the parsed address ``<StreetNumber> 305 <StreetName>
-        rue des Lilas`` will be converted into the following list of tuples:
-        ``('305', 'StreetNumber'), ('rue des Lilas', 'StreetName')]``.
+        is the value of the components, and the second value is the name of the components.
+
+        For example, the parsed address ``<StreetNumber> 305 <StreetName> rue des Lilas`` will be converted into the
+        following list of tuples: ``('305', 'StreetNumber'), ('rue des Lilas', 'StreetName')]``.
 
         Args:
-            fields (Union[list, None]): Optional argument to define the fields to extract from the address and the
-                order of it. If None, will use the default order and value `'StreetNumber, Unit, StreetName,
+            fields (Union[list, None]): Optional argument to define the fields to extract from the address and its
+                order. If None, it will use the default order and value `'StreetNumber, Unit, StreetName,
                 Orientation, Municipality, Province, PostalCode, GeneralDelivery'`.
 
         Return:
-            A list of tuples where the first element of the tuples
-        are the value of the address components. and the second values are the the name of the address components
+            A list of tuples where the first element of the tuples are the value of the address components
+            and the second values are the name of the address components.
+
         """
         dict_of_attr = self.to_dict(fields)
         return [(value, key) for key, value in dict_of_attr.items()]
 
-    
     def _resolve_tagged_affectation(self, tagged_address: List[Tuple]) -> None:
         """
         Private method to resolve the parsing of the tagged address.

@@ -6,22 +6,23 @@ from .formatted_compared_addresses import FormattedComparedAddresses
 
 @dataclass(frozen=True)
 class FormattedComparedAddressesTags(FormattedComparedAddresses):
-    """class that inherits from abstract class FormattedComparedAddresses and implements its comparison report."""
+    """
+    A formatted compared address of two already tagged addresses.
+    """
 
-    
     def _get_probs(self) -> Dict:
-        """get the tags from the parsing with their associated probabilities
-
-        Returns:
-            Dict: the key is the raw address and the value is the tags with thei associated probabilities.
         """
-        return {self.origin[0]: self.first_address.address_parsed_components,
-                self.origin[1]: self.second_address.address_parsed_components}
+        Get the tags from the parsing with their associated probabilities, the method needs to be implemented in each
+        class because they don't use the probabilities the same way.
+        """
+        return {
+            self.origin[0]: self.first_address.address_parsed_components,
+            self.origin[1]: self.second_address.address_parsed_components
+        }
 
-    def _get_probs_of_tags(self, verbose:bool = True) -> str:
-        """takes the tags and their probabilities and print them to console
-        Args:
-            verbose (bool, optional): If true, the results are presented. Defaults to True.
+    def _get_probs_of_tags(self, verbose: bool = True) -> str:
+        """
+        Takes the tags and their probabilities for the report.
         """
         formatted_str = ""
         if verbose:
@@ -35,24 +36,23 @@ class FormattedComparedAddressesTags(FormattedComparedAddresses):
         return formatted_str
 
     def _comparison_report_builder(self) -> str:
-        """Builds a formatted string that represents a comparison report for addresses tags comparison
-
-        Returns:
-            str: A formatted string that represents a comparison report for addresses tags comparison
+        """
+        Builds the core of a comparison report for the different comparisons. Since the procedure to make a tags
+        comparison and the raw addresses comparison is different, the comparison report is not the same for the two.
+        It is then implemented in each specific class.
         """
 
         formatted_str = ""
         intro_str = "Comparison report of tags for parsed address: "
         if self.identical:
-            formatted_str +=  intro_str + "Identical\n\n"
+            formatted_str += intro_str + "Identical\n\n"
         else:
-            formatted_str +=  intro_str + "Not equivalent\n\n"
-        formatted_str += "Raw address: " + self.first_address.raw_address +"\n\n\n"
+            formatted_str += intro_str + "Not equivalent\n\n"
+        formatted_str += "Raw address: " + self.first_address.raw_address + "\n\n\n"
 
         formatted_str += "Tags: \n"
         formatted_str += self.origin[0] + ": " + str(self.first_address.to_list_of_tuples()) + "\n\n"
         formatted_str += self.origin[1] + ": " + str(self.second_address.to_list_of_tuples()) + "\n\n\n"
-
 
         if self.with_prob:
             formatted_str += self._get_probs_of_tags()
@@ -61,5 +61,5 @@ class FormattedComparedAddressesTags(FormattedComparedAddresses):
             formatted_str += "\n"
             formatted_str += "Addresses tags differences between the two parsing:\n"
             formatted_str += self._get_tags_diff_color(self.origin[0], self.origin[1])
-        
+
         return formatted_str

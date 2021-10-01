@@ -98,7 +98,7 @@
 - Improved device management.
 - Improved testing.
 
-## Dev
+## 0.4.3
 
 - Fixed typos in one of file name.
 - Added tools to compare addresses (tagged or not).

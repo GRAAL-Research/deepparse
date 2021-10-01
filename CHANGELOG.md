@@ -97,3 +97,9 @@
 - Added `__eq__` method to `FormattedParsedAddress`.
 - Improved device management.
 - Improved testing.
+
+## Dev
+
+- Fixed typos in one of file name.
+- Added tools to compare addresses (tagged or not).
+- Fixed some tests errors.

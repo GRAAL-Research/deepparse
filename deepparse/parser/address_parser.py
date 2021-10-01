@@ -8,8 +8,8 @@ from poutyne.framework import Experiment
 from torch.optim import SGD
 from torch.utils.data import DataLoader, Subset
 
-from . import formated_parsed_address
-from .formated_parsed_address import FormattedParsedAddress
+from . import formatted_parsed_address
+from .formatted_parsed_address import FormattedParsedAddress
 from .. import CACHE_PATH, indices_splitting
 from .. import load_tuple_to_device, download_fasttext_magnitude_embeddings
 from ..converter import TagsConverter
@@ -166,7 +166,7 @@ class AddressParser:
             # We "infer" the model type
             model_type = checkpoint_weights.get("model_type")
 
-        formated_parsed_address.FIELDS = fields
+        formatted_parsed_address.FIELDS = fields
         self.tags_converter = TagsConverter(tags_to_idx)
 
         self._set_model_name(model_type)

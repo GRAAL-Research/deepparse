@@ -456,6 +456,7 @@ API Reference
 
   parser
   dataset_container
+  comparer
 
 .. toctree::
   :glob:

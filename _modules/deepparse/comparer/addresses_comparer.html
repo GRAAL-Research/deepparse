@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>deepparse.comparer.addresses_comparer &mdash; deepparse 0.4.3 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html">
+            <img src="../../../_static/deepparse.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.4.3
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../parser.html">Parser</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dataset_container.html">Dataset Container</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../comparer.html">Comparer</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/fine_tuning.html">Retrain a Pretrained Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/parse_addresses.html">Parse Addresses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">deepparse</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>deepparse.comparer.addresses_comparer</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for deepparse.comparer.addresses_comparer</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Dict</span>
+
+<span class="kn">from</span> <span class="nn">.formatted_compared_addresses_raw</span> <span class="kn">import</span> <span class="n">FormattedComparedAddressesRaw</span>
+<span class="kn">from</span> <span class="nn">.formatted_compared_addresses_tags</span> <span class="kn">import</span> <span class="n">FormattedComparedAddressesTags</span>
+<span class="kn">from</span> <span class="nn">..parser</span> <span class="kn">import</span> <span class="n">AddressParser</span>
+<span class="kn">from</span> <span class="nn">..parser.formatted_parsed_address</span> <span class="kn">import</span> <span class="n">FormattedParsedAddress</span>
+
+
+<div class="viewcode-block" id="AddressesComparer"><a class="viewcode-back" href="../../../comparer.html#deepparse.comparer.AddressesComparer">[docs]</a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">AddressesComparer</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Address comparer to compare addresses with each other and retrieves the differences between them. The addresses</span>
+<span class="sd">    are parsed using an address parser based on one of the seq2seq pre-trained networks either with fastText or BPEmb.</span>
+
+<span class="sd">    The address comparer can compare already parsed addresses. The address parser first recompose the raw</span>
+<span class="sd">    addresses then suggests its own tags, then it makes a comparison with the tags of the source parsing and the</span>
+<span class="sd">    newly parsed address</span>
+
+<span class="sd">    The address comparer is also able to compare raw addresses by first parsing the addresses using the</span>
+<span class="sd">    address parser and then brings out the differences among the parsed addresses.</span>
+
+
+<span class="sd">    Args:</span>
+<span class="sd">        parser (~deepparse.parser.address_parser.AddressParser): the AddressParser used to parse the addresses.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">parser</span><span class="p">:</span> <span class="n">AddressParser</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Compare addresses with </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">model_type</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s2">AddressParser&quot;</span>
+
+    <span class="fm">__repr__</span> <span class="o">=</span> <span class="fm">__str__</span>  <span class="c1"># to call __str__ when list of address</span>
+
+<div class="viewcode-block" id="AddressesComparer.compare_tags"><a class="viewcode-back" href="../../../comparer.html#deepparse.comparer.AddressesComparer.compare_tags">[docs]</a>    <span class="k">def</span> <span class="nf">compare_tags</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">addresses_tags_to_compare</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">tuple</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">tuple</span><span class="p">]]],</span>
+        <span class="n">with_prob</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span>
+                         <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">FormattedComparedAddressesTags</span><span class="p">],</span> <span class="n">FormattedComparedAddressesTags</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compare tags of a source parsing with the parsing from AddressParser. First, it reconstructs the</span>
+<span class="sd">        raw address from the parsing, then AddressParser generates tags and then compares the two parsings.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            addresses_tags_to_compare (Union[List[tuple], List[List[tuple]]]): list of tuple that contains</span>
+<span class="sd">            the tags for the address components from the source. Can compare multiples parsings if passed as a</span>
+<span class="sd">            list of tuples.</span>
+<span class="sd">            with_prob (Union[None, bool]): A option flag to either or not include prob in the comparison report.</span>
+<span class="sd">                The probabilities are not compared but only included in the report.</span>
+<span class="sd">                The default value is None, which means not taking into account.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            Either a :class:`~FormattedComparedAddressesTags` or a list of :class:`~FormattedComparedAddressTags`</span>
+<span class="sd">            when there is more than one comparison to make.</span>
+
+<span class="sd">        Examples:</span>
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                first_parsed_address = [</span>
+<span class="sd">                    (&quot;350&quot;, &quot;StreetNumber&quot;),</span>
+<span class="sd">                    (&quot;rue des Lilas&quot;, &quot;StreetName&quot;),</span>
+<span class="sd">                    (&quot;Ouest Québec&quot;, &quot;Municipality&quot;),</span>
+<span class="sd">                    (&quot;Québec&quot;, &quot;Province&quot;),</span>
+<span class="sd">                    (&quot;G1L 1B6&quot;, &quot;PostalCode&quot;)]</span>
+<span class="sd">                second_parsed_address_with_prob = [</span>
+<span class="sd">                    (&#39;350&#39;, (&#39;StreetNumber&#39;, 1.0)),</span>
+<span class="sd">                    (&#39;rue&#39;, (&#39;StreetName&#39;, 0.9987)),</span>
+<span class="sd">                    (&#39;des&#39;, (&#39;StreetName&#39;, 0.9993)),</span>
+<span class="sd">                    (&#39;Lilas&#39;, (&#39;StreetName&#39;, 0.8176)),</span>
+<span class="sd">                    (&#39;Ouest&#39;, (&#39;Orientation&#39;, 0.781)),</span>
+<span class="sd">                    (&#39;Quebec&#39;, (&#39;Municipality&#39;, 0.9768)),</span>
+<span class="sd">                    (&#39;Quebec&#39;, (&#39;Province&#39;, 1.0)),</span>
+<span class="sd">                    (&#39;G1L&#39;, (&#39;PostalCode&#39;, 0.9993)),</span>
+<span class="sd">                    (&#39;1B6&#39;, (&#39;PostalCode&#39;, 1.0))]</span>
+
+<span class="sd">                address_parser = AddressParser(model_type=&quot;bpemb&quot;)</span>
+<span class="sd">                addresses_comparer = AddressesComparer(address_parser)</span>
+
+<span class="sd">                list_of_compared_addresses = addresses_comparer.compare_tags([first_parsed_address,</span>
+<span class="sd">                                                                              second_parsed_address_with_prob])</span>
+<span class="sd">                list_of_compared_addresses[0].comparison_report()</span>
+<span class="sd">                list_of_compared_addresses[1].comparison_report()</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">addresses_tags_to_compare</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="n">addresses_tags_to_compare</span> <span class="o">=</span> <span class="p">[</span><span class="n">addresses_tags_to_compare</span><span class="p">]</span>
+
+        <span class="n">with_prob</span> <span class="o">=</span> <span class="nb">any</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_check_if_with_prob</span><span class="p">(</span><span class="n">address</span><span class="p">)</span>
+                         <span class="k">for</span> <span class="n">address</span> <span class="ow">in</span> <span class="n">addresses_tags_to_compare</span><span class="p">))</span> <span class="k">if</span> <span class="n">with_prob</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">with_prob</span>
+
+        <span class="n">raw_addresses</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">element</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">address</span><span class="p">])</span> <span class="k">for</span> <span class="n">address</span> <span class="ow">in</span> <span class="n">addresses_tags_to_compare</span><span class="p">]</span>
+
+        <span class="n">formatted_addresses</span> <span class="o">=</span> <span class="p">[</span><span class="n">FormattedParsedAddress</span><span class="p">({</span><span class="n">raw_address</span><span class="p">:</span> <span class="n">address_tags</span><span class="p">})</span> <span class="k">for</span> <span class="n">raw_address</span><span class="p">,</span> <span class="n">address_tags</span> \
+                               <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">raw_addresses</span><span class="p">,</span> <span class="n">addresses_tags_to_compare</span><span class="p">)]</span>
+
+        <span class="n">deepparsed_formatted_addresses</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="p">(</span><span class="n">raw_address</span><span class="p">,</span> <span class="n">with_prob</span><span class="o">=</span><span class="n">with_prob</span><span class="p">)</span> <span class="k">for</span> <span class="n">raw_address</span> <span class="ow">in</span> <span class="n">raw_addresses</span>
+        <span class="p">]</span>
+
+        <span class="n">comparison_tuples</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">formatted_addresses</span><span class="p">,</span> <span class="n">deepparsed_formatted_addresses</span><span class="p">))</span>
+
+        <span class="n">parsing_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">model_type</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span>
+        <span class="n">origin_tuple</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;source&quot;</span><span class="p">,</span> <span class="s2">&quot;deepparse using &quot;</span> <span class="o">+</span> <span class="n">parsing_model</span><span class="p">)</span>
+        <span class="n">list_of_comparison_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_format_comparisons_dict</span><span class="p">(</span><span class="n">comparison_tuples</span><span class="p">,</span> <span class="n">origin_tuple</span><span class="p">,</span> <span class="n">with_prob</span><span class="p">)</span>
+
+        <span class="n">formatted_comparisons</span> <span class="o">=</span> <span class="p">[</span><span class="n">FormattedComparedAddressesTags</span><span class="p">(</span><span class="o">**</span><span class="n">comparison_info</span><span class="p">)</span> <span class="k">for</span> <span class="n">comparison_info</span> \
+                                 <span class="ow">in</span> <span class="n">list_of_comparison_dict</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">formatted_comparisons</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">formatted_comparisons</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">formatted_comparisons</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="AddressesComparer.compare_raw"><a class="viewcode-back" href="../../../comparer.html#deepparse.comparer.AddressesComparer.compare_raw">[docs]</a>    <span class="k">def</span> <span class="nf">compare_raw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                    <span class="n">raw_addresses_to_compare</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">]]],</span>
+                    <span class="n">with_prob</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">FormattedComparedAddressesRaw</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compare a list of raw addresses together, it starts by parsing the addresses</span>
+<span class="sd">        with the setted parser and then return the differences between the addresses components</span>
+<span class="sd">        retrieved with our model.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            raw_addresses_to_compare (Union[Tuple[str], List[Tuple[str]]]):</span>
+<span class="sd">                List of string that represent raw addresses to compare.</span>
+<span class="sd">            with_prob (Union[None, bool]): A option flag to either or not include prob in the comparison report.</span>
+<span class="sd">                The probabilities are not compared but only included in the report.</span>
+<span class="sd">                The default value is None, which means not taking into account.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            Either a :class:`~FormattedComparedAddressesRaw` or a list of</span>
+<span class="sd">            :class:`~FormattedComparedAddressesRaw` when given more than one comparison to make.</span>
+
+<span class="sd">        Examples:</span>
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                raw_address_original = &quot;350 rue des Lilas Ouest Quebec Quebec G1L 1B6&quot;</span>
+<span class="sd">                raw_address_identical = &quot;350 rue des Lilas Ouest Quebec Quebec G1L 1B6&quot;</span>
+<span class="sd">                raw_address_equivalent = &quot;350  rue des Lilas Ouest Quebec Quebec G1L 1B6&quot;</span>
+<span class="sd">                raw_address_diff_streetNumber = &quot;450 rue des Lilas Ouest Quebec Quebec G1L 1B6&quot;</span>
+
+<span class="sd">                raw_addresses_multiples_comparisons = addresses_comparer.compare_raw([(raw_address_original,</span>
+<span class="sd">                                                                                       raw_address_identical),</span>
+<span class="sd">                                                                                      (raw_address_original,</span>
+<span class="sd">                                                                                       raw_address_equivalent),</span>
+<span class="sd">                                                                                      (raw_address_original,</span>
+<span class="sd">                                                                                       raw_address_diff_streetNumber)])</span>
+<span class="sd">                raw_addresses_multiples_comparisons[0].comparison_report()</span>
+<span class="sd">                raw_addresses_multiples_comparisons[1].comparison_report()</span>
+<span class="sd">                raw_addresses_multiples_comparisons[2].comparison_report()</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">raw_addresses_to_compare</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">raw_addresses_to_compare</span> <span class="o">=</span> <span class="p">[</span><span class="n">raw_addresses_to_compare</span><span class="p">]</span>
+
+        <span class="n">with_prob</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">with_prob</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">with_prob</span>
+
+        <span class="n">list_of_deepparsed_addresses</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">addresses_to_compare</span> <span class="ow">in</span> <span class="n">raw_addresses_to_compare</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">addresses_to_compare</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;You need to compare two addresses&quot;</span><span class="p">)</span>
+            <span class="n">list_of_deepparsed_addresses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="p">(</span><span class="n">addresses_to_compare</span><span class="p">,</span> <span class="n">with_prob</span><span class="o">=</span><span class="n">with_prob</span><span class="p">))</span>
+
+        <span class="n">parsing_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">model_type</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span>
+        <span class="n">origin_tuple</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;deepparse using &quot;</span> <span class="o">+</span> <span class="n">parsing_model</span><span class="p">,</span> <span class="s2">&quot;deepparse using &quot;</span> <span class="o">+</span> <span class="n">parsing_model</span><span class="p">)</span>
+        <span class="n">list_of_comparison_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_format_comparisons_dict</span><span class="p">(</span><span class="n">list_of_deepparsed_addresses</span><span class="p">,</span> <span class="n">origin_tuple</span><span class="p">,</span> <span class="n">with_prob</span><span class="p">)</span>
+
+        <span class="n">formatted_comparisons</span> <span class="o">=</span> <span class="p">[</span><span class="n">FormattedComparedAddressesRaw</span><span class="p">(</span><span class="o">**</span><span class="n">comparison_info</span><span class="p">)</span> <span class="k">for</span> <span class="n">comparison_info</span> \
+                                 <span class="ow">in</span> <span class="n">list_of_comparison_dict</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">formatted_comparisons</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">formatted_comparisons</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">formatted_comparisons</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_format_comparisons_dict</span><span class="p">(</span><span class="n">comparison_tuples</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">origin_tuple</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">with_prob</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return formatted dict that contains two FormattedParsedAddress and the origin name tuple and output it in a</span>
+<span class="sd">        dict format.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">list_of_formatted_comparisons_dict</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">comparison_tuple</span> <span class="ow">in</span> <span class="n">comparison_tuples</span><span class="p">:</span>
+            <span class="n">comparison_info</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;first_address&quot;</span><span class="p">:</span> <span class="n">comparison_tuple</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                <span class="s2">&quot;second_address&quot;</span><span class="p">:</span> <span class="n">comparison_tuple</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                <span class="s2">&quot;origin&quot;</span><span class="p">:</span> <span class="n">origin_tuple</span><span class="p">,</span>
+                <span class="s2">&quot;with_prob&quot;</span><span class="p">:</span> <span class="n">with_prob</span>
+            <span class="p">}</span>
+
+            <span class="n">list_of_formatted_comparisons_dict</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">comparison_info</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">list_of_formatted_comparisons_dict</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_check_if_with_prob</span><span class="p">(</span><span class="n">list_of_tuple</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">list_of_tuple</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">list_of_tuple</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="nb">float</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2021, Marouane Yassine &amp; David Beauchemin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

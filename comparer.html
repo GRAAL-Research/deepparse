@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Comparer &mdash; deepparse 0.4.3 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Retrain a Pretrained Model" href="examples/fine_tuning.html" />
+    <link rel="prev" title="Dataset Container" href="dataset_container.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html">
+            <img src="_static/deepparse.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.4.3
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="parser.html">Parser</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dataset_container.html">Dataset Container</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Comparer</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#addressescomparer">AddressesComparer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#formatted-compared-addresses">Formatted Compared Addresses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#formatted-compared-addresses-raw">Formatted Compared Addresses Raw</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#formatted-compared-addresses-tags">Formatted Compared Addresses Tags</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/fine_tuning.html">Retrain a Pretrained Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/parse_addresses.html">Parse Addresses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">deepparse</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Comparer</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/comparer.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="comparer">
+<h1>Comparer<a class="headerlink" href="#comparer" title="Permalink to this headline"></a></h1>
+<section id="addressescomparer">
+<h2>AddressesComparer<a class="headerlink" href="#addressescomparer" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="deepparse.comparer.AddressesComparer">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">deepparse.comparer.</span></span><span class="sig-name descname"><span class="pre">AddressesComparer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="parser.html#deepparse.parser.AddressParser" title="deepparse.parser.address_parser.AddressParser"><span class="pre">deepparse.parser.address_parser.AddressParser</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deepparse/comparer/addresses_comparer.html#AddressesComparer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.comparer.AddressesComparer" title="Permalink to this definition"></a></dt>
+<dd><p>Address comparer to compare addresses with each other and retrieves the differences between them. The addresses
+are parsed using an address parser based on one of the seq2seq pre-trained networks either with fastText or BPEmb.</p>
+<p>The address comparer can compare already parsed addresses. The address parser first recompose the raw
+addresses then suggests its own tags, then it makes a comparison with the tags of the source parsing and the
+newly parsed address</p>
+<p>The address comparer is also able to compare raw addresses by first parsing the addresses using the
+address parser and then brings out the differences among the parsed addresses.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>parser</strong> (<a class="reference internal" href="parser.html#deepparse.parser.AddressParser" title="deepparse.parser.address_parser.AddressParser"><em>AddressParser</em></a>) – the AddressParser used to parse the addresses.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="deepparse.comparer.AddressesComparer.compare_tags">
+<span class="sig-name descname"><span class="pre">compare_tags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">addresses_tags_to_compare</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><span class="pre">tuple</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><span class="pre">tuple</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">with_prob</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#deepparse.comparer.FormattedComparedAddressesTags" title="deepparse.comparer.formatted_compared_addresses_tags.FormattedComparedAddressesTags"><span class="pre">deepparse.comparer.formatted_compared_addresses_tags.FormattedComparedAddressesTags</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><a class="reference internal" href="#deepparse.comparer.FormattedComparedAddressesTags" title="deepparse.comparer.formatted_compared_addresses_tags.FormattedComparedAddressesTags"><span class="pre">deepparse.comparer.formatted_compared_addresses_tags.FormattedComparedAddressesTags</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/deepparse/comparer/addresses_comparer.html#AddressesComparer.compare_tags"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.comparer.AddressesComparer.compare_tags" title="Permalink to this definition"></a></dt>
+<dd><p>Compare tags of a source parsing with the parsing from AddressParser. First, it reconstructs the
+raw address from the parsing, then AddressParser generates tags and then compares the two parsings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>addresses_tags_to_compare</strong> (<em>Union</em><em>[</em><em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><em>tuple</em></a><em>]</em><em>, </em><em>List</em><em>[</em><em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><em>tuple</em></a><em>]</em><em>]</em><em>]</em>) – list of tuple that contains</p></li>
+<li><p><strong>a</strong> (<em>the tags for the address components from the source. Can compare multiples parsings if passed as</em>) – </p></li>
+<li><p><strong>tuples.</strong> (<em>list of</em>) – </p></li>
+<li><p><strong>with_prob</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><em>None</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>]</em>) – A option flag to either or not include prob in the comparison report.
+The probabilities are not compared but only included in the report.
+The default value is None, which means not taking into account.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Either a <a class="reference internal" href="#deepparse.comparer.FormattedComparedAddressesTags" title="deepparse.comparer.FormattedComparedAddressesTags"><code class="xref py py-class docutils literal notranslate"><span class="pre">FormattedComparedAddressesTags</span></code></a> or a list of <code class="xref py py-class docutils literal notranslate"><span class="pre">FormattedComparedAddressTags</span></code>
+when there is more than one comparison to make.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">first_parsed_address</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s2">&quot;350&quot;</span><span class="p">,</span> <span class="s2">&quot;StreetNumber&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;rue des Lilas&quot;</span><span class="p">,</span> <span class="s2">&quot;StreetName&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;Ouest Québec&quot;</span><span class="p">,</span> <span class="s2">&quot;Municipality&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;Québec&quot;</span><span class="p">,</span> <span class="s2">&quot;Province&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;G1L 1B6&quot;</span><span class="p">,</span> <span class="s2">&quot;PostalCode&quot;</span><span class="p">)]</span>
+<span class="n">second_parsed_address_with_prob</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s1">&#39;350&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;StreetNumber&#39;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)),</span>
+    <span class="p">(</span><span class="s1">&#39;rue&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;StreetName&#39;</span><span class="p">,</span> <span class="mf">0.9987</span><span class="p">)),</span>
+    <span class="p">(</span><span class="s1">&#39;des&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;StreetName&#39;</span><span class="p">,</span> <span class="mf">0.9993</span><span class="p">)),</span>
+    <span class="p">(</span><span class="s1">&#39;Lilas&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;StreetName&#39;</span><span class="p">,</span> <span class="mf">0.8176</span><span class="p">)),</span>
+    <span class="p">(</span><span class="s1">&#39;Ouest&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;Orientation&#39;</span><span class="p">,</span> <span class="mf">0.781</span><span class="p">)),</span>
+    <span class="p">(</span><span class="s1">&#39;Quebec&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;Municipality&#39;</span><span class="p">,</span> <span class="mf">0.9768</span><span class="p">)),</span>
+    <span class="p">(</span><span class="s1">&#39;Quebec&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;Province&#39;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)),</span>
+    <span class="p">(</span><span class="s1">&#39;G1L&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;PostalCode&#39;</span><span class="p">,</span> <span class="mf">0.9993</span><span class="p">)),</span>
+    <span class="p">(</span><span class="s1">&#39;1B6&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;PostalCode&#39;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))]</span>
+
+<span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;bpemb&quot;</span><span class="p">)</span>
+<span class="n">addresses_comparer</span> <span class="o">=</span> <span class="n">AddressesComparer</span><span class="p">(</span><span class="n">address_parser</span><span class="p">)</span>
+
+<span class="n">list_of_compared_addresses</span> <span class="o">=</span> <span class="n">addresses_comparer</span><span class="o">.</span><span class="n">compare_tags</span><span class="p">([</span><span class="n">first_parsed_address</span><span class="p">,</span>
+                                                              <span class="n">second_parsed_address_with_prob</span><span class="p">])</span>
+<span class="n">list_of_compared_addresses</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">comparison_report</span><span class="p">()</span>
+<span class="n">list_of_compared_addresses</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">comparison_report</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deepparse.comparer.AddressesComparer.compare_raw">
+<span class="sig-name descname"><span class="pre">compare_raw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_addresses_to_compare</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">with_prob</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#deepparse.comparer.FormattedComparedAddressesRaw" title="deepparse.comparer.formatted_compared_addresses_raw.FormattedComparedAddressesRaw"><span class="pre">deepparse.comparer.formatted_compared_addresses_raw.FormattedComparedAddressesRaw</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/deepparse/comparer/addresses_comparer.html#AddressesComparer.compare_raw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.comparer.AddressesComparer.compare_raw" title="Permalink to this definition"></a></dt>
+<dd><p>Compare a list of raw addresses together, it starts by parsing the addresses
+with the setted parser and then return the differences between the addresses components
+retrieved with our model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>raw_addresses_to_compare</strong> (<em>Union</em><em>[</em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>]</em><em>, </em><em>List</em><em>[</em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>]</em><em>]</em><em>]</em>) – List of string that represent raw addresses to compare.</p></li>
+<li><p><strong>with_prob</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><em>None</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>]</em>) – A option flag to either or not include prob in the comparison report.
+The probabilities are not compared but only included in the report.
+The default value is None, which means not taking into account.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Either a <a class="reference internal" href="#deepparse.comparer.FormattedComparedAddressesRaw" title="deepparse.comparer.FormattedComparedAddressesRaw"><code class="xref py py-class docutils literal notranslate"><span class="pre">FormattedComparedAddressesRaw</span></code></a> or a list of
+<a class="reference internal" href="#deepparse.comparer.FormattedComparedAddressesRaw" title="deepparse.comparer.FormattedComparedAddressesRaw"><code class="xref py py-class docutils literal notranslate"><span class="pre">FormattedComparedAddressesRaw</span></code></a> when given more than one comparison to make.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">raw_address_original</span> <span class="o">=</span> <span class="s2">&quot;350 rue des Lilas Ouest Quebec Quebec G1L 1B6&quot;</span>
+<span class="n">raw_address_identical</span> <span class="o">=</span> <span class="s2">&quot;350 rue des Lilas Ouest Quebec Quebec G1L 1B6&quot;</span>
+<span class="n">raw_address_equivalent</span> <span class="o">=</span> <span class="s2">&quot;350  rue des Lilas Ouest Quebec Quebec G1L 1B6&quot;</span>
+<span class="n">raw_address_diff_streetNumber</span> <span class="o">=</span> <span class="s2">&quot;450 rue des Lilas Ouest Quebec Quebec G1L 1B6&quot;</span>
+
+<span class="n">raw_addresses_multiples_comparisons</span> <span class="o">=</span> <span class="n">addresses_comparer</span><span class="o">.</span><span class="n">compare_raw</span><span class="p">([(</span><span class="n">raw_address_original</span><span class="p">,</span>
+                                                                       <span class="n">raw_address_identical</span><span class="p">),</span>
+                                                                      <span class="p">(</span><span class="n">raw_address_original</span><span class="p">,</span>
+                                                                       <span class="n">raw_address_equivalent</span><span class="p">),</span>
+                                                                      <span class="p">(</span><span class="n">raw_address_original</span><span class="p">,</span>
+                                                                       <span class="n">raw_address_diff_streetNumber</span><span class="p">)])</span>
+<span class="n">raw_addresses_multiples_comparisons</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">comparison_report</span><span class="p">()</span>
+<span class="n">raw_addresses_multiples_comparisons</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">comparison_report</span><span class="p">()</span>
+<span class="n">raw_addresses_multiples_comparisons</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">comparison_report</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="formatted-compared-addresses">
+<h2>Formatted Compared Addresses<a class="headerlink" href="#formatted-compared-addresses" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="deepparse.comparer.FormattedComparedAddresses">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">deepparse.comparer.</span></span><span class="sig-name descname"><span class="pre">FormattedComparedAddresses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">first_address</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="parser.html#deepparse.parser.FormattedParsedAddress" title="deepparse.parser.formatted_parsed_address.FormattedParsedAddress"><span class="pre">deepparse.parser.formatted_parsed_address.FormattedParsedAddress</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">second_address</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="parser.html#deepparse.parser.FormattedParsedAddress" title="deepparse.parser.formatted_parsed_address.FormattedParsedAddress"><span class="pre">deepparse.parser.formatted_parsed_address.FormattedParsedAddress</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">with_prob</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deepparse/comparer/formatted_compared_addresses.html#FormattedComparedAddresses"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.comparer.FormattedComparedAddresses" title="Permalink to this definition"></a></dt>
+<dd><p>Abstract method that defined a comparison for addresses returned by the address comparer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>first_address</strong> (<a class="reference internal" href="parser.html#deepparse.parser.FormattedParsedAddress" title="deepparse.parser.FormattedParsedAddress"><em>FormattedParsedAddress</em></a>) – A formatted parsed address that contains the parsing information
+for the first one.</p></li>
+<li><p><strong>second_address</strong> (<a class="reference internal" href="parser.html#deepparse.parser.FormattedParsedAddress" title="deepparse.parser.FormattedParsedAddress"><em>FormattedParsedAddress</em></a>) – A formatted parsed address that contains the parsing information
+for the second one.</p></li>
+<li><p><strong>origin</strong> – (Tuple[str, str]): The origin of the parsing (ex : from source or from a deepparse pre-trained model).</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_comparer</span> <span class="o">=</span> <span class="n">AddressesComparer</span><span class="p">(</span><span class="n">AddressParser</span><span class="p">())</span>
+<span class="n">raw_identical_comparison</span> <span class="o">=</span> <span class="n">address_comparer</span><span class="o">.</span><span class="n">compare_raw</span><span class="p">(</span>
+                                            <span class="p">(</span><span class="s2">&quot;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&quot;</span><span class="p">,</span>
+                                            <span class="s2">&quot;450 rue des Lilas Ouest Quebec city Quebec G1L 1B6&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<dl class="py property">
+<dt class="sig sig-object py" id="deepparse.comparer.FormattedComparedAddresses.list_of_bool">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">list_of_bool</span></span><em class="property"><span class="pre">:</span> <span class="pre">List</span></em><a class="headerlink" href="#deepparse.comparer.FormattedComparedAddresses.list_of_bool" title="Permalink to this definition"></a></dt>
+<dd><p>A list of boolean that contains all the address components names and indicates if it is the same for the
+two addresses.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A list of the boolean.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="deepparse.comparer.FormattedComparedAddresses.equivalent">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">equivalent</span></span><em class="property"><span class="pre">:</span> <a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></em><a class="headerlink" href="#deepparse.comparer.FormattedComparedAddresses.equivalent" title="Permalink to this definition"></a></dt>
+<dd><p>Check if the parsing is the same for the two addresses.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A bool.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="deepparse.comparer.FormattedComparedAddresses.identical">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">identical</span></span><em class="property"><span class="pre">:</span> <a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></em><a class="headerlink" href="#deepparse.comparer.FormattedComparedAddresses.identical" title="Permalink to this definition"></a></dt>
+<dd><p>Check if the parsing is the same for the two addresses and if the raw addresses are identical.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A bool.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deepparse.comparer.FormattedComparedAddresses.comparison_report">
+<span class="sig-name descname"><span class="pre">comparison_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nb_delimiters</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/deepparse/comparer/formatted_compared_addresses.html#FormattedComparedAddresses.comparison_report"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.comparer.FormattedComparedAddresses.comparison_report" title="Permalink to this definition"></a></dt>
+<dd><p>Print a formatted comparison report of the two addresses.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="formatted-compared-addresses-raw">
+<h2>Formatted Compared Addresses Raw<a class="headerlink" href="#formatted-compared-addresses-raw" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="deepparse.comparer.FormattedComparedAddressesRaw">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">deepparse.comparer.</span></span><span class="sig-name descname"><span class="pre">FormattedComparedAddressesRaw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">first_address</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="parser.html#deepparse.parser.FormattedParsedAddress" title="deepparse.parser.formatted_parsed_address.FormattedParsedAddress"><span class="pre">deepparse.parser.formatted_parsed_address.FormattedParsedAddress</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">second_address</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="parser.html#deepparse.parser.FormattedParsedAddress" title="deepparse.parser.formatted_parsed_address.FormattedParsedAddress"><span class="pre">deepparse.parser.formatted_parsed_address.FormattedParsedAddress</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">with_prob</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deepparse/comparer/formatted_compared_addresses_raw.html#FormattedComparedAddressesRaw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.comparer.FormattedComparedAddressesRaw" title="Permalink to this definition"></a></dt>
+<dd><p>A formatted compared address of two raw (not parsed) addresses.</p>
+</dd></dl>
+
+</section>
+<section id="formatted-compared-addresses-tags">
+<h2>Formatted Compared Addresses Tags<a class="headerlink" href="#formatted-compared-addresses-tags" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="deepparse.comparer.FormattedComparedAddressesTags">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">deepparse.comparer.</span></span><span class="sig-name descname"><span class="pre">FormattedComparedAddressesTags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">first_address</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="parser.html#deepparse.parser.FormattedParsedAddress" title="deepparse.parser.formatted_parsed_address.FormattedParsedAddress"><span class="pre">deepparse.parser.formatted_parsed_address.FormattedParsedAddress</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">second_address</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="parser.html#deepparse.parser.FormattedParsedAddress" title="deepparse.parser.formatted_parsed_address.FormattedParsedAddress"><span class="pre">deepparse.parser.formatted_parsed_address.FormattedParsedAddress</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">with_prob</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deepparse/comparer/formatted_compared_addresses_tags.html#FormattedComparedAddressesTags"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.comparer.FormattedComparedAddressesTags" title="Permalink to this definition"></a></dt>
+<dd><p>A formatted compared address of two already tagged addresses.</p>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="dataset_container.html" class="btn btn-neutral float-left" title="Dataset Container" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="examples/fine_tuning.html" class="btn btn-neutral float-right" title="Retrain a Pretrained Model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2021, Marouane Yassine &amp; David Beauchemin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

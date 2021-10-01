@@ -1,83 +1,41 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  <meta content="deepparse is a state-of-the-art library for parsing multinational street addresses using deep learning" name="description" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<meta content="deepparse is a state-of-the-art library for parsing multinational street addresses using deep learning" name="description" />
 <meta content="deepparse, deep learning, pytorch, neural network, machine learning, natural language processing, parsing, data science, python" name="keywords" />
 <meta content="Marouane Yassine &amp; David Beauchemin" name="author" />
 <meta content="https://deepparse.org/_static/logos/deepparse.png" property="og:image" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Here is deepparse &mdash; deepparse 0.4.2 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>Here is deepparse &mdash; deepparse 0.4.3 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-    
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-
-    
+    <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Parser" href="parser.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="#">
-          
-
-          
-            
             <img src="_static/deepparse.png" class="logo" alt="Logo"/>
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                0.4.2
+                0.4.3
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -85,22 +43,12 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="parser.html">Parser</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dataset_container.html">Dataset Container</a></li>
+<li class="toctree-l1"><a class="reference internal" href="comparer.html">Comparer</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul>
@@ -109,81 +57,36 @@
 <li class="toctree-l1"><a class="reference internal" href="examples/retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="#">deepparse</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="#" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Here is deepparse</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
-            
               <!-- User defined GitHub URL -->
               <a href="https://github.com/GRAAL-Research/deepparse" class="fa fa-github"> Edit on GitHub</a>
-            
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   <center>
 <a href="https://github.com/GRAAL-Research/deepparse-address-data">
     <img src="https://img.shields.io/badge/Download%20Dataset-blue?style=for-the-badge&logo=download" alt="No message"/></a>
-</center><div class="section" id="here-is-deepparse">
-<h1>Here is deepparse<a class="headerlink" href="#here-is-deepparse" title="Permalink to this headline">¶</a></h1>
+</center><section id="here-is-deepparse">
+<h1>Here is deepparse<a class="headerlink" href="#here-is-deepparse" title="Permalink to this headline"></a></h1>
 <p>Deepparse is a state-of-the-art library for parsing multinational street addresses using deep learning.</p>
 <p>Use deepparse to</p>
 <ul class="simple">
@@ -192,17 +95,17 @@
 <li><p>retrain our pre-trained models with your own prediction tags easily.</p></li>
 </ul>
 <p>Deepparse is compatible with the <strong>latest version of PyTorch</strong> and  <strong>Python &gt;= 3.7</strong>.</p>
-</div>
-<div class="section" id="countries-and-results">
-<h1>Countries and Results<a class="headerlink" href="#countries-and-results" title="Permalink to this headline">¶</a></h1>
+</section>
+<section id="countries-and-results">
+<h1>Countries and Results<a class="headerlink" href="#countries-and-results" title="Permalink to this headline"></a></h1>
 <p>We evaluate our models on two forms of address data</p>
 <ul class="simple">
 <li><p><strong>clean data</strong> which refers to addresses containing elements from four categories, namely a street name, a municipality, a province and a postal code,</p></li>
 <li><p><strong>incomplete data</strong> which is made up of addresses missing at least one category amongst the aforementioned ones.</p></li>
 </ul>
 <p>You can get our dataset <a class="reference external" href="https://github.com/GRAAL-Research/deepparse-address-data)">here</a>.</p>
-<div class="section" id="clean-data">
-<h2>Clean Data<a class="headerlink" href="#clean-data" title="Permalink to this headline">¶</a></h2>
+<section id="clean-data">
+<h2>Clean Data<a class="headerlink" href="#clean-data" title="Permalink to this headline"></a></h2>
 <p>The following table presents the accuracy on the 20 countries (using clean data) we used during training for both our models.</p>
 <table class="docutils align-default">
 <colgroup>
@@ -464,9 +367,9 @@
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="incomplete-data">
-<h2>Incomplete Data<a class="headerlink" href="#incomplete-data" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="incomplete-data">
+<h2>Incomplete Data<a class="headerlink" href="#incomplete-data" title="Permalink to this headline"></a></h2>
 <p>The following table presents the accuracy on the 20 countries we used during training for both our models but for
 incomplete data. We didn’t test on the other 41 countries since we did not train on them and therefore do not expect
 to achieve an interesting performance.</p>
@@ -561,10 +464,10 @@ to achieve an interesting performance.</p>
 </tr>
 </tbody>
 </table>
-</div>
-</div>
-<div class="section" id="getting-started">
-<h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+</section>
+</section>
+<section id="getting-started">
+<h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline"></a></h1>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">deepparse.parser</span> <span class="kn">import</span> <span class="n">AddressParser</span>
 
 <span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;bpemb&quot;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
@@ -600,23 +503,23 @@ to achieve an interesting performance.</p>
 <li><p>“GeneralDelivery”: for other delivery information.</p></li>
 </ul>
 </div></blockquote>
-<div class="section" id="retrain-a-model">
-<h2>Retrain a Model<a class="headerlink" href="#retrain-a-model" title="Permalink to this headline">¶</a></h2>
+<section id="retrain-a-model">
+<h2>Retrain a Model<a class="headerlink" href="#retrain-a-model" title="Permalink to this headline"></a></h2>
 <p>See <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py">here</a> for a complete example.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span><span class="o">.</span><span class="n">retrain</span><span class="p">(</span><span class="n">training_container</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="retrain-a-model-with-new-tags">
-<h2>Retrain a Model With New Tags<a class="headerlink" href="#retrain-a-model-with-new-tags" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="retrain-a-model-with-new-tags">
+<h2>Retrain a Model With New Tags<a class="headerlink" href="#retrain-a-model-with-new-tags" title="Permalink to this headline"></a></h2>
 <p>See <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py">this</a> for a complete example.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_components</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ATag&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;AnotherTag&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;EOS&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
 <span class="n">address_parser</span><span class="o">.</span><span class="n">retrain</span><span class="p">(</span><span class="n">training_container</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">prediction_tags</span><span class="o">=</span><span class="n">address_components</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="download-our-models">
-<h2>Download our Models<a class="headerlink" href="#download-our-models" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="download-our-models">
+<h2>Download our Models<a class="headerlink" href="#download-our-models" title="Permalink to this headline"></a></h2>
 <dl class="simple">
 <dt>Here are the URLs to download our pre-trained models directly</dt><dd><ul class="simple">
 <li><p><a class="reference external" href="https://graal.ift.ulaval.ca/public/deepparse/fasttext.ckpt">FastText</a>,</p></li>
@@ -625,10 +528,10 @@ to achieve an interesting performance.</p>
 </ul>
 </dd>
 </dl>
-</div>
-</div>
-<div class="section" id="installation">
-<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+</section>
+</section>
+<section id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline"></a></h1>
 <p>Before installing deepparse, you must have the latest version of <a class="reference external" href="https://pytorch.org/">PyTorch</a> in your environment.</p>
 <ul>
 <li><p><strong>Install the stable version of deepparse:</strong></p>
@@ -642,9 +545,9 @@ to achieve an interesting performance.</p>
 </div>
 </li>
 </ul>
-</div>
-<div class="section" id="cite">
-<h1>Cite<a class="headerlink" href="#cite" title="Permalink to this headline">¶</a></h1>
+</section>
+<section id="cite">
+<h1>Cite<a class="headerlink" href="#cite" title="Permalink to this headline"></a></h1>
 <div class="highlight-bib notranslate"><div class="highlight"><pre><span></span><span class="nc">@misc</span><span class="p">{</span><span class="nl">yassine2020leveraging</span><span class="p">,</span>
     <span class="na">title</span><span class="p">=</span><span class="s">{{Leveraging Subword Embeddings for Multinational Address Parsing}}</span><span class="p">,</span>
     <span class="na">author</span><span class="p">=</span><span class="s">{Marouane Yassine and David Beauchemin and François Laviolette and Luc Lamontagne}</span><span class="p">,</span>
@@ -663,24 +566,25 @@ to achieve an interesting performance.</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="contributing-to-deepparse">
-<h1>Contributing to Deepparse<a class="headerlink" href="#contributing-to-deepparse" title="Permalink to this headline">¶</a></h1>
+</section>
+<section id="contributing-to-deepparse">
+<h1>Contributing to Deepparse<a class="headerlink" href="#contributing-to-deepparse" title="Permalink to this headline"></a></h1>
 <p>We welcome user input, whether it is regarding bugs found in the library or feature propositions ! Make sure to have a
 look at our <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/master/.github/CONTRIBUTING.md">contributing guidelines</a> for more
 details on this matter.</p>
-</div>
-<div class="section" id="license">
-<h1>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h1>
+</section>
+<section id="license">
+<h1>License<a class="headerlink" href="#license" title="Permalink to this headline"></a></h1>
 <p>Deepparse is LGPLv3 licensed, as found in the <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/master/LICENSE">LICENSE file</a>.</p>
-</div>
-<div class="section" id="api-reference">
-<h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline">¶</a></h1>
+</section>
+<section id="api-reference">
+<h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline"></a></h1>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="parser.html">Parser</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dataset_container.html">Dataset Container</a></li>
+<li class="toctree-l1"><a class="reference internal" href="comparer.html">Comparer</a></li>
 </ul>
 </div>
 <div class="toctree-wrapper compound">
@@ -691,60 +595,43 @@ details on this matter.</p>
 <li class="toctree-l1"><a class="reference internal" href="examples/retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
 </ul>
 </div>
-</div>
-<div class="section" id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+</section>
+<section id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline"></a></h1>
 <ul class="simple">
 <li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
 <li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
 </ul>
-</div>
+</section>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="parser.html" class="btn btn-neutral float-right" title="Parser" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2020-2021, Marouane Yassine &amp; David Beauchemin.
-
-    </p>
+    <p>&#169; Copyright 2020-2021, Marouane Yassine &amp; David Beauchemin.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

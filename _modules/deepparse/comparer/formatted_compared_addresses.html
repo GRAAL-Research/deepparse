@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>deepparse.comparer.formatted_compared_addresses &mdash; deepparse 0.4.3 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html">
+            <img src="../../../_static/deepparse.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.4.3
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../parser.html">Parser</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dataset_container.html">Dataset Container</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../comparer.html">Comparer</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/fine_tuning.html">Retrain a Pretrained Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/parse_addresses.html">Parse Addresses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">deepparse</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>deepparse.comparer.formatted_compared_addresses</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for deepparse.comparer.formatted_compared_addresses</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span> <span class="nn">difflib</span> <span class="kn">import</span> <span class="n">SequenceMatcher</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Dict</span>
+
+<span class="kn">from</span> <span class="nn">..parser</span> <span class="kn">import</span> <span class="n">FormattedParsedAddress</span>
+
+
+<div class="viewcode-block" id="FormattedComparedAddresses"><a class="viewcode-back" href="../../../comparer.html#deepparse.comparer.FormattedComparedAddresses">[docs]</a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">FormattedComparedAddresses</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Abstract method that defined a comparison for addresses returned by the address comparer.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        first_address(FormattedParsedAddress): A formatted parsed address that contains the parsing information</span>
+<span class="sd">                                                for the first one.</span>
+<span class="sd">        second_address(FormattedParsedAddress): A formatted parsed address that contains the parsing information</span>
+<span class="sd">                                                for the second one.</span>
+<span class="sd">        origin: (Tuple[str, str]): The origin of the parsing (ex : from source or from a deepparse pre-trained model).</span>
+
+<span class="sd">    Example:</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            address_comparer = AddressesComparer(AddressParser())</span>
+<span class="sd">            raw_identical_comparison = address_comparer.compare_raw(</span>
+<span class="sd">                                                        (&quot;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&quot;,</span>
+<span class="sd">                                                        &quot;450 rue des Lilas Ouest Quebec city Quebec G1L 1B6&quot;))</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">first_address</span><span class="p">:</span> <span class="n">FormattedParsedAddress</span>
+    <span class="n">second_address</span><span class="p">:</span> <span class="n">FormattedParsedAddress</span>
+    <span class="n">origin</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">with_prob</span><span class="p">:</span> <span class="nb">bool</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">list_of_bool</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A list of boolean that contains all the address components names and indicates if it is the same for the</span>
+<span class="sd">        two addresses.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            A list of the boolean.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bool_address_tags_are_the_same</span><span class="p">(</span>
+            <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">first_address</span><span class="o">.</span><span class="n">to_list_of_tuples</span><span class="p">(),</span>
+             <span class="bp">self</span><span class="o">.</span><span class="n">second_address</span><span class="o">.</span><span class="n">to_list_of_tuples</span><span class="p">()])</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">equivalent</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if the parsing is the same for the two addresses.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            A bool.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">all</span><span class="p">((</span><span class="n">bool_address</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">bool_address</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">list_of_bool</span><span class="p">))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">identical</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if the parsing is the same for the two addresses and if the raw addresses are identical.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            A bool.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">is_identical</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">equivalent</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_address</span><span class="o">.</span><span class="n">raw_address</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">second_address</span><span class="o">.</span><span class="n">raw_address</span><span class="p">:</span>
+                <span class="n">is_identical</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="n">is_identical</span>
+
+<div class="viewcode-block" id="FormattedComparedAddresses.comparison_report"><a class="viewcode-back" href="../../../comparer.html#deepparse.comparer.FormattedComparedAddresses.comparison_report">[docs]</a>    <span class="k">def</span> <span class="nf">comparison_report</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nb_delimiters</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Print a formatted comparison report of the two addresses.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_comparison_report</span><span class="p">(</span><span class="n">nb_delimiters</span><span class="p">))</span></div>
+
+    <span class="k">def</span> <span class="nf">_comparison_report</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nb_delimiters</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Builds a comparison_report with delimiters to make the beginning and the end of the comparison easier to spot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Get terminal size to adapt the output to the user</span>
+        <span class="n">nb_delimiters</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">get_terminal_size</span><span class="p">()</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">nb_delimiters</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">nb_delimiters</span>
+
+        <span class="n">formatted_str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">comparison_report_signal</span> <span class="o">=</span> <span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="n">nb_delimiters</span>
+        <span class="n">formatted_str</span> <span class="o">+=</span> <span class="n">comparison_report_signal</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">formatted_str</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_comparison_report_builder</span><span class="p">()</span>
+        <span class="n">formatted_str</span> <span class="o">+=</span> <span class="n">comparison_report_signal</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="n">formatted_str</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">_comparison_report_builder</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Builds the core of a comparison report for the different comparisons. Since the procedure to make a tags</span>
+<span class="sd">        comparison and the raw addresses comparison is different, the comparison report is not the same for the two.</span>
+<span class="sd">        It is then implemented in each specific class.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">_get_probs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the tags from the parsing with their associated probabilities, the method needs to be implemented in each</span>
+<span class="sd">        class because they don&#39;t use the probabilities the same way.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_get_color_diff</span><span class="p">(</span><span class="n">string_one</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">string_two</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">highlight</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compare two strings and determine the difference between the two. The differences are noted with colour code;</span>
+<span class="sd">        if the first string has more element than the second one it will be noted in one colour; on the contrary,</span>
+<span class="sd">        if the other string has something more, it will have a different colour notation.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            string_one (str): The first string to compare.</span>
+<span class="sd">            string_two (str): The second string to compare.</span>
+<span class="sd">            highlight (bool, optional): If set to yes, the difference will be highlighted in colour instead of the</span>
+<span class="sd">                character itself in colour. This might be used to have information where the discrepancies between</span>
+<span class="sd">                two strings are spaces. The default is False.</span>
+
+<span class="sd">        Notes:</span>
+<span class="sd">            the method is colorblind-friendly, which means that the output will be</span>
+<span class="sd">            in colours that minimize the risk that a user cannot see the difference as</span>
+<span class="sd">            defined here https://davidmathlogic.com/colorblind/#%23D81B60-%231E88E5-%23FFC107-%23004D40.</span>
+
+<span class="sd">            If both the strings share the same character, it will be noted in white.</span>
+<span class="sd">            If the first string has something more than the second one, it will be indicated in blue.</span>
+<span class="sd">            If the second string has something more than the first one, it will be noted in yellow.</span>
+
+<span class="sd">            The uses the SequenceMatcher to get the differences codes that are then converted to</span>
+<span class="sd">            colour codes.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            str: The two strings joined, and the differences are noted in colour codes</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">code_type</span> <span class="o">=</span> <span class="mi">48</span> <span class="k">if</span> <span class="n">highlight</span> <span class="k">else</span> <span class="mi">38</span>
+
+        <span class="n">color_1</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[</span><span class="si">{code_type}</span><span class="s2">;2;26;123;220m</span><span class="si">{text}</span><span class="se">\033</span><span class="s2">[0m&quot;</span>  <span class="c1"># blue</span>
+        <span class="n">color_2</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[</span><span class="si">{code_type}</span><span class="s2">;2;255;194;10m</span><span class="si">{text}</span><span class="se">\033</span><span class="s2">[0m&quot;</span>  <span class="c1"># yellow</span>
+
+        <span class="n">white</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[38;2;255;255;255m</span><span class="si">{text}</span><span class="se">\033</span><span class="s2">[0m&quot;</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">codes</span> <span class="o">=</span> <span class="n">SequenceMatcher</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">string_one</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">string_two</span><span class="p">)</span><span class="o">.</span><span class="n">get_opcodes</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">code</span> <span class="ow">in</span> <span class="n">codes</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">code</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;equal&quot;</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">+=</span> <span class="n">white</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="p">(</span><span class="n">string_one</span><span class="p">[</span><span class="n">code</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span><span class="n">code</span><span class="p">[</span><span class="mi">2</span><span class="p">]]))</span>
+            <span class="k">elif</span> <span class="n">code</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;delete&quot;</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">+=</span> <span class="n">color_1</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">code_type</span><span class="o">=</span><span class="n">code_type</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">string_one</span><span class="p">[</span><span class="n">code</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span><span class="n">code</span><span class="p">[</span><span class="mi">2</span><span class="p">]])</span>
+            <span class="k">elif</span> <span class="n">code</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;insert&quot;</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">+=</span> <span class="n">color_2</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">code_type</span><span class="o">=</span><span class="n">code_type</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">string_two</span><span class="p">[</span><span class="n">code</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span><span class="n">code</span><span class="p">[</span><span class="mi">4</span><span class="p">]])</span>
+            <span class="k">elif</span> <span class="n">code</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;replace&quot;</span><span class="p">:</span>
+
+                <span class="k">if</span> <span class="n">code</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">code</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span>
+                    <span class="n">result</span> <span class="o">+=</span> <span class="p">(</span><span class="n">color_1</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">code_type</span><span class="o">=</span><span class="n">code_type</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">string_one</span><span class="p">[</span><span class="n">code</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span><span class="n">code</span><span class="p">[</span><span class="mi">2</span><span class="p">]])</span> <span class="o">+</span>
+                               <span class="n">color_2</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">code_type</span><span class="o">=</span><span class="n">code_type</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">string_two</span><span class="p">[</span><span class="n">code</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span><span class="n">code</span><span class="p">[</span><span class="mi">4</span><span class="p">]]))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">result</span> <span class="o">+=</span> <span class="p">(</span><span class="n">color_2</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">code_type</span><span class="o">=</span><span class="n">code_type</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">string_two</span><span class="p">[</span><span class="n">code</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span><span class="n">code</span><span class="p">[</span><span class="mi">4</span><span class="p">]])</span> <span class="o">+</span>
+                               <span class="n">color_1</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">code_type</span><span class="o">=</span><span class="n">code_type</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">string_one</span><span class="p">[</span><span class="n">code</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span><span class="n">code</span><span class="p">[</span><span class="mi">2</span><span class="p">]]))</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="k">def</span> <span class="nf">_get_tags_diff_color</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                             <span class="n">name_one</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;first address&quot;</span><span class="p">,</span>
+                             <span class="n">name_two</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;second address&quot;</span><span class="p">,</span>
+                             <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Print the output of the string with colour codes that represent the differences between the two strings.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name_one (str, optional) : Name associated with first color. The default value is the first address.</span>
+<span class="sd">            name_two (str, optional) : Name associated with second color. The default value is the second address.</span>
+<span class="sd">            verbose (bool, optional): If True, it will print a presentation of the colours and what they mean.</span>
+<span class="sd">                The default value is True.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">formatted_str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="n">formatted_str</span> <span class="o">+=</span> <span class="s2">&quot;White: Shared</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">formatted_str</span> <span class="o">+=</span> <span class="s2">&quot;Blue: Belongs only to the &quot;</span> <span class="o">+</span> <span class="n">name_one</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">formatted_str</span> <span class="o">+=</span> <span class="s2">&quot;Yellow: Belongs only to the &quot;</span> <span class="o">+</span> <span class="n">name_two</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">formatted_str</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+        <span class="n">address_component_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">list_of_bool</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+
+        <span class="k">for</span> <span class="n">address_component_name</span> <span class="ow">in</span> <span class="n">address_component_names</span><span class="p">:</span>
+            <span class="n">list_of_list_tag</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">parsed_address</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">first_address</span><span class="o">.</span><span class="n">to_list_of_tuples</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">second_address</span><span class="o">.</span><span class="n">to_list_of_tuples</span><span class="p">()]:</span>
+                <span class="n">list_of_list_tag</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">tag</span> <span class="k">for</span> <span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">tag_name</span><span class="p">)</span> <span class="ow">in</span> <span class="n">parsed_address</span> \
+                                                  <span class="k">if</span> <span class="n">tag_name</span> <span class="o">==</span> <span class="n">address_component_name</span> <span class="ow">and</span> <span class="n">tag</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]))</span>
+
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_color_diff</span><span class="p">(</span><span class="n">list_of_list_tag</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">list_of_list_tag</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+            <span class="n">formatted_str</span> <span class="o">+=</span> <span class="n">address_component_name</span> <span class="o">+</span> <span class="s2">&quot;: </span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">formatted_str</span> <span class="o">+=</span> <span class="n">result</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+        <span class="k">return</span> <span class="n">formatted_str</span>
+
+    <span class="k">def</span> <span class="nf">_bool_address_tags_are_the_same</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parsed_addresses</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">tuple</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="nb">tuple</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">tuple</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compare addresses components and put the differences in a dictionary where the keys are the</span>
+<span class="sd">        names of the addresses components, and the values are the value of the addresses component.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            parsed_addresses (Union[List[List[tuple]], List[tuple]]): Contains the tags and the</span>
+<span class="sd">            address components name for the parsed addresses.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            List[tuple]: List of tuples that contains all addresses components that differ from each other.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">unique_address_component_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unique_addresses_component_names</span><span class="p">(</span><span class="n">parsed_addresses</span><span class="p">)</span>
+
+        <span class="n">list_of_bool_and_tag</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">address_component_name</span> <span class="ow">in</span> <span class="n">unique_address_component_names</span><span class="p">:</span>
+            <span class="n">list_of_list_tag</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">parsed_address</span> <span class="ow">in</span> <span class="n">parsed_addresses</span><span class="p">:</span>
+                <span class="n">list_of_list_tag</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
+                    <span class="n">tag</span> <span class="k">for</span> <span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">tag_name</span><span class="p">)</span> <span class="ow">in</span> <span class="n">parsed_address</span> <span class="k">if</span> <span class="n">tag_name</span> <span class="o">==</span> <span class="n">address_component_name</span> <span class="ow">and</span> <span class="n">tag</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                <span class="p">]))</span>
+
+            <span class="n">list_of_bool_and_tag</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">address_component_name</span><span class="p">,</span> <span class="nb">all</span><span class="p">(</span><span class="n">x</span> <span class="o">==</span> <span class="n">list_of_list_tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">list_of_list_tag</span><span class="p">)))</span>
+
+        <span class="k">return</span> <span class="n">list_of_bool_and_tag</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_unique_addresses_component_names</span><span class="p">(</span><span class="n">parsed_addresses</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">tuple</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="nb">tuple</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves all the unique address components names from the comparison then returns it.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            parsed_addresses (Union[List[List[tuple]], List[tuple]]): Contains the tags and the</span>
+<span class="sd">            address components name for the parsed addresses.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            Returns a list of all the unique address components names.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">parsed_addresses</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="n">parsed_addresses</span> <span class="o">=</span> <span class="p">[</span><span class="n">parsed_addresses</span><span class="p">]</span>
+
+        <span class="c1"># Here we don&#39;t use a set since order will change and report will also change.</span>
+        <span class="n">unique_address_component_names</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">tuple_values</span> <span class="ow">in</span> <span class="n">parsed_addresses</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">address_component</span> <span class="ow">in</span> <span class="n">tuple_values</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">address_component</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">):</span>
+                    <span class="n">address_component</span> <span class="o">=</span> <span class="n">address_component</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">address_component</span> <span class="o">=</span> <span class="n">address_component</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">address_component</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">unique_address_component_names</span><span class="p">:</span>
+                    <span class="n">unique_address_component_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">address_component</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">unique_address_component_names</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2021, Marouane Yassine &amp; David Beauchemin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -103,3 +103,7 @@
 - Fixed typos in one of file name.
 - Added tools to compare addresses (tagged or not).
 - Fixed some tests errors.
+
+## 0.4.4
+
+- Fixed import error.

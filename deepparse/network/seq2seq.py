@@ -2,7 +2,8 @@ import os
 import random
 import warnings
 from abc import ABC
-from typing import Tuple, Union, OrderedDict
+from typing import Tuple, Union
+from collections import OrderedDict
 
 import torch
 import torch.nn as nn

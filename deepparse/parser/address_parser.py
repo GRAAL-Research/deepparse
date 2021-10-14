@@ -10,8 +10,8 @@ from torch.utils.data import DataLoader, Subset
 
 from . import formatted_parsed_address
 from .formatted_parsed_address import FormattedParsedAddress
-from .. import CACHE_PATH, indices_splitting
-from .. import load_tuple_to_device, download_fasttext_magnitude_embeddings
+from ..tools import CACHE_PATH, indices_splitting, load_tuple_to_device
+from ..fasttext_tools import download_fasttext_magnitude_embeddings
 from ..converter import TagsConverter
 from ..converter import fasttext_data_padding, bpemb_data_padding, DataTransform
 from ..dataset_container import DatasetContainer

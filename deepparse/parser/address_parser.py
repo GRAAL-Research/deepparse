@@ -621,10 +621,21 @@ class AddressParser:
         Handle the model type name matching with proper seq2seq model type name.
         """
         model_type = model_type.lower()
-        if model_type == "lightest":
-            model_type = "fasttext-light"  # we change name to 'fasttext-light' since lightest = fasttext-light
-        elif model_type == "fastest":
-            model_type = "fasttext"  # we change name to fasttext since fastest = fasttext
-        elif model_type == "best":
-            model_type = "bpemb"  # we change name to bpemb since best = bpemb
+        if model_type in ("lightest", "fasttext-light"):
+            model_type = "fasttext-light"  # We change name to 'fasttext-light' since lightest = fasttext-light
+            formatted_name = "FastTextLight"
+        elif model_type in ("fastest", "fasttext"):
+            model_type = "fasttext"  # We change name to fasttext since fastest = fasttext
+            formatted_name = "FastText"
+        elif model_type in ("best", "bpemb"):
+            model_type = "bpemb"  # We change name to bpemb since best = bpemb
+            formatted_name = "BPEmb"
         self.model_type = model_type
+        self._model_type_formatted = formatted_name
+
+    def get_formatted_model_name(self) -> str:
+        """
+        Return the model type formatted name. For example, if the model type is `'fasttext'` the formatted name is
+        `"FastText"`.
+        """
+        return self._model_type_formatted

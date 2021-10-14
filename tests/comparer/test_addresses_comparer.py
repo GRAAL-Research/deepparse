@@ -30,11 +30,11 @@ class TestAdressesComparer(TestCase):
                                            ('Ouest Québec', 'Municipality'), ('Québec', 'Province'),
                                            ('G1L 1B6', 'PostalCode'), (None, 'Orientation'), (None, 'GeneralDelivery')]
 
-    def setup_address_parser_mock(self, comparison_list, model_type="bpemb"):
+    def setup_address_parser_mock(self, comparison_list, formatted_model_type_value="BPEmb"):
         address_parser_mock = MagicMock()
 
         address_parser_mock.__call__().return_value = comparison_list
-        address_parser_mock.model_type.capitalize().return_value = model_type
+        address_parser_mock.get_formatted_model_name.return_value = formatted_model_type_value
 
         return address_parser_mock
 
@@ -96,6 +96,24 @@ class TestAdressesComparer(TestCase):
         self.assertIsInstance(tags_multiple_comparisons, list)
         self.assertIsInstance(tags_multiple_comparisons[0], FormattedComparedAddressesTags)
         self.assertIsInstance(tags_multiple_comparisons[1], FormattedComparedAddressesTags)
+
+    def test_given_anAddressComparerFastText_whenStr_thenUsedProperRep(self):
+        mocked_parser = self.setup_address_parser_mock(self.raw_address_original_parsed,
+                                                       formatted_model_type_value="FastText")
+        address_comparer = AddressesComparer(mocked_parser)
+
+        actual = str(address_comparer)
+        expected = "Compare addresses with FastTextAddressParser"
+        self.assertEqual(expected, actual)
+
+    def test_given_anAddressComparerBPEmb_whenStr_thenUsedProperRep(self):
+        mocked_parser = self.setup_address_parser_mock(self.raw_address_original_parsed,
+                                                       formatted_model_type_value="BPEmb")
+        address_comparer = AddressesComparer(mocked_parser)
+
+        actual = str(address_comparer)
+        expected = "Compare addresses with BPEmbAddressParser"
+        self.assertEqual(expected, actual)
 
 
 if __name__ == "__main__":

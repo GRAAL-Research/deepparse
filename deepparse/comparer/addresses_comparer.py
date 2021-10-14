@@ -27,9 +27,10 @@ class AddressesComparer:
     parser: AddressParser
 
     def __str__(self) -> str:
-        return f"Compare addresses with {self.parser.model_type.capitalize()}AddressParser"
+        model_type_formatted = self.parser.get_formatted_model_name()
+        return f"Compare addresses with {model_type_formatted}AddressParser"
 
-    __repr__ = __str__  # to call __str__ when list of address
+    __repr__ = __str__  # To call __str__ when list of address
 
     def compare_tags(
         self,

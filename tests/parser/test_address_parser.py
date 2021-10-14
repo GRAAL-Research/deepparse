@@ -56,10 +56,9 @@ class AddressParserTest(AddressParserPredictTestCase):
         expected = self.a_cpu_torch_device
         self.assertEqual(actual, expected)
 
+    # We use BPEmb but could use FastText also
     @patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel")
     @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
-    @skipIf(torch.cuda.is_available(), "gpu available so we skip the test")
-    # We skip the test since this one test if cuda is not available, we set to CPU by default
     def test_givenAGPUDeviceSetup_whenInstantiatingParserWithoutGPU_thenRaiseWarningAndCPU(
             self, embeddings_model_mock, model_mock):
         with self.assertWarns(UserWarning):
@@ -712,6 +711,30 @@ class AddressParserTest(AddressParserPredictTestCase):
             output = address_parser(self.a_complete_address, with_prob=True)
             self.assertIsInstance(output.address_parsed_components[0][1], tuple)  # tuple of prob
             self.assertIsInstance(output.address_parsed_components[1][1], tuple)
+
+    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
+    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
+    def test_givenAFasttextModel_whenGetFormattedModelType_thenReturnFastText(self, download_weights_mock, model_mock):
+        with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel"):
+            address_parser = AddressParser(model_type=self.a_fasttext_model_type,
+                                           device=self.a_cpu_device,
+                                           verbose=self.verbose)
+            actual = address_parser.get_formatted_model_name()
+            expected = "FastText"
+            self.assertEqual(expected, actual)
+
+    @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.BPEmbVectorizer")
+    @patch("deepparse.parser.address_parser.bpemb_data_padding")
+    def test_givenABpembModel_whenGetFormattedModelType_thenReturnBPEmb(self, embeddings_model_mock,
+                                                                        vectorizer_model_mock, data_padding_mock):
+        with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel") as model_mock:
+            self.mock_predictions_vectors(model_mock)
+            address_parser = AddressParser(model_type=self.a_bpemb_model_type, device=self.a_cpu_device, verbose=True)
+
+            actual = address_parser.get_formatted_model_name()
+            expected = "BPEmb"
+            self.assertEqual(expected, actual)
 
 
 if __name__ == "__main__":

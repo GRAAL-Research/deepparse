@@ -59,6 +59,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     # We use BPEmb but could use FastText also
     @patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel")
     @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
+    @skipIf(torch.cuda.is_available(), "gpu available")
     def test_givenAGPUDeviceSetup_whenInstantiatingParserWithoutGPU_thenRaiseWarningAndCPU(
             self, embeddings_model_mock, model_mock):
         with self.assertWarns(UserWarning):

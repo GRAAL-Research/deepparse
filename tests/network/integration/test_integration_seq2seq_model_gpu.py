@@ -17,7 +17,13 @@ class Seq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
     def setUp(self) -> None:
         super().setUp()
 
-        self.pre_trained_seq2seq_model = Seq2SeqModel(self.a_torch_device, self.output_size)
+        self.pre_trained_seq2seq_model = Seq2SeqModel(self.a_torch_device,
+                                                      input_size=self.input_size,
+                                                      encoder_hidden_size=self.encoder_hidden_size,
+                                                      encoder_num_layers=self.num_layers,
+                                                      decoder_hidden_size=self.decoder_hidden_size,
+                                                      decoder_num_layers=self.num_layers,
+                                                      output_size=self.output_size)
 
         self.encoder_input_setUp("fasttext",
                                  self.a_torch_device)  # fasttext since the simplest case (bpemb use a embedding layer)

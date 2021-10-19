@@ -1,5 +1,5 @@
 # Since we use a patch as model mock we skip the unused argument error
-# pylint: disable=unused-argument, too-many-arguments, too-many-public-methods
+# pylint: disable=unused-argument, too-many-arguments, too-many-public-methods, protected-access
 import os
 import unittest
 from tempfile import TemporaryDirectory

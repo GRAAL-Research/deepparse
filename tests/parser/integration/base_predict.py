@@ -1,6 +1,6 @@
 # Bug with PyTorch source code makes torch.tensor as not callable for pylint.
 # no-member skip is so because child define the training_container in setup
-# pylint: disable=not-callable, too-many-public-methods, no-member
+# pylint: disable=not-callable, too-many-public-methods, no-member, too-many-arguments
 
 import os
 from tempfile import TemporaryDirectory

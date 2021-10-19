@@ -394,7 +394,9 @@ class AddressParser:
             raise ValueError("It's not possible to retrain a fasttext-light due to pymagnitude problem.")
 
         model_factory_dict = {"prediction_layer_len": 9}  # We set the default output dim size
+
         if prediction_tags is not None:
+            # Handle prediction tags
             if "EOS" not in prediction_tags.keys():
                 raise ValueError("The prediction tags dictionary is missing the EOS tag.")
             self.tags_converter = TagsConverter(prediction_tags)
@@ -408,6 +410,7 @@ class AddressParser:
                     model_factory_dict.update({"prediction_layer_len": new_dim})
 
         if seq2seq_params is not None:
+            # Handle seq2seq params
             # We set the flag to use the pre-trained weights to false since we train new ones
             seq2seq_params.update({"pre_trained_weights": False})
 

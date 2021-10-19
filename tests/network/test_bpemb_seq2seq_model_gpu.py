@@ -91,8 +91,8 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
         all_layers_params = MagicMock()
         torch_mock.load.return_value = all_layers_params
         self.seq2seq_model = BPEmbSeq2SeqModel(self.a_torch_device,
-                                               self.output_size,
-                                               self.verbose,
+                                               output_size=self.output_size,
+                                               verbose=self.verbose,
                                                path_to_retrained_model=self.a_path_to_retrained_model)
 
         torch_load_call = [call.load(self.a_path_to_retrained_model, map_location=self.a_torch_device)]

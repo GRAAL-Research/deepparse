@@ -49,8 +49,8 @@ class BPEmbSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
 
     def test_retrainedModel_whenForwardStep_thenStepIsOk(self):
         self.seq2seq_model = BPEmbSeq2SeqModel(self.a_torch_device,
-                                               self.re_trained_output_dim,
-                                               self.verbose,
+                                               output_size=self.re_trained_output_dim,
+                                               verbose=self.verbose,
                                                path_to_retrained_model=self.a_retrain_model_path)
         # forward pass for two address: '['15 major st london ontario n5z1e1', '15 major st london ontario n5z1e1']'
         self.decoder_input_setUp()
@@ -62,8 +62,8 @@ class BPEmbSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
 
     def test_retrainedModel_whenForwardStepWithTarget_thenStepIsOk(self):
         self.seq2seq_model = BPEmbSeq2SeqModel(self.a_torch_device,
-                                               self.re_trained_output_dim,
-                                               self.verbose,
+                                               output_size=self.re_trained_output_dim,
+                                               verbose=self.verbose,
                                                path_to_retrained_model=self.a_retrain_model_path)
         # forward pass for two address: '['15 major st london ontario n5z1e1', '15 major st london ontario n5z1e1']'
         self.decoder_input_setUp()

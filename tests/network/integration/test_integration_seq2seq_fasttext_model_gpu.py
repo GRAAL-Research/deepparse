@@ -28,7 +28,7 @@ class FastTextSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
         self.a_target_vector = torch.tensor([[0, 1, 1, 4, 5, 8], [1, 0, 3, 8, 0, 0]], device=self.a_torch_device)
 
     def test_whenForwardStep_thenStepIsOk(self):
-        self.seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device, self.number_of_tags)
+        self.seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device, output_size=self.number_of_tags)
         # forward pass for two address: "['15 major st london ontario n5z1e1', '15 major st london ontario n5z1e1']"
         self.decoder_input_setUp()
 
@@ -37,7 +37,7 @@ class FastTextSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
         self.assert_output_is_valid_dim(predictions, output_dim=self.number_of_tags)
 
     def test_whenForwardStepWithTarget_thenStepIsOk(self):
-        self.seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device, self.number_of_tags)
+        self.seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device, output_size=self.number_of_tags)
         # forward pass for two address: "['15 major st london ontario n5z1e1', '15 major st london ontario n5z1e1']"
         self.decoder_input_setUp()
 
@@ -47,8 +47,8 @@ class FastTextSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
 
     def test_retrainedModel_whenForwardStep_thenStepIsOk(self):
         self.seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device,
-                                                  self.re_trained_output_dim,
-                                                  self.verbose,
+                                                  output_size=self.re_trained_output_dim,
+                                                  verbose=self.verbose,
                                                   path_to_retrained_model=self.a_retrain_model_path)
         # forward pass for two address: '['15 major st london ontario n5z1e1', '15 major st london ontario n5z1e1']'
         self.decoder_input_setUp()
@@ -59,8 +59,8 @@ class FastTextSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
 
     def test_retrainedModel_whenForwardStepWithTarget_thenStepIsOk(self):
         self.seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device,
-                                                  self.re_trained_output_dim,
-                                                  self.verbose,
+                                                  output_size=self.re_trained_output_dim,
+                                                  verbose=self.verbose,
                                                   path_to_retrained_model=self.a_retrain_model_path)
         # forward pass for two address: '['15 major st london ontario n5z1e1', '15 major st london ontario n5z1e1']'
         self.decoder_input_setUp()

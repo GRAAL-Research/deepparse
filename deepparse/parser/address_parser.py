@@ -10,8 +10,6 @@ from torch.utils.data import DataLoader, Subset
 
 from . import formatted_parsed_address
 from .formatted_parsed_address import FormattedParsedAddress
-from ..tools import CACHE_PATH, indices_splitting, load_tuple_to_device
-from ..fasttext_tools import download_fasttext_magnitude_embeddings
 from ..converter import TagsConverter
 from ..converter import fasttext_data_padding, bpemb_data_padding, DataTransform
 from ..dataset_container import DatasetContainer
@@ -19,9 +17,11 @@ from ..embeddings_models import BPEmbEmbeddingsModel
 from ..embeddings_models import FastTextEmbeddingsModel
 from ..embeddings_models import MagnitudeEmbeddingsModel
 from ..fasttext_tools import download_fasttext_embeddings
+from ..fasttext_tools import download_fasttext_magnitude_embeddings
 from ..metrics import nll_loss, accuracy
 from ..network.bpemb_seq2seq import BPEmbSeq2SeqModel
 from ..network.fasttext_seq2seq import FastTextSeq2SeqModel
+from ..tools import CACHE_PATH, indices_splitting, load_tuple_to_device
 from ..vectorizer import FastTextVectorizer, BPEmbVectorizer
 from ..vectorizer import TrainVectorizer
 from ..vectorizer.magnitude_vectorizer import MagnitudeVectorizer
@@ -150,17 +150,21 @@ class AddressParser:
         self.rounding = rounding
         self.verbose = verbose
 
-        # default pre trained tag are loaded
+        # Default pre trained tag are loaded
         tags_to_idx = _pre_trained_tags_to_idx
-        # default field of the formatted addrress
+        # Default field of the formatted address
         fields = [field for field in tags_to_idx if field != "EOS"]
+        # Default new config seq2seq model params
+        seq2seq_kwargs = {}  # Empty for default settings
 
         if path_to_retrained_model is not None:
             checkpoint_weights = torch.load(path_to_retrained_model, map_location='cpu')
+            if self._validate_if_new_seq2seq_params(checkpoint_weights):
+                seq2seq_kwargs = checkpoint_weights.get("seq2seq_params")
             if self._validate_if_new_prediction_tags(checkpoint_weights):
                 # We load the new tags_to_idx
                 tags_to_idx = checkpoint_weights.get("prediction_tags")
-                # we change the FIELDS for the FormattedParsedAddress
+                # We change the FIELDS for the FormattedParsedAddress
                 fields = [field for field in tags_to_idx if field != "EOS"]
 
             # We "infer" the model type
@@ -172,7 +176,8 @@ class AddressParser:
         self._set_model_name(model_type)
         self._model_factory(verbose=self.verbose,
                             path_to_retrained_model=path_to_retrained_model,
-                            prediction_layer_len=self.tags_converter.dim)
+                            prediction_layer_len=self.tags_converter.dim,
+                            seq2seq_kwargs=seq2seq_kwargs)
         self.model.eval()
 
     def __str__(self) -> str:
@@ -261,7 +266,8 @@ class AddressParser:
                 callbacks: Union[List, None] = None,
                 seed: int = 42,
                 logging_path: str = "./checkpoints",
-                prediction_tags: Union[Dict, None] = None) -> List[Dict]:
+                prediction_tags: Union[Dict, None] = None,
+                seq2seq_params: Union[Dict, None] = None) -> List[Dict]:
 
         # pylint: disable=too-many-arguments, line-too-long, too-many-locals
         """
@@ -290,10 +296,21 @@ class AddressParser:
             logging_path (str): The logging path for the checkpoints. By default the path is ``./checkpoints``.
             prediction_tags (Union[dict, None]): A dictionary where the keys are the address components
                 (e.g. street name) and the values are the components indices (from 0 to N + 1) to use during retraining
-                of a model. The ``+ 1`` corresponds to the End Of Sequence (EOS) token that needs to be included in the dictionary.
-                We will use the length of this dictionary for the output size of the prediction layer. We also save
-                the dictionary to be used later on when you load the model. Default is None, meaning we use our
-                pre-trained model prediction tags.
+                of a model. The ``+ 1`` corresponds to the End Of Sequence (EOS) token that needs to be included in the
+                dictionary. We will use the length of this dictionary for the output size of the prediction layer.
+                We also save the dictionary to be used later on when you load the model. Default is None, meaning
+                we use our pre-trained model prediction tags.
+            seq2seq_params (Union[dict, None]): A dictionary of seq2seq parameters to modify the seq2seq architecture
+                to train. Params to be modify are:
+
+                    - input_size (int): The input size of the encoder (i.e. the embeddings size). The default value is
+                        300.
+                    - encoder_hidden_size (int): The size of the hidden layer(s) of the encoder. The default value is
+                        1024.
+                    - encoder_num_layers (int): The number of hidden layers of the encoder. The default value is 1.
+                    - decoder_hidden_size (int): The size of the hidden layer(s) of the decoder. The default value is
+                        1024.
+                    - decoder_num_layers (int): The number of hidden layers of the decoder. The default value is 1.
 
         Return:
             A list of dictionary with the best epoch stats (see `Experiment class
@@ -350,6 +367,7 @@ class AddressParser:
         if self.model_type == "fasttext-light":
             raise ValueError("It's not possible to retrain a fasttext-light due to pymagnitude problem.")
 
+        model_factory_dict = {"prediction_layer_len": 9}  # We set the default output dim size
         if prediction_tags is not None:
             if "EOS" not in prediction_tags.keys():
                 raise ValueError("The prediction tags dictionary is missing the EOS tag.")
@@ -357,7 +375,19 @@ class AddressParser:
             if not self.model.same_output_dim(self.tags_converter.dim):
                 # Since we have change the output layer dim, we need to handle the prediction layer dim
                 new_dim = self.tags_converter.dim
-                self.model.handle_new_output_dim(new_dim)
+                if seq2seq_params is None:
+                    self.model.handle_new_output_dim(new_dim)
+                else:
+                    # We update the output dim size
+                    model_factory_dict.update({"prediction_layer_len": new_dim})
+
+        if seq2seq_params is not None:
+            # We set the flag to use the pre-trained weights to false since we train new ones
+            seq2seq_params.update({"pre_trained_weights": False})
+
+            model_factory_dict.update({"seq2seq_kwargs": seq2seq_params})
+            # We set verbose to false since model is reloaded
+            self._model_factory(verbose=False, path_to_retrained_model=None, **model_factory_dict)
 
         callbacks = [] if callbacks is None else callbacks
         train_generator, valid_generator = self._create_training_data_generator(dataset_container,
@@ -384,18 +414,15 @@ class AddressParser:
                               disable_tensorboard=True)  # to remove tensorboard automatic logging
 
         file_path = os.path.join(logging_path, f"retrained_{self.model_type}_address_parser.ckpt")
+        torch_save = {"address_tagger_model": exp.model.network.state_dict(), "model_type": self.model_type}
+        if seq2seq_params is not None:
+            # Means we have changed the seq2seq params
+            torch_save.update({"seq2seq_params": seq2seq_params})
         if prediction_tags is not None:
-            torch.save(
-                {
-                    "address_tagger_model": exp.model.network.state_dict(),
-                    "prediction_tags": prediction_tags,
-                    "model_type": self.model_type
-                }, file_path)
-        else:
-            torch.save({
-                "address_tagger_model": exp.model.network.state_dict(),
-                "model_type": self.model_type
-            }, file_path)
+            #  Means we have changed the predictions tags
+            torch_save.update({"prediction_tags": prediction_tags})
+
+        torch.save(torch_save, file_path)
         return train_res
 
     def test(self,
@@ -569,38 +596,44 @@ class AddressParser:
     def _model_factory(self,
                        verbose: bool,
                        path_to_retrained_model: Union[str, None] = None,
-                       prediction_layer_len: int = 9) -> None:
+                       prediction_layer_len: int = 9,
+                       seq2seq_kwargs: Union[dict, None] = None) -> None:
         """
         Model factory to create the vectorizer, the data converter and the pre-trained model
         """
+        # We switch the case where seq2seq_kwargs is None to an empty dict
+        seq2seq_kwargs = seq2seq_kwargs if seq2seq_kwargs is not None else {}
+
         if "fasttext" in self.model_type:
             if self.model_type == "fasttext-light":
-                file_name = download_fasttext_magnitude_embeddings(saving_dir=CACHE_PATH, verbose=self.verbose)
+                file_name = download_fasttext_magnitude_embeddings(saving_dir=CACHE_PATH, verbose=verbose)
 
                 embeddings_model = MagnitudeEmbeddingsModel(file_name, verbose=verbose)
                 self.vectorizer = MagnitudeVectorizer(embeddings_model=embeddings_model)
             else:
-                file_name = download_fasttext_embeddings(saving_dir=CACHE_PATH, verbose=self.verbose)
+                file_name = download_fasttext_embeddings(saving_dir=CACHE_PATH, verbose=verbose)
 
                 embeddings_model = FastTextEmbeddingsModel(file_name, verbose=verbose)
                 self.vectorizer = FastTextVectorizer(embeddings_model=embeddings_model)
 
             self.data_converter = fasttext_data_padding
 
-            self.model = FastTextSeq2SeqModel(self.device,
-                                              prediction_layer_len,
+            self.model = FastTextSeq2SeqModel(device=self.device,
+                                              output_size=prediction_layer_len,
                                               verbose=verbose,
-                                              path_to_retrained_model=path_to_retrained_model)
+                                              path_to_retrained_model=path_to_retrained_model,
+                                              **seq2seq_kwargs)
 
         elif self.model_type == "bpemb":
-            self.vectorizer = BPEmbVectorizer(embeddings_model=BPEmbEmbeddingsModel(verbose=self.verbose))
+            self.vectorizer = BPEmbVectorizer(embeddings_model=BPEmbEmbeddingsModel(verbose=verbose))
 
             self.data_converter = bpemb_data_padding
 
-            self.model = BPEmbSeq2SeqModel(self.device,
-                                           prediction_layer_len,
+            self.model = BPEmbSeq2SeqModel(device=self.device,
+                                           output_size=prediction_layer_len,
                                            verbose=verbose,
-                                           path_to_retrained_model=path_to_retrained_model)
+                                           path_to_retrained_model=path_to_retrained_model,
+                                           **seq2seq_kwargs)
         else:
             raise NotImplementedError(f"There is no {self.model_type} network implemented. Value should be: "
                                       f"fasttext, bpemb, lightest (fasttext-light), fastest (fasttext) "
@@ -615,6 +648,10 @@ class AddressParser:
     @staticmethod
     def _validate_if_new_prediction_tags(checkpoint_weights: dict) -> bool:
         return checkpoint_weights.get("prediction_tags") is not None
+
+    @staticmethod
+    def _validate_if_new_seq2seq_params(checkpoint_weights: dict) -> bool:
+        return checkpoint_weights.get("seq2seq_params") is not None
 
     def _set_model_name(self, model_type: str):
         """

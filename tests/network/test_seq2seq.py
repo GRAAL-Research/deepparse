@@ -31,7 +31,13 @@ class Seq2SeqTest(TestCase):
         self.a_fake_retrain_path = "a/fake/path/retrain/model"
 
     def test_whenInstantiateASeq2SeqModel_thenParametersAreOk(self):
-        seq2seq_model = Seq2SeqModel(self.a_cpu_device, output_size=self.decoder_output_size)
+        seq2seq_model = Seq2SeqModel(self.a_cpu_device,
+                                     input_size=self.encoder_input_size_dim,
+                                     encoder_hidden_size=self.encoder_hidden_size,
+                                     encoder_num_layers=self.encoder_num_layers,
+                                     decoder_hidden_size=self.decoder_hidden_size,
+                                     decoder_num_layers=self.decoder_num_layers,
+                                     output_size=self.decoder_output_size)
 
         self.assertEqual(self.a_cpu_device, seq2seq_model.device)
 
@@ -48,7 +54,13 @@ class Seq2SeqTest(TestCase):
 
     @skipIf(not torch.cuda.is_available(), "no gpu available")
     def test_whenInstantiateASeq2SeqModelGPU_thenParametersAreOk(self):
-        seq2seq_model = Seq2SeqModel(self.a_torch_device, output_size=self.decoder_output_size)
+        seq2seq_model = Seq2SeqModel(self.a_torch_device,
+                                     input_size=self.encoder_input_size_dim,
+                                     encoder_hidden_size=self.encoder_hidden_size,
+                                     encoder_num_layers=self.encoder_num_layers,
+                                     decoder_hidden_size=self.decoder_hidden_size,
+                                     decoder_num_layers=self.decoder_num_layers,
+                                     output_size=self.decoder_output_size)
 
         self.assertEqual(self.a_torch_device, seq2seq_model.device)
 
@@ -64,15 +76,33 @@ class Seq2SeqTest(TestCase):
         self.assertEqual(self.a_torch_device, seq2seq_model.decoder.lstm.all_weights[0][0].device)
 
     def test_whenSameOutput_thenReturnTrue(self):
-        seq2seq_model = Seq2SeqModel(self.a_cpu_device, output_size=self.decoder_output_size)
+        seq2seq_model = Seq2SeqModel(self.a_cpu_device,
+                                     input_size=self.encoder_input_size_dim,
+                                     encoder_hidden_size=self.encoder_hidden_size,
+                                     encoder_num_layers=self.encoder_num_layers,
+                                     decoder_hidden_size=self.decoder_hidden_size,
+                                     decoder_num_layers=self.decoder_num_layers,
+                                     output_size=self.decoder_output_size)
         self.assertTrue(seq2seq_model.same_output_dim(self.decoder_output_size))
 
     def test_whenNotSameOutput_thenReturnFalse(self):
-        seq2seq_model = Seq2SeqModel(self.a_cpu_device, output_size=self.decoder_output_size)
+        seq2seq_model = Seq2SeqModel(self.a_cpu_device,
+                                     input_size=self.encoder_input_size_dim,
+                                     encoder_hidden_size=self.encoder_hidden_size,
+                                     encoder_num_layers=self.encoder_num_layers,
+                                     decoder_hidden_size=self.decoder_hidden_size,
+                                     decoder_num_layers=self.decoder_num_layers,
+                                     output_size=self.decoder_output_size)
         self.assertFalse(seq2seq_model.same_output_dim(self.decoder_output_size - 1))
 
     def test_whenHandleNewOutputDim_thenProperlyHandleNewDim(self):
-        seq2seq_model = Seq2SeqModel(self.a_cpu_device, output_size=self.decoder_output_size)
+        seq2seq_model = Seq2SeqModel(self.a_cpu_device,
+                                     input_size=self.encoder_input_size_dim,
+                                     encoder_hidden_size=self.encoder_hidden_size,
+                                     encoder_num_layers=self.encoder_num_layers,
+                                     decoder_hidden_size=self.decoder_hidden_size,
+                                     decoder_num_layers=self.decoder_num_layers,
+                                     output_size=self.decoder_output_size)
 
         a_new_dim = 1
         seq2seq_model.handle_new_output_dim(a_new_dim)
@@ -91,7 +121,14 @@ class Seq2SeqTest(TestCase):
     @skipIf(not torch.cuda.is_available(), "no gpu available")
     def test_givenSeq2seqModel_whenLoadPreTrainedWeightsVerboseGPU_thenWarningsRaised(
             self, torch_nn_mock, torch_mock, isfile_mock, last_version_mock):
-        seq2seq_model = Seq2SeqModel(self.a_torch_device, verbose=True, output_size=self.decoder_output_size)
+        seq2seq_model = Seq2SeqModel(self.a_torch_device,
+                                     input_size=self.encoder_input_size_dim,
+                                     encoder_hidden_size=self.encoder_hidden_size,
+                                     encoder_num_layers=self.encoder_num_layers,
+                                     decoder_hidden_size=self.decoder_hidden_size,
+                                     decoder_num_layers=self.decoder_num_layers,
+                                     output_size=self.decoder_output_size,
+                                     verbose=True)
         isfile_mock.return_value = True
         last_version_mock.return_value = False
         with patch("deepparse.network.seq2seq.download_weights"):
@@ -105,7 +142,14 @@ class Seq2SeqTest(TestCase):
     @skipIf(not torch.cuda.is_available(), "no gpu available")
     def test_givenSeq2seqModel_whenLoadPreTrainedWeightsNotVerboseGPU_thenWarningsNotRaised(
             self, torch_nn_mock, torch_mock, isfile_mock, last_version_mock):
-        seq2seq_model = Seq2SeqModel(self.a_torch_device, verbose=False, output_size=self.decoder_output_size)
+        seq2seq_model = Seq2SeqModel(self.a_cpu_device,
+                                     input_size=self.encoder_input_size_dim,
+                                     encoder_hidden_size=self.encoder_hidden_size,
+                                     encoder_num_layers=self.encoder_num_layers,
+                                     decoder_hidden_size=self.decoder_hidden_size,
+                                     decoder_num_layers=self.decoder_num_layers,
+                                     output_size=self.decoder_output_size,
+                                     verbose=False)
         isfile_mock.return_value = True
         last_version_mock.return_value = False
         with patch("deepparse.network.seq2seq.download_weights"):
@@ -119,7 +163,14 @@ class Seq2SeqTest(TestCase):
     @patch("deepparse.network.seq2seq.torch.nn.Module.load_state_dict")
     def test_givenSeq2seqModel_whenLoadPreTrainedWeightsVerboseCPU_thenWarningsRaised(
             self, torch_nn_mock, torch_mock, isfile_mock, last_version_mock):
-        seq2seq_model = Seq2SeqModel(self.a_cpu_device, verbose=True, output_size=self.decoder_output_size)
+        seq2seq_model = Seq2SeqModel(self.a_cpu_device,
+                                     input_size=self.encoder_input_size_dim,
+                                     encoder_hidden_size=self.encoder_hidden_size,
+                                     encoder_num_layers=self.encoder_num_layers,
+                                     decoder_hidden_size=self.decoder_hidden_size,
+                                     decoder_num_layers=self.decoder_num_layers,
+                                     output_size=self.decoder_output_size,
+                                     verbose=True)
         isfile_mock.return_value = True
         last_version_mock.return_value = False
         with patch("deepparse.network.seq2seq.download_weights"):
@@ -132,7 +183,14 @@ class Seq2SeqTest(TestCase):
     @patch("deepparse.network.seq2seq.torch.nn.Module.load_state_dict")
     def test_givenSeq2seqModel_whenLoadPreTrainedWeightsNotVerboseCPU_thenWarningsNotRaised(
             self, torch_nn_mock, torch_mock, isfile_mock, last_version_mock):
-        seq2seq_model = Seq2SeqModel(self.a_cpu_device, verbose=False, output_size=self.decoder_output_size)
+        seq2seq_model = Seq2SeqModel(self.a_cpu_device,
+                                     input_size=self.encoder_input_size_dim,
+                                     encoder_hidden_size=self.encoder_hidden_size,
+                                     encoder_num_layers=self.encoder_num_layers,
+                                     decoder_hidden_size=self.decoder_hidden_size,
+                                     decoder_num_layers=self.decoder_num_layers,
+                                     output_size=self.decoder_output_size,
+                                     verbose=False)
         isfile_mock.return_value = True
         last_version_mock.return_value = False
         with patch("deepparse.network.seq2seq.download_weights"):
@@ -147,7 +205,14 @@ class Seq2SeqTest(TestCase):
         all_layers_params_mock.__getitem__().__len__.return_value = self.decoder_output_size
         torch_mock.load.return_value = all_layers_params_mock
 
-        seq2seq_model = Seq2SeqModel(self.a_cpu_device, verbose=True, output_size=self.decoder_output_size)
+        seq2seq_model = Seq2SeqModel(self.a_cpu_device,
+                                     input_size=self.encoder_input_size_dim,
+                                     encoder_hidden_size=self.encoder_hidden_size,
+                                     encoder_num_layers=self.encoder_num_layers,
+                                     decoder_hidden_size=self.decoder_hidden_size,
+                                     decoder_num_layers=self.decoder_num_layers,
+                                     output_size=self.decoder_output_size,
+                                     verbose=True)
         seq2seq_model._load_weights(self.a_fake_retrain_path)
 
         torch_mock.assert_has_calls([call.load(self.a_fake_retrain_path, map_location=self.a_cpu_device)])
@@ -163,7 +228,14 @@ class Seq2SeqTest(TestCase):
         all_layers_params_mock.__getitem__().__len__.return_value = self.decoder_output_size
         torch_mock.load.return_value = all_layers_params_mock
 
-        seq2seq_model = Seq2SeqModel(self.a_cpu_device, verbose=True, output_size=self.decoder_output_size)
+        seq2seq_model = Seq2SeqModel(self.a_cpu_device,
+                                     input_size=self.encoder_input_size_dim,
+                                     encoder_hidden_size=self.encoder_hidden_size,
+                                     encoder_num_layers=self.encoder_num_layers,
+                                     decoder_hidden_size=self.decoder_hidden_size,
+                                     decoder_num_layers=self.decoder_num_layers,
+                                     output_size=self.decoder_output_size,
+                                     verbose=True)
         seq2seq_model._load_weights(self.a_fake_retrain_path)
 
         all_layers_params_mock.get.assert_called()

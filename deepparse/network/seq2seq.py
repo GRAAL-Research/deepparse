@@ -1,9 +1,10 @@
+# pylint: disable=too-many-arguments
 import os
 import random
 import warnings
 from abc import ABC
-from typing import Tuple, Union
 from collections import OrderedDict
+from typing import Tuple, Union
 
 import torch
 import torch.nn as nn
@@ -16,29 +17,39 @@ from ..tools import download_weights, latest_version
 
 class Seq2SeqModel(ABC, nn.Module):
     """
-    Abstract class for Seq2Seq network. By default, the network uses the config as designed in our article for the
-    encoder and decoder:
-
-        - Encoder: ``input_size = 300``, ``hidden_size = 1024`` and ``num_layers = 1``
-        - Decoder: ``input_size = 1``, ``hidden_size = 1024``, ``num_layers = 1`` and ``output_size = 9``
-
-    When retraining with a different tag dictionary the output_size is changed to the size of that dictionary.
+    Abstract class for Seq2Seq network.
 
      Args:
         device (~torch.device): The device tu use for the prediction.
+        input_size (int): The input size of the encoder (i.e. the embeddings size). The default value is 300.
+        encoder_hidden_size (int): The size of the hidden layer(s) of the encoder. The default value is 1024.
+        encoder_num_layers (int): The number of hidden layers of the encoder. The default value is 1.
+        decoder_hidden_size (int): The size of the hidden layer(s) of the decoder. The default value is 1024.
+        decoder_num_layers (int): The number of hidden layers of the decoder. The default value is 1.
         output_size (int): The size of the prediction layers (i.e. the number of tag to predict).
         verbose (bool): Turn on/off the verbosity of the model. The default value is True.
     """
 
-    def __init__(self, device: torch.device, output_size: int, verbose: bool = True) -> None:
+    def __init__(self,
+                 device: torch.device,
+                 input_size: int,
+                 encoder_hidden_size: int,
+                 encoder_num_layers: int,
+                 decoder_hidden_size: int,
+                 decoder_num_layers: int,
+                 output_size: int,
+                 verbose: bool = True) -> None:
         super().__init__()
         self.device = device
         self.verbose = verbose
 
-        self.encoder = Encoder(input_size=300, hidden_size=1024, num_layers=1)
+        self.encoder = Encoder(input_size=input_size, hidden_size=encoder_hidden_size, num_layers=encoder_num_layers)
         self.encoder.to(self.device)
 
-        self.decoder = Decoder(input_size=1, hidden_size=1024, num_layers=1, output_size=output_size)
+        self.decoder = Decoder(input_size=encoder_num_layers,
+                               hidden_size=decoder_hidden_size,
+                               num_layers=decoder_num_layers,
+                               output_size=output_size)
         self.decoder.to(self.device)
 
         self.output_size = output_size

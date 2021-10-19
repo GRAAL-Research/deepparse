@@ -18,7 +18,7 @@ class UserFormattedParsedAddressTest(TestCase):
         cls.a_address = {cls.a_address_str: cls.a_parsed_address}
         cls.a_existing_tag = "3"
 
-        cls.a_parsed_address_in_dict_format = {'ALastTag': None, 'ATag': '3', 'AnotherTag': 'test road'}
+        cls.a_parsed_address_in_dict_format = {"ALastTag": None, "ATag": "3", "AnotherTag": "test road"}
 
     def _capture_output(self):
         self.test_out = io.StringIO()
@@ -72,7 +72,7 @@ class UserFormattedParsedAddressTest(TestCase):
 
     def test_whenToDictUserFields_thenReturnTheProperDict(self):
         actual = self.parsed_address.to_dict(fields=["ATag"])
-        expected = {'ATag': '3'}
+        expected = {"ATag": "3"}
         self.assertEqual(actual, expected)
 
     def test_whenFormattedAddressUpperCaseFields_thenReturnAddressWithFieldsUpperCase(self):

@@ -32,7 +32,7 @@ class DataSetContainerTest(TestCase):
 
     def setUp(self) -> None:
         self.temp_dir_obj = TemporaryDirectory()
-        self.a_pickle_data_container_path = os.path.join(self.temp_dir_obj.name, 'fake_pickle_data_container.p')
+        self.a_pickle_data_container_path = os.path.join(self.temp_dir_obj.name, "fake_pickle_data_container.p")
 
     def tearDown(self) -> None:
         self.temp_dir_obj.cleanup()

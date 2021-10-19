@@ -15,10 +15,8 @@ download_from_url(training_dataset_name, saving_dir, file_extension=file_extensi
 download_from_url(test_dataset_name, saving_dir, file_extension=file_extension)
 
 # Now let's create a training and test container.
-training_container = PickleDatasetContainer(os.path.join(saving_dir,
-                                                         training_dataset_name + "." + file_extension))
-test_container = PickleDatasetContainer(os.path.join(saving_dir,
-                                                     test_dataset_name + "." + file_extension))
+training_container = PickleDatasetContainer(os.path.join(saving_dir, training_dataset_name + "." + file_extension))
+test_container = PickleDatasetContainer(os.path.join(saving_dir, test_dataset_name + "." + file_extension))
 
 # We will retrain the fasttext version of our pretrained model.
 model = "fasttext"

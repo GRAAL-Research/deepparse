@@ -107,3 +107,9 @@
 ## 0.4.4
 
 - Fixed import error.
+
+## 0.5
+
+- Added Python 3.9
+- Added feature to allow a more flexible way to retrain
+- Added a feature to allow retrain of a new seq2seq architecture

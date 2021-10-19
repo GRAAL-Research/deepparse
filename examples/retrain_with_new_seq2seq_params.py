@@ -15,10 +15,8 @@ download_from_url(training_dataset_name, saving_dir, file_extension=file_extensi
 download_from_url(test_dataset_name, saving_dir, file_extension=file_extension)
 
 # Now let's create a training and test container.
-training_container = PickleDatasetContainer(os.path.join(saving_dir,
-                                                         training_dataset_name + "." + file_extension))
-test_container = PickleDatasetContainer(os.path.join(saving_dir,
-                                                     test_dataset_name + "." + file_extension))
+training_container = PickleDatasetContainer(os.path.join(saving_dir, training_dataset_name + "." + file_extension))
+test_container = PickleDatasetContainer(os.path.join(saving_dir, test_dataset_name + "." + file_extension))
 
 # We will retrain the fasttext version of our pretrained model.
 model = "bpemb"
@@ -37,10 +35,7 @@ logging_path = "./checkpoints"
 
 # The new seq2seq params settings using smaller hidden size
 # See the doc for the list of tunable seq2seq parameters
-seq2seq_params = {
-    "encoder_hidden_size": 512,
-    "decoder_hidden_size": 512
-}
+seq2seq_params = {"encoder_hidden_size": 512, "decoder_hidden_size": 512}
 
 address_parser.retrain(training_container,
                        0.8,
@@ -54,4 +49,3 @@ address_parser.retrain(training_container,
 
 # Now let's test our fine tuned model using the best checkpoint (default parameter).
 address_parser.test(test_container, batch_size=256)
-

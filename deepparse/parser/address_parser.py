@@ -277,8 +277,8 @@ class AddressParser:
         where the best epochs can be found (the best epoch is used for the test). The retrained model file name are
         formatted as ``retrained_{model_type}_address_parser.ckpt``. For example, if you retrain a fasttext model,
         the file name will be ``retrained_fasttext_address_parser.ckpt``. The retrained saved model included, in a
-        dictionary format, the model weights, the model type, and if new ``prediction_tags`` were used, the new
-        prediction tags.
+        dictionary format, the model weights, the model type, if new ``prediction_tags`` were used, the new
+        prediction tags, and if new ``seq2seq_params`` were used, the new seq2seq parameters.
 
         Args:
             dataset_container (~deepparse.dataset_container.DatasetContainer): The
@@ -303,14 +303,11 @@ class AddressParser:
             seq2seq_params (Union[dict, None]): A dictionary of seq2seq parameters to modify the seq2seq architecture
                 to train. Params to be modify are:
 
-                    - input_size (int): The input size of the encoder (i.e. the embeddings size). The default value is
-                        300.
-                    - encoder_hidden_size (int): The size of the hidden layer(s) of the encoder. The default value is
-                        1024.
-                    - encoder_num_layers (int): The number of hidden layers of the encoder. The default value is 1.
-                    - decoder_hidden_size (int): The size of the hidden layer(s) of the decoder. The default value is
-                        1024.
-                    - decoder_num_layers (int): The number of hidden layers of the decoder. The default value is 1.
+                    - The ``input_size`` of the encoder (i.e. the embeddings size). The default value is 300.
+                    - The size of the ``encoder_hidden_size`` of the encoder. The default value is 1024.
+                    - The number of ``encoder_num_layers`` of the encoder. The default value is 1.
+                    - The size of the ``decoder_hidden_size`` of the decoder. The default value is 1024.
+                    - The number of ``decoder_num_layers`` of the decoder. The default value is 1.
 
         Return:
             A list of dictionary with the best epoch stats (see `Experiment class
@@ -362,6 +359,35 @@ class AddressParser:
                 container = PickleDatasetContainer(data_path)
 
                 address_parser.retrain(container, 0.8, epochs=1, batch_size=128, prediction_tags=address_components)
+
+            Using your own seq2seq parameters.
+
+            .. code-block:: python
+
+                seq2seq_params = {"encoder_hidden_size": 512, "decoder_hidden_size": 512}
+
+                address_parser = AddressParser(device=0) #on gpu device 0
+                data_path = 'path_to_a_pickle_dataset.p'
+
+                container = PickleDatasetContainer(data_path)
+
+                address_parser.retrain(container, 0.8, epochs=1, batch_size=128, seq2seq_params=seq2seq_params)
+
+
+            Using your own seq2seq parameters and prediction tags dictionary.
+
+            .. code-block:: python
+
+                seq2seq_params = {"encoder_hidden_size": 512, "decoder_hidden_size": 512}
+                address_components = {"ATag":0, "AnotherTag": 1, "EOS": 2}
+
+                address_parser = AddressParser(device=0) #on gpu device 0
+                data_path = 'path_to_a_pickle_dataset.p'
+
+                container = PickleDatasetContainer(data_path)
+
+                address_parser.retrain(container, 0.8, epochs=1, batch_size=128, seq2seq_params=seq2seq_params,
+                    prediction_tags=address_components)
 
         """
         if self.model_type == "fasttext-light":

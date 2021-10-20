@@ -47,5 +47,5 @@ address_parser.retrain(training_container,
                        logging_path=logging_path,
                        seq2seq_params=seq2seq_params)
 
-# Now let's test our fine tuned model using the best checkpoint (default parameter).
+# Now let's test our fine-tuned model using the best checkpoint (default parameter).
 address_parser.test(test_container, batch_size=256)

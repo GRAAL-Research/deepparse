@@ -17,7 +17,7 @@ from ..tools import download_weights, latest_version
 
 class Seq2SeqModel(ABC, nn.Module):
     """
-    Abstract class for Seq2Seq network.
+    Abstract class for Seq2Seq networks.
 
      Args:
         device (~torch.device): The device tu use for the prediction.

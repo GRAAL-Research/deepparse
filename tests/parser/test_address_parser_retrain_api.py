@@ -1,5 +1,5 @@
 # Since we use a patch as model mock we skip the unused argument error
-# pylint: disable=unused-argument, too-many-arguments, too-many-public-methods
+# pylint: disable=unused-argument, too-many-arguments, too-many-public-methods, protected-access
 import os
 import unittest
 from tempfile import TemporaryDirectory
@@ -39,6 +39,8 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
 
         cls.address_components = {"ATag": 0, "AnotherTag": 1, "EOS": 2}
 
+        cls.seq2seq_params = {"encoder_hidden_size": 512, "decoder_hidden_size": 512}
+
     def setUp(self):
         self.temp_dir_obj = TemporaryDirectory()
         self.a_logging_path = os.path.join(self.temp_dir_obj.name, "ckpts")
@@ -47,7 +49,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
     def tearDown(self) -> None:
         self.temp_dir_obj.cleanup()
 
-    def address_parser_retrain_call(self, prediction_tags=None):
+    def address_parser_retrain_call(self, prediction_tags=None, seq2seq_params=None):
         self.address_parser.retrain(self.mocked_data_container,
                                     self.a_train_ratio,
                                     self.a_batch_size,
@@ -57,7 +59,8 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
                                     callbacks=self.a_callbacks_list,
                                     seed=self.a_seed,
                                     logging_path=self.a_logging_path,
-                                    prediction_tags=prediction_tags)
+                                    prediction_tags=prediction_tags,
+                                    seq2seq_params=seq2seq_params)
 
     def assert_experiment_retrain(self, experiment_mock, model_mock, optimizer_mock, device):
         experiment_mock.assert_called_with(
@@ -143,8 +146,8 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         save_call = [
             call(
                 {
-                    'address_tagger_model': experiment_mock().model.network.state_dict(),
-                    'model_type': self.a_fasttext_model_type
+                    "address_tagger_model": experiment_mock().model.network.state_dict(),
+                    "model_type": self.a_fasttext_model_type
                 }, saving_model_path)
         ]
 
@@ -213,9 +216,92 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         save_call = [
             call(
                 {
-                    'address_tagger_model': experiment_mock().model.network.state_dict(),
-                    'prediction_tags': self.address_components,
-                    'model_type': self.a_fasttext_model_type
+                    "address_tagger_model": experiment_mock().model.network.state_dict(),
+                    "prediction_tags": self.address_components,
+                    "model_type": self.a_fasttext_model_type
+                }, saving_model_path)
+        ]
+
+        torch_save_mock.assert_has_calls(save_call)
+
+    @patch("deepparse.parser.address_parser.torch.save")
+    @patch("deepparse.parser.address_parser.DataLoader")
+    @patch("deepparse.parser.address_parser.Experiment")
+    @patch("deepparse.parser.address_parser.SGD")
+    @patch("deepparse.parser.address_parser.DataTransform")
+    @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
+    @patch("deepparse.parser.address_parser.fasttext_data_padding")
+    @patch("deepparse.parser.address_parser.FastTextVectorizer")
+    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
+    def test_givenAFasttextModel_whenRetrainWithNewParams_thenModelFactoryIsCalled(
+            self, download_weights_mock, embeddings_model_mock, vectorizer_model_mock, data_padding_mock, model_mock,
+            data_transform_mock, optimizer_mock, experiment_mock, data_loader_mock, torch_save_mock):
+        self.address_parser = AddressParser(model_type=self.a_fasttext_model_type,
+                                            device=self.a_device,
+                                            verbose=self.verbose)
+        model_factory_mock = MagicMock()
+        self.address_parser._model_factory = model_factory_mock
+        self.address_parser_retrain_call(seq2seq_params=self.seq2seq_params)
+
+        model_factory_mock.assert_called()
+
+    @patch("deepparse.parser.address_parser.torch.save")
+    @patch("deepparse.parser.address_parser.DataLoader")
+    @patch("deepparse.parser.address_parser.Experiment")
+    @patch("deepparse.parser.address_parser.SGD")
+    @patch("deepparse.parser.address_parser.DataTransform")
+    @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
+    @patch("deepparse.parser.address_parser.fasttext_data_padding")
+    @patch("deepparse.parser.address_parser.FastTextVectorizer")
+    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
+    def test_givenAFasttextModel_whenRetrainWithNewParams_thenSaveNewParamsDict(
+            self, download_weights_mock, embeddings_model_mock, vectorizer_model_mock, data_padding_mock, model_mock,
+            data_transform_mock, optimizer_mock, experiment_mock, data_loader_mock, torch_save_mock):
+        self.address_parser = AddressParser(model_type=self.a_fasttext_model_type,
+                                            device=self.a_device,
+                                            verbose=self.verbose)
+        self.address_parser_retrain_call(seq2seq_params=self.seq2seq_params)
+
+        saving_model_path = self.saving_template_path.format(self.a_fasttext_model_type)
+        save_call = [
+            call(
+                {
+                    "address_tagger_model": experiment_mock().model.network.state_dict(),
+                    "model_type": self.a_fasttext_model_type,
+                    "seq2seq_params": self.seq2seq_params
+                }, saving_model_path)
+        ]
+
+        torch_save_mock.assert_has_calls(save_call)
+
+    @patch("deepparse.parser.address_parser.torch.save")
+    @patch("deepparse.parser.address_parser.DataLoader")
+    @patch("deepparse.parser.address_parser.Experiment")
+    @patch("deepparse.parser.address_parser.SGD")
+    @patch("deepparse.parser.address_parser.DataTransform")
+    @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
+    @patch("deepparse.parser.address_parser.fasttext_data_padding")
+    @patch("deepparse.parser.address_parser.FastTextVectorizer")
+    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
+    def test_givenAFasttextModel_whenRetrainWithNewParamsAndNewTags_thenSaveNewParamsDictAndParams(
+            self, download_weights_mock, embeddings_model_mock, vectorizer_model_mock, data_padding_mock, model_mock,
+            data_transform_mock, optimizer_mock, experiment_mock, data_loader_mock, torch_save_mock):
+        self.address_parser = AddressParser(model_type=self.a_fasttext_model_type,
+                                            device=self.a_device,
+                                            verbose=self.verbose)
+        self.address_parser_retrain_call(prediction_tags=self.address_components, seq2seq_params=self.seq2seq_params)
+
+        saving_model_path = self.saving_template_path.format(self.a_fasttext_model_type)
+        save_call = [
+            call(
+                {
+                    "address_tagger_model": experiment_mock().model.network.state_dict(),
+                    "model_type": self.a_fasttext_model_type,
+                    "seq2seq_params": self.seq2seq_params,
+                    "prediction_tags": self.address_components
                 }, saving_model_path)
         ]
 
@@ -325,9 +411,91 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         save_call = [
             call(
                 {
-                    'address_tagger_model': experiment_mock().model.network.state_dict(),
-                    'prediction_tags': self.address_components,
-                    'model_type': self.a_bpemb_model_type
+                    "address_tagger_model": experiment_mock().model.network.state_dict(),
+                    "prediction_tags": self.address_components,
+                    "model_type": self.a_bpemb_model_type
+                }, saving_model_path)
+        ]
+
+        torch_save_mock.assert_has_calls(save_call)
+
+    @patch("deepparse.parser.address_parser.torch.save")
+    @patch("deepparse.parser.address_parser.DataLoader")
+    @patch("deepparse.parser.address_parser.Experiment")
+    @patch("deepparse.parser.address_parser.SGD")
+    @patch("deepparse.parser.address_parser.DataTransform")
+    @patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel")
+    @patch("deepparse.parser.address_parser.bpemb_data_padding")
+    @patch("deepparse.parser.address_parser.BPEmbVectorizer")
+    @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
+    def test_givenABPEmbModel_whenRetrainWithNewParams_thenModelFactoryIsCalled(
+            self, embeddings_model_mock, vectorizer_model_mock, data_padding_mock, model_mock, data_transform_mock,
+            optimizer_mock, experiment_mock, data_loader_mock, torch_save_mock):
+        self.address_parser = AddressParser(model_type=self.a_bpemb_model_type,
+                                            device=self.a_device,
+                                            verbose=self.verbose)
+        model_factory_mock = MagicMock()
+        self.address_parser._model_factory = model_factory_mock
+        self.address_parser_retrain_call(seq2seq_params=self.seq2seq_params)
+
+        model_factory_mock.assert_called()
+
+    @patch("deepparse.parser.address_parser.torch.save")
+    @patch("deepparse.parser.address_parser.DataLoader")
+    @patch("deepparse.parser.address_parser.Experiment")
+    @patch("deepparse.parser.address_parser.SGD")
+    @patch("deepparse.parser.address_parser.DataTransform")
+    @patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel")
+    @patch("deepparse.parser.address_parser.bpemb_data_padding")
+    @patch("deepparse.parser.address_parser.BPEmbVectorizer")
+    @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
+    def test_givenABPEmbModel_whenRetrainWithNewParams_thenSaveNewParamsDict(self, embeddings_model_mock,
+                                                                             vectorizer_model_mock, data_padding_mock,
+                                                                             model_mock, data_transform_mock,
+                                                                             optimizer_mock, experiment_mock,
+                                                                             data_loader_mock, torch_save_mock):
+        self.address_parser = AddressParser(model_type=self.a_bpemb_model_type,
+                                            device=self.a_device,
+                                            verbose=self.verbose)
+        self.address_parser_retrain_call(seq2seq_params=self.seq2seq_params)
+
+        saving_model_path = self.saving_template_path.format(self.a_bpemb_model_type)
+        save_call = [
+            call(
+                {
+                    "address_tagger_model": experiment_mock().model.network.state_dict(),
+                    "model_type": self.a_bpemb_model_type,
+                    "seq2seq_params": self.seq2seq_params
+                }, saving_model_path)
+        ]
+
+        torch_save_mock.assert_has_calls(save_call)
+
+    @patch("deepparse.parser.address_parser.torch.save")
+    @patch("deepparse.parser.address_parser.DataLoader")
+    @patch("deepparse.parser.address_parser.Experiment")
+    @patch("deepparse.parser.address_parser.SGD")
+    @patch("deepparse.parser.address_parser.DataTransform")
+    @patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel")
+    @patch("deepparse.parser.address_parser.bpemb_data_padding")
+    @patch("deepparse.parser.address_parser.BPEmbVectorizer")
+    @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
+    def test_givenABPEmbModel_whenRetrainWithNewParamsAndNewTags_thenSaveNewParamsDictAndParams(
+            self, embeddings_model_mock, vectorizer_model_mock, data_padding_mock, model_mock, data_transform_mock,
+            optimizer_mock, experiment_mock, data_loader_mock, torch_save_mock):
+        self.address_parser = AddressParser(model_type=self.a_bpemb_model_type,
+                                            device=self.a_device,
+                                            verbose=self.verbose)
+        self.address_parser_retrain_call(prediction_tags=self.address_components, seq2seq_params=self.seq2seq_params)
+
+        saving_model_path = self.saving_template_path.format(self.a_bpemb_model_type)
+        save_call = [
+            call(
+                {
+                    "address_tagger_model": experiment_mock().model.network.state_dict(),
+                    "model_type": self.a_bpemb_model_type,
+                    "seq2seq_params": self.seq2seq_params,
+                    "prediction_tags": self.address_components
                 }, saving_model_path)
         ]
 

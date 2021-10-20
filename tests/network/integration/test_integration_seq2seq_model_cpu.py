@@ -18,7 +18,13 @@ class Seq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
 
     def setUp(self) -> None:
         super().setUp()
-        self.pre_trained_seq2seq_model = Seq2SeqModel(self.a_cpu_device, output_size=self.number_of_tags)
+        self.pre_trained_seq2seq_model = Seq2SeqModel(self.a_cpu_device,
+                                                      input_size=self.input_size,
+                                                      encoder_hidden_size=self.encoder_hidden_size,
+                                                      encoder_num_layers=self.num_layers,
+                                                      decoder_hidden_size=self.decoder_hidden_size,
+                                                      decoder_num_layers=self.num_layers,
+                                                      output_size=self.output_size)
         self.encoder_input_setUp("fasttext",
                                  self.a_cpu_device)  # fasttext since the simplest case (bpemb use a embedding layer)
         self.none_target = None  # No target (for teacher forcing)
@@ -27,7 +33,7 @@ class Seq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
         self.a_target_vector = torch.tensor([[0, 1, 1, 4, 5, 8], [1, 0, 3, 8, 0, 0]], device=self.a_cpu_device)
 
     def test_whenEncoderStep_thenEncoderStepIsOk(self):
-        # encoding for two address: '['15 major st london ontario n5z1e1', '15 major st london ontario n5z1e1']'
+        # encoding for two address: "['15 major st london ontario n5z1e1', '15 major st london ontario n5z1e1']"
 
         actual_decoder_input, actual_decoder_hidden = self.pre_trained_seq2seq_model._encoder_step(
             self.to_predict_tensor, self.a_lengths_tensor, self.a_batch_size)
@@ -41,7 +47,7 @@ class Seq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
         self.assertEqual(self.encoder_hidden_size, actual_decoder_hidden[1].shape[2])
 
     def test_whenDecoderStep_thenDecoderStepIsOk(self):
-        # decoding for two address: '['15 major st london ontario n5z1e1', '15 major st london ontario n5z1e1']'
+        # decoding for two address: "['15 major st london ontario n5z1e1', '15 major st london ontario n5z1e1']"
         self.encoder_output_setUp(self.a_cpu_device)
         self.decoder_input_setUp()
 
@@ -53,7 +59,7 @@ class Seq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
         self.assert_output_is_valid_dim(actual_prediction_sequence, output_dim=self.number_of_tags)
 
     def test_whenDecoderStepTeacherForcing_thenDecoderStepIsOk(self):
-        # decoding for two address: '['15 major st london ontario n5z1e1', '15 major st london ontario n5z1e1']'
+        # decoding for two address: "['15 major st london ontario n5z1e1', '15 major st london ontario n5z1e1']"
         self.encoder_output_setUp(self.a_cpu_device)
         self.decoder_input_setUp()
 
@@ -68,7 +74,7 @@ class Seq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
     def test_whenDecoderStepWithTarget_thenUsesTarget(self, random_mock):
         random_mock.return_value = self.a_value_greater_than_threshold
 
-        # decoding for two address: '['15 major st london ontario n5z1e1', '15 major st london ontario n5z1e1']'
+        # decoding for two address: "['15 major st london ontario n5z1e1', '15 major st london ontario n5z1e1']'
         self.encoder_output_setUp(self.a_cpu_device)
         self.decoder_input_setUp()
 

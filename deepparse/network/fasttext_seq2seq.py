@@ -1,3 +1,4 @@
+# pylint: disable=too-many-arguments
 from typing import Union
 
 import torch
@@ -12,6 +13,11 @@ class FastTextSeq2SeqModel(Seq2SeqModel):
 
     Args:
         device (~torch.device): The device tu use for the prediction.
+        input_size (int): The input size of the encoder (i.e. the embeddings size). The default value is 300.
+        encoder_hidden_size (int): The size of the hidden layer(s) of the encoder. The default value is 1024.
+        encoder_num_layers (int): The number of hidden layers of the encoder. The default value is 1.
+        decoder_hidden_size (int): The size of the hidden layer(s) of the decoder. The default value is 1024.
+        decoder_num_layers (int): The number of hidden layers of the decoder. The default value is 1.
         output_size (int): The size of the prediction layers (i.e. the number of tag to predict).
         verbose (bool): Turn on/off the verbosity of the model. The default value is True.
         path_to_retrained_model (Union[str, None]): The path to the retrained model to use for the seq2seq.
@@ -19,14 +25,28 @@ class FastTextSeq2SeqModel(Seq2SeqModel):
 
     def __init__(self,
                  device: torch.device,
-                 output_size: int,
+                 input_size: int = 300,
+                 encoder_hidden_size: int = 1024,
+                 encoder_num_layers: int = 1,
+                 decoder_hidden_size: int = 1024,
+                 decoder_num_layers: int = 1,
+                 output_size: int = 9,
                  verbose: bool = True,
-                 path_to_retrained_model: Union[str, None] = None) -> None:
-        super().__init__(device, output_size, verbose)
+                 path_to_retrained_model: Union[str, None] = None,
+                 pre_trained_weights: bool = True) -> None:
+        super().__init__(device,
+                         input_size=input_size,
+                         encoder_hidden_size=encoder_hidden_size,
+                         encoder_num_layers=encoder_num_layers,
+                         decoder_hidden_size=decoder_hidden_size,
+                         decoder_num_layers=decoder_num_layers,
+                         output_size=output_size,
+                         verbose=verbose)
 
         if path_to_retrained_model is not None:
             self._load_weights(path_to_retrained_model)
-        else:
+        elif pre_trained_weights:
+            # Means we use the pre-trained weights
             self._load_pre_trained_weights("fasttext")
 
     def forward(self,

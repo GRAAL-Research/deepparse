@@ -88,3 +88,14 @@ class AddressParserPredictTestCase(CaptureOutputTestCase):
             "model_type": model_type
         }
         torch.save(data_dict, self.a_model_path)
+
+    def setup_retrain_new_params_model(self, seq2seq_params, model_type):
+        data_dict = {
+            "address_tagger_model": {
+                "a_key": 1,
+                "another_key": 2
+            },
+            "seq2seq_params": seq2seq_params,
+            "model_type": model_type
+        }
+        torch.save(data_dict, self.a_model_path)

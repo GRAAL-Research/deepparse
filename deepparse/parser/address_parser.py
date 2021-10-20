@@ -159,9 +159,9 @@ class AddressParser:
 
         if path_to_retrained_model is not None:
             checkpoint_weights = torch.load(path_to_retrained_model, map_location='cpu')
-            if self._validate_if_new_seq2seq_params(checkpoint_weights):
+            if _validate_if_new_seq2seq_params(checkpoint_weights):
                 seq2seq_kwargs = checkpoint_weights.get("seq2seq_params")
-            if self._validate_if_new_prediction_tags(checkpoint_weights):
+            if _validate_if_new_prediction_tags(checkpoint_weights):
                 # We load the new tags_to_idx
                 tags_to_idx = checkpoint_weights.get("prediction_tags")
                 # We change the FIELDS for the FormattedParsedAddress
@@ -301,7 +301,8 @@ class AddressParser:
                 We also save the dictionary to be used later on when you load the model. Default is None, meaning
                 we use our pre-trained model prediction tags.
             seq2seq_params (Union[dict, None]): A dictionary of seq2seq parameters to modify the seq2seq architecture
-                to train. Parameters which can be modified are:
+                to train. Note that if you change the seq2seq parameters, a new model will be trained from scratch.
+                Parameters that can be modified are:
 
                     - The ``input_size`` of the encoder (i.e. the embeddings size). The default value is 300.
                     - The size of the ``encoder_hidden_size`` of the encoder. The default value is 1024.
@@ -674,14 +675,6 @@ class AddressParser:
         """
         return self.data_converter(self.vectorizer(data))
 
-    @staticmethod
-    def _validate_if_new_prediction_tags(checkpoint_weights: dict) -> bool:
-        return checkpoint_weights.get("prediction_tags") is not None
-
-    @staticmethod
-    def _validate_if_new_seq2seq_params(checkpoint_weights: dict) -> bool:
-        return checkpoint_weights.get("seq2seq_params") is not None
-
     def _set_model_name(self, model_type: str):
         """
         Handle the model type name matching with proper seq2seq model type name.
@@ -705,3 +698,11 @@ class AddressParser:
         `"FastText"`.
         """
         return self._model_type_formatted
+
+
+def _validate_if_new_prediction_tags(checkpoint_weights: dict) -> bool:
+    return checkpoint_weights.get("prediction_tags") is not None
+
+
+def _validate_if_new_seq2seq_params(checkpoint_weights: dict) -> bool:
+    return checkpoint_weights.get("seq2seq_params") is not None

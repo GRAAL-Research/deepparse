@@ -72,7 +72,7 @@ Let's start with the default learning rate of 0.01 and use a learning rate sched
                            logging_path=logging_path,
                            seq2seq_params=seq2seq_params)
 
-Now let's test our fine tuned model using the best checkpoint (default parameter).
+Now let's test our fine-tuned model using the best checkpoint (default parameter).
 
 .. code-block:: python
 

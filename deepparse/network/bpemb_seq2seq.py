@@ -13,7 +13,7 @@ class BPEmbSeq2SeqModel(Seq2SeqModel):
 
      Args:
         device (~torch.device): The device tu use for the prediction.
-        input_size (int): The input size of the encoder (i.e. the embeddings size). It will also be sue to init the
+        input_size (int): The input size of the encoder (i.e. the embeddings size). It will also be used to initialize the
             internal embeddings network input size, hidden size and output dim. The default value is 300.
         encoder_hidden_size (int): The size of the hidden layer(s) of the encoder. The default value is 1024.
         encoder_num_layers (int): The number of hidden layers of the encoder. The default value is 1.

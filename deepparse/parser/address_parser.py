@@ -301,7 +301,7 @@ class AddressParser:
                 We also save the dictionary to be used later on when you load the model. Default is None, meaning
                 we use our pre-trained model prediction tags.
             seq2seq_params (Union[dict, None]): A dictionary of seq2seq parameters to modify the seq2seq architecture
-                to train. Params to be modify are:
+                to train. Parameters which can be modified are:
 
                     - The ``input_size`` of the encoder (i.e. the embeddings size). The default value is 300.
                     - The size of the ``encoder_hidden_size`` of the encoder. The default value is 1024.

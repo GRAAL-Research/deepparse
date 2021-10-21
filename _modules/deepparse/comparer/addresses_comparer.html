@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>deepparse.comparer.addresses_comparer &mdash; deepparse 0.4.4 documentation</title>
+  <title>deepparse.comparer.addresses_comparer &mdash; deepparse 0.5 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -28,7 +28,7 @@
             <img src="../../../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.4.4
+                0.5
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -105,9 +105,10 @@
     <span class="n">parser</span><span class="p">:</span> <span class="n">AddressParser</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Compare addresses with </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">model_type</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s2">AddressParser&quot;</span>
+        <span class="n">model_type_formatted</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">get_formatted_model_name</span><span class="p">()</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Compare addresses with </span><span class="si">{</span><span class="n">model_type_formatted</span><span class="si">}</span><span class="s2">AddressParser&quot;</span>
 
-    <span class="fm">__repr__</span> <span class="o">=</span> <span class="fm">__str__</span>  <span class="c1"># to call __str__ when list of address</span>
+    <span class="fm">__repr__</span> <span class="o">=</span> <span class="fm">__str__</span>  <span class="c1"># To call __str__ when list of address</span>
 
 <div class="viewcode-block" id="AddressesComparer.compare_tags"><a class="viewcode-back" href="../../../comparer.html#deepparse.comparer.AddressesComparer.compare_tags">[docs]</a>    <span class="k">def</span> <span class="nf">compare_tags</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>

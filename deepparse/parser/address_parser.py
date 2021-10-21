@@ -400,7 +400,12 @@ class AddressParser:
             # Handle prediction tags
             if "EOS" not in prediction_tags.keys():
                 raise ValueError("The prediction tags dictionary is missing the EOS tag.")
+
+            fields = [field for field in prediction_tags if field != "EOS"]
+            formatted_parsed_address.FIELDS = fields
+
             self.tags_converter = TagsConverter(prediction_tags)
+
             if not self.model.same_output_dim(self.tags_converter.dim):
                 # Since we have change the output layer dim, we need to handle the prediction layer dim
                 new_dim = self.tags_converter.dim

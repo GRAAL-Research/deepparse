@@ -467,6 +467,7 @@ API Reference
   examples/fine_tuning
   examples/parse_addresses
   examples/retrain_with_new_prediction_tags
+  examples/retrain_with_new_seq2seq_params
 
 Indices and tables
 ==================

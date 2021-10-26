@@ -140,7 +140,7 @@ The predictions tags are the following
 
 ### Retrain a Model
 
-> see [here](https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py) for a complete example.
+> See [here](https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py) for a complete example.
 
 ```python
 # We will retrain the fasttext version of our pretrained model.
@@ -152,7 +152,7 @@ address_parser.retrain(training_container, 0.8, epochs=5, batch_size=8)
 
 ### Retrain a Model With New Tags
 
-> See [here](https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py>) for a complete example.
+> See [here](https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py) for a complete example.
 
 ```python
 
@@ -163,7 +163,7 @@ address_parser.retrain(training_container, 0.8, epochs=1, batch_size=128, predic
 
 ### Retrain a Seq2seq model from scratch
 
-> See [here](https://github.com/GRAAL-Research/deepparse/blob/master/examples/retrain_with_new_seq2seq_params.py>) for 
+> See [here](https://github.com/GRAAL-Research/deepparse/blob/master/examples/retrain_with_new_seq2seq_params.py) for 
 > a complete example.
 
 ```python

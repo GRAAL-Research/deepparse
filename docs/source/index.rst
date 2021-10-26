@@ -378,12 +378,25 @@ See `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine
 
 Retrain a Model With New Tags
 *****************************
-See `this <https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py>`_ for a complete example.
+See `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py>`_ for a complete example.
 
 .. code-block:: python
 
     address_components = {"ATag":0, "AnotherTag": 1, "EOS": 2}
     address_parser.retrain(training_container, 0.8, epochs=1, batch_size=128, prediction_tags=address_components)
+
+
+Retrain a Seq2seq model from scratch
+************************************
+
+See  `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/retrain_with_new_seq2seq_params.py>`_ for
+a complete example.
+
+.. code-block:: python
+
+    seq2seq_params = {"encoder_hidden_size": 512, "decoder_hidden_size": 512}
+    address_parser.retrain(training_container, 0.8, epochs=1, batch_size=128, seq2seq_params=seq2seq_params)
+
 
 Download our Models
 *******************

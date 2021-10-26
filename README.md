@@ -161,6 +161,17 @@ address_parser.retrain(training_container, 0.8, epochs=1, batch_size=128, predic
 
 ```
 
+### Retrain a Seq2seq model from scratch
+
+> See [here](https://github.com/GRAAL-Research/deepparse/blob/master/examples/retrain_with_new_seq2seq_params.py>) for 
+> a complete example.
+
+```python
+
+seq2seq_params = {"encoder_hidden_size": 512, "decoder_hidden_size": 512}
+address_parser.retrain(training_container, 0.8, epochs=1, batch_size=128, seq2seq_params=seq2seq_params)
+
+```
 
 ### Download our Models
 

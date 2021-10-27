@@ -3,68 +3,16 @@ import torch.nn.init as init
 
 
 def weights_init(m):
-    # pylint: disable=too-many-branches, too-many-statements
     """
-    Function to initialize the weights of a layer.
+    Function to initialize the weights of our layers.
     Usage:
         network = Model()
         network.apply(weight_init)
     """
-    if isinstance(m, nn.Conv1d):
-        init.normal_(m.weight.data)
-        if m.bias is not None:
-            init.normal_(m.bias.data)
-    elif isinstance(m, nn.Conv2d):
-        init.xavier_normal_(m.weight.data)
-        if m.bias is not None:
-            init.normal_(m.bias.data)
-    elif isinstance(m, nn.Conv3d):
-        init.xavier_normal_(m.weight.data)
-        if m.bias is not None:
-            init.normal_(m.bias.data)
-    elif isinstance(m, nn.ConvTranspose1d):
-        init.normal_(m.weight.data)
-        if m.bias is not None:
-            init.normal_(m.bias.data)
-    elif isinstance(m, nn.ConvTranspose2d):
-        init.xavier_normal_(m.weight.data)
-        if m.bias is not None:
-            init.normal_(m.bias.data)
-    elif isinstance(m, nn.ConvTranspose3d):
-        init.xavier_normal_(m.weight.data)
-        if m.bias is not None:
-            init.normal_(m.bias.data)
-    elif isinstance(m, nn.BatchNorm1d):
-        init.normal_(m.weight.data, mean=1, std=0.02)
-        init.constant_(m.bias.data, 0)
-    elif isinstance(m, nn.BatchNorm2d):
-        init.normal_(m.weight.data, mean=1, std=0.02)
-        init.constant_(m.bias.data, 0)
-    elif isinstance(m, nn.BatchNorm3d):
-        init.normal_(m.weight.data, mean=1, std=0.02)
-        init.constant_(m.bias.data, 0)
-    elif isinstance(m, nn.Linear):
+    if isinstance(m, nn.Linear):
         init.xavier_normal_(m.weight.data)
         init.normal_(m.bias.data)
-    elif isinstance(m, nn.LSTM):
-        for param in m.parameters():
-            if len(param.shape) >= 2:
-                init.orthogonal_(param.data)
-            else:
-                init.normal_(param.data)
-    elif isinstance(m, nn.LSTMCell):
-        for param in m.parameters():
-            if len(param.shape) >= 2:
-                init.orthogonal_(param.data)
-            else:
-                init.normal_(param.data)
-    elif isinstance(m, nn.GRU):
-        for param in m.parameters():
-            if len(param.shape) >= 2:
-                init.orthogonal_(param.data)
-            else:
-                init.normal_(param.data)
-    elif isinstance(m, nn.GRUCell):
+    elif isinstance(m, (nn.LSTM, nn.LSTMCell, nn.GRU, nn.GRUCell)):
         for param in m.parameters():
             if len(param.shape) >= 2:
                 init.orthogonal_(param.data)

@@ -154,7 +154,6 @@ class FormattedComparedAddresses(ABC):
             elif code[0] == "insert":
                 result += color_2.format(code_type=code_type, text=string_two[code[3]:code[4]])
             elif code[0] == "replace":
-
                 if code[1] <= code[3]:
                     result += (color_1.format(code_type=code_type, text=string_one[code[1]:code[2]]) +
                                color_2.format(code_type=code_type, text=string_two[code[3]:code[4]]))

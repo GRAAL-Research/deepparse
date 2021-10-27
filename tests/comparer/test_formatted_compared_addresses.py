@@ -1,10 +1,10 @@
 # Bug with PyTorch source code makes torch.tensor as not callable for pylint.
 # pylint: disable=not-callable, too-many-public-methods, protected-access
 import unittest
-from unittest import TestCase
 
 from deepparse.comparer import FormattedComparedAddresses
 from deepparse.parser import FormattedParsedAddress
+from tests.base_capture_output import CaptureOutputTestCase
 
 
 class AbstractFormattedComparedAddresses(FormattedComparedAddresses):
@@ -16,7 +16,7 @@ class AbstractFormattedComparedAddresses(FormattedComparedAddresses):
         pass
 
 
-class TestFormattedComparedAddresses(TestCase):
+class TestFormattedComparedAddresses(CaptureOutputTestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -89,7 +89,7 @@ class TestFormattedComparedAddresses(TestCase):
 
         self.assertFalse(raw_identical_comparison.equivalent)
 
-    def test_comparisonReportSignal(self):
+    def test__comparisonReportSignal(self):
         identical_address = "350 rue des Lilas Ouest Quebec Quebec G1L 1B6"
         identical_address_parsing = [('350', ('StreetNumber', 1.0)), ('rue', ('StreetName', 0.9987)),
                                      ('des', ('StreetName', 0.9993)), ('Lilas', ('StreetName', 0.8176)),
@@ -107,6 +107,30 @@ class TestFormattedComparedAddresses(TestCase):
 
         self.assertEqual(raw_identical_comparison._comparison_report(nb_delimiters=20),
                          "====================\nComparison report\n====================\n\n")
+
+    def test_comparisonReportSignal(self):
+        identical_address = "350 rue des Lilas Ouest Quebec Quebec G1L 1B6"
+        identical_address_parsing = [('350', ('StreetNumber', 1.0)), ('rue', ('StreetName', 0.9987)),
+                                     ('des', ('StreetName', 0.9993)), ('Lilas', ('StreetName', 0.8176)),
+                                     ('Ouest', ('Orientation', 0.781)), ('Quebec', ('Municipality', 0.9768)),
+                                     ('Quebec', ('Province', 1.0)), ('G1L', ('PostalCode', 0.9993)),
+                                     ('1B6', ('PostalCode', 1.0))]
+
+        identical_formatted_parsed_address = FormattedParsedAddress({identical_address: identical_address_parsing})
+
+        raw_identical_comparison = AbstractFormattedComparedAddresses(
+            first_address=self.original_formatted_parsed_address,
+            second_address=identical_formatted_parsed_address,
+            origin=("deepparse using bpemb", "deepparse using bpemb"),
+            with_prob=True)
+
+        self._capture_output()
+        raw_identical_comparison.comparison_report(nb_delimiters=20)
+
+        actual = self.test_out.getvalue()
+        expected = "====================\nComparison report\n====================\n\n"
+
+        self.assertEqual(actual, expected)
 
 
 if __name__ == "__main__":

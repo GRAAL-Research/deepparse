@@ -112,7 +112,7 @@ class FormattedComparedAddresses(ABC):
     def _get_color_diff(string_one: str, string_two: str, highlight=False) -> str:
         """
         Compare two strings and determine the difference between the two. The differences are noted with colour code;
-        if the first string has more element than the second one it will be noted in one colour; on the contrary,
+        if the first string has more elements than the second one, it will be noted in one colour; on the contrary,
         if the other string has something more, it will have a different colour notation.
 
         Args:
@@ -127,12 +127,11 @@ class FormattedComparedAddresses(ABC):
             in colours that minimize the risk that a user cannot see the difference as
             defined here https://davidmathlogic.com/colorblind/#%23D81B60-%231E88E5-%23FFC107-%23004D40.
 
-            If both the strings share the same character, it will be noted in white.
+            If both the strings share the same character, it will be written in white.
             If the first string has something more than the second one, it will be indicated in blue.
             If the second string has something more than the first one, it will be noted in yellow.
 
-            The uses the SequenceMatcher to get the differences codes that are then converted to
-            colour codes.
+            It uses SequenceMatcher to get the different codes to be later converted into colour codes.
 
         Return:
             str: The two strings joined, and the differences are noted in colour codes

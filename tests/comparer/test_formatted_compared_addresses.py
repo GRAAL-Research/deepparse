@@ -132,6 +132,27 @@ class TestFormattedComparedAddresses(CaptureOutputTestCase):
 
         self.assertEqual(actual, expected)
 
+    def test_given_anyFormattedComparedAddressesWithAddress_whenListOfBool_thenReturnProperBool(self):
+        any_address = "350 rue des Lilas Ouest Quebec Quebec G1L 1B6"
+        any_address_parsing = [('350', ('StreetNumber', 1.0)), ('rue', ('StreetName', 0.9987)),
+                               ('des', ('StreetName', 0.9993)), ('Lilas', ('StreetName', 0.8176)),
+                               ('Ouest', ('Orientation', 0.781)), ('Quebec', ('Municipality', 0.9768)),
+                               ('Quebec', ('Province', 1.0)), ('G1L', ('PostalCode', 0.9993)),
+                               ('1B6', ('PostalCode', 1.0))]
+
+        any_formatted_parsed_address = FormattedParsedAddress({any_address: any_address_parsing})
+
+        any_comparison = AbstractFormattedComparedAddresses(first_address=any_formatted_parsed_address,
+                                                            second_address=any_formatted_parsed_address,
+                                                            origin=("deepparse using bpemb", "deepparse using bpemb"),
+                                                            with_prob=True)
+
+        actual_list_of_bool = any_comparison.list_of_bool
+        expected = [('StreetNumber', True), ('Unit', True), ('StreetName', True), ('Orientation', True),
+                    ('Municipality', True), ('Province', True), ('PostalCode', True), ('GeneralDelivery', True)]
+
+        self.assertEqual(actual_list_of_bool, expected)
+
 
 if __name__ == "__main__":
     unittest.main()

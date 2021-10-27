@@ -31,7 +31,7 @@ class FormattedComparedAddresses(ABC):
     """
     first_address: FormattedParsedAddress
     second_address: FormattedParsedAddress
-    origin: Tuple[str]
+    origin: Tuple[str, str]
     with_prob: bool
 
     @property
@@ -226,29 +226,22 @@ class FormattedComparedAddresses(ABC):
         return list_of_bool_and_tag
 
     @staticmethod
-    def _unique_addresses_component_names(parsed_addresses: Union[List[List[tuple]], List[tuple]]) -> List:
+    def _unique_addresses_component_names(parsed_addresses: List[List[tuple]]) -> List:
         """
         Retrieves all the unique address components names from the comparison then returns it.
 
         Args:
-            parsed_addresses (Union[List[List[tuple]], List[tuple]]): Contains the tags and the
+            parsed_addresses (List[List[tuple]]): Contains the tags and the
             address components name for the parsed addresses.
 
         Return:
             Returns a list of all the unique address components names.
         """
-        if isinstance(parsed_addresses[0], tuple):
-            parsed_addresses = [parsed_addresses]
-
         # Here we don't use a set since order will change and report will also change.
         unique_address_component_names = []
         for tuple_values in parsed_addresses:
             for address_component in tuple_values:
-                if isinstance(address_component[1], tuple):
-                    address_component = address_component[1][0]
-                else:
-                    address_component = address_component[1]
+                address_component = address_component[1]
                 if address_component not in unique_address_component_names:
                     unique_address_component_names.append(address_component)
-
         return unique_address_component_names

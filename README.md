@@ -115,7 +115,8 @@ parsed_address = address_parser("350 rue des Lilas Ouest Québec Québec G1L 1B6
 
 # or multiple addresses
 parsed_address = address_parser(
-    ["350 rue des Lilas Ouest Québec Québec G1L 1B6", "350 rue des Lilas Ouest Québec Québec G1L 1B6"])
+    ["350 rue des Lilas Ouest Québec Québec G1L 1B6", 
+    "350 rue des Lilas Ouest Québec Québec G1L 1B6"])
 
 # or multinational addresses
 # Canada, US, Germany, UK and South Korea
@@ -124,7 +125,8 @@ parsed_address = address_parser(
      "Ansgarstr. 4, Wallenhorst, 49134", "221 B Baker Street", "서울특별시 종로구 사직로3길 23"])
 
 # you can also get the probability of the predicted tags
-parsed_address = address_parser("350 rue des Lilas Ouest Québec Québec G1L 1B6", with_prob=True)
+parsed_address = address_parser("350 rue des Lilas Ouest Québec Québec G1L 1B6", 
+                                with_prob=True)
 ```
 
 The predictions tags are the following
@@ -157,7 +159,8 @@ address_parser.retrain(training_container, 0.8, epochs=5, batch_size=8)
 ```python
 
 address_components = {"ATag":0, "AnotherTag": 1, "EOS": 2}
-address_parser.retrain(training_container, 0.8, epochs=1, batch_size=128, prediction_tags=address_components)
+address_parser.retrain(training_container, 0.8, epochs=1, batch_size=128, 
+                       prediction_tags=address_components)
 
 ```
 
@@ -169,7 +172,8 @@ address_parser.retrain(training_container, 0.8, epochs=1, batch_size=128, predic
 ```python
 
 seq2seq_params = {"encoder_hidden_size": 512, "decoder_hidden_size": 512}
-address_parser.retrain(training_container, 0.8, epochs=1, batch_size=128, seq2seq_params=seq2seq_params)
+address_parser.retrain(training_container, 0.8, epochs=1, batch_size=128, 
+                       seq2seq_params=seq2seq_params)
 
 ```
 

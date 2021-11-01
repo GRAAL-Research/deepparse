@@ -38,6 +38,7 @@ class Seq2SeqModel(ABC, nn.Module):
                  decoder_hidden_size: int,
                  decoder_num_layers: int,
                  output_size: int,
+                 attention_mechanism: bool = False,
                  verbose: bool = True) -> None:
         super().__init__()
         self.device = device
@@ -49,7 +50,9 @@ class Seq2SeqModel(ABC, nn.Module):
         self.decoder = Decoder(input_size=encoder_num_layers,
                                hidden_size=decoder_hidden_size,
                                num_layers=decoder_num_layers,
-                               output_size=output_size)
+                               output_size=output_size,
+                               attention_mechanism=attention_mechanism)
+
         self.decoder.to(self.device)
 
         self.output_size = output_size
@@ -115,18 +118,18 @@ class Seq2SeqModel(ABC, nn.Module):
             batch_size (int): The number of element in the batch.
 
         Return:
-            A tuple (``x``, ``y``) where ``x`` is the decoder input (a zeros tensor) and ``y`` is the decoder
-            hidden states.
+            A tuple (``x``, ``y``, ``z``) where ``x`` is the decoder input (a zeros tensor), ``y`` is the decoder
+            hidden states and ``z`` is the encoder outputs for the attention weighs if needed.
         """
-        decoder_hidden = self.encoder(to_predict, lengths_tensor)
+        encoder_outputs, decoder_hidden = self.encoder(to_predict, lengths_tensor)
 
         # -1 for BOS token
         decoder_input = torch.zeros(1, batch_size, 1).to(self.device).new_full((1, batch_size, 1), -1)
 
-        return decoder_input, decoder_hidden
+        return decoder_input, decoder_hidden, encoder_outputs
 
-    def _decoder_step(self, decoder_input: torch.Tensor, decoder_hidden: tuple, target: Union[torch.Tensor, None],
-                      max_length: int, batch_size: int) -> torch.Tensor:
+    def _decoder_step(self, decoder_input: torch.Tensor, decoder_hidden: tuple, encoder_outputs: torch.Tensor,
+                      target: Union[torch.Tensor, None], max_length: int, batch_size: int) -> torch.Tensor:
         # pylint: disable=too-many-arguments
         """
         Step of the encoder.
@@ -134,6 +137,7 @@ class Seq2SeqModel(ABC, nn.Module):
         Args:
             decoder_input (~torch.Tensor): The decoder input (so the encode output).
             decoder_hidden (~torch.Tensor): The encoder hidden state (so the encode hidden state).
+            encoder_outputs (~torch.Tensor): The encoder outputs for the attention mechanism weighs if needed.
             target (~torch.Tensor) : The target of the batch element, use only when we retrain the model since we do
                 `teacher forcing <https://machinelearningmastery.com/teacher-forcing-for-recurrent-neural-networks/>`_.
             max_length (int): The max length of the sequence.

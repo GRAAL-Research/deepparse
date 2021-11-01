@@ -258,9 +258,9 @@ class AddressParser:
 
     def retrain(self,
                 dataset_container: DatasetContainer,
-                train_ratio: float,
-                batch_size: int,
-                epochs: int,
+                train_ratio: float = 0.8,
+                batch_size: int = 32,
+                epochs: int = 5,
                 num_workers: int = 1,
                 learning_rate: float = 0.01,
                 callbacks: Union[List, None] = None,
@@ -284,9 +284,9 @@ class AddressParser:
             dataset_container (~deepparse.dataset_container.DatasetContainer): The
                 dataset container of the data to use.
             train_ratio (float): The ratio to use of the dataset for the training. The rest of the data is used for the
-                validation (e.g. a train ratio of 0.8 mean a 80-20 train-valid split).
-            batch_size (int): The size of the batch.
-            epochs (int): number of training epochs.
+                validation (e.g. a train ratio of 0.8 mean a 80-20 train-valid split) (default is 0.8).
+            batch_size (int): The size of the batch (default is 32).
+            epochs (int): number of training epochs (default is 5).
             num_workers (int): Number of workers to use for the data loader (default is 1 worker).
             learning_rate (float): The learning rate (LR) to use for training (default 0.01).
             callbacks (Union[list, None]): List of callbacks to use during training.
@@ -462,7 +462,7 @@ class AddressParser:
 
     def test(self,
              test_dataset_container: DatasetContainer,
-             batch_size: int,
+             batch_size: int = 32,
              num_workers: int = 1,
              callbacks: Union[List, None] = None,
              seed: int = 42) -> Dict:

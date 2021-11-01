@@ -31,7 +31,7 @@ class FormattedComparedAddresses(ABC):
     """
     first_address: FormattedParsedAddress
     second_address: FormattedParsedAddress
-    origin: Tuple[str]
+    origin: Tuple[str, str]
     with_prob: bool
 
     @property
@@ -112,7 +112,7 @@ class FormattedComparedAddresses(ABC):
     def _get_color_diff(string_one: str, string_two: str, highlight=False) -> str:
         """
         Compare two strings and determine the difference between the two. The differences are noted with colour code;
-        if the first string has more element than the second one it will be noted in one colour; on the contrary,
+        if the first string has more elements than the second one, it will be noted in one colour; on the contrary,
         if the other string has something more, it will have a different colour notation.
 
         Args:
@@ -127,12 +127,11 @@ class FormattedComparedAddresses(ABC):
             in colours that minimize the risk that a user cannot see the difference as
             defined here https://davidmathlogic.com/colorblind/#%23D81B60-%231E88E5-%23FFC107-%23004D40.
 
-            If both the strings share the same character, it will be noted in white.
+            If both the strings share the same character, it will be written in white.
             If the first string has something more than the second one, it will be indicated in blue.
             If the second string has something more than the first one, it will be noted in yellow.
 
-            The uses the SequenceMatcher to get the differences codes that are then converted to
-            colour codes.
+            It uses SequenceMatcher to get the different codes to be later converted into colour codes.
 
         Return:
             str: The two strings joined, and the differences are noted in colour codes
@@ -154,7 +153,6 @@ class FormattedComparedAddresses(ABC):
             elif code[0] == "insert":
                 result += color_2.format(code_type=code_type, text=string_two[code[3]:code[4]])
             elif code[0] == "replace":
-
                 if code[1] <= code[3]:
                     result += (color_1.format(code_type=code_type, text=string_one[code[1]:code[2]]) +
                                color_2.format(code_type=code_type, text=string_two[code[3]:code[4]]))
@@ -228,29 +226,22 @@ class FormattedComparedAddresses(ABC):
         return list_of_bool_and_tag
 
     @staticmethod
-    def _unique_addresses_component_names(parsed_addresses: Union[List[List[tuple]], List[tuple]]) -> List:
+    def _unique_addresses_component_names(parsed_addresses: List[List[tuple]]) -> List:
         """
         Retrieves all the unique address components names from the comparison then returns it.
 
         Args:
-            parsed_addresses (Union[List[List[tuple]], List[tuple]]): Contains the tags and the
+            parsed_addresses (List[List[tuple]]): Contains the tags and the
             address components name for the parsed addresses.
 
         Return:
             Returns a list of all the unique address components names.
         """
-        if isinstance(parsed_addresses[0], tuple):
-            parsed_addresses = [parsed_addresses]
-
         # Here we don't use a set since order will change and report will also change.
         unique_address_component_names = []
         for tuple_values in parsed_addresses:
             for address_component in tuple_values:
-                if isinstance(address_component[1], tuple):
-                    address_component = address_component[1][0]
-                else:
-                    address_component = address_component[1]
+                address_component = address_component[1]
                 if address_component not in unique_address_component_names:
                     unique_address_component_names.append(address_component)
-
         return unique_address_component_names

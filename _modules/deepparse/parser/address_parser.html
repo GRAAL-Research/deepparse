@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>deepparse.parser.address_parser &mdash; deepparse 0.5 documentation</title>
+  <title>deepparse.parser.address_parser &mdash; deepparse 0.5.1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -28,7 +28,7 @@
             <img src="../../../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.5
+                0.5.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -337,9 +337,9 @@
 
 <div class="viewcode-block" id="AddressParser.retrain"><a class="viewcode-back" href="../../../parser.html#deepparse.parser.AddressParser.retrain">[docs]</a>    <span class="k">def</span> <span class="nf">retrain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                 <span class="n">dataset_container</span><span class="p">:</span> <span class="n">DatasetContainer</span><span class="p">,</span>
-                <span class="n">train_ratio</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-                <span class="n">epochs</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                <span class="n">train_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.8</span><span class="p">,</span>
+                <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
+                <span class="n">epochs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
                 <span class="n">num_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
                 <span class="n">learning_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span>
                 <span class="n">callbacks</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -363,9 +363,9 @@
 <span class="sd">            dataset_container (~deepparse.dataset_container.DatasetContainer): The</span>
 <span class="sd">                dataset container of the data to use.</span>
 <span class="sd">            train_ratio (float): The ratio to use of the dataset for the training. The rest of the data is used for the</span>
-<span class="sd">                validation (e.g. a train ratio of 0.8 mean a 80-20 train-valid split).</span>
-<span class="sd">            batch_size (int): The size of the batch.</span>
-<span class="sd">            epochs (int): number of training epochs.</span>
+<span class="sd">                validation (e.g. a train ratio of 0.8 mean a 80-20 train-valid split) (default is 0.8).</span>
+<span class="sd">            batch_size (int): The size of the batch (default is 32).</span>
+<span class="sd">            epochs (int): number of training epochs (default is 5).</span>
 <span class="sd">            num_workers (int): Number of workers to use for the data loader (default is 1 worker).</span>
 <span class="sd">            learning_rate (float): The learning rate (LR) to use for training (default 0.01).</span>
 <span class="sd">            callbacks (Union[list, None]): List of callbacks to use during training.</span>
@@ -541,7 +541,7 @@
 
 <div class="viewcode-block" id="AddressParser.test"><a class="viewcode-back" href="../../../parser.html#deepparse.parser.AddressParser.test">[docs]</a>    <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
              <span class="n">test_dataset_container</span><span class="p">:</span> <span class="n">DatasetContainer</span><span class="p">,</span>
-             <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+             <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
              <span class="n">num_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
              <span class="n">callbacks</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
              <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>

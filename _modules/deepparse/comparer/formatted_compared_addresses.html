@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>deepparse.comparer.formatted_compared_addresses &mdash; deepparse 0.5 documentation</title>
+  <title>deepparse.comparer.formatted_compared_addresses &mdash; deepparse 0.5.1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -28,7 +28,7 @@
             <img src="../../../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.5
+                0.5.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -110,7 +110,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">first_address</span><span class="p">:</span> <span class="n">FormattedParsedAddress</span>
     <span class="n">second_address</span><span class="p">:</span> <span class="n">FormattedParsedAddress</span>
-    <span class="n">origin</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">origin</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
     <span class="n">with_prob</span><span class="p">:</span> <span class="nb">bool</span>
 
     <span class="nd">@property</span>
@@ -191,7 +191,7 @@
     <span class="k">def</span> <span class="nf">_get_color_diff</span><span class="p">(</span><span class="n">string_one</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">string_two</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">highlight</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compare two strings and determine the difference between the two. The differences are noted with colour code;</span>
-<span class="sd">        if the first string has more element than the second one it will be noted in one colour; on the contrary,</span>
+<span class="sd">        if the first string has more elements than the second one, it will be noted in one colour; on the contrary,</span>
 <span class="sd">        if the other string has something more, it will have a different colour notation.</span>
 
 <span class="sd">        Args:</span>
@@ -206,12 +206,11 @@
 <span class="sd">            in colours that minimize the risk that a user cannot see the difference as</span>
 <span class="sd">            defined here https://davidmathlogic.com/colorblind/#%23D81B60-%231E88E5-%23FFC107-%23004D40.</span>
 
-<span class="sd">            If both the strings share the same character, it will be noted in white.</span>
+<span class="sd">            If both the strings share the same character, it will be written in white.</span>
 <span class="sd">            If the first string has something more than the second one, it will be indicated in blue.</span>
 <span class="sd">            If the second string has something more than the first one, it will be noted in yellow.</span>
 
-<span class="sd">            The uses the SequenceMatcher to get the differences codes that are then converted to</span>
-<span class="sd">            colour codes.</span>
+<span class="sd">            It uses SequenceMatcher to get the different codes to be later converted into colour codes.</span>
 
 <span class="sd">        Return:</span>
 <span class="sd">            str: The two strings joined, and the differences are noted in colour codes</span>
@@ -233,7 +232,6 @@
             <span class="k">elif</span> <span class="n">code</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;insert&quot;</span><span class="p">:</span>
                 <span class="n">result</span> <span class="o">+=</span> <span class="n">color_2</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">code_type</span><span class="o">=</span><span class="n">code_type</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">string_two</span><span class="p">[</span><span class="n">code</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span><span class="n">code</span><span class="p">[</span><span class="mi">4</span><span class="p">]])</span>
             <span class="k">elif</span> <span class="n">code</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;replace&quot;</span><span class="p">:</span>
-
                 <span class="k">if</span> <span class="n">code</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">code</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span>
                     <span class="n">result</span> <span class="o">+=</span> <span class="p">(</span><span class="n">color_1</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">code_type</span><span class="o">=</span><span class="n">code_type</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">string_one</span><span class="p">[</span><span class="n">code</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span><span class="n">code</span><span class="p">[</span><span class="mi">2</span><span class="p">]])</span> <span class="o">+</span>
                                <span class="n">color_2</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">code_type</span><span class="o">=</span><span class="n">code_type</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">string_two</span><span class="p">[</span><span class="n">code</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span><span class="n">code</span><span class="p">[</span><span class="mi">4</span><span class="p">]]))</span>
@@ -307,31 +305,24 @@
         <span class="k">return</span> <span class="n">list_of_bool_and_tag</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_unique_addresses_component_names</span><span class="p">(</span><span class="n">parsed_addresses</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">tuple</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="nb">tuple</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_unique_addresses_component_names</span><span class="p">(</span><span class="n">parsed_addresses</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">tuple</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieves all the unique address components names from the comparison then returns it.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            parsed_addresses (Union[List[List[tuple]], List[tuple]]): Contains the tags and the</span>
+<span class="sd">            parsed_addresses (List[List[tuple]]): Contains the tags and the</span>
 <span class="sd">            address components name for the parsed addresses.</span>
 
 <span class="sd">        Return:</span>
 <span class="sd">            Returns a list of all the unique address components names.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">parsed_addresses</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">):</span>
-            <span class="n">parsed_addresses</span> <span class="o">=</span> <span class="p">[</span><span class="n">parsed_addresses</span><span class="p">]</span>
-
         <span class="c1"># Here we don&#39;t use a set since order will change and report will also change.</span>
         <span class="n">unique_address_component_names</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">tuple_values</span> <span class="ow">in</span> <span class="n">parsed_addresses</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">address_component</span> <span class="ow">in</span> <span class="n">tuple_values</span><span class="p">:</span>
-                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">address_component</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">):</span>
-                    <span class="n">address_component</span> <span class="o">=</span> <span class="n">address_component</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">address_component</span> <span class="o">=</span> <span class="n">address_component</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">address_component</span> <span class="o">=</span> <span class="n">address_component</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
                 <span class="k">if</span> <span class="n">address_component</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">unique_address_component_names</span><span class="p">:</span>
                     <span class="n">unique_address_component_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">address_component</span><span class="p">)</span>
-
         <span class="k">return</span> <span class="n">unique_address_component_names</span></div>
 </pre></div>
 

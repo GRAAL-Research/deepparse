@@ -114,3 +114,10 @@
 - Added feature to allow a more flexible way to retrain
 - Added a feature to allow retrain of a new seq2seq architecture
 - Fixed prediction tags bug when parsing with new tags after retraining
+
+## 0.5.1
+
+- Fixed address_comparer hint typing error
+- Fixed some docs errors
+- Retrain and test now have more defaults parameters
+- Various small code and tests improvements

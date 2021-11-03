@@ -1,5 +1,5 @@
 # pylint: disable=too-many-arguments
-from typing import List, Union
+from typing import List, Union, Tuple
 
 import torch
 
@@ -20,6 +20,7 @@ class BPEmbSeq2SeqModel(Seq2SeqModel):
         decoder_hidden_size (int): The size of the hidden layer(s) of the decoder. The default value is 1024.
         decoder_num_layers (int): The number of hidden layers of the decoder. The default value is 1.
         output_size (int): The size of the prediction layers (i.e. the number of tag to predict).
+        attention_mechanism (bool): Either or not to use attention mechanism. The default value is False.
         verbose (bool): Turn on/off the verbosity of the model. The default value is True.
         path_to_retrained_model (Union[str, None]): The path to the retrained model to use for the seq2seq.
     """
@@ -32,6 +33,7 @@ class BPEmbSeq2SeqModel(Seq2SeqModel):
                  decoder_hidden_size: int = 1024,
                  decoder_num_layers: int = 1,
                  output_size: int = 9,
+                 attention_mechanism: bool = False,
                  verbose: bool = True,
                  path_to_retrained_model: Union[str, None] = None,
                  pre_trained_weights: bool = True) -> None:
@@ -42,6 +44,7 @@ class BPEmbSeq2SeqModel(Seq2SeqModel):
                          decoder_hidden_size=decoder_hidden_size,
                          decoder_num_layers=decoder_num_layers,
                          output_size=output_size,
+                         attention_mechanism=attention_mechanism,
                          verbose=verbose)
 
         self.embedding_network = EmbeddingNetwork(input_size=input_size,
@@ -53,13 +56,16 @@ class BPEmbSeq2SeqModel(Seq2SeqModel):
             self._load_weights(path_to_retrained_model)
         elif pre_trained_weights:
             # Means we use the pre-trained weights
-            self._load_pre_trained_weights("bpemb")
+            model_weights_name = "bpemb"
+            if attention_mechanism:
+                model_weights_name += "attention"
+            self._load_pre_trained_weights(model_weights_name)
 
     def forward(self,
                 to_predict: torch.Tensor,
                 decomposition_lengths: List,
                 lengths_tensor: torch.Tensor,
-                target: Union[torch.Tensor, None] = None) -> torch.Tensor:
+                target: Union[torch.Tensor, None] = None) -> Union[torch.Tensor, Tuple[torch.Tensor, torch.Tensor]]:
         """
         Callable method as per PyTorch forward method to get tags prediction over the components of
         an address.
@@ -71,15 +77,16 @@ class BPEmbSeq2SeqModel(Seq2SeqModel):
                 `teacher forcing <https://machinelearningmastery.com/teacher-forcing-for-recurrent-neural-networks/>`_.
                 Default value is None since we mostly don't have the target except for retrain.
         Return:
-            The tensor of the address components tags predictions.
+            Either a Tensor of the predicted sequence or a a tuple (``x``, ``y``) where ``x`` is the predicted sequence
+            and ``y`` is the attention weights if attention mechanism is activated.
         """
         batch_size = to_predict.size(0)
 
         embedded_output = self.embedding_network(to_predict, decomposition_lengths)
 
-        decoder_input, decoder_hidden = self._encoder_step(embedded_output, lengths_tensor, batch_size)
+        decoder_input, decoder_hidden, encoder_outputs = self._encoder_step(embedded_output, lengths_tensor, batch_size)
 
-        max_length = lengths_tensor.max().item()
-        prediction_sequence = self._decoder_step(decoder_input, decoder_hidden, target, max_length, batch_size)
+        prediction_sequence, attention_output = self._decoder_step(decoder_input, decoder_hidden, encoder_outputs,
+                                                                   target, lengths_tensor, batch_size)
 
-        return prediction_sequence
+        return prediction_sequence, attention_output

@@ -27,6 +27,7 @@ class Seq2SeqModel(ABC, nn.Module):
         decoder_hidden_size (int): The size of the hidden layer(s) of the decoder. The default value is 1024.
         decoder_num_layers (int): The number of hidden layers of the decoder. The default value is 1.
         output_size (int): The size of the prediction layers (i.e. the number of tag to predict).
+        attention_mechanism (bool): Either or not to use attention mechanism. The default value is False.
         verbose (bool): Turn on/off the verbosity of the model. The default value is True.
     """
 
@@ -129,8 +130,8 @@ class Seq2SeqModel(ABC, nn.Module):
         return decoder_input, decoder_hidden, encoder_outputs
 
     def _decoder_step(self, decoder_input: torch.Tensor, decoder_hidden: tuple, encoder_outputs: torch.Tensor,
-                      target: Union[torch.Tensor, None], max_length: int, batch_size: int) -> torch.Tensor:
-        # pylint: disable=too-many-arguments
+                      target: Union[torch.Tensor, None], lengths_tensor: torch.Tensor,
+                      batch_size: int) -> Union[torch.Tensor, Tuple[torch.Tensor, torch.Tensor]]:
         """
         Step of the encoder.
 
@@ -140,42 +141,61 @@ class Seq2SeqModel(ABC, nn.Module):
             encoder_outputs (~torch.Tensor): The encoder outputs for the attention mechanism weighs if needed.
             target (~torch.Tensor) : The target of the batch element, use only when we retrain the model since we do
                 `teacher forcing <https://machinelearningmastery.com/teacher-forcing-for-recurrent-neural-networks/>`_.
-            max_length (int): The max length of the sequence.
+            lengths_tensor (~torch.Tensor): The lengths of the batch elements (since packed).
             batch_size (int): Number of element in the batch.
 
         Return:
-            A tuple (``x``, ``y``) where ``x`` is the decoder input (a zeros tensor) and ``y`` is the decoder
-            hidden states.
+            Either a Tensor of the predicted sequence or a a tuple (``x``, ``y``) where ``x`` is the predicted sequence
+            and ``y`` is the attention weights if attention mechanism is activated.
         """
+        max_length = lengths_tensor.max().item()
+
         # The empty prediction sequence
         # +1 for the EOS
         prediction_sequence = torch.zeros(max_length + 1, batch_size, self.output_size).to(self.device)
 
-        # we decode the first token
-        decoder_output, decoder_hidden = self.decoder(decoder_input, decoder_hidden)
+        # We decode the first token
+        decoder_output, decoder_hidden, attention_weights = self.decoder(decoder_input, decoder_hidden, encoder_outputs,
+                                                                         lengths_tensor)
 
-        # we fill the first token prediction
+        if attention_weights is not None:
+            # We fill the attention
+            attention_output = torch.ones(max_length + 1, batch_size, 1, max_length)
+            attention_output[0] = attention_weights
+
+        # We fill the first token prediction
         prediction_sequence[0] = decoder_output
 
-        # the decoder next step input (the predicted idx of the previous token)
+        # The decoder next step input (the predicted idx of the previous token)
         _, decoder_input = decoder_output.topk(1)
 
         # we loop the same steps for the rest of the sequence
-
         if target is not None and random.random() < 0.5:
             # force the real target value instead of the predicted one to help learning
             target = target.transpose(0, 1)
             for idx in range(max_length):
                 decoder_input = target[idx].view(1, batch_size, 1)
-                decoder_output, decoder_hidden = self.decoder(decoder_input, decoder_hidden)
-
+                decoder_output, decoder_hidden, attention_weights = self.decoder(decoder_input, decoder_hidden,
+                                                                                 encoder_outputs, lengths_tensor)
                 prediction_sequence[idx + 1] = decoder_output
+
+                if attention_weights is not None:
+                    # We fill the attention
+                    attention_output[idx + 1] = attention_weights
         else:
             for idx in range(max_length):
-                decoder_output, decoder_hidden = self.decoder(decoder_input.view(1, batch_size, 1), decoder_hidden)
+                decoder_output, decoder_hidden, attention_weights = self.decoder(decoder_input, decoder_hidden,
+                                                                                 encoder_outputs, lengths_tensor)
 
                 prediction_sequence[idx + 1] = decoder_output
+
+                if attention_weights is not None:
+                    # We fill the attention
+                    attention_output[idx + 1] = attention_weights
 
                 _, decoder_input = decoder_output.topk(1)
 
-        return prediction_sequence  # the sequence is now fully parse
+        # The sequence is now fully parse
+        if self.attention_mechanism:
+            return prediction_sequence, attention_output
+        return prediction_sequence

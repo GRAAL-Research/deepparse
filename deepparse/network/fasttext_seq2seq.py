@@ -1,5 +1,5 @@
 # pylint: disable=too-many-arguments
-from typing import Union
+from typing import Union, Tuple
 
 import torch
 
@@ -19,6 +19,7 @@ class FastTextSeq2SeqModel(Seq2SeqModel):
         decoder_hidden_size (int): The size of the hidden layer(s) of the decoder. The default value is 1024.
         decoder_num_layers (int): The number of hidden layers of the decoder. The default value is 1.
         output_size (int): The size of the prediction layers (i.e. the number of tag to predict).
+        attention_mechanism (bool): Either or not to use attention mechanism. The default value is False.
         verbose (bool): Turn on/off the verbosity of the model. The default value is True.
         path_to_retrained_model (Union[str, None]): The path to the retrained model to use for the seq2seq.
     """
@@ -31,6 +32,7 @@ class FastTextSeq2SeqModel(Seq2SeqModel):
                  decoder_hidden_size: int = 1024,
                  decoder_num_layers: int = 1,
                  output_size: int = 9,
+                 attention_mechanism: bool = False,
                  verbose: bool = True,
                  path_to_retrained_model: Union[str, None] = None,
                  pre_trained_weights: bool = True) -> None:
@@ -41,18 +43,22 @@ class FastTextSeq2SeqModel(Seq2SeqModel):
                          decoder_hidden_size=decoder_hidden_size,
                          decoder_num_layers=decoder_num_layers,
                          output_size=output_size,
+                         attention_mechanism=attention_mechanism,
                          verbose=verbose)
 
         if path_to_retrained_model is not None:
             self._load_weights(path_to_retrained_model)
         elif pre_trained_weights:
             # Means we use the pre-trained weights
-            self._load_pre_trained_weights("fasttext")
+            model_weights_name = "fasttext"
+            if attention_mechanism:
+                model_weights_name += "attention"
+            self._load_pre_trained_weights(model_weights_name)
 
     def forward(self,
                 to_predict: torch.Tensor,
                 lengths_tensor: torch.Tensor,
-                target: Union[torch.Tensor, None] = None) -> torch.Tensor:
+                target: Union[torch.Tensor, None] = None) -> Union[torch.Tensor, Tuple[torch.Tensor, torch.Tensor]]:
         """
         Callable method as per PyTorch forward method to get tags prediction over the components of
         an address.
@@ -65,13 +71,14 @@ class FastTextSeq2SeqModel(Seq2SeqModel):
                 Default value is None since we mostly don't have the target except for retrain.
 
         Return:
-            The tensor of the address components tags predictions.
+            Either a Tensor of the predicted sequence or a a tuple (``x``, ``y``) where ``x`` is the predicted sequence
+            and ``y`` is the attention weights if attention mechanism is activated.
         """
         batch_size = to_predict.size(0)
 
-        decoder_input, decoder_hidden = self._encoder_step(to_predict, lengths_tensor, batch_size)
+        decoder_input, decoder_hidden, encoder_outputs = self._encoder_step(to_predict, lengths_tensor, batch_size)
 
-        max_length = lengths_tensor.max().item()
-        decoder_predict = self._decoder_step(decoder_input, decoder_hidden, target, max_length, batch_size)
+        prediction_sequence, attention_output = self._decoder_step(decoder_input, decoder_hidden, encoder_outputs,
+                                                                   target, lengths_tensor, batch_size)
 
-        return decoder_predict
+        return prediction_sequence, attention_output

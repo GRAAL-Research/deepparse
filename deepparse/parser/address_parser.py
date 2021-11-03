@@ -69,6 +69,7 @@ class AddressParser:
 
             The default value is "best" for the most accurate model. Ignored if ``path_to_retrained_model`` is not
             ``None``.
+        attention_mechanism (bool): Either or not to use the model with attention mechanism. The default value is False.
         device (Union[int, str, torch.torch.device]): The device to use can be either:
 
             - a ``GPU`` index in int format (e.g. ``0``),
@@ -140,6 +141,7 @@ class AddressParser:
 
     def __init__(self,
                  model_type: str = "best",
+                 attention_mechanism: bool = False,
                  device: Union[int, str, torch.device] = 0,
                  rounding: int = 4,
                  verbose: bool = True,
@@ -173,10 +175,11 @@ class AddressParser:
         formatted_parsed_address.FIELDS = fields
         self.tags_converter = TagsConverter(tags_to_idx)
 
-        self._set_model_name(model_type)
+        self._set_model_name(model_type, attention_mechanism)
         self._model_factory(verbose=self.verbose,
                             path_to_retrained_model=path_to_retrained_model,
                             prediction_layer_len=self.tags_converter.dim,
+                            attention_mechanism=attention_mechanism,
                             seq2seq_kwargs=seq2seq_kwargs)
         self.model.eval()
 
@@ -246,7 +249,7 @@ class AddressParser:
         tags_predictions = []
         tags_predictions_prob = []
         for x in predict_data_loader:
-            tensor_prediction = self.model(*load_tuple_to_device(x, self.device))
+            tensor_prediction, _ = self.model(*load_tuple_to_device(x, self.device))  # _ is for the attention weights
             tags_predictions.extend(tensor_prediction.max(2)[1].transpose(0, 1).cpu().numpy().tolist())
             tags_predictions_prob.extend(
                 torch.exp(tensor_prediction.max(2)[0]).transpose(0, 1).detach().cpu().numpy().tolist())
@@ -632,7 +635,9 @@ class AddressParser:
                        verbose: bool,
                        path_to_retrained_model: Union[str, None] = None,
                        prediction_layer_len: int = 9,
+                       attention_mechanism=False,
                        seq2seq_kwargs: Union[dict, None] = None) -> None:
+        # pylint: disable=too-many-arguments
         """
         Model factory to create the vectorizer, the data converter and the pre-trained model
         """
@@ -657,9 +662,10 @@ class AddressParser:
                                               output_size=prediction_layer_len,
                                               verbose=verbose,
                                               path_to_retrained_model=path_to_retrained_model,
+                                              attention_mechanism=attention_mechanism,
                                               **seq2seq_kwargs)
 
-        elif self.model_type == "bpemb":
+        elif "bpemb" in self.model_type:
             self.vectorizer = BPEmbVectorizer(embeddings_model=BPEmbEmbeddingsModel(verbose=verbose))
 
             self.data_converter = bpemb_data_padding
@@ -668,6 +674,7 @@ class AddressParser:
                                            output_size=prediction_layer_len,
                                            verbose=verbose,
                                            path_to_retrained_model=path_to_retrained_model,
+                                           attention_mechanism=attention_mechanism,
                                            **seq2seq_kwargs)
         else:
             raise NotImplementedError(f"There is no {self.model_type} network implemented. Value should be: "
@@ -680,7 +687,7 @@ class AddressParser:
         """
         return self.data_converter(self.vectorizer(data))
 
-    def _set_model_name(self, model_type: str):
+    def _set_model_name(self, model_type: str, attention_mechanism: str):
         """
         Handle the model type name matching with proper seq2seq model type name.
         """
@@ -694,6 +701,10 @@ class AddressParser:
         elif model_type in ("best", "bpemb"):
             model_type = "bpemb"  # We change name to bpemb since best = bpemb
             formatted_name = "BPEmb"
+
+        if attention_mechanism:
+            model_type += "Attention"
+            formatted_name += "Attention"
         self.model_type = model_type
         self._model_type_formatted = formatted_name
 

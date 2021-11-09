@@ -58,7 +58,7 @@ class BPEmbSeq2SeqModel(Seq2SeqModel):
             # Means we use the pre-trained weights
             model_weights_name = "bpemb"
             if attention_mechanism:
-                model_weights_name += "attention"
+                model_weights_name += "_attention"
             self._load_pre_trained_weights(model_weights_name)
 
     def forward(self,

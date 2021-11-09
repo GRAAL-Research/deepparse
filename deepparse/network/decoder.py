@@ -67,19 +67,19 @@ class Decoder(nn.Module):
         self.linear.apply(weights_init)
 
     def attention_mechanism_set_up(self, hidden_size: int = 1024):
-        self.linear_attention_mecanism_encoder_outputs = nn.Linear(hidden_size, hidden_size)
-        self.linear_attention_mecanism_encoder_outputs.apply(weights_init)
+        self.linear_attention_mechanism_encoder_outputs = nn.Linear(hidden_size, hidden_size)
+        self.linear_attention_mechanism_encoder_outputs.apply(weights_init)
 
-        self.linear_attention_mecanism_previous_hidden = nn.Linear(hidden_size, hidden_size)
-        self.linear_attention_mecanism_previous_hidden.apply(weights_init)
+        self.linear_attention_mechanism_previous_hidden = nn.Linear(hidden_size, hidden_size)
+        self.linear_attention_mechanism_previous_hidden.apply(weights_init)
 
         self.weights = nn.Parameter(torch.ones(1, hidden_size))
 
     def _attention_mechanism_forward(self, to_predict: torch.Tensor, hidden: torch.Tensor,
                                      encoder_outputs: torch.Tensor, lengths: torch.Tensor):
         unweighted_alignments = torch.tanh(
-            self.linear_attention_mecanism_encoder_outputs(encoder_outputs) +
-            self.linear_attention_mecanism_previous_hidden(hidden[0].transpose(0, 1)))
+            self.linear_attention_mechanism_encoder_outputs(encoder_outputs) +
+            self.linear_attention_mechanism_previous_hidden(hidden[0].transpose(0, 1)))
         alignments_scores = torch.matmul(self.weights.view(1, 1, self.hidden_size),
                                          unweighted_alignments.transpose(1, 2))
 

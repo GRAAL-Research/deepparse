@@ -27,6 +27,7 @@ class Decoder(nn.Module):
         self.attention_mechanism = attention_mechanism
         if attention_mechanism:
             # Since layer also have attention mechanism
+            self.hidden_size = hidden_size
             input_size = input_size + hidden_size
             self.attention_mechanism_set_up()
         self.softmax = nn.LogSoftmax(dim=1)
@@ -54,7 +55,8 @@ class Decoder(nn.Module):
         to_predict = to_predict.float()
         attention_weights = None
         if self.attention_mechanism:
-            to_predict = self._attention_mechanism_forward(to_predict, hidden, encoder_outputs, lengths)
+            to_predict, attention_weights = self._attention_mechanism_forward(to_predict, hidden, encoder_outputs,
+                                                                              lengths)
 
         output, hidden = self.lstm(to_predict, hidden)
 
@@ -76,7 +78,13 @@ class Decoder(nn.Module):
         self.weights = nn.Parameter(torch.ones(1, hidden_size))
 
     def _attention_mechanism_forward(self, to_predict: torch.Tensor, hidden: torch.Tensor,
-                                     encoder_outputs: torch.Tensor, lengths: torch.Tensor):
+                                     encoder_outputs: torch.Tensor, lengths: torch.Tensor) -> Tuple:
+        """
+        Compute the attention mechanism weights and context vector
+        Return:
+            A tuple (``x``, ``y``) where ``x`` is the to_predict vector with the context vector and y is the attention
+            weights.
+        """
         unweighted_alignments = torch.tanh(
             self.linear_attention_mechanism_encoder_outputs(encoder_outputs) +
             self.linear_attention_mechanism_previous_hidden(hidden[0].transpose(0, 1)))
@@ -84,7 +92,7 @@ class Decoder(nn.Module):
                                          unweighted_alignments.transpose(1, 2))
 
         max_length = lengths.max().item()
-        mask = torch.arange(max_length)[None, :].cuda(self.device) < lengths[:, None].cuda(self.device)
+        mask = torch.arange(max_length)[None, :] < lengths[:, None]
         mask = mask.unsqueeze(1)
         alignments_scores[~mask] = float('-inf')
 
@@ -93,4 +101,4 @@ class Decoder(nn.Module):
         context_vector = torch.matmul(attention_weights, encoder_outputs)
 
         attention_input = torch.cat((to_predict, context_vector.transpose(0, 1)), 2)
-        return attention_input
+        return attention_input, attention_weights

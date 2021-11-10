@@ -44,6 +44,7 @@ class Seq2SeqModel(ABC, nn.Module):
         super().__init__()
         self.device = device
         self.verbose = verbose
+        self.attention_mechanism = attention_mechanism
 
         self.encoder = Encoder(input_size=input_size, hidden_size=encoder_hidden_size, num_layers=encoder_num_layers)
         self.encoder.to(self.device)
@@ -52,7 +53,7 @@ class Seq2SeqModel(ABC, nn.Module):
                                hidden_size=decoder_hidden_size,
                                num_layers=decoder_num_layers,
                                output_size=output_size,
-                               attention_mechanism=attention_mechanism)
+                               attention_mechanism=self.attention_mechanism)
 
         self.decoder.to(self.device)
 
@@ -184,8 +185,9 @@ class Seq2SeqModel(ABC, nn.Module):
                     attention_output[idx + 1] = attention_weights
         else:
             for idx in range(max_length):
-                decoder_output, decoder_hidden, attention_weights = self.decoder(decoder_input, decoder_hidden,
-                                                                                 encoder_outputs, lengths_tensor)
+                decoder_output, decoder_hidden, attention_weights = self.decoder(decoder_input.view(1, batch_size, 1),
+                                                                                 decoder_hidden, encoder_outputs,
+                                                                                 lengths_tensor)
 
                 prediction_sequence[idx + 1] = decoder_output
 

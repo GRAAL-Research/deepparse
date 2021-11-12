@@ -69,7 +69,8 @@ class AddressParser:
 
             The default value is "best" for the most accurate model. Ignored if ``path_to_retrained_model`` is not
             ``None``.
-        attention_mechanism (bool): Whether or not to use the model with attention mechanism. The default value is False.
+        attention_mechanism (bool): Whether or not to use the model with attention mechanism. The default value is
+            False.
         device (Union[int, str, torch.torch.device]): The device to use can be either:
 
             - a ``GPU`` index in int format (e.g. ``0``),

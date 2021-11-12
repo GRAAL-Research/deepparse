@@ -88,5 +88,7 @@ class BPEmbSeq2SeqModel(Seq2SeqModel):
 
         prediction_sequence, attention_output = self._decoder_step(decoder_input, decoder_hidden, encoder_outputs,
                                                                    target, lengths_tensor, batch_size)
-
-        return prediction_sequence, attention_output
+        predict = prediction_sequence
+        if self.attention_mechanism:
+            predict = prediction_sequence, attention_output
+        return predict

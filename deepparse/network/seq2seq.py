@@ -185,9 +185,9 @@ class Seq2SeqModel(ABC, nn.Module):
                     attention_output[idx + 1] = attention_weights
         else:
             for idx in range(max_length):
-                decoder_output, decoder_hidden, attention_weights = self.decoder(decoder_input.view(1, batch_size, 1),
-                                                                                 decoder_hidden, encoder_outputs,
-                                                                                 lengths_tensor)
+                decoder_output, decoder_hidden, attention_weights = self.decoder(decoder_input.view(1, batch_size,
+                                                                                                    1), decoder_hidden,
+                                                                                 encoder_outputs, lengths_tensor)
 
                 prediction_sequence[idx + 1] = decoder_output
 
@@ -198,6 +198,7 @@ class Seq2SeqModel(ABC, nn.Module):
                 _, decoder_input = decoder_output.topk(1)
 
         # The sequence is now fully parse
-        if self.attention_mechanism:
-            return prediction_sequence, attention_output
-        return prediction_sequence
+        if not self.attention_mechanism:
+            attention_output = None  # None since we unpack the tuple later and we don't have attention output if
+            # self.attention_mechanism is set to False
+        return prediction_sequence, attention_output

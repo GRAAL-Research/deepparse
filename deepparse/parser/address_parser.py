@@ -185,7 +185,7 @@ class AddressParser:
         self.model.eval()
 
     def __str__(self) -> str:
-        return f"{self.model_type.capitalize()}AddressParser"
+        return f"{self._model_type_formatted}AddressParser"
 
     __repr__ = __str__  # to call __str__ when list of address
 
@@ -285,6 +285,7 @@ class AddressParser:
         prediction tags, and if new ``seq2seq_params`` were used, the new seq2seq parameters.
 
         Args:
+            dataset_container (~deepparse.dataset_container.DatasetContainer): The
             dataset_container (~deepparse.dataset_container.DatasetContainer): The
                 dataset container of the data to use.
             train_ratio (float): The ratio to use of the dataset for the training. The rest of the data is used for the
@@ -646,7 +647,7 @@ class AddressParser:
         seq2seq_kwargs = seq2seq_kwargs if seq2seq_kwargs is not None else {}
 
         if "fasttext" in self.model_type:
-            if self.model_type == "fasttext-light":
+            if "fasttext-light" in self.model_type:
                 file_name = download_fasttext_magnitude_embeddings(saving_dir=CACHE_PATH, verbose=verbose)
 
                 embeddings_model = MagnitudeEmbeddingsModel(file_name, verbose=verbose)

@@ -250,7 +250,7 @@ class AddressParser:
         tags_predictions = []
         tags_predictions_prob = []
         for x in predict_data_loader:
-            tensor_prediction, _ = self.model(*load_tuple_to_device(x, self.device))  # _ is for the attention weights
+            tensor_prediction = self.model(*load_tuple_to_device(x, self.device))
             tags_predictions.extend(tensor_prediction.max(2)[1].transpose(0, 1).cpu().numpy().tolist())
             tags_predictions_prob.extend(
                 torch.exp(tensor_prediction.max(2)[0]).transpose(0, 1).detach().cpu().numpy().tolist())

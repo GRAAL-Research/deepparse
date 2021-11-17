@@ -129,13 +129,12 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
         max_length = 4  # a sequence of 4 tokens
         lengths_tensor_mock.max().item.return_value = max_length
         encoder_outputs = MagicMock()
-        _, att_weights = seq2seq_model._decoder_step(decoder_input_mock, decoder_hidden_mock, encoder_outputs,
+        seq2seq_model._decoder_step(decoder_input_mock, decoder_hidden_mock, encoder_outputs,
                                                      self.a_none_target, lengths_tensor_mock, self.a_batch_size)
 
         decoder_call = [call()(view_mock, decoder_hidden_mock, encoder_outputs, lengths_tensor_mock)] * max_length
 
         decoder_mock.assert_has_calls(decoder_call)
-        self.assertIsNone(att_weights)
 
     @patch("deepparse.network.seq2seq.Decoder")
     @patch("deepparse.network.seq2seq.download_weights")
@@ -166,13 +165,12 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
         max_length = 4  # a sequence of 4 tokens
         lengths_tensor_mock.max().item.return_value = max_length
         encoder_outputs = MagicMock()
-        _, att_weights = seq2seq_model._decoder_step(decoder_input_mock, decoder_hidden_mock, encoder_outputs,
+        seq2seq_model._decoder_step(decoder_input_mock, decoder_hidden_mock, encoder_outputs,
                                                      self.a_none_target, lengths_tensor_mock, self.a_batch_size)
 
         decoder_call = [call()(view_mock, decoder_hidden_mock, encoder_outputs, lengths_tensor_mock)] * max_length
 
         decoder_mock.assert_has_calls(decoder_call)
-        self.assertIsNotNone(att_weights)
 
     @patch("deepparse.network.seq2seq.random.random")
     @patch("deepparse.network.seq2seq.Decoder")
@@ -239,7 +237,7 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
                     with decoder_mock:
                         seq2seq_model = BPEmbSeq2SeqModel(self.a_torch_device, self.output_size, self.verbose)
 
-                        _, actual_att_weights = seq2seq_model.forward(to_predict=to_predict_mock,
+                        seq2seq_model.forward(to_predict=to_predict_mock,
                                                                       decomposition_lengths=decomposition_lengths_mock,
                                                                       lengths_tensor=lengths_tensor_mock,
                                                                       target=None)
@@ -249,7 +247,6 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
                         lengths_tensor_mock.assert_has_calls([call.max().item()])
                         decoder_mock.assert_has_calls(
                             [call()(to_mock, decoder_hidden_mock, decoder_input_mock, lengths_tensor_mock)])
-                        self.assertIsNone(actual_att_weights)
 
     @patch("deepparse.network.seq2seq.random.random")
     @patch("deepparse.network.seq2seq.Encoder")
@@ -290,7 +287,7 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
                     with decoder_mock:
                         seq2seq_model = BPEmbSeq2SeqModel(self.a_torch_device, self.output_size, self.verbose)
 
-                        _, actual_att_weights = seq2seq_model.forward(to_predict=to_predict_mock,
+                        seq2seq_model.forward(to_predict=to_predict_mock,
                                                                       decomposition_lengths=decomposition_lengths_mock,
                                                                       lengths_tensor=lengths_tensor_mock,
                                                                       target=target_mock)
@@ -301,7 +298,6 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
                         decoder_mock.assert_has_calls(
                             [call()(to_mock, decoder_hidden_mock, decoder_input_mock, lengths_tensor_mock)])
                         target_mock.assert_has_calls([call.transpose(0, 1)])
-                        self.assertIsNone(actual_att_weights)
 
     @patch("deepparse.network.seq2seq.random.random")
     @patch("deepparse.network.seq2seq.Encoder")
@@ -342,7 +338,7 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
                                                           self.verbose,
                                                           attention_mechanism=True)
 
-                        _, actual_att_weights = seq2seq_model.forward(to_predict=to_predict_mock,
+                        seq2seq_model.forward(to_predict=to_predict_mock,
                                                                       decomposition_lengths=decomposition_lengths_mock,
                                                                       lengths_tensor=lengths_tensor_mock,
                                                                       target=target_mock)
@@ -353,7 +349,6 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
                         decoder_mock.assert_has_calls(
                             [call()(to_mock, decoder_hidden_mock, decoder_input_mock, lengths_tensor_mock)])
                         target_mock.assert_has_calls([call.transpose(0, 1)])
-                        self.assertIsNotNone(actual_att_weights)
 
 
 if __name__ == "__main__":

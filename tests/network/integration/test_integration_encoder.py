@@ -56,7 +56,7 @@ class EncoderGPUTest(EncoderCase):
 
     def test_whenForwardStepGPU_thenStepIsOk(self):
         self.setUp_encoder(self.a_torch_device)
-        predictions = self.encoder.forward(self.to_predict_tensor, self.a_lengths_tensor)
+        predictions, _ = self.encoder.forward(self.to_predict_tensor, self.a_lengths_tensor)
 
         self.assert_output_is_valid_dim(predictions)
 
@@ -66,7 +66,7 @@ class EncoderCPUTest(EncoderCase):
     def test_whenForwardStepCPU_thenStepIsOk(self):
         self.setUp_encoder(self.a_cpu_device)
 
-        predictions = self.encoder.forward(self.to_predict_tensor, self.a_lengths_tensor)
+        predictions, _ = self.encoder.forward(self.to_predict_tensor, self.a_lengths_tensor)
 
         self.assert_output_is_valid_dim(predictions)
 

@@ -1,5 +1,5 @@
 # pylint: disable=too-many-arguments
-from typing import Union, Tuple
+from typing import Union
 
 import torch
 
@@ -58,7 +58,7 @@ class FastTextSeq2SeqModel(Seq2SeqModel):
     def forward(self,
                 to_predict: torch.Tensor,
                 lengths_tensor: torch.Tensor,
-                target: Union[torch.Tensor, None] = None) -> Union[torch.Tensor, Tuple[torch.Tensor, torch.Tensor]]:
+                target: Union[torch.Tensor, None] = None) -> torch.Tensor:
         """
         Callable method as per PyTorch forward method to get tags prediction over the components of
         an address.
@@ -71,14 +71,13 @@ class FastTextSeq2SeqModel(Seq2SeqModel):
                 Default value is None since we mostly don't have the target except for retrain.
 
         Return:
-            Either a Tensor of the predicted sequence or a a tuple (``x``, ``y``) where ``x`` is the predicted sequence
-            and ``y`` is the attention weights if attention mechanism is activated.
+            A Tensor of the predicted sequence.
         """
         batch_size = to_predict.size(0)
 
         decoder_input, decoder_hidden, encoder_outputs = self._encoder_step(to_predict, lengths_tensor, batch_size)
 
-        prediction_sequence, attention_output = self._decoder_step(decoder_input, decoder_hidden, encoder_outputs,
-                                                                   target, lengths_tensor, batch_size)
+        prediction_sequence = self._decoder_step(decoder_input, decoder_hidden, encoder_outputs, target, lengths_tensor,
+                                                 batch_size)
 
-        return prediction_sequence, attention_output
+        return prediction_sequence

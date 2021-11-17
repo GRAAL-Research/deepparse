@@ -1,5 +1,5 @@
 # pylint: disable=too-many-arguments
-from typing import List, Union, Tuple
+from typing import List, Union
 
 import torch
 
@@ -65,7 +65,7 @@ class BPEmbSeq2SeqModel(Seq2SeqModel):
                 to_predict: torch.Tensor,
                 decomposition_lengths: List,
                 lengths_tensor: torch.Tensor,
-                target: Union[torch.Tensor, None] = None) -> Union[torch.Tensor, Tuple[torch.Tensor, torch.Tensor]]:
+                target: Union[torch.Tensor, None] = None) -> torch.Tensor:
         """
         Callable method as per PyTorch forward method to get tags prediction over the components of
         an address.
@@ -77,8 +77,7 @@ class BPEmbSeq2SeqModel(Seq2SeqModel):
                 `teacher forcing <https://machinelearningmastery.com/teacher-forcing-for-recurrent-neural-networks/>`_.
                 Default value is None since we mostly don't have the target except for retrain.
         Return:
-            Either a Tensor of the predicted sequence or a a tuple (``x``, ``y``) where ``x`` is the predicted sequence
-            and ``y`` is the attention weights if attention mechanism is activated.
+            A Tensor of the predicted sequence.
         """
         batch_size = to_predict.size(0)
 
@@ -86,6 +85,6 @@ class BPEmbSeq2SeqModel(Seq2SeqModel):
 
         decoder_input, decoder_hidden, encoder_outputs = self._encoder_step(embedded_output, lengths_tensor, batch_size)
 
-        prediction_sequence, attention_output = self._decoder_step(decoder_input, decoder_hidden, encoder_outputs,
-                                                                   target, lengths_tensor, batch_size)
-        return prediction_sequence, attention_output
+        prediction_sequence = self._decoder_step(decoder_input, decoder_hidden, encoder_outputs, target, lengths_tensor,
+                                                 batch_size)
+        return prediction_sequence

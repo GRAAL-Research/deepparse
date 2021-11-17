@@ -71,22 +71,15 @@ class AddressParserPredictTestCase(CaptureOutputTestCase):
         os.makedirs(self.a_model_root_path, exist_ok=True)
         self.a_model_path = os.path.join(self.a_model_root_path, "model.p")
 
-    def mock_predictions_vectors(self, model, attention_mechanism):
+    def mock_predictions_vectors(self, model):
         returned_prediction_vectors = self.a_prediction_vector_for_a_complete_address
-        if attention_mechanism:
-            returned_value = (returned_prediction_vectors, self.attention_mechanism_weights)
-        else:
-            returned_value = (returned_prediction_vectors, None)
+        returned_value = returned_prediction_vectors
         model.__call__().return_value = returned_value
 
-    def mock_multiple_predictions_vectors(self, model, attention_mechanism):
+    def mock_multiple_predictions_vectors(self, model):
         returned_prediction_vectors = torch.cat(
             (self.a_prediction_vector_for_a_complete_address, self.a_prediction_vector_for_a_complete_address), 1)
-        if attention_mechanism:
-            returned_value = (returned_prediction_vectors, self.attention_mechanism_weights)
-        else:
-            returned_value = (returned_prediction_vectors, None)
-
+        returned_value = returned_prediction_vectors
         model.__call__().return_value = returned_value
 
     def setup_retrain_new_tags_model(self, address_components, model_type):

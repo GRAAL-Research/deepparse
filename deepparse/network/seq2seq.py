@@ -131,8 +131,7 @@ class Seq2SeqModel(ABC, nn.Module):
         return decoder_input, decoder_hidden, encoder_outputs
 
     def _decoder_step(self, decoder_input: torch.Tensor, decoder_hidden: tuple, encoder_outputs: torch.Tensor,
-                      target: Union[torch.Tensor, None], lengths_tensor: torch.Tensor,
-                      batch_size: int) -> torch.Tensor:
+                      target: Union[torch.Tensor, None], lengths_tensor: torch.Tensor, batch_size: int) -> torch.Tensor:
         """
         Step of the encoder.
 

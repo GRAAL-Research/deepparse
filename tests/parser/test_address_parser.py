@@ -436,7 +436,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                                                                             embeddings_model_mock,
                                                                             vectorizer_model_mock, data_padding_mock):
         with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel") as model_mock:
-            self.mock_predictions_vectors(model_mock, attention_mechanism=False)
+            self.mock_predictions_vectors(model_mock)
             address_parser = AddressParser(model_type=self.a_fasttext_model_type,
                                            device=self.a_cpu_device,
                                            verbose=self.verbose)
@@ -455,7 +455,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                                                                                vectorizer_model_mock,
                                                                                data_padding_mock):
         with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel") as model_mock:
-            self.mock_predictions_vectors(model_mock, attention_mechanism=True)
+            self.mock_predictions_vectors(model_mock)
             address_parser = AddressParser(model_type=self.a_fasttext_model_type,
                                            device=self.a_cpu_device,
                                            verbose=self.verbose,
@@ -473,7 +473,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     def test_givenAFasttextModel_whenAddressParsingAListOfAddress_thenParseAllAddress(
             self, download_weights_mock, embeddings_model_mock, vectorizer_model_mock, data_padding_mock):
         with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel") as model_mock:
-            self.mock_multiple_predictions_vectors(model_mock, attention_mechanism=False)
+            self.mock_multiple_predictions_vectors(model_mock)
             address_parser = AddressParser(model_type=self.a_fasttext_model_type,
                                            device=self.a_cpu_device,
                                            verbose=self.verbose)
@@ -492,7 +492,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     def test_givenAFasttextAttModel_whenAddressParsingAListOfAddress_thenParseAllAddress(
             self, download_weights_mock, embeddings_model_mock, vectorizer_model_mock, data_padding_mock):
         with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel") as model_mock:
-            self.mock_multiple_predictions_vectors(model_mock, attention_mechanism=True)
+            self.mock_multiple_predictions_vectors(model_mock)
             address_parser = AddressParser(model_type=self.a_fasttext_model_type,
                                            device=self.a_cpu_device,
                                            verbose=self.verbose,
@@ -512,7 +512,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     def test_givenAFasttextModel_whenAddressParsingAnAddress_thenParseAddressCorrectly(
             self, download_weights_mock, embeddings_model_mock, vectorizer_model_mock, data_padding_mock):
         with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel") as model_mock:
-            self.mock_predictions_vectors(model_mock, attention_mechanism=False)
+            self.mock_predictions_vectors(model_mock)
             address_parser = AddressParser(model_type=self.a_fasttext_model_type,
                                            device=self.a_cpu_device,
                                            verbose=self.verbose)
@@ -534,7 +534,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     def test_givenAFasttextAttModel_whenAddressParsingAnAddress_thenParseAddressCorrectly(
             self, download_weights_mock, embeddings_model_mock, vectorizer_model_mock, data_padding_mock):
         with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel") as model_mock:
-            self.mock_predictions_vectors(model_mock, attention_mechanism=True)
+            self.mock_predictions_vectors(model_mock)
             address_parser = AddressParser(model_type=self.a_fasttext_model_type,
                                            device=self.a_cpu_device,
                                            verbose=self.verbose,
@@ -558,7 +558,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                                                                              embeddings_model_mock,
                                                                              vectorizer_model_mock, data_padding_mock):
         with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel") as model_mock:
-            self.mock_predictions_vectors(model_mock, attention_mechanism=False)
+            self.mock_predictions_vectors(model_mock)
             address_parser = AddressParser(model_type=self.a_fasttext_light_model_type,
                                            device=self.a_cpu_device,
                                            verbose=self.verbose)
@@ -577,7 +577,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                                                                                 vectorizer_model_mock,
                                                                                 data_padding_mock):
         with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel") as model_mock:
-            self.mock_predictions_vectors(model_mock, attention_mechanism=True)
+            self.mock_predictions_vectors(model_mock)
             address_parser = AddressParser(model_type=self.a_fasttext_light_model_type,
                                            device=self.a_cpu_device,
                                            verbose=self.verbose,
@@ -595,7 +595,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     def test_givenAMagnitudeModel_whenAddressParsingAListOfAddress_thenParseAllAddress(
             self, download_weights_mock, embeddings_model_mock, vectorizer_model_mock, data_padding_mock):
         with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel") as model_mock:
-            self.mock_multiple_predictions_vectors(model_mock, attention_mechanism=False)
+            self.mock_multiple_predictions_vectors(model_mock)
             address_parser = AddressParser(model_type=self.a_fasttext_light_model_type,
                                            device=self.a_cpu_device,
                                            verbose=self.verbose)
@@ -614,7 +614,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     def test_givenAMagnitudeAttModel_whenAddressParsingAListOfAddress_thenParseAllAddress(
             self, download_weights_mock, embeddings_model_mock, vectorizer_model_mock, data_padding_mock):
         with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel") as model_mock:
-            self.mock_multiple_predictions_vectors(model_mock, attention_mechanism=True)
+            self.mock_multiple_predictions_vectors(model_mock)
             address_parser = AddressParser(model_type=self.a_fasttext_light_model_type,
                                            device=self.a_cpu_device,
                                            verbose=self.verbose,
@@ -634,7 +634,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     def test_givenAMagnitudeModel_whenAddressParsingAnAddress_thenParseAddressCorrectly(
             self, download_weights_mock, embeddings_model_mock, vectorizer_model_mock, data_padding_mock):
         with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel") as model_mock:
-            self.mock_predictions_vectors(model_mock, attention_mechanism=False)
+            self.mock_predictions_vectors(model_mock)
             address_parser = AddressParser(model_type=self.a_fasttext_light_model_type,
                                            device=self.a_cpu_device,
                                            verbose=self.verbose)
@@ -656,7 +656,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     def test_givenAMagnitudeAttModel_whenAddressParsingAnAddress_thenParseAddressCorrectly(
             self, download_weights_mock, embeddings_model_mock, vectorizer_model_mock, data_padding_mock):
         with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel") as model_mock:
-            self.mock_predictions_vectors(model_mock, attention_mechanism=True)
+            self.mock_predictions_vectors(model_mock)
             address_parser = AddressParser(model_type=self.a_fasttext_light_model_type,
                                            device=self.a_cpu_device,
                                            verbose=self.verbose,
@@ -678,7 +678,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     def test_givenABPEmbModel_whenAddressParsingAString_thenParseAddress(self, embeddings_model_mock,
                                                                          vectorizer_model_mock, data_padding_mock):
         with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel") as model_mock:
-            self.mock_predictions_vectors(model_mock, attention_mechanism=False)
+            self.mock_predictions_vectors(model_mock)
             address_parser = AddressParser(model_type=self.a_bpemb_model_type,
                                            device=self.a_cpu_device,
                                            verbose=self.verbose)
@@ -694,7 +694,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     def test_givenABPEmbAttModel_whenAddressParsingAString_thenParseAddress(self, embeddings_model_mock,
                                                                             vectorizer_model_mock, data_padding_mock):
         with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel") as model_mock:
-            self.mock_predictions_vectors(model_mock, attention_mechanism=True)
+            self.mock_predictions_vectors(model_mock)
             address_parser = AddressParser(model_type=self.a_bpemb_model_type,
                                            device=self.a_cpu_device,
                                            verbose=self.verbose,
@@ -712,7 +712,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                                                                                    vectorizer_model_mock,
                                                                                    data_padding_mock):
         with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel") as model_mock:
-            self.mock_multiple_predictions_vectors(model_mock, attention_mechanism=False)
+            self.mock_multiple_predictions_vectors(model_mock)
             address_parser = AddressParser(model_type=self.a_bpemb_model_type,
                                            device=self.a_cpu_device,
                                            verbose=self.verbose)
@@ -730,7 +730,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     def test_givenABPEmbAttModel_whenAddressParsingAListOfAddress_thenParseAllAddress(
             self, embeddings_model_mock, vectorizer_model_mock, data_padding_mock):
         with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel") as model_mock:
-            self.mock_multiple_predictions_vectors(model_mock, attention_mechanism=True)
+            self.mock_multiple_predictions_vectors(model_mock)
             address_parser = AddressParser(model_type=self.a_bpemb_model_type,
                                            device=self.a_cpu_device,
                                            verbose=self.verbose,
@@ -750,7 +750,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                                                                                     vectorizer_model_mock,
                                                                                     data_padding_mock):
         with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel") as model_mock:
-            self.mock_predictions_vectors(model_mock, attention_mechanism=False)
+            self.mock_predictions_vectors(model_mock)
             address_parser = AddressParser(model_type=self.a_bpemb_model_type,
                                            device=self.a_cpu_device,
                                            verbose=self.verbose)
@@ -771,7 +771,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     def test_givenABPEmbAttModel_whenAddressParsingAnAddress_thenParseAddressCorrectly(
             self, embeddings_model_mock, vectorizer_model_mock, data_padding_mock):
         with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel") as model_mock:
-            self.mock_predictions_vectors(model_mock, attention_mechanism=True)
+            self.mock_predictions_vectors(model_mock)
             address_parser = AddressParser(model_type=self.a_bpemb_model_type,
                                            device=self.a_cpu_device,
                                            verbose=self.verbose,
@@ -795,7 +795,7 @@ class AddressParserTest(AddressParserPredictTestCase):
         self._capture_output()
         with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel") as model_mock:
             with patch("deepparse.parser.address_parser.PREDICTION_TIME_PERFORMANCE_THRESHOLD", 0):
-                self.mock_predictions_vectors(model_mock, attention_mechanism=False)
+                self.mock_predictions_vectors(model_mock)
                 address_parser = AddressParser(model_type=self.a_bpemb_model_type,
                                                device=self.a_cpu_device,
                                                verbose=True)
@@ -814,7 +814,7 @@ class AddressParserTest(AddressParserPredictTestCase):
         self._capture_output()
         with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel") as model_mock:
             with patch("deepparse.parser.address_parser.PREDICTION_TIME_PERFORMANCE_THRESHOLD", 0):
-                self.mock_predictions_vectors(model_mock, attention_mechanism=True)
+                self.mock_predictions_vectors(model_mock)
                 address_parser = AddressParser(model_type=self.a_bpemb_model_type,
                                                device=self.a_cpu_device,
                                                verbose=True,
@@ -833,7 +833,7 @@ class AddressParserTest(AddressParserPredictTestCase):
         self._capture_output()
 
         with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel") as model_mock:
-            self.mock_predictions_vectors(model_mock, attention_mechanism=False)
+            self.mock_predictions_vectors(model_mock)
             address_parser = AddressParser(model_type=self.a_bpemb_model_type,
                                            device=self.a_cpu_device,
                                            verbose=self.verbose)
@@ -849,7 +849,7 @@ class AddressParserTest(AddressParserPredictTestCase):
         self._capture_output()
 
         with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel") as model_mock:
-            self.mock_predictions_vectors(model_mock, attention_mechanism=True)
+            self.mock_predictions_vectors(model_mock)
             address_parser = AddressParser(model_type=self.a_bpemb_model_type,
                                            device=self.a_cpu_device,
                                            verbose=self.verbose,
@@ -866,7 +866,7 @@ class AddressParserTest(AddressParserPredictTestCase):
         self._capture_output()
 
         with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel") as model_mock:
-            self.mock_predictions_vectors(model_mock, attention_mechanism=False)
+            self.mock_predictions_vectors(model_mock)
             address_parser = AddressParser(model_type=self.a_best_model_type,
                                            device=self.a_cpu_device,
                                            verbose=self.verbose)
@@ -882,7 +882,7 @@ class AddressParserTest(AddressParserPredictTestCase):
         self._capture_output()
 
         with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel") as model_mock:
-            self.mock_predictions_vectors(model_mock, attention_mechanism=True)
+            self.mock_predictions_vectors(model_mock)
             address_parser = AddressParser(model_type=self.a_best_model_type,
                                            device=self.a_cpu_device,
                                            verbose=self.verbose,
@@ -900,7 +900,7 @@ class AddressParserTest(AddressParserPredictTestCase):
         self._capture_output()
 
         with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel") as model_mock:
-            self.mock_predictions_vectors(model_mock, attention_mechanism=False)
+            self.mock_predictions_vectors(model_mock)
             address_parser = AddressParser(model_type=self.a_fasttext_model_type,
                                            device=self.a_cpu_device,
                                            verbose=self.verbose)
@@ -917,7 +917,7 @@ class AddressParserTest(AddressParserPredictTestCase):
         self._capture_output()
 
         with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel") as model_mock:
-            self.mock_predictions_vectors(model_mock, attention_mechanism=True)
+            self.mock_predictions_vectors(model_mock)
             address_parser = AddressParser(model_type=self.a_fasttext_model_type,
                                            device=self.a_cpu_device,
                                            verbose=self.verbose,
@@ -935,7 +935,7 @@ class AddressParserTest(AddressParserPredictTestCase):
         self._capture_output()
 
         with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel") as model_mock:
-            self.mock_predictions_vectors(model_mock, attention_mechanism=False)
+            self.mock_predictions_vectors(model_mock)
             address_parser = AddressParser(model_type=self.a_fasttext_model_type,
                                            device=self.a_cpu_device,
                                            verbose=self.verbose)
@@ -952,7 +952,7 @@ class AddressParserTest(AddressParserPredictTestCase):
         self._capture_output()
 
         with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel") as model_mock:
-            self.mock_predictions_vectors(model_mock, attention_mechanism=True)
+            self.mock_predictions_vectors(model_mock)
             address_parser = AddressParser(model_type=self.a_fasttext_model_type,
                                            device=self.a_cpu_device,
                                            verbose=self.verbose,
@@ -970,7 +970,7 @@ class AddressParserTest(AddressParserPredictTestCase):
         self._capture_output()
 
         with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel") as model_mock:
-            self.mock_predictions_vectors(model_mock, attention_mechanism=False)
+            self.mock_predictions_vectors(model_mock)
             address_parser = AddressParser(model_type=self.a_fasttext_lightest_model_type,
                                            device=self.a_cpu_device,
                                            verbose=self.verbose)
@@ -987,7 +987,7 @@ class AddressParserTest(AddressParserPredictTestCase):
         self._capture_output()
 
         with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel") as model_mock:
-            self.mock_predictions_vectors(model_mock, attention_mechanism=True)
+            self.mock_predictions_vectors(model_mock)
             address_parser = AddressParser(model_type=self.a_fasttext_lightest_model_type,
                                            device=self.a_cpu_device,
                                            verbose=self.verbose,
@@ -1005,7 +1005,7 @@ class AddressParserTest(AddressParserPredictTestCase):
         self._capture_output()
 
         with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel") as model_mock:
-            self.mock_predictions_vectors(model_mock, attention_mechanism=False)
+            self.mock_predictions_vectors(model_mock)
             address_parser = AddressParser(model_type=self.a_fasttext_lightest_model_type,
                                            device=self.a_cpu_device,
                                            verbose=self.verbose)
@@ -1022,7 +1022,7 @@ class AddressParserTest(AddressParserPredictTestCase):
         self._capture_output()
 
         with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel") as model_mock:
-            self.mock_predictions_vectors(model_mock, attention_mechanism=True)
+            self.mock_predictions_vectors(model_mock)
             address_parser = AddressParser(model_type=self.a_fasttext_lightest_model_type,
                                            device=self.a_cpu_device,
                                            verbose=self.verbose,
@@ -1061,7 +1061,7 @@ class AddressParserTest(AddressParserPredictTestCase):
         self._capture_output()
         with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel") as model_mock:
             with patch("deepparse.parser.address_parser.PREDICTION_TIME_PERFORMANCE_THRESHOLD", 0):
-                self.mock_predictions_vectors(model_mock, attention_mechanism=False)
+                self.mock_predictions_vectors(model_mock)
                 address_parser = AddressParser(model_type=self.a_bpemb_model_type,
                                                device=self.a_cpu_device,
                                                verbose=True)
@@ -1077,7 +1077,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     def test_givenAModel_whenAddressParsingAnAddressWithProb_thenIncludeProb(self, embeddings_model_mock,
                                                                              vectorizer_model_mock, data_padding_mock):
         with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel") as model_mock:
-            self.mock_predictions_vectors(model_mock, attention_mechanism=False)
+            self.mock_predictions_vectors(model_mock)
             address_parser = AddressParser(model_type=self.a_bpemb_model_type, device=self.a_cpu_device, verbose=True)
 
             output = address_parser(self.a_complete_address, with_prob=True)
@@ -1126,7 +1126,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     def test_givenABpembAttModel_whenGetFormattedModelType_thenReturnBPEmbAtt(self, embeddings_model_mock,
                                                                               vectorizer_model_mock, data_padding_mock):
         with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel") as model_mock:
-            self.mock_predictions_vectors(model_mock, attention_mechanism=True)
+            self.mock_predictions_vectors(model_mock)
             address_parser = AddressParser(model_type=self.a_bpemb_model_type,
                                            device=self.a_cpu_device,
                                            verbose=True,

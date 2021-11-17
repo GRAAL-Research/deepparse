@@ -45,10 +45,10 @@ class EncoderCase(TestCase):
         self.max_length = self.a_lengths_tensor[0].item()
 
     def assert_output_is_valid_dim(self, actual_predictions):
+        self.assertEqual(self.a_batch_size, len(actual_predictions))
         for actual_prediction in actual_predictions:
-            self.assertEqual(self.num_layers, actual_prediction.shape[0])
-            self.assertEqual(self.a_batch_size, actual_prediction.shape[1])
-            self.assertEqual(self.hidden_size, actual_prediction.shape[2])
+            self.assertEqual(self.max_length, actual_prediction.shape[0])
+            self.assertEqual(self.hidden_size, actual_prediction.shape[1])
 
 
 @skipIf(not torch.cuda.is_available(), "no gpu available")
@@ -56,7 +56,7 @@ class EncoderGPUTest(EncoderCase):
 
     def test_whenForwardStepGPU_thenStepIsOk(self):
         self.setUp_encoder(self.a_torch_device)
-        predictions = self.encoder.forward(self.to_predict_tensor, self.a_lengths_tensor)
+        predictions, _ = self.encoder.forward(self.to_predict_tensor, self.a_lengths_tensor)
 
         self.assert_output_is_valid_dim(predictions)
 
@@ -66,7 +66,7 @@ class EncoderCPUTest(EncoderCase):
     def test_whenForwardStepCPU_thenStepIsOk(self):
         self.setUp_encoder(self.a_cpu_device)
 
-        predictions = self.encoder.forward(self.to_predict_tensor, self.a_lengths_tensor)
+        predictions, _ = self.encoder.forward(self.to_predict_tensor, self.a_lengths_tensor)
 
         self.assert_output_is_valid_dim(predictions)
 

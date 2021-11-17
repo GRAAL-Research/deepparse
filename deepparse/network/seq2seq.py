@@ -132,7 +132,7 @@ class Seq2SeqModel(ABC, nn.Module):
 
     def _decoder_step(self, decoder_input: torch.Tensor, decoder_hidden: tuple, encoder_outputs: torch.Tensor,
                       target: Union[torch.Tensor, None], lengths_tensor: torch.Tensor,
-                      batch_size: int) -> Union[torch.Tensor, Tuple[torch.Tensor, torch.Tensor]]:
+                      batch_size: int) -> torch.Tensor:
         """
         Step of the encoder.
 
@@ -146,8 +146,7 @@ class Seq2SeqModel(ABC, nn.Module):
             batch_size (int): Number of element in the batch.
 
         Return:
-            Either a Tensor of the predicted sequence or a a tuple (``x``, ``y``) where ``x`` is the predicted sequence
-            and ``y`` is the attention weights if attention mechanism is activated.
+            A Tensor of the predicted sequence.
         """
         max_length = lengths_tensor.max().item()
 

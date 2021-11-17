@@ -71,10 +71,10 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
             self, load_state_dict_mock, torch_mock):
         all_layers_params = MagicMock()
         torch_mock.load.return_value = all_layers_params
-        _ = BPEmbSeq2SeqModel(self.a_cpu_device,
-                              output_size=self.output_size,
-                              verbose=self.verbose,
-                              path_to_retrained_model=self.a_path_to_retrained_model)
+        BPEmbSeq2SeqModel(self.a_cpu_device,
+                          output_size=self.output_size,
+                          verbose=self.verbose,
+                          path_to_retrained_model=self.a_path_to_retrained_model)
 
         torch_load_call = [call.load(self.a_path_to_retrained_model, map_location=self.a_cpu_device)]
         torch_mock.assert_has_calls(torch_load_call)
@@ -108,13 +108,13 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
     def test_whenInstantiateASeq2SeqModelNoTarget_thenDecoderIsCalled(
-            self,
-            load_state_dict_mock,
-            torch_mock,
-            isfile_mock,
-            last_version_mock,
-            download_weights_mock,
-            decoder_mock,
+        self,
+        load_state_dict_mock,
+        torch_mock,
+        isfile_mock,
+        last_version_mock,
+        download_weights_mock,
+        decoder_mock,
     ):
         seq2seq_model = BPEmbSeq2SeqModel(self.a_cpu_device, output_size=self.output_size, verbose=self.verbose)
 
@@ -142,15 +142,17 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
     def test_whenInstantiateASeq2SeqAttModelNoTarget_thenDecoderIsCalled(
-            self,
-            load_state_dict_mock,
-            torch_mock,
-            isfile_mock,
-            last_version_mock,
-            download_weights_mock,
-            decoder_mock,
+        self,
+        load_state_dict_mock,
+        torch_mock,
+        isfile_mock,
+        last_version_mock,
+        download_weights_mock,
+        decoder_mock,
     ):
-        seq2seq_model = BPEmbSeq2SeqModel(self.a_cpu_device, output_size=self.output_size, verbose=self.verbose,
+        seq2seq_model = BPEmbSeq2SeqModel(self.a_cpu_device,
+                                          output_size=self.output_size,
+                                          verbose=self.verbose,
                                           attention_mechanism=True)
 
         decoder_input_mock, decoder_hidden_mock = self.setUp_decoder_mocks(decoder_mock, attention_mechanism=True)
@@ -191,8 +193,8 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
         max_length = 4  # a sequence of 4 tokens
         lengths_tensor_mock.max().item.return_value = max_length
         encoder_outputs = MagicMock()
-        _, att_weights = seq2seq_model._decoder_step(decoder_input_mock, decoder_hidden_mock, encoder_outputs,
-                                                     self.a_none_target, lengths_tensor_mock, self.a_batch_size)
+        seq2seq_model._decoder_step(decoder_input_mock, decoder_hidden_mock, encoder_outputs, self.a_none_target,
+                                    lengths_tensor_mock, self.a_batch_size)
 
         decoder_call = []
 
@@ -215,7 +217,6 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
                                                                         encoder_mock):
         to_predict_mock, lengths_tensor_mock = self.setup_encoder_mocks()
 
-        # We reset it later
         _, decoder_hidden_mock = self.setUp_decoder_mocks(decoder_mock, attention_mechanism=False)
         decomposition_lengths_mock = MagicMock()
 
@@ -316,7 +317,6 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
         target_mock = MagicMock()
         to_predict_mock, lengths_tensor_mock = self.setup_encoder_mocks()
 
-        # We reset it later
         _, decoder_hidden_mock = self.setUp_decoder_mocks(decoder_mock, attention_mechanism=True)
         decomposition_lengths_mock = MagicMock()
 

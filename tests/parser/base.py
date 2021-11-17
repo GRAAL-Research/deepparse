@@ -2,7 +2,6 @@
 # pylint: disable=not-callable, too-many-public-methods, no-name-in-module
 
 import os
-from unittest.mock import Mock
 
 import torch
 from torch import tensor

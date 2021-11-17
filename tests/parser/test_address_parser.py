@@ -1,5 +1,5 @@
 # Since we use a patch as model mock we skip the unused argument error
-# pylint: disable=unused-argument, no-member, too-many-public-methods
+# pylint: disable=unused-argument, no-member, too-many-public-methods, too-many-lines
 
 import os
 import unittest
@@ -768,9 +768,8 @@ class AddressParserTest(AddressParserPredictTestCase):
     @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
     @patch("deepparse.parser.address_parser.BPEmbVectorizer")
     @patch("deepparse.parser.address_parser.bpemb_data_padding")
-    def test_givenABPEmbModel_whenAddressParsingAnAddress_thenParseAddressCorrectly(self, embeddings_model_mock,
-                                                                                    vectorizer_model_mock,
-                                                                                    data_padding_mock):
+    def test_givenABPEmbAttModel_whenAddressParsingAnAddress_thenParseAddressCorrectly(
+            self, embeddings_model_mock, vectorizer_model_mock, data_padding_mock):
         with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel") as model_mock:
             self.mock_predictions_vectors(model_mock, attention_mechanism=True)
             address_parser = AddressParser(model_type=self.a_bpemb_model_type,
@@ -1114,7 +1113,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     @patch("deepparse.parser.address_parser.bpemb_data_padding")
     def test_givenABpembModel_whenGetFormattedModelType_thenReturnBPEmb(self, embeddings_model_mock,
                                                                         vectorizer_model_mock, data_padding_mock):
-        with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel") as model_mock:
+        with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel"):
             address_parser = AddressParser(model_type=self.a_bpemb_model_type, device=self.a_cpu_device, verbose=True)
 
             actual = address_parser.get_formatted_model_name()

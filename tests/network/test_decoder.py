@@ -3,7 +3,6 @@ from unittest import TestCase
 from unittest.mock import patch, MagicMock, call
 
 import torch
-from torch import Tensor
 
 from deepparse.network import Decoder
 
@@ -17,7 +16,10 @@ class DecoderTest(TestCase):
         self.output_size = 9
 
     def test_whenInstantiateASeq2SeqModel_thenParametersAreOk(self):
-        decoder = Decoder(self.input_size_dim, self.hidden_size, self.num_layers, self.output_size,
+        decoder = Decoder(self.input_size_dim,
+                          self.hidden_size,
+                          self.num_layers,
+                          self.output_size,
                           attention_mechanism=False)
 
         self.assertEqual(self.input_size_dim, decoder.lstm.input_size)
@@ -26,7 +28,10 @@ class DecoderTest(TestCase):
         self.assertEqual(self.output_size, decoder.linear.out_features)
 
     def test_whenInstantiateASeq2SeqAttModel_thenParametersAreOk(self):
-        decoder = Decoder(self.input_size_dim, self.hidden_size, self.num_layers, self.output_size,
+        decoder = Decoder(self.input_size_dim,
+                          self.hidden_size,
+                          self.num_layers,
+                          self.output_size,
                           attention_mechanism=True)
 
         self.assertEqual(self.input_size_dim + self.hidden_size, decoder.lstm.input_size)
@@ -44,7 +49,10 @@ class DecoderTest(TestCase):
                 linear_output = MagicMock()
                 linear_mock().return_value = linear_output
                 with patch("deepparse.network.nn.LogSoftmax") as log_soft_max_mock:
-                    decoder = Decoder(self.input_size_dim, self.hidden_size, self.num_layers, self.output_size,
+                    decoder = Decoder(self.input_size_dim,
+                                      self.hidden_size,
+                                      self.num_layers,
+                                      self.output_size,
                                       attention_mechanism=False)
                     to_predict_mock = MagicMock()
                     hidden_mock = MagicMock()
@@ -70,8 +78,10 @@ class DecoderTest(TestCase):
                         matmul_mock().return_value = MagicMock()
                         with patch("deepparse.network.torch.cat") as cat_mock:
                             cat_mock().return_value = MagicMock()
-                            with patch("deepparse.network.nn.LogSoftmax") as log_soft_max_mock:
-                                decoder = Decoder(self.input_size_dim, self.hidden_size, self.num_layers,
+                            with patch("deepparse.network.nn.LogSoftmax"):
+                                decoder = Decoder(self.input_size_dim,
+                                                  self.hidden_size,
+                                                  self.num_layers,
                                                   self.output_size,
                                                   attention_mechanism=True)
                                 to_predict_mock = MagicMock()
@@ -91,8 +101,11 @@ class DecoderTest(TestCase):
             with patch("deepparse.network.nn.Linear") as linear_mock:
                 linear_output = MagicMock()
                 linear_mock().return_value = linear_output
-                with patch("deepparse.network.nn.LogSoftmax") as log_soft_max_mock:
-                    decoder = Decoder(self.input_size_dim, self.hidden_size, self.num_layers, self.output_size,
+                with patch("deepparse.network.nn.LogSoftmax"):
+                    decoder = Decoder(self.input_size_dim,
+                                      self.hidden_size,
+                                      self.num_layers,
+                                      self.output_size,
                                       attention_mechanism=False)
                     to_predict_mock = MagicMock()
                     hidden_mock = MagicMock()

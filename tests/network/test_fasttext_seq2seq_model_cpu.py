@@ -110,8 +110,8 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
         max_length = 4  # a sequence of 4 tokens
         lengths_tensor_mock.max().item.return_value = max_length
         encoder_outputs = MagicMock()
-        seq2seq_model._decoder_step(decoder_input_mock, decoder_hidden_mock, encoder_outputs,
-                                                     self.a_none_target, lengths_tensor_mock, self.a_batch_size)
+        seq2seq_model._decoder_step(decoder_input_mock, decoder_hidden_mock, encoder_outputs, self.a_none_target,
+                                    lengths_tensor_mock, self.a_batch_size)
 
         decoder_call = [call()(view_mock, decoder_hidden_mock, encoder_outputs, lengths_tensor_mock)] * max_length
 
@@ -146,8 +146,8 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
         max_length = 4  # a sequence of 4 tokens
         lengths_tensor_mock.max().item.return_value = max_length
         encoder_outputs = MagicMock()
-        seq2seq_model._decoder_step(decoder_input_mock, decoder_hidden_mock, encoder_outputs,
-                                                     self.a_none_target, lengths_tensor_mock, self.a_batch_size)
+        seq2seq_model._decoder_step(decoder_input_mock, decoder_hidden_mock, encoder_outputs, self.a_none_target,
+                                    lengths_tensor_mock, self.a_batch_size)
 
         decoder_call = [call()(view_mock, decoder_hidden_mock, encoder_outputs, lengths_tensor_mock)] * max_length
 
@@ -213,9 +213,7 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
                 with decoder_mock:
                     seq2seq_model = FastTextSeq2SeqModel(self.a_cpu_device, self.output_size, self.verbose)
 
-                    seq2seq_model.forward(to_predict=to_predict_mock,
-                                                                  lengths_tensor=lengths_tensor_mock,
-                                                                  target=None)
+                    seq2seq_model.forward(to_predict=to_predict_mock, lengths_tensor=lengths_tensor_mock, target=None)
 
                     encoder_mock.assert_has_calls([call()(to_predict_mock, lengths_tensor_mock)])
                     lengths_tensor_mock.assert_has_calls([call.max().item()])
@@ -256,8 +254,8 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
                     seq2seq_model = FastTextSeq2SeqModel(self.a_cpu_device, self.output_size, self.verbose)
 
                     seq2seq_model.forward(to_predict=to_predict_mock,
-                                                                  lengths_tensor=lengths_tensor_mock,
-                                                                  target=target_mock)
+                                          lengths_tensor=lengths_tensor_mock,
+                                          target=target_mock)
 
                     encoder_mock.assert_has_calls([call()(to_predict_mock, lengths_tensor_mock)])
                     lengths_tensor_mock.assert_has_calls([call.max().item()])
@@ -300,8 +298,8 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
                                                          attention_mechanism=True)
 
                     seq2seq_model.forward(to_predict=to_predict_mock,
-                                                                  lengths_tensor=lengths_tensor_mock,
-                                                                  target=target_mock)
+                                          lengths_tensor=lengths_tensor_mock,
+                                          target=target_mock)
 
                     encoder_mock.assert_has_calls([call()(to_predict_mock, lengths_tensor_mock)])
                     lengths_tensor_mock.assert_has_calls([call.max().item()])

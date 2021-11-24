@@ -37,7 +37,7 @@ We evaluate our models on two forms of address data
 - **clean data** which refers to addresses containing elements from four categories, namely a street name, a municipality, a province and a postal code,
 - **incomplete data** which is made up of addresses missing at least one category amongst the aforementioned ones.
 
-You can get our dataset `here <https://github.com/GRAAL-Research/deepparse-address-data)>`_.
+You can get our dataset `here <https://github.com/GRAAL-Research/deepparse-address-data>`_.
 
 Clean Data
 **********

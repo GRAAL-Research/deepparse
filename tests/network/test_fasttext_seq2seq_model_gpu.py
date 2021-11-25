@@ -216,8 +216,7 @@ class FasttextSeq2SeqGPUTest(Seq2SeqTestCase):
 
         encoder_mock.assert_has_calls([call()(to_predict_mock, lengths_tensor_mock)])
         lengths_tensor_mock.assert_has_calls([call.max().item()])
-        decoder_mock.assert_has_calls(
-            [call()(to_mock, decoder_hidden_mock, decoder_input_mock, lengths_tensor_mock)])
+        decoder_mock.assert_has_calls([call()(to_mock, decoder_hidden_mock, decoder_input_mock, lengths_tensor_mock)])
 
     @patch("deepparse.network.seq2seq.random.random")
     @patch("deepparse.network.seq2seq.Encoder")
@@ -249,14 +248,11 @@ class FasttextSeq2SeqGPUTest(Seq2SeqTestCase):
 
         seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device, self.output_size, self.verbose)
 
-        seq2seq_model.forward(to_predict=to_predict_mock,
-                              lengths_tensor=lengths_tensor_mock,
-                              target=target_mock)
+        seq2seq_model.forward(to_predict=to_predict_mock, lengths_tensor=lengths_tensor_mock, target=target_mock)
 
         encoder_mock.assert_has_calls([call()(to_predict_mock, lengths_tensor_mock)])
         lengths_tensor_mock.assert_has_calls([call.max().item()])
-        decoder_mock.assert_has_calls(
-            [call()(to_mock, decoder_hidden_mock, decoder_input_mock, lengths_tensor_mock)])
+        decoder_mock.assert_has_calls([call()(to_mock, decoder_hidden_mock, decoder_input_mock, lengths_tensor_mock)])
         target_mock.assert_has_calls([call.transpose(0, 1)])
 
     @patch("deepparse.network.seq2seq.random.random")
@@ -290,14 +286,11 @@ class FasttextSeq2SeqGPUTest(Seq2SeqTestCase):
                                              self.verbose,
                                              attention_mechanism=True)
 
-        seq2seq_model.forward(to_predict=to_predict_mock,
-                              lengths_tensor=lengths_tensor_mock,
-                              target=target_mock)
+        seq2seq_model.forward(to_predict=to_predict_mock, lengths_tensor=lengths_tensor_mock, target=target_mock)
 
         encoder_mock.assert_has_calls([call()(to_predict_mock, lengths_tensor_mock)])
         lengths_tensor_mock.assert_has_calls([call.max().item()])
-        decoder_mock.assert_has_calls(
-            [call()(to_mock, decoder_hidden_mock, decoder_input_mock, lengths_tensor_mock)])
+        decoder_mock.assert_has_calls([call()(to_mock, decoder_hidden_mock, decoder_input_mock, lengths_tensor_mock)])
         target_mock.assert_has_calls([call.transpose(0, 1)])
 
 

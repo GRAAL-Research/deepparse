@@ -232,21 +232,18 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
             # we mock the output of the embedding layer
             embedded_output_mock = MagicMock()
             embedding_network_patch().return_value = embedded_output_mock
-            with torch_mock:
-                with encoder_mock:
-                    with decoder_mock:
-                        seq2seq_model = BPEmbSeq2SeqModel(self.a_torch_device, self.output_size, self.verbose)
+            seq2seq_model = BPEmbSeq2SeqModel(self.a_torch_device, self.output_size, self.verbose)
 
-                        seq2seq_model.forward(to_predict=to_predict_mock,
-                                              decomposition_lengths=decomposition_lengths_mock,
-                                              lengths_tensor=lengths_tensor_mock,
-                                              target=None)
+            seq2seq_model.forward(to_predict=to_predict_mock,
+                                  decomposition_lengths=decomposition_lengths_mock,
+                                  lengths_tensor=lengths_tensor_mock,
+                                  target=None)
 
-                        embedding_network_patch.assert_has_calls([call()(to_predict_mock, decomposition_lengths_mock)])
-                        encoder_mock.assert_has_calls([call()(embedded_output_mock, lengths_tensor_mock)])
-                        lengths_tensor_mock.assert_has_calls([call.max().item()])
-                        decoder_mock.assert_has_calls(
-                            [call()(to_mock, decoder_hidden_mock, decoder_input_mock, lengths_tensor_mock)])
+            embedding_network_patch.assert_has_calls([call()(to_predict_mock, decomposition_lengths_mock)])
+            encoder_mock.assert_has_calls([call()(embedded_output_mock, lengths_tensor_mock)])
+            lengths_tensor_mock.assert_has_calls([call.max().item()])
+            decoder_mock.assert_has_calls(
+                [call()(to_mock, decoder_hidden_mock, decoder_input_mock, lengths_tensor_mock)])
 
     @patch("deepparse.network.seq2seq.random.random")
     @patch("deepparse.network.seq2seq.Encoder")
@@ -282,22 +279,19 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
             # we mock the output of the embedding layer
             embedded_output_mock = MagicMock()
             embedding_network_patch().return_value = embedded_output_mock
-            with torch_mock:
-                with encoder_mock:
-                    with decoder_mock:
-                        seq2seq_model = BPEmbSeq2SeqModel(self.a_torch_device, self.output_size, self.verbose)
+            seq2seq_model = BPEmbSeq2SeqModel(self.a_torch_device, self.output_size, self.verbose)
 
-                        seq2seq_model.forward(to_predict=to_predict_mock,
-                                              decomposition_lengths=decomposition_lengths_mock,
-                                              lengths_tensor=lengths_tensor_mock,
-                                              target=target_mock)
+            seq2seq_model.forward(to_predict=to_predict_mock,
+                                  decomposition_lengths=decomposition_lengths_mock,
+                                  lengths_tensor=lengths_tensor_mock,
+                                  target=target_mock)
 
-                        embedding_network_patch.assert_has_calls([call()(to_predict_mock, decomposition_lengths_mock)])
-                        encoder_mock.assert_has_calls([call()(embedded_output_mock, lengths_tensor_mock)])
-                        lengths_tensor_mock.assert_has_calls([call.max().item()])
-                        decoder_mock.assert_has_calls(
-                            [call()(to_mock, decoder_hidden_mock, decoder_input_mock, lengths_tensor_mock)])
-                        target_mock.assert_has_calls([call.transpose(0, 1)])
+            embedding_network_patch.assert_has_calls([call()(to_predict_mock, decomposition_lengths_mock)])
+            encoder_mock.assert_has_calls([call()(embedded_output_mock, lengths_tensor_mock)])
+            lengths_tensor_mock.assert_has_calls([call.max().item()])
+            decoder_mock.assert_has_calls(
+                [call()(to_mock, decoder_hidden_mock, decoder_input_mock, lengths_tensor_mock)])
+            target_mock.assert_has_calls([call.transpose(0, 1)])
 
     @patch("deepparse.network.seq2seq.random.random")
     @patch("deepparse.network.seq2seq.Encoder")
@@ -330,25 +324,22 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
             # we mock the output of the embedding layer
             embedded_output_mock = MagicMock()
             embedding_network_patch().return_value = embedded_output_mock
-            with torch_mock:
-                with encoder_mock:
-                    with decoder_mock:
-                        seq2seq_model = BPEmbSeq2SeqModel(self.a_torch_device,
-                                                          self.output_size,
-                                                          self.verbose,
-                                                          attention_mechanism=True)
+            seq2seq_model = BPEmbSeq2SeqModel(self.a_torch_device,
+                                              self.output_size,
+                                              self.verbose,
+                                              attention_mechanism=True)
 
-                        seq2seq_model.forward(to_predict=to_predict_mock,
-                                              decomposition_lengths=decomposition_lengths_mock,
-                                              lengths_tensor=lengths_tensor_mock,
-                                              target=target_mock)
+            seq2seq_model.forward(to_predict=to_predict_mock,
+                                  decomposition_lengths=decomposition_lengths_mock,
+                                  lengths_tensor=lengths_tensor_mock,
+                                  target=target_mock)
 
-                        embedding_network_patch.assert_has_calls([call()(to_predict_mock, decomposition_lengths_mock)])
-                        encoder_mock.assert_has_calls([call()(embedded_output_mock, lengths_tensor_mock)])
-                        lengths_tensor_mock.assert_has_calls([call.max().item()])
-                        decoder_mock.assert_has_calls(
-                            [call()(to_mock, decoder_hidden_mock, decoder_input_mock, lengths_tensor_mock)])
-                        target_mock.assert_has_calls([call.transpose(0, 1)])
+            embedding_network_patch.assert_has_calls([call()(to_predict_mock, decomposition_lengths_mock)])
+            encoder_mock.assert_has_calls([call()(embedded_output_mock, lengths_tensor_mock)])
+            lengths_tensor_mock.assert_has_calls([call.max().item()])
+            decoder_mock.assert_has_calls(
+                [call()(to_mock, decoder_hidden_mock, decoder_input_mock, lengths_tensor_mock)])
+            target_mock.assert_has_calls([call.transpose(0, 1)])
 
 
 if __name__ == "__main__":

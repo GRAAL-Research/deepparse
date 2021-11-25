@@ -69,9 +69,9 @@ class AddressParser:
 
             The default value is "best" for the most accurate model. Ignored if ``path_to_retrained_model`` is not
             ``None``.
-        attention_mechanism (bool): Whether or not to use the model with attention mechanism. The model will use an
-            attention mechanism and it take The default value is
-            False.
+        attention_mechanism (bool): Whether or not to use the model with an attention mechanism. The model will use an
+            attention mechanism takes an extra 100 MB on GPU usage (see the doc for more statistics).
+            The default value is False.
         device (Union[int, str, torch.torch.device]): The device to use can be either:
 
             - a ``GPU`` index in int format (e.g. ``0``),
@@ -121,6 +121,14 @@ class AddressParser:
             parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
 
             address_parser = AddressParser(model_type="fasttext", device="cpu") # fasttext model on cpu
+            parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
+
+        Using a model with attention mechanism
+
+        .. code-block:: python
+
+            # fasttext model with attention
+            address_parser = AddressParser(model_type="fasttext", attention_mechanism=True)
             parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
 
         Using a retrain model

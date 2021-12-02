@@ -17,8 +17,17 @@ class AddressParserPredictBase(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.fasttext_address_parser = AddressParser(model_type="fasttext", device="cpu", verbose=False)
-        cls.bpemb_address_parser = AddressParser(model_type="bpemb", device="cpu", verbose=False)
+        device = "cpu"
+        cls.fasttext_address_parser = AddressParser(model_type="fasttext", device=device, verbose=False)
+        cls.bpemb_address_parser = AddressParser(model_type="bpemb", device=device, verbose=False)
+        cls.fasttext_att_address_parser = AddressParser(model_type="fasttext",
+                                                        device=device,
+                                                        verbose=False,
+                                                        attention_mechanism=True)
+        cls.bpemb_att_address_parser = AddressParser(model_type="bpemb",
+                                                     device=device,
+                                                     verbose=False,
+                                                     attention_mechanism=True)
         cls.an_address_to_parse = "350 rue des lilas o"
 
 
@@ -26,8 +35,17 @@ class AddressParserPredictBaseGPU(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.fasttext_address_parser = AddressParser(model_type="fasttext", device=torch.device("cuda:0"), verbose=False)
-        cls.bpemb_address_parser = AddressParser(model_type="bpemb", device=torch.device("cuda:0"), verbose=False)
+        device = torch.device("cuda:0")
+        cls.fasttext_address_parser = AddressParser(model_type="fasttext", device=device, verbose=False)
+        cls.bpemb_address_parser = AddressParser(model_type="bpemb", device=device, verbose=False)
+        cls.fasttext_att_address_parser = AddressParser(model_type="fasttext",
+                                                        device=device,
+                                                        verbose=False,
+                                                        attention_mechanism=True)
+        cls.bpemb_att_address_parser = AddressParser(model_type="bpemb",
+                                                     device=device,
+                                                     verbose=False,
+                                                     attention_mechanism=True)
         cls.an_address_to_parse = "350 rue des lilas o"
 
 

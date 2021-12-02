@@ -92,7 +92,8 @@ class Decoder(nn.Module):
                                          unweighted_alignments.transpose(1, 2))
 
         max_length = lengths.max().item()
-        mask = torch.arange(max_length)[None, :] < lengths[:, None]
+        mask = torch.arange(max_length)[None, :] < lengths[:, None].to(
+            "cpu")  # We switch the lengths to cpu for the comparison
         mask = mask.unsqueeze(1)
         alignments_scores[~mask] = float('-inf')
 

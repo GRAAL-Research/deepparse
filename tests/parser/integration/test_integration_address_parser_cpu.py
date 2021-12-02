@@ -27,6 +27,13 @@ class AddressParserPredictCPUTest(AddressParserPredictBase):
         parse_address = self.bpemb_address_parser([self.an_address_to_parse, self.an_address_to_parse])
         self.assertIsInstance(parse_address, List)
 
+    def test_givenAAttentionModel_whenParse_thenProperlyParseAddress(self):
+        parse_address = self.fasttext_att_address_parser(self.an_address_to_parse)
+        self.assertIsInstance(parse_address, FormattedParsedAddress)
+
+        parse_address = self.bpemb_att_address_parser(self.an_address_to_parse)
+        self.assertIsInstance(parse_address, FormattedParsedAddress)
+
 
 # test if num_workers > 0 is correct for the data loader
 @skipIf(not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
@@ -62,3 +69,10 @@ class AddressParserPredictCPUMultiProcessTest(AddressParserPredictBase):
 
         parse_address = self.bpemb_address_parser([self.an_address_to_parse, self.an_address_to_parse], num_workers=2)
         self.assertIsInstance(parse_address, List)
+
+    def test_givenAAttentionModel_whenParseNumWorkers2_thenProperlyParseAddress(self):
+        parse_address = self.fasttext_att_address_parser(self.an_address_to_parse, num_workers=2)
+        self.assertIsInstance(parse_address, FormattedParsedAddress)
+
+        parse_address = self.bpemb_att_address_parser(self.an_address_to_parse, num_workers=2)
+        self.assertIsInstance(parse_address, FormattedParsedAddress)

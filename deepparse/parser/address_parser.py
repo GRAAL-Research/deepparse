@@ -69,6 +69,9 @@ class AddressParser:
 
             The default value is "best" for the most accurate model. Ignored if ``path_to_retrained_model`` is not
             ``None``.
+        attention_mechanism (bool): Whether or not to use the model with an attention mechanism. The model will use an
+            attention mechanism takes an extra 100 MB on GPU usage (see the doc for more statistics).
+            The default value is False.
         device (Union[int, str, torch.torch.device]): The device to use can be either:
 
             - a ``GPU`` index in int format (e.g. ``0``),
@@ -120,6 +123,14 @@ class AddressParser:
             address_parser = AddressParser(model_type="fasttext", device="cpu") # fasttext model on cpu
             parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
 
+        Using a model with attention mechanism
+
+        .. code-block:: python
+
+            # fasttext model with attention
+            address_parser = AddressParser(model_type="fasttext", attention_mechanism=True)
+            parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
+
         Using a retrain model
 
         .. code-block:: python
@@ -140,6 +151,7 @@ class AddressParser:
 
     def __init__(self,
                  model_type: str = "best",
+                 attention_mechanism: bool = False,
                  device: Union[int, str, torch.device] = 0,
                  rounding: int = 4,
                  verbose: bool = True,
@@ -173,15 +185,16 @@ class AddressParser:
         formatted_parsed_address.FIELDS = fields
         self.tags_converter = TagsConverter(tags_to_idx)
 
-        self._set_model_name(model_type)
+        self._set_model_name(model_type, attention_mechanism)
         self._model_factory(verbose=self.verbose,
                             path_to_retrained_model=path_to_retrained_model,
                             prediction_layer_len=self.tags_converter.dim,
+                            attention_mechanism=attention_mechanism,
                             seq2seq_kwargs=seq2seq_kwargs)
         self.model.eval()
 
     def __str__(self) -> str:
-        return f"{self.model_type.capitalize()}AddressParser"
+        return f"{self._model_type_formatted}AddressParser"
 
     __repr__ = __str__  # to call __str__ when list of address
 
@@ -281,6 +294,7 @@ class AddressParser:
         prediction tags, and if new ``seq2seq_params`` were used, the new seq2seq parameters.
 
         Args:
+            dataset_container (~deepparse.dataset_container.DatasetContainer): The
             dataset_container (~deepparse.dataset_container.DatasetContainer): The
                 dataset container of the data to use.
             train_ratio (float): The ratio to use of the dataset for the training. The rest of the data is used for the
@@ -632,7 +646,9 @@ class AddressParser:
                        verbose: bool,
                        path_to_retrained_model: Union[str, None] = None,
                        prediction_layer_len: int = 9,
+                       attention_mechanism=False,
                        seq2seq_kwargs: Union[dict, None] = None) -> None:
+        # pylint: disable=too-many-arguments
         """
         Model factory to create the vectorizer, the data converter and the pre-trained model
         """
@@ -640,7 +656,7 @@ class AddressParser:
         seq2seq_kwargs = seq2seq_kwargs if seq2seq_kwargs is not None else {}
 
         if "fasttext" in self.model_type:
-            if self.model_type == "fasttext-light":
+            if "fasttext-light" in self.model_type:
                 file_name = download_fasttext_magnitude_embeddings(saving_dir=CACHE_PATH, verbose=verbose)
 
                 embeddings_model = MagnitudeEmbeddingsModel(file_name, verbose=verbose)
@@ -657,9 +673,10 @@ class AddressParser:
                                               output_size=prediction_layer_len,
                                               verbose=verbose,
                                               path_to_retrained_model=path_to_retrained_model,
+                                              attention_mechanism=attention_mechanism,
                                               **seq2seq_kwargs)
 
-        elif self.model_type == "bpemb":
+        elif "bpemb" in self.model_type:
             self.vectorizer = BPEmbVectorizer(embeddings_model=BPEmbEmbeddingsModel(verbose=verbose))
 
             self.data_converter = bpemb_data_padding
@@ -668,6 +685,7 @@ class AddressParser:
                                            output_size=prediction_layer_len,
                                            verbose=verbose,
                                            path_to_retrained_model=path_to_retrained_model,
+                                           attention_mechanism=attention_mechanism,
                                            **seq2seq_kwargs)
         else:
             raise NotImplementedError(f"There is no {self.model_type} network implemented. Value should be: "
@@ -680,7 +698,7 @@ class AddressParser:
         """
         return self.data_converter(self.vectorizer(data))
 
-    def _set_model_name(self, model_type: str):
+    def _set_model_name(self, model_type: str, attention_mechanism: str):
         """
         Handle the model type name matching with proper seq2seq model type name.
         """
@@ -694,6 +712,10 @@ class AddressParser:
         elif model_type in ("best", "bpemb"):
             model_type = "bpemb"  # We change name to bpemb since best = bpemb
             formatted_name = "BPEmb"
+
+        if attention_mechanism:
+            model_type += "Attention"
+            formatted_name += "Attention"
         self.model_type = model_type
         self._model_type_formatted = formatted_name
 

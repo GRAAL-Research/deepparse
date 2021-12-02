@@ -66,6 +66,7 @@ class Seq2SeqIntegrationTestCase(TestCase):
             self.decoder_hidden_tensor = pickle.load(file)
         self.decoder_hidden_tensor = (self.decoder_hidden_tensor[0].to(device),
                                       self.decoder_hidden_tensor[1].to(device))
+        self.encoder_hidden = torch.rand((self.a_batch_size, self.a_target_vector.shape[1], self.encoder_hidden_size))
 
     def decoder_input_setUp(self):
         self.max_length = self.a_lengths_tensor[0].item()

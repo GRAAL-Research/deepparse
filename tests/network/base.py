@@ -34,13 +34,15 @@ class Seq2SeqTestCase(TestCase):
         lengths_tensor_mock = MagicMock()
         return to_predict_mock, lengths_tensor_mock
 
-    def setUp_decoder_mocks(self, decoder_mock):
+    def setUp_decoder_mocks(self, decoder_mock, attention_mechanism):
         decoder_input_mock = MagicMock()
         decoder_hidden_mock = MagicMock()
 
+        attention_weights = MagicMock() if attention_mechanism else None
+
         decoder_output = MagicMock()
         decoder_output.topk.return_value = MagicMock(), decoder_input_mock
-        decoder_mock().return_value = decoder_output, decoder_hidden_mock
+        decoder_mock.__call__().return_value = decoder_output, decoder_hidden_mock, attention_weights
 
         return decoder_input_mock, decoder_hidden_mock
 

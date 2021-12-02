@@ -4,49 +4,33 @@
 
 import os
 from tempfile import TemporaryDirectory
+from typing import List
 from unittest import TestCase
 
 import torch
 
 from deepparse import download_from_url
 from deepparse.dataset_container import PickleDatasetContainer, DatasetContainer
-from deepparse.parser import AddressParser
+from deepparse.parser import AddressParser, FormattedParsedAddress
 
 
 class AddressParserPredictBase(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        device = "cpu"
-        cls.fasttext_address_parser = AddressParser(model_type="fasttext", device=device, verbose=False)
-        cls.bpemb_address_parser = AddressParser(model_type="bpemb", device=device, verbose=False)
-        cls.fasttext_att_address_parser = AddressParser(model_type="fasttext",
-                                                        device=device,
-                                                        verbose=False,
-                                                        attention_mechanism=True)
-        cls.bpemb_att_address_parser = AddressParser(model_type="bpemb",
-                                                     device=device,
-                                                     verbose=False,
-                                                     attention_mechanism=True)
         cls.an_address_to_parse = "350 rue des lilas o"
 
+    def setup_model_with_config(self, config):
+        self.a_model = AddressParser(**config)
 
-class AddressParserPredictBaseGPU(TestCase):
+    def assert_properly_parse(self, parsed_address, multiple_address=False):
+        if multiple_address:
+            self.assertIsInstance(parsed_address, List)
+            parsed_address = parsed_address[0]
+        self.assertIsInstance(parsed_address, FormattedParsedAddress)
 
-    @classmethod
-    def setUpClass(cls):
-        device = torch.device("cuda:0")
-        cls.fasttext_address_parser = AddressParser(model_type="fasttext", device=device, verbose=False)
-        cls.bpemb_address_parser = AddressParser(model_type="bpemb", device=device, verbose=False)
-        cls.fasttext_att_address_parser = AddressParser(model_type="fasttext",
-                                                        device=device,
-                                                        verbose=False,
-                                                        attention_mechanism=True)
-        cls.bpemb_att_address_parser = AddressParser(model_type="bpemb",
-                                                     device=device,
-                                                     verbose=False,
-                                                     attention_mechanism=True)
-        cls.an_address_to_parse = "350 rue des lilas o"
+    def tearDown(self) -> None:
+        del self.a_model
 
 
 class AddressParserPredictNewParamsBase(TestCase):

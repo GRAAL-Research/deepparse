@@ -27,10 +27,10 @@
 ## 0.2
 
 - Added Fasttext light model using pymagnitude-light
-- Added finetuning API to allow finetuning of our models (retrain)
+- Added fine-tuning API to allow fine-tuning of our models (retrain)
 - Added a method to test models (test)
-- Added metric, loss and dataset container to facilitate finetuning training
-- Added an example of finetuning
+- Added metric, loss and dataset container to facilitate fine-tuning training
+- Added an example of fine-tuning
 - Added way to load retrain model when instantiation of AddressParser
 
 ## 0.2.1
@@ -112,7 +112,7 @@
 
 - Added Python 3.9
 - Added feature to allow a more flexible way to retrain
-- Added a feature to allow retrain of a new seq2seq architecture
+- Added a feature to allow retraining of a new seq2seq architecture
 - Fixed prediction tags bug when parsing with new tags after retraining
 
 ## 0.5.1
@@ -122,6 +122,7 @@
 - Retrain and test now have more defaults parameters
 - Various small code and tests improvements
 
-## dev
+## 0.5.2
 
 - Added Attention mechanism models
+- Fixed EOS bug

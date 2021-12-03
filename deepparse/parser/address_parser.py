@@ -38,8 +38,8 @@ _pre_trained_tags_to_idx = {
     "EOS": 8  # the 9th is the EOS with idx 8
 }
 
-# this threshold represent at which point the prediction of the address takes enough time to
-# justify a predict verbosity.
+# This threshold represents at which point the prediction of the address takes enough time to
+# justify predictions verbosity.
 PREDICTION_TIME_PERFORMANCE_THRESHOLD = 64
 
 
@@ -67,11 +67,11 @@ class AddressParser:
             - bpemb (need ~2 GO of RAM to be used),
             - fastest (quicker to process one address) (equivalent to fasttext),
             - lightest (the one using the less RAM and GPU usage) (equivalent to fasttext-light),
-            - best (best accuracy performance) (equivalent to bpemb).
+            - best (the best accuracy performance) (equivalent to bpemb).
 
             The default value is "best" for the most accurate model. Ignored if ``path_to_retrained_model`` is not
             ``None``.
-        attention_mechanism (bool): Whether or not to use the model with an attention mechanism. The model will use an
+        attention_mechanism (bool): Whether to use the model with an attention mechanism. The model will use an
             attention mechanism takes an extra 100 MB on GPU usage (see the doc for more statistics).
             The default value is False.
         device (Union[int, str, torch.torch.device]): The device to use can be either:
@@ -81,7 +81,7 @@ class AddressParser:
             - a :class:`~torch.torch.device` object,
             - ``'cpu'`` for a  ``CPU`` use.
 
-            The default value is GPU with the index ``0`` if it exist, otherwise the value is ``CPU``.
+            The default value is GPU with the index ``0`` if it exists, otherwise the value is ``CPU``.
         rounding (int): The rounding to use when asking the probability of the tags. The default value is 4 digits.
         verbose (bool): Turn on/off the verbosity of the model weights download and loading. The default value is True.
         path_to_retrained_model (Union[str, None]): The path to the retrained model to use for prediction. We will
@@ -164,7 +164,7 @@ class AddressParser:
         self.rounding = rounding
         self.verbose = verbose
 
-        # Default pre trained tag are loaded
+        # Default pre-trained tag are loaded
         tags_to_idx = _pre_trained_tags_to_idx
         # Default field of the formatted address
         fields = [field for field in tags_to_idx if field != "EOS"]
@@ -209,7 +209,7 @@ class AddressParser:
         Callable method to parse the components of an address or a list of address.
 
         Args:
-            addresses_to_parse (Union[list[str], str]): The addresses to be parse, can be either a single address
+            addresses_to_parse (Union[list[str], str]): The addresses to be parsed, can be either a single address
                 (when using str) or a list of address. When using a list of addresses, the addresses are processed in
                 batch, allowing a faster process. For example, using fastText model, a single address takes around
                 0.003 seconds to be parsed using a batch of 1 (1 element at the time is processed).
@@ -307,9 +307,9 @@ class AddressParser:
             learning_rate (float): The learning rate (LR) to use for training (default 0.01).
             callbacks (Union[list, None]): List of callbacks to use during training.
                 See Poutyne `callback <https://poutyne.org/callbacks.html#callback-class>`_ for more information. By
-                default we set no callback.
+                default, we set no callback.
             seed (int): Seed to use (by default 42).
-            logging_path (str): The logging path for the checkpoints. By default the path is ``./checkpoints``.
+            logging_path (str): The logging path for the checkpoints. By default, the path is ``./checkpoints``.
             prediction_tags (Union[dict, None]): A dictionary where the keys are the address components
                 (e.g. street name) and the values are the components indices (from 0 to N + 1) to use during retraining
                 of a model. The ``+ 1`` corresponds to the End Of Sequence (EOS) token that needs to be included in the
@@ -331,7 +331,7 @@ class AddressParser:
             <https://poutyne.org/experiment.html#poutyne.Experiment.train>`_ for details).
 
         Note:
-            We use SGD optimizer, NLL loss and accuracy as a metric, the data is shuffled and we use teacher forcing
+            We use SGD optimizer, NLL loss and accuracy as a metric, the data is shuffled, and we use teacher forcing
             during training (with a prob of 0.5) as in the `article <https://arxiv.org/abs/2006.16152>`_.
 
         Note:
@@ -494,11 +494,11 @@ class AddressParser:
             num_workers (int): Number of workers to use for the data loader (default is 1 worker).
             callbacks (Union[list, None]): List of callbacks to use during training.
                 See Poutyne `callback <https://poutyne.org/callbacks.html#callback-class>`_ for more information.
-                By default we set no callback.
+                By default, we set no callback.
             seed (int): Seed to use (by default 42).
             callbacks (Union[list, None]): List of callbacks to use during training.
                 See Poutyne `callback <https://poutyne.org/callbacks.html#callback-class>`_ for more information.
-                By default we set no callback.
+                By default, we set no callback.
         Return:
             A dictionary with the stats (see `Experiment class
             <https://poutyne.org/experiment.html#poutyne.Experiment.train>`_ for details).
@@ -517,7 +517,7 @@ class AddressParser:
 
                 address_parser.test(test_container) # We test the model on the data
 
-            You can also test your fine tuned model
+            You can also test your fine-tuned model
 
             .. code-block:: python
 
@@ -588,7 +588,7 @@ class AddressParser:
 
     def _process_device(self, device: Union[int, str, torch.device]) -> None:
         """
-        Function to process the device depending of the argument type.
+        Function to process the device depending on the argument type.
 
         Set the device as a torch device object.
         """

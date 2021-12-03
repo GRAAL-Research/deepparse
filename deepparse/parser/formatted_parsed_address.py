@@ -1,7 +1,8 @@
 from typing import Dict, List, Tuple, Union
 
 FIELDS = [
-    "StreetNumber", "Unit", "StreetName", "Orientation", "Municipality", "Province", "PostalCode", "GeneralDelivery"
+    "StreetNumber", "Unit", "StreetName", "Orientation", "Municipality", "Province", "PostalCode", "GeneralDelivery",
+    "EOS"
 ]
 
 

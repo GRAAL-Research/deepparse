@@ -121,3 +121,7 @@
 - Fixed some docs errors
 - Retrain and test now have more defaults parameters
 - Various small code and tests improvements
+
+## dev
+
+- Added Attention mechanism models

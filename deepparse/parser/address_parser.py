@@ -112,7 +112,7 @@ class AddressParser:
         You may observe a 100% CPU load the first time you call the fasttext-light model. We
         `hypotheses <https://github.com/GRAAL-Research/deepparse/pull/54#issuecomment-743463855>`_ that this is due
         to the SQLite database behind `pymagnitude`. This approach create a cache to speed up processing and since the
-        memory mapping is save between the runs, it's more intensive the first time you call it and subsequent
+        memory mapping is saved between the runs, it's more intensive the first time you call it and subsequent
         time this load doesn't appear.
 
     Examples:
@@ -133,7 +133,7 @@ class AddressParser:
             address_parser = AddressParser(model_type="fasttext", attention_mechanism=True)
             parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
 
-        Using a retrain model
+        Using a retrained model
 
         .. code-block:: python
 
@@ -141,7 +141,7 @@ class AddressParser:
                                            path_to_retrained_model='/path_to_a_retrain_fasttext_model')
             parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
 
-        Using a retrain model trained on different tags
+        Using a retrained model trained on different tags
 
         .. code-block:: python
 

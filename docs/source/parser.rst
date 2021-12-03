@@ -43,6 +43,11 @@ are a little bit lower on trained country (around ~2%) but are similar on zero-s
             - ~8
             - ~0.00236
             - ~0.0004
+        *   - fastTextAttention
+            - ~1.1
+            - ~8
+            - ~0.0052
+            - ~0.0010
         *   - fastText-light
             - ~1
             - ~1
@@ -53,6 +58,11 @@ are a little bit lower on trained country (around ~2%) but are similar on zero-s
             - ~1
             - ~0.0053
             - ~0.0019
+         *   - BPEmb
+            - ~1.1
+            - ~1
+            - ~
+            - ~
         *   - Libpostal
             - N/A
             - N/A
@@ -73,6 +83,10 @@ are a little bit lower on trained country (around ~2%) but are similar on zero-s
             - ~8
             - ~0.0168
             - ~0.0026
+        *   - fastTextAttention
+            - ~8
+            - ~0.0212
+            - ~0.0054
         *   - fastText-light
             - ~1
             - ~0.0170
@@ -81,6 +95,10 @@ are a little bit lower on trained country (around ~2%) but are similar on zero-s
             - ~1
             - ~0.0219
             - ~0.0059
+        *   - BPEmbAttention
+            - ~1
+            - ~
+            - ~
         *   - Libpostal
             - N/A
             - <1

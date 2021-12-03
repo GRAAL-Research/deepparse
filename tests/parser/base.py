@@ -2,10 +2,12 @@
 # pylint: disable=not-callable, too-many-public-methods, no-name-in-module
 
 import os
+from unittest import TestCase
 
 import torch
 from torch import tensor
 
+from deepparse.parser import formatted_parsed_address
 from tests.base_capture_output import CaptureOutputTestCase
 
 
@@ -103,3 +105,18 @@ class AddressParserPredictTestCase(CaptureOutputTestCase):
             "model_type": model_type
         }
         torch.save(data_dict, self.a_model_path)
+
+
+class FormattedParsedAddressBase(TestCase):
+
+    def reset_fields(self):
+        # We reset the FIELDS of the address to default values since we change it in some tests
+        default_value = [
+            "StreetNumber", "Unit", "StreetName", "Orientation", "Municipality", "Province", "PostalCode",
+            "GeneralDelivery", "EOS"
+        ]
+        self.set_fields(default_value)
+
+    @staticmethod
+    def set_fields(fields_value):
+        formatted_parsed_address.FIELDS = fields_value

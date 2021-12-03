@@ -3,12 +3,12 @@
 import io
 import sys
 import unittest
-from unittest import TestCase
 
-from deepparse.parser import FormattedParsedAddress, formatted_parsed_address
+from deepparse.parser import FormattedParsedAddress
+from tests.parser.base import FormattedParsedAddressBase
 
 
-class UserFormattedParsedAddressTest(TestCase):
+class UserFormattedParsedAddressTest(FormattedParsedAddressBase):
 
     @classmethod
     def setUpClass(cls):
@@ -27,7 +27,8 @@ class UserFormattedParsedAddressTest(TestCase):
 
     def setUp(self):
         # We set the FIELDS of the address base on the prediction tags
-        formatted_parsed_address.FIELDS = ["ATag", "AnotherTag", "ALastTag"]
+        new_fields = ["ATag", "AnotherTag", "ALastTag"]
+        self.set_fields(new_fields)
 
         self.parsed_address = FormattedParsedAddress(self.a_address)
 
@@ -97,11 +98,8 @@ class UserFormattedParsedAddressTest(TestCase):
                                                      ("postal_code", "PostalCode"), ("delivery", "GeneralDelivery")]
         another_address = {a_different_address_str: an_address_with_different_components_tags}
 
-        # We reset the FIELDS of the address to default values since we change it in setup
-        formatted_parsed_address.FIELDS = [
-            "StreetNumber", "Unit", "StreetName", "Orientation", "Municipality", "Province", "PostalCode",
-            "GeneralDelivery"
-        ]
+        self.reset_fields()
+
         different_parsed_address = FormattedParsedAddress(another_address)
 
         self.assertFalse(self.parsed_address == different_parsed_address)

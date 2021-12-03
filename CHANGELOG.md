@@ -122,7 +122,7 @@
 - Retrain and test now have more defaults parameters
 - Various small code and tests improvements
 
-## 0.5.2
+## 0.6
 
 - Added Attention mechanism models
 - Fixed EOS bug

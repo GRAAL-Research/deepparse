@@ -14,7 +14,7 @@ from deepparse.dataset_container import PickleDatasetContainer, DatasetContainer
 from deepparse.parser import AddressParser, FormattedParsedAddress
 
 
-class AddressParserPredictBase(TestCase):
+class AddressParserBase(TestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -22,6 +22,9 @@ class AddressParserPredictBase(TestCase):
 
     def setup_model_with_config(self, config):
         self.a_model = AddressParser(**config)
+
+
+class AddressParserPredictBase(AddressParserBase):
 
     def assert_properly_parse(self, parsed_address, multiple_address=False):
         if multiple_address:

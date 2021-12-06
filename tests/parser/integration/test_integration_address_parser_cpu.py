@@ -4,7 +4,40 @@
 import os
 from unittest import skipIf
 
-from tests.parser.integration.base_predict import AddressParserPredictBase
+from deepparse.parser import formatted_parsed_address
+from tests.parser.integration.base_predict import AddressParserPredictBase, AddressParserBase
+
+
+@skipIf(not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
+        "download of model too long for test in runner")
+class AddressParserTest(AddressParserBase):
+
+    def setUp(self) -> None:
+        a_config = {"model_type": "fasttext", "device": "cpu", "verbose": False}
+        self.setup_model_with_config(a_config)
+
+        self.expected_fields = [
+            "StreetNumber", "Unit", "StreetName", "Orientation", "Municipality", "Province", "PostalCode",
+            "GeneralDelivery", "EOS"
+        ]
+
+    def test_proper_tags_set_up(self):
+        actual_tags = list(self.a_model.tags_converter.tags_to_idx.keys())
+
+        expected_fields = self.expected_fields
+
+        self.assert_equal_not_ordered(actual_tags, expected_fields)
+
+    def test_proper_fields_set_up(self):
+        actual_fields = formatted_parsed_address.FIELDS
+
+        expected_fields = self.expected_fields
+
+        self.assert_equal_not_ordered(actual_fields, expected_fields)
+
+    def assert_equal_not_ordered(self, actual, expected_elements):
+        for expected in expected_elements:
+            self.assertIn(expected, actual)
 
 
 @skipIf(not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),

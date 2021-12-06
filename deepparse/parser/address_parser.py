@@ -166,8 +166,8 @@ class AddressParser:
 
         # Default pre-trained tag are loaded
         tags_to_idx = _pre_trained_tags_to_idx
-        # Default field of the formatted address
-        fields = [field for field in tags_to_idx if field != "EOS"]
+        # Default FIELDS of the formatted address
+        fields = list(tags_to_idx)
         # Default new config seq2seq model params
         seq2seq_kwargs = {}  # Empty for default settings
 
@@ -179,7 +179,7 @@ class AddressParser:
                 # We load the new tags_to_idx
                 tags_to_idx = checkpoint_weights.get("prediction_tags")
                 # We change the FIELDS for the FormattedParsedAddress
-                fields = [field for field in tags_to_idx if field != "EOS"]
+                fields = list(tags_to_idx)
 
             # We "infer" the model type
             model_type = checkpoint_weights.get("model_type")

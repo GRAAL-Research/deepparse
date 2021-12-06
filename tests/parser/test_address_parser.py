@@ -9,7 +9,7 @@ from unittest.mock import patch, Mock
 import torch
 from torch import device
 
-from deepparse.parser import FormattedParsedAddress
+from deepparse.parser import FormattedParsedAddress, formatted_parsed_address
 from deepparse.parser.address_parser import AddressParser
 from tests.parser.base import AddressParserPredictTestCase
 
@@ -43,12 +43,34 @@ class AddressParserTest(AddressParserPredictTestCase):
 
         cls.new_seq2seq_params = {"encoder_hidden_size": 512, "decoder_hidden_size": 512}
 
+        cls.expected_fields = [
+            "StreetNumber", "Unit", "StreetName", "Orientation", "Municipality", "Province", "PostalCode",
+            "GeneralDelivery", "EOS"
+        ]
+
     def setUp(self):
         super().setUp()
         self.BPEmb_mock = Mock()
         self.fasttext_mock = Mock()
 
         self.embeddings_model_mock = Mock()
+
+    def assert_equal_not_ordered(self, actual, expected_elements):
+        for expected in expected_elements:
+            self.assertIn(expected, actual)
+
+    @patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel")
+    @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
+    def test_givenAModel_whenInit_thenProperFieldsSet(self, embeddings_model_mock, model_mock):
+        address_parser = AddressParser(model_type=self.a_bpemb_model_type, device=self.a_cpu_device, verbose=True)
+        expected_fields = self.expected_fields
+
+        actual_tags = list(address_parser.tags_converter.tags_to_idx.keys())
+        self.assert_equal_not_ordered(actual_tags, expected_fields)
+
+        actual_fields = formatted_parsed_address.FIELDS
+
+        self.assert_equal_not_ordered(actual_fields, expected_fields)
 
     @patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel")
     @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")

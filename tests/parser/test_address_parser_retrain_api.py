@@ -68,7 +68,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
             model_mock(),
             device=device,
             optimizer=optimizer_mock(),
-            # For a reason I don't understand if I use self.nll_loss and set it in the
+            # For a reason I don"t understand if I use self.nll_loss and set it in the
             # class setup, it return a bound method for the nll_loss but it work for
             # the accuracy. So fuck it, here a fix.
             loss_function=nll_loss,

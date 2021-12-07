@@ -43,5 +43,5 @@ class PickleDatasetContainer(DatasetContainer):
 
     def __init__(self, data_path: str) -> None:
         super().__init__()
-        with open(data_path, 'rb') as f:
+        with open(data_path, "rb") as f:
             self.data = load(f)

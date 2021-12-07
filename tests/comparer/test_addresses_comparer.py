@@ -20,15 +20,15 @@ class TestAdressesComparer(TestCase):
                                            ("Ouest", "Orientation"), ("Québec", "Municipality"), ("Québec", "Province"),
                                            ("G1L 1B6", "PostalCode")]
 
-        cls.tagged_addresses_components_with_prob = [('305', ('StreetNumber', 1.0)), ('rue', ('StreetName', 0.9989)),
-                                                     ('des', ('StreetName', 0.9998)), ('Lilas', ('StreetName', 0.9343)),
-                                                     ('Ouest', ('Municipality', 0.781)),
-                                                     ('Québec', ('Municipality', 0.9467)),
-                                                     ('Québec', ('Province', 1.0)), ('G1L', ('PostalCode', 0.9997)),
-                                                     ('1B6', ('PostalCode', 1.0))]
-        cls.tagged_addresses_components = [('305', 'StreetNumber'), ('rue des Lilas', 'StreetName'), (None, 'Unit'),
-                                           ('Ouest Québec', 'Municipality'), ('Québec', 'Province'),
-                                           ('G1L 1B6', 'PostalCode'), (None, 'Orientation'), (None, 'GeneralDelivery')]
+        cls.tagged_addresses_components_with_prob = [("305", ("StreetNumber", 1.0)), ("rue", ("StreetName", 0.9989)),
+                                                     ("des", ("StreetName", 0.9998)), ("Lilas", ("StreetName", 0.9343)),
+                                                     ("Ouest", ("Municipality", 0.781)),
+                                                     ("Québec", ("Municipality", 0.9467)),
+                                                     ("Québec", ("Province", 1.0)), ("G1L", ("PostalCode", 0.9997)),
+                                                     ("1B6", ("PostalCode", 1.0))]
+        cls.tagged_addresses_components = [("305", "StreetNumber"), ("rue des Lilas", "StreetName"), (None, "Unit"),
+                                           ("Ouest Québec", "Municipality"), ("Québec", "Province"),
+                                           ("G1L 1B6", "PostalCode"), (None, "Orientation"), (None, "GeneralDelivery")]
 
     def setup_address_parser_mock(self, comparison_list, formatted_model_type_value="BPEmb"):
         address_parser_mock = MagicMock()

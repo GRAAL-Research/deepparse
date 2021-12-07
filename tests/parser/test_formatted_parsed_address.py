@@ -26,26 +26,26 @@ class FormattedParsedAddressTest(FormattedParsedAddressBase):
         cls.a_existing_tag = "3"
 
         cls.a_parsed_address_in_dict_format = {
-            'StreetNumber': '3',
-            'Unit': None,
-            'StreetName': 'test road',
-            'Orientation': None,
-            'Municipality': None,
-            'Province': None,
-            'PostalCode': None,
-            'GeneralDelivery': None,
+            "StreetNumber": "3",
+            "Unit": None,
+            "StreetName": "test road",
+            "Orientation": None,
+            "Municipality": None,
+            "Province": None,
+            "PostalCode": None,
+            "GeneralDelivery": None,
             "EOS": None
         }
 
         cls.a_complete_parsed_address_in_dict_format = {
-            'StreetNumber': '3',
-            'Unit': 'unit',
-            'StreetName': 'test road',
-            'Orientation': 'west',
-            'Municipality': 'city',
-            'Province': 'province',
-            'PostalCode': 'postal_code',
-            'GeneralDelivery': 'delivery',
+            "StreetNumber": "3",
+            "Unit": "unit",
+            "StreetName": "test road",
+            "Orientation": "west",
+            "Municipality": "city",
+            "Province": "province",
+            "PostalCode": "postal_code",
+            "GeneralDelivery": "delivery",
             "EOS": None
         }
 
@@ -104,11 +104,11 @@ class FormattedParsedAddressTest(FormattedParsedAddressBase):
 
     def test_whenToDictUserFields_thenReturnTheProperDict(self):
         actual = self.parsed_address.to_dict(fields=["StreetNumber"])
-        expected = {'StreetNumber': '3'}
+        expected = {"StreetNumber": "3"}
         self.assertEqual(actual, expected)
 
         actual = self.complete_parsed_address.to_dict(fields=["StreetNumber"])
-        expected = {'StreetNumber': '3'}
+        expected = {"StreetNumber": "3"}
         self.assertEqual(actual, expected)
 
     def test_whenFormattedAddressDefaultSettings_thenReturnExpectedOrderAndDontReturnNoneComponents(self):
@@ -200,14 +200,14 @@ class FormattedParsedAddressTest(FormattedParsedAddressBase):
 
     def test_whenFormattedParsedAddressInferredOrder_thenProperlyInferred(self):
         actual = self.parsed_address.inferred_order
-        expected = ['StreetNumber', 'StreetName']
+        expected = ["StreetNumber", "StreetName"]
 
         self.assertEqual(actual, expected)
 
         actual = self.complete_parsed_address.inferred_order
         expected = [
-            'StreetNumber', 'StreetName', 'Unit', 'Orientation', 'Municipality', 'Province', 'PostalCode',
-            'GeneralDelivery'
+            "StreetNumber", "StreetName", "Unit", "Orientation", "Municipality", "Province", "PostalCode",
+            "GeneralDelivery"
         ]
 
         self.assertEqual(actual, expected)

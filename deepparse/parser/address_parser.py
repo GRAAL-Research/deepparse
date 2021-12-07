@@ -171,7 +171,7 @@ class AddressParser:
         seq2seq_kwargs = {}  # Empty for default settings
 
         if path_to_retrained_model is not None:
-            checkpoint_weights = torch.load(path_to_retrained_model, map_location='cpu')
+            checkpoint_weights = torch.load(path_to_retrained_model, map_location="cpu")
             if _validate_if_new_seq2seq_params(checkpoint_weights):
                 seq2seq_kwargs = checkpoint_weights.get("seq2seq_params")
             if _validate_if_new_prediction_tags(checkpoint_weights):

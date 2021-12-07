@@ -95,7 +95,7 @@ class Decoder(nn.Module):
         mask = torch.arange(max_length)[None, :] < lengths[:, None].to(
             "cpu")  # We switch the lengths to cpu for the comparison
         mask = mask.unsqueeze(1)
-        alignments_scores[~mask] = float('-inf')
+        alignments_scores[~mask] = float("-inf")
 
         attention_weights = nn.functional.softmax(alignments_scores, dim=2)
 

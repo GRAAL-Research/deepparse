@@ -77,7 +77,7 @@ class NLLLossTest(TestCase):
         self.assertAlmostEqual(expected, actual, delta=5)
 
     def test_givenAPerfectPredictionTensor_whenNLLLossPerTag_thenLossIs0(self):
-        # Tags prediction value are 'inverted' to mimic the log
+        # Tags prediction value are "inverted" to mimic the log
         first_token_first_element_of_the_batch = [0., 1.]  # the predicted token is the first class
         first_token_second_element_of_the_batch = [1., 0.]  # the predicted token is the second class
         second_token_first_element_of_the_batch = [1., 0.]  # the predicted token is the second class
@@ -92,7 +92,7 @@ class NLLLossTest(TestCase):
         self.assertAlmostEqual(expected, actual, delta=5)
 
     def test_givenACompletelyWrongPredictionTensor_whenNLLLossPerTag_thenLossIsMinus2(self):
-        # Tags prediction value are 'inverted' to mimic the log
+        # Tags prediction value are "inverted" to mimic the log
         first_token_first_element_of_the_batch = [1., 0.]  # the predicted token is the second class
         first_token_second_element_of_the_batch = [0., 1.]  # the predicted token is the first class
         second_token_first_element_of_the_batch = [0., 1.]  # the predicted token is the first class

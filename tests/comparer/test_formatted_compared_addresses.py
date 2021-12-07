@@ -24,22 +24,22 @@ class TestFormattedComparedAddresses(CaptureOutputTestCase):
         cls.a_address_parser_model = "bpemb"
 
         cls.original_raw_address = "350 rue des Lilas Ouest Quebec Quebec G1L 1B6"
-        cls.original_parsed_address = [('350', ('StreetNumber', 1.0)), ('rue', ('StreetName', 0.9987)),
-                                       ('des', ('StreetName', 0.9993)), ('Lilas', ('StreetName', 0.8176)),
-                                       ('Ouest', ('Orientation', 0.781)), ('Quebec', ('Municipality', 0.9768)),
-                                       ('Quebec', ('Province', 1.0)), ('G1L', ('PostalCode', 0.9993)),
-                                       ('1B6', ('PostalCode', 1.0))]
+        cls.original_parsed_address = [("350", ("StreetNumber", 1.0)), ("rue", ("StreetName", 0.9987)),
+                                       ("des", ("StreetName", 0.9993)), ("Lilas", ("StreetName", 0.8176)),
+                                       ("Ouest", ("Orientation", 0.781)), ("Quebec", ("Municipality", 0.9768)),
+                                       ("Quebec", ("Province", 1.0)), ("G1L", ("PostalCode", 0.9993)),
+                                       ("1B6", ("PostalCode", 1.0))]
 
         cls.original_formatted_parsed_address = FormattedParsedAddress(
             {cls.original_raw_address: cls.original_parsed_address})
 
     def test_givenIdenticalComparison_thenReturnIdentical(self):
         identical_address = "350 rue des Lilas Ouest Quebec Quebec G1L 1B6"
-        identical_address_parsing = [('350', ('StreetNumber', 1.0)), ('rue', ('StreetName', 0.9987)),
-                                     ('des', ('StreetName', 0.9993)), ('Lilas', ('StreetName', 0.8176)),
-                                     ('Ouest', ('Orientation', 0.781)), ('Quebec', ('Municipality', 0.9768)),
-                                     ('Quebec', ('Province', 1.0)), ('G1L', ('PostalCode', 0.9993)),
-                                     ('1B6', ('PostalCode', 1.0))]
+        identical_address_parsing = [("350", ("StreetNumber", 1.0)), ("rue", ("StreetName", 0.9987)),
+                                     ("des", ("StreetName", 0.9993)), ("Lilas", ("StreetName", 0.8176)),
+                                     ("Ouest", ("Orientation", 0.781)), ("Quebec", ("Municipality", 0.9768)),
+                                     ("Quebec", ("Province", 1.0)), ("G1L", ("PostalCode", 0.9993)),
+                                     ("1B6", ("PostalCode", 1.0))]
 
         identical_formatted_parsed_address = FormattedParsedAddress({identical_address: identical_address_parsing})
 
@@ -53,11 +53,11 @@ class TestFormattedComparedAddresses(CaptureOutputTestCase):
 
     def test_givenEquivalentComparison_thenReturnEquivalent(self):
         equivalent_address = "350  rue des Lilas Ouest Quebec Quebec G1L 1B6"
-        equivalent_address_parsing = [('350', ('StreetNumber', 1.0)), ('rue', ('StreetName', 0.9987)),
-                                      ('des', ('StreetName', 0.9993)), ('Lilas', ('StreetName', 0.8176)),
-                                      ('Ouest', ('Orientation', 0.781)), ('Quebec', ('Municipality', 0.9768)),
-                                      ('Quebec', ('Province', 1.0)), ('G1L', ('PostalCode', 0.9993)),
-                                      ('1B6', ('PostalCode', 1.0))]
+        equivalent_address_parsing = [("350", ("StreetNumber", 1.0)), ("rue", ("StreetName", 0.9987)),
+                                      ("des", ("StreetName", 0.9993)), ("Lilas", ("StreetName", 0.8176)),
+                                      ("Ouest", ("Orientation", 0.781)), ("Quebec", ("Municipality", 0.9768)),
+                                      ("Quebec", ("Province", 1.0)), ("G1L", ("PostalCode", 0.9993)),
+                                      ("1B6", ("PostalCode", 1.0))]
 
         equivalent_formatted_address_parsing = FormattedParsedAddress({equivalent_address: equivalent_address_parsing})
 
@@ -72,11 +72,11 @@ class TestFormattedComparedAddresses(CaptureOutputTestCase):
 
     def test_givenNotEquivalentComparison_thenReturnNotEquivalent(self):
         not_equivalent_address = "450 rue des Lilas Ouest Quebec Quebec G1L 1B6"
-        not_equivalent_address_parsing = [('450', ('StreetNumber', 1.0)), ('rue', ('StreetName', 0.9987)),
-                                          ('des', ('StreetName', 0.9993)), ('Lilas', ('StreetName', 0.8176)),
-                                          ('Ouest', ('Orientation', 0.781)), ('Quebec', ('Municipality', 0.9768)),
-                                          ('Quebec', ('Province', 1.0)), ('G1L', ('PostalCode', 0.9993)),
-                                          ('1B6', ('PostalCode', 1.0))]
+        not_equivalent_address_parsing = [("450", ("StreetNumber", 1.0)), ("rue", ("StreetName", 0.9987)),
+                                          ("des", ("StreetName", 0.9993)), ("Lilas", ("StreetName", 0.8176)),
+                                          ("Ouest", ("Orientation", 0.781)), ("Quebec", ("Municipality", 0.9768)),
+                                          ("Quebec", ("Province", 1.0)), ("G1L", ("PostalCode", 0.9993)),
+                                          ("1B6", ("PostalCode", 1.0))]
 
         not_equivalent_formatted_address_parsing = FormattedParsedAddress(
             {not_equivalent_address: not_equivalent_address_parsing})
@@ -91,11 +91,11 @@ class TestFormattedComparedAddresses(CaptureOutputTestCase):
 
     def test__comparisonReportSignal(self):
         identical_address = "350 rue des Lilas Ouest Quebec Quebec G1L 1B6"
-        identical_address_parsing = [('350', ('StreetNumber', 1.0)), ('rue', ('StreetName', 0.9987)),
-                                     ('des', ('StreetName', 0.9993)), ('Lilas', ('StreetName', 0.8176)),
-                                     ('Ouest', ('Orientation', 0.781)), ('Quebec', ('Municipality', 0.9768)),
-                                     ('Quebec', ('Province', 1.0)), ('G1L', ('PostalCode', 0.9993)),
-                                     ('1B6', ('PostalCode', 1.0))]
+        identical_address_parsing = [("350", ("StreetNumber", 1.0)), ("rue", ("StreetName", 0.9987)),
+                                     ("des", ("StreetName", 0.9993)), ("Lilas", ("StreetName", 0.8176)),
+                                     ("Ouest", ("Orientation", 0.781)), ("Quebec", ("Municipality", 0.9768)),
+                                     ("Quebec", ("Province", 1.0)), ("G1L", ("PostalCode", 0.9993)),
+                                     ("1B6", ("PostalCode", 1.0))]
 
         identical_formatted_parsed_address = FormattedParsedAddress({identical_address: identical_address_parsing})
 
@@ -110,11 +110,11 @@ class TestFormattedComparedAddresses(CaptureOutputTestCase):
 
     def test_comparisonReportSignal(self):
         identical_address = "350 rue des Lilas Ouest Quebec Quebec G1L 1B6"
-        identical_address_parsing = [('350', ('StreetNumber', 1.0)), ('rue', ('StreetName', 0.9987)),
-                                     ('des', ('StreetName', 0.9993)), ('Lilas', ('StreetName', 0.8176)),
-                                     ('Ouest', ('Orientation', 0.781)), ('Quebec', ('Municipality', 0.9768)),
-                                     ('Quebec', ('Province', 1.0)), ('G1L', ('PostalCode', 0.9993)),
-                                     ('1B6', ('PostalCode', 1.0))]
+        identical_address_parsing = [("350", ("StreetNumber", 1.0)), ("rue", ("StreetName", 0.9987)),
+                                     ("des", ("StreetName", 0.9993)), ("Lilas", ("StreetName", 0.8176)),
+                                     ("Ouest", ("Orientation", 0.781)), ("Quebec", ("Municipality", 0.9768)),
+                                     ("Quebec", ("Province", 1.0)), ("G1L", ("PostalCode", 0.9993)),
+                                     ("1B6", ("PostalCode", 1.0))]
 
         identical_formatted_parsed_address = FormattedParsedAddress({identical_address: identical_address_parsing})
 
@@ -134,11 +134,11 @@ class TestFormattedComparedAddresses(CaptureOutputTestCase):
 
     def test_given_anyFormattedComparedAddressesWithAddress_whenListOfBool_thenReturnProperBool(self):
         any_address = "350 rue des Lilas Ouest Quebec Quebec G1L 1B6"
-        any_address_parsing = [('350', ('StreetNumber', 1.0)), ('rue', ('StreetName', 0.9987)),
-                               ('des', ('StreetName', 0.9993)), ('Lilas', ('StreetName', 0.8176)),
-                               ('Ouest', ('Orientation', 0.781)), ('Quebec', ('Municipality', 0.9768)),
-                               ('Quebec', ('Province', 1.0)), ('G1L', ('PostalCode', 0.9993)),
-                               ('1B6', ('PostalCode', 1.0))]
+        any_address_parsing = [("350", ("StreetNumber", 1.0)), ("rue", ("StreetName", 0.9987)),
+                               ("des", ("StreetName", 0.9993)), ("Lilas", ("StreetName", 0.8176)),
+                               ("Ouest", ("Orientation", 0.781)), ("Quebec", ("Municipality", 0.9768)),
+                               ("Quebec", ("Province", 1.0)), ("G1L", ("PostalCode", 0.9993)),
+                               ("1B6", ("PostalCode", 1.0))]
 
         any_formatted_parsed_address = FormattedParsedAddress({any_address: any_address_parsing})
 
@@ -148,8 +148,9 @@ class TestFormattedComparedAddresses(CaptureOutputTestCase):
                                                             with_prob=True)
 
         actual_list_of_bool = any_comparison.list_of_bool
-        expected = [('StreetNumber', True), ('Unit', True), ('StreetName', True), ('Orientation', True),
-                    ('Municipality', True), ('Province', True), ('PostalCode', True), ('GeneralDelivery', True)]
+        expected = [("StreetNumber", True), ("Unit", True), ("StreetName", True), ("Orientation", True),
+                    ("Municipality", True), ("Province", True), ("PostalCode", True), ("GeneralDelivery", True),
+                    ("EOS", True)]
 
         self.assertEqual(actual_list_of_bool, expected)
 

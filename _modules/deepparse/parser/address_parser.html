@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>deepparse.parser.address_parser &mdash; deepparse 0.5.1 documentation</title>
+  <title>deepparse.parser.address_parser &mdash; deepparse 0.6 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -28,7 +28,7 @@
             <img src="../../../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.5.1
+                0.6
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -117,8 +117,8 @@
     <span class="s2">&quot;EOS&quot;</span><span class="p">:</span> <span class="mi">8</span>  <span class="c1"># the 9th is the EOS with idx 8</span>
 <span class="p">}</span>
 
-<span class="c1"># this threshold represent at which point the prediction of the address takes enough time to</span>
-<span class="c1"># justify a predict verbosity.</span>
+<span class="c1"># This threshold represents at which point the prediction of the address takes enough time to</span>
+<span class="c1"># justify predictions verbosity.</span>
 <span class="n">PREDICTION_TIME_PERFORMANCE_THRESHOLD</span> <span class="o">=</span> <span class="mi">64</span>
 
 
@@ -134,7 +134,8 @@
 <span class="sd">            - &quot;Province&quot;: for the province or local region,</span>
 <span class="sd">            - &quot;PostalCode&quot;: for the postal code,</span>
 <span class="sd">            - &quot;Orientation&quot;: for the street orientation (e.g. west, east),</span>
-<span class="sd">            - &quot;GeneralDelivery&quot;: for other delivery information.</span>
+<span class="sd">            - &quot;GeneralDelivery&quot;: for other delivery information,</span>
+<span class="sd">            - &quot;EOS&quot;: (End Of Sequence) since we use an EOS tag during training, sometimes the models return an EOS tag.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        model_type (str): The network name to use, can be either:</span>
@@ -144,10 +145,13 @@
 <span class="sd">            - bpemb (need ~2 GO of RAM to be used),</span>
 <span class="sd">            - fastest (quicker to process one address) (equivalent to fasttext),</span>
 <span class="sd">            - lightest (the one using the less RAM and GPU usage) (equivalent to fasttext-light),</span>
-<span class="sd">            - best (best accuracy performance) (equivalent to bpemb).</span>
+<span class="sd">            - best (the best accuracy performance) (equivalent to bpemb).</span>
 
 <span class="sd">            The default value is &quot;best&quot; for the most accurate model. Ignored if ``path_to_retrained_model`` is not</span>
 <span class="sd">            ``None``.</span>
+<span class="sd">        attention_mechanism (bool): Whether to use the model with an attention mechanism. The model will use an</span>
+<span class="sd">            attention mechanism takes an extra 100 MB on GPU usage (see the doc for more statistics).</span>
+<span class="sd">            The default value is False.</span>
 <span class="sd">        device (Union[int, str, torch.torch.device]): The device to use can be either:</span>
 
 <span class="sd">            - a ``GPU`` index in int format (e.g. ``0``),</span>
@@ -155,7 +159,7 @@
 <span class="sd">            - a :class:`~torch.torch.device` object,</span>
 <span class="sd">            - ``&#39;cpu&#39;`` for a  ``CPU`` use.</span>
 
-<span class="sd">            The default value is GPU with the index ``0`` if it exist, otherwise the value is ``CPU``.</span>
+<span class="sd">            The default value is GPU with the index ``0`` if it exists, otherwise the value is ``CPU``.</span>
 <span class="sd">        rounding (int): The rounding to use when asking the probability of the tags. The default value is 4 digits.</span>
 <span class="sd">        verbose (bool): Turn on/off the verbosity of the model weights download and loading. The default value is True.</span>
 <span class="sd">        path_to_retrained_model (Union[str, None]): The path to the retrained model to use for prediction. We will</span>
@@ -186,7 +190,7 @@
 <span class="sd">        You may observe a 100% CPU load the first time you call the fasttext-light model. We</span>
 <span class="sd">        `hypotheses &lt;https://github.com/GRAAL-Research/deepparse/pull/54#issuecomment-743463855&gt;`_ that this is due</span>
 <span class="sd">        to the SQLite database behind `pymagnitude`. This approach create a cache to speed up processing and since the</span>
-<span class="sd">        memory mapping is save between the runs, it&#39;s more intensive the first time you call it and subsequent</span>
+<span class="sd">        memory mapping is saved between the runs, it&#39;s more intensive the first time you call it and subsequent</span>
 <span class="sd">        time this load doesn&#39;t appear.</span>
 
 <span class="sd">    Examples:</span>
@@ -199,7 +203,15 @@
 <span class="sd">            address_parser = AddressParser(model_type=&quot;fasttext&quot;, device=&quot;cpu&quot;) # fasttext model on cpu</span>
 <span class="sd">            parse_address = address_parser(&quot;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&quot;)</span>
 
-<span class="sd">        Using a retrain model</span>
+<span class="sd">        Using a model with attention mechanism</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            # fasttext model with attention</span>
+<span class="sd">            address_parser = AddressParser(model_type=&quot;fasttext&quot;, attention_mechanism=True)</span>
+<span class="sd">            parse_address = address_parser(&quot;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&quot;)</span>
+
+<span class="sd">        Using a retrained model</span>
 
 <span class="sd">        .. code-block:: python</span>
 
@@ -207,7 +219,7 @@
 <span class="sd">                                           path_to_retrained_model=&#39;/path_to_a_retrain_fasttext_model&#39;)</span>
 <span class="sd">            parse_address = address_parser(&quot;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&quot;)</span>
 
-<span class="sd">        Using a retrain model trained on different tags</span>
+<span class="sd">        Using a retrained model trained on different tags</span>
 
 <span class="sd">        .. code-block:: python</span>
 
@@ -219,6 +231,7 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">model_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;best&quot;</span><span class="p">,</span>
+                 <span class="n">attention_mechanism</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
                  <span class="n">device</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
                  <span class="n">rounding</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
                  <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -229,22 +242,22 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">rounding</span> <span class="o">=</span> <span class="n">rounding</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
 
-        <span class="c1"># Default pre trained tag are loaded</span>
+        <span class="c1"># Default pre-trained tag are loaded</span>
         <span class="n">tags_to_idx</span> <span class="o">=</span> <span class="n">_pre_trained_tags_to_idx</span>
-        <span class="c1"># Default field of the formatted address</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="n">field</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">tags_to_idx</span> <span class="k">if</span> <span class="n">field</span> <span class="o">!=</span> <span class="s2">&quot;EOS&quot;</span><span class="p">]</span>
+        <span class="c1"># Default FIELDS of the formatted address</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">tags_to_idx</span><span class="p">)</span>
         <span class="c1"># Default new config seq2seq model params</span>
         <span class="n">seq2seq_kwargs</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># Empty for default settings</span>
 
         <span class="k">if</span> <span class="n">path_to_retrained_model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">checkpoint_weights</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path_to_retrained_model</span><span class="p">,</span> <span class="n">map_location</span><span class="o">=</span><span class="s1">&#39;cpu&#39;</span><span class="p">)</span>
+            <span class="n">checkpoint_weights</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path_to_retrained_model</span><span class="p">,</span> <span class="n">map_location</span><span class="o">=</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">_validate_if_new_seq2seq_params</span><span class="p">(</span><span class="n">checkpoint_weights</span><span class="p">):</span>
                 <span class="n">seq2seq_kwargs</span> <span class="o">=</span> <span class="n">checkpoint_weights</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;seq2seq_params&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">_validate_if_new_prediction_tags</span><span class="p">(</span><span class="n">checkpoint_weights</span><span class="p">):</span>
                 <span class="c1"># We load the new tags_to_idx</span>
                 <span class="n">tags_to_idx</span> <span class="o">=</span> <span class="n">checkpoint_weights</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;prediction_tags&quot;</span><span class="p">)</span>
                 <span class="c1"># We change the FIELDS for the FormattedParsedAddress</span>
-                <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="n">field</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">tags_to_idx</span> <span class="k">if</span> <span class="n">field</span> <span class="o">!=</span> <span class="s2">&quot;EOS&quot;</span><span class="p">]</span>
+                <span class="n">fields</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">tags_to_idx</span><span class="p">)</span>
 
             <span class="c1"># We &quot;infer&quot; the model type</span>
             <span class="n">model_type</span> <span class="o">=</span> <span class="n">checkpoint_weights</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;model_type&quot;</span><span class="p">)</span>
@@ -252,15 +265,16 @@
         <span class="n">formatted_parsed_address</span><span class="o">.</span><span class="n">FIELDS</span> <span class="o">=</span> <span class="n">fields</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tags_converter</span> <span class="o">=</span> <span class="n">TagsConverter</span><span class="p">(</span><span class="n">tags_to_idx</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_set_model_name</span><span class="p">(</span><span class="n">model_type</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_model_name</span><span class="p">(</span><span class="n">model_type</span><span class="p">,</span> <span class="n">attention_mechanism</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_model_factory</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">,</span>
                             <span class="n">path_to_retrained_model</span><span class="o">=</span><span class="n">path_to_retrained_model</span><span class="p">,</span>
                             <span class="n">prediction_layer_len</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tags_converter</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span>
+                            <span class="n">attention_mechanism</span><span class="o">=</span><span class="n">attention_mechanism</span><span class="p">,</span>
                             <span class="n">seq2seq_kwargs</span><span class="o">=</span><span class="n">seq2seq_kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s2">AddressParser&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_model_type_formatted</span><span class="si">}</span><span class="s2">AddressParser&quot;</span>
 
     <span class="fm">__repr__</span> <span class="o">=</span> <span class="fm">__str__</span>  <span class="c1"># to call __str__ when list of address</span>
 
@@ -273,7 +287,7 @@
 <span class="sd">        Callable method to parse the components of an address or a list of address.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            addresses_to_parse (Union[list[str], str]): The addresses to be parse, can be either a single address</span>
+<span class="sd">            addresses_to_parse (Union[list[str], str]): The addresses to be parsed, can be either a single address</span>
 <span class="sd">                (when using str) or a list of address. When using a list of addresses, the addresses are processed in</span>
 <span class="sd">                batch, allowing a faster process. For example, using fastText model, a single address takes around</span>
 <span class="sd">                0.003 seconds to be parsed using a batch of 1 (1 element at the time is processed).</span>
@@ -361,6 +375,7 @@
 
 <span class="sd">        Args:</span>
 <span class="sd">            dataset_container (~deepparse.dataset_container.DatasetContainer): The</span>
+<span class="sd">            dataset_container (~deepparse.dataset_container.DatasetContainer): The</span>
 <span class="sd">                dataset container of the data to use.</span>
 <span class="sd">            train_ratio (float): The ratio to use of the dataset for the training. The rest of the data is used for the</span>
 <span class="sd">                validation (e.g. a train ratio of 0.8 mean a 80-20 train-valid split) (default is 0.8).</span>
@@ -370,9 +385,9 @@
 <span class="sd">            learning_rate (float): The learning rate (LR) to use for training (default 0.01).</span>
 <span class="sd">            callbacks (Union[list, None]): List of callbacks to use during training.</span>
 <span class="sd">                See Poutyne `callback &lt;https://poutyne.org/callbacks.html#callback-class&gt;`_ for more information. By</span>
-<span class="sd">                default we set no callback.</span>
+<span class="sd">                default, we set no callback.</span>
 <span class="sd">            seed (int): Seed to use (by default 42).</span>
-<span class="sd">            logging_path (str): The logging path for the checkpoints. By default the path is ``./checkpoints``.</span>
+<span class="sd">            logging_path (str): The logging path for the checkpoints. By default, the path is ``./checkpoints``.</span>
 <span class="sd">            prediction_tags (Union[dict, None]): A dictionary where the keys are the address components</span>
 <span class="sd">                (e.g. street name) and the values are the components indices (from 0 to N + 1) to use during retraining</span>
 <span class="sd">                of a model. The ``+ 1`` corresponds to the End Of Sequence (EOS) token that needs to be included in the</span>
@@ -394,7 +409,7 @@
 <span class="sd">            &lt;https://poutyne.org/experiment.html#poutyne.Experiment.train&gt;`_ for details).</span>
 
 <span class="sd">        Note:</span>
-<span class="sd">            We use SGD optimizer, NLL loss and accuracy as a metric, the data is shuffled and we use teacher forcing</span>
+<span class="sd">            We use SGD optimizer, NLL loss and accuracy as a metric, the data is shuffled, and we use teacher forcing</span>
 <span class="sd">            during training (with a prob of 0.5) as in the `article &lt;https://arxiv.org/abs/2006.16152&gt;`_.</span>
 
 <span class="sd">        Note:</span>
@@ -557,11 +572,11 @@
 <span class="sd">            num_workers (int): Number of workers to use for the data loader (default is 1 worker).</span>
 <span class="sd">            callbacks (Union[list, None]): List of callbacks to use during training.</span>
 <span class="sd">                See Poutyne `callback &lt;https://poutyne.org/callbacks.html#callback-class&gt;`_ for more information.</span>
-<span class="sd">                By default we set no callback.</span>
+<span class="sd">                By default, we set no callback.</span>
 <span class="sd">            seed (int): Seed to use (by default 42).</span>
 <span class="sd">            callbacks (Union[list, None]): List of callbacks to use during training.</span>
 <span class="sd">                See Poutyne `callback &lt;https://poutyne.org/callbacks.html#callback-class&gt;`_ for more information.</span>
-<span class="sd">                By default we set no callback.</span>
+<span class="sd">                By default, we set no callback.</span>
 <span class="sd">        Return:</span>
 <span class="sd">            A dictionary with the stats (see `Experiment class</span>
 <span class="sd">            &lt;https://poutyne.org/experiment.html#poutyne.Experiment.train&gt;`_ for details).</span>
@@ -580,7 +595,7 @@
 
 <span class="sd">                address_parser.test(test_container) # We test the model on the data</span>
 
-<span class="sd">            You can also test your fine tuned model</span>
+<span class="sd">            You can also test your fine-tuned model</span>
 
 <span class="sd">            .. code-block:: python</span>
 
@@ -651,7 +666,7 @@
 
     <span class="k">def</span> <span class="nf">_process_device</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Function to process the device depending of the argument type.</span>
+<span class="sd">        Function to process the device depending on the argument type.</span>
 
 <span class="sd">        Set the device as a torch device object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -711,7 +726,9 @@
                        <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
                        <span class="n">path_to_retrained_model</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                        <span class="n">prediction_layer_len</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">9</span><span class="p">,</span>
+                       <span class="n">attention_mechanism</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                        <span class="n">seq2seq_kwargs</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># pylint: disable=too-many-arguments</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Model factory to create the vectorizer, the data converter and the pre-trained model</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -719,7 +736,7 @@
         <span class="n">seq2seq_kwargs</span> <span class="o">=</span> <span class="n">seq2seq_kwargs</span> <span class="k">if</span> <span class="n">seq2seq_kwargs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">{}</span>
 
         <span class="k">if</span> <span class="s2">&quot;fasttext&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;fasttext-light&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;fasttext-light&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="p">:</span>
                 <span class="n">file_name</span> <span class="o">=</span> <span class="n">download_fasttext_magnitude_embeddings</span><span class="p">(</span><span class="n">saving_dir</span><span class="o">=</span><span class="n">CACHE_PATH</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
 
                 <span class="n">embeddings_model</span> <span class="o">=</span> <span class="n">MagnitudeEmbeddingsModel</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
@@ -736,9 +753,10 @@
                                               <span class="n">output_size</span><span class="o">=</span><span class="n">prediction_layer_len</span><span class="p">,</span>
                                               <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
                                               <span class="n">path_to_retrained_model</span><span class="o">=</span><span class="n">path_to_retrained_model</span><span class="p">,</span>
+                                              <span class="n">attention_mechanism</span><span class="o">=</span><span class="n">attention_mechanism</span><span class="p">,</span>
                                               <span class="o">**</span><span class="n">seq2seq_kwargs</span><span class="p">)</span>
 
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;bpemb&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="s2">&quot;bpemb&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">vectorizer</span> <span class="o">=</span> <span class="n">BPEmbVectorizer</span><span class="p">(</span><span class="n">embeddings_model</span><span class="o">=</span><span class="n">BPEmbEmbeddingsModel</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">))</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">data_converter</span> <span class="o">=</span> <span class="n">bpemb_data_padding</span>
@@ -747,6 +765,7 @@
                                            <span class="n">output_size</span><span class="o">=</span><span class="n">prediction_layer_len</span><span class="p">,</span>
                                            <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
                                            <span class="n">path_to_retrained_model</span><span class="o">=</span><span class="n">path_to_retrained_model</span><span class="p">,</span>
+                                           <span class="n">attention_mechanism</span><span class="o">=</span><span class="n">attention_mechanism</span><span class="p">,</span>
                                            <span class="o">**</span><span class="n">seq2seq_kwargs</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;There is no </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="si">}</span><span class="s2"> network implemented. Value should be: &quot;</span>
@@ -759,7 +778,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_converter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vectorizer</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="nf">_set_model_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_set_model_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">attention_mechanism</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Handle the model type name matching with proper seq2seq model type name.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -773,6 +792,10 @@
         <span class="k">elif</span> <span class="n">model_type</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;best&quot;</span><span class="p">,</span> <span class="s2">&quot;bpemb&quot;</span><span class="p">):</span>
             <span class="n">model_type</span> <span class="o">=</span> <span class="s2">&quot;bpemb&quot;</span>  <span class="c1"># We change name to bpemb since best = bpemb</span>
             <span class="n">formatted_name</span> <span class="o">=</span> <span class="s2">&quot;BPEmb&quot;</span>
+
+        <span class="k">if</span> <span class="n">attention_mechanism</span><span class="p">:</span>
+            <span class="n">model_type</span> <span class="o">+=</span> <span class="s2">&quot;Attention&quot;</span>
+            <span class="n">formatted_name</span> <span class="o">+=</span> <span class="s2">&quot;Attention&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">=</span> <span class="n">model_type</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_model_type_formatted</span> <span class="o">=</span> <span class="n">formatted_name</span>
 

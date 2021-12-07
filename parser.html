@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Parser &mdash; deepparse 0.5.1 documentation</title>
+  <title>Parser &mdash; deepparse 0.6 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -15,7 +15,7 @@
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -32,7 +32,7 @@
             <img src="_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.5.1
+                0.6
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -132,17 +132,29 @@ are a little bit lower on trained country (around ~2%) but are similar on zero-s
 <td><p>~0.00236</p></td>
 <td><p>~0.0004</p></td>
 </tr>
-<tr class="row-odd"><td><p>fastText-light</p></td>
+<tr class="row-odd"><td><p>fastTextAttention</p></td>
+<td><p>~1.1</p></td>
+<td><p>~8</p></td>
+<td><p>~0.0052</p></td>
+<td><p>~0.0010</p></td>
+</tr>
+<tr class="row-even"><td><p>fastText-light</p></td>
 <td><p>~1</p></td>
 <td><p>~1</p></td>
 <td><p>~0.0028</p></td>
 <td><p>~0.0037</p></td>
 </tr>
-<tr class="row-even"><td><p>BPEmb</p></td>
+<tr class="row-odd"><td><p>BPEmb</p></td>
 <td><p>~1</p></td>
 <td><p>~1</p></td>
 <td><p>~0.0053</p></td>
 <td><p>~0.0019</p></td>
+</tr>
+<tr class="row-even"><td><p>BPEmbAttention</p></td>
+<td><p>~1.1</p></td>
+<td><p>~1</p></td>
+<td><p>~0.0086</p></td>
+<td><p>~0.0027</p></td>
 </tr>
 <tr class="row-odd"><td><p>Libpostal</p></td>
 <td><p>N/A</p></td>
@@ -177,15 +189,25 @@ are a little bit lower on trained country (around ~2%) but are similar on zero-s
 <td><p>~0.0168</p></td>
 <td><p>~0.0026</p></td>
 </tr>
-<tr class="row-odd"><td><p>fastText-light</p></td>
+<tr class="row-odd"><td><p>fastTextAttention</p></td>
+<td><p>~8</p></td>
+<td><p>~0.0212</p></td>
+<td><p>~0.0054</p></td>
+</tr>
+<tr class="row-even"><td><p>fastText-light</p></td>
 <td><p>~1</p></td>
 <td><p>~0.0170</p></td>
 <td><p>~0.0030</p></td>
 </tr>
-<tr class="row-even"><td><p>BPEmb</p></td>
+<tr class="row-odd"><td><p>BPEmb</p></td>
 <td><p>~1</p></td>
 <td><p>~0.0219</p></td>
 <td><p>~0.0059</p></td>
+</tr>
+<tr class="row-even"><td><p>BPEmbAttention</p></td>
+<td><p>~1</p></td>
+<td><p>~0.0270</p></td>
+<td><p>~0.0075</p></td>
 </tr>
 <tr class="row-odd"><td><p>Libpostal</p></td>
 <td><p>N/A</p></td>
@@ -209,7 +231,7 @@ improvements is not linear.</p>
 <h2>AddressParser<a class="headerlink" href="#addressparser" title="Permalink to this headline"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="deepparse.parser.AddressParser">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deepparse.parser.</span></span><span class="sig-name descname"><span class="pre">AddressParser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'best'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">torch.device</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rounding</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_to_retrained_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deepparse/parser/address_parser.html#AddressParser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.parser.AddressParser" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deepparse.parser.</span></span><span class="sig-name descname"><span class="pre">AddressParser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'best'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attention_mechanism</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">torch.device</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rounding</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_to_retrained_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deepparse/parser/address_parser.html#AddressParser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.parser.AddressParser" title="Permalink to this definition"></a></dt>
 <dd><p>Address parser to parse an address or a list of address using one of the seq2seq pre-trained
 networks either with fastText or BPEmb. The default prediction tags are the following</p>
 <blockquote>
@@ -221,7 +243,8 @@ networks either with fastText or BPEmb. The default prediction tags are the foll
 <li><p>“Province”: for the province or local region,</p></li>
 <li><p>“PostalCode”: for the postal code,</p></li>
 <li><p>“Orientation”: for the street orientation (e.g. west, east),</p></li>
-<li><p>“GeneralDelivery”: for other delivery information.</p></li>
+<li><p>“GeneralDelivery”: for other delivery information,</p></li>
+<li><p>“EOS”: (End Of Sequence) since we use an EOS tag during training, sometimes the models return an EOS tag.</p></li>
 </ul>
 </div></blockquote>
 <dl class="field-list simple">
@@ -234,11 +257,14 @@ networks either with fastText or BPEmb. The default prediction tags are the foll
 <li><p>bpemb (need ~2 GO of RAM to be used),</p></li>
 <li><p>fastest (quicker to process one address) (equivalent to fasttext),</p></li>
 <li><p>lightest (the one using the less RAM and GPU usage) (equivalent to fasttext-light),</p></li>
-<li><p>best (best accuracy performance) (equivalent to bpemb).</p></li>
+<li><p>best (the best accuracy performance) (equivalent to bpemb).</p></li>
 </ul>
 <p>The default value is “best” for the most accurate model. Ignored if <code class="docutils literal notranslate"><span class="pre">path_to_retrained_model</span></code> is not
 <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
 </p></li>
+<li><p><strong>attention_mechanism</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Whether to use the model with an attention mechanism. The model will use an
+attention mechanism takes an extra 100 MB on GPU usage (see the doc for more statistics).
+The default value is False.</p></li>
 <li><p><strong>device</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><a class="reference external" href="https://pytorch.org/docs/stable/tensor_attributes.html#torch.torch.device" title="(in PyTorch v1.10.0)"><em>torch.torch.device</em></a><em>]</em>) – <p>The device to use can be either:</p>
 <ul>
 <li><p>a <code class="docutils literal notranslate"><span class="pre">GPU</span></code> index in int format (e.g. <code class="docutils literal notranslate"><span class="pre">0</span></code>),</p></li>
@@ -246,7 +272,7 @@ networks either with fastText or BPEmb. The default prediction tags are the foll
 <li><p>a <a class="reference external" href="https://pytorch.org/docs/stable/tensor_attributes.html#torch.torch.device" title="(in PyTorch v1.10.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">device</span></code></a> object,</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'cpu'</span></code> for a  <code class="docutils literal notranslate"><span class="pre">CPU</span></code> use.</p></li>
 </ul>
-<p>The default value is GPU with the index <code class="docutils literal notranslate"><span class="pre">0</span></code> if it exist, otherwise the value is <code class="docutils literal notranslate"><span class="pre">CPU</span></code>.</p>
+<p>The default value is GPU with the index <code class="docutils literal notranslate"><span class="pre">0</span></code> if it exists, otherwise the value is <code class="docutils literal notranslate"><span class="pre">CPU</span></code>.</p>
 </p></li>
 <li><p><strong>rounding</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – The rounding to use when asking the probability of the tags. The default value is 4 digits.</p></li>
 <li><p><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Turn on/off the verbosity of the model weights download and loading. The default value is True.</p></li>
@@ -284,7 +310,7 @@ It also takes a longer time to load. See here the
 <p>You may observe a 100% CPU load the first time you call the fasttext-light model. We
 <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/pull/54#issuecomment-743463855">hypotheses</a> that this is due
 to the SQLite database behind <cite>pymagnitude</cite>. This approach create a cache to speed up processing and since the
-memory mapping is save between the runs, it’s more intensive the first time you call it and subsequent
+memory mapping is saved between the runs, it’s more intensive the first time you call it and subsequent
 time this load doesn’t appear.</p>
 </div>
 <p class="rubric">Examples</p>
@@ -295,13 +321,19 @@ time this load doesn’t appear.</p>
 <span class="n">parse_address</span> <span class="o">=</span> <span class="n">address_parser</span><span class="p">(</span><span class="s2">&quot;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Using a retrain model</p>
+<p>Using a model with attention mechanism</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># fasttext model with attention</span>
+<span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;fasttext&quot;</span><span class="p">,</span> <span class="n">attention_mechanism</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">parse_address</span> <span class="o">=</span> <span class="n">address_parser</span><span class="p">(</span><span class="s2">&quot;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Using a retrained model</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;fasttext&quot;</span><span class="p">,</span>
                                <span class="n">path_to_retrained_model</span><span class="o">=</span><span class="s1">&#39;/path_to_a_retrain_fasttext_model&#39;</span><span class="p">)</span>
 <span class="n">parse_address</span> <span class="o">=</span> <span class="n">address_parser</span><span class="p">(</span><span class="s2">&quot;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Using a retrain model trained on different tags</p>
+<p>Using a retrained model trained on different tags</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># We don&#39;t give the model_type since it&#39;s ignored when using path_to_retrained_model</span>
 <span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="n">path_to_retrained_model</span><span class="o">=</span><span class="s1">&#39;/path_to_a_retrain_fasttext_model&#39;</span><span class="p">)</span>
 <span class="n">parse_address</span> <span class="o">=</span> <span class="n">address_parser</span><span class="p">(</span><span class="s2">&quot;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&quot;</span><span class="p">)</span>
@@ -314,7 +346,7 @@ time this load doesn’t appear.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>addresses_to_parse</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>]</em>) – The addresses to be parse, can be either a single address
+<li><p><strong>addresses_to_parse</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>]</em>) – The addresses to be parsed, can be either a single address
 (when using str) or a list of address. When using a list of addresses, the addresses are processed in
 batch, allowing a faster process. For example, using fastText model, a single address takes around
 0.003 seconds to be parsed using a batch of 1 (1 element at the time is processed).
@@ -362,7 +394,8 @@ prediction tags, and if new <code class="docutils literal notranslate"><span cla
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dataset_container</strong> (<a class="reference internal" href="dataset_container.html#deepparse.dataset_container.DatasetContainer" title="deepparse.dataset_container.DatasetContainer"><em>DatasetContainer</em></a>) – The
+<li><p><strong>dataset_container</strong> (<a class="reference internal" href="dataset_container.html#deepparse.dataset_container.DatasetContainer" title="deepparse.dataset_container.DatasetContainer"><em>DatasetContainer</em></a>) – The</p></li>
+<li><p><strong>dataset_container</strong> – The
 dataset container of the data to use.</p></li>
 <li><p><strong>train_ratio</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – The ratio to use of the dataset for the training. The rest of the data is used for the
 validation (e.g. a train ratio of 0.8 mean a 80-20 train-valid split) (default is 0.8).</p></li>
@@ -372,9 +405,9 @@ validation (e.g. a train ratio of 0.8 mean a 80-20 train-valid split) (default i
 <li><p><strong>learning_rate</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – The learning rate (LR) to use for training (default 0.01).</p></li>
 <li><p><strong>callbacks</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><em>None</em></a><em>]</em>) – List of callbacks to use during training.
 See Poutyne <a class="reference external" href="https://poutyne.org/callbacks.html#callback-class">callback</a> for more information. By
-default we set no callback.</p></li>
+default, we set no callback.</p></li>
 <li><p><strong>seed</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Seed to use (by default 42).</p></li>
-<li><p><strong>logging_path</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The logging path for the checkpoints. By default the path is <code class="docutils literal notranslate"><span class="pre">./checkpoints</span></code>.</p></li>
+<li><p><strong>logging_path</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The logging path for the checkpoints. By default, the path is <code class="docutils literal notranslate"><span class="pre">./checkpoints</span></code>.</p></li>
 <li><p><strong>prediction_tags</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><em>None</em></a><em>]</em>) – A dictionary where the keys are the address components
 (e.g. street name) and the values are the components indices (from 0 to N + 1) to use during retraining
 of a model. The <code class="docutils literal notranslate"><span class="pre">+</span> <span class="pre">1</span></code> corresponds to the End Of Sequence (EOS) token that needs to be included in the
@@ -402,7 +435,7 @@ Parameters that can be modified are:</p>
 </dl>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>We use SGD optimizer, NLL loss and accuracy as a metric, the data is shuffled and we use teacher forcing
+<p>We use SGD optimizer, NLL loss and accuracy as a metric, the data is shuffled, and we use teacher forcing
 during training (with a prob of 0.5) as in the <a class="reference external" href="https://arxiv.org/abs/2006.16152">article</a>.</p>
 </div>
 <div class="admonition note">
@@ -482,12 +515,12 @@ retrained model with different prediction tags, we will use those tags.</p>
 <li><p><strong>num_workers</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of workers to use for the data loader (default is 1 worker).</p></li>
 <li><p><strong>callbacks</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><em>None</em></a><em>]</em>) – <p>List of callbacks to use during training.
 See Poutyne <a class="reference external" href="https://poutyne.org/callbacks.html#callback-class">callback</a> for more information.
-By default we set no callback.</p>
+By default, we set no callback.</p>
 </p></li>
 <li><p><strong>seed</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Seed to use (by default 42).</p></li>
 <li><p><strong>callbacks</strong> – <p>List of callbacks to use during training.
 See Poutyne <a class="reference external" href="https://poutyne.org/callbacks.html#callback-class">callback</a> for more information.
-By default we set no callback.</p>
+By default, we set no callback.</p>
 </p></li>
 </ul>
 </dd>
@@ -509,7 +542,7 @@ By default we set no callback.</p>
 <span class="n">address_parser</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="n">test_container</span><span class="p">)</span> <span class="c1"># We test the model on the data</span>
 </pre></div>
 </div>
-<p>You can also test your fine tuned model</p>
+<p>You can also test your fine-tuned model</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_components</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ATag&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;AnotherTag&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;EOS&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
 
 <span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="c1">#on gpu device 0</span>
@@ -602,10 +635,10 @@ GeneralDelivery’</cite> and we filter the empty components.</p>
 the address. If None, we will use the inferred order base on the address tags appearance. For example,
 if the parsed address is <code class="docutils literal notranslate"><span class="pre">(305,</span> <span class="pre">StreetNumber),</span> <span class="pre">(rue,</span> <span class="pre">StreetName),</span> <span class="pre">(des,</span> <span class="pre">StreetName),</span>
 <span class="pre">(Lilas,</span> <span class="pre">StreetName)</span></code>, the inferred order will be <code class="docutils literal notranslate"><span class="pre">StreetNumber,</span> <span class="pre">StreetName</span></code>.</p></li>
-<li><p><strong>capitalize_fields</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><em>None</em></a><em>]</em>) – Optional argument to define the capitalize fields for the formatted
-address. If None, no fields are capitalize.</p></li>
-<li><p><strong>upper_case_fields</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><em>None</em></a><em>]</em>) – Optional argument to define the upper cased fields for the
-formatted address. If None, no fields are capitalize.</p></li>
+<li><p><strong>capitalize_fields</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><em>None</em></a><em>]</em>) – Optional argument to define the capitalized fields for the formatted
+address. If None, no fields are capitalized.</p></li>
+<li><p><strong>upper_case_fields</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><em>None</em></a><em>]</em>) – Optional argument to define the upper-cased fields for the
+formatted address. If None, no fields are capitalized.</p></li>
 <li><p><strong>field_separator</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><em>None</em></a><em>]</em>) – Optional argument to define the field separator between address
 components. If None, the default field separator is <code class="docutils literal notranslate"><span class="pre">&quot;</span> <span class="pre">&quot;</span></code>.</p></li>
 </ul>

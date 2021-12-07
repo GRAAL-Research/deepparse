@@ -46,14 +46,14 @@ class AddressParserRetrainTestCase(TestCase):
         cls.a_learning_rate = 0.001
 
         cls.a_torch_device = torch.device("cuda:0")
-        cls.a_cpu_device = 'cpu'
+        cls.a_cpu_device = "cpu"
 
         cls.a_zero_number_of_workers = 0
 
         cls.fasttext_local_path = os.path.join(CACHE_PATH, "fasttext.ckpt")
         cls.bpemb_local_path = os.path.join(CACHE_PATH, "bpemb.ckpt")
 
-        cls.with_new_prediction_tags = {'ALastTag': 0, 'ATag': 1, 'AnotherTag': 2, "EOS": 3}
+        cls.with_new_prediction_tags = {"ALastTag": 0, "ATag": 1, "AnotherTag": 2, "EOS": 3}
 
     def setUp(self) -> None:
         self.training_temp_dir_obj = TemporaryDirectory()

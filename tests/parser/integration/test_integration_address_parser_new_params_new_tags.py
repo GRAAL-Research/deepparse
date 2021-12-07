@@ -42,9 +42,9 @@ class AddressParserPredictTest(TestCase):
         cls.a_number_of_workers = 2
         cls.a_learning_rate = 0.001
 
-        cls.a_cpu_device = 'cpu'
+        cls.a_cpu_device = "cpu"
 
-        cls.with_new_prediction_tags = {'ALastTag': 0, 'ATag': 1, 'AnotherTag': 2, "EOS": 3}
+        cls.with_new_prediction_tags = {"ALastTag": 0, "ATag": 1, "AnotherTag": 2, "EOS": 3}
         cls.seq2seq_params = {"encoder_hidden_size": 512, "decoder_hidden_size": 512}
 
         cls.retrain_file_name_format = "retrained_{}_address_parser"

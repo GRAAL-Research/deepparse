@@ -5,7 +5,7 @@ from typing import Tuple
 
 import torch
 import torch.nn as nn
-from torch.nn.utils.rnn import pack_padded_sequence
+from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 
 from ..weights_init import weights_init
 
@@ -40,6 +40,8 @@ class Encoder(nn.Module):
 
         packed_sequence = pack_padded_sequence(to_predict, lengths_tensor.cpu(), batch_first=True, enforce_sorted=False)
 
-        _, hidden = self.lstm(packed_sequence)
+        packed_outputs, hidden = self.lstm(packed_sequence)
 
-        return hidden
+        outputs, _ = pad_packed_sequence(packed_outputs, batch_first=True)
+
+        return outputs, hidden

@@ -2,11 +2,12 @@
 # pylint: disable=not-callable, too-many-public-methods, no-name-in-module
 
 import os
-from unittest.mock import Mock
+from unittest import TestCase
 
 import torch
 from torch import tensor
 
+from deepparse.parser import formatted_parsed_address
 from tests.base_capture_output import CaptureOutputTestCase
 
 
@@ -62,6 +63,7 @@ class AddressParserPredictTestCase(CaptureOutputTestCase):
                  -1.7509e+01, -1.8191e+01, -1.7853e+01, -2.6309e+01, -1.7179e+01, -1.0518e+01, -1.9438e+01, -1.9542e+01,
                  -2.7060e-05
              ]]])
+        self.attention_mechanism_weights = self.a_prediction_vector_for_a_complete_address
 
         # to create the dirs for dumping the prediction tags since we mock Poutyne that usually will do it
         os.makedirs(self.a_logging_path, exist_ok=True)
@@ -72,11 +74,15 @@ class AddressParserPredictTestCase(CaptureOutputTestCase):
         self.a_model_path = os.path.join(self.a_model_root_path, "model.p")
 
     def mock_predictions_vectors(self, model):
-        model.return_value = Mock(return_value=self.a_prediction_vector_for_a_complete_address)
+        returned_prediction_vectors = self.a_prediction_vector_for_a_complete_address
+        returned_value = returned_prediction_vectors
+        model.__call__().return_value = returned_value
 
     def mock_multiple_predictions_vectors(self, model):
-        model.return_value = Mock(return_value=torch.cat((self.a_prediction_vector_for_a_complete_address,
-                                                          self.a_prediction_vector_for_a_complete_address), 1))
+        returned_prediction_vectors = torch.cat(
+            (self.a_prediction_vector_for_a_complete_address, self.a_prediction_vector_for_a_complete_address), 1)
+        returned_value = returned_prediction_vectors
+        model.__call__().return_value = returned_value
 
     def setup_retrain_new_tags_model(self, address_components, model_type):
         data_dict = {
@@ -99,3 +105,18 @@ class AddressParserPredictTestCase(CaptureOutputTestCase):
             "model_type": model_type
         }
         torch.save(data_dict, self.a_model_path)
+
+
+class FormattedParsedAddressBase(TestCase):
+
+    def reset_fields(self):
+        # We reset the FIELDS of the address to default values since we change it in some tests
+        default_value = [
+            "StreetNumber", "Unit", "StreetName", "Orientation", "Municipality", "Province", "PostalCode",
+            "GeneralDelivery", "EOS"
+        ]
+        self.set_fields(default_value)
+
+    @staticmethod
+    def set_fields(fields_value):
+        formatted_parsed_address.FIELDS = fields_value

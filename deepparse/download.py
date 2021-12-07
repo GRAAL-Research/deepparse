@@ -13,11 +13,11 @@ def main(args: argparse.Namespace) -> None:
     """
     model_type = args.model_type
 
-    if model_type == "fasttext":
+    if "fasttext" in model_type and "fasttext-light" not in model_type:
         download_fasttext_embeddings(saving_dir=CACHE_PATH)
-    if model_type == "fasttext-light":
+    elif model_type == "fasttext-light":
         download_fasttext_magnitude_embeddings(saving_dir=CACHE_PATH)
-    if model_type == "bpemb":
+    elif "bpemb" in model_type:
         BPEmb(lang="multi", vs=100000, dim=300)  # The class manage the download of the pre-trained words embedding
 
     model_path = os.path.join(CACHE_PATH, f"{model_type}.ckpt")
@@ -32,7 +32,7 @@ def main(args: argparse.Namespace) -> None:
 if __name__ == "__main__":  # pragma: no cover
     parser = argparse.ArgumentParser()
     parser.add_argument("model_type",
-                        choices=["fasttext", "fasttext-light", "bpemb"],
+                        choices=["fasttext", "fasttext_attention", "fasttext-light", "bpemb", "bpemb_attention"],
                         help="The model type to download.")
 
     args_parser = parser.parse_args()

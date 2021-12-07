@@ -38,8 +38,8 @@ _pre_trained_tags_to_idx = {
     "EOS": 8  # the 9th is the EOS with idx 8
 }
 
-# this threshold represent at which point the prediction of the address takes enough time to
-# justify a predict verbosity.
+# This threshold represents at which point the prediction of the address takes enough time to
+# justify predictions verbosity.
 PREDICTION_TIME_PERFORMANCE_THRESHOLD = 64
 
 
@@ -55,7 +55,8 @@ class AddressParser:
             - "Province": for the province or local region,
             - "PostalCode": for the postal code,
             - "Orientation": for the street orientation (e.g. west, east),
-            - "GeneralDelivery": for other delivery information.
+            - "GeneralDelivery": for other delivery information,
+            - "EOS": (End Of Sequence) since we use an EOS tag during training, sometimes the models return an EOS tag.
 
     Args:
         model_type (str): The network name to use, can be either:
@@ -65,10 +66,13 @@ class AddressParser:
             - bpemb (need ~2 GO of RAM to be used),
             - fastest (quicker to process one address) (equivalent to fasttext),
             - lightest (the one using the less RAM and GPU usage) (equivalent to fasttext-light),
-            - best (best accuracy performance) (equivalent to bpemb).
+            - best (the best accuracy performance) (equivalent to bpemb).
 
             The default value is "best" for the most accurate model. Ignored if ``path_to_retrained_model`` is not
             ``None``.
+        attention_mechanism (bool): Whether to use the model with an attention mechanism. The model will use an
+            attention mechanism takes an extra 100 MB on GPU usage (see the doc for more statistics).
+            The default value is False.
         device (Union[int, str, torch.torch.device]): The device to use can be either:
 
             - a ``GPU`` index in int format (e.g. ``0``),
@@ -76,7 +80,7 @@ class AddressParser:
             - a :class:`~torch.torch.device` object,
             - ``'cpu'`` for a  ``CPU`` use.
 
-            The default value is GPU with the index ``0`` if it exist, otherwise the value is ``CPU``.
+            The default value is GPU with the index ``0`` if it exists, otherwise the value is ``CPU``.
         rounding (int): The rounding to use when asking the probability of the tags. The default value is 4 digits.
         verbose (bool): Turn on/off the verbosity of the model weights download and loading. The default value is True.
         path_to_retrained_model (Union[str, None]): The path to the retrained model to use for prediction. We will
@@ -107,7 +111,7 @@ class AddressParser:
         You may observe a 100% CPU load the first time you call the fasttext-light model. We
         `hypotheses <https://github.com/GRAAL-Research/deepparse/pull/54#issuecomment-743463855>`_ that this is due
         to the SQLite database behind `pymagnitude`. This approach create a cache to speed up processing and since the
-        memory mapping is save between the runs, it's more intensive the first time you call it and subsequent
+        memory mapping is saved between the runs, it's more intensive the first time you call it and subsequent
         time this load doesn't appear.
 
     Examples:
@@ -120,7 +124,15 @@ class AddressParser:
             address_parser = AddressParser(model_type="fasttext", device="cpu") # fasttext model on cpu
             parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
 
-        Using a retrain model
+        Using a model with attention mechanism
+
+        .. code-block:: python
+
+            # fasttext model with attention
+            address_parser = AddressParser(model_type="fasttext", attention_mechanism=True)
+            parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
+
+        Using a retrained model
 
         .. code-block:: python
 
@@ -128,7 +140,7 @@ class AddressParser:
                                            path_to_retrained_model='/path_to_a_retrain_fasttext_model')
             parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
 
-        Using a retrain model trained on different tags
+        Using a retrained model trained on different tags
 
         .. code-block:: python
 
@@ -140,6 +152,7 @@ class AddressParser:
 
     def __init__(self,
                  model_type: str = "best",
+                 attention_mechanism: bool = False,
                  device: Union[int, str, torch.device] = 0,
                  rounding: int = 4,
                  verbose: bool = True,
@@ -150,22 +163,22 @@ class AddressParser:
         self.rounding = rounding
         self.verbose = verbose
 
-        # Default pre trained tag are loaded
+        # Default pre-trained tag are loaded
         tags_to_idx = _pre_trained_tags_to_idx
-        # Default field of the formatted address
-        fields = [field for field in tags_to_idx if field != "EOS"]
+        # Default FIELDS of the formatted address
+        fields = list(tags_to_idx)
         # Default new config seq2seq model params
         seq2seq_kwargs = {}  # Empty for default settings
 
         if path_to_retrained_model is not None:
-            checkpoint_weights = torch.load(path_to_retrained_model, map_location='cpu')
+            checkpoint_weights = torch.load(path_to_retrained_model, map_location="cpu")
             if _validate_if_new_seq2seq_params(checkpoint_weights):
                 seq2seq_kwargs = checkpoint_weights.get("seq2seq_params")
             if _validate_if_new_prediction_tags(checkpoint_weights):
                 # We load the new tags_to_idx
                 tags_to_idx = checkpoint_weights.get("prediction_tags")
                 # We change the FIELDS for the FormattedParsedAddress
-                fields = [field for field in tags_to_idx if field != "EOS"]
+                fields = list(tags_to_idx)
 
             # We "infer" the model type
             model_type = checkpoint_weights.get("model_type")
@@ -173,15 +186,16 @@ class AddressParser:
         formatted_parsed_address.FIELDS = fields
         self.tags_converter = TagsConverter(tags_to_idx)
 
-        self._set_model_name(model_type)
+        self._set_model_name(model_type, attention_mechanism)
         self._model_factory(verbose=self.verbose,
                             path_to_retrained_model=path_to_retrained_model,
                             prediction_layer_len=self.tags_converter.dim,
+                            attention_mechanism=attention_mechanism,
                             seq2seq_kwargs=seq2seq_kwargs)
         self.model.eval()
 
     def __str__(self) -> str:
-        return f"{self.model_type.capitalize()}AddressParser"
+        return f"{self._model_type_formatted}AddressParser"
 
     __repr__ = __str__  # to call __str__ when list of address
 
@@ -194,7 +208,7 @@ class AddressParser:
         Callable method to parse the components of an address or a list of address.
 
         Args:
-            addresses_to_parse (Union[list[str], str]): The addresses to be parse, can be either a single address
+            addresses_to_parse (Union[list[str], str]): The addresses to be parsed, can be either a single address
                 (when using str) or a list of address. When using a list of addresses, the addresses are processed in
                 batch, allowing a faster process. For example, using fastText model, a single address takes around
                 0.003 seconds to be parsed using a batch of 1 (1 element at the time is processed).
@@ -282,6 +296,7 @@ class AddressParser:
 
         Args:
             dataset_container (~deepparse.dataset_container.DatasetContainer): The
+            dataset_container (~deepparse.dataset_container.DatasetContainer): The
                 dataset container of the data to use.
             train_ratio (float): The ratio to use of the dataset for the training. The rest of the data is used for the
                 validation (e.g. a train ratio of 0.8 mean a 80-20 train-valid split) (default is 0.8).
@@ -291,9 +306,9 @@ class AddressParser:
             learning_rate (float): The learning rate (LR) to use for training (default 0.01).
             callbacks (Union[list, None]): List of callbacks to use during training.
                 See Poutyne `callback <https://poutyne.org/callbacks.html#callback-class>`_ for more information. By
-                default we set no callback.
+                default, we set no callback.
             seed (int): Seed to use (by default 42).
-            logging_path (str): The logging path for the checkpoints. By default the path is ``./checkpoints``.
+            logging_path (str): The logging path for the checkpoints. By default, the path is ``./checkpoints``.
             prediction_tags (Union[dict, None]): A dictionary where the keys are the address components
                 (e.g. street name) and the values are the components indices (from 0 to N + 1) to use during retraining
                 of a model. The ``+ 1`` corresponds to the End Of Sequence (EOS) token that needs to be included in the
@@ -315,7 +330,7 @@ class AddressParser:
             <https://poutyne.org/experiment.html#poutyne.Experiment.train>`_ for details).
 
         Note:
-            We use SGD optimizer, NLL loss and accuracy as a metric, the data is shuffled and we use teacher forcing
+            We use SGD optimizer, NLL loss and accuracy as a metric, the data is shuffled, and we use teacher forcing
             during training (with a prob of 0.5) as in the `article <https://arxiv.org/abs/2006.16152>`_.
 
         Note:
@@ -478,11 +493,11 @@ class AddressParser:
             num_workers (int): Number of workers to use for the data loader (default is 1 worker).
             callbacks (Union[list, None]): List of callbacks to use during training.
                 See Poutyne `callback <https://poutyne.org/callbacks.html#callback-class>`_ for more information.
-                By default we set no callback.
+                By default, we set no callback.
             seed (int): Seed to use (by default 42).
             callbacks (Union[list, None]): List of callbacks to use during training.
                 See Poutyne `callback <https://poutyne.org/callbacks.html#callback-class>`_ for more information.
-                By default we set no callback.
+                By default, we set no callback.
         Return:
             A dictionary with the stats (see `Experiment class
             <https://poutyne.org/experiment.html#poutyne.Experiment.train>`_ for details).
@@ -501,7 +516,7 @@ class AddressParser:
 
                 address_parser.test(test_container) # We test the model on the data
 
-            You can also test your fine tuned model
+            You can also test your fine-tuned model
 
             .. code-block:: python
 
@@ -572,7 +587,7 @@ class AddressParser:
 
     def _process_device(self, device: Union[int, str, torch.device]) -> None:
         """
-        Function to process the device depending of the argument type.
+        Function to process the device depending on the argument type.
 
         Set the device as a torch device object.
         """
@@ -632,7 +647,9 @@ class AddressParser:
                        verbose: bool,
                        path_to_retrained_model: Union[str, None] = None,
                        prediction_layer_len: int = 9,
+                       attention_mechanism=False,
                        seq2seq_kwargs: Union[dict, None] = None) -> None:
+        # pylint: disable=too-many-arguments
         """
         Model factory to create the vectorizer, the data converter and the pre-trained model
         """
@@ -640,7 +657,7 @@ class AddressParser:
         seq2seq_kwargs = seq2seq_kwargs if seq2seq_kwargs is not None else {}
 
         if "fasttext" in self.model_type:
-            if self.model_type == "fasttext-light":
+            if "fasttext-light" in self.model_type:
                 file_name = download_fasttext_magnitude_embeddings(saving_dir=CACHE_PATH, verbose=verbose)
 
                 embeddings_model = MagnitudeEmbeddingsModel(file_name, verbose=verbose)
@@ -657,9 +674,10 @@ class AddressParser:
                                               output_size=prediction_layer_len,
                                               verbose=verbose,
                                               path_to_retrained_model=path_to_retrained_model,
+                                              attention_mechanism=attention_mechanism,
                                               **seq2seq_kwargs)
 
-        elif self.model_type == "bpemb":
+        elif "bpemb" in self.model_type:
             self.vectorizer = BPEmbVectorizer(embeddings_model=BPEmbEmbeddingsModel(verbose=verbose))
 
             self.data_converter = bpemb_data_padding
@@ -668,6 +686,7 @@ class AddressParser:
                                            output_size=prediction_layer_len,
                                            verbose=verbose,
                                            path_to_retrained_model=path_to_retrained_model,
+                                           attention_mechanism=attention_mechanism,
                                            **seq2seq_kwargs)
         else:
             raise NotImplementedError(f"There is no {self.model_type} network implemented. Value should be: "
@@ -680,7 +699,7 @@ class AddressParser:
         """
         return self.data_converter(self.vectorizer(data))
 
-    def _set_model_name(self, model_type: str):
+    def _set_model_name(self, model_type: str, attention_mechanism: str):
         """
         Handle the model type name matching with proper seq2seq model type name.
         """
@@ -694,6 +713,10 @@ class AddressParser:
         elif model_type in ("best", "bpemb"):
             model_type = "bpemb"  # We change name to bpemb since best = bpemb
             formatted_name = "BPEmb"
+
+        if attention_mechanism:
+            model_type += "Attention"
+            formatted_name += "Attention"
         self.model_type = model_type
         self._model_type_formatted = formatted_name
 

@@ -23,9 +23,9 @@ def main(args):
         print(f"{idx} file done of {len(test_files)}.")
 
         if train_country_file(test_file):
-            training_test_results.update({country: results['test_accuracy']})
+            training_test_results.update({country: results["test_accuracy"]})
         elif zero_shot_eval_country_file(test_file):
-            zero_shot_test_results.update({country: results['test_accuracy']})
+            zero_shot_test_results.update({country: results["test_accuracy"]})
         else:
             print(f"Error with the identification of test file type {test_file}.")
 
@@ -49,7 +49,7 @@ def main(args):
         print(f"{idx} file done of {len(incomplete_test_files)}.")
 
         if train_country_file(incomplete_test_file):
-            incomplete_training_test_results.update({country: results['test_accuracy']})
+            incomplete_training_test_results.update({country: results["test_accuracy"]})
         else:
             print(f"Error with the identification of test file type {incomplete_test_file}.")
 

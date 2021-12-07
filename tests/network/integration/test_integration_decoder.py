@@ -28,23 +28,30 @@ class DecoderCase(TestCase):
         cls.hidden_size = 1024
         cls.num_layers = 1
         cls.a_batch_size = 2
+        cls.sequence_len = 1
 
     @classmethod
     def tearDownClass(cls) -> None:
         cls.temp_dir_obj.cleanup()
 
-    def setUp_encoder_decoder(self, output_size: int, device: torch.device) -> None:
-        self.encoder = Decoder(self.input_size_dim, self.hidden_size, self.num_layers, output_size)
-        self.encoder.to(device)  # we mount it into the device
+    def setUp_encoder_decoder(self, output_size: int, device: torch.device, attention_mechanism) -> None:
+        self.decoder = Decoder(self.input_size_dim,
+                               self.hidden_size,
+                               self.num_layers,
+                               output_size,
+                               attention_mechanism=attention_mechanism)
+        self.decoder.to(device)  # we mount it into the device
         self.decoder_input_setUp(device)
 
     def decoder_input_setUp(self, device: torch.device):
-        self.decoder_input = torch.tensor([[[-1.], [-1.]]], device=device)
+        self.decoder_input = torch.tensor([[[-1], [-1]]], device=device)
+        self.a_lengths_tensor = torch.tensor(([self.sequence_len, self.sequence_len]), device="cpu")
 
         with open(os.path.join(self.weights_dir, "decoder_hidden.p"), "rb") as file:
             self.decoder_hidden_tensor = pickle.load(file)
         self.decoder_hidden_tensor = (self.decoder_hidden_tensor[0].to(device),
                                       self.decoder_hidden_tensor[1].to(device))
+        self.decoder_output = torch.rand((1, self.sequence_len, self.hidden_size), device=device)
 
     def assert_predictions_is_valid_dim(self, actual_predictions, output_size: int):
         self.assertEqual(self.a_batch_size, actual_predictions.shape[0])
@@ -62,38 +69,66 @@ class DecoderGPUTest(DecoderCase):
 
     def test_whenForwardStepGPU_thenStepIsOk(self):
         output_size = 9
-        self.setUp_encoder_decoder(output_size, self.a_torch_device)
-        predictions, hidden = self.encoder.forward(self.decoder_input, self.decoder_hidden_tensor)
+        self.setUp_encoder_decoder(output_size, self.a_torch_device, attention_mechanism=False)
+        predictions, hidden, att_weights = self.decoder.forward(self.decoder_input, self.decoder_hidden_tensor,
+                                                                self.decoder_output, self.a_lengths_tensor)
 
         self.assert_predictions_is_valid_dim(predictions, output_size)
         self.assert_hidden_is_valid_dim(hidden)
+        self.assertIsNone(att_weights)
+
+    def test_whenForwardAttStepGPU_thenStepIsOk(self):
+        output_size = 9
+        self.setUp_encoder_decoder(output_size, self.a_torch_device, attention_mechanism=True)
+        predictions, hidden, att_weights = self.decoder.forward(self.decoder_input, self.decoder_hidden_tensor,
+                                                                self.decoder_output, self.a_lengths_tensor)
+
+        self.assert_predictions_is_valid_dim(predictions, output_size)
+        self.assert_hidden_is_valid_dim(hidden)
+        self.assertIsNotNone(att_weights)
 
     def test_whenForwardStepDim10GPU_thenStepIsOk(self):
         output_size = 10
-        self.setUp_encoder_decoder(output_size, self.a_torch_device)
-        predictions, hidden = self.encoder.forward(self.decoder_input, self.decoder_hidden_tensor)
+        self.setUp_encoder_decoder(output_size, self.a_torch_device, attention_mechanism=False)
+        predictions, hidden, att_weights = self.decoder.forward(self.decoder_input, self.decoder_hidden_tensor,
+                                                                self.decoder_output, self.a_lengths_tensor)
 
         self.assert_predictions_is_valid_dim(predictions, output_size)
         self.assert_hidden_is_valid_dim(hidden)
+        self.assertIsNone(att_weights)
 
 
 class DecoderCPUTest(DecoderCase):
 
     def test_whenForwardStepCPU_thenStepIsOk(self):
         output_size = 9
-        self.setUp_encoder_decoder(output_size, self.a_cpu_device)
-        predictions, hidden = self.encoder.forward(self.decoder_input, self.decoder_hidden_tensor)
+        self.setUp_encoder_decoder(output_size, self.a_cpu_device, attention_mechanism=False)
+        predictions, hidden, att_weights = self.decoder.forward(self.decoder_input, self.decoder_hidden_tensor,
+                                                                self.decoder_output, self.a_lengths_tensor)
 
         self.assert_predictions_is_valid_dim(predictions, output_size)
         self.assert_hidden_is_valid_dim(hidden)
+        self.assertIsNone(att_weights)
+
+    def test_whenForwardAttStepCPU_thenStepIsOk(self):
+        output_size = 9
+        self.setUp_encoder_decoder(output_size, self.a_cpu_device, attention_mechanism=True)
+        predictions, hidden, att_weights = self.decoder.forward(self.decoder_input, self.decoder_hidden_tensor,
+                                                                self.decoder_output, self.a_lengths_tensor)
+
+        self.assert_predictions_is_valid_dim(predictions, output_size)
+        self.assert_hidden_is_valid_dim(hidden)
+        self.assertIsNotNone(att_weights)
 
     def test_whenForwardStepDim10CPU_thenStepIsOk(self):
         output_size = 10
-        self.setUp_encoder_decoder(output_size, self.a_cpu_device)
-        predictions, hidden = self.encoder.forward(self.decoder_input, self.decoder_hidden_tensor)
+        self.setUp_encoder_decoder(output_size, self.a_cpu_device, attention_mechanism=False)
+        predictions, hidden, att_weights = self.decoder.forward(self.decoder_input, self.decoder_hidden_tensor,
+                                                                self.decoder_output, self.a_lengths_tensor)
 
         self.assert_predictions_is_valid_dim(predictions, output_size)
         self.assert_hidden_is_valid_dim(hidden)
+        self.assertIsNone(att_weights)
 
 
 if __name__ == "__main__":

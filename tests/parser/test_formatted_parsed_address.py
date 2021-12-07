@@ -3,12 +3,12 @@
 import io
 import sys
 import unittest
-from unittest import TestCase
 
-from deepparse.parser import FormattedParsedAddress, formatted_parsed_address
+from deepparse.parser import FormattedParsedAddress
+from tests.parser.base import FormattedParsedAddressBase
 
 
-class FormattedParsedAddressTest(TestCase):
+class FormattedParsedAddressTest(FormattedParsedAddressBase):
 
     @classmethod
     def setUpClass(cls):
@@ -26,31 +26,28 @@ class FormattedParsedAddressTest(TestCase):
         cls.a_existing_tag = "3"
 
         cls.a_parsed_address_in_dict_format = {
-            'StreetNumber': '3',
-            'Unit': None,
-            'StreetName': 'test road',
-            'Orientation': None,
-            'Municipality': None,
-            'Province': None,
-            'PostalCode': None,
-            'GeneralDelivery': None
+            "StreetNumber": "3",
+            "Unit": None,
+            "StreetName": "test road",
+            "Orientation": None,
+            "Municipality": None,
+            "Province": None,
+            "PostalCode": None,
+            "GeneralDelivery": None,
+            "EOS": None
         }
 
         cls.a_complete_parsed_address_in_dict_format = {
-            'StreetNumber': '3',
-            'Unit': 'unit',
-            'StreetName': 'test road',
-            'Orientation': 'west',
-            'Municipality': 'city',
-            'Province': 'province',
-            'PostalCode': 'postal_code',
-            'GeneralDelivery': 'delivery'
+            "StreetNumber": "3",
+            "Unit": "unit",
+            "StreetName": "test road",
+            "Orientation": "west",
+            "Municipality": "city",
+            "Province": "province",
+            "PostalCode": "postal_code",
+            "GeneralDelivery": "delivery",
+            "EOS": None
         }
-        # we reset the FIELDS of the address to default values since we change it in some tests
-        formatted_parsed_address.FIELDS = [
-            "StreetNumber", "Unit", "StreetName", "Orientation", "Municipality", "Province", "PostalCode",
-            "GeneralDelivery"
-        ]
 
     def _capture_output(self):
         self.test_out = io.StringIO()
@@ -60,6 +57,7 @@ class FormattedParsedAddressTest(TestCase):
     def setUp(self):
         self.parsed_address = FormattedParsedAddress(self.a_address)
         self.complete_parsed_address = FormattedParsedAddress(self.a_complete_address)
+        self.reset_fields()
 
     def test_whenInstantiatedWithAddress_thenShouldReturnCorrectRawAddress(self):
         address = self.parsed_address.raw_address
@@ -106,11 +104,11 @@ class FormattedParsedAddressTest(TestCase):
 
     def test_whenToDictUserFields_thenReturnTheProperDict(self):
         actual = self.parsed_address.to_dict(fields=["StreetNumber"])
-        expected = {'StreetNumber': '3'}
+        expected = {"StreetNumber": "3"}
         self.assertEqual(actual, expected)
 
         actual = self.complete_parsed_address.to_dict(fields=["StreetNumber"])
-        expected = {'StreetNumber': '3'}
+        expected = {"StreetNumber": "3"}
         self.assertEqual(actual, expected)
 
     def test_whenFormattedAddressDefaultSettings_thenReturnExpectedOrderAndDontReturnNoneComponents(self):
@@ -202,14 +200,14 @@ class FormattedParsedAddressTest(TestCase):
 
     def test_whenFormattedParsedAddressInferredOrder_thenProperlyInferred(self):
         actual = self.parsed_address.inferred_order
-        expected = ['StreetNumber', 'StreetName']
+        expected = ["StreetNumber", "StreetName"]
 
         self.assertEqual(actual, expected)
 
         actual = self.complete_parsed_address.inferred_order
         expected = [
-            'StreetNumber', 'StreetName', 'Unit', 'Orientation', 'Municipality', 'Province', 'PostalCode',
-            'GeneralDelivery'
+            "StreetNumber", "StreetName", "Unit", "Orientation", "Municipality", "Province", "PostalCode",
+            "GeneralDelivery"
         ]
 
         self.assertEqual(actual, expected)
@@ -221,6 +219,15 @@ class FormattedParsedAddressTest(TestCase):
     def test_whenNotEqualParsedAddress_then__eq__ReturnFalse(self):
         self.assertFalse(self.parsed_address == self.complete_parsed_address)
         self.assertFalse(self.complete_parsed_address == self.parsed_address)
+
+    def test_whenParsedAddressAsEOSTag_thenProperlySet(self):
+        a_parsed_address_with_eos_tag = {
+            self.a_address_str: [("3", "StreetNumber"), ("test", "StreetName"), ("road", "EOS")]
+        }
+
+        actual_parsed_address = FormattedParsedAddress(a_parsed_address_with_eos_tag)
+
+        self.assertIsNotNone(actual_parsed_address.EOS)
 
 
 if __name__ == "__main__":

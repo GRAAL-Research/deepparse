@@ -16,13 +16,13 @@ except ModuleNotFoundError:
     class EmptyStringAttrClass:
 
         def __getattr__(self, attr):
-            return ''
+            return ""
 
     Fore = EmptyStringAttrClass()
     Style = EmptyStringAttrClass()
 
-__author__ = 'Jean-Samuel Leboeuf, Frédérik Paradis'
-__date__ = 'May 28th, 2019'
+__author__ = "Jean-Samuel Leboeuf, Frédérik Paradis"
+__date__ = "May 28th, 2019"
 
 
 class Timer:
@@ -37,14 +37,14 @@ class Timer:
     def __init__(self,
                  func_or_name=None,
                  *,
-                 display_name='',
-                 datetime_format='%Y-%m-%d %Hh%Mm%Ss',
-                 elapsed_time_format='short',
-                 main_color='LIGHTYELLOW_EX',
-                 exception_exit_color='LIGHTRED_EX',
-                 name_color='LIGHTBLUE_EX',
-                 time_color='LIGHTCYAN_EX',
-                 datetime_color='LIGHTMAGENTA_EX',
+                 display_name="",
+                 datetime_format="%Y-%m-%d %Hh%Mm%Ss",
+                 elapsed_time_format="short",
+                 main_color="LIGHTYELLOW_EX",
+                 exception_exit_color="LIGHTRED_EX",
+                 name_color="LIGHTBLUE_EX",
+                 time_color="LIGHTCYAN_EX",
+                 datetime_color="LIGHTMAGENTA_EX",
                  yield_timer=False):
         """
         Args:
@@ -87,7 +87,7 @@ class Timer:
             Example 1:
                 >>> from graal_utils import Timer
                 >>> with Timer():
-                ...     print('graal')
+                ...     print("graal")
                 ...
             Execution started on 2019-05-09 13h48m23s.
 
@@ -97,8 +97,8 @@ class Timer:
 
             Example 2:
                 >>> from graal_utils import Timer
-                >>> with Timer('python', time_color='MAGENTA'):
-                ...     print('Python')
+                >>> with Timer("python", time_color="MAGENTA"):
+                ...     print("Python")
                 ...
             Execution of 'python' started on 2019-05-09 13h48m23s.
 
@@ -111,7 +111,7 @@ class Timer:
                 >>> from graal_utils import Timer
                 >>> @Timer
                 ... def foo():
-                ...     print('foo!')
+                ...     print("foo!")
                 ...
                 >>> foo()
                 Execution of 'foo' started on 2018-09-10 20h25m06s.
@@ -123,7 +123,7 @@ class Timer:
             Example 2:
                 >>> @Timer(datetime_format='%Hh%Mm%Ss', display_func_name=False, main_color='WHITE')
                 ... def bar():
-                ...     print('bar!')
+                ...     print("bar!")
                 ...     raise RuntimeError
                 ...
                 >>> try:
@@ -142,7 +142,7 @@ class Timer:
                 >>> class Spam:
                 ...     @Timer
                 ...     def spam(self):
-                ...         print('egg!')
+                ...         print("egg!")
 
                 >>> Spam().spam()
                 Execution of 'spam' started on 2018-10-02 18h33m14s.
@@ -200,7 +200,7 @@ class Timer:
         self.datetime_color = getattr(Fore, datetime_color)
 
         self.yield_timer = yield_timer
-        self.iter_stats = ''
+        self.iter_stats = ""
 
     def __enter__(self):
         self._start_timer()
@@ -218,27 +218,27 @@ class Timer:
         # pylint: disable=no-else-return
         if self.display_name:
             return f"of '{self.name_color}{self.display_name}{self.main_color}' "
-        elif self.display_name == '' and self._wrapped_func is not None:
+        elif self.display_name == "" and self._wrapped_func is not None:
             return f"of '{self.name_color}{self.__name__}{self.main_color}' "
         else:
-            return ''
+            return ""
 
     @property
     def datetime(self):
         # pylint: disable=no-else-return
         if self.datetime_format is None:
-            return ''
+            return ""
         else:
-            return 'on ' + self.datetime_color + dt.now().strftime(self.datetime_format) + self.main_color
+            return "on " + self.datetime_color + dt.now().strftime(self.datetime_format) + self.main_color
 
     @staticmethod
     def format_long_time(seconds, period):
         # pylint: disable=no-else-return
-        periods = {'d': 'day', 'h': 'hour', 'm': 'minute', 's': 'second'}
+        periods = {"d": "day", "h": "hour", "m": "minute", "s": "second"}
 
-        pluralize = lambda period_value: 's' if period_value > 1 else ''
+        pluralize = lambda period_value: "s" if period_value > 1 else ""
         format_period_string = periods[period] + pluralize(seconds)
-        if period != 's':
+        if period != "s":
             return f"{int(seconds)} {format_period_string}"
         else:
             return f"{seconds:.2f} {format_period_string}"
@@ -246,18 +246,18 @@ class Timer:
     @staticmethod
     def format_short_time(seconds, period):
         # pylint: disable=no-else-return
-        if period != 's':
+        if period != "s":
             return f"{int(seconds)}{period}"
         else:
             return f"{seconds:.2f}{period}"
 
     def format_elapsed_time(self, seconds):
-        is_long = self.elapsed_time_format == 'long'
+        is_long = self.elapsed_time_format == "long"
         format_time = self.format_long_time if is_long else self.format_short_time
         periods = {
-            'd': 60 * 60 * 24,
-            'h': 60 * 60,
-            'm': 60,
+            "d": 60 * 60 * 24,
+            "h": 60 * 60,
+            "m": 60,
         }
 
         time_strings = []
@@ -266,28 +266,28 @@ class Timer:
                 period_value, seconds = divmod(seconds, period_seconds)
                 time_strings.append(format_time(period_value, period_name))
 
-        time_strings.append(format_time(seconds, 's'))
+        time_strings.append(format_time(seconds, "s"))
 
         return self.time_color + " ".join(time_strings) + self.main_color
 
     def _start_timer(self):
         self.start_time = time()
-        print(self.main_color + f'Execution {self.func_name}started {self.datetime}.\n' + Style.RESET_ALL)
+        print(self.main_color + f"Execution {self.func_name}started {self.datetime}.\n" + Style.RESET_ALL)
 
     def _exception_exit_end_timer(self):
-        print(self.exception_exit_color + '\nExecution terminated after ' +
+        print(self.exception_exit_color + "\nExecution terminated after " +
               self.format_elapsed_time(self.elapsed_time) +
-              f'{self.exception_exit_color} {self.datetime}{self.exception_exit_color}.\n{self.iter_stats}' +
+              f"{self.exception_exit_color} {self.datetime}{self.exception_exit_color}.\n{self.iter_stats}" +
               Style.RESET_ALL)
 
     def _normal_exit_end_timer(self):
-        print(self.main_color + f'\nExecution {self.func_name}completed in ' +
-              self.format_elapsed_time(self.elapsed_time) + f' {self.datetime}.\n{self.iter_stats}' + Style.RESET_ALL)
+        print(self.main_color + f"\nExecution {self.func_name}completed in " +
+              self.format_elapsed_time(self.elapsed_time) + f" {self.datetime}.\n{self.iter_stats}" + Style.RESET_ALL)
 
     def wrap_function(self, func):
         if func is not None:
             self.__doc__ = func.__doc__
-            if hasattr(func, '__name__'):
+            if hasattr(func, "__name__"):
                 self.__name__ = func.__name__
             else:
                 self.__name__ = type(func).__name__  # For the case when Timer is used as an iterator.
@@ -328,7 +328,7 @@ class Timer:
         longest_time = max((t, i) for i, t in enumerate(self.laps))
         self.iter_stats = (
             self.main_color +
-            f'Mean time per iteration: {self.format_elapsed_time(mean_time)} ± {self.format_elapsed_time(std)} over'
-            f' {len(self.laps)} iterations.\n' +
-            f'Iteration {shortest_time[1]} was the shortest with {self.format_elapsed_time(shortest_time[0])}.\n' +
-            f'Iteration {longest_time[1]} was the longest with {self.format_elapsed_time(longest_time[0])}.\n')
+            f"Mean time per iteration: {self.format_elapsed_time(mean_time)} ± {self.format_elapsed_time(std)} over"
+            f" {len(self.laps)} iterations.\n" +
+            f"Iteration {shortest_time[1]} was the shortest with {self.format_elapsed_time(shortest_time[0])}.\n" +
+            f"Iteration {longest_time[1]} was the longest with {self.format_elapsed_time(longest_time[0])}.\n")

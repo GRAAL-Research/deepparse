@@ -4,31 +4,36 @@
 
 import os
 from tempfile import TemporaryDirectory
+from typing import List
 from unittest import TestCase
 
 import torch
 
 from deepparse import download_from_url
 from deepparse.dataset_container import PickleDatasetContainer, DatasetContainer
-from deepparse.parser import AddressParser
+from deepparse.parser import AddressParser, FormattedParsedAddress
 
 
-class AddressParserPredictBase(TestCase):
-
-    @classmethod
-    def setUpClass(cls):
-        cls.fasttext_address_parser = AddressParser(model_type="fasttext", device="cpu", verbose=False)
-        cls.bpemb_address_parser = AddressParser(model_type="bpemb", device="cpu", verbose=False)
-        cls.an_address_to_parse = "350 rue des lilas o"
-
-
-class AddressParserPredictBaseGPU(TestCase):
+class AddressParserBase(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.fasttext_address_parser = AddressParser(model_type="fasttext", device=torch.device("cuda:0"), verbose=False)
-        cls.bpemb_address_parser = AddressParser(model_type="bpemb", device=torch.device("cuda:0"), verbose=False)
         cls.an_address_to_parse = "350 rue des lilas o"
+
+    def setup_model_with_config(self, config):
+        self.a_model = AddressParser(**config)
+
+
+class AddressParserPredictBase(AddressParserBase):
+
+    def assert_properly_parse(self, parsed_address, multiple_address=False):
+        if multiple_address:
+            self.assertIsInstance(parsed_address, List)
+            parsed_address = parsed_address[0]
+        self.assertIsInstance(parsed_address, FormattedParsedAddress)
+
+    def tearDown(self) -> None:
+        del self.a_model
 
 
 class AddressParserPredictNewParamsBase(TestCase):

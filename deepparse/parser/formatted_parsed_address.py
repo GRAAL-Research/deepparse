@@ -1,7 +1,8 @@
 from typing import Dict, List, Tuple, Union
 
 FIELDS = [
-    "StreetNumber", "Unit", "StreetName", "Orientation", "Municipality", "Province", "PostalCode", "GeneralDelivery"
+    "StreetNumber", "Unit", "StreetName", "Orientation", "Municipality", "Province", "PostalCode", "GeneralDelivery",
+    "EOS"
 ]
 
 
@@ -94,10 +95,10 @@ class FormattedParsedAddress:
                 the address. If None, we will use the inferred order base on the address tags appearance. For example,
                 if the parsed address is ``(305, StreetNumber), (rue, StreetName), (des, StreetName),
                 (Lilas, StreetName)``, the inferred order will be ``StreetNumber, StreetName``.
-            capitalize_fields (Union[list, None]): Optional argument to define the capitalize fields for the formatted
-                address. If None, no fields are capitalize.
-            upper_case_fields (Union[list, None]): Optional argument to define the upper cased fields for the
-                formatted address. If None, no fields are capitalize.
+            capitalize_fields (Union[list, None]): Optional argument to define the capitalized fields for the formatted
+                address. If None, no fields are capitalized.
+            upper_case_fields (Union[list, None]): Optional argument to define the upper-cased fields for the
+                formatted address. If None, no fields are capitalized.
             field_separator (Union[list, None]): Optional argument to define the field separator between address
                 components. If None, the default field separator is ``" "``.
 

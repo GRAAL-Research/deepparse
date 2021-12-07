@@ -1,4 +1,4 @@
-| Country        |   Fasttext (%) |   BPEmb (%) | Country     |   Fasttext (%) |   BPEmb (%) |
+| Country        |   FastText (%) |   BPEmb (%) | Country     |   FastText (%) |   BPEmb (%) |
 |:---------------|---------------:|------------:|:------------|---------------:|------------:|
 | Norway         |          99.06 |       98.3  | Austria     |          99.21 |       97.82 |
 | Italy          |          99.65 |       98.93 | Mexico      |          99.49 |       98.9  |

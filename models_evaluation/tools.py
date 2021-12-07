@@ -94,7 +94,7 @@ def test_on_country_data(address_parser: AddressParser, file: str, directory_pat
     return results, country
 
 
-def make_table(data_type: str, root_path: str = "."):
+def make_table(data_type: str, root_path: str = ".", with_attention: bool = False):
     """
     Function to generate an Markdown table
     """
@@ -104,11 +104,24 @@ def make_table(data_type: str, root_path: str = "."):
     fasttext_all_res = json.load(open(os.path.join(root_path, f"{data_type}_test_results_fasttext.json"), "r"))
     bpemb_all_res = json.load(open(os.path.join(root_path, f"{data_type}_test_results_bpemb.json"), "r"))
 
+    columns_name = ["Country", r"FastText (%)", r"BPEmb (%)"]
+
+    num_model = 2
+
+    if with_attention:
+        fasttext_att_all_res = json.load(
+            open(os.path.join(root_path, f"{data_type}_test_results_fasttext_attention.json"), "r"))
+        bpemb_att_all_res = json.load(
+            open(os.path.join(root_path, f"{data_type}_test_results_bpemb_attention.json"), "r"))
+        num_model = 4
+        columns_name = ["Country", r"FastText (%)", r"FastTextAtt (%)", r"BPEmb (%)", r"BPEmbAtt (%)"]
+
+    columns = columns_name * 2
     formatted_data = []
     # we format the data to have two pairs of columns for a less long table
     for idx, ((country, fasttext_res), (_, bpemb_res)) in enumerate(zip(fasttext_all_res.items(),
                                                                         bpemb_all_res.items())):
-        if idx % 2 and idx != 0:
+        if idx % num_model and idx != 0:
             data.extend([country, fasttext_res, bpemb_res])
             formatted_data.append(data)
         else:
@@ -116,14 +129,13 @@ def make_table(data_type: str, root_path: str = "."):
             if idx == 40:
                 formatted_data.append(data)
     table = pd.DataFrame(formatted_data,
-                         columns=["Country", r"Fasttext (%)", r"BPEmb (%)", "Country", r"Fasttext (%)",
-                                  r"BPEmb (%)"]).round(2).to_markdown(index=False)
+                         columns=columns).round(2).to_markdown(index=False)
 
     with open(os.path.join(table_dir, f"{data_type}_table.md"), "w", encoding="utf-8") as file:
         file.writelines(table)
 
 
-def make_table_rst(data_type: str, root_path: str = "."):
+def make_table_rst(data_type: str, root_path: str = ".", with_attention: bool = False):
     # pylint: disable=too-many-locals
     """
     Function to generate an Sphinx RST table
@@ -134,11 +146,25 @@ def make_table_rst(data_type: str, root_path: str = "."):
     fasttext_all_res = json.load(open(os.path.join(root_path, f"{data_type}_test_results_fasttext.json"), "r"))
     bpemb_all_res = json.load(open(os.path.join(root_path, f"{data_type}_test_results_bpemb.json"), "r"))
 
+    columns_name = ["Country", r"FastText (%)", r"BPEmb (%)"]
+
+    num_model = 2
+
+    if with_attention:
+        fasttext_att_all_res = json.load(
+            open(os.path.join(root_path, f"{data_type}_test_results_fasttext_attention.json"), "r"))
+        bpemb_att_all_res = json.load(
+            open(os.path.join(root_path, f"{data_type}_test_results_bpemb_attention.json"), "r"))
+        num_model = 4
+        columns_name = ["Country", r"FastText (%)", r"FastTextAtt (%)", r"BPEmb (%)", r"BPEmbAtt (%)"]
+
+    columns = columns_name * 2
+
     formatted_data = []
     # we format the data to have two pairs of columns for a less long table
     for idx, ((country, fasttext_res), (_, bpemb_res)) in enumerate(zip(fasttext_all_res.items(),
                                                                         bpemb_all_res.items())):
-        if idx % 2 and idx != 0:
+        if idx % num_model and idx != 0:
             data.extend([country, fasttext_res, bpemb_res])
             formatted_data.append(data)
         else:
@@ -146,8 +172,7 @@ def make_table_rst(data_type: str, root_path: str = "."):
             if idx == 40:
                 formatted_data.append(data)
     table = pd.DataFrame(formatted_data,
-                         columns=["Country", r"Fasttext (%)", r"BPEmb (%)", "Country", r"Fasttext (%)",
-                                  r"BPEmb (%)"]).round(2)
+                         columns=columns).round(2)
     new_line_prefix = "\t\t"
     string = ".. list-table::\n" + new_line_prefix + ":header-rows: 1\n" + "\n"
 

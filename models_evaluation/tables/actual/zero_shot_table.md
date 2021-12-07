@@ -1,4 +1,4 @@
-| Country      |   Fasttext (%) |   BPEmb (%) | Country       |   Fasttext (%) |   BPEmb (%) |
+| Country      |   FastText (%) |   BPEmb (%) | Country       |   FastText (%) |   BPEmb (%) |
 |:-------------|---------------:|------------:|:--------------|---------------:|------------:|
 | Latvia       |          89.29 |       68.31 | Faroe Islands |          71.22 |       64.74 |
 | Colombia     |          85.96 |       68.09 | Singapore     |          86.03 |       67.19 |

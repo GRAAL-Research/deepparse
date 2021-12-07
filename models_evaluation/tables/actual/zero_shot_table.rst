@@ -2,10 +2,10 @@
 		:header-rows: 1
 
 		*	- Country
-			- Fasttext (%)
+			- FastText (%)
 			- BPEmb (%)
 			- Country
-			- Fasttext (%)
+			- FastText (%)
 			- BPEmb (%)
 		*	- Latvia
 			- 89.29

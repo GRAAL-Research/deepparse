@@ -49,10 +49,10 @@ Attention mechanisms improve performance by around 0.5% for all countries.
 		:header-rows: 1
 
 		*	- Country
-			- Fasttext (%)
+			- FastText (%)
 			- BPEmb (%)
 			- Country
-			- Fasttext (%)
+			- FastText (%)
 			- BPEmb (%)
 		*	- Norway
 			- 99.06
@@ -122,10 +122,10 @@ We have also made a zero-shot evaluation of our models using clean data from 41 
 		:header-rows: 1
 
 		*	- Country
-			- Fasttext (%)
+			- FastText (%)
 			- BPEmb (%)
 			- Country
-			- Fasttext (%)
+			- FastText (%)
 			- BPEmb (%)
 		*	- Latvia
 			- 89.29
@@ -257,7 +257,229 @@ We have also made a zero-shot evaluation of our models using clean data from 41 
 Moreover, we also tested the performance when using attention mechanism to further improve zero-shot performance on
 those countries; the result are shown in the next table.
 
+.. list-table::
+		:header-rows: 1
 
+		*	- Country
+			- FastText (%)
+			- FastTextAtt (%)
+			- BPEmb (%)
+			- BPEmbAtt (%)
+			- Country
+			- FastText (%)
+			- FastTextAtt (%)
+			- BPEmb (%)
+			- BPEmbAtt (%)
+		*	- Ireland
+			- 80.16
+			- 89.11
+			- 54.44
+			- 81.84
+			- Serbia
+			- 92.87
+			- 95.88
+			- 76.79
+			- 91.4
+		*	- Uzbekistan
+			- 85.85
+			- 87.24
+			- 70.1
+			- 76.71
+			- Ukraine
+			- 93.34
+			- 94.58
+			- 89.42
+			- 92.65
+		*	- South Africa
+			- 95.68
+			- 97.25
+			- 74.82
+			- 97.95
+			- Paraguay
+			- 96.02
+			- 97.08
+			- 87.07
+			- 97.36
+		*	- Greece
+			- 87.08
+			- 86.04
+			- 38.95
+			- 58.79
+			- Algeria
+			- 86.32
+			- 87.3
+			- 70.59
+			- 84.56
+		*	- Belarus
+			- 93.25
+			- 97.4
+			- 78.59
+			- 97.49
+			- Sweden
+			- 73.13
+			- 89.24
+			- 86.85
+			- 93.53
+		*	- Portugal
+			- 93.09
+			- 94.92
+			- 72.01
+			- 93.76
+			- Hungary
+			- 51.52
+			- 51.08
+			- 37.87
+			- 24.48
+		*	- Iceland
+			- 83.7
+			- 96.54
+			- 77.09
+			- 96.63
+			- Colombia
+			- 85.96
+			- 90.08
+			- 68.09
+			- 88.52
+		*	- Latvia
+			- 89.29
+			- 93.14
+			- 68.31
+			- 73.79
+			- Malaysia
+			- 83.14
+			- 74.62
+			- 89.64
+			- 91.14
+		*	- Bosnia
+			- 88.54
+			- 87.27
+			- 67.46
+			- 89.02
+			- India
+			- 70.3
+			- 75.31
+			- 63.68
+			- 80.56
+		*	- Réunion
+			- 84.3
+			- 97.74
+			- 78.65
+			- 94.27
+			- Croatia
+			- 95.8
+			- 95.32
+			- 81.76
+			- 85.99
+		*	- Estonia
+			- 87.62
+			- 88.2
+			- 70.08
+			- 77.32
+			- New Caledonia
+			- 94.45
+			- 99.61
+			- 94.46
+			- 99.77
+		*	- Japan
+			- 36.26
+			- 46.91
+			- 34.97
+			- 49.48
+			- New Zealand
+			- 91.25
+			- 97.0
+			- 75.57
+			- 95.7
+		*	- Singapore
+			- 86.03
+			- 89.92
+			- 67.19
+			- 88.17
+			- Romania
+			- 90.04
+			- 95.38
+			- 82.9
+			- 93.41
+		*	- Bangladesh
+			- 72.28
+			- 78.21
+			- 65.63
+			- 77.09
+			- Slovakia
+			- 78.34
+			- 82.29
+			- 68.96
+			- 96.0
+		*	- Argentina
+			- 81.68
+			- 88.59
+			- 71.2
+			- 86.8
+			- Kazakhstan
+			- 89.04
+			- 92.37
+			- 76.13
+			- 96.08
+		*	- Venezuela
+			- 79.23
+			- 95.47
+			- 70.88
+			- 96.38
+			- Indonesia
+			- 62.38
+			- 66.87
+			- 63.04
+			- 71.17
+		*	- Bulgaria
+			- 91.16
+			- 91.73
+			- 65.76
+			- 93.28
+			- Cyprus
+			- 89.64
+			- 97.44
+			- 89.47
+			- 98.01
+		*	- Bermuda
+			- 83.19
+			- 93.25
+			- 59.16
+			- 93.8
+			- Moldova
+			- 89.22
+			- 92.07
+			- 57.48
+			- 89.08
+		*	- Slovenia
+			- 89.01
+			- 95.08
+			- 83.96
+			- 96.73
+			- Lithuania
+			- 93.28
+			- 87.74
+			- 69.97
+			- 78.67
+		*	- Philippines
+			- 63.91
+			- 81.94
+			- 57.36
+			- 83.42
+			- Belgium
+			- 93.14
+			- 90.72
+			- 86.06
+			- 89.85
+		*	- Faroe Islands
+			- 71.22
+			- 73.23
+			- 64.74
+			- 85.39
+			-
+			-
+			-
+			-
+			-
 
 Incomplete Data
 ***************
@@ -270,10 +492,10 @@ to achieve an interesting performance. Attention mechanisms improve performance 
 		:header-rows: 1
 
 		*	- Country
-			- Fasttext (%)
+			- FastText (%)
 			- BPEmb (%)
 			- Country
-			- Fasttext (%)
+			- FastText (%)
 			- BPEmb (%)
 		*	- Norway
 			- 99.52

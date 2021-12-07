@@ -43,6 +43,7 @@ Clean Data
 **********
 
 The following table presents the accuracy on the 20 countries (using clean data) we used during training for both our models.
+Attention mechanisms improve performance by around 0.5% for all countries.
 
 .. list-table::
 		:header-rows: 1
@@ -253,12 +254,17 @@ We have also made a zero-shot evaluation of our models using clean data from 41 
 			-
 			-
 
+Moreover, we also tested the performance when using attention mechanism to further improve zero-shot performance on
+those countries; the result are shown in the next table.
+
+
+
 Incomplete Data
 ***************
 
 The following table presents the accuracy on the 20 countries we used during training for both our models but for
 incomplete data. We didn't test on the other 41 countries since we did not train on them and therefore do not expect
-to achieve an interesting performance. 
+to achieve an interesting performance. Attention mechanisms improve performance by around 0.5% for all countries.
 
 .. list-table::
 		:header-rows: 1
@@ -376,6 +382,18 @@ See `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine
 
     address_parser.retrain(training_container, 0.8, epochs=5, batch_size=8)
 
+Retrain a Model with an attention mechanism
+*******************************************
+See `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py>`_ for a complete example.
+
+.. code-block:: python
+
+    # We will retrain the fasttext version of our pretrained model.
+    address_parser = AddressParser(model_type="fasttext", device=0, attention_mechanism=True)
+
+    address_parser.retrain(training_container, 0.8, epochs=5, batch_size=8)
+
+
 Retrain a Model With New Tags
 *****************************
 See `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py>`_ for a complete example.
@@ -403,8 +421,10 @@ Download our Models
 
 Here are the URLs to download our pre-trained models directly
     - `FastText <https://graal.ift.ulaval.ca/public/deepparse/fasttext.ckpt>`_,
+    - `FastTextAttention <https://graal.ift.ulaval.ca/public/deepparse/fasttext_attention.ckpt>`_,
     - `BPEmb <https://graal.ift.ulaval.ca/public/deepparse/bpemb.ckpt>`_,
-    - `FastText Light <https://graal.ift.ulaval.ca/public/deepparse/fasttext.magnitude.gz>`_ (using `Magnitude Light <https://github.com/davebulaval/magnitude-light>`_).
+    - `BPEmbAttention <https://graal.ift.ulaval.ca/public/deepparse/bpemb_attention.ckpt>`_,
+    - `FastText Light <https://graal.ift.ulaval.ca/public/deepparse/fasttext.magnitude.gz>`_ (using `Magnitude Light <https://github.com/davebulaval/magnitude-light>`_),.
 
 
 Installation

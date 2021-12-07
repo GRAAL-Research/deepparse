@@ -56,8 +56,7 @@ class AddressParser:
             - "PostalCode": for the postal code,
             - "Orientation": for the street orientation (e.g. west, east),
             - "GeneralDelivery": for other delivery information,
-            - "EOS": (End Of Sequence) since we use an EOS tag during training, sometimes the models return an EOS tag
-                to some address components.
+            - "EOS": (End Of Sequence) since we use an EOS tag during training, sometimes the models return an EOS tag.
 
     Args:
         model_type (str): The network name to use, can be either:

@@ -58,11 +58,11 @@ are a little bit lower on trained country (around ~2%) but are similar on zero-s
             - ~1
             - ~0.0053
             - ~0.0019
-         *   - BPEmb
+        *   - BPEmbAttention
             - ~1.1
             - ~1
-            - ~
-            - ~
+            - ~0.0086
+            - ~0.0027
         *   - Libpostal
             - N/A
             - N/A
@@ -97,8 +97,8 @@ are a little bit lower on trained country (around ~2%) but are similar on zero-s
             - ~0.0059
         *   - BPEmbAttention
             - ~1
-            - ~
-            - ~
+            - ~0.0270
+            - ~0.0075
         *   - Libpostal
             - N/A
             - <1

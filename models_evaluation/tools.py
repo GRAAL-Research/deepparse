@@ -1,3 +1,5 @@
+# pylint: disable=too-many-locals
+
 import json
 import os
 
@@ -134,8 +136,7 @@ def make_table(data_type: str, root_path: str = ".", with_attention: bool = Fals
             if idx == 40:
                 data.extend([0] * (len(res_data) + 1))
                 formatted_data.append(data)
-    table = pd.DataFrame(formatted_data,
-                         columns=columns).round(2).to_markdown(index=False)
+    table = pd.DataFrame(formatted_data, columns=columns).round(2).to_markdown(index=False)
 
     with open(os.path.join(table_dir, f"{data_type}_table.md"), "w", encoding="utf-8") as file:
         file.writelines(table)
@@ -183,8 +184,7 @@ def make_table_rst(data_type: str, root_path: str = ".", with_attention: bool = 
             if idx == 40:
                 data.extend([0] * (len(res_data) + 1))
                 formatted_data.append(data)
-    table = pd.DataFrame(formatted_data,
-                         columns=columns).round(2)
+    table = pd.DataFrame(formatted_data, columns=columns).round(2)
     new_line_prefix = "\t\t"
     string = ".. list-table::\n" + new_line_prefix + ":header-rows: 1\n" + "\n"
 

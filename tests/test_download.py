@@ -9,7 +9,6 @@ from unittest import TestCase
 from unittest.mock import patch
 
 from deepparse import download
-from tests.tools import create_file
 
 
 class DownloadTests(TestCase):
@@ -17,10 +16,11 @@ class DownloadTests(TestCase):
     def setUp(self) -> None:
         self.temp_dir_obj = TemporaryDirectory()
         self.fake_cache_path = os.path.join(self.temp_dir_obj.name, "fake_cache")
-        self.a_file_extension = "version"
         self.a_fasttext_model_type = "fasttext"
+        self.a_fasttext_att_model_type = "fasttext_attention"
         self.a_fasttext_light_model_type = "fasttext-light"
         self.a_bpemb_model_type = "bpemb"
+        self.a_bpemb_att_model_type = "bpemd_attention"
         self.latest_fasttext_version = "617a417a2f2b02654f7deb5b5cbc60ab2f6334ba"
         self.latest_bpemb_version = "6d01367745157066ea6e621ac087be828137711f"
 
@@ -29,15 +29,14 @@ class DownloadTests(TestCase):
     def tearDown(self) -> None:
         self.temp_dir_obj.cleanup()
 
-    def create_cache_version(self, model_name, content):
-        version_file_path = os.path.join(self.fake_cache_path, model_name + ".version")
-        create_file(version_file_path, content)
-
     def create_parser(self):
         self.parser = argparse.ArgumentParser()
-        self.parser.add_argument(
-            "model_type",
-            choices=[self.a_fasttext_model_type, self.a_fasttext_light_model_type, self.a_bpemb_model_type])
+        self.parser.add_argument("model_type",
+                                 choices=[
+                                     self.a_fasttext_model_type, self.a_fasttext_att_model_type,
+                                     self.a_fasttext_light_model_type, self.a_bpemb_model_type,
+                                     self.a_bpemb_att_model_type
+                                 ])
 
     @patch("deepparse.download.download_weights")
     def test_givenAFasttextDownload_whenModelIsNotLocal_thenDownloadEmbeddings(self, weights_download_mock):
@@ -79,6 +78,16 @@ class DownloadTests(TestCase):
 
                 downloader.assert_any_call(self.a_fasttext_model_type, self.fake_cache_path)
 
+    @patch("deepparse.download.download_fasttext_embeddings")
+    def test_givenAFasttextAttDownload_whenModelIsNotLocal_thenDownloadWeights(self, download_embeddings_mock):
+        args_parser = self.parser.parse_args([self.a_fasttext_att_model_type])
+
+        with patch("deepparse.download.CACHE_PATH", self.fake_cache_path):
+            with patch("deepparse.download.download_weights") as downloader:
+                download.main(args_parser)
+
+                downloader.assert_any_call(self.a_fasttext_att_model_type, self.fake_cache_path)
+
     @patch("deepparse.download.download_fasttext_magnitude_embeddings")
     def test_givenAFasttextLightDownload_whenModelIsNotLocal_thenDownloadWeights(self, download_embeddings_mock):
         args_parser = self.parser.parse_args([self.a_fasttext_light_model_type])
@@ -97,6 +106,15 @@ class DownloadTests(TestCase):
                 download.main(args_parser)
 
                 downloader.assert_any_call(self.a_bpemb_model_type, self.fake_cache_path)
+
+    @patch("deepparse.download.BPEmb")
+    def test_givenABPembAttDownload_whenModelIsNotLocal_thenDownloadWeights(self, download_embeddings_mock):
+        args_parser = self.parser.parse_args([self.a_bpemb_att_model_type])
+        with patch("deepparse.download.CACHE_PATH", self.fake_cache_path):
+            with patch("deepparse.download.download_weights") as downloader:
+                download.main(args_parser)
+
+                downloader.assert_any_call(self.a_bpemb_att_model_type, self.fake_cache_path)
 
     @patch("deepparse.download.download_fasttext_embeddings")
     @patch("deepparse.download.os.path.isfile", return_value=True)

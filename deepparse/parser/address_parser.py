@@ -25,6 +25,7 @@ from ..tools import CACHE_PATH, indices_splitting, load_tuple_to_device
 from ..vectorizer import FastTextVectorizer, BPEmbVectorizer
 from ..vectorizer import TrainVectorizer
 from ..vectorizer.magnitude_vectorizer import MagnitudeVectorizer
+from ..preprocessing import AddressCleaner
 
 _pre_trained_tags_to_idx = {
     "StreetNumber": 0,
@@ -246,13 +247,12 @@ class AddressParser:
         if isinstance(addresses_to_parse, str):
             addresses_to_parse = [addresses_to_parse]
 
-        # since training data is lowercase
-        lower_cased_addresses_to_parse = [address.lower() for address in addresses_to_parse]
+        clean_addresses = AddressCleaner.clean(addresses_to_parse)
 
         if self.verbose and len(addresses_to_parse) > PREDICTION_TIME_PERFORMANCE_THRESHOLD:
             print("Vectorizing the address")
 
-        predict_data_loader = DataLoader(lower_cased_addresses_to_parse,
+        predict_data_loader = DataLoader(clean_addresses,
                                          collate_fn=self._predict_pipeline,
                                          batch_size=batch_size,
                                          num_workers=num_workers)
@@ -266,7 +266,8 @@ class AddressParser:
                 torch.exp(tensor_prediction.max(2)[0]).transpose(0, 1).detach().cpu().numpy().tolist())
 
         tagged_addresses_components = self._fill_tagged_addresses_components(tags_predictions, tags_predictions_prob,
-                                                                             addresses_to_parse, with_prob)
+                                                                             addresses_to_parse, clean_addresses,
+                                                                             with_prob)
 
         return tagged_addresses_components
 
@@ -564,17 +565,17 @@ class AddressParser:
 
     def _fill_tagged_addresses_components(
             self, tags_predictions: List, tags_predictions_prob: List, addresses_to_parse: List[str],
-            with_prob: bool) -> Union[FormattedParsedAddress, List[FormattedParsedAddress]]:
+            clean_addresses: List[str], with_prob: bool) -> Union[FormattedParsedAddress, List[FormattedParsedAddress]]:
+        # pylint: disable=too-many-arguments, too-many-locals
         """
         Method to fill the mapping for every address between a address components and is associated predicted tag (or
         tag and prob).
         """
         tagged_addresses_components = []
-        for address_to_parse, tags_prediction, tags_prediction_prob in zip(addresses_to_parse, tags_predictions,
-                                                                           tags_predictions_prob):
+        for address_to_parse, clean_address, tags_prediction, tags_prediction_prob in zip(
+                addresses_to_parse, clean_addresses, tags_predictions, tags_predictions_prob):
             tagged_address_components = []
-            for word, predicted_idx_tag, tag_proba in zip(address_to_parse.split(), tags_prediction,
-                                                          tags_prediction_prob):
+            for word, predicted_idx_tag, tag_proba in zip(clean_address.split(), tags_prediction, tags_prediction_prob):
                 tag = self.tags_converter(predicted_idx_tag)
                 if with_prob:
                     tag = (tag, round(tag_proba, self.rounding))

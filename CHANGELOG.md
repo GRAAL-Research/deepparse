@@ -126,3 +126,7 @@
 
 - Added Attention mechanism models
 - Fixed EOS bug
+
+## 0.6.1
+
+- Completed EOS bug fix

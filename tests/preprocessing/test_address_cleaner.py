@@ -12,28 +12,28 @@ class AddressCleanerTest(TestCase):
         cls.a_dirty_address_with_uppercase = "350 rue des Lilas Ouest Québec Québec G1L 1B6"
         cls.a_dirty_address_with_whitespaces = "350     rue des Lilas Ouest Québec Québec G1L 1B6"
 
-    def test_givenACleanAddress_whenCleaningAddress_thenshouldntMakeAnyChange(self):
-        cleaned_address = AddressCleaner.clean([self.a_clean_address])
+    def test_givenACleanAddress_whenCleaningAddress_thenShouldNotMakeAnyChange(self):
+        cleaned_address = AddressCleaner().clean([self.a_clean_address])
 
         self.assertEqual(self.a_clean_address, cleaned_address[0])
 
     def test_givenADirtyAddressWithCommas_whenCleaningAddress_thenShouldRemoveCommas(self):
-        cleaned_address = AddressCleaner.clean([self.a_dirty_address_with_commas])
+        cleaned_address = AddressCleaner().clean([self.a_dirty_address_with_commas])
 
         self.assertEqual(self.a_clean_address, cleaned_address[0])
 
     def test_givenADirtyAddressWithUppercase_whenCleaningAddress_thenShouldLower(self):
-        cleaned_address = AddressCleaner.clean([self.a_dirty_address_with_uppercase])
+        cleaned_address = AddressCleaner().clean([self.a_dirty_address_with_uppercase])
 
         self.assertEqual(self.a_clean_address, cleaned_address[0])
 
     def test_givenADirtyAddressWithWhitespaces_whenCleaningAddress_thenShouldRemoveWhitespaces(self):
-        cleaned_address = AddressCleaner.clean([self.a_dirty_address_with_whitespaces])
+        cleaned_address = AddressCleaner().clean([self.a_dirty_address_with_whitespaces])
 
         self.assertEqual(self.a_clean_address, cleaned_address[0])
 
     def test_givenMultipleDirtyAddresses_whenCleaningAddresses_thenShouldCleanAllAddresses(self):
-        cleaned_address = AddressCleaner.clean(
+        cleaned_address = AddressCleaner().clean(
             [self.a_dirty_address_with_whitespaces, self.a_dirty_address_with_uppercase])
 
         self.assertEqual(self.a_clean_address, cleaned_address[0])

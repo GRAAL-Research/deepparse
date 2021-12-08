@@ -44,7 +44,6 @@ class BPEmbVectorizer(Vectorizer):
         """
         input_sequence = []
         word_decomposition_lengths = []
-        address = address.replace(",", "")  # see issue 56 https://github.com/GRAAL-Research/deepparse/issues/56
         for word in address.split():
             bpe_decomposition = self.embeddings_model(word)
             word_decomposition_lengths.append(len(bpe_decomposition))

@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+preferred-citation:
+  type: misc
+  message: "If you use Deepparse, please cite it as below."
+  authors:
+  - family-names: "Yassine"
+    given-names: "Marouane"
+  - family-names: "Beauchemin"
+    given-names: "David"
+  title: "Deepparse: A State-Of-The-Art Deep Learning Multinational Addresses Parser"
+  url: "https://deepparse.org"
+  year: 2020

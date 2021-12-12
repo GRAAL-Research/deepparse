@@ -309,7 +309,10 @@ class AddressParser:
                 See Poutyne `callback <https://poutyne.org/callbacks.html#callback-class>`_ for more information. By
                 default, we set no callback.
             seed (int): Seed to use (by default 42).
-            logging_path (str): The logging path for the checkpoints. By default, the path is ``./checkpoints``.
+            logging_path (str): The logging path for the checkpoints. Poutyne will use the best one and reload the 
+                state if any checkpoints are there. Thus, an error will be raised if you change the model type. 
+                For example,  you retrain a FastText model and then retrain a BPEmb in the same logging path directory. 
+                By default, the path is ``./checkpoints``.
             prediction_tags (Union[dict, None]): A dictionary where the keys are the address components
                 (e.g. street name) and the values are the components indices (from 0 to N + 1) to use during retraining
                 of a model. The ``+ 1`` corresponds to the End Of Sequence (EOS) token that needs to be included in the
@@ -338,6 +341,11 @@ class AddressParser:
             Due to pymagnitude, we could not train using the Magnitude embeddings, meaning it's not possible to
             train using the fasttext-light model. But, since we don't update the embeddings weights, one can retrain
             using the fasttext model and later on use the weights with the fasttext-light.
+
+        Note:
+            When retraining a model, Poutyne will create checkpoints. After the training, we use the best checkpoint
+            in a directory as the model to load. Thus, if you train two different models in the same directory,
+            the second retrain will not work due to model differences.
 
         Examples:
 
@@ -407,7 +415,7 @@ class AddressParser:
                     prediction_tags=address_components)
 
         """
-        if self.model_type == "fasttext-light":
+        if "fasttext-light" in self.model_type:
             raise ValueError("It's not possible to retrain a fasttext-light due to pymagnitude problem.")
 
         model_factory_dict = {"prediction_layer_len": 9}  # We set the default output dim size
@@ -456,13 +464,19 @@ class AddressParser:
                          loss_function=nll_loss,
                          batch_metrics=[accuracy])
 
-        train_res = exp.train(train_generator,
-                              valid_generator=valid_generator,
-                              epochs=epochs,
-                              seed=seed,
-                              callbacks=callbacks,
-                              verbose=self.verbose,
-                              disable_tensorboard=True)  # to remove tensorboard automatic logging
+        try:
+            train_res = exp.train(train_generator,
+                                  valid_generator=valid_generator,
+                                  epochs=epochs,
+                                  seed=seed,
+                                  callbacks=callbacks,
+                                  verbose=self.verbose,
+                                  disable_tensorboard=True)  # to remove tensorboard automatic logging
+        except RuntimeError as error:
+            if len(os.listdir(path='.')) > 0:
+                pass
+            else:
+
 
         file_path = os.path.join(logging_path, f"retrained_{self.model_type}_address_parser.ckpt")
         torch_save = {"address_tagger_model": exp.model.network.state_dict(), "model_type": self.model_type}
@@ -540,7 +554,7 @@ class AddressParser:
                 address_parser.test(test_container) # Test the retrained model
 
         """
-        if self.model_type == "fasttext-light":
+        if "fasttext-light" in self.model_type:
             raise ValueError("It's not possible to test a fasttext-light due to pymagnitude problem. See Retrain method"
                              "doc for more details.")
 

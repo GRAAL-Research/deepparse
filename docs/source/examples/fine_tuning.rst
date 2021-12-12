@@ -44,16 +44,44 @@ Let's start with the default learning rate of 0.01 and use a learning rate sched
 
 .. code-block:: python
 
-    # reduce LR by a factor of 10 each epoch
+    # Reduce LR by a factor of 10 each epoch
     lr_scheduler = poutyne.StepLR(step_size=1, gamma=0.1)
 
-The checkpoints (ckpt) are saved in the default "./checkpoints" directory
+The checkpoints (ckpt) are saved in the default "./checkpoints" directory, so if you wish to retrain
+another model (let say BPEmb), you need to change the `logging_path` directory otherwise you will get
+an error when doing a retrain since Poutyne will try to use the last checkpoint.
+
 
 .. code-block:: python
 
     address_parser.retrain(training_container, 0.8, epochs=5, batch_size=8, num_workers=2, callbacks=[lr_scheduler])
 
 Now let's test our fine tuned model using the best ckeckpoint (default parameter).
+
+.. code-block:: python
+
+    address_parser.test(test_container, batch_size=256)
+
+Now let's retrain the fasttext version but with an attention mechanism
+
+.. code-block:: python
+
+    address_parser = AddressParser(model_type="fasttext", device=0, attention_mechanism=True)
+
+Since the previous checkpoints where saved in the default "./checkpoints" directory, we need to use a new one.
+Otherwise, poutyne will try to reload the previous checkpoints and our model have change.
+
+.. code-block:: python
+
+    address_parser.retrain(training_container,
+                           0.8,
+                           epochs=5,
+                           batch_size=8,
+                           num_workers=2,
+                           callbacks=[lr_scheduler],
+                           logging_path="checkpoints_attention")
+
+Now let's test our fine-tuned model using the best checkpoint (default parameter).
 
 .. code-block:: python
 

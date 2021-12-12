@@ -25,8 +25,8 @@ def fasttext_data_padding(batch: List) -> Tuple:
     """
 
     # We convert into np.array before as per PyTorch optimization recommendation
-    sequences_vectors, lengths = zip(
-        *[(torch.FloatTensor(np.array(seq_vectors)), len(seq_vectors)) for seq_vectors in batch])
+    sequences_vectors, lengths = zip(*[(torch.FloatTensor(np.array(seq_vectors)), len(seq_vectors))
+                                       for seq_vectors in batch])
 
     lengths = torch.tensor(lengths)
 
@@ -50,9 +50,8 @@ def bpemb_data_padding(batch: List[Tuple]) -> Tuple:
     """
 
     # We convert into np.array before as per PyTorch optimization recommendation
-    sequences_vectors, decomp_len, lengths = zip(
-        *[(torch.tensor(np.array(vectors)), word_decomposition_len, len(vectors))
-          for vectors, word_decomposition_len in batch])
+    sequences_vectors, decomp_len, lengths = zip(*[(torch.tensor(np.array(vectors)), word_decomposition_len,
+                                                    len(vectors)) for vectors, word_decomposition_len in batch])
 
     lengths = torch.tensor(lengths)
 

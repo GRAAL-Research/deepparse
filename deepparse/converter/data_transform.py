@@ -24,7 +24,7 @@ class DataTransform:
 
     def __init__(self, vectorizer: TrainVectorizer, model_type: str):
         self.vectorizer = vectorizer
-        if "fasttext" in model_type:
+        if "fasttext" in model_type and "light" not in model_type:
             self.teacher_forcing_data_padding_fn = fasttext_data_padding_teacher_forcing
             self.output_transform_data_padding_fn = fasttext_data_padding_with_target
         elif "bpemb" in model_type:

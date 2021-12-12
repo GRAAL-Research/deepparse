@@ -130,3 +130,7 @@
 ## 0.6.1
 
 - Completed EOS bug fix
+
+## 0.6.2.
+
+- Improved code speed of data padding method as per PyTorch list or array to Tensor recommendation.

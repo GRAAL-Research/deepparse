@@ -12,12 +12,8 @@ class DataTransform:
     Args:
         vectorizer (~deepparse.deepparse.train_vectorizer.TrainVectorizer): Vectorizer to vectorize the data
          (i.e. transform into word embedding and tag idx).
-        model_type (str): The model type, can be either:
-
-            - fasttext (need ~8 GO of RAM to be used),
-            - bpemb (need ~2 GO of RAM to be used),
-            - fastest (quicker to process one address) (equivalent to fasttext),
-            - best (best accuracy performance) (equivalent to bpemb).
+        model_type (str): See AddressParser for model type. Only `fasttext-light` is not supported due to
+            `pymagnitude-light` incompatibility.
 
         Note:
         Since Windows uses `spawn` instead of `fork` during multiprocess (for the data loading pre-processing
@@ -28,10 +24,10 @@ class DataTransform:
 
     def __init__(self, vectorizer: TrainVectorizer, model_type: str):
         self.vectorizer = vectorizer
-        if model_type in ("fasttext", "fastest"):
+        if "fasttext" in model_type:
             self.teacher_forcing_data_padding_fn = fasttext_data_padding_teacher_forcing
             self.output_transform_data_padding_fn = fasttext_data_padding_with_target
-        elif model_type in ("bpemb", "best"):
+        elif "bpemb" in model_type:
             self.teacher_forcing_data_padding_fn = bpemb_data_padding_teacher_forcing
             self.output_transform_data_padding_fn = bpemb_data_padding_with_target
         else:

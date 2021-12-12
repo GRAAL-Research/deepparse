@@ -21,11 +21,11 @@ from ..fasttext_tools import download_fasttext_magnitude_embeddings
 from ..metrics import nll_loss, accuracy
 from ..network.bpemb_seq2seq import BPEmbSeq2SeqModel
 from ..network.fasttext_seq2seq import FastTextSeq2SeqModel
+from ..preprocessing import AddressCleaner
 from ..tools import CACHE_PATH, indices_splitting, load_tuple_to_device
 from ..vectorizer import FastTextVectorizer, BPEmbVectorizer
 from ..vectorizer import TrainVectorizer
 from ..vectorizer.magnitude_vectorizer import MagnitudeVectorizer
-from ..preprocessing import AddressCleaner
 
 _pre_trained_tags_to_idx = {
     "StreetNumber": 0,
@@ -309,9 +309,9 @@ class AddressParser:
                 See Poutyne `callback <https://poutyne.org/callbacks.html#callback-class>`_ for more information. By
                 default, we set no callback.
             seed (int): Seed to use (by default 42).
-            logging_path (str): The logging path for the checkpoints. Poutyne will use the best one and reload the 
-                state if any checkpoints are there. Thus, an error will be raised if you change the model type. 
-                For example,  you retrain a FastText model and then retrain a BPEmb in the same logging path directory. 
+            logging_path (str): The logging path for the checkpoints. Poutyne will use the best one and reload the
+                state if any checkpoints are there. Thus, an error will be raised if you change the model type.
+                For example,  you retrain a FastText model and then retrain a BPEmb in the same logging path directory.
                 By default, the path is ``./checkpoints``.
             prediction_tags (Union[dict, None]): A dictionary where the keys are the address components
                 (e.g. street name) and the values are the components indices (from 0 to N + 1) to use during retraining
@@ -415,6 +415,7 @@ class AddressParser:
                     prediction_tags=address_components)
 
         """
+        # pylint: disable=too-many-branches
         if "fasttext-light" in self.model_type:
             raise ValueError("It's not possible to retrain a fasttext-light due to pymagnitude problem.")
 
@@ -473,10 +474,24 @@ class AddressParser:
                                   verbose=self.verbose,
                                   disable_tensorboard=True)  # to remove tensorboard automatic logging
         except RuntimeError as error:
-            if len(os.listdir(path='.')) > 0:
-                pass
+            list_of_file_path = os.listdir(path='.')
+            if len(list_of_file_path) > 0:
+                if _pretrained_parser_in_directory(logging_path):
+                    # Mean we might already have checkpoint in the training directory
+                    files_in_directory = _get_files_in_directory(logging_path)
+                    retrained_address_parser_in_directory = _get_address_parser_in_directory(
+                        files_in_directory)[0].split("_")[1]
+                    if self.model_type != retrained_address_parser_in_directory:
+                        raise ValueError(f"You are currently training a {self.model_type} in the directory "
+                                         f"{logging_path} where a different retrained "
+                                         f"{retrained_address_parser_in_directory} is currently hare."
+                                         f"Thus, the loading of the model is failing. Change directory to retrain the"
+                                         f"{self.model_type}") from error
+                    if self.model_type == retrained_address_parser_in_directory:
+                        raise ValueError(f"You are currently training a different {self.model_type} version from"
+                                         f"the one in the {logging_path}. Verify version.") from error
             else:
-
+                raise RuntimeError(error) from error
 
         file_path = os.path.join(logging_path, f"retrained_{self.model_type}_address_parser.ckpt")
         torch_save = {"address_tagger_model": exp.model.network.state_dict(), "model_type": self.model_type}
@@ -749,3 +764,24 @@ def _validate_if_new_prediction_tags(checkpoint_weights: dict) -> bool:
 
 def _validate_if_new_seq2seq_params(checkpoint_weights: dict) -> bool:
     return checkpoint_weights.get("seq2seq_params") is not None
+
+
+def _pretrained_parser_in_directory(logging_path: str) -> bool:
+    # we verify if an address retrained address parser is in the directory
+    files_in_directory = _get_files_in_directory(logging_path)
+
+    return len(_get_address_parser_in_directory(files_in_directory)) == 0
+
+
+def _get_files_in_directory(logging_path: str) -> List[str]:
+    files_path_with_directories = [files for root, dirs, files in os.walk(os.path.abspath(logging_path))]
+
+    # We unwrap the list of list
+    files_in_directory = [elem for sublist in files_path_with_directories for elem in sublist]
+    return files_in_directory
+
+
+def _get_address_parser_in_directory(files_in_directory: List[str]) -> List:
+    return [
+        file_name for file_name in files_in_directory if "_address_parser" in file_name and "retrained" in file_name
+    ]

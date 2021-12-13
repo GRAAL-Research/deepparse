@@ -3,10 +3,11 @@
 
 from typing import List, Tuple
 
+import numpy as np
 import torch
 from torch.nn.utils.rnn import pad_sequence
 
-# By default the loss and accuracy ignore the value of -100
+# By default, the loss and accuracy ignore the value of -100
 # we leverage that when padding elements
 padding_value = -100
 
@@ -23,7 +24,9 @@ def fasttext_data_padding(batch: List) -> Tuple:
         lengths of the sequences.
     """
 
-    sequences_vectors, lengths = zip(*[(torch.FloatTensor(seq_vectors), len(seq_vectors)) for seq_vectors in batch])
+    # We convert into np.array before as per PyTorch optimization recommendation
+    sequences_vectors, lengths = zip(*[(torch.FloatTensor(np.array(seq_vectors)), len(seq_vectors))
+                                       for seq_vectors in batch])
 
     lengths = torch.tensor(lengths)
 
@@ -46,8 +49,9 @@ def bpemb_data_padding(batch: List[Tuple]) -> Tuple:
         decomposition lengths, and ``z`` is the original lengths of the sequences before padding.
     """
 
-    sequences_vectors, decomp_len, lengths = zip(*[(torch.tensor(vectors), word_decomposition_len, len(vectors))
-                                                   for vectors, word_decomposition_len in batch])
+    # We convert into np.array before as per PyTorch optimization recommendation
+    sequences_vectors, decomp_len, lengths = zip(*[(torch.tensor(np.array(vectors)), word_decomposition_len,
+                                                    len(vectors)) for vectors, word_decomposition_len in batch])
 
     lengths = torch.tensor(lengths)
 
@@ -177,7 +181,8 @@ def _convert_sequence_to_tensor(batch):
     """
     sorted_batch = sorted(batch, key=lambda x: len(x[0]), reverse=True)
 
-    return zip(*[(torch.FloatTensor(seq_vectors), torch.tensor(target_vector), len(seq_vectors))
+    # We convert into np.array before as per PyTorch optimization recommendation
+    return zip(*[(torch.FloatTensor(np.array(seq_vectors)), torch.tensor(target_vector), len(seq_vectors))
                  for seq_vectors, target_vector in sorted_batch])
 
 
@@ -186,5 +191,7 @@ def _convert_bpemb_sequence_to_tensor(batch):
     Sort and convert a BPEmb sequence into a tensor with target element
     """
     sorted_batch = sorted(batch, key=lambda x: len(x[0][1]), reverse=True)
-    return zip(*[(torch.tensor(vectors), word_decomposition_len, torch.tensor(target_vectors), len(vectors))
+
+    # We convert into np.array before as per PyTorch optimization recommendation
+    return zip(*[(torch.tensor(np.array(vectors)), word_decomposition_len, torch.tensor(target_vectors), len(vectors))
                  for (vectors, word_decomposition_len), target_vectors in sorted_batch])

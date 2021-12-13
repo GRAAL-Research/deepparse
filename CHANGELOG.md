@@ -133,4 +133,4 @@
 
 ## 0.6.2.
 
-- Improved code speed of data padding method as per PyTorch list or array to Tensor recommendation.
+- Improved (slightly) code speed of data padding method as per PyTorch list or array to Tensor recommendation.

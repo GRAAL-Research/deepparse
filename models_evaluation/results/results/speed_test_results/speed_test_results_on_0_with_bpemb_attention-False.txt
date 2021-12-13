@@ -1,0 +1,2 @@
+Temps moyen pour batch size avec  0 et batch size de  1  :  0.005484896581681048
+temps moyen pour batch size avec batch size > 1: 0.0014723541350095432

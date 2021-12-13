@@ -28,17 +28,17 @@ class DataTransform:
 
     def __init__(self, vectorizer: TrainVectorizer, model_type: str):
         self.vectorizer = vectorizer
-        if model_type in ("fasttext", "fastest"):
+        if "fasttext" in model_type:
             self.teacher_forcing_data_padding_fn = fasttext_data_padding_teacher_forcing
             self.output_transform_data_padding_fn = fasttext_data_padding_with_target
-        elif model_type in ("bpemb", "best"):
+        elif "bpemb" in model_type:
             self.teacher_forcing_data_padding_fn = bpemb_data_padding_teacher_forcing
             self.output_transform_data_padding_fn = bpemb_data_padding_with_target
         else:
             # Note that we don't have lightest here since lightest is fasttext-light (magnitude) and we cannot train
             # with that model type (see doc note).
             raise NotImplementedError(f"There is no {model_type} network implemented. Value should be: "
-                                      f"fasttext, bpemb, fastest (fasttext) or best (bpemb).")
+                                      f"fasttext, bpemb or their attention variant.")
 
     def teacher_forcing_transform(self, batch_pairs: Tuple) -> Tuple:
         """

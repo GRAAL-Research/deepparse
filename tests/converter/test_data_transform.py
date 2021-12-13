@@ -13,6 +13,7 @@ class DataTransformTest(TestCase):
         self.a_fasttext_model_type = "fasttext"
         self.a_bpemb_model_type = "bpemb"
         self.a_fasttext_light_model_type = "fasttext-light"
+        self.an_attention_model = "fasttextAttention"
 
     def test_whenInstantiateAFastTextDataTransform_thenParametersAreOk(self):
         data_transform = DataTransform(self.train_vectorizer_mock, self.a_fasttext_model_type)
@@ -71,6 +72,20 @@ class DataTransformTest(TestCase):
     @patch("deepparse.converter.data_transform.fasttext_data_padding_with_target")
     def test_givenAFasttextDataTransform_whenOutputTransform_thenComponentsAreCall(self, output_transform_mock):
         data_transform = DataTransform(self.train_vectorizer_mock, self.a_fasttext_model_type)
+
+        batch_pairs_mock = MagicMock()
+
+        data_transform.output_transform(batch_pairs_mock)
+
+        train_vectorizer_call = [call(batch_pairs_mock)]
+        self.train_vectorizer_mock.assert_has_calls(train_vectorizer_call)
+
+        train_vectorizer_call = [call(self.train_vectorizer_mock())]
+        output_transform_mock.assert_has_calls(train_vectorizer_call)
+
+    @patch("deepparse.converter.data_transform.fasttext_data_padding_with_target")
+    def test_givenAFasttextAttDataTransform_whenOutputTransform_thenComponentsAreCall(self, output_transform_mock):
+        data_transform = DataTransform(self.train_vectorizer_mock, self.an_attention_model)
 
         batch_pairs_mock = MagicMock()
 

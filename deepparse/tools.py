@@ -1,11 +1,8 @@
-import math
 import os
 import warnings
 
-import numpy as np
 import poutyne
 import requests
-import torch
 
 BASE_URL = "https://graal.ift.ulaval.ca/public/deepparse/{}.{}"
 CACHE_PATH = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
@@ -47,15 +44,6 @@ def download_weights(model: str, saving_dir: str, verbose: bool = True) -> None:
         print(f"Downloading the weights for the network {model}.")
     download_from_url(model, saving_dir, "ckpt")
     download_from_url(model, saving_dir, "version")
-
-
-def load_tuple_to_device(padded_address, device):
-    # pylint: disable=consider-using-generator
-    """
-    Function to load the torch components of a tuple to a device. Since tuple are immutable we return a new tuple with
-    the tensor loaded to the device.
-    """
-    return tuple([element.to(device) if isinstance(element, torch.Tensor) else element for element in padded_address])
 
 
 def handle_poutyne_version() -> float:
@@ -112,19 +100,3 @@ def handle_model_path(checkpoint: str) -> str:
                          "'fasttext' or 'bpemb'.")
 
     return checkpoint
-
-
-def indices_splitting(num_data: int, train_ratio: float, seed: int = 42):
-    """
-    Split indices into train and valid
-    """
-    np.random.seed(seed)
-    indices = list(range(num_data))
-    np.random.shuffle(indices)
-
-    split = math.floor(train_ratio * num_data)
-
-    train_indices = indices[:split]
-    valid_indices = indices[split:]
-
-    return train_indices, valid_indices

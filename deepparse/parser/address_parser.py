@@ -9,7 +9,10 @@ from torch.optim import SGD
 from torch.utils.data import DataLoader, Subset
 
 from . import formatted_parsed_address
+from .capturing import Capturing
 from .formatted_parsed_address import FormattedParsedAddress
+from .tools import validate_if_new_seq2seq_params, validate_if_new_prediction_tags, load_tuple_to_device, \
+    pretrained_parser_in_directory, get_files_in_directory, get_address_parser_in_directory, indices_splitting
 from ..converter import TagsConverter
 from ..converter import fasttext_data_padding, bpemb_data_padding, DataTransform
 from ..dataset_container import DatasetContainer
@@ -22,7 +25,7 @@ from ..metrics import nll_loss, accuracy
 from ..network.bpemb_seq2seq import BPEmbSeq2SeqModel
 from ..network.fasttext_seq2seq import FastTextSeq2SeqModel
 from ..preprocessing import AddressCleaner
-from ..tools import CACHE_PATH, indices_splitting, load_tuple_to_device
+from ..tools import CACHE_PATH
 from ..vectorizer import FastTextVectorizer, BPEmbVectorizer
 from ..vectorizer import TrainVectorizer
 from ..vectorizer.magnitude_vectorizer import MagnitudeVectorizer
@@ -173,9 +176,9 @@ class AddressParser:
 
         if path_to_retrained_model is not None:
             checkpoint_weights = torch.load(path_to_retrained_model, map_location="cpu")
-            if _validate_if_new_seq2seq_params(checkpoint_weights):
+            if validate_if_new_seq2seq_params(checkpoint_weights):
                 seq2seq_kwargs = checkpoint_weights.get("seq2seq_params")
-            if _validate_if_new_prediction_tags(checkpoint_weights):
+            if validate_if_new_prediction_tags(checkpoint_weights):
                 # We load the new tags_to_idx
                 tags_to_idx = checkpoint_weights.get("prediction_tags")
                 # We change the FIELDS for the FormattedParsedAddress
@@ -466,20 +469,22 @@ class AddressParser:
                          batch_metrics=[accuracy])
 
         try:
-            train_res = exp.train(train_generator,
-                                  valid_generator=valid_generator,
-                                  epochs=epochs,
-                                  seed=seed,
-                                  callbacks=callbacks,
-                                  verbose=self.verbose,
-                                  disable_tensorboard=True)  # to remove tensorboard automatic logging
+            # We capture poutyne print since it print some exception
+            with Capturing():
+                train_res = exp.train(train_generator,
+                                      valid_generator=valid_generator,
+                                      epochs=epochs,
+                                      seed=seed,
+                                      callbacks=callbacks,
+                                      verbose=self.verbose,
+                                      disable_tensorboard=True)  # to remove tensorboard automatic logging
         except RuntimeError as error:
             list_of_file_path = os.listdir(path='.')
             if len(list_of_file_path) > 0:
-                if _pretrained_parser_in_directory(logging_path):
+                if pretrained_parser_in_directory(logging_path):
                     # Mean we might already have checkpoint in the training directory
-                    files_in_directory = _get_files_in_directory(logging_path)
-                    retrained_address_parser_in_directory = _get_address_parser_in_directory(
+                    files_in_directory = get_files_in_directory(logging_path)
+                    retrained_address_parser_in_directory = get_address_parser_in_directory(
                         files_in_directory)[0].split("_")[1]
                     if self.model_type != retrained_address_parser_in_directory:
                         raise ValueError(f"You are currently training a {self.model_type} in the directory "
@@ -756,32 +761,3 @@ class AddressParser:
         `"FastText"`.
         """
         return self._model_type_formatted
-
-
-def _validate_if_new_prediction_tags(checkpoint_weights: dict) -> bool:
-    return checkpoint_weights.get("prediction_tags") is not None
-
-
-def _validate_if_new_seq2seq_params(checkpoint_weights: dict) -> bool:
-    return checkpoint_weights.get("seq2seq_params") is not None
-
-
-def _pretrained_parser_in_directory(logging_path: str) -> bool:
-    # we verify if an address retrained address parser is in the directory
-    files_in_directory = _get_files_in_directory(logging_path)
-
-    return len(_get_address_parser_in_directory(files_in_directory)) == 0
-
-
-def _get_files_in_directory(logging_path: str) -> List[str]:
-    files_path_with_directories = [files for root, dirs, files in os.walk(os.path.abspath(logging_path))]
-
-    # We unwrap the list of list
-    files_in_directory = [elem for sublist in files_path_with_directories for elem in sublist]
-    return files_in_directory
-
-
-def _get_address_parser_in_directory(files_in_directory: List[str]) -> List:
-    return [
-        file_name for file_name in files_in_directory if "_address_parser" in file_name and "retrained" in file_name
-    ]

@@ -14,6 +14,7 @@ from deepparse.parser.address_parser import AddressParser
 from tests.parser.base import AddressParserPredictTestCase
 
 
+### ajouter test except
 class AddressParserTest(AddressParserPredictTestCase):
 
     @classmethod

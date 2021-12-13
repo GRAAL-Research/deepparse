@@ -286,8 +286,7 @@ class AddressParser:
                 logging_path: str = "./checkpoints",
                 prediction_tags: Union[Dict, None] = None,
                 seq2seq_params: Union[Dict, None] = None) -> List[Dict]:
-
-        # pylint: disable=too-many-arguments, line-too-long, too-many-locals
+        # pylint: disable=too-many-arguments, line-too-long, too-many-locals, too-many-branches
         """
         Method to retrain the address parser model using a dataset with the same tags. We train using
         `experiment <https://poutyne.org/experiment.html>`_ from `poutyne <https://poutyne.org/index.html>`_
@@ -418,7 +417,6 @@ class AddressParser:
                     prediction_tags=address_components)
 
         """
-        # pylint: disable=too-many-branches
         if "fasttext-light" in self.model_type:
             raise ValueError("It's not possible to retrain a fasttext-light due to pymagnitude problem.")
 
@@ -489,26 +487,26 @@ class AddressParser:
                     if self.model_type != retrained_address_parser_in_directory:
                         raise ValueError(f"You are currently training a {self.model_type} in the directory "
                                          f"{logging_path} where a different retrained "
-                                         f"{retrained_address_parser_in_directory} is currently hare."
-                                         f"Thus, the loading of the model is failing. Change directory to retrain the"
-                                         f"{self.model_type}") from error
+                                         f"{retrained_address_parser_in_directory} is currently his."
+                                         f" Thus, the loading of the model is failing. Change directory to retrain the"
+                                         f" {self.model_type}.") from error
                     if self.model_type == retrained_address_parser_in_directory:
                         raise ValueError(f"You are currently training a different {self.model_type} version from"
-                                         f"the one in the {logging_path}. Verify version.") from error
+                                         f" the one in the {logging_path}. Verify version.") from error
             else:
                 raise RuntimeError(error) from error
+        else:
+            file_path = os.path.join(logging_path, f"retrained_{self.model_type}_address_parser.ckpt")
+            torch_save = {"address_tagger_model": exp.model.network.state_dict(), "model_type": self.model_type}
+            if seq2seq_params is not None:
+                # Means we have changed the seq2seq params
+                torch_save.update({"seq2seq_params": seq2seq_params})
+            if prediction_tags is not None:
+                #  Means we have changed the predictions tags
+                torch_save.update({"prediction_tags": prediction_tags})
 
-        file_path = os.path.join(logging_path, f"retrained_{self.model_type}_address_parser.ckpt")
-        torch_save = {"address_tagger_model": exp.model.network.state_dict(), "model_type": self.model_type}
-        if seq2seq_params is not None:
-            # Means we have changed the seq2seq params
-            torch_save.update({"seq2seq_params": seq2seq_params})
-        if prediction_tags is not None:
-            #  Means we have changed the predictions tags
-            torch_save.update({"prediction_tags": prediction_tags})
-
-        torch.save(torch_save, file_path)
-        return train_res
+            torch.save(torch_save, file_path)
+            return train_res
 
     def test(self,
              test_dataset_container: DatasetContainer,

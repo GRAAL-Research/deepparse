@@ -22,8 +22,7 @@ class ToolsTests(CaptureOutputTestCase):
     def tearDown(self) -> None:
         self.temp_dir_obj.cleanup()
 
-    def populate_a_directory(self, with_retrain_parser: bool = False):
-
+    def populate_directory(self, with_retrain_parser: bool = False):
         os.makedirs(os.path.join(self.fake_directory, "a_directory"), exist_ok=True)
         create_file(os.path.join(self.fake_directory, "afile.txt"), "a content")
         create_file(os.path.join(self.fake_directory, "another_file.txt"), "a content")
@@ -60,24 +59,26 @@ class ToolsTests(CaptureOutputTestCase):
         self.assertFalse(actual)
 
     def test_givenADirectoryWithARetrainedModel_whenPretrainedParserInDirectory_thenReturnTrue(self):
-        self.populate_a_directory(with_retrain_parser=True)
+        self.populate_directory(with_retrain_parser=True)
         actual = pretrained_parser_in_directory(self.fake_directory)
 
         self.assertTrue(actual)
 
     def test_givenADirectoryWithoutARetrainedModel_whenPretrainedParserInDirectory_thenReturnFalse(self):
-        self.populate_a_directory(with_retrain_parser=False)
+        self.populate_directory(with_retrain_parser=False)
         actual = pretrained_parser_in_directory(self.fake_directory)
 
         self.assertFalse(actual)
 
     def test_givenADirectory_whenGetFilesInDirectory_thenReturnListWithAllFiles(self):
-        self.populate_a_directory()
+        self.populate_directory()
         actual = get_files_in_directory(self.fake_directory)
 
         expected = ['afile.txt', 'random_file.txt', 'another_file.txt', 'random_file.txt']
 
-        self.assertEqual(actual, expected)
+        for actual_element in actual:
+            self.assertIn(actual_element, expected)
+        self.assertEqual(len(actual), len(expected))
 
     def test_givenAEmptyDirectory_whenGetFilesInDirectory_thenReturnEmptyList(self):
         actual = get_files_in_directory(self.fake_directory)

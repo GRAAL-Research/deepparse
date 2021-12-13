@@ -130,3 +130,9 @@
 ## 0.6.1
 
 - Completed EOS bug fix
+
+## 0.6.2
+
+- Improved (slightly) code speed of data padding method as per PyTorch list or array to Tensor recommendation.
+- Improved doc for RuntimeError due to retraining FastText and BPEmb model in same directory.
+- Added error handling RuntimeError when retraining.

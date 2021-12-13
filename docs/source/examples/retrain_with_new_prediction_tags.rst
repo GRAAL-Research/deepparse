@@ -64,7 +64,7 @@ Let's start with the default learning rate of 0.01 and use a learning rate sched
                            prediction_tags=tag_dictionary,
                            logging_path=logging_path)
 
-Now let's test our fine tuned model using the best checkpoint (default parameter).
+Now let's test our fine-tuned model using the best checkpoint (default parameter).
 
 .. code-block:: python
 

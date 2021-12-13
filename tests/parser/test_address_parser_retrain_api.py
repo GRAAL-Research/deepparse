@@ -12,7 +12,7 @@ from deepparse.converter import TagsConverter
 from deepparse.metrics import nll_loss, accuracy
 from deepparse.parser import AddressParser
 from tests.parser.base import AddressParserPredictTestCase
-from tests.tools import BATCH_SIZE, ADataContainer
+from tests.tools import BATCH_SIZE, ADataContainer, create_file
 
 
 class AddressParserRetrainTest(AddressParserPredictTestCase):
@@ -44,7 +44,11 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
     def setUp(self):
         self.temp_dir_obj = TemporaryDirectory()
         self.a_logging_path = os.path.join(self.temp_dir_obj.name, "ckpts")
+        os.makedirs(self.a_logging_path)
         self.saving_template_path = os.path.join(self.a_logging_path, "retrained_{}_address_parser.ckpt")
+
+    def populate_directory(self):
+        create_file(os.path.join(self.a_logging_path, "retrained_fasttext_address_parser.ckpt"), "a content")
 
     def tearDown(self) -> None:
         self.temp_dir_obj.cleanup()
@@ -106,6 +110,60 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         self.address_parser_retrain_call()
 
         optimizer_mock.assert_called_with(model_mock().parameters(), self.a_learning_rate)
+
+    @patch("deepparse.parser.address_parser.torch.save")
+    @patch("deepparse.parser.address_parser.Experiment", **{'return_value.train.side_effect': RuntimeError()})
+    @patch("deepparse.parser.address_parser.SGD")
+    @patch("deepparse.parser.address_parser.DataTransform")
+    @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
+    @patch("deepparse.parser.address_parser.fasttext_data_padding")
+    @patch("deepparse.parser.address_parser.FastTextVectorizer")
+    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
+    def test_givenAFasttextModelDirectoryWithOtherRetrainModel_whenRetrain_thenRaiseError(
+            self, download_weights_mock, embeddings_model_mock, vectorizer_model_mock, data_padding_mock, model_mock,
+            data_transform_mock, optimizer_mock, experiment_mock, torch_save_mock):
+        self.populate_directory()
+        self.address_parser = AddressParser(model_type=self.a_fasttext_model_type,
+                                            device=self.a_device,
+                                            verbose=self.verbose)
+        with self.assertRaises(ValueError):
+            self.address_parser_retrain_call()
+
+        expect_error_message = f"You are currently training a different fasttext version from the one in" \
+                               f" the {self.a_logging_path}. Verify version."
+        try:
+            self.address_parser_retrain_call()
+        except ValueError as actual_error_message:
+            self.assertEqual(actual_error_message.args[0], expect_error_message)
+
+    @patch("deepparse.parser.address_parser.torch.save")
+    @patch("deepparse.parser.address_parser.Experiment", **{'return_value.train.side_effect': RuntimeError()})
+    @patch("deepparse.parser.address_parser.SGD")
+    @patch("deepparse.parser.address_parser.DataTransform")
+    @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
+    @patch("deepparse.parser.address_parser.fasttext_data_padding")
+    @patch("deepparse.parser.address_parser.FastTextVectorizer")
+    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
+    def test_givenABPEmbModelDirectoryWithOtherFastTextRetrainModel_whenRetrain_thenRaiseError(
+            self, download_weights_mock, embeddings_model_mock, vectorizer_model_mock, data_padding_mock, model_mock,
+            data_transform_mock, optimizer_mock, experiment_mock, torch_save_mock):
+        self.populate_directory()
+        self.address_parser = AddressParser(model_type=self.a_best_model_type,
+                                            device=self.a_device,
+                                            verbose=self.verbose)
+
+        with self.assertRaises(ValueError):
+            self.address_parser_retrain_call()
+
+        expect_error_message = f"You are currently training a bpemb in the directory {self.a_logging_path} where a " \
+                               f"different retrained fasttext is currently his. Thus, the loading of the model is " \
+                               f"failing. Change directory to retrain the bpemb."
+        try:
+            self.address_parser_retrain_call()
+        except ValueError as actual_error_message:
+            self.assertEqual(actual_error_message.args[0], expect_error_message)
 
     @patch("deepparse.parser.address_parser.Experiment")
     @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")

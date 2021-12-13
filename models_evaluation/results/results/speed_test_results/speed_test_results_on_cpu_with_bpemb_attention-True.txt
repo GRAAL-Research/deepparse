@@ -1,0 +1,2 @@
+Temps moyen pour batch size avec  cpu et batch size de  1  :  0.028605516078042202
+temps moyen pour batch size avec batch size > 1: 0.007484601740845783

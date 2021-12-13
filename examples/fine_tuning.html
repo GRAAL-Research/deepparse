@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Retrain a Pretrained Model &mdash; deepparse 0.6.1 documentation</title>
+  <title>Retrain a Pretrained Model &mdash; deepparse 0.6.2 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -31,7 +31,7 @@
             <img src="../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.6.1
+                0.6.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -110,15 +110,36 @@
 </div>
 <p>Now let’s retrain for 5 epochs using a batch size of 8 since the dataset is really small for the example.
 Let’s start with the default learning rate of 0.01 and use a learning rate scheduler to lower the learning rate as we progress.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># reduce LR by a factor of 10 each epoch</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Reduce LR by a factor of 10 each epoch</span>
 <span class="n">lr_scheduler</span> <span class="o">=</span> <span class="n">poutyne</span><span class="o">.</span><span class="n">StepLR</span><span class="p">(</span><span class="n">step_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The checkpoints (ckpt) are saved in the default “./checkpoints” directory</p>
+<p>The checkpoints (ckpt) are saved in the default “./checkpoints” directory, so if you wish to retrain
+another model (let say BPEmb), you need to change the <cite>logging_path</cite> directory otherwise you will get
+an error when doing a retrain since Poutyne will try to use the last checkpoint.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span><span class="o">.</span><span class="n">retrain</span><span class="p">(</span><span class="n">training_container</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">lr_scheduler</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>Now let’s test our fine tuned model using the best ckeckpoint (default parameter).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="n">test_container</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now let’s retrain the fasttext version but with an attention mechanism</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;fasttext&quot;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">attention_mechanism</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Since the previous checkpoints where saved in the default “./checkpoints” directory, we need to use a new one.
+Otherwise, poutyne will try to reload the previous checkpoints and our model have change.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span><span class="o">.</span><span class="n">retrain</span><span class="p">(</span><span class="n">training_container</span><span class="p">,</span>
+                       <span class="mf">0.8</span><span class="p">,</span>
+                       <span class="n">epochs</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                       <span class="n">batch_size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+                       <span class="n">num_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                       <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">lr_scheduler</span><span class="p">],</span>
+                       <span class="n">logging_path</span><span class="o">=</span><span class="s2">&quot;checkpoints_attention&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now let’s test our fine-tuned model using the best checkpoint (default parameter).</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="n">test_container</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span>
 </pre></div>
 </div>

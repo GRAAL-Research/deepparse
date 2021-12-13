@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>deepparse.parser.address_parser &mdash; deepparse 0.6.1 documentation</title>
+  <title>deepparse.parser.address_parser &mdash; deepparse 0.6.2 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -28,7 +28,7 @@
             <img src="../../../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.6.1
+                0.6.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -88,7 +88,10 @@
 <span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">DataLoader</span><span class="p">,</span> <span class="n">Subset</span>
 
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">formatted_parsed_address</span>
+<span class="kn">from</span> <span class="nn">.capturing</span> <span class="kn">import</span> <span class="n">Capturing</span>
 <span class="kn">from</span> <span class="nn">.formatted_parsed_address</span> <span class="kn">import</span> <span class="n">FormattedParsedAddress</span>
+<span class="kn">from</span> <span class="nn">.tools</span> <span class="kn">import</span> <span class="n">validate_if_new_seq2seq_params</span><span class="p">,</span> <span class="n">validate_if_new_prediction_tags</span><span class="p">,</span> <span class="n">load_tuple_to_device</span><span class="p">,</span> \
+    <span class="n">pretrained_parser_in_directory</span><span class="p">,</span> <span class="n">get_files_in_directory</span><span class="p">,</span> <span class="n">get_address_parser_in_directory</span><span class="p">,</span> <span class="n">indices_splitting</span>
 <span class="kn">from</span> <span class="nn">..converter</span> <span class="kn">import</span> <span class="n">TagsConverter</span>
 <span class="kn">from</span> <span class="nn">..converter</span> <span class="kn">import</span> <span class="n">fasttext_data_padding</span><span class="p">,</span> <span class="n">bpemb_data_padding</span><span class="p">,</span> <span class="n">DataTransform</span>
 <span class="kn">from</span> <span class="nn">..dataset_container</span> <span class="kn">import</span> <span class="n">DatasetContainer</span>
@@ -100,11 +103,11 @@
 <span class="kn">from</span> <span class="nn">..metrics</span> <span class="kn">import</span> <span class="n">nll_loss</span><span class="p">,</span> <span class="n">accuracy</span>
 <span class="kn">from</span> <span class="nn">..network.bpemb_seq2seq</span> <span class="kn">import</span> <span class="n">BPEmbSeq2SeqModel</span>
 <span class="kn">from</span> <span class="nn">..network.fasttext_seq2seq</span> <span class="kn">import</span> <span class="n">FastTextSeq2SeqModel</span>
-<span class="kn">from</span> <span class="nn">..tools</span> <span class="kn">import</span> <span class="n">CACHE_PATH</span><span class="p">,</span> <span class="n">indices_splitting</span><span class="p">,</span> <span class="n">load_tuple_to_device</span>
+<span class="kn">from</span> <span class="nn">..preprocessing</span> <span class="kn">import</span> <span class="n">AddressCleaner</span>
+<span class="kn">from</span> <span class="nn">..tools</span> <span class="kn">import</span> <span class="n">CACHE_PATH</span>
 <span class="kn">from</span> <span class="nn">..vectorizer</span> <span class="kn">import</span> <span class="n">FastTextVectorizer</span><span class="p">,</span> <span class="n">BPEmbVectorizer</span>
 <span class="kn">from</span> <span class="nn">..vectorizer</span> <span class="kn">import</span> <span class="n">TrainVectorizer</span>
 <span class="kn">from</span> <span class="nn">..vectorizer.magnitude_vectorizer</span> <span class="kn">import</span> <span class="n">MagnitudeVectorizer</span>
-<span class="kn">from</span> <span class="nn">..preprocessing</span> <span class="kn">import</span> <span class="n">AddressCleaner</span>
 
 <span class="n">_pre_trained_tags_to_idx</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;StreetNumber&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
@@ -252,9 +255,9 @@
 
         <span class="k">if</span> <span class="n">path_to_retrained_model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">checkpoint_weights</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path_to_retrained_model</span><span class="p">,</span> <span class="n">map_location</span><span class="o">=</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">_validate_if_new_seq2seq_params</span><span class="p">(</span><span class="n">checkpoint_weights</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">validate_if_new_seq2seq_params</span><span class="p">(</span><span class="n">checkpoint_weights</span><span class="p">):</span>
                 <span class="n">seq2seq_kwargs</span> <span class="o">=</span> <span class="n">checkpoint_weights</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;seq2seq_params&quot;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">_validate_if_new_prediction_tags</span><span class="p">(</span><span class="n">checkpoint_weights</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">validate_if_new_prediction_tags</span><span class="p">(</span><span class="n">checkpoint_weights</span><span class="p">):</span>
                 <span class="c1"># We load the new tags_to_idx</span>
                 <span class="n">tags_to_idx</span> <span class="o">=</span> <span class="n">checkpoint_weights</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;prediction_tags&quot;</span><span class="p">)</span>
                 <span class="c1"># We change the FIELDS for the FormattedParsedAddress</span>
@@ -362,8 +365,7 @@
                 <span class="n">logging_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;./checkpoints&quot;</span><span class="p">,</span>
                 <span class="n">prediction_tags</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                 <span class="n">seq2seq_params</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
-
-        <span class="c1"># pylint: disable=too-many-arguments, line-too-long, too-many-locals</span>
+        <span class="c1"># pylint: disable=too-many-arguments, line-too-long, too-many-locals, too-many-branches</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to retrain the address parser model using a dataset with the same tags. We train using</span>
 <span class="sd">        `experiment &lt;https://poutyne.org/experiment.html&gt;`_ from `poutyne &lt;https://poutyne.org/index.html&gt;`_</span>
@@ -388,7 +390,10 @@
 <span class="sd">                See Poutyne `callback &lt;https://poutyne.org/callbacks.html#callback-class&gt;`_ for more information. By</span>
 <span class="sd">                default, we set no callback.</span>
 <span class="sd">            seed (int): Seed to use (by default 42).</span>
-<span class="sd">            logging_path (str): The logging path for the checkpoints. By default, the path is ``./checkpoints``.</span>
+<span class="sd">            logging_path (str): The logging path for the checkpoints. Poutyne will use the best one and reload the</span>
+<span class="sd">                state if any checkpoints are there. Thus, an error will be raised if you change the model type.</span>
+<span class="sd">                For example,  you retrain a FastText model and then retrain a BPEmb in the same logging path directory.</span>
+<span class="sd">                By default, the path is ``./checkpoints``.</span>
 <span class="sd">            prediction_tags (Union[dict, None]): A dictionary where the keys are the address components</span>
 <span class="sd">                (e.g. street name) and the values are the components indices (from 0 to N + 1) to use during retraining</span>
 <span class="sd">                of a model. The ``+ 1`` corresponds to the End Of Sequence (EOS) token that needs to be included in the</span>
@@ -417,6 +422,11 @@
 <span class="sd">            Due to pymagnitude, we could not train using the Magnitude embeddings, meaning it&#39;s not possible to</span>
 <span class="sd">            train using the fasttext-light model. But, since we don&#39;t update the embeddings weights, one can retrain</span>
 <span class="sd">            using the fasttext model and later on use the weights with the fasttext-light.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            When retraining a model, Poutyne will create checkpoints. After the training, we use the best checkpoint</span>
+<span class="sd">            in a directory as the model to load. Thus, if you train two different models in the same directory,</span>
+<span class="sd">            the second retrain will not work due to model differences.</span>
 
 <span class="sd">        Examples:</span>
 
@@ -486,7 +496,7 @@
 <span class="sd">                    prediction_tags=address_components)</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;fasttext-light&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;fasttext-light&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;It&#39;s not possible to retrain a fasttext-light due to pymagnitude problem.&quot;</span><span class="p">)</span>
 
         <span class="n">model_factory_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;prediction_layer_len&quot;</span><span class="p">:</span> <span class="mi">9</span><span class="p">}</span>  <span class="c1"># We set the default output dim size</span>
@@ -535,25 +545,47 @@
                          <span class="n">loss_function</span><span class="o">=</span><span class="n">nll_loss</span><span class="p">,</span>
                          <span class="n">batch_metrics</span><span class="o">=</span><span class="p">[</span><span class="n">accuracy</span><span class="p">])</span>
 
-        <span class="n">train_res</span> <span class="o">=</span> <span class="n">exp</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">train_generator</span><span class="p">,</span>
-                              <span class="n">valid_generator</span><span class="o">=</span><span class="n">valid_generator</span><span class="p">,</span>
-                              <span class="n">epochs</span><span class="o">=</span><span class="n">epochs</span><span class="p">,</span>
-                              <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
-                              <span class="n">callbacks</span><span class="o">=</span><span class="n">callbacks</span><span class="p">,</span>
-                              <span class="n">verbose</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">,</span>
-                              <span class="n">disable_tensorboard</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># to remove tensorboard automatic logging</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># We capture poutyne print since it print some exception</span>
+            <span class="k">with</span> <span class="n">Capturing</span><span class="p">():</span>
+                <span class="n">train_res</span> <span class="o">=</span> <span class="n">exp</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">train_generator</span><span class="p">,</span>
+                                      <span class="n">valid_generator</span><span class="o">=</span><span class="n">valid_generator</span><span class="p">,</span>
+                                      <span class="n">epochs</span><span class="o">=</span><span class="n">epochs</span><span class="p">,</span>
+                                      <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
+                                      <span class="n">callbacks</span><span class="o">=</span><span class="n">callbacks</span><span class="p">,</span>
+                                      <span class="n">verbose</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">,</span>
+                                      <span class="n">disable_tensorboard</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># to remove tensorboard automatic logging</span>
+        <span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">list_of_file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">list_of_file_path</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">pretrained_parser_in_directory</span><span class="p">(</span><span class="n">logging_path</span><span class="p">):</span>
+                    <span class="c1"># Mean we might already have checkpoint in the training directory</span>
+                    <span class="n">files_in_directory</span> <span class="o">=</span> <span class="n">get_files_in_directory</span><span class="p">(</span><span class="n">logging_path</span><span class="p">)</span>
+                    <span class="n">retrained_address_parser_in_directory</span> <span class="o">=</span> <span class="n">get_address_parser_in_directory</span><span class="p">(</span>
+                        <span class="n">files_in_directory</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">!=</span> <span class="n">retrained_address_parser_in_directory</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;You are currently training a </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="si">}</span><span class="s2"> in the directory &quot;</span>
+                                         <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">logging_path</span><span class="si">}</span><span class="s2"> where a different retrained &quot;</span>
+                                         <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">retrained_address_parser_in_directory</span><span class="si">}</span><span class="s2"> is currently his.&quot;</span>
+                                         <span class="sa">f</span><span class="s2">&quot; Thus, the loading of the model is failing. Change directory to retrain the&quot;</span>
+                                         <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">error</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="n">retrained_address_parser_in_directory</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;You are currently training a different </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="si">}</span><span class="s2"> version from&quot;</span>
+                                         <span class="sa">f</span><span class="s2">&quot; the one in the </span><span class="si">{</span><span class="n">logging_path</span><span class="si">}</span><span class="s2">. Verify version.&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">error</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">error</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">error</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">logging_path</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;retrained_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="si">}</span><span class="s2">_address_parser.ckpt&quot;</span><span class="p">)</span>
+            <span class="n">torch_save</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;address_tagger_model&quot;</span><span class="p">:</span> <span class="n">exp</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span> <span class="s2">&quot;model_type&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="p">}</span>
+            <span class="k">if</span> <span class="n">seq2seq_params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># Means we have changed the seq2seq params</span>
+                <span class="n">torch_save</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;seq2seq_params&quot;</span><span class="p">:</span> <span class="n">seq2seq_params</span><span class="p">})</span>
+            <span class="k">if</span> <span class="n">prediction_tags</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1">#  Means we have changed the predictions tags</span>
+                <span class="n">torch_save</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;prediction_tags&quot;</span><span class="p">:</span> <span class="n">prediction_tags</span><span class="p">})</span>
 
-        <span class="n">file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">logging_path</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;retrained_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="si">}</span><span class="s2">_address_parser.ckpt&quot;</span><span class="p">)</span>
-        <span class="n">torch_save</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;address_tagger_model&quot;</span><span class="p">:</span> <span class="n">exp</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span> <span class="s2">&quot;model_type&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="p">}</span>
-        <span class="k">if</span> <span class="n">seq2seq_params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="c1"># Means we have changed the seq2seq params</span>
-            <span class="n">torch_save</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;seq2seq_params&quot;</span><span class="p">:</span> <span class="n">seq2seq_params</span><span class="p">})</span>
-        <span class="k">if</span> <span class="n">prediction_tags</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="c1">#  Means we have changed the predictions tags</span>
-            <span class="n">torch_save</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;prediction_tags&quot;</span><span class="p">:</span> <span class="n">prediction_tags</span><span class="p">})</span>
-
-        <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">torch_save</span><span class="p">,</span> <span class="n">file_path</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">train_res</span></div>
+            <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">torch_save</span><span class="p">,</span> <span class="n">file_path</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">train_res</span></div>
 
 <div class="viewcode-block" id="AddressParser.test"><a class="viewcode-back" href="../../../parser.html#deepparse.parser.AddressParser.test">[docs]</a>    <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
              <span class="n">test_dataset_container</span><span class="p">:</span> <span class="n">DatasetContainer</span><span class="p">,</span>
@@ -619,7 +651,7 @@
 <span class="sd">                address_parser.test(test_container) # Test the retrained model</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;fasttext-light&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;fasttext-light&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;It&#39;s not possible to test a fasttext-light due to pymagnitude problem. See Retrain method&quot;</span>
                              <span class="s2">&quot;doc for more details.&quot;</span><span class="p">)</span>
 
@@ -806,14 +838,6 @@
 <span class="sd">        `&quot;FastText&quot;`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model_type_formatted</span></div></div>
-
-
-<span class="k">def</span> <span class="nf">_validate_if_new_prediction_tags</span><span class="p">(</span><span class="n">checkpoint_weights</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">checkpoint_weights</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;prediction_tags&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-
-
-<span class="k">def</span> <span class="nf">_validate_if_new_seq2seq_params</span><span class="p">(</span><span class="n">checkpoint_weights</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">checkpoint_weights</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;seq2seq_params&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 </pre></div>
 
            </div>

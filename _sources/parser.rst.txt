@@ -41,13 +41,13 @@ are a little bit lower on trained country (around ~2%) but are similar on zero-s
         *   - fastText [1]_
             - ~1
             - ~8
-            - ~0.00236
+            - ~0.00233
             - ~0.0004
         *   - fastTextAttention
             - ~1.1
             - ~8
-            - ~0.0052
-            - ~0.0010
+            - ~0.0043
+            - ~0.0007
         *   - fastText-light
             - ~1
             - ~1
@@ -56,13 +56,13 @@ are a little bit lower on trained country (around ~2%) but are similar on zero-s
         *   - BPEmb
             - ~1
             - ~1
-            - ~0.0053
-            - ~0.0019
+            - ~0.0055
+            - ~0.0015
         *   - BPEmbAttention
             - ~1.1
             - ~1
-            - ~0.0086
-            - ~0.0027
+            - ~0.0081
+            - ~0.0019
         *   - Libpostal
             - N/A
             - N/A
@@ -81,23 +81,23 @@ are a little bit lower on trained country (around ~2%) but are similar on zero-s
             - Mean time of execution (batch of more than 1) (s)
         *   - fastText [2]_
             - ~8
-            - ~0.0168
+            - ~0.0128
             - ~0.0026
         *   - fastTextAttention
             - ~8
-            - ~0.0212
-            - ~0.0054
+            - ~0.0230
+            - ~0.0057
         *   - fastText-light
             - ~1
             - ~0.0170
             - ~0.0030
         *   - BPEmb
             - ~1
-            - ~0.0219
-            - ~0.0059
+            - ~0.0179
+            - ~0.0044
         *   - BPEmbAttention
             - ~1
-            - ~0.0270
+            - ~0.0286
             - ~0.0075
         *   - Libpostal
             - N/A

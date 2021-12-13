@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Parser &mdash; deepparse 0.6.1 documentation</title>
+  <title>Parser &mdash; deepparse 0.6.2 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -32,7 +32,7 @@
             <img src="_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.6.1
+                0.6.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -129,14 +129,14 @@ are a little bit lower on trained country (around ~2%) but are similar on zero-s
 <tr class="row-even"><td><p>fastText <a class="footnote-reference brackets" href="#id3" id="id2">1</a></p></td>
 <td><p>~1</p></td>
 <td><p>~8</p></td>
-<td><p>~0.00236</p></td>
+<td><p>~0.00233</p></td>
 <td><p>~0.0004</p></td>
 </tr>
 <tr class="row-odd"><td><p>fastTextAttention</p></td>
 <td><p>~1.1</p></td>
 <td><p>~8</p></td>
-<td><p>~0.0052</p></td>
-<td><p>~0.0010</p></td>
+<td><p>~0.0043</p></td>
+<td><p>~0.0007</p></td>
 </tr>
 <tr class="row-even"><td><p>fastText-light</p></td>
 <td><p>~1</p></td>
@@ -147,14 +147,14 @@ are a little bit lower on trained country (around ~2%) but are similar on zero-s
 <tr class="row-odd"><td><p>BPEmb</p></td>
 <td><p>~1</p></td>
 <td><p>~1</p></td>
-<td><p>~0.0053</p></td>
-<td><p>~0.0019</p></td>
+<td><p>~0.0055</p></td>
+<td><p>~0.0015</p></td>
 </tr>
 <tr class="row-even"><td><p>BPEmbAttention</p></td>
 <td><p>~1.1</p></td>
 <td><p>~1</p></td>
-<td><p>~0.0086</p></td>
-<td><p>~0.0027</p></td>
+<td><p>~0.0081</p></td>
+<td><p>~0.0019</p></td>
 </tr>
 <tr class="row-odd"><td><p>Libpostal</p></td>
 <td><p>N/A</p></td>
@@ -186,13 +186,13 @@ are a little bit lower on trained country (around ~2%) but are similar on zero-s
 <tbody>
 <tr class="row-even"><td><p>fastText <a class="footnote-reference brackets" href="#id5" id="id4">2</a></p></td>
 <td><p>~8</p></td>
-<td><p>~0.0168</p></td>
+<td><p>~0.0128</p></td>
 <td><p>~0.0026</p></td>
 </tr>
 <tr class="row-odd"><td><p>fastTextAttention</p></td>
 <td><p>~8</p></td>
-<td><p>~0.0212</p></td>
-<td><p>~0.0054</p></td>
+<td><p>~0.0230</p></td>
+<td><p>~0.0057</p></td>
 </tr>
 <tr class="row-even"><td><p>fastText-light</p></td>
 <td><p>~1</p></td>
@@ -201,12 +201,12 @@ are a little bit lower on trained country (around ~2%) but are similar on zero-s
 </tr>
 <tr class="row-odd"><td><p>BPEmb</p></td>
 <td><p>~1</p></td>
-<td><p>~0.0219</p></td>
-<td><p>~0.0059</p></td>
+<td><p>~0.0179</p></td>
+<td><p>~0.0044</p></td>
 </tr>
 <tr class="row-even"><td><p>BPEmbAttention</p></td>
 <td><p>~1</p></td>
-<td><p>~0.0270</p></td>
+<td><p>~0.0286</p></td>
 <td><p>~0.0075</p></td>
 </tr>
 <tr class="row-odd"><td><p>Libpostal</p></td>
@@ -407,7 +407,10 @@ validation (e.g. a train ratio of 0.8 mean a 80-20 train-valid split) (default i
 See Poutyne <a class="reference external" href="https://poutyne.org/callbacks.html#callback-class">callback</a> for more information. By
 default, we set no callback.</p></li>
 <li><p><strong>seed</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Seed to use (by default 42).</p></li>
-<li><p><strong>logging_path</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The logging path for the checkpoints. By default, the path is <code class="docutils literal notranslate"><span class="pre">./checkpoints</span></code>.</p></li>
+<li><p><strong>logging_path</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The logging path for the checkpoints. Poutyne will use the best one and reload the
+state if any checkpoints are there. Thus, an error will be raised if you change the model type.
+For example,  you retrain a FastText model and then retrain a BPEmb in the same logging path directory.
+By default, the path is <code class="docutils literal notranslate"><span class="pre">./checkpoints</span></code>.</p></li>
 <li><p><strong>prediction_tags</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><em>None</em></a><em>]</em>) – A dictionary where the keys are the address components
 (e.g. street name) and the values are the components indices (from 0 to N + 1) to use during retraining
 of a model. The <code class="docutils literal notranslate"><span class="pre">+</span> <span class="pre">1</span></code> corresponds to the End Of Sequence (EOS) token that needs to be included in the
@@ -443,6 +446,12 @@ during training (with a prob of 0.5) as in the <a class="reference external" hre
 <p>Due to pymagnitude, we could not train using the Magnitude embeddings, meaning it’s not possible to
 train using the fasttext-light model. But, since we don’t update the embeddings weights, one can retrain
 using the fasttext model and later on use the weights with the fasttext-light.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When retraining a model, Poutyne will create checkpoints. After the training, we use the best checkpoint
+in a directory as the model to load. Thus, if you train two different models in the same directory,
+the second retrain will not work due to model differences.</p>
 </div>
 <p class="rubric">Examples</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="c1">#on gpu device 0</span>

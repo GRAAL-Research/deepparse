@@ -140,3 +140,4 @@
 ## 0.6.3
 
 - Fixed the printing capture to raise error with Poutyne as of version 1.8. We keep the previous approach as for compatibilities with previous Poutyne version.
+- Added a flag to disable or not Tensorboard during retrain.

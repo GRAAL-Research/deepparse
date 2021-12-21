@@ -1,8 +1,10 @@
+import contextlib
 import os
 import re
 import warnings
 from typing import List, Union, Dict, Tuple
 
+import poutyne
 import torch
 from poutyne.framework import Experiment
 from torch.optim import SGD
@@ -284,6 +286,7 @@ class AddressParser:
                 callbacks: Union[List, None] = None,
                 seed: int = 42,
                 logging_path: str = "./checkpoints",
+                disable_tensorboard: bool = True,
                 prediction_tags: Union[Dict, None] = None,
                 seq2seq_params: Union[Dict, None] = None) -> List[Dict]:
         # pylint: disable=too-many-arguments, line-too-long, too-many-locals, too-many-branches
@@ -315,6 +318,8 @@ class AddressParser:
                 state if any checkpoints are there. Thus, an error will be raised if you change the model type.
                 For example,  you retrain a FastText model and then retrain a BPEmb in the same logging path directory.
                 By default, the path is ``./checkpoints``.
+            disable_tensorboard (bool): To disable Poutyne automatic Tensorboard monitoring. By default, we disable them
+                (true).
             prediction_tags (Union[dict, None]): A dictionary where the keys are the address components
                 (e.g. street name) and the values are the components indices (from 0 to N + 1) to use during retraining
                 of a model. The ``+ 1`` corresponds to the End Of Sequence (EOS) token that needs to be included in the
@@ -467,15 +472,20 @@ class AddressParser:
                          batch_metrics=[accuracy])
 
         try:
-            # We capture poutyne print since it print some exception
-            with Capturing():
-                train_res = exp.train(train_generator,
+            with_capturing_context = False
+            if float(poutyne.version.__version__) < 1.8:
+                print("You are using a older version of Poutyne that does not support properly error management."
+                      " Due to that, we cannot show retrain progress. To fix that, update Poutyne to "
+                      "the newest version.")
+                with_capturing_context = True
+            train_res = self._retrain(experiment=exp,
+                                      train_generator=train_generator,
                                       valid_generator=valid_generator,
                                       epochs=epochs,
                                       seed=seed,
                                       callbacks=callbacks,
-                                      verbose=self.verbose,
-                                      disable_tensorboard=True)  # to remove tensorboard automatic logging
+                                      disable_tensorboard=disable_tensorboard,
+                                      capturing_context=with_capturing_context)
         except RuntimeError as error:
             list_of_file_path = os.listdir(path='.')
             if len(list_of_file_path) > 0:
@@ -759,3 +769,19 @@ class AddressParser:
         `"FastText"`.
         """
         return self._model_type_formatted
+
+    def _retrain(self, experiment: Experiment, train_generator: DatasetContainer, valid_generator: DatasetContainer,
+                 epochs: int, seed: int, callbacks: List, disable_tensorboard: bool,
+                 capturing_context: bool) -> List[Dict]:
+        # pylint: disable=too-many-arguments
+        # If Poutyne 1.7 and before, we capture poutyne print since it print some exception.
+        # Otherwise, we use a null context manager.
+        with Capturing() if capturing_context else contextlib.nullcontext():
+            train_res = experiment.train(train_generator,
+                                         valid_generator=valid_generator,
+                                         epochs=epochs,
+                                         seed=seed,
+                                         callbacks=callbacks,
+                                         verbose=self.verbose,
+                                         disable_tensorboard=disable_tensorboard)
+        return train_res

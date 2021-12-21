@@ -111,6 +111,63 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
 
         optimizer_mock.assert_called_with(model_mock().parameters(), self.a_learning_rate)
 
+    @patch("deepparse.parser.address_parser.poutyne")
+    @patch("deepparse.parser.address_parser.torch.save")
+    @patch("deepparse.parser.address_parser.Experiment")
+    @patch("deepparse.parser.address_parser.SGD")
+    @patch("deepparse.parser.address_parser.DataTransform")
+    @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
+    @patch("deepparse.parser.address_parser.fasttext_data_padding")
+    @patch("deepparse.parser.address_parser.FastTextVectorizer")
+    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
+    def test_givenAModel_whenRetrainWithPoutyneBefore18_thenPrintMessage(
+            self, download_weights_mock, embeddings_model_mock, vectorizer_model_mock, data_padding_mock, model_mock,
+            data_transform_mock, optimizer_mock, experiment_mock, torch_save_mock, poutyne_mock):
+        poutyne_mock.version.__version__ = 1.7
+        self._capture_output()
+        self.address_parser = AddressParser(model_type=self.a_fasttext_model_type,
+                                            device=self.a_device,
+                                            verbose=self.verbose)
+        self.address_parser_retrain_call()
+
+        actual = self.test_out.getvalue()
+        expected = "You are using a older version of Poutyne that does not support properly error management." \
+                   " Due to that, we cannot show retrain progress. To fix that, update Poutyne to the newest version.\n"
+
+        self.assertEqual(actual, expected)
+
+    @patch("deepparse.parser.address_parser.poutyne")
+    @patch("deepparse.parser.address_parser.torch.save")
+    @patch("deepparse.parser.address_parser.Experiment")
+    @patch("deepparse.parser.address_parser.SGD")
+    @patch("deepparse.parser.address_parser.DataTransform")
+    @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
+    @patch("deepparse.parser.address_parser.fasttext_data_padding")
+    @patch("deepparse.parser.address_parser.FastTextVectorizer")
+    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
+    def test_givenAModel_whenRetrainWithPoutyneAfter17_thenDoNotPrintMessage(
+            self, download_weights_mock, embeddings_model_mock, vectorizer_model_mock, data_padding_mock, model_mock,
+            data_transform_mock, optimizer_mock, experiment_mock, torch_save_mock, poutyne_mock):
+        poutyne_mock.version.__version__ = 1.8
+        self._capture_output()
+        self.address_parser = AddressParser(model_type=self.a_fasttext_model_type,
+                                            device=self.a_device,
+                                            verbose=self.verbose)
+        self.address_parser_retrain_call()
+
+        actual = self.test_out.getvalue()
+
+        expected = ""
+        self.assertEqual(actual, expected)
+
+        not_expected = "You are using a older version of Poutyne that does not support properly error management." \
+                       " Due to that, we cannot show retrain progress. To fix that, update Poutyne to the newest " \
+                       "version.\n"
+
+        self.assertNotRegex(actual, not_expected)
+
     @patch("deepparse.parser.address_parser.torch.save")
     @patch("deepparse.parser.address_parser.Experiment", **{'return_value.train.side_effect': RuntimeError()})
     @patch("deepparse.parser.address_parser.SGD")

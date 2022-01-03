@@ -34,8 +34,7 @@ jobs:
           python setup.py develop
       - name: Linting
         run: |
-          yapf --diff --recursive deepparse/
-          yapf --diff --recursive tests/
+          black --diff --check .
           pylint deepparse/
           pylint tests/
       - name: Test with pytest

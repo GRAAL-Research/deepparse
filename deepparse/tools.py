@@ -28,7 +28,7 @@ def download_from_url(file_name: str, saving_dir: str, file_extension: str):
     r = requests.get(url, timeout=5)
     r.raise_for_status()  # Raise exception
     os.makedirs(saving_dir, exist_ok=True)
-    with open(os.path.join(saving_dir, f"{file_name}.{file_extension}"), "wb", encoding="utf-8") as file:
+    with open(os.path.join(saving_dir, f"{file_name}.{file_extension}"), "wb") as file:
         file.write(r.content)
 
 

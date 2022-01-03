@@ -13,7 +13,6 @@ from deepparse.network import Encoder
 
 
 class EncoderCase(TestCase):
-
     @classmethod
     def setUpClass(cls):
         cls.a_torch_device = torch.device("cuda:0")
@@ -26,7 +25,11 @@ class EncoderCase(TestCase):
 
         cls.temp_dir_obj = TemporaryDirectory()
         cls.weights_dir = os.path.join(cls.temp_dir_obj.name, "weights")
-        download_from_url(file_name="to_predict_fasttext", saving_dir=cls.weights_dir, file_extension="p")
+        download_from_url(
+            file_name="to_predict_fasttext",
+            saving_dir=cls.weights_dir,
+            file_extension="p",
+        )
 
     @classmethod
     def tearDownClass(cls) -> None:
@@ -53,7 +56,6 @@ class EncoderCase(TestCase):
 
 @skipIf(not torch.cuda.is_available(), "no gpu available")
 class EncoderGPUTest(EncoderCase):
-
     def test_whenForwardStepGPU_thenStepIsOk(self):
         self.setUp_encoder(self.a_torch_device)
         predictions, _ = self.encoder.forward(self.to_predict_tensor, self.a_lengths_tensor)
@@ -62,7 +64,6 @@ class EncoderGPUTest(EncoderCase):
 
 
 class EncoderCPUTest(EncoderCase):
-
     def test_whenForwardStepCPU_thenStepIsOk(self):
         self.setUp_encoder(self.a_cpu_device)
 

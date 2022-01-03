@@ -13,20 +13,22 @@ from ..integration.base import Seq2SeqIntegrationTestCase
 
 @skipIf(not torch.cuda.is_available(), "no gpu available")
 class Seq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
-
     def setUp(self) -> None:
         super().setUp()
 
-        self.pre_trained_seq2seq_model = Seq2SeqModel(self.a_torch_device,
-                                                      input_size=self.input_size,
-                                                      encoder_hidden_size=self.encoder_hidden_size,
-                                                      encoder_num_layers=self.num_layers,
-                                                      decoder_hidden_size=self.decoder_hidden_size,
-                                                      decoder_num_layers=self.num_layers,
-                                                      output_size=self.output_size)
+        self.pre_trained_seq2seq_model = Seq2SeqModel(
+            self.a_torch_device,
+            input_size=self.input_size,
+            encoder_hidden_size=self.encoder_hidden_size,
+            encoder_num_layers=self.num_layers,
+            decoder_hidden_size=self.decoder_hidden_size,
+            decoder_num_layers=self.num_layers,
+            output_size=self.output_size,
+        )
 
-        self.encoder_input_setUp("fasttext",
-                                 self.a_torch_device)  # fasttext since the simplest case (bpemb use a embedding layer)
+        self.encoder_input_setUp(
+            "fasttext", self.a_torch_device
+        )  # fasttext since the simplest case (bpemb use a embedding layer)
         self.none_target = None  # No target (for teacher forcing)
         self.a_value_greater_than_threshold = 0.1
 
@@ -35,8 +37,9 @@ class Seq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
     def test_whenEncoderStep_thenEncoderStepIsOk(self):
         # encoding for two address: "["15 major st london ontario n5z1e1", "15 major st london ontario n5z1e1"]"
 
-        decoder_input, decoder_hidden, encoder_outputs = self.pre_trained_seq2seq_model._encoder_step(
-            self.to_predict_tensor, self.a_lengths_tensor, self.a_batch_size)
+        (decoder_input, decoder_hidden, encoder_outputs,) = self.pre_trained_seq2seq_model._encoder_step(
+            self.to_predict_tensor, self.a_lengths_tensor, self.a_batch_size
+        )
 
         self.assertEqual(decoder_input.shape[1], self.a_batch_size)
         self.assertTrue(decoder_input[0][0] == self.begin_of_sequence_idx)
@@ -57,11 +60,14 @@ class Seq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
         self.encoder_output_setUp(self.a_torch_device)
         self.decoder_input_setUp()
 
-        actual_prediction_sequence = self.pre_trained_seq2seq_model._decoder_step(self.decoder_input,
-                                                                                  self.decoder_hidden_tensor,
-                                                                                  self.encoder_hidden, self.none_target,
-                                                                                  self.a_lengths_tensor,
-                                                                                  self.a_batch_size)
+        actual_prediction_sequence = self.pre_trained_seq2seq_model._decoder_step(
+            self.decoder_input,
+            self.decoder_hidden_tensor,
+            self.encoder_hidden,
+            self.none_target,
+            self.a_lengths_tensor,
+            self.a_batch_size,
+        )
 
         self.assert_output_is_valid_dim(actual_prediction_sequence, output_dim=self.number_of_tags)
 
@@ -71,8 +77,13 @@ class Seq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
         self.decoder_input_setUp()
 
         actual_prediction_sequence = self.pre_trained_seq2seq_model._decoder_step(
-            self.decoder_input, self.decoder_hidden_tensor, self.encoder_hidden, self.a_target_vector,
-            self.a_lengths_tensor, self.a_batch_size)
+            self.decoder_input,
+            self.decoder_hidden_tensor,
+            self.encoder_hidden,
+            self.a_target_vector,
+            self.a_lengths_tensor,
+            self.a_batch_size,
+        )
 
         self.assert_output_is_valid_dim(actual_prediction_sequence, output_dim=self.number_of_tags)
 
@@ -84,9 +95,14 @@ class Seq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
         self.encoder_output_setUp(self.a_torch_device)
         self.decoder_input_setUp()
 
-        self.pre_trained_seq2seq_model._decoder_step(self.decoder_input, self.decoder_hidden_tensor,
-                                                     self.encoder_hidden, self.a_target_vector, self.a_lengths_tensor,
-                                                     self.a_batch_size)
+        self.pre_trained_seq2seq_model._decoder_step(
+            self.decoder_input,
+            self.decoder_hidden_tensor,
+            self.encoder_hidden,
+            self.a_target_vector,
+            self.a_lengths_tensor,
+            self.a_batch_size,
+        )
 
         random_mock.assert_called_once()
 
@@ -98,9 +114,14 @@ class Seq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
         self.encoder_output_setUp(self.a_torch_device)
         self.decoder_input_setUp()
 
-        self.pre_trained_seq2seq_model._decoder_step(self.decoder_input, self.decoder_hidden_tensor,
-                                                     self.encoder_hidden, self.none_target, self.a_lengths_tensor,
-                                                     self.a_batch_size)
+        self.pre_trained_seq2seq_model._decoder_step(
+            self.decoder_input,
+            self.decoder_hidden_tensor,
+            self.encoder_hidden,
+            self.none_target,
+            self.a_lengths_tensor,
+            self.a_batch_size,
+        )
 
         random_mock.assert_not_called()
 

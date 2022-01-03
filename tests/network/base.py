@@ -9,7 +9,6 @@ import torch
 
 
 class Seq2SeqTestCase(TestCase):
-
     @classmethod
     def setUpClass(cls):
         cls.a_cpu_device = torch.device("cpu")
@@ -42,7 +41,11 @@ class Seq2SeqTestCase(TestCase):
 
         decoder_output = MagicMock()
         decoder_output.topk.return_value = MagicMock(), decoder_input_mock
-        decoder_mock.__call__().return_value = decoder_output, decoder_hidden_mock, attention_weights
+        decoder_mock.__call__().return_value = (
+            decoder_output,
+            decoder_hidden_mock,
+            attention_weights,
+        )
 
         return decoder_input_mock, decoder_hidden_mock
 

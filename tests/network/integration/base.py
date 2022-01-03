@@ -11,7 +11,6 @@ from deepparse import download_from_url
 
 
 class Seq2SeqIntegrationTestCase(TestCase):
-
     @classmethod
     def setUpClass(cls):
         cls.verbose = False
@@ -32,7 +31,11 @@ class Seq2SeqIntegrationTestCase(TestCase):
         cls.weights_dir = os.path.join(cls.temp_dir_obj.name, "./weights")
 
         download_from_url(file_name="to_predict_bpemb", saving_dir=cls.weights_dir, file_extension="p")
-        download_from_url(file_name="to_predict_fasttext", saving_dir=cls.weights_dir, file_extension="p")
+        download_from_url(
+            file_name="to_predict_fasttext",
+            saving_dir=cls.weights_dir,
+            file_extension="p",
+        )
         download_from_url(file_name="decoder_hidden", saving_dir=cls.weights_dir, file_extension="p")
 
         cls.path = os.path.join(cls.temp_dir_obj.name, ".cache", "deepparse")
@@ -61,11 +64,13 @@ class Seq2SeqIntegrationTestCase(TestCase):
         self.a_batch_size = 2
 
     def encoder_output_setUp(self, device: torch.device):
-        self.decoder_input = torch.tensor([[[-1.], [-1.]]], device=device)
+        self.decoder_input = torch.tensor([[[-1.0], [-1.0]]], device=device)
         with open(os.path.join(self.weights_dir, "decoder_hidden.p"), "rb") as file:
             self.decoder_hidden_tensor = pickle.load(file)
-        self.decoder_hidden_tensor = (self.decoder_hidden_tensor[0].to(device),
-                                      self.decoder_hidden_tensor[1].to(device))
+        self.decoder_hidden_tensor = (
+            self.decoder_hidden_tensor[0].to(device),
+            self.decoder_hidden_tensor[1].to(device),
+        )
         self.encoder_hidden = torch.rand((self.a_batch_size, self.a_target_vector.shape[1], self.encoder_hidden_size))
 
     def decoder_input_setUp(self):

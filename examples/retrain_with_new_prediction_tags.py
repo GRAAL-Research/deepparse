@@ -33,14 +33,16 @@ tag_dictionary = {"ATag": 0, "AnotherTag": 1, "EOS": 2}
 # The path to save our checkpoints
 logging_path = "./checkpoints"
 
-address_parser.retrain(training_container,
-                       0.8,
-                       epochs=5,
-                       batch_size=8,
-                       num_workers=2,
-                       callbacks=[lr_scheduler],
-                       prediction_tags=tag_dictionary,
-                       logging_path=logging_path)
+address_parser.retrain(
+    training_container,
+    0.8,
+    epochs=5,
+    batch_size=8,
+    num_workers=2,
+    callbacks=[lr_scheduler],
+    prediction_tags=tag_dictionary,
+    logging_path=logging_path,
+)
 
 # Now let's test our fine-tuned model using the best checkpoint (default parameter).
 address_parser.test(test_container, batch_size=256)

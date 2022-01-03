@@ -28,14 +28,14 @@ class Encoder(nn.Module):
 
     def forward(self, to_predict: torch.Tensor, lengths_tensor: torch.Tensor) -> Tuple:
         """
-            Callable method to encode the components of an address.
+        Callable method to encode the components of an address.
 
-            Args:
-                to_predict (~torch.Tensor): The elements to predict the tags.
-                lengths_tensor (~torch.Tensor): The lengths of the batch elements (since packed).
+        Args:
+            to_predict (~torch.Tensor): The elements to predict the tags.
+            lengths_tensor (~torch.Tensor): The lengths of the batch elements (since packed).
 
-            Return:
-                A tuple of the address components encoding.
+        Return:
+            A tuple of the address components encoding.
         """
 
         packed_sequence = pack_padded_sequence(to_predict, lengths_tensor.cpu(), batch_first=True, enforce_sorted=False)

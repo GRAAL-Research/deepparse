@@ -2,7 +2,6 @@ from typing import List
 
 
 class TrainVectorizer:
-
     def __init__(self, embedding_vectorizer, tags_vectorizer):
         """
         Vectorizer use during training to convert an address into word embeddings and to provide the target.
@@ -22,8 +21,9 @@ class TrainVectorizer:
         """
         input_sequence = []
         target_sequence = []
-        input_sequence.extend(self.embedding_vectorizer([address[0]
-                                                         for address in addresses]))  # need to be pass in batch
+        input_sequence.extend(
+            self.embedding_vectorizer([address[0] for address in addresses])
+        )  # need to be pass in batch
         # otherwise the padding for byte-pair encoding will be broken
         for address in addresses:
             target_tmp = [self.tags_vectorizer(target) for target in address[1]]

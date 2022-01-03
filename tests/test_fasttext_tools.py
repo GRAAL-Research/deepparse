@@ -9,15 +9,18 @@ from unittest.mock import patch, mock_open
 
 from fasttext.FastText import _FastText
 
-from deepparse import download_fasttext_embeddings, download_fasttext_magnitude_embeddings, download_from_url, \
-    load_fasttext_embeddings
+from deepparse import (
+    download_fasttext_embeddings,
+    download_fasttext_magnitude_embeddings,
+    download_from_url,
+    load_fasttext_embeddings,
+)
 from deepparse.fasttext_tools import _print_progress
 from tests.base_capture_output import CaptureOutputTestCase
 from tests.tools import create_file
 
 
 class ToolsTests(CaptureOutputTestCase):
-
     @classmethod
     def setUpClass(cls) -> None:
         cls.temp_dir_obj = TemporaryDirectory()
@@ -62,14 +65,16 @@ class ToolsTests(CaptureOutputTestCase):
 
     @patch("os.path.isfile")
     def test_givenAFasttextLightEmbeddingsLocal_whenDownloadFasttextLightEmbeddings_thenReturnFilePath(
-            self, isfile_mock):
+        self, isfile_mock
+    ):
         expected = self.a_fasttext_light_name_path
         actual = download_fasttext_magnitude_embeddings(self.a_directory_path)
         self.assertEqual(expected, actual)
 
     @patch("os.path.isfile")
     def test_givenAFasttextLightEmbeddingsNotLocal_whenDownloadFasttextLightEmbeddings_thenDownloadIt(
-            self, isfile_mock):
+        self, isfile_mock
+    ):
         # since we create a local fake file, the file exist, so we mock that the file doest not exist.
         isfile_mock.return_value = False
         create_file(self.a_fasttext_light_name_path, content="Fake fasttext embedding content")
@@ -85,7 +90,8 @@ class ToolsTests(CaptureOutputTestCase):
 
     @patch("os.path.isfile")
     def test_givenAFasttextLightEmbeddingsNotLocal_whenDownloadFasttextEmbeddingsNoVerbose_thenNoVerbose(
-            self, isfile_mock):
+        self, isfile_mock
+    ):
         self._capture_output()
 
         # since we create a local fake file, the file exist, so we mock that the file doest not exist.
@@ -119,8 +125,10 @@ class ToolsTests(CaptureOutputTestCase):
         with patch("deepparse.fasttext_tools.download_from_url"):
             download_fasttext_magnitude_embeddings(self.a_directory_path, verbose=True)
 
-            expected = "The fastText pre-trained word embeddings will be download in magnitude format (2.3 GO), " \
-                       "this process will take several minutes."
+            expected = (
+                "The fastText pre-trained word embeddings will be download in magnitude format (2.3 GO), "
+                "this process will take several minutes."
+            )
 
             actual = self.test_out.getvalue().strip()
             self.assertEqual(expected, actual)
@@ -134,14 +142,20 @@ class ToolsTests(CaptureOutputTestCase):
 
             # we verify some cases
             if downloaded_bytes == 1:
-                self.assertEqual(self.test_out.getvalue().strip(),
-                                 "(10.00%) [=====>                                             ]")
+                self.assertEqual(
+                    self.test_out.getvalue().strip(),
+                    "(10.00%) [=====>                                             ]",
+                )
             elif downloaded_bytes == 7:
-                self.assertIn("(70.00%) [===================================>               ]",
-                              self.test_out.getvalue().strip())
+                self.assertIn(
+                    "(70.00%) [===================================>               ]",
+                    self.test_out.getvalue().strip(),
+                )
             elif downloaded_bytes == 10:
-                self.assertIn("(100.00%) [==================================================>]",
-                              self.test_out.getvalue().strip())
+                self.assertIn(
+                    "(100.00%) [==================================================>]",
+                    self.test_out.getvalue().strip(),
+                )
 
         self.assertStdoutContains(["[", ">", "=", "]"])
 
@@ -151,9 +165,15 @@ class ToolsTests(CaptureOutputTestCase):
     @patch("deepparse.fasttext_tools.os.rename")
     @patch("deepparse.fasttext_tools.shutil")
     @patch("deepparse.fasttext_tools.os.remove")
-    def test_givenADownloadFasttext_whenPrintProgressSetToVerbose_thenDontPrint(self, os_remove_mock, shutil_mock,
-                                                                                os_rename_mock, g_zip_mock,
-                                                                                urlopen_mock, open_mock):
+    def test_givenADownloadFasttext_whenPrintProgressSetToVerbose_thenDontPrint(
+        self,
+        os_remove_mock,
+        shutil_mock,
+        os_rename_mock,
+        g_zip_mock,
+        urlopen_mock,
+        open_mock,
+    ):
         # pylint: disable=too-many-arguments
         urlopen_mock().read.side_effect = self.a_response_payload
         self._capture_output()
@@ -171,9 +191,15 @@ class ToolsTests(CaptureOutputTestCase):
     @patch("deepparse.fasttext_tools.os.rename")
     @patch("deepparse.fasttext_tools.shutil")
     @patch("deepparse.fasttext_tools.os.remove")
-    def test_givenADownloadFasttext_whenPrintProgressSetToVerbose_thenPrint(self, os_remove_mock, shutil_mock,
-                                                                            os_rename_mock, g_zip_mock, urlopen_mock,
-                                                                            open_mock):
+    def test_givenADownloadFasttext_whenPrintProgressSetToVerbose_thenPrint(
+        self,
+        os_remove_mock,
+        shutil_mock,
+        os_rename_mock,
+        g_zip_mock,
+        urlopen_mock,
+        open_mock,
+    ):
         # pylint: disable=too-many-arguments
         urlopen_mock().read.side_effect = self.a_response_payload
         urlopen_mock().getheader.return_value = "2"
@@ -182,8 +208,10 @@ class ToolsTests(CaptureOutputTestCase):
             _ = download_fasttext_embeddings(self.a_directory_path, verbose=True)
         actual = self.test_out.getvalue().strip()
 
-        expected = "The fastText pre-trained word embeddings will be downloaded (6.8 GO), " \
-                   "this process will take several minutes."
+        expected = (
+            "The fastText pre-trained word embeddings will be downloaded (6.8 GO), "
+            "this process will take several minutes."
+        )
         self.assertIn(expected, actual)
 
         expected = "Downloading https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.fr.300.bin.gz"

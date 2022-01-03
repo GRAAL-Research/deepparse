@@ -17,7 +17,7 @@ class FormattedComparedAddressesRaw(FormattedComparedAddresses):
         """
         return {
             self.first_address.raw_address: self.first_address.address_parsed_components,
-            self.second_address.raw_address: self.second_address.address_parsed_components
+            self.second_address.raw_address: self.second_address.address_parsed_components,
         }
 
     def _get_raw_diff_color(self, verbose=True) -> str:
@@ -33,8 +33,14 @@ class FormattedComparedAddressesRaw(FormattedComparedAddresses):
             str_formatted += "Yellow: Belongs only to the second address\n"
             str_formatted += "\n"
 
-        str_formatted += self._get_color_diff(
-            self.first_address.raw_address, self.second_address.raw_address, highlight=True) + "\n"
+        str_formatted += (
+            self._get_color_diff(
+                self.first_address.raw_address,
+                self.second_address.raw_address,
+                highlight=True,
+            )
+            + "\n"
+        )
         return str_formatted
 
     def _comparison_report_builder(self) -> str:

@@ -23,18 +23,26 @@ class EmbeddingNetwork(nn.Module):
         maxpool_kernel_size (int): The kernel size of the maximum pooling layer. Default is three (3).
     """
 
-    def __init__(self,
-                 input_size: int,
-                 hidden_size: int,
-                 projection_size: int,
-                 num_layers: int = 1,
-                 maxpool=False,
-                 maxpool_kernel_size=3) -> None:
+    def __init__(
+        self,
+        input_size: int,
+        hidden_size: int,
+        projection_size: int,
+        num_layers: int = 1,
+        maxpool=False,
+        maxpool_kernel_size=3,
+    ) -> None:
         # pylint: disable=too-many-arguments
         super().__init__()
 
         self.hidden_size = hidden_size
-        self.model = nn.LSTM(input_size, self.hidden_size, num_layers=num_layers, batch_first=True, bidirectional=True)
+        self.model = nn.LSTM(
+            input_size,
+            self.hidden_size,
+            num_layers=num_layers,
+            batch_first=True,
+            bidirectional=True,
+        )
 
         self.projection_layer = nn.Linear(2 * hidden_size, projection_size)
 
@@ -56,8 +64,11 @@ class EmbeddingNetwork(nn.Module):
         device = to_predict.device
         batch_size = to_predict.size(0)
 
-        embeddings = torch.zeros(to_predict.size(1), to_predict.size(0),
-                                 int(to_predict.size(3) / self.maxpool_kernel_size)).to(device)
+        embeddings = torch.zeros(
+            to_predict.size(1),
+            to_predict.size(0),
+            int(to_predict.size(3) / self.maxpool_kernel_size),
+        ).to(device)
 
         to_predict = to_predict.transpose(0, 1).float()
 
@@ -68,10 +79,12 @@ class EmbeddingNetwork(nn.Module):
             for decomposition_length in decomposition_lengths:
                 lengths.append(decomposition_length[i])
 
-            packed_sequence = pack_padded_sequence(to_predict[i],
-                                                   torch.tensor(lengths).cpu(),
-                                                   batch_first=True,
-                                                   enforce_sorted=False)
+            packed_sequence = pack_padded_sequence(
+                to_predict[i],
+                torch.tensor(lengths).cpu(),
+                batch_first=True,
+                enforce_sorted=False,
+            )
 
             packed_output, _ = self.model(packed_sequence)
 
@@ -98,7 +111,8 @@ class EmbeddingNetwork(nn.Module):
         Max pooling the projection output of the projection layer.
         """
         pooled_output = self.maxpooling_layer(
-            projection_output.view(1, projection_output.size(0), projection_output.size(1)))
+            projection_output.view(1, projection_output.size(0), projection_output.size(1))
+        )
         projection_output = pooled_output.view(pooled_output.size(1), pooled_output.size(2))
 
         return projection_output

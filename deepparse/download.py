@@ -3,8 +3,13 @@ import os
 
 from bpemb import BPEmb
 
-from deepparse import CACHE_PATH, download_fasttext_magnitude_embeddings, latest_version, \
-    download_fasttext_embeddings, download_weights
+from deepparse import (
+    CACHE_PATH,
+    download_fasttext_magnitude_embeddings,
+    latest_version,
+    download_fasttext_embeddings,
+    download_weights,
+)
 
 
 def main(args: argparse.Namespace) -> None:
@@ -31,9 +36,17 @@ def main(args: argparse.Namespace) -> None:
 
 if __name__ == "__main__":  # pragma: no cover
     parser = argparse.ArgumentParser()
-    parser.add_argument("model_type",
-                        choices=["fasttext", "fasttext_attention", "fasttext-light", "bpemb", "bpemb_attention"],
-                        help="The model type to download.")
+    parser.add_argument(
+        "model_type",
+        choices=[
+            "fasttext",
+            "fasttext_attention",
+            "fasttext-light",
+            "bpemb",
+            "bpemb_attention",
+        ],
+        help="The model type to download.",
+    )
 
     args_parser = parser.parse_args()
 

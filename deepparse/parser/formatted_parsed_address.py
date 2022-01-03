@@ -1,8 +1,15 @@
 from typing import Dict, List, Tuple, Union
 
 FIELDS = [
-    "StreetNumber", "Unit", "StreetName", "Orientation", "Municipality", "Province", "PostalCode", "GeneralDelivery",
-    "EOS"
+    "StreetNumber",
+    "Unit",
+    "StreetName",
+    "Orientation",
+    "Municipality",
+    "Province",
+    "PostalCode",
+    "GeneralDelivery",
+    "EOS",
 ]
 
 
@@ -58,7 +65,8 @@ class FormattedParsedAddress:
 
     def __repr__(self) -> str:
         values = [
-            self._get_attr_repr(name) for name in self.__dict__
+            self._get_attr_repr(name)
+            for name in self.__dict__
             if name not in ("raw_address", "address_parsed_components", "inferred_order")
         ]
         joined_values = ", ".join(v for v in values if v != "")
@@ -80,11 +88,13 @@ class FormattedParsedAddress:
                 return False
         return True
 
-    def format_address(self,
-                       fields: Union[List, None] = None,
-                       capitalize_fields: Union[List[str], None] = None,
-                       upper_case_fields: Union[List[str], None] = None,
-                       field_separator: Union[str, None] = None) -> str:
+    def format_address(
+        self,
+        fields: Union[List, None] = None,
+        capitalize_fields: Union[List[str], None] = None,
+        upper_case_fields: Union[List[str], None] = None,
+        field_separator: Union[str, None] = None,
+    ) -> str:
         """
         Method to format the address components in a specific order. We also filter the empty components (None).
         By default, the order is `'StreetNumber, Unit, StreetName, Orientation, Municipality, Province, PostalCode,

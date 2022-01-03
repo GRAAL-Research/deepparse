@@ -13,7 +13,6 @@ from ..integration.base import Seq2SeqIntegrationTestCase
 
 @skipIf(not torch.cuda.is_available(), "no gpu available")
 class FastTextSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
-
     @classmethod
     def setUpClass(cls):
         super(FastTextSeq2SeqIntegrationTest, cls).setUpClass()
@@ -46,10 +45,12 @@ class FastTextSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
         self.assert_output_is_valid_dim(predictions, output_dim=self.number_of_tags)
 
     def test_retrainedModel_whenForwardStep_thenStepIsOk(self):
-        self.seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device,
-                                                  output_size=self.re_trained_output_dim,
-                                                  verbose=self.verbose,
-                                                  path_to_retrained_model=self.a_retrain_model_path)
+        self.seq2seq_model = FastTextSeq2SeqModel(
+            self.a_torch_device,
+            output_size=self.re_trained_output_dim,
+            verbose=self.verbose,
+            path_to_retrained_model=self.a_retrain_model_path,
+        )
         # forward pass for two address: "["15 major st london ontario n5z1e1", "15 major st london ontario n5z1e1"]"
         self.decoder_input_setUp()
 
@@ -58,10 +59,12 @@ class FastTextSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
         self.assert_output_is_valid_dim(predictions, output_dim=self.re_trained_output_dim)
 
     def test_retrainedModel_whenForwardStepWithTarget_thenStepIsOk(self):
-        self.seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device,
-                                                  output_size=self.re_trained_output_dim,
-                                                  verbose=self.verbose,
-                                                  path_to_retrained_model=self.a_retrain_model_path)
+        self.seq2seq_model = FastTextSeq2SeqModel(
+            self.a_torch_device,
+            output_size=self.re_trained_output_dim,
+            verbose=self.verbose,
+            path_to_retrained_model=self.a_retrain_model_path,
+        )
         # forward pass for two address: "["15 major st london ontario n5z1e1", "15 major st london ontario n5z1e1"]"
         self.decoder_input_setUp()
 

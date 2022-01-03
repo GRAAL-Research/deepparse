@@ -14,7 +14,6 @@ from deepparse.parser import CACHE_PATH, AddressParser
 
 
 class AddressParserRetrainTestCase(TestCase):
-
     @classmethod
     def setUpClass(cls):
         cls.data_temp_dir_obj = TemporaryDirectory()
@@ -27,9 +26,11 @@ class AddressParserRetrainTestCase(TestCase):
         download_from_url(test_dataset_name, cls.a_data_saving_dir, file_extension=file_extension)
 
         cls.training_container = PickleDatasetContainer(
-            os.path.join(cls.a_data_saving_dir, training_dataset_name + "." + file_extension))
+            os.path.join(cls.a_data_saving_dir, training_dataset_name + "." + file_extension)
+        )
         cls.test_container = PickleDatasetContainer(
-            os.path.join(cls.a_data_saving_dir, test_dataset_name + "." + file_extension))
+            os.path.join(cls.a_data_saving_dir, test_dataset_name + "." + file_extension)
+        )
 
         cls.a_fasttext_model_type = "fasttext"
         cls.a_fasttext_light_model_type = "fasttext-light"
@@ -53,7 +54,12 @@ class AddressParserRetrainTestCase(TestCase):
         cls.fasttext_local_path = os.path.join(CACHE_PATH, "fasttext.ckpt")
         cls.bpemb_local_path = os.path.join(CACHE_PATH, "bpemb.ckpt")
 
-        cls.with_new_prediction_tags = {"ALastTag": 0, "ATag": 1, "AnotherTag": 2, "EOS": 3}
+        cls.with_new_prediction_tags = {
+            "ALastTag": 0,
+            "ATag": 1,
+            "AnotherTag": 2,
+            "EOS": 3,
+        }
 
     def setUp(self) -> None:
         self.training_temp_dir_obj = TemporaryDirectory()
@@ -66,15 +72,19 @@ class AddressParserRetrainTestCase(TestCase):
     def tearDown(self) -> None:
         self.training_temp_dir_obj.cleanup()
 
-    def training(self,
-                 address_parser: AddressParser,
-                 data_container: DatasetContainer,
-                 num_workers: int,
-                 prediction_tags=None):
-        address_parser.retrain(data_container,
-                               self.a_train_ratio,
-                               epochs=self.a_single_epoch,
-                               batch_size=self.a_batch_size,
-                               num_workers=num_workers,
-                               logging_path=self.a_checkpoints_saving_dir,
-                               prediction_tags=prediction_tags)
+    def training(
+        self,
+        address_parser: AddressParser,
+        data_container: DatasetContainer,
+        num_workers: int,
+        prediction_tags=None,
+    ):
+        address_parser.retrain(
+            data_container,
+            self.a_train_ratio,
+            epochs=self.a_single_epoch,
+            batch_size=self.a_batch_size,
+            num_workers=num_workers,
+            logging_path=self.a_checkpoints_saving_dir,
+            prediction_tags=prediction_tags,
+        )

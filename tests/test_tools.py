@@ -8,15 +8,20 @@ from unittest.mock import patch
 
 import requests
 
-from deepparse import download_from_url, latest_version, download_weights, handle_pre_trained_checkpoint, \
-    handle_poutyne_version, valid_poutyne_version
+from deepparse import (
+    download_from_url,
+    latest_version,
+    download_weights,
+    handle_pre_trained_checkpoint,
+    handle_poutyne_version,
+    valid_poutyne_version,
+)
 from deepparse import handle_model_path, CACHE_PATH
 from tests.base_capture_output import CaptureOutputTestCase
 from tests.tools import create_file
 
 
 class ToolsTests(CaptureOutputTestCase):
-
     def setUp(self) -> None:
         self.temp_dir_obj = TemporaryDirectory()
         self.fake_cache_path = self.temp_dir_obj.name
@@ -41,7 +46,9 @@ class ToolsTests(CaptureOutputTestCase):
         self.create_cache_version("fasttext", self.latest_fasttext_version)
         self.assertTrue(latest_version("fasttext", self.fake_cache_path))
 
-    def test_givenAFasttextNotTheLatestVersion_whenVerifyIfLastVersion_thenReturnFalse(self):
+    def test_givenAFasttextNotTheLatestVersion_whenVerifyIfLastVersion_thenReturnFalse(
+        self,
+    ):
         self.create_cache_version("fasttext", "not_the_last_version")
         self.assertFalse(latest_version("fasttext", self.fake_cache_path))
 
@@ -49,7 +56,9 @@ class ToolsTests(CaptureOutputTestCase):
         self.create_cache_version("bpemb", self.latest_bpemb_version)
         self.assertTrue(latest_version("bpemb", self.fake_cache_path))
 
-    def test_givenABPEmbNotTheLatestVersion_whenVerifyIfLastVersion_thenReturnFalse(self):
+    def test_givenABPEmbNotTheLatestVersion_whenVerifyIfLastVersion_thenReturnFalse(
+        self,
+    ):
         self.create_cache_version("bpemb", "not_the_last_version")
         self.assertFalse(latest_version("bpemb", self.fake_cache_path))
 
@@ -92,7 +101,9 @@ class ToolsTests(CaptureOutputTestCase):
             downloader.assert_any_call("bpemb", "./", "ckpt")
             downloader.assert_any_call("bpemb", "./", "version")
 
-    def test_givenModelFasttextWeightsToDownloadVerbose_whenDownloadOk_thenVerbose(self):
+    def test_givenModelFasttextWeightsToDownloadVerbose_whenDownloadOk_thenVerbose(
+        self,
+    ):
         self._capture_output()
         with patch("deepparse.tools.download_from_url"):
             download_weights(model="fasttext", saving_dir="./", verbose=True)
@@ -115,7 +126,8 @@ class ToolsTests(CaptureOutputTestCase):
     @patch("os.path.isfile")
     @patch("deepparse.tools.latest_version")
     def test_givenAFasttextCheckpoint_whenHandleCheckpoint_thenReturnCachedFasttextPath(
-            self, latest_version_check, isfile_mock):
+        self, latest_version_check, isfile_mock
+    ):
         isfile_mock.return_value = True
         checkpoint = "fasttext"
 
@@ -126,8 +138,9 @@ class ToolsTests(CaptureOutputTestCase):
 
     @patch("os.path.isfile")
     @patch("deepparse.tools.latest_version")
-    def test_givenABPEmbCheckpoint_whenHandleCheckpoint_thenReturnCachedBPEmbPath(self, latest_version_check,
-                                                                                  isfile_mock):
+    def test_givenABPEmbCheckpoint_whenHandleCheckpoint_thenReturnCachedBPEmbPath(
+        self, latest_version_check, isfile_mock
+    ):
         isfile_mock.return_value = True
         checkpoint = "bpemb"
 
@@ -180,7 +193,8 @@ class ToolsTests(CaptureOutputTestCase):
     @patch("deepparse.tools.latest_version")
     @patch("deepparse.tools.poutyne")
     def test_givenPoutyneVersionGreaterThan12_givenHandlePreTrainedCheckpointFasttext_thenReturnFasttext(
-            self, poutyne_mock, latest_version_mock, isfile_mock):
+        self, poutyne_mock, latest_version_mock, isfile_mock
+    ):
         poutyne_mock.version.__version__ = "1.2"
         isfile_mock.return_value = True
 
@@ -192,7 +206,8 @@ class ToolsTests(CaptureOutputTestCase):
     @patch("deepparse.tools.latest_version")
     @patch("deepparse.tools.poutyne")
     def test_givenPoutyneVersionGreaterThan12_givenHandlePreTrainedCheckpointFasttextNoLocalFile_thenReturnFasttext(
-            self, poutyne_mock, latest_version_mock, isfile_mock):
+        self, poutyne_mock, latest_version_mock, isfile_mock
+    ):
         poutyne_mock.version.__version__ = "1.2"
         isfile_mock.return_value = False
 
@@ -205,7 +220,8 @@ class ToolsTests(CaptureOutputTestCase):
     @patch("deepparse.tools.latest_version")
     @patch("deepparse.tools.poutyne")
     def test_givenPoutyneVersionGreaterThan12_givenHandlePreTrainedCheckpointBPEmb_thenReturnBPEmb(
-            self, poutyne_mock, latest_version_mock, isfile_mock):
+        self, poutyne_mock, latest_version_mock, isfile_mock
+    ):
         poutyne_mock.version.__version__ = "1.2"
         isfile_mock.return_value = True
 
@@ -217,7 +233,8 @@ class ToolsTests(CaptureOutputTestCase):
     @patch("deepparse.tools.latest_version")
     @patch("deepparse.tools.poutyne")
     def test_givenPoutyneVersionGreaterThan12_givenHandlePreTrainedCheckpointBPEmbNoLocalFile_thenReturnBPEmb(
-            self, poutyne_mock, latest_version_mock, isfile_mock):
+        self, poutyne_mock, latest_version_mock, isfile_mock
+    ):
         poutyne_mock.version.__version__ = "1.2"
         isfile_mock.return_value = False
 
@@ -230,7 +247,8 @@ class ToolsTests(CaptureOutputTestCase):
     @patch("deepparse.tools.latest_version")
     @patch("deepparse.tools.poutyne")
     def test_givenPoutyneVersionGreaterThan12_givenHandlePreTrainedCheckpointFasttextNotLatestVersion_thenRaiseWarning(
-            self, poutyne_mock, latest_version_mock, isfile_mock):
+        self, poutyne_mock, latest_version_mock, isfile_mock
+    ):
         isfile_mock.return_value = True
         latest_version_mock.return_value = False  # Not the latest version
         poutyne_mock.version.__version__ = "1.2"
@@ -242,7 +260,8 @@ class ToolsTests(CaptureOutputTestCase):
     @patch("deepparse.tools.latest_version")
     @patch("deepparse.tools.poutyne")
     def test_givenPoutyneVersionGreaterThan12_givenHandlePreTrainedCheckpointBPEmbNotLatestVersion_thenRaiseWarning(
-            self, poutyne_mock, latest_version_mock, isfile_mock):
+        self, poutyne_mock, latest_version_mock, isfile_mock
+    ):
         isfile_mock.return_value = True
         latest_version_mock.return_value = False  # Not the latest version
         poutyne_mock.version.__version__ = "1.2"

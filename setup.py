@@ -62,15 +62,24 @@ def main():
             "Programming Language :: Python :: 3.8",
             "Programming Language :: Python :: 3.9",
             "Topic :: Software Development :: Libraries",
-            "Topic :: Software Development :: Libraries :: Python Modules"
+            "Topic :: Software Development :: Libraries :: Python Modules",
         ],
         packages=packages,
-        install_requires=["numpy", "torch", "bpemb", "gensim", "requests", "fasttext", "pymagnitude-light", "poutyne"],
+        install_requires=[
+            "numpy",
+            "torch",
+            "bpemb",
+            "gensim",
+            "requests",
+            "fasttext",
+            "pymagnitude-light",
+            "poutyne",
+        ],
         python_requires=">=3.7",
         description="A library for parsing multinational street addresses using deep learning.",
         long_description=readme,
         long_description_content_type="text/markdown",
-        extras_require={"colorama": "colorama>=0.4.3"}
+        extras_require={"colorama": "colorama>=0.4.3"},
     )
 
 

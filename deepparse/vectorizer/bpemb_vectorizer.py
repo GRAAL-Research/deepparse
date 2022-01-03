@@ -60,5 +60,7 @@ class BPEmbVectorizer(Vectorizer):
         for decomposed_sequence, _ in batch:
             for decomposition in decomposed_sequence:
                 if len(decomposition) != self._max_length:
-                    decomposition.extend([np.ones(self.embeddings_model.dim) * [self.padding_value]] *
-                                         (self._max_length - len(decomposition)))
+                    decomposition.extend(
+                        [np.ones(self.embeddings_model.dim) * [self.padding_value]]
+                        * (self._max_length - len(decomposition))
+                    )

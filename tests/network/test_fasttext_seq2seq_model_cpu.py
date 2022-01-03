@@ -13,7 +13,6 @@ from tests.network.base import Seq2SeqTestCase
 
 
 class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
-
     @classmethod
     def setUpClass(cls):
         super(FasttextSeq2SeqCPUTest, cls).setUpClass()
@@ -26,7 +25,8 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
     def test_givenNotLocalWeights_whenInstantiatingAFastTextSeq2SeqModel_thenShouldDownloadWeights(
-            self, load_state_dict_mock, torch_mock, isfile_mock):
+        self, load_state_dict_mock, torch_mock, isfile_mock
+    ):
         isfile_mock.return_value = False
         with patch("deepparse.network.seq2seq.download_weights") as download_weights_mock:
             FastTextSeq2SeqModel(self.a_cpu_device, output_size=self.output_size, verbose=self.verbose)
@@ -37,7 +37,8 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
     def test_givenLocalWeightsNotLastVersion_whenInstantiatingAFastTextSeq2SeqModel_thenShouldDownloadWeights(
-            self, load_state_dict_mock, torch_mock, isfile_mock, last_version_mock):
+        self, load_state_dict_mock, torch_mock, isfile_mock, last_version_mock
+    ):
         isfile_mock.return_value = True
         last_version_mock.return_value = False
         with patch("deepparse.network.seq2seq.download_weights") as download_weights_mock:
@@ -47,13 +48,16 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
     def test_givenRetrainedWeights_whenInstantiatingAFastTextSeq2SeqModel_thenShouldUseRetrainedWeights(
-            self, load_state_dict_mock, torch_mock):
+        self, load_state_dict_mock, torch_mock
+    ):
         all_layers_params = MagicMock()
         torch_mock.load.return_value = all_layers_params
-        FastTextSeq2SeqModel(self.a_cpu_device,
-                             output_size=self.output_size,
-                             verbose=self.verbose,
-                             path_to_retrained_model=self.a_path_to_retrained_model)
+        FastTextSeq2SeqModel(
+            self.a_cpu_device,
+            output_size=self.output_size,
+            verbose=self.verbose,
+            path_to_retrained_model=self.a_path_to_retrained_model,
+        )
 
         torch_load_call = [call.load(self.a_path_to_retrained_model, map_location=self.a_cpu_device)]
         torch_mock.assert_has_calls(torch_load_call)
@@ -67,9 +71,15 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
     @patch("os.path.isfile")
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
-    def test_whenInstantiateASeq2SeqModel_thenEncodeIsCalledOnce(self, load_state_dict_mock, torch_mock, isfile_mock,
-                                                                 last_version_mock, download_weights_mock,
-                                                                 encoder_mock):
+    def test_whenInstantiateASeq2SeqModel_thenEncodeIsCalledOnce(
+        self,
+        load_state_dict_mock,
+        torch_mock,
+        isfile_mock,
+        last_version_mock,
+        download_weights_mock,
+        encoder_mock,
+    ):
         seq2seq_model = FastTextSeq2SeqModel(self.a_cpu_device, self.output_size, self.verbose)
 
         to_predict_mock, lengths_tensor_mock = self.setup_encoder_mocks()
@@ -96,10 +106,12 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
         download_weights_mock,
         decoder_mock,
     ):
-        seq2seq_model = FastTextSeq2SeqModel(self.a_cpu_device,
-                                             output_size=self.output_size,
-                                             verbose=self.verbose,
-                                             attention_mechanism=False)
+        seq2seq_model = FastTextSeq2SeqModel(
+            self.a_cpu_device,
+            output_size=self.output_size,
+            verbose=self.verbose,
+            attention_mechanism=False,
+        )
 
         decoder_input_mock, decoder_hidden_mock = self.setUp_decoder_mocks(decoder_mock, attention_mechanism=True)
 
@@ -110,8 +122,14 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
         max_length = 4  # a sequence of 4 tokens
         lengths_tensor_mock.max().item.return_value = max_length
         encoder_outputs = MagicMock()
-        seq2seq_model._decoder_step(decoder_input_mock, decoder_hidden_mock, encoder_outputs, self.a_none_target,
-                                    lengths_tensor_mock, self.a_batch_size)
+        seq2seq_model._decoder_step(
+            decoder_input_mock,
+            decoder_hidden_mock,
+            encoder_outputs,
+            self.a_none_target,
+            lengths_tensor_mock,
+            self.a_batch_size,
+        )
 
         decoder_call = [call()(view_mock, decoder_hidden_mock, encoder_outputs, lengths_tensor_mock)] * max_length
 
@@ -132,10 +150,12 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
         download_weights_mock,
         decoder_mock,
     ):
-        seq2seq_model = FastTextSeq2SeqModel(self.a_cpu_device,
-                                             output_size=self.output_size,
-                                             verbose=self.verbose,
-                                             attention_mechanism=True)
+        seq2seq_model = FastTextSeq2SeqModel(
+            self.a_cpu_device,
+            output_size=self.output_size,
+            verbose=self.verbose,
+            attention_mechanism=True,
+        )
 
         decoder_input_mock, decoder_hidden_mock = self.setUp_decoder_mocks(decoder_mock, attention_mechanism=True)
 
@@ -146,8 +166,14 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
         max_length = 4  # a sequence of 4 tokens
         lengths_tensor_mock.max().item.return_value = max_length
         encoder_outputs = MagicMock()
-        seq2seq_model._decoder_step(decoder_input_mock, decoder_hidden_mock, encoder_outputs, self.a_none_target,
-                                    lengths_tensor_mock, self.a_batch_size)
+        seq2seq_model._decoder_step(
+            decoder_input_mock,
+            decoder_hidden_mock,
+            encoder_outputs,
+            self.a_none_target,
+            lengths_tensor_mock,
+            self.a_batch_size,
+        )
 
         decoder_call = [call()(view_mock, decoder_hidden_mock, encoder_outputs, lengths_tensor_mock)] * max_length
 
@@ -160,10 +186,16 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
     @patch("os.path.isfile")
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
-    def test_whenInstantiateASeq2SeqModelWithTarget_thenDecoderIsCalled(self, load_state_dict_mock, torch_mock,
-                                                                        isfile_mock, last_version_mock,
-                                                                        download_weights_mock, decoder_mock,
-                                                                        random_mock):
+    def test_whenInstantiateASeq2SeqModelWithTarget_thenDecoderIsCalled(
+        self,
+        load_state_dict_mock,
+        torch_mock,
+        isfile_mock,
+        last_version_mock,
+        download_weights_mock,
+        decoder_mock,
+        random_mock,
+    ):
         random_mock.return_value = self.a_value_lower_than_threshold
 
         seq2seq_model = FastTextSeq2SeqModel(self.a_cpu_device, output_size=self.output_size, verbose=self.verbose)
@@ -174,14 +206,24 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
         max_length = 4  # a sequence of 4 tokens
         lengths_tensor_mock.max().item.return_value = max_length
         encoder_outputs = MagicMock()
-        seq2seq_model._decoder_step(decoder_input_mock, decoder_hidden_mock, encoder_outputs, self.a_none_target,
-                                    lengths_tensor_mock, self.a_batch_size)
+        seq2seq_model._decoder_step(
+            decoder_input_mock,
+            decoder_hidden_mock,
+            encoder_outputs,
+            self.a_none_target,
+            lengths_tensor_mock,
+            self.a_batch_size,
+        )
 
         decoder_call = []
 
         for idx in range(max_length):
-            decoder_call.append(call()(self.a_transpose_target_vector[idx].view(1, self.a_batch_size, 1),
-                                       decoder_hidden_mock))
+            decoder_call.append(
+                call()(
+                    self.a_transpose_target_vector[idx].view(1, self.a_batch_size, 1),
+                    decoder_hidden_mock,
+                )
+            )
 
         self.assert_has_calls_tensor_equals(decoder_mock, decoder_call)
 
@@ -192,10 +234,16 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
     @patch("os.path.isfile")
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
-    def test_givenAFasttextSeq2SeqModel_whenForwardPass_thenProperlyDoPAss(self, load_state_dict_mock, torch_mock,
-                                                                           isfile_mock, last_version_mock,
-                                                                           download_weights_mock, decoder_mock,
-                                                                           encoder_mock):
+    def test_givenAFasttextSeq2SeqModel_whenForwardPass_thenProperlyDoPAss(
+        self,
+        load_state_dict_mock,
+        torch_mock,
+        isfile_mock,
+        last_version_mock,
+        download_weights_mock,
+        decoder_mock,
+        encoder_mock,
+    ):
         to_predict_mock, lengths_tensor_mock = self.setup_encoder_mocks()
 
         _, decoder_hidden_mock = self.setUp_decoder_mocks(decoder_mock, attention_mechanism=False)
@@ -214,7 +262,16 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
 
         encoder_mock.assert_has_calls([call()(to_predict_mock, lengths_tensor_mock)])
         lengths_tensor_mock.assert_has_calls([call.max().item()])
-        decoder_mock.assert_has_calls([call()(to_mock, decoder_hidden_mock, decoder_input_mock, lengths_tensor_mock)])
+        decoder_mock.assert_has_calls(
+            [
+                call()(
+                    to_mock,
+                    decoder_hidden_mock,
+                    decoder_input_mock,
+                    lengths_tensor_mock,
+                )
+            ]
+        )
 
     @patch("deepparse.network.seq2seq.random.random")
     @patch("deepparse.network.seq2seq.Encoder")
@@ -224,11 +281,17 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
     @patch("os.path.isfile")
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
-    def test_givenAFasttext2SeqModel_whenForwardPassWithTarget_thenProperlyDoPAss(self, load_state_dict_mock,
-                                                                                  torch_mock, isfile_mock,
-                                                                                  last_version_mock,
-                                                                                  download_weights_mock, decoder_mock,
-                                                                                  encoder_mock, random_mock):
+    def test_givenAFasttext2SeqModel_whenForwardPassWithTarget_thenProperlyDoPAss(
+        self,
+        load_state_dict_mock,
+        torch_mock,
+        isfile_mock,
+        last_version_mock,
+        download_weights_mock,
+        decoder_mock,
+        encoder_mock,
+        random_mock,
+    ):
         random_mock.return_value = self.a_value_lower_than_threshold
 
         target_mock = MagicMock()
@@ -246,11 +309,24 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
 
         seq2seq_model = FastTextSeq2SeqModel(self.a_cpu_device, self.output_size, self.verbose)
 
-        seq2seq_model.forward(to_predict=to_predict_mock, lengths_tensor=lengths_tensor_mock, target=target_mock)
+        seq2seq_model.forward(
+            to_predict=to_predict_mock,
+            lengths_tensor=lengths_tensor_mock,
+            target=target_mock,
+        )
 
         encoder_mock.assert_has_calls([call()(to_predict_mock, lengths_tensor_mock)])
         lengths_tensor_mock.assert_has_calls([call.max().item()])
-        decoder_mock.assert_has_calls([call()(to_mock, decoder_hidden_mock, decoder_input_mock, lengths_tensor_mock)])
+        decoder_mock.assert_has_calls(
+            [
+                call()(
+                    to_mock,
+                    decoder_hidden_mock,
+                    decoder_input_mock,
+                    lengths_tensor_mock,
+                )
+            ]
+        )
         target_mock.assert_has_calls([call.transpose(0, 1)])
 
     @patch("deepparse.network.seq2seq.random.random")
@@ -262,8 +338,16 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
     def test_givenAFasttext2SeqAttModel_whenForwardPassWithTarget_thenProperlyDoPAss(
-            self, load_state_dict_mock, torch_mock, isfile_mock, last_version_mock, download_weights_mock, decoder_mock,
-            encoder_mock, random_mock):
+        self,
+        load_state_dict_mock,
+        torch_mock,
+        isfile_mock,
+        last_version_mock,
+        download_weights_mock,
+        decoder_mock,
+        encoder_mock,
+        random_mock,
+    ):
         random_mock.return_value = self.a_value_lower_than_threshold
 
         target_mock = MagicMock()
@@ -278,16 +362,28 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
 
         # We mock the return of the decoder output
         encoder_mock.__call__().return_value = (decoder_input_mock, decoder_hidden_mock)
-        seq2seq_model = FastTextSeq2SeqModel(self.a_cpu_device,
-                                             self.output_size,
-                                             self.verbose,
-                                             attention_mechanism=True)
+        seq2seq_model = FastTextSeq2SeqModel(
+            self.a_cpu_device, self.output_size, self.verbose, attention_mechanism=True
+        )
 
-        seq2seq_model.forward(to_predict=to_predict_mock, lengths_tensor=lengths_tensor_mock, target=target_mock)
+        seq2seq_model.forward(
+            to_predict=to_predict_mock,
+            lengths_tensor=lengths_tensor_mock,
+            target=target_mock,
+        )
 
         encoder_mock.assert_has_calls([call()(to_predict_mock, lengths_tensor_mock)])
         lengths_tensor_mock.assert_has_calls([call.max().item()])
-        decoder_mock.assert_has_calls([call()(to_mock, decoder_hidden_mock, decoder_input_mock, lengths_tensor_mock)])
+        decoder_mock.assert_has_calls(
+            [
+                call()(
+                    to_mock,
+                    decoder_hidden_mock,
+                    decoder_input_mock,
+                    lengths_tensor_mock,
+                )
+            ]
+        )
         target_mock.assert_has_calls([call.transpose(0, 1)])
 
 

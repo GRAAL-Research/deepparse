@@ -5,20 +5,31 @@ import os
 from unittest import skipIf
 
 from deepparse.parser import formatted_parsed_address
-from tests.parser.integration.base_predict import AddressParserPredictBase, AddressParserBase
+from tests.parser.integration.base_predict import (
+    AddressParserPredictBase,
+    AddressParserBase,
+)
 
 
-@skipIf(not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
-        "download of model too long for test in runner")
+@skipIf(
+    not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
+    "download of model too long for test in runner",
+)
 class AddressParserTest(AddressParserBase):
-
     def setUp(self) -> None:
         a_config = {"model_type": "fasttext", "device": "cpu", "verbose": False}
         self.setup_model_with_config(a_config)
 
         self.expected_fields = [
-            "StreetNumber", "Unit", "StreetName", "Orientation", "Municipality", "Province", "PostalCode",
-            "GeneralDelivery", "EOS"
+            "StreetNumber",
+            "Unit",
+            "StreetName",
+            "Orientation",
+            "Municipality",
+            "Province",
+            "PostalCode",
+            "GeneralDelivery",
+            "EOS",
         ]
 
     def test_proper_tags_set_up(self):
@@ -40,10 +51,11 @@ class AddressParserTest(AddressParserBase):
             self.assertIn(expected, actual)
 
 
-@skipIf(not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
-        "download of model too long for test in runner")
+@skipIf(
+    not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
+    "download of model too long for test in runner",
+)
 class AddressParserPredictCPUTest(AddressParserPredictBase):
-
     @classmethod
     def setUpClass(cls):
         super(AddressParserPredictCPUTest, cls).setUpClass()
@@ -64,14 +76,24 @@ class AddressParserPredictCPUTest(AddressParserPredictBase):
         self.assert_properly_parse(parse_address)
 
     def test_givenAAddress_whenParseFastTextAtt_thenParseAddress(self):
-        config = {"model_type": "fasttext", "device": self.device, "verbose": False, "attention_mechanism": True}
+        config = {
+            "model_type": "fasttext",
+            "device": self.device,
+            "verbose": False,
+            "attention_mechanism": True,
+        }
         self.setup_model_with_config(config)
 
         parse_address = self.a_model(self.an_address_to_parse)
         self.assert_properly_parse(parse_address)
 
     def test_givenAAddress_whenParseBPEmbAtt_thenParseAddress(self):
-        config = {"model_type": "bpemb", "device": self.device, "verbose": False, "attention_mechanism": True}
+        config = {
+            "model_type": "bpemb",
+            "device": self.device,
+            "verbose": False,
+            "attention_mechanism": True,
+        }
         self.setup_model_with_config(config)
 
         parse_address = self.a_model(self.an_address_to_parse)
@@ -93,10 +115,11 @@ class AddressParserPredictCPUTest(AddressParserPredictBase):
 
 
 # test if num_workers > 0 is correct for the data loader
-@skipIf(not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
-        "download of model too long for test in runner")
+@skipIf(
+    not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
+    "download of model too long for test in runner",
+)
 class AddressParserPredictCPUMultiProcessTest(AddressParserPredictBase):
-
     @classmethod
     def setUpClass(cls):
         super(AddressParserPredictCPUMultiProcessTest, cls).setUpClass()
@@ -158,15 +181,29 @@ class AddressParserPredictCPUMultiProcessTest(AddressParserPredictBase):
         parse_address = self.a_model([self.an_address_to_parse, self.an_address_to_parse], num_workers=2)
         self.assert_properly_parse(parse_address, multiple_address=True)
 
-    def test_givenAAttentionModel_whenParseFastTextNumWorkers2_thenProperlyParseAddress(self):
-        config = {"model_type": "fasttext", "device": self.device, "verbose": False, "attention_mechanism": True}
+    def test_givenAAttentionModel_whenParseFastTextNumWorkers2_thenProperlyParseAddress(
+        self,
+    ):
+        config = {
+            "model_type": "fasttext",
+            "device": self.device,
+            "verbose": False,
+            "attention_mechanism": True,
+        }
         self.setup_model_with_config(config)
 
         parse_address = self.a_model(self.an_address_to_parse, num_workers=2)
         self.assert_properly_parse(parse_address)
 
-    def test_givenAAttentionModel_whenParseBPEmbNumWorkers2_thenProperlyParseAddress(self):
-        config = {"model_type": "bpemb", "device": self.device, "verbose": False, "attention_mechanism": True}
+    def test_givenAAttentionModel_whenParseBPEmbNumWorkers2_thenProperlyParseAddress(
+        self,
+    ):
+        config = {
+            "model_type": "bpemb",
+            "device": self.device,
+            "verbose": False,
+            "attention_mechanism": True,
+        }
         self.setup_model_with_config(config)
 
         parse_address = self.a_model(self.an_address_to_parse, num_workers=2)

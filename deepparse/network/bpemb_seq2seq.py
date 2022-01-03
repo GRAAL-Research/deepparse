@@ -25,31 +25,35 @@ class BPEmbSeq2SeqModel(Seq2SeqModel):
         path_to_retrained_model (Union[str, None]): The path to the retrained model to use for the seq2seq.
     """
 
-    def __init__(self,
-                 device: torch.device,
-                 input_size: int = 300,
-                 encoder_hidden_size: int = 1024,
-                 encoder_num_layers: int = 1,
-                 decoder_hidden_size: int = 1024,
-                 decoder_num_layers: int = 1,
-                 output_size: int = 9,
-                 attention_mechanism: bool = False,
-                 verbose: bool = True,
-                 path_to_retrained_model: Union[str, None] = None,
-                 pre_trained_weights: bool = True) -> None:
-        super().__init__(device,
-                         input_size=input_size,
-                         encoder_hidden_size=encoder_hidden_size,
-                         encoder_num_layers=encoder_num_layers,
-                         decoder_hidden_size=decoder_hidden_size,
-                         decoder_num_layers=decoder_num_layers,
-                         output_size=output_size,
-                         attention_mechanism=attention_mechanism,
-                         verbose=verbose)
+    def __init__(
+        self,
+        device: torch.device,
+        input_size: int = 300,
+        encoder_hidden_size: int = 1024,
+        encoder_num_layers: int = 1,
+        decoder_hidden_size: int = 1024,
+        decoder_num_layers: int = 1,
+        output_size: int = 9,
+        attention_mechanism: bool = False,
+        verbose: bool = True,
+        path_to_retrained_model: Union[str, None] = None,
+        pre_trained_weights: bool = True,
+    ) -> None:
+        super().__init__(
+            device,
+            input_size=input_size,
+            encoder_hidden_size=encoder_hidden_size,
+            encoder_num_layers=encoder_num_layers,
+            decoder_hidden_size=decoder_hidden_size,
+            decoder_num_layers=decoder_num_layers,
+            output_size=output_size,
+            attention_mechanism=attention_mechanism,
+            verbose=verbose,
+        )
 
-        self.embedding_network = EmbeddingNetwork(input_size=input_size,
-                                                  hidden_size=input_size,
-                                                  projection_size=input_size)
+        self.embedding_network = EmbeddingNetwork(
+            input_size=input_size, hidden_size=input_size, projection_size=input_size
+        )
         self.embedding_network.to(self.device)
 
         if path_to_retrained_model is not None:
@@ -61,11 +65,13 @@ class BPEmbSeq2SeqModel(Seq2SeqModel):
                 model_weights_name += "_attention"
             self._load_pre_trained_weights(model_weights_name)
 
-    def forward(self,
-                to_predict: torch.Tensor,
-                decomposition_lengths: List,
-                lengths_tensor: torch.Tensor,
-                target: Union[torch.Tensor, None] = None) -> torch.Tensor:
+    def forward(
+        self,
+        to_predict: torch.Tensor,
+        decomposition_lengths: List,
+        lengths_tensor: torch.Tensor,
+        target: Union[torch.Tensor, None] = None,
+    ) -> torch.Tensor:
         """
         Callable method as per PyTorch forward method to get tags prediction over the components of
         an address.
@@ -85,6 +91,12 @@ class BPEmbSeq2SeqModel(Seq2SeqModel):
 
         decoder_input, decoder_hidden, encoder_outputs = self._encoder_step(embedded_output, lengths_tensor, batch_size)
 
-        prediction_sequence = self._decoder_step(decoder_input, decoder_hidden, encoder_outputs, target, lengths_tensor,
-                                                 batch_size)
+        prediction_sequence = self._decoder_step(
+            decoder_input,
+            decoder_hidden,
+            encoder_outputs,
+            target,
+            lengths_tensor,
+            batch_size,
+        )
         return prediction_sequence

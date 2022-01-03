@@ -14,7 +14,6 @@ try:
 except ModuleNotFoundError:
     # Emulate the Fore and Style class of colorama with a class that as an empty string for every attributes.
     class EmptyStringAttrClass:
-
         def __getattr__(self, attr):
             return ""
 
@@ -34,18 +33,20 @@ class Timer:
     for loop as well as the mean time taken per iteration. See the doc of the init method for usage examples.
     """
 
-    def __init__(self,
-                 func_or_name=None,
-                 *,
-                 display_name="",
-                 datetime_format="%Y-%m-%d %Hh%Mm%Ss",
-                 elapsed_time_format="short",
-                 main_color="LIGHTYELLOW_EX",
-                 exception_exit_color="LIGHTRED_EX",
-                 name_color="LIGHTBLUE_EX",
-                 time_color="LIGHTCYAN_EX",
-                 datetime_color="LIGHTMAGENTA_EX",
-                 yield_timer=False):
+    def __init__(
+        self,
+        func_or_name=None,
+        *,
+        display_name="",
+        datetime_format="%Y-%m-%d %Hh%Mm%Ss",
+        elapsed_time_format="short",
+        main_color="LIGHTYELLOW_EX",
+        exception_exit_color="LIGHTRED_EX",
+        name_color="LIGHTBLUE_EX",
+        time_color="LIGHTCYAN_EX",
+        datetime_color="LIGHTMAGENTA_EX",
+        yield_timer=False,
+    ):
         """
         Args:
             func_or_name (Union[Callable, str, None]):
@@ -275,14 +276,22 @@ class Timer:
         print(self.main_color + f"Execution {self.func_name}started {self.datetime}.\n" + Style.RESET_ALL)
 
     def _exception_exit_end_timer(self):
-        print(self.exception_exit_color + "\nExecution terminated after " +
-              self.format_elapsed_time(self.elapsed_time) +
-              f"{self.exception_exit_color} {self.datetime}{self.exception_exit_color}.\n{self.iter_stats}" +
-              Style.RESET_ALL)
+        print(
+            self.exception_exit_color
+            + "\nExecution terminated after "
+            + self.format_elapsed_time(self.elapsed_time)
+            + f"{self.exception_exit_color} {self.datetime}{self.exception_exit_color}.\n{self.iter_stats}"
+            + Style.RESET_ALL
+        )
 
     def _normal_exit_end_timer(self):
-        print(self.main_color + f"\nExecution {self.func_name}completed in " +
-              self.format_elapsed_time(self.elapsed_time) + f" {self.datetime}.\n{self.iter_stats}" + Style.RESET_ALL)
+        print(
+            self.main_color
+            + f"\nExecution {self.func_name}completed in "
+            + self.format_elapsed_time(self.elapsed_time)
+            + f" {self.datetime}.\n{self.iter_stats}"
+            + Style.RESET_ALL
+        )
 
     def wrap_function(self, func):
         if func is not None:
@@ -323,12 +332,13 @@ class Timer:
 
     def _update_iter_stats(self):
         mean_time = sum(self.laps) / len(self.laps)
-        std = math.sqrt(sum(t**2 for t in self.laps) / len(self.laps) - mean_time**2)
+        std = math.sqrt(sum(t ** 2 for t in self.laps) / len(self.laps) - mean_time ** 2)
         shortest_time = min((t, i) for i, t in enumerate(self.laps))
         longest_time = max((t, i) for i, t in enumerate(self.laps))
         self.iter_stats = (
-            self.main_color +
-            f"Mean time per iteration: {self.format_elapsed_time(mean_time)} ± {self.format_elapsed_time(std)} over"
-            f" {len(self.laps)} iterations.\n" +
-            f"Iteration {shortest_time[1]} was the shortest with {self.format_elapsed_time(shortest_time[0])}.\n" +
-            f"Iteration {longest_time[1]} was the longest with {self.format_elapsed_time(longest_time[0])}.\n")
+            self.main_color
+            + f"Mean time per iteration: {self.format_elapsed_time(mean_time)} ± {self.format_elapsed_time(std)} over"
+            f" {len(self.laps)} iterations.\n"
+            + f"Iteration {shortest_time[1]} was the shortest with {self.format_elapsed_time(shortest_time[0])}.\n"
+            + f"Iteration {longest_time[1]} was the longest with {self.format_elapsed_time(longest_time[0])}.\n"
+        )

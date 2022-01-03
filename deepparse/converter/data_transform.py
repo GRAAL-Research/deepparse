@@ -1,7 +1,11 @@
 from typing import Tuple
 
-from . import fasttext_data_padding_teacher_forcing, bpemb_data_padding_teacher_forcing, \
-    bpemb_data_padding_with_target, fasttext_data_padding_with_target
+from . import (
+    fasttext_data_padding_teacher_forcing,
+    bpemb_data_padding_teacher_forcing,
+    bpemb_data_padding_with_target,
+    fasttext_data_padding_with_target,
+)
 from ..vectorizer import TrainVectorizer
 
 
@@ -33,8 +37,10 @@ class DataTransform:
         else:
             # Note that we don't have lightest here since lightest is fasttext-light (magnitude) and we cannot train
             # with that model type (see doc note).
-            raise NotImplementedError(f"There is no {model_type} network implemented. Value should be: "
-                                      f"fasttext, bpemb or their attention variant.")
+            raise NotImplementedError(
+                f"There is no {model_type} network implemented. Value should be: "
+                f"fasttext, bpemb or their attention variant."
+            )
 
     def teacher_forcing_transform(self, batch_pairs: Tuple) -> Tuple:
         """

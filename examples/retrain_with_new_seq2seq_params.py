@@ -37,15 +37,17 @@ logging_path = "./checkpoints"
 # See the doc for the list of tunable seq2seq parameters
 seq2seq_params = {"encoder_hidden_size": 512, "decoder_hidden_size": 512}
 
-address_parser.retrain(training_container,
-                       0.8,
-                       epochs=5,
-                       batch_size=8,
-                       num_workers=2,
-                       callbacks=[lr_scheduler],
-                       prediction_tags=tag_dictionary,
-                       logging_path=logging_path,
-                       seq2seq_params=seq2seq_params)
+address_parser.retrain(
+    training_container,
+    0.8,
+    epochs=5,
+    batch_size=8,
+    num_workers=2,
+    callbacks=[lr_scheduler],
+    prediction_tags=tag_dictionary,
+    logging_path=logging_path,
+    seq2seq_params=seq2seq_params,
+)
 
 # Now let's test our fine-tuned model using the best checkpoint (default parameter).
 address_parser.test(test_container, batch_size=256)

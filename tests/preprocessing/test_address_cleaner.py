@@ -4,7 +4,6 @@ from deepparse.preprocessing import AddressCleaner
 
 
 class AddressCleanerTest(TestCase):
-
     @classmethod
     def setUpClass(cls):
         cls.a_clean_address = "350 rue des lilas ouest québec québec g1l 1b6"
@@ -17,7 +16,9 @@ class AddressCleanerTest(TestCase):
 
         self.assertEqual(self.a_clean_address, cleaned_address[0])
 
-    def test_givenADirtyAddressWithCommas_whenCleaningAddress_thenShouldRemoveCommas(self):
+    def test_givenADirtyAddressWithCommas_whenCleaningAddress_thenShouldRemoveCommas(
+        self,
+    ):
         cleaned_address = AddressCleaner().clean([self.a_dirty_address_with_commas])
 
         self.assertEqual(self.a_clean_address, cleaned_address[0])
@@ -27,14 +28,19 @@ class AddressCleanerTest(TestCase):
 
         self.assertEqual(self.a_clean_address, cleaned_address[0])
 
-    def test_givenADirtyAddressWithWhitespaces_whenCleaningAddress_thenShouldRemoveWhitespaces(self):
+    def test_givenADirtyAddressWithWhitespaces_whenCleaningAddress_thenShouldRemoveWhitespaces(
+        self,
+    ):
         cleaned_address = AddressCleaner().clean([self.a_dirty_address_with_whitespaces])
 
         self.assertEqual(self.a_clean_address, cleaned_address[0])
 
-    def test_givenMultipleDirtyAddresses_whenCleaningAddresses_thenShouldCleanAllAddresses(self):
+    def test_givenMultipleDirtyAddresses_whenCleaningAddresses_thenShouldCleanAllAddresses(
+        self,
+    ):
         cleaned_address = AddressCleaner().clean(
-            [self.a_dirty_address_with_whitespaces, self.a_dirty_address_with_uppercase])
+            [self.a_dirty_address_with_whitespaces, self.a_dirty_address_with_uppercase]
+        )
 
         self.assertEqual(self.a_clean_address, cleaned_address[0])
         self.assertEqual(self.a_clean_address, cleaned_address[1])

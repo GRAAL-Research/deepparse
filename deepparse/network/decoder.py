@@ -21,8 +21,14 @@ class Decoder(nn.Module):
         attention_mechanism (bool): Either or not to use attention mechanism in forward pass.
     """
 
-    def __init__(self, input_size: int, hidden_size: int, num_layers: int, output_size: int,
-                 attention_mechanism: bool) -> None:
+    def __init__(
+        self,
+        input_size: int,
+        hidden_size: int,
+        num_layers: int,
+        output_size: int,
+        attention_mechanism: bool,
+    ) -> None:
         super().__init__()
         self.attention_mechanism = attention_mechanism
         if attention_mechanism:
@@ -36,33 +42,43 @@ class Decoder(nn.Module):
 
         self.linear_layer_set_up(output_size, hidden_size=hidden_size)
 
-    def forward(self, to_predict: torch.Tensor, hidden: torch.Tensor, encoder_outputs: torch.Tensor,
-                lengths: torch.Tensor) -> Tuple:
+    def forward(
+        self,
+        to_predict: torch.Tensor,
+        hidden: torch.Tensor,
+        encoder_outputs: torch.Tensor,
+        lengths: torch.Tensor,
+    ) -> Tuple:
         """
-            Callable method to decode the components of an address using attention mechanism.
+        Callable method to decode the components of an address using attention mechanism.
 
-            Args:
-                to_predict (~torch.Tensor): The elements to predict the tags.
-                hidden (~torch.Tensor): The hidden state of the decoder.
-                encoder_outputs (~torch.Tensor): The encoder outputs for the attention mechanism weighs if needed.
-                lengths (~torch.Tensor) : The lengths of the batch elements (since packed).
+        Args:
+            to_predict (~torch.Tensor): The elements to predict the tags.
+            hidden (~torch.Tensor): The hidden state of the decoder.
+            encoder_outputs (~torch.Tensor): The encoder outputs for the attention mechanism weighs if needed.
+            lengths (~torch.Tensor) : The lengths of the batch elements (since packed).
 
-            Return:
-                A tuple (``x``, ``y``, ``z``) where ``x`` is the address components tags predictions, y is the hidden
-                states and `̀`z`` is None if no attention mechanism is setter or the attention weights.
+        Return:
+            A tuple (``x``, ``y``, ``z``) where ``x`` is the address components tags predictions, y is the hidden
+            states and `̀`z`` is None if no attention mechanism is setter or the attention weights.
 
         """
         to_predict = to_predict.float()
         attention_weights = None
         if self.attention_mechanism:
-            to_predict, attention_weights = self._attention_mechanism_forward(to_predict, hidden, encoder_outputs,
-                                                                              lengths)
+            to_predict, attention_weights = self._attention_mechanism_forward(
+                to_predict, hidden, encoder_outputs, lengths
+            )
 
         output, hidden = self.lstm(to_predict, hidden)
 
         output_prob = self.softmax(self.linear(output[0]))
 
-        return output_prob, hidden, attention_weights  # attention_weights: None or the real attention weights
+        return (
+            output_prob,
+            hidden,
+            attention_weights,
+        )  # attention_weights: None or the real attention weights
 
     def linear_layer_set_up(self, output_size: int, hidden_size: int = 1024):
         self.linear = nn.Linear(hidden_size, output_size)
@@ -77,8 +93,13 @@ class Decoder(nn.Module):
 
         self.weights = nn.Parameter(torch.ones(1, hidden_size))
 
-    def _attention_mechanism_forward(self, to_predict: torch.Tensor, hidden: torch.Tensor,
-                                     encoder_outputs: torch.Tensor, lengths: torch.Tensor) -> Tuple:
+    def _attention_mechanism_forward(
+        self,
+        to_predict: torch.Tensor,
+        hidden: torch.Tensor,
+        encoder_outputs: torch.Tensor,
+        lengths: torch.Tensor,
+    ) -> Tuple:
         """
         Compute the attention mechanism weights and context vector
         Return:
@@ -86,14 +107,18 @@ class Decoder(nn.Module):
             weights.
         """
         unweighted_alignments = torch.tanh(
-            self.linear_attention_mechanism_encoder_outputs(encoder_outputs) +
-            self.linear_attention_mechanism_previous_hidden(hidden[0].transpose(0, 1)))
-        alignments_scores = torch.matmul(self.weights.view(1, 1, self.hidden_size),
-                                         unweighted_alignments.transpose(1, 2))
+            self.linear_attention_mechanism_encoder_outputs(encoder_outputs)
+            + self.linear_attention_mechanism_previous_hidden(hidden[0].transpose(0, 1))
+        )
+        alignments_scores = torch.matmul(
+            self.weights.view(1, 1, self.hidden_size),
+            unweighted_alignments.transpose(1, 2),
+        )
 
         max_length = lengths.max().item()
         mask = torch.arange(max_length)[None, :] < lengths[:, None].to(
-            "cpu")  # We switch the lengths to cpu for the comparison
+            "cpu"
+        )  # We switch the lengths to cpu for the comparison
         mask = mask.unsqueeze(1)
         alignments_scores[~mask] = float("-inf")
 

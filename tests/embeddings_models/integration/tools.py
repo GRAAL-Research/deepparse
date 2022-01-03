@@ -1,6 +1,5 @@
 # A class to mock to logic of using a collate_fn in the data loader to be multiprocess and test if multiprocess work
 class MockedDataTransform:
-
     def __init__(self, word_vectors_model):
         self.model = word_vectors_model
 

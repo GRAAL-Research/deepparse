@@ -73,14 +73,17 @@ def handle_pre_trained_checkpoint(model_type_checkpoint: str) -> str:
     if not valid_poutyne_version():
         raise NotImplementedError(
             f"To load the pre-trained {model_type_checkpoint} model, you need to have a Poutyne version"
-            "greater than 1.1 (>1.1)")
+            "greater than 1.1 (>1.1)"
+        )
     model_path = os.path.join(CACHE_PATH, f"{model_type_checkpoint}.ckpt")
 
     if not os.path.isfile(model_path):
         download_weights(model_type_checkpoint, CACHE_PATH, verbose=True)
     elif not latest_version(model_type_checkpoint, cache_path=CACHE_PATH):
-        warnings.warn("A newer model of fasttext is available, you can download it using the download script.",
-                      UserWarning)
+        warnings.warn(
+            "A newer model of fasttext is available, you can download it using the download script.",
+            UserWarning,
+        )
     checkpoint = os.path.join(CACHE_PATH, f"{model_type_checkpoint}.ckpt")
     return checkpoint
 
@@ -93,10 +96,13 @@ def handle_model_path(checkpoint: str) -> str:
         checkpoint = handle_pre_trained_checkpoint(checkpoint)
     elif isinstance(checkpoint, str) and checkpoint.endswith(".ckpt"):
         if not valid_poutyne_version():
-            raise NotImplementedError("To load a string path to a model, you need to have a Poutyne version"
-                                      "greater than 1.1 (>1.1)")
+            raise NotImplementedError(
+                "To load a string path to a model, you need to have a Poutyne version" "greater than 1.1 (>1.1)"
+            )
     else:
-        raise ValueError("The checkpoint is not valid. Can be a path in a string format (e.g. 'a_path_.ckpt'), "
-                         "'fasttext' or 'bpemb'.")
+        raise ValueError(
+            "The checkpoint is not valid. Can be a path in a string format (e.g. 'a_path_.ckpt'), "
+            "'fasttext' or 'bpemb'."
+        )
 
     return checkpoint

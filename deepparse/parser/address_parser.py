@@ -13,8 +13,15 @@ from torch.utils.data import DataLoader, Subset
 from . import formatted_parsed_address
 from .capturing import Capturing
 from .formatted_parsed_address import FormattedParsedAddress
-from .tools import validate_if_new_seq2seq_params, validate_if_new_prediction_tags, load_tuple_to_device, \
-    pretrained_parser_in_directory, get_files_in_directory, get_address_parser_in_directory, indices_splitting
+from .tools import (
+    validate_if_new_seq2seq_params,
+    validate_if_new_prediction_tags,
+    load_tuple_to_device,
+    pretrained_parser_in_directory,
+    get_files_in_directory,
+    get_address_parser_in_directory,
+    indices_splitting,
+)
 from ..converter import TagsConverter
 from ..converter import fasttext_data_padding, bpemb_data_padding, DataTransform
 from ..dataset_container import DatasetContainer
@@ -41,7 +48,7 @@ _pre_trained_tags_to_idx = {
     "PostalCode": 5,
     "Orientation": 6,
     "GeneralDelivery": 7,
-    "EOS": 8  # the 9th is the EOS with idx 8
+    "EOS": 8,  # the 9th is the EOS with idx 8
 }
 
 # This threshold represents at which point the prediction of the address takes enough time to
@@ -156,13 +163,15 @@ class AddressParser:
 
     """
 
-    def __init__(self,
-                 model_type: str = "best",
-                 attention_mechanism: bool = False,
-                 device: Union[int, str, torch.device] = 0,
-                 rounding: int = 4,
-                 verbose: bool = True,
-                 path_to_retrained_model: Union[str, None] = None) -> None:
+    def __init__(
+        self,
+        model_type: str = "best",
+        attention_mechanism: bool = False,
+        device: Union[int, str, torch.device] = 0,
+        rounding: int = 4,
+        verbose: bool = True,
+        path_to_retrained_model: Union[str, None] = None,
+    ) -> None:
         # pylint: disable=too-many-arguments
         self._process_device(device)
 
@@ -193,11 +202,13 @@ class AddressParser:
         self.tags_converter = TagsConverter(tags_to_idx)
 
         self._set_model_name(model_type, attention_mechanism)
-        self._model_factory(verbose=self.verbose,
-                            path_to_retrained_model=path_to_retrained_model,
-                            prediction_layer_len=self.tags_converter.dim,
-                            attention_mechanism=attention_mechanism,
-                            seq2seq_kwargs=seq2seq_kwargs)
+        self._model_factory(
+            verbose=self.verbose,
+            path_to_retrained_model=path_to_retrained_model,
+            prediction_layer_len=self.tags_converter.dim,
+            attention_mechanism=attention_mechanism,
+            seq2seq_kwargs=seq2seq_kwargs,
+        )
         self.model.eval()
 
     def __str__(self) -> str:
@@ -205,11 +216,13 @@ class AddressParser:
 
     __repr__ = __str__  # to call __str__ when list of address
 
-    def __call__(self,
-                 addresses_to_parse: Union[List[str], str],
-                 with_prob: bool = False,
-                 batch_size: int = 32,
-                 num_workers: int = 0) -> Union[FormattedParsedAddress, List[FormattedParsedAddress]]:
+    def __call__(
+        self,
+        addresses_to_parse: Union[List[str], str],
+        with_prob: bool = False,
+        batch_size: int = 32,
+        num_workers: int = 0,
+    ) -> Union[FormattedParsedAddress, List[FormattedParsedAddress]]:
         """
         Callable method to parse the components of an address or a list of address.
 
@@ -257,10 +270,12 @@ class AddressParser:
         if self.verbose and len(addresses_to_parse) > PREDICTION_TIME_PERFORMANCE_THRESHOLD:
             print("Vectorizing the address")
 
-        predict_data_loader = DataLoader(clean_addresses,
-                                         collate_fn=self._predict_pipeline,
-                                         batch_size=batch_size,
-                                         num_workers=num_workers)
+        predict_data_loader = DataLoader(
+            clean_addresses,
+            collate_fn=self._predict_pipeline,
+            batch_size=batch_size,
+            num_workers=num_workers,
+        )
 
         tags_predictions = []
         tags_predictions_prob = []
@@ -268,27 +283,34 @@ class AddressParser:
             tensor_prediction = self.model(*load_tuple_to_device(x, self.device))
             tags_predictions.extend(tensor_prediction.max(2)[1].transpose(0, 1).cpu().numpy().tolist())
             tags_predictions_prob.extend(
-                torch.exp(tensor_prediction.max(2)[0]).transpose(0, 1).detach().cpu().numpy().tolist())
+                torch.exp(tensor_prediction.max(2)[0]).transpose(0, 1).detach().cpu().numpy().tolist()
+            )
 
-        tagged_addresses_components = self._fill_tagged_addresses_components(tags_predictions, tags_predictions_prob,
-                                                                             addresses_to_parse, clean_addresses,
-                                                                             with_prob)
+        tagged_addresses_components = self._fill_tagged_addresses_components(
+            tags_predictions,
+            tags_predictions_prob,
+            addresses_to_parse,
+            clean_addresses,
+            with_prob,
+        )
 
         return tagged_addresses_components
 
-    def retrain(self,
-                dataset_container: DatasetContainer,
-                train_ratio: float = 0.8,
-                batch_size: int = 32,
-                epochs: int = 5,
-                num_workers: int = 1,
-                learning_rate: float = 0.01,
-                callbacks: Union[List, None] = None,
-                seed: int = 42,
-                logging_path: str = "./checkpoints",
-                disable_tensorboard: bool = True,
-                prediction_tags: Union[Dict, None] = None,
-                seq2seq_params: Union[Dict, None] = None) -> List[Dict]:
+    def retrain(
+        self,
+        dataset_container: DatasetContainer,
+        train_ratio: float = 0.8,
+        batch_size: int = 32,
+        epochs: int = 5,
+        num_workers: int = 1,
+        learning_rate: float = 0.01,
+        callbacks: Union[List, None] = None,
+        seed: int = 42,
+        logging_path: str = "./checkpoints",
+        disable_tensorboard: bool = True,
+        prediction_tags: Union[Dict, None] = None,
+        seq2seq_params: Union[Dict, None] = None,
+    ) -> List[Dict]:
         # pylint: disable=too-many-arguments, line-too-long, too-many-locals, too-many-branches
         """
         Method to retrain the address parser model using a dataset with the same tags. We train using
@@ -456,58 +478,70 @@ class AddressParser:
             self._model_factory(verbose=False, path_to_retrained_model=None, **model_factory_dict)
 
         callbacks = [] if callbacks is None else callbacks
-        train_generator, valid_generator = self._create_training_data_generator(dataset_container,
-                                                                                train_ratio,
-                                                                                batch_size,
-                                                                                num_workers,
-                                                                                seed=seed)
+        train_generator, valid_generator = self._create_training_data_generator(
+            dataset_container, train_ratio, batch_size, num_workers, seed=seed
+        )
 
         optimizer = SGD(self.model.parameters(), learning_rate)
 
-        exp = Experiment(logging_path,
-                         self.model,
-                         device=self.device,
-                         optimizer=optimizer,
-                         loss_function=nll_loss,
-                         batch_metrics=[accuracy])
+        exp = Experiment(
+            logging_path,
+            self.model,
+            device=self.device,
+            optimizer=optimizer,
+            loss_function=nll_loss,
+            batch_metrics=[accuracy],
+        )
 
         try:
             with_capturing_context = False
             if float(poutyne.version.__version__) < 1.8:
-                print("You are using a older version of Poutyne that does not support properly error management."
-                      " Due to that, we cannot show retrain progress. To fix that, update Poutyne to "
-                      "the newest version.")
+                print(
+                    "You are using a older version of Poutyne that does not support properly error management."
+                    " Due to that, we cannot show retrain progress. To fix that, update Poutyne to "
+                    "the newest version."
+                )
                 with_capturing_context = True
-            train_res = self._retrain(experiment=exp,
-                                      train_generator=train_generator,
-                                      valid_generator=valid_generator,
-                                      epochs=epochs,
-                                      seed=seed,
-                                      callbacks=callbacks,
-                                      disable_tensorboard=disable_tensorboard,
-                                      capturing_context=with_capturing_context)
+            train_res = self._retrain(
+                experiment=exp,
+                train_generator=train_generator,
+                valid_generator=valid_generator,
+                epochs=epochs,
+                seed=seed,
+                callbacks=callbacks,
+                disable_tensorboard=disable_tensorboard,
+                capturing_context=with_capturing_context,
+            )
         except RuntimeError as error:
-            list_of_file_path = os.listdir(path='.')
+            list_of_file_path = os.listdir(path=".")
             if len(list_of_file_path) > 0:
                 if pretrained_parser_in_directory(logging_path):
                     # Mean we might already have checkpoint in the training directory
                     files_in_directory = get_files_in_directory(logging_path)
-                    retrained_address_parser_in_directory = get_address_parser_in_directory(
-                        files_in_directory)[0].split("_")[1]
+                    retrained_address_parser_in_directory = get_address_parser_in_directory(files_in_directory)[
+                        0
+                    ].split("_")[1]
                     if self.model_type != retrained_address_parser_in_directory:
-                        raise ValueError(f"You are currently training a {self.model_type} in the directory "
-                                         f"{logging_path} where a different retrained "
-                                         f"{retrained_address_parser_in_directory} is currently his."
-                                         f" Thus, the loading of the model is failing. Change directory to retrain the"
-                                         f" {self.model_type}.") from error
+                        raise ValueError(
+                            f"You are currently training a {self.model_type} in the directory "
+                            f"{logging_path} where a different retrained "
+                            f"{retrained_address_parser_in_directory} is currently his."
+                            f" Thus, the loading of the model is failing. Change directory to retrain the"
+                            f" {self.model_type}."
+                        ) from error
                     if self.model_type == retrained_address_parser_in_directory:
-                        raise ValueError(f"You are currently training a different {self.model_type} version from"
-                                         f" the one in the {logging_path}. Verify version.") from error
+                        raise ValueError(
+                            f"You are currently training a different {self.model_type} version from"
+                            f" the one in the {logging_path}. Verify version."
+                        ) from error
             else:
                 raise RuntimeError(error) from error
         else:
             file_path = os.path.join(logging_path, f"retrained_{self.model_type}_address_parser.ckpt")
-            torch_save = {"address_tagger_model": exp.model.network.state_dict(), "model_type": self.model_type}
+            torch_save = {
+                "address_tagger_model": exp.model.network.state_dict(),
+                "model_type": self.model_type,
+            }
             if seq2seq_params is not None:
                 # Means we have changed the seq2seq params
                 torch_save.update({"seq2seq_params": seq2seq_params})
@@ -518,12 +552,14 @@ class AddressParser:
             torch.save(torch_save, file_path)
             return train_res
 
-    def test(self,
-             test_dataset_container: DatasetContainer,
-             batch_size: int = 32,
-             num_workers: int = 1,
-             callbacks: Union[List, None] = None,
-             seed: int = 42) -> Dict:
+    def test(
+        self,
+        test_dataset_container: DatasetContainer,
+        batch_size: int = 32,
+        num_workers: int = 1,
+        callbacks: Union[List, None] = None,
+        seed: int = 42,
+    ) -> Dict:
         # pylint: disable=too-many-arguments, too-many-locals
         """
         Method to test a retrained or a pre-trained model using a dataset with the default tags. If you test a
@@ -583,39 +619,54 @@ class AddressParser:
 
         """
         if "fasttext-light" in self.model_type:
-            raise ValueError("It's not possible to test a fasttext-light due to pymagnitude problem. See Retrain method"
-                             "doc for more details.")
+            raise ValueError(
+                "It's not possible to test a fasttext-light due to pymagnitude problem. See Retrain method"
+                "doc for more details."
+            )
 
         callbacks = [] if callbacks is None else callbacks
         data_transform = self._set_data_transformer()
 
-        test_generator = DataLoader(test_dataset_container,
-                                    collate_fn=data_transform.output_transform,
-                                    batch_size=batch_size,
-                                    num_workers=num_workers)
+        test_generator = DataLoader(
+            test_dataset_container,
+            collate_fn=data_transform.output_transform,
+            batch_size=batch_size,
+            num_workers=num_workers,
+        )
 
-        exp = Experiment("./checkpoint",
-                         self.model,
-                         device=self.device,
-                         loss_function=nll_loss,
-                         batch_metrics=[accuracy],
-                         logging=False)  # We set logging to false since we don't need it
+        exp = Experiment(
+            "./checkpoint",
+            self.model,
+            device=self.device,
+            loss_function=nll_loss,
+            batch_metrics=[accuracy],
+            logging=False,
+        )  # We set logging to false since we don't need it
 
         test_res = exp.test(test_generator, seed=seed, callbacks=callbacks, verbose=self.verbose)
 
         return test_res
 
     def _fill_tagged_addresses_components(
-            self, tags_predictions: List, tags_predictions_prob: List, addresses_to_parse: List[str],
-            clean_addresses: List[str], with_prob: bool) -> Union[FormattedParsedAddress, List[FormattedParsedAddress]]:
+        self,
+        tags_predictions: List,
+        tags_predictions_prob: List,
+        addresses_to_parse: List[str],
+        clean_addresses: List[str],
+        with_prob: bool,
+    ) -> Union[FormattedParsedAddress, List[FormattedParsedAddress]]:
         # pylint: disable=too-many-arguments, too-many-locals
         """
         Method to fill the mapping for every address between a address components and is associated predicted tag (or
         tag and prob).
         """
         tagged_addresses_components = []
-        for address_to_parse, clean_address, tags_prediction, tags_prediction_prob in zip(
-                addresses_to_parse, clean_addresses, tags_predictions, tags_predictions_prob):
+        for (
+            address_to_parse,
+            clean_address,
+            tags_prediction,
+            tags_prediction_prob,
+        ) in zip(addresses_to_parse, clean_addresses, tags_predictions, tags_predictions_prob):
             tagged_address_components = []
             for word, predicted_idx_tag, tag_proba in zip(clean_address.split(), tags_prediction, tags_prediction_prob):
                 tag = self.tags_converter(predicted_idx_tag)
@@ -658,40 +709,53 @@ class AddressParser:
 
     def _set_data_transformer(self) -> DataTransform:
         train_vectorizer = TrainVectorizer(self.vectorizer, self.tags_converter)  # Vectorize to provide also the target
-        data_transform = DataTransform(train_vectorizer,
-                                       self.model_type)  # Use for transforming the data prior to training
+        data_transform = DataTransform(
+            train_vectorizer, self.model_type
+        )  # Use for transforming the data prior to training
         return data_transform
 
-    def _create_training_data_generator(self, dataset_container: DatasetContainer, train_ratio: float, batch_size: int,
-                                        num_workers: int, seed: int) -> Tuple:
+    def _create_training_data_generator(
+        self,
+        dataset_container: DatasetContainer,
+        train_ratio: float,
+        batch_size: int,
+        num_workers: int,
+        seed: int,
+    ) -> Tuple:
         # pylint: disable=too-many-arguments
         data_transform = self._set_data_transformer()
 
-        train_indices, valid_indices = indices_splitting(num_data=len(dataset_container),
-                                                         train_ratio=train_ratio,
-                                                         seed=seed)
+        train_indices, valid_indices = indices_splitting(
+            num_data=len(dataset_container), train_ratio=train_ratio, seed=seed
+        )
 
         train_dataset = Subset(dataset_container, train_indices)
-        train_generator = DataLoader(train_dataset,
-                                     collate_fn=data_transform.teacher_forcing_transform,
-                                     batch_size=batch_size,
-                                     num_workers=num_workers,
-                                     shuffle=True)
+        train_generator = DataLoader(
+            train_dataset,
+            collate_fn=data_transform.teacher_forcing_transform,
+            batch_size=batch_size,
+            num_workers=num_workers,
+            shuffle=True,
+        )
 
         valid_dataset = Subset(dataset_container, valid_indices)
-        valid_generator = DataLoader(valid_dataset,
-                                     collate_fn=data_transform.output_transform,
-                                     batch_size=batch_size,
-                                     num_workers=num_workers)
+        valid_generator = DataLoader(
+            valid_dataset,
+            collate_fn=data_transform.output_transform,
+            batch_size=batch_size,
+            num_workers=num_workers,
+        )
 
         return train_generator, valid_generator
 
-    def _model_factory(self,
-                       verbose: bool,
-                       path_to_retrained_model: Union[str, None] = None,
-                       prediction_layer_len: int = 9,
-                       attention_mechanism=False,
-                       seq2seq_kwargs: Union[dict, None] = None) -> None:
+    def _model_factory(
+        self,
+        verbose: bool,
+        path_to_retrained_model: Union[str, None] = None,
+        prediction_layer_len: int = 9,
+        attention_mechanism=False,
+        seq2seq_kwargs: Union[dict, None] = None,
+    ) -> None:
         # pylint: disable=too-many-arguments
         """
         Model factory to create the vectorizer, the data converter and the pre-trained model
@@ -713,28 +777,34 @@ class AddressParser:
 
             self.data_converter = fasttext_data_padding
 
-            self.model = FastTextSeq2SeqModel(device=self.device,
-                                              output_size=prediction_layer_len,
-                                              verbose=verbose,
-                                              path_to_retrained_model=path_to_retrained_model,
-                                              attention_mechanism=attention_mechanism,
-                                              **seq2seq_kwargs)
+            self.model = FastTextSeq2SeqModel(
+                device=self.device,
+                output_size=prediction_layer_len,
+                verbose=verbose,
+                path_to_retrained_model=path_to_retrained_model,
+                attention_mechanism=attention_mechanism,
+                **seq2seq_kwargs,
+            )
 
         elif "bpemb" in self.model_type:
             self.vectorizer = BPEmbVectorizer(embeddings_model=BPEmbEmbeddingsModel(verbose=verbose))
 
             self.data_converter = bpemb_data_padding
 
-            self.model = BPEmbSeq2SeqModel(device=self.device,
-                                           output_size=prediction_layer_len,
-                                           verbose=verbose,
-                                           path_to_retrained_model=path_to_retrained_model,
-                                           attention_mechanism=attention_mechanism,
-                                           **seq2seq_kwargs)
+            self.model = BPEmbSeq2SeqModel(
+                device=self.device,
+                output_size=prediction_layer_len,
+                verbose=verbose,
+                path_to_retrained_model=path_to_retrained_model,
+                attention_mechanism=attention_mechanism,
+                **seq2seq_kwargs,
+            )
         else:
-            raise NotImplementedError(f"There is no {self.model_type} network implemented. Value should be: "
-                                      f"fasttext, bpemb, lightest (fasttext-light), fastest (fasttext) "
-                                      f"or best (bpemb).")
+            raise NotImplementedError(
+                f"There is no {self.model_type} network implemented. Value should be: "
+                f"fasttext, bpemb, lightest (fasttext-light), fastest (fasttext) "
+                f"or best (bpemb)."
+            )
 
     def _predict_pipeline(self, data: List) -> Tuple:
         """
@@ -770,18 +840,28 @@ class AddressParser:
         """
         return self._model_type_formatted
 
-    def _retrain(self, experiment: Experiment, train_generator: DatasetContainer, valid_generator: DatasetContainer,
-                 epochs: int, seed: int, callbacks: List, disable_tensorboard: bool,
-                 capturing_context: bool) -> List[Dict]:
+    def _retrain(
+        self,
+        experiment: Experiment,
+        train_generator: DatasetContainer,
+        valid_generator: DatasetContainer,
+        epochs: int,
+        seed: int,
+        callbacks: List,
+        disable_tensorboard: bool,
+        capturing_context: bool,
+    ) -> List[Dict]:
         # pylint: disable=too-many-arguments
         # If Poutyne 1.7 and before, we capture poutyne print since it print some exception.
         # Otherwise, we use a null context manager.
         with Capturing() if capturing_context else contextlib.nullcontext():
-            train_res = experiment.train(train_generator,
-                                         valid_generator=valid_generator,
-                                         epochs=epochs,
-                                         seed=seed,
-                                         callbacks=callbacks,
-                                         verbose=self.verbose,
-                                         disable_tensorboard=disable_tensorboard)
+            train_res = experiment.train(
+                train_generator,
+                valid_generator=valid_generator,
+                epochs=epochs,
+                seed=seed,
+                callbacks=callbacks,
+                verbose=self.verbose,
+                disable_tensorboard=disable_tensorboard,
+            )
         return train_res

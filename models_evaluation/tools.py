@@ -29,8 +29,26 @@ def clean_up_name(country: str) -> str:
 
 # country that we trained on
 train_test_files = [
-    "br.p", "us.p", "kp.p", "ru.p", "de.p", "fr.p", "nl.p", "ch.p", "fi.p", "es.p", "cz.p", "gb.p", "mx.p", "no.p",
-    "ca.p", "it.p", "au.p", "dk.p", "pl.p", "at.p"
+    "br.p",
+    "us.p",
+    "kp.p",
+    "ru.p",
+    "de.p",
+    "fr.p",
+    "nl.p",
+    "ch.p",
+    "fi.p",
+    "es.p",
+    "cz.p",
+    "gb.p",
+    "mx.p",
+    "no.p",
+    "ca.p",
+    "it.p",
+    "au.p",
+    "dk.p",
+    "pl.p",
+    "at.p",
 ]
 
 
@@ -43,9 +61,47 @@ def train_country_file(file: str) -> bool:
 
 # country that we did not train on
 other_test_files = [
-    "ie.p", "rs.p", "uz.p", "ua.p", "za.p", "py.p", "gr.p", "dz.p", "by.p", "se.p", "pt.p", "hu.p", "is.p", "co.p",
-    "lv.p", "my.p", "ba.p", "in.p", "re.p", "hr.p", "ee.p", "nc.p", "jp.p", "nz.p", "sg.p", "ro.p", "bd.p", "sk.p",
-    "ar.p", "kz.p", "ve.p", "id.p", "bg.p", "cy.p", "bm.p", "md.p", "si.p", "lt.p", "ph.p", "be.p", "fo.p"
+    "ie.p",
+    "rs.p",
+    "uz.p",
+    "ua.p",
+    "za.p",
+    "py.p",
+    "gr.p",
+    "dz.p",
+    "by.p",
+    "se.p",
+    "pt.p",
+    "hu.p",
+    "is.p",
+    "co.p",
+    "lv.p",
+    "my.p",
+    "ba.p",
+    "in.p",
+    "re.p",
+    "hr.p",
+    "ee.p",
+    "nc.p",
+    "jp.p",
+    "nz.p",
+    "sg.p",
+    "ro.p",
+    "bd.p",
+    "sk.p",
+    "ar.p",
+    "kz.p",
+    "ve.p",
+    "id.p",
+    "bg.p",
+    "cy.p",
+    "bm.p",
+    "md.p",
+    "si.p",
+    "lt.p",
+    "ph.p",
+    "be.p",
+    "fo.p",
 ]
 
 
@@ -88,11 +144,13 @@ def test_on_country_data(address_parser: AddressParser, file: str, directory_pat
     test_file_path = os.path.join(directory_path, file)
     test_container = PickleDatasetContainer(test_file_path)
 
-    results = address_parser.test(test_container,
-                                  batch_size=args.batch_size,
-                                  num_workers=4,
-                                  logging_path=f"./checkpoints/{args.model_type}",
-                                  checkpoint=args.model_path)
+    results = address_parser.test(
+        test_container,
+        batch_size=args.batch_size,
+        num_workers=4,
+        logging_path=f"./checkpoints/{args.model_type}",
+        checkpoint=args.model_path,
+    )
     return results, country
 
 
@@ -111,13 +169,31 @@ def make_table(data_type: str, root_path: str = ".", with_attention: bool = Fals
 
     if with_attention:
         fasttext_att_all_res = json.load(
-            open(os.path.join(root_path, f"{data_type}_test_results_fasttext_attention.json"), "r"))
+            open(
+                os.path.join(root_path, f"{data_type}_test_results_fasttext_attention.json"),
+                "r",
+            )
+        )
         bpemb_att_all_res = json.load(
-            open(os.path.join(root_path, f"{data_type}_test_results_bpemb_attention.json"), "r"))
+            open(
+                os.path.join(root_path, f"{data_type}_test_results_bpemb_attention.json"),
+                "r",
+            )
+        )
 
-        zipped_data = zip(fasttext_all_res.items(), fasttext_att_all_res.items(), bpemb_all_res.items(),
-                          bpemb_att_all_res.items())
-        columns_name = ["Country", r"FastText (%)", r"FastTextAtt (%)", r"BPEmb (%)", r"BPEmbAtt (%)"]
+        zipped_data = zip(
+            fasttext_all_res.items(),
+            fasttext_att_all_res.items(),
+            bpemb_all_res.items(),
+            bpemb_att_all_res.items(),
+        )
+        columns_name = [
+            "Country",
+            r"FastText (%)",
+            r"FastTextAtt (%)",
+            r"BPEmb (%)",
+            r"BPEmbAtt (%)",
+        ]
 
     columns = columns_name * 2
     formatted_data = []
@@ -158,13 +234,31 @@ def make_table_rst(data_type: str, root_path: str = ".", with_attention: bool = 
 
     if with_attention:
         fasttext_att_all_res = json.load(
-            open(os.path.join(root_path, f"{data_type}_test_results_fasttext_attention.json"), "r"))
+            open(
+                os.path.join(root_path, f"{data_type}_test_results_fasttext_attention.json"),
+                "r",
+            )
+        )
         bpemb_att_all_res = json.load(
-            open(os.path.join(root_path, f"{data_type}_test_results_bpemb_attention.json"), "r"))
+            open(
+                os.path.join(root_path, f"{data_type}_test_results_bpemb_attention.json"),
+                "r",
+            )
+        )
 
-        zipped_data = zip(fasttext_all_res.items(), fasttext_att_all_res.items(), bpemb_all_res.items(),
-                          bpemb_att_all_res.items())
-        columns_name = ["Country", r"FastText (%)", r"FastTextAtt (%)", r"BPEmb (%)", r"BPEmbAtt (%)"]
+        zipped_data = zip(
+            fasttext_all_res.items(),
+            fasttext_att_all_res.items(),
+            bpemb_all_res.items(),
+            bpemb_att_all_res.items(),
+        )
+        columns_name = [
+            "Country",
+            r"FastText (%)",
+            r"FastTextAtt (%)",
+            r"BPEmb (%)",
+            r"BPEmbAtt (%)",
+        ]
 
     columns = columns_name * 2
 
@@ -225,11 +319,25 @@ def make_comparison_table(results_a_file_name: str, results_b_file_name: str, ro
             data = [country, fasttext_res, bpemb_res]
             if idx == 40:
                 formatted_data.append(data)
-    table = pd.DataFrame(formatted_data,
-                         columns=["Country", r"Model A (%)", r"Model B (%)", "Country", r"Model A (%)",
-                                  r"Model B (%)"]).round(2).to_markdown(index=False)
+    table = (
+        pd.DataFrame(
+            formatted_data,
+            columns=[
+                "Country",
+                r"Model A (%)",
+                r"Model B (%)",
+                "Country",
+                r"Model A (%)",
+                r"Model B (%)",
+            ],
+        )
+        .round(2)
+        .to_markdown(index=False)
+    )
 
-    with open(os.path.join(table_dir, f"{results_a_file_name}_vs_{results_b_file_name}_table.md"),
-              "w",
-              encoding="utf-8") as file:
+    with open(
+        os.path.join(table_dir, f"{results_a_file_name}_vs_{results_b_file_name}_table.md"),
+        "w",
+        encoding="utf-8",
+    ) as file:
         file.writelines(table)

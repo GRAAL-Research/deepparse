@@ -17,7 +17,7 @@ class FormattedComparedAddressesTags(FormattedComparedAddresses):
         """
         return {
             self.origin[0]: self.first_address.address_parsed_components,
-            self.origin[1]: self.second_address.address_parsed_components
+            self.origin[1]: self.second_address.address_parsed_components,
         }
 
     def _get_probs_of_tags(self, verbose: bool = True) -> str:

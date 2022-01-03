@@ -15,7 +15,6 @@ from tests.parser.integration.base_retrain import AddressParserRetrainTestCase
 
 
 class FastTextEmbeddingsModelIntegrationTest(AddressParserRetrainTestCase):
-
     @classmethod
     def setUpClass(cls):
         super(FastTextEmbeddingsModelIntegrationTest, cls).setUpClass()
@@ -45,42 +44,54 @@ class FastTextEmbeddingsModelIntegrationTest(AddressParserRetrainTestCase):
         self.assertIsInstance(model.model, _FastText)
 
     @skipIf(platform.system() != "Windows", "Integration test on Windows env.")
-    def test_givenAWindowsOS_whenFasttextModelCollateFnInDataLoader_thenWorkProperly(self):
+    def test_givenAWindowsOS_whenFasttextModelCollateFnInDataLoader_thenWorkProperly(
+        self,
+    ):
         model = FastTextEmbeddingsModel(self.a_fasttext_model_path, verbose=self.verbose)
         data_transform = MockedDataTransform(model)
 
-        data_loader = DataLoader(self.training_container,
-                                 collate_fn=data_transform.collate_fn,
-                                 batch_size=32,
-                                 num_workers=0)
+        data_loader = DataLoader(
+            self.training_container,
+            collate_fn=data_transform.collate_fn,
+            batch_size=32,
+            num_workers=0,
+        )
         dataset = []
         for data in data_loader:
             dataset.append(data)
         self.assertGreater(len(dataset), 0)
 
     @skipIf(platform.system() != "Windows", "Integration test on Windows env.")
-    def test_givenAWindowsOS_whenFasttextModelCollateFnInDataLoaderNumWorkers1_thenWorkProperly(self):
+    def test_givenAWindowsOS_whenFasttextModelCollateFnInDataLoaderNumWorkers1_thenWorkProperly(
+        self,
+    ):
         model = FastTextEmbeddingsModel(self.a_fasttext_model_path, verbose=self.verbose)
         data_transform = MockedDataTransform(model)
 
-        data_loader = DataLoader(self.training_container,
-                                 collate_fn=data_transform.collate_fn,
-                                 batch_size=32,
-                                 num_workers=1)
+        data_loader = DataLoader(
+            self.training_container,
+            collate_fn=data_transform.collate_fn,
+            batch_size=32,
+            num_workers=1,
+        )
         dataset = []
         for data in data_loader:
             dataset.append(data)
         self.assertGreater(len(dataset), 0)
 
     @skipIf(platform.system() != "Windows", "Integration test on Windows env.")
-    def test_givenAWindowsOS_whenFasttextModelCollateFnInDataLoaderNumWorkers2_thenWorkProperly(self):
+    def test_givenAWindowsOS_whenFasttextModelCollateFnInDataLoaderNumWorkers2_thenWorkProperly(
+        self,
+    ):
         model = FastTextEmbeddingsModel(self.a_fasttext_model_path, verbose=self.verbose)
         data_transform = MockedDataTransform(model)
 
-        data_loader = DataLoader(self.training_container,
-                                 collate_fn=data_transform.collate_fn,
-                                 batch_size=32,
-                                 num_workers=2)
+        data_loader = DataLoader(
+            self.training_container,
+            collate_fn=data_transform.collate_fn,
+            batch_size=32,
+            num_workers=2,
+        )
         dataset = []
         for data in data_loader:
             dataset.append(data)
@@ -89,61 +100,76 @@ class FastTextEmbeddingsModelIntegrationTest(AddressParserRetrainTestCase):
     @skipIf(platform.system() != "Windows", "Integration test on Windows env.")
     @patch("deepparse.embeddings_models.fasttext_embeddings_model.platform")
     def test_givenAWindowsOS_whenFasttextModelCollateFnInDataLoaderEvenWithWindowsSetup_thenWorkProperly(
-            self, platform_mock):
+        self, platform_mock
+    ):
         platform_mock.system().__eq__.return_value = True
         with platform_mock:
             model = FastTextEmbeddingsModel(self.a_fasttext_model_path, verbose=self.verbose)
         data_transform = MockedDataTransform(model)
 
-        data_loader = DataLoader(self.training_container,
-                                 collate_fn=data_transform.collate_fn,
-                                 batch_size=32,
-                                 num_workers=0)
+        data_loader = DataLoader(
+            self.training_container,
+            collate_fn=data_transform.collate_fn,
+            batch_size=32,
+            num_workers=0,
+        )
         dataset = []
         for data in data_loader:
             dataset.append(data)
         self.assertGreater(len(dataset), 0)
 
     @skipIf(platform.system() != "Windows", "Integration test on Windows env.")
-    def test_givenAWindowsOS_whenFasttextModelCollateFnInDataLoaderForWindows_thenRaiseError(self):
+    def test_givenAWindowsOS_whenFasttextModelCollateFnInDataLoaderForWindows_thenRaiseError(
+        self,
+    ):
         model = FastTextEmbeddingsModel(self.a_fasttext_model_path, verbose=self.verbose)
 
         data_transform = MockedDataTransform(model)
 
-        data_loader = DataLoader(self.training_container,
-                                 collate_fn=data_transform.collate_fn,
-                                 batch_size=32,
-                                 num_workers=0)
+        data_loader = DataLoader(
+            self.training_container,
+            collate_fn=data_transform.collate_fn,
+            batch_size=32,
+            num_workers=0,
+        )
         dataset = []
         for data in data_loader:
             dataset.append(data)
         self.assertGreater(len(dataset), 0)
 
     @skipIf(platform.system() != "Windows", "Integration test on Windows env.")
-    def test_givenAWindowsOS_whenFasttextModelCollateFnInDataLoaderForWindowsNumWorkers1_thenRaiseError(self):
+    def test_givenAWindowsOS_whenFasttextModelCollateFnInDataLoaderForWindowsNumWorkers1_thenRaiseError(
+        self,
+    ):
         model = FastTextEmbeddingsModel(self.a_fasttext_model_path, verbose=self.verbose)
 
         data_transform = MockedDataTransform(model)
 
-        data_loader = DataLoader(self.training_container,
-                                 collate_fn=data_transform.collate_fn,
-                                 batch_size=32,
-                                 num_workers=1)
+        data_loader = DataLoader(
+            self.training_container,
+            collate_fn=data_transform.collate_fn,
+            batch_size=32,
+            num_workers=1,
+        )
         dataset = []
         for data in data_loader:
             dataset.append(data)
         self.assertGreater(len(dataset), 0)
 
     @skipIf(platform.system() != "Windows", "Integration test on Windows env.")
-    def test_givenAWindowsOS_whenFasttextModelCollateFnInDataLoaderForWindowsNumWorkers2_thenRaiseError(self):
+    def test_givenAWindowsOS_whenFasttextModelCollateFnInDataLoaderForWindowsNumWorkers2_thenRaiseError(
+        self,
+    ):
         model = FastTextEmbeddingsModel(self.a_fasttext_model_path, verbose=self.verbose)
 
         data_transform = MockedDataTransform(model)
 
-        data_loader = DataLoader(self.training_container,
-                                 collate_fn=data_transform.collate_fn,
-                                 batch_size=32,
-                                 num_workers=2)
+        data_loader = DataLoader(
+            self.training_container,
+            collate_fn=data_transform.collate_fn,
+            batch_size=32,
+            num_workers=2,
+        )
         dataset = []
         for data in data_loader:
             dataset.append(data)
@@ -158,10 +184,12 @@ class FastTextEmbeddingsModelIntegrationTest(AddressParserRetrainTestCase):
 
         data_transform = MockedDataTransform(model)
 
-        data_loader = DataLoader(self.training_container,
-                                 collate_fn=data_transform.collate_fn,
-                                 batch_size=32,
-                                 num_workers=0)
+        data_loader = DataLoader(
+            self.training_container,
+            collate_fn=data_transform.collate_fn,
+            batch_size=32,
+            num_workers=0,
+        )
         with self.assertRaises(TypeError):
             for _ in data_loader:
                 pass

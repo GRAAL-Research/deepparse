@@ -9,16 +9,23 @@ from tests.parser.base import FormattedParsedAddressBase
 
 
 class UserFormattedParsedAddressTest(FormattedParsedAddressBase):
-
     @classmethod
     def setUpClass(cls):
         cls.a_address_str = "3 test road"
-        cls.a_parsed_address = [("3", "ATag"), ("test", "AnotherTag"), ("road", "AnotherTag")]
+        cls.a_parsed_address = [
+            ("3", "ATag"),
+            ("test", "AnotherTag"),
+            ("road", "AnotherTag"),
+        ]
         cls.a_address_repr = "FormattedParsedAddress<ATag='3', AnotherTag='test road'>"
         cls.a_address = {cls.a_address_str: cls.a_parsed_address}
         cls.a_existing_tag = "3"
 
-        cls.a_parsed_address_in_dict_format = {"ALastTag": None, "ATag": "3", "AnotherTag": "test road"}
+        cls.a_parsed_address_in_dict_format = {
+            "ALastTag": None,
+            "ATag": "3",
+            "AnotherTag": "test road",
+        }
 
     def _capture_output(self):
         self.test_out = io.StringIO()
@@ -76,7 +83,9 @@ class UserFormattedParsedAddressTest(FormattedParsedAddressBase):
         expected = {"ATag": "3"}
         self.assertEqual(actual, expected)
 
-    def test_whenFormattedAddressUpperCaseFields_thenReturnAddressWithFieldsUpperCase(self):
+    def test_whenFormattedAddressUpperCaseFields_thenReturnAddressWithFieldsUpperCase(
+        self,
+    ):
         actual = self.parsed_address.format_address(upper_case_fields=["AnotherTag"])
         expected = "3 TEST ROAD"
 
@@ -92,10 +101,17 @@ class UserFormattedParsedAddressTest(FormattedParsedAddressBase):
     def test_whenNotEqualParsedAddressNotSameElements_then__eq__ReturnFalse(self):
         a_different_address_str = "3 test road unit west city province postal_code delivery"
 
-        an_address_with_different_components_tags = [("3", "StreetNumber"), ("test", "StreetName"),
-                                                     ("road", "StreetName"), ("unit", "Unit"), ("west", "Orientation"),
-                                                     ("city", "Municipality"), ("province", "Province"),
-                                                     ("postal_code", "PostalCode"), ("delivery", "GeneralDelivery")]
+        an_address_with_different_components_tags = [
+            ("3", "StreetNumber"),
+            ("test", "StreetName"),
+            ("road", "StreetName"),
+            ("unit", "Unit"),
+            ("west", "Orientation"),
+            ("city", "Municipality"),
+            ("province", "Province"),
+            ("postal_code", "PostalCode"),
+            ("delivery", "GeneralDelivery"),
+        ]
         another_address = {a_different_address_str: an_address_with_different_components_tags}
 
         self.reset_fields()

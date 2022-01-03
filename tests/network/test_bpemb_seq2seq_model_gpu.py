@@ -15,7 +15,6 @@ from tests.network.base import Seq2SeqTestCase
 
 @skipIf(not torch.cuda.is_available(), "no gpu available")
 class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
-
     @classmethod
     def setUpClass(cls):
         super(BPEmbSeq2SeqGPUTest, cls).setUpClass()
@@ -26,18 +25,23 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
 
     @patch("deepparse.network.seq2seq.Seq2SeqModel._load_pre_trained_weights")
     def test_whenInstantiatingABPEmbSeq2SeqModel_thenShouldInstantiateAEmbeddingNetwork(
-            self, load_pre_trained_weights_mock):
+        self, load_pre_trained_weights_mock
+    ):
         seq2seq_model = BPEmbSeq2SeqModel(self.a_torch_device, output_size=self.output_size, verbose=self.verbose)
 
         self.assertEqual(self.input_size, seq2seq_model.embedding_network.model.input_size)
         self.assertEqual(self.hidden_size, seq2seq_model.embedding_network.model.hidden_size)
-        self.assertEqual(self.projection_size, seq2seq_model.embedding_network.projection_layer.out_features)
+        self.assertEqual(
+            self.projection_size,
+            seq2seq_model.embedding_network.projection_layer.out_features,
+        )
 
     @patch("os.path.isfile")
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
     def test_givenNotLocalWeights_whenInstantiatingABPEmbSeq2SeqModel_thenShouldDownloadWeights(
-            self, load_state_dict_mock, torch_mock, isfile_mock):
+        self, load_state_dict_mock, torch_mock, isfile_mock
+    ):
         isfile_mock.return_value = False
         with patch("deepparse.network.seq2seq.download_weights") as download_weights_mock:
             _ = BPEmbSeq2SeqModel(self.a_torch_device, output_size=self.output_size, verbose=self.verbose)
@@ -48,7 +52,8 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
     def test_givenLocalWeightsNotLastVersion_whenInstantiatingABPEmbSeq2SeqModel_thenShouldDownloadWeights(
-            self, load_state_dict_mock, torch_mock, isfile_mock, last_version_mock):
+        self, load_state_dict_mock, torch_mock, isfile_mock, last_version_mock
+    ):
         isfile_mock.return_value = True
         last_version_mock.return_value = False
         with patch("deepparse.network.seq2seq.download_weights") as download_weights_mock:
@@ -60,7 +65,8 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
     def test_givenLocalWeights_whenInstantiatingABPEmbSeq2SeqModel_thenShouldntDownloadWeights(
-            self, load_state_dict_mock, torch_mock, isfile_mock, last_version_mock):
+        self, load_state_dict_mock, torch_mock, isfile_mock, last_version_mock
+    ):
         isfile_mock.return_value = True
         last_version_mock.return_value = True
         with patch("deepparse.network.seq2seq.download_weights") as download_weights_mock:
@@ -70,13 +76,16 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
     def test_givenRetrainedWeights_whenInstantiatingAFastTextSeq2SeqModel_thenShouldUseRetrainedWeights(
-            self, load_state_dict_mock, torch_mock):
+        self, load_state_dict_mock, torch_mock
+    ):
         all_layers_params = MagicMock()
         torch_mock.load.return_value = all_layers_params
-        _ = BPEmbSeq2SeqModel(self.a_torch_device,
-                              output_size=self.output_size,
-                              verbose=self.verbose,
-                              path_to_retrained_model=self.a_path_to_retrained_model)
+        _ = BPEmbSeq2SeqModel(
+            self.a_torch_device,
+            output_size=self.output_size,
+            verbose=self.verbose,
+            path_to_retrained_model=self.a_path_to_retrained_model,
+        )
 
         torch_load_call = [call.load(self.a_path_to_retrained_model, map_location=self.a_torch_device)]
         torch_mock.assert_has_calls(torch_load_call)
@@ -90,9 +99,15 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
     @patch("os.path.isfile")
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
-    def test_whenInstantiateASeq2SeqModel_thenEncoderIsCalledOnce(self, load_state_dict_mock, torch_mock, isfile_mock,
-                                                                  last_version_mock, download_weights_mock,
-                                                                  encoder_mock):
+    def test_whenInstantiateASeq2SeqModel_thenEncoderIsCalledOnce(
+        self,
+        load_state_dict_mock,
+        torch_mock,
+        isfile_mock,
+        last_version_mock,
+        download_weights_mock,
+        encoder_mock,
+    ):
         seq2seq_model = BPEmbSeq2SeqModel(self.a_torch_device, self.output_size, self.verbose)
 
         to_predict_mock, lengths_tensor_mock = self.setup_encoder_mocks()
@@ -129,8 +144,14 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
         max_length = 4  # a sequence of 4 tokens
         lengths_tensor_mock.max().item.return_value = max_length
         encoder_outputs = MagicMock()
-        seq2seq_model._decoder_step(decoder_input_mock, decoder_hidden_mock, encoder_outputs, self.a_none_target,
-                                    lengths_tensor_mock, self.a_batch_size)
+        seq2seq_model._decoder_step(
+            decoder_input_mock,
+            decoder_hidden_mock,
+            encoder_outputs,
+            self.a_none_target,
+            lengths_tensor_mock,
+            self.a_batch_size,
+        )
 
         decoder_call = [call()(view_mock, decoder_hidden_mock, encoder_outputs, lengths_tensor_mock)] * max_length
 
@@ -151,10 +172,12 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
         download_weights_mock,
         decoder_mock,
     ):
-        seq2seq_model = BPEmbSeq2SeqModel(self.a_torch_device,
-                                          output_size=self.output_size,
-                                          verbose=self.verbose,
-                                          attention_mechanism=True)
+        seq2seq_model = BPEmbSeq2SeqModel(
+            self.a_torch_device,
+            output_size=self.output_size,
+            verbose=self.verbose,
+            attention_mechanism=True,
+        )
 
         decoder_input_mock, decoder_hidden_mock = self.setUp_decoder_mocks(decoder_mock, attention_mechanism=True)
 
@@ -165,8 +188,14 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
         max_length = 4  # a sequence of 4 tokens
         lengths_tensor_mock.max().item.return_value = max_length
         encoder_outputs = MagicMock()
-        seq2seq_model._decoder_step(decoder_input_mock, decoder_hidden_mock, encoder_outputs, self.a_none_target,
-                                    lengths_tensor_mock, self.a_batch_size)
+        seq2seq_model._decoder_step(
+            decoder_input_mock,
+            decoder_hidden_mock,
+            encoder_outputs,
+            self.a_none_target,
+            lengths_tensor_mock,
+            self.a_batch_size,
+        )
 
         decoder_call = [call()(view_mock, decoder_hidden_mock, encoder_outputs, lengths_tensor_mock)] * max_length
 
@@ -179,10 +208,16 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
     @patch("os.path.isfile")
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
-    def test_whenInstantiateASeq2SeqModelWithTarget_thenDecoderIsCalled(self, load_state_dict_mock, torch_mock,
-                                                                        isfile_mock, last_version_mock,
-                                                                        download_weights_mock, decoder_mock,
-                                                                        random_mock):
+    def test_whenInstantiateASeq2SeqModelWithTarget_thenDecoderIsCalled(
+        self,
+        load_state_dict_mock,
+        torch_mock,
+        isfile_mock,
+        last_version_mock,
+        download_weights_mock,
+        decoder_mock,
+        random_mock,
+    ):
         random_mock.return_value = self.a_value_lower_than_threshold
 
         seq2seq_model = BPEmbSeq2SeqModel(self.a_torch_device, output_size=self.output_size, verbose=self.verbose)
@@ -193,14 +228,24 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
         max_length = 4  # a sequence of 4 tokens
         lengths_tensor_mock.max().item.return_value = max_length
         encoder_outputs = MagicMock()
-        seq2seq_model._decoder_step(decoder_input_mock, decoder_hidden_mock, encoder_outputs, self.a_none_target,
-                                    lengths_tensor_mock, self.a_batch_size)
+        seq2seq_model._decoder_step(
+            decoder_input_mock,
+            decoder_hidden_mock,
+            encoder_outputs,
+            self.a_none_target,
+            lengths_tensor_mock,
+            self.a_batch_size,
+        )
 
         decoder_call = []
 
         for idx in range(max_length):
-            decoder_call.append(call()(self.a_transpose_target_vector[idx].view(1, self.a_batch_size, 1),
-                                       decoder_hidden_mock))
+            decoder_call.append(
+                call()(
+                    self.a_transpose_target_vector[idx].view(1, self.a_batch_size, 1),
+                    decoder_hidden_mock,
+                )
+            )
 
         self.assert_has_calls_tensor_equals(decoder_mock, decoder_call)
 
@@ -211,10 +256,16 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
     @patch("os.path.isfile")
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
-    def test_givenABPEmbSeq2SeqModel_whenForwardPass_thenProperlyDoPAss(self, load_state_dict_mock, torch_mock,
-                                                                        isfile_mock, last_version_mock,
-                                                                        download_weights_mock, decoder_mock,
-                                                                        encoder_mock):
+    def test_givenABPEmbSeq2SeqModel_whenForwardPass_thenProperlyDoPAss(
+        self,
+        load_state_dict_mock,
+        torch_mock,
+        isfile_mock,
+        last_version_mock,
+        download_weights_mock,
+        decoder_mock,
+        encoder_mock,
+    ):
         to_predict_mock, lengths_tensor_mock = self.setup_encoder_mocks()
 
         _, decoder_hidden_mock = self.setUp_decoder_mocks(decoder_mock, attention_mechanism=False)
@@ -234,16 +285,26 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
             embedding_network_patch().return_value = embedded_output_mock
             seq2seq_model = BPEmbSeq2SeqModel(self.a_torch_device, self.output_size, self.verbose)
 
-            seq2seq_model.forward(to_predict=to_predict_mock,
-                                  decomposition_lengths=decomposition_lengths_mock,
-                                  lengths_tensor=lengths_tensor_mock,
-                                  target=None)
+            seq2seq_model.forward(
+                to_predict=to_predict_mock,
+                decomposition_lengths=decomposition_lengths_mock,
+                lengths_tensor=lengths_tensor_mock,
+                target=None,
+            )
 
             embedding_network_patch.assert_has_calls([call()(to_predict_mock, decomposition_lengths_mock)])
             encoder_mock.assert_has_calls([call()(embedded_output_mock, lengths_tensor_mock)])
             lengths_tensor_mock.assert_has_calls([call.max().item()])
             decoder_mock.assert_has_calls(
-                [call()(to_mock, decoder_hidden_mock, decoder_input_mock, lengths_tensor_mock)])
+                [
+                    call()(
+                        to_mock,
+                        decoder_hidden_mock,
+                        decoder_input_mock,
+                        lengths_tensor_mock,
+                    )
+                ]
+            )
 
     @patch("deepparse.network.seq2seq.random.random")
     @patch("deepparse.network.seq2seq.Encoder")
@@ -253,11 +314,17 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
     @patch("os.path.isfile")
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
-    def test_givenABPEmbSeq2SeqModel_whenForwardPassWithTarget_thenProperlyDoPAss(self, load_state_dict_mock,
-                                                                                  torch_mock, isfile_mock,
-                                                                                  last_version_mock,
-                                                                                  download_weights_mock, decoder_mock,
-                                                                                  encoder_mock, random_mock):
+    def test_givenABPEmbSeq2SeqModel_whenForwardPassWithTarget_thenProperlyDoPAss(
+        self,
+        load_state_dict_mock,
+        torch_mock,
+        isfile_mock,
+        last_version_mock,
+        download_weights_mock,
+        decoder_mock,
+        encoder_mock,
+        random_mock,
+    ):
         random_mock.return_value = self.a_value_lower_than_threshold
 
         target_mock = MagicMock()
@@ -281,16 +348,26 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
             embedding_network_patch().return_value = embedded_output_mock
             seq2seq_model = BPEmbSeq2SeqModel(self.a_torch_device, self.output_size, self.verbose)
 
-            seq2seq_model.forward(to_predict=to_predict_mock,
-                                  decomposition_lengths=decomposition_lengths_mock,
-                                  lengths_tensor=lengths_tensor_mock,
-                                  target=target_mock)
+            seq2seq_model.forward(
+                to_predict=to_predict_mock,
+                decomposition_lengths=decomposition_lengths_mock,
+                lengths_tensor=lengths_tensor_mock,
+                target=target_mock,
+            )
 
             embedding_network_patch.assert_has_calls([call()(to_predict_mock, decomposition_lengths_mock)])
             encoder_mock.assert_has_calls([call()(embedded_output_mock, lengths_tensor_mock)])
             lengths_tensor_mock.assert_has_calls([call.max().item()])
             decoder_mock.assert_has_calls(
-                [call()(to_mock, decoder_hidden_mock, decoder_input_mock, lengths_tensor_mock)])
+                [
+                    call()(
+                        to_mock,
+                        decoder_hidden_mock,
+                        decoder_input_mock,
+                        lengths_tensor_mock,
+                    )
+                ]
+            )
             target_mock.assert_has_calls([call.transpose(0, 1)])
 
     @patch("deepparse.network.seq2seq.random.random")
@@ -302,8 +379,16 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
     def test_givenABPEmbAttSeq2SeqModel_whenForwardPassWithTarget_thenProperlyDoPAss(
-            self, load_state_dict_mock, torch_mock, isfile_mock, last_version_mock, download_weights_mock, decoder_mock,
-            encoder_mock, random_mock):
+        self,
+        load_state_dict_mock,
+        torch_mock,
+        isfile_mock,
+        last_version_mock,
+        download_weights_mock,
+        decoder_mock,
+        encoder_mock,
+        random_mock,
+    ):
         random_mock.return_value = self.a_value_lower_than_threshold
 
         target_mock = MagicMock()
@@ -324,21 +409,33 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
             # we mock the output of the embedding layer
             embedded_output_mock = MagicMock()
             embedding_network_patch().return_value = embedded_output_mock
-            seq2seq_model = BPEmbSeq2SeqModel(self.a_torch_device,
-                                              self.output_size,
-                                              self.verbose,
-                                              attention_mechanism=True)
+            seq2seq_model = BPEmbSeq2SeqModel(
+                self.a_torch_device,
+                self.output_size,
+                self.verbose,
+                attention_mechanism=True,
+            )
 
-            seq2seq_model.forward(to_predict=to_predict_mock,
-                                  decomposition_lengths=decomposition_lengths_mock,
-                                  lengths_tensor=lengths_tensor_mock,
-                                  target=target_mock)
+            seq2seq_model.forward(
+                to_predict=to_predict_mock,
+                decomposition_lengths=decomposition_lengths_mock,
+                lengths_tensor=lengths_tensor_mock,
+                target=target_mock,
+            )
 
             embedding_network_patch.assert_has_calls([call()(to_predict_mock, decomposition_lengths_mock)])
             encoder_mock.assert_has_calls([call()(embedded_output_mock, lengths_tensor_mock)])
             lengths_tensor_mock.assert_has_calls([call.max().item()])
             decoder_mock.assert_has_calls(
-                [call()(to_mock, decoder_hidden_mock, decoder_input_mock, lengths_tensor_mock)])
+                [
+                    call()(
+                        to_mock,
+                        decoder_hidden_mock,
+                        decoder_input_mock,
+                        lengths_tensor_mock,
+                    )
+                ]
+            )
             target_mock.assert_has_calls([call.transpose(0, 1)])
 
 

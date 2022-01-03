@@ -9,6 +9,7 @@
 # -- Path setup --------------------------------------------------------------
 
 import datetime
+
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
@@ -43,9 +44,16 @@ release = version
 # extensions coming with Sphinx (named "sphinx.ext.*") or your custom
 # ones.
 extensions = [
-    "sphinx.ext.autodoc", "sphinx.ext.doctest", "sphinx.ext.todo", "sphinx.ext.coverage", "sphinx.ext.mathjax",
-    "sphinx.ext.ifconfig", "sphinx.ext.viewcode", "sphinx.ext.githubpages", "sphinx.ext.napoleon",
-    "sphinx.ext.intersphinx"
+    "sphinx.ext.autodoc",
+    "sphinx.ext.doctest",
+    "sphinx.ext.todo",
+    "sphinx.ext.coverage",
+    "sphinx.ext.mathjax",
+    "sphinx.ext.ifconfig",
+    "sphinx.ext.viewcode",
+    "sphinx.ext.githubpages",
+    "sphinx.ext.napoleon",
+    "sphinx.ext.intersphinx",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -120,15 +128,12 @@ latex_elements = {
     # The paper size ("letterpaper" or "a4paper").
     #
     # "papersize": "letterpaper",
-
     # The font size ("10pt", "11pt" or "12pt").
     #
     # "pointsize": "10pt",
-
     # Additional stuff for the LaTeX preamble.
     #
     # "preamble": "",
-
     # Latex figure (float) alignment
     #
     # "figure_align": "htbp",
@@ -138,7 +143,13 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, "deepparse.tex", "deepparse Documentation", "Marouane Yassine & David Beauchemin", "manual"),
+    (
+        master_doc,
+        "deepparse.tex",
+        "deepparse Documentation",
+        "Marouane Yassine & David Beauchemin",
+        "manual",
+    ),
 ]
 
 # -- Options for manual page output ------------------------------------------
@@ -153,8 +164,15 @@ man_pages = [(master_doc, "deepparse", "deepparse Documentation", [author], 1)]
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, "deepparse", "deepparse Documentation", author, "deepparse", "One line description of project.",
-     "Miscellaneous")
+    (
+        master_doc,
+        "deepparse",
+        "deepparse Documentation",
+        author,
+        "deepparse",
+        "One line description of project.",
+        "Miscellaneous",
+    )
 ]
 
 # -- Intersphinx mappings ----------------------------------------------------
@@ -162,14 +180,12 @@ texinfo_documents = [
 intersphinx_mapping = {
     "PyTorch": ("https://pytorch.org/docs/stable/", None),
     "python": ("https://docs.python.org/3.8", None),
-    "numpy": ("http://docs.scipy.org/doc/numpy/", None)
+    "numpy": ("http://docs.scipy.org/doc/numpy/", None),
 }
 
 # -- Extension configuration -------------------------------------------------
 
-autodoc_default_options = {
-    "member-order": "bysource"
-}
+autodoc_default_options = {"member-order": "bysource"}
 
 # -- Options for todo extension ----------------------------------------------
 

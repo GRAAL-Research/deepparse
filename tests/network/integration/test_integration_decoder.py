@@ -13,7 +13,6 @@ from deepparse.network import Decoder
 
 
 class DecoderCase(TestCase):
-
     @classmethod
     def setUpClass(cls):
         cls.temp_dir_obj = TemporaryDirectory()
@@ -35,11 +34,13 @@ class DecoderCase(TestCase):
         cls.temp_dir_obj.cleanup()
 
     def setUp_encoder_decoder(self, output_size: int, device: torch.device, attention_mechanism) -> None:
-        self.decoder = Decoder(self.input_size_dim,
-                               self.hidden_size,
-                               self.num_layers,
-                               output_size,
-                               attention_mechanism=attention_mechanism)
+        self.decoder = Decoder(
+            self.input_size_dim,
+            self.hidden_size,
+            self.num_layers,
+            output_size,
+            attention_mechanism=attention_mechanism,
+        )
         self.decoder.to(device)  # we mount it into the device
         self.decoder_input_setUp(device)
 
@@ -49,8 +50,10 @@ class DecoderCase(TestCase):
 
         with open(os.path.join(self.weights_dir, "decoder_hidden.p"), "rb") as file:
             self.decoder_hidden_tensor = pickle.load(file)
-        self.decoder_hidden_tensor = (self.decoder_hidden_tensor[0].to(device),
-                                      self.decoder_hidden_tensor[1].to(device))
+        self.decoder_hidden_tensor = (
+            self.decoder_hidden_tensor[0].to(device),
+            self.decoder_hidden_tensor[1].to(device),
+        )
         self.decoder_output = torch.rand((1, self.sequence_len, self.hidden_size), device=device)
 
     def assert_predictions_is_valid_dim(self, actual_predictions, output_size: int):
@@ -66,12 +69,15 @@ class DecoderCase(TestCase):
 
 @skipIf(not torch.cuda.is_available(), "no gpu available")
 class DecoderGPUTest(DecoderCase):
-
     def test_whenForwardStepGPU_thenStepIsOk(self):
         output_size = 9
         self.setUp_encoder_decoder(output_size, self.a_torch_device, attention_mechanism=False)
-        predictions, hidden, att_weights = self.decoder.forward(self.decoder_input, self.decoder_hidden_tensor,
-                                                                self.decoder_output, self.a_lengths_tensor)
+        predictions, hidden, att_weights = self.decoder.forward(
+            self.decoder_input,
+            self.decoder_hidden_tensor,
+            self.decoder_output,
+            self.a_lengths_tensor,
+        )
 
         self.assert_predictions_is_valid_dim(predictions, output_size)
         self.assert_hidden_is_valid_dim(hidden)
@@ -80,8 +86,12 @@ class DecoderGPUTest(DecoderCase):
     def test_whenForwardAttStepGPU_thenStepIsOk(self):
         output_size = 9
         self.setUp_encoder_decoder(output_size, self.a_torch_device, attention_mechanism=True)
-        predictions, hidden, att_weights = self.decoder.forward(self.decoder_input, self.decoder_hidden_tensor,
-                                                                self.decoder_output, self.a_lengths_tensor)
+        predictions, hidden, att_weights = self.decoder.forward(
+            self.decoder_input,
+            self.decoder_hidden_tensor,
+            self.decoder_output,
+            self.a_lengths_tensor,
+        )
 
         self.assert_predictions_is_valid_dim(predictions, output_size)
         self.assert_hidden_is_valid_dim(hidden)
@@ -90,8 +100,12 @@ class DecoderGPUTest(DecoderCase):
     def test_whenForwardStepDim10GPU_thenStepIsOk(self):
         output_size = 10
         self.setUp_encoder_decoder(output_size, self.a_torch_device, attention_mechanism=False)
-        predictions, hidden, att_weights = self.decoder.forward(self.decoder_input, self.decoder_hidden_tensor,
-                                                                self.decoder_output, self.a_lengths_tensor)
+        predictions, hidden, att_weights = self.decoder.forward(
+            self.decoder_input,
+            self.decoder_hidden_tensor,
+            self.decoder_output,
+            self.a_lengths_tensor,
+        )
 
         self.assert_predictions_is_valid_dim(predictions, output_size)
         self.assert_hidden_is_valid_dim(hidden)
@@ -99,12 +113,15 @@ class DecoderGPUTest(DecoderCase):
 
 
 class DecoderCPUTest(DecoderCase):
-
     def test_whenForwardStepCPU_thenStepIsOk(self):
         output_size = 9
         self.setUp_encoder_decoder(output_size, self.a_cpu_device, attention_mechanism=False)
-        predictions, hidden, att_weights = self.decoder.forward(self.decoder_input, self.decoder_hidden_tensor,
-                                                                self.decoder_output, self.a_lengths_tensor)
+        predictions, hidden, att_weights = self.decoder.forward(
+            self.decoder_input,
+            self.decoder_hidden_tensor,
+            self.decoder_output,
+            self.a_lengths_tensor,
+        )
 
         self.assert_predictions_is_valid_dim(predictions, output_size)
         self.assert_hidden_is_valid_dim(hidden)
@@ -113,8 +130,12 @@ class DecoderCPUTest(DecoderCase):
     def test_whenForwardAttStepCPU_thenStepIsOk(self):
         output_size = 9
         self.setUp_encoder_decoder(output_size, self.a_cpu_device, attention_mechanism=True)
-        predictions, hidden, att_weights = self.decoder.forward(self.decoder_input, self.decoder_hidden_tensor,
-                                                                self.decoder_output, self.a_lengths_tensor)
+        predictions, hidden, att_weights = self.decoder.forward(
+            self.decoder_input,
+            self.decoder_hidden_tensor,
+            self.decoder_output,
+            self.a_lengths_tensor,
+        )
 
         self.assert_predictions_is_valid_dim(predictions, output_size)
         self.assert_hidden_is_valid_dim(hidden)
@@ -123,8 +144,12 @@ class DecoderCPUTest(DecoderCase):
     def test_whenForwardStepDim10CPU_thenStepIsOk(self):
         output_size = 10
         self.setUp_encoder_decoder(output_size, self.a_cpu_device, attention_mechanism=False)
-        predictions, hidden, att_weights = self.decoder.forward(self.decoder_input, self.decoder_hidden_tensor,
-                                                                self.decoder_output, self.a_lengths_tensor)
+        predictions, hidden, att_weights = self.decoder.forward(
+            self.decoder_input,
+            self.decoder_hidden_tensor,
+            self.decoder_output,
+            self.a_lengths_tensor,
+        )
 
         self.assert_predictions_is_valid_dim(predictions, output_size)
         self.assert_hidden_is_valid_dim(hidden)

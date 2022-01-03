@@ -20,8 +20,10 @@ def download_fasttext_magnitude_embeddings(saving_dir: str, verbose: bool = True
     file_name = os.path.join(saving_dir, f"{model}.{extension}")
     if not os.path.isfile(file_name):
         if verbose:
-            print("The fastText pre-trained word embeddings will be download in magnitude format (2.3 GO), "
-                  "this process will take several minutes.")
+            print(
+                "The fastText pre-trained word embeddings will be download in magnitude format (2.3 GO), "
+                "this process will take several minutes."
+            )
         extension = extension + ".gz"
         download_from_url(file_name=model, saving_dir=saving_dir, file_extension=extension)
         gz_file_name = file_name + ".gz"
@@ -68,9 +70,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 def download_fasttext_embeddings(saving_dir: str, verbose: bool = True) -> str:
     """
-        Simpler version of the download_model function from fastText to download pre-trained common-crawl
-        vectors from fastText's website https://fasttext.cc/docs/en/crawl-vectors.html and save it in the
-        saving directory (saving_dir).
+    Simpler version of the download_model function from fastText to download pre-trained common-crawl
+    vectors from fastText's website https://fasttext.cc/docs/en/crawl-vectors.html and save it in the
+    saving directory (saving_dir).
     """
     os.makedirs(saving_dir, exist_ok=True)
 
@@ -102,13 +104,15 @@ def download_gz_model(gz_file_name: str, saving_path: str, verbose: bool = True)
 
     url = "https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/%s" % gz_file_name
     if verbose:
-        print("The fastText pre-trained word embeddings will be downloaded (6.8 GO), "
-              "this process will take several minutes.")
+        print(
+            "The fastText pre-trained word embeddings will be downloaded (6.8 GO), "
+            "this process will take several minutes."
+        )
     _download_file(url, saving_path, verbose=verbose)
 
 
 # No modification, we just need to call our _print_progress function
-def _download_file(url: str, write_file_name: str, chunk_size: int = 2**13, verbose: bool = True) -> None:
+def _download_file(url: str, write_file_name: str, chunk_size: int = 2 ** 13, verbose: bool = True) -> None:
     if verbose:
         print("Downloading %s" % url)
     response = urlopen(url)

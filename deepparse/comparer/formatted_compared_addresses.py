@@ -29,6 +29,7 @@ class FormattedComparedAddresses(ABC):
                                                         ("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6",
                                                         "450 rue des Lilas Ouest Quebec city Quebec G1L 1B6"))
     """
+
     first_address: FormattedParsedAddress
     second_address: FormattedParsedAddress
     origin: Tuple[str, str]
@@ -44,8 +45,11 @@ class FormattedComparedAddresses(ABC):
             A list of the boolean.
         """
         return self._bool_address_tags_are_the_same(
-            [self.first_address.to_list_of_tuples(),
-             self.second_address.to_list_of_tuples()])
+            [
+                self.first_address.to_list_of_tuples(),
+                self.second_address.to_list_of_tuples(),
+            ]
+        )
 
     @property
     def equivalent(self) -> bool:
@@ -147,24 +151,28 @@ class FormattedComparedAddresses(ABC):
         codes = SequenceMatcher(a=string_one, b=string_two).get_opcodes()
         for code in codes:
             if code[0] == "equal":
-                result += white.format(text=(string_one[code[1]:code[2]]))
+                result += white.format(text=(string_one[code[1] : code[2]]))
             elif code[0] == "delete":
-                result += color_1.format(code_type=code_type, text=string_one[code[1]:code[2]])
+                result += color_1.format(code_type=code_type, text=string_one[code[1] : code[2]])
             elif code[0] == "insert":
-                result += color_2.format(code_type=code_type, text=string_two[code[3]:code[4]])
+                result += color_2.format(code_type=code_type, text=string_two[code[3] : code[4]])
             elif code[0] == "replace":
                 if code[1] <= code[3]:
-                    result += (color_1.format(code_type=code_type, text=string_one[code[1]:code[2]]) +
-                               color_2.format(code_type=code_type, text=string_two[code[3]:code[4]]))
+                    result += color_1.format(code_type=code_type, text=string_one[code[1] : code[2]]) + color_2.format(
+                        code_type=code_type, text=string_two[code[3] : code[4]]
+                    )
                 else:
-                    result += (color_2.format(code_type=code_type, text=string_two[code[3]:code[4]]) +
-                               color_1.format(code_type=code_type, text=string_one[code[1]:code[2]]))
+                    result += color_2.format(code_type=code_type, text=string_two[code[3] : code[4]]) + color_1.format(
+                        code_type=code_type, text=string_one[code[1] : code[2]]
+                    )
         return result
 
-    def _get_tags_diff_color(self,
-                             name_one: str = "first address",
-                             name_two: str = "second address",
-                             verbose=True) -> str:
+    def _get_tags_diff_color(
+        self,
+        name_one: str = "first address",
+        name_two: str = "second address",
+        verbose=True,
+    ) -> str:
         """
         Print the output of the string with colour codes that represent the differences between the two strings.
 
@@ -187,9 +195,19 @@ class FormattedComparedAddresses(ABC):
 
         for address_component_name in address_component_names:
             list_of_list_tag = []
-            for parsed_address in [self.first_address.to_list_of_tuples(), self.second_address.to_list_of_tuples()]:
-                list_of_list_tag.append(" ".join([tag for (tag, tag_name) in parsed_address \
-                                                  if tag_name == address_component_name and tag is not None]))
+            for parsed_address in [
+                self.first_address.to_list_of_tuples(),
+                self.second_address.to_list_of_tuples(),
+            ]:
+                list_of_list_tag.append(
+                    " ".join(
+                        [
+                            tag
+                            for (tag, tag_name) in parsed_address
+                            if tag_name == address_component_name and tag is not None
+                        ]
+                    )
+                )
 
             result = self._get_color_diff(list_of_list_tag[0], list_of_list_tag[1])
 
@@ -216,12 +234,22 @@ class FormattedComparedAddresses(ABC):
         for address_component_name in unique_address_component_names:
             list_of_list_tag = []
             for parsed_address in parsed_addresses:
-                list_of_list_tag.append(" ".join([
-                    tag for (tag, tag_name) in parsed_address if tag_name == address_component_name and tag is not None
-                ]))
+                list_of_list_tag.append(
+                    " ".join(
+                        [
+                            tag
+                            for (tag, tag_name) in parsed_address
+                            if tag_name == address_component_name and tag is not None
+                        ]
+                    )
+                )
 
             list_of_bool_and_tag.append(
-                (address_component_name, all(x == list_of_list_tag[0] for x in list_of_list_tag)))
+                (
+                    address_component_name,
+                    all(x == list_of_list_tag[0] for x in list_of_list_tag),
+                )
+            )
 
         return list_of_bool_and_tag
 

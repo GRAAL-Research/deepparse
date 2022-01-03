@@ -31,29 +31,37 @@ class Seq2SeqModel(ABC, nn.Module):
         verbose (bool): Turn on/off the verbosity of the model. The default value is True.
     """
 
-    def __init__(self,
-                 device: torch.device,
-                 input_size: int,
-                 encoder_hidden_size: int,
-                 encoder_num_layers: int,
-                 decoder_hidden_size: int,
-                 decoder_num_layers: int,
-                 output_size: int,
-                 attention_mechanism: bool = False,
-                 verbose: bool = True) -> None:
+    def __init__(
+        self,
+        device: torch.device,
+        input_size: int,
+        encoder_hidden_size: int,
+        encoder_num_layers: int,
+        decoder_hidden_size: int,
+        decoder_num_layers: int,
+        output_size: int,
+        attention_mechanism: bool = False,
+        verbose: bool = True,
+    ) -> None:
         super().__init__()
         self.device = device
         self.verbose = verbose
         self.attention_mechanism = attention_mechanism
 
-        self.encoder = Encoder(input_size=input_size, hidden_size=encoder_hidden_size, num_layers=encoder_num_layers)
+        self.encoder = Encoder(
+            input_size=input_size,
+            hidden_size=encoder_hidden_size,
+            num_layers=encoder_num_layers,
+        )
         self.encoder.to(self.device)
 
-        self.decoder = Decoder(input_size=encoder_num_layers,
-                               hidden_size=decoder_hidden_size,
-                               num_layers=decoder_num_layers,
-                               output_size=output_size,
-                               attention_mechanism=self.attention_mechanism)
+        self.decoder = Decoder(
+            input_size=encoder_num_layers,
+            hidden_size=decoder_hidden_size,
+            num_layers=decoder_num_layers,
+            output_size=output_size,
+            attention_mechanism=self.attention_mechanism,
+        )
 
         self.decoder.to(self.device)
 
@@ -90,8 +98,9 @@ class Seq2SeqModel(ABC, nn.Module):
             download_weights(model_type, CACHE_PATH, verbose=self.verbose)
         elif not latest_version(model_type, cache_path=CACHE_PATH):
             if self.verbose:
-                warnings.warn("A new version of the pre-trained model is available. "
-                              "The newest model will be downloaded.")
+                warnings.warn(
+                    "A new version of the pre-trained model is available. " "The newest model will be downloaded."
+                )
             download_weights(model_type, CACHE_PATH, verbose=self.verbose)
 
         all_layers_params = torch.load(model_path, map_location=self.device)
@@ -130,8 +139,15 @@ class Seq2SeqModel(ABC, nn.Module):
 
         return decoder_input, decoder_hidden, encoder_outputs
 
-    def _decoder_step(self, decoder_input: torch.Tensor, decoder_hidden: tuple, encoder_outputs: torch.Tensor,
-                      target: Union[torch.Tensor, None], lengths_tensor: torch.Tensor, batch_size: int) -> torch.Tensor:
+    def _decoder_step(
+        self,
+        decoder_input: torch.Tensor,
+        decoder_hidden: tuple,
+        encoder_outputs: torch.Tensor,
+        target: Union[torch.Tensor, None],
+        lengths_tensor: torch.Tensor,
+        batch_size: int,
+    ) -> torch.Tensor:
         """
         Step of the encoder.
 
@@ -154,8 +170,9 @@ class Seq2SeqModel(ABC, nn.Module):
         prediction_sequence = torch.zeros(max_length + 1, batch_size, self.output_size).to(self.device)
 
         # We decode the first token
-        decoder_output, decoder_hidden, attention_weights = self.decoder(decoder_input, decoder_hidden, encoder_outputs,
-                                                                         lengths_tensor)
+        decoder_output, decoder_hidden, attention_weights = self.decoder(
+            decoder_input, decoder_hidden, encoder_outputs, lengths_tensor
+        )
 
         if attention_weights is not None:
             # We fill the attention
@@ -174,15 +191,19 @@ class Seq2SeqModel(ABC, nn.Module):
             target = target.transpose(0, 1)
             for idx in range(max_length):
                 decoder_input = target[idx].view(1, batch_size, 1)
-                decoder_output, decoder_hidden, attention_weights = self.decoder(decoder_input, decoder_hidden,
-                                                                                 encoder_outputs, lengths_tensor)
+                decoder_output, decoder_hidden, attention_weights = self.decoder(
+                    decoder_input, decoder_hidden, encoder_outputs, lengths_tensor
+                )
                 prediction_sequence[idx + 1] = decoder_output
 
         else:
             for idx in range(max_length):
-                decoder_output, decoder_hidden, attention_weights = self.decoder(decoder_input.view(1, batch_size,
-                                                                                                    1), decoder_hidden,
-                                                                                 encoder_outputs, lengths_tensor)
+                decoder_output, decoder_hidden, attention_weights = self.decoder(
+                    decoder_input.view(1, batch_size, 1),
+                    decoder_hidden,
+                    encoder_outputs,
+                    lengths_tensor,
+                )
 
                 prediction_sequence[idx + 1] = decoder_output
 

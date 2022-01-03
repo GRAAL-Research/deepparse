@@ -25,8 +25,9 @@ def fasttext_data_padding(batch: List) -> Tuple:
     """
 
     # We convert into np.array before as per PyTorch optimization recommendation
-    sequences_vectors, lengths = zip(*[(torch.FloatTensor(np.array(seq_vectors)), len(seq_vectors))
-                                       for seq_vectors in batch])
+    sequences_vectors, lengths = zip(
+        *[(torch.FloatTensor(np.array(seq_vectors)), len(seq_vectors)) for seq_vectors in batch]
+    )
 
     lengths = torch.tensor(lengths)
 
@@ -50,8 +51,12 @@ def bpemb_data_padding(batch: List[Tuple]) -> Tuple:
     """
 
     # We convert into np.array before as per PyTorch optimization recommendation
-    sequences_vectors, decomp_len, lengths = zip(*[(torch.tensor(np.array(vectors)), word_decomposition_len,
-                                                    len(vectors)) for vectors, word_decomposition_len in batch])
+    sequences_vectors, decomp_len, lengths = zip(
+        *[
+            (torch.tensor(np.array(vectors)), word_decomposition_len, len(vectors))
+            for vectors, word_decomposition_len in batch
+        ]
+    )
 
     lengths = torch.tensor(lengths)
 
@@ -87,7 +92,11 @@ def fasttext_data_padding_teacher_forcing(batch: List) -> Tuple:
     padded_sequences_vectors = pad_sequence(sequences_vectors, batch_first=True, padding_value=padding_value)
     padded_target_vectors = pad_sequence(target_vectors, batch_first=True, padding_value=padding_value)
 
-    return (padded_sequences_vectors, lengths, padded_target_vectors), padded_target_vectors
+    return (
+        padded_sequences_vectors,
+        lengths,
+        padded_target_vectors,
+    ), padded_target_vectors
 
 
 def bpemb_data_padding_teacher_forcing(batch: List[Tuple]) -> Tuple:
@@ -106,7 +115,12 @@ def bpemb_data_padding_teacher_forcing(batch: List[Tuple]) -> Tuple:
         training (``w``).
     """
 
-    sequences_vectors, decomp_len, target_vectors, lengths = _convert_bpemb_sequence_to_tensor(batch)
+    (
+        sequences_vectors,
+        decomp_len,
+        target_vectors,
+        lengths,
+    ) = _convert_bpemb_sequence_to_tensor(batch)
 
     lengths = torch.tensor(lengths)
 
@@ -119,7 +133,12 @@ def bpemb_data_padding_teacher_forcing(batch: List[Tuple]) -> Tuple:
         if len(decomposition_length) < max_sequence_length:
             decomposition_length.extend([1] * (max_sequence_length - len(decomposition_length)))
 
-    return (padded_sequences_vectors, list(decomp_len), lengths, padded_target_vectors), padded_target_vectors
+    return (
+        padded_sequences_vectors,
+        list(decomp_len),
+        lengths,
+        padded_target_vectors,
+    ), padded_target_vectors
 
 
 def fasttext_data_padding_with_target(batch: List) -> Tuple:
@@ -159,7 +178,12 @@ def bpemb_data_padding_with_target(batch: List[Tuple]) -> Tuple:
         ``w`` is a tensor of padded target idx.
     """
 
-    sequences_vectors, decomp_len, target_vectors, lengths = _convert_bpemb_sequence_to_tensor(batch)
+    (
+        sequences_vectors,
+        decomp_len,
+        target_vectors,
+        lengths,
+    ) = _convert_bpemb_sequence_to_tensor(batch)
 
     lengths = torch.tensor(lengths)
 
@@ -182,8 +206,16 @@ def _convert_sequence_to_tensor(batch):
     sorted_batch = sorted(batch, key=lambda x: len(x[0]), reverse=True)
 
     # We convert into np.array before as per PyTorch optimization recommendation
-    return zip(*[(torch.FloatTensor(np.array(seq_vectors)), torch.tensor(target_vector), len(seq_vectors))
-                 for seq_vectors, target_vector in sorted_batch])
+    return zip(
+        *[
+            (
+                torch.FloatTensor(np.array(seq_vectors)),
+                torch.tensor(target_vector),
+                len(seq_vectors),
+            )
+            for seq_vectors, target_vector in sorted_batch
+        ]
+    )
 
 
 def _convert_bpemb_sequence_to_tensor(batch):
@@ -193,5 +225,14 @@ def _convert_bpemb_sequence_to_tensor(batch):
     sorted_batch = sorted(batch, key=lambda x: len(x[0][1]), reverse=True)
 
     # We convert into np.array before as per PyTorch optimization recommendation
-    return zip(*[(torch.tensor(np.array(vectors)), word_decomposition_len, torch.tensor(target_vectors), len(vectors))
-                 for (vectors, word_decomposition_len), target_vectors in sorted_batch])
+    return zip(
+        *[
+            (
+                torch.tensor(np.array(vectors)),
+                word_decomposition_len,
+                torch.tensor(target_vectors),
+                len(vectors),
+            )
+            for (vectors, word_decomposition_len), target_vectors in sorted_batch
+        ]
+    )

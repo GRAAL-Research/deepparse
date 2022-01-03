@@ -10,7 +10,6 @@ from tests.parser.integration.base_retrain import AddressParserRetrainTestCase
 
 
 class BPEmbEmbeddingsModelIntegrationTest(AddressParserRetrainTestCase):
-
     @classmethod
     def setUpClass(cls):
         super(BPEmbEmbeddingsModelIntegrationTest, cls).setUpClass()
@@ -36,88 +35,110 @@ class BPEmbEmbeddingsModelIntegrationTest(AddressParserRetrainTestCase):
         model = BPEmbEmbeddingsModel(verbose=self.verbose)
         data_transform = MockedDataTransform(model)
 
-        data_loader = DataLoader(self.training_container,
-                                 collate_fn=data_transform.collate_fn,
-                                 batch_size=32,
-                                 num_workers=0)
+        data_loader = DataLoader(
+            self.training_container,
+            collate_fn=data_transform.collate_fn,
+            batch_size=32,
+            num_workers=0,
+        )
         dataset = []
         for data in data_loader:
             dataset.append(data)
         self.assertGreater(len(dataset), 0)
 
     @skipIf(platform.system() != "Windows", "Integration test on Windows env.")
-    def test_givenAWindowsOS_whenBPEmbModelCollateFnInDataLoaderNumWorkers1_thenWorkProperly(self):
+    def test_givenAWindowsOS_whenBPEmbModelCollateFnInDataLoaderNumWorkers1_thenWorkProperly(
+        self,
+    ):
         # we setup a smaller model for simplicity
         model = BPEmbEmbeddingsModel(verbose=self.verbose)
         data_transform = MockedDataTransform(model)
 
-        data_loader = DataLoader(self.training_container,
-                                 collate_fn=data_transform.collate_fn,
-                                 batch_size=32,
-                                 num_workers=1)
+        data_loader = DataLoader(
+            self.training_container,
+            collate_fn=data_transform.collate_fn,
+            batch_size=32,
+            num_workers=1,
+        )
         dataset = []
         for data in data_loader:
             dataset.append(data)
         self.assertGreater(len(dataset), 0)
 
     @skipIf(platform.system() != "Windows", "Integration test on Windows env.")
-    def test_givenAWindowsOS_whenBPEmbModelCollateFnInDataLoaderNumWorkers2_thenWorkProperly(self):
+    def test_givenAWindowsOS_whenBPEmbModelCollateFnInDataLoaderNumWorkers2_thenWorkProperly(
+        self,
+    ):
         # we setup a smaller model for simplicity
         model = BPEmbEmbeddingsModel(verbose=self.verbose)
         data_transform = MockedDataTransform(model)
 
-        data_loader = DataLoader(self.training_container,
-                                 collate_fn=data_transform.collate_fn,
-                                 batch_size=32,
-                                 num_workers=2)
+        data_loader = DataLoader(
+            self.training_container,
+            collate_fn=data_transform.collate_fn,
+            batch_size=32,
+            num_workers=2,
+        )
         dataset = []
         for data in data_loader:
             dataset.append(data)
         self.assertGreater(len(dataset), 0)
 
     @skipIf(platform.system() == "Windows", "Integration test not on Windows env.")
-    def test_givenANotWindowsOS_whenBPEmbModelCollateFnInDataLoaderForWindows_thenWorkProperly(self):
+    def test_givenANotWindowsOS_whenBPEmbModelCollateFnInDataLoaderForWindows_thenWorkProperly(
+        self,
+    ):
         # we setup a smaller model for simplicity
         model = BPEmbEmbeddingsModel(verbose=self.verbose)
 
         data_transform = MockedDataTransform(model)
 
-        data_loader = DataLoader(self.training_container,
-                                 collate_fn=data_transform.collate_fn,
-                                 batch_size=32,
-                                 num_workers=0)
+        data_loader = DataLoader(
+            self.training_container,
+            collate_fn=data_transform.collate_fn,
+            batch_size=32,
+            num_workers=0,
+        )
         dataset = []
         for data in data_loader:
             dataset.append(data)
         self.assertGreater(len(dataset), 0)
 
     @skipIf(platform.system() == "Windows", "Integration test not on Windows env.")
-    def test_givenANotWindowsOS_whenBPEmbModelCollateFnInDataLoaderForWindowsNumWorkers1_thenWorkProperly(self):
+    def test_givenANotWindowsOS_whenBPEmbModelCollateFnInDataLoaderForWindowsNumWorkers1_thenWorkProperly(
+        self,
+    ):
         # we setup a smaller model for simplicity
         model = BPEmbEmbeddingsModel(verbose=self.verbose)
 
         data_transform = MockedDataTransform(model)
 
-        data_loader = DataLoader(self.training_container,
-                                 collate_fn=data_transform.collate_fn,
-                                 batch_size=32,
-                                 num_workers=1)
+        data_loader = DataLoader(
+            self.training_container,
+            collate_fn=data_transform.collate_fn,
+            batch_size=32,
+            num_workers=1,
+        )
         dataset = []
         for data in data_loader:
             dataset.append(data)
         self.assertGreater(len(dataset), 0)
 
     @skipIf(platform.system() == "Windows", "Integration test not on Windows env.")
-    def test_givenANotWindowsOS_whenBPEmbModelCollateFnInDataLoaderForWindowsNumWorkers2_thenWorkProperly(self):
+    def test_givenANotWindowsOS_whenBPEmbModelCollateFnInDataLoaderForWindowsNumWorkers2_thenWorkProperly(
+        self,
+    ):
         # we setup a smaller model for simplicity
         model = BPEmbEmbeddingsModel(verbose=self.verbose)
 
         data_transform = MockedDataTransform(model)
 
-        data_loader = DataLoader(self.training_container,
-                                 collate_fn=data_transform.collate_fn,
-                                 batch_size=32,
-                                 num_workers=2)
+        data_loader = DataLoader(
+            self.training_container,
+            collate_fn=data_transform.collate_fn,
+            batch_size=32,
+            num_workers=2,
+        )
         dataset = []
         for data in data_loader:
             dataset.append(data)

@@ -5,7 +5,6 @@ from deepparse.converter import TagsConverter
 
 
 class TargetConverterTest(TestCase):
-
     @classmethod
     def setUpClass(cls):
         cls.a_tag = "first_tag"

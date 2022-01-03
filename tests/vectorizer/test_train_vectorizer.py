@@ -5,7 +5,6 @@ from deepparse.vectorizer import TrainVectorizer
 
 
 class TrainVectorizerTest(TestCase):
-
     def test_givenAEmbeddingVectorizer_whenCallVectorizer_thenProcess(self):
         train_vectorizer = TrainVectorizer(MagicMock(), MagicMock())
 

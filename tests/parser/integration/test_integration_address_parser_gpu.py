@@ -10,7 +10,6 @@ from tests.parser.integration.base_predict import AddressParserPredictBase
 
 @skipIf(not torch.cuda.is_available(), "no gpu available")
 class AddressParserPredictGPUTest(AddressParserPredictBase):
-
     @classmethod
     def setUpClass(cls):
         super(AddressParserPredictGPUTest, cls).setUpClass()
@@ -31,14 +30,24 @@ class AddressParserPredictGPUTest(AddressParserPredictBase):
         self.assert_properly_parse(parse_address)
 
     def test_givenAAddress_whenParseFastTextAtt_thenParseAddress(self):
-        config = {"model_type": "fasttext", "device": self.device, "verbose": False, "attention_mechanism": True}
+        config = {
+            "model_type": "fasttext",
+            "device": self.device,
+            "verbose": False,
+            "attention_mechanism": True,
+        }
         self.setup_model_with_config(config)
 
         parse_address = self.a_model(self.an_address_to_parse)
         self.assert_properly_parse(parse_address)
 
     def test_givenAAddress_whenParseBPEmbAtt_thenParseAddress(self):
-        config = {"model_type": "bpemb", "device": self.device, "verbose": False, "attention_mechanism": True}
+        config = {
+            "model_type": "bpemb",
+            "device": self.device,
+            "verbose": False,
+            "attention_mechanism": True,
+        }
         self.setup_model_with_config(config)
 
         parse_address = self.a_model(self.an_address_to_parse)
@@ -62,7 +71,6 @@ class AddressParserPredictGPUTest(AddressParserPredictBase):
 # test if num_workers > 0 is correct for the data loader
 @skipIf(not torch.cuda.is_available(), "no gpu available")
 class AddressParserPredictGPUMultiProcessTest(AddressParserPredictBase):
-
     @classmethod
     def setUpClass(cls):
         super(AddressParserPredictGPUMultiProcessTest, cls).setUpClass()
@@ -124,15 +132,29 @@ class AddressParserPredictGPUMultiProcessTest(AddressParserPredictBase):
         parse_address = self.a_model([self.an_address_to_parse, self.an_address_to_parse], num_workers=2)
         self.assert_properly_parse(parse_address, multiple_address=True)
 
-    def test_givenAAttentionModel_whenParseFastTextNumWorkers2_thenProperlyParseAddress(self):
-        config = {"model_type": "fasttext", "device": self.device, "verbose": False, "attention_mechanism": True}
+    def test_givenAAttentionModel_whenParseFastTextNumWorkers2_thenProperlyParseAddress(
+        self,
+    ):
+        config = {
+            "model_type": "fasttext",
+            "device": self.device,
+            "verbose": False,
+            "attention_mechanism": True,
+        }
         self.setup_model_with_config(config)
 
         parse_address = self.a_model(self.an_address_to_parse, num_workers=2)
         self.assert_properly_parse(parse_address)
 
-    def test_givenAAttentionModel_whenParseBPEmbNumWorkers2_thenProperlyParseAddress(self):
-        config = {"model_type": "bpemb", "device": self.device, "verbose": False, "attention_mechanism": True}
+    def test_givenAAttentionModel_whenParseBPEmbNumWorkers2_thenProperlyParseAddress(
+        self,
+    ):
+        config = {
+            "model_type": "bpemb",
+            "device": self.device,
+            "verbose": False,
+            "attention_mechanism": True,
+        }
         self.setup_model_with_config(config)
 
         parse_address = self.a_model(self.an_address_to_parse, num_workers=2)

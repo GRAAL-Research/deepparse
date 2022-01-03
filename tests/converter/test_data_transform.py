@@ -2,12 +2,16 @@ import unittest
 from unittest import TestCase
 from unittest.mock import MagicMock, patch, call
 
-from deepparse.converter import DataTransform, fasttext_data_padding_teacher_forcing, \
-    fasttext_data_padding_with_target, bpemb_data_padding_teacher_forcing, bpemb_data_padding_with_target
+from deepparse.converter import (
+    DataTransform,
+    fasttext_data_padding_teacher_forcing,
+    fasttext_data_padding_with_target,
+    bpemb_data_padding_teacher_forcing,
+    bpemb_data_padding_with_target,
+)
 
 
 class DataTransformTest(TestCase):
-
     def setUp(self) -> None:
         self.train_vectorizer_mock = MagicMock()
         self.a_fasttext_model_type = "fasttext"

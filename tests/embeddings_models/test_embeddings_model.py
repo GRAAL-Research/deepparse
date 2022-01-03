@@ -5,13 +5,11 @@ from tests.base_capture_output import CaptureOutputTestCase
 
 
 class CallAbstractedEmbeddingsModel(EmbeddingsModel):
-
     def __call__(self, *args, **kwargs):
         pass
 
 
 class EmbeddingsModelInterfaceTest(CaptureOutputTestCase):
-
     def test_whenInstantiated_thenInitProperly(self):
         embeddings_model = CallAbstractedEmbeddingsModel(verbose=False)
 

@@ -5,7 +5,11 @@ import json
 import os
 
 from deepparse.parser import AddressParser
-from models_evaluation.tools import train_country_file, zero_shot_eval_country_file, test_on_country_data
+from models_evaluation.tools import (
+    train_country_file,
+    zero_shot_eval_country_file,
+    test_on_country_data,
+)
 
 
 def main(args):
@@ -33,12 +37,18 @@ def main(args):
     training_incomplete_base_string = "training_incomplete_test_results"
     zero_shot_base_string = "zero_shot_test_results"
 
-    with open(os.path.join(saving_dir, f"{training_base_string}_{args.model_type}.json"), "w",
-              encoding="utf-8") as file:
+    with open(
+        os.path.join(saving_dir, f"{training_base_string}_{args.model_type}.json"),
+        "w",
+        encoding="utf-8",
+    ) as file:
         json.dump(training_test_results, file, ensure_ascii=False)
 
-    with open(os.path.join(saving_dir, f"{zero_shot_base_string}_{args.model_type}.json"), "w",
-              encoding="utf-8") as file:
+    with open(
+        os.path.join(saving_dir, f"{zero_shot_base_string}_{args.model_type}.json"),
+        "w",
+        encoding="utf-8",
+    ) as file:
         json.dump(zero_shot_test_results, file, ensure_ascii=False)
 
     incomplete_test_directory = args.incomplete_test_directory
@@ -53,24 +63,42 @@ def main(args):
         else:
             print(f"Error with the identification of test file type {incomplete_test_file}.")
 
-    with open(os.path.join(saving_dir, f"{training_incomplete_base_string}_{args.model_type}.json"),
-              "w",
-              encoding="utf-8") as file:
+    with open(
+        os.path.join(saving_dir, f"{training_incomplete_base_string}_{args.model_type}.json"),
+        "w",
+        encoding="utf-8",
+    ) as file:
         json.dump(incomplete_training_test_results, file, ensure_ascii=False)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("model_type", type=str, help="Model type to retrain.", choices=["fasttext", "bpemb"])
+    parser.add_argument(
+        "model_type",
+        type=str,
+        help="Model type to retrain.",
+        choices=["fasttext", "bpemb"],
+    )
     parser.add_argument("test_directory", type=str, help="Path to the test directory.")
-    parser.add_argument("incomplete_test_directory", type=str, help="Path the to incomplete test directory.")
+    parser.add_argument(
+        "incomplete_test_directory",
+        type=str,
+        help="Path the to incomplete test directory.",
+    )
     parser.add_argument("model_path", type=str, help="Path to the model to evaluate on.")
-    parser.add_argument("--batch_size", type=int, default=2048, help="Batch size of the data to evaluate on.")
-    parser.add_argument("--results_type",
-                        type=str,
-                        default="actual",
-                        help="Either or not the evaluation is for new models.")
+    parser.add_argument(
+        "--batch_size",
+        type=int,
+        default=2048,
+        help="Batch size of the data to evaluate on.",
+    )
+    parser.add_argument(
+        "--results_type",
+        type=str,
+        default="actual",
+        help="Either or not the evaluation is for new models.",
+    )
     args_parser = parser.parse_args()
 
     main(args_parser)

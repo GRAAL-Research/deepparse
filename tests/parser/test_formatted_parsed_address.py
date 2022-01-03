@@ -9,16 +9,26 @@ from tests.parser.base import FormattedParsedAddressBase
 
 
 class FormattedParsedAddressTest(FormattedParsedAddressBase):
-
     @classmethod
     def setUpClass(cls):
         cls.a_address_str = "3 test road"
         cls.a_complete_address_str = "3 test road unit west city province postal_code delivery"
-        cls.a_parsed_address = [("3", "StreetNumber"), ("test", "StreetName"), ("road", "StreetName")]
-        cls.a_complete_parsed_address = [("3", "StreetNumber"), ("test", "StreetName"), ("road", "StreetName"),
-                                         ("unit", "Unit"), ("west", "Orientation"), ("city", "Municipality"),
-                                         ("province", "Province"), ("postal_code", "PostalCode"),
-                                         ("delivery", "GeneralDelivery")]
+        cls.a_parsed_address = [
+            ("3", "StreetNumber"),
+            ("test", "StreetName"),
+            ("road", "StreetName"),
+        ]
+        cls.a_complete_parsed_address = [
+            ("3", "StreetNumber"),
+            ("test", "StreetName"),
+            ("road", "StreetName"),
+            ("unit", "Unit"),
+            ("west", "Orientation"),
+            ("city", "Municipality"),
+            ("province", "Province"),
+            ("postal_code", "PostalCode"),
+            ("delivery", "GeneralDelivery"),
+        ]
 
         cls.a_address_repr = "FormattedParsedAddress<StreetNumber='3', StreetName='test road'>"
         cls.a_address = {cls.a_address_str: cls.a_parsed_address}
@@ -34,7 +44,7 @@ class FormattedParsedAddressTest(FormattedParsedAddressBase):
             "Province": None,
             "PostalCode": None,
             "GeneralDelivery": None,
-            "EOS": None
+            "EOS": None,
         }
 
         cls.a_complete_parsed_address_in_dict_format = {
@@ -46,7 +56,7 @@ class FormattedParsedAddressTest(FormattedParsedAddressBase):
             "Province": "province",
             "PostalCode": "postal_code",
             "GeneralDelivery": "delivery",
-            "EOS": None
+            "EOS": None,
         }
 
     def _capture_output(self):
@@ -111,7 +121,9 @@ class FormattedParsedAddressTest(FormattedParsedAddressBase):
         expected = {"StreetNumber": "3"}
         self.assertEqual(actual, expected)
 
-    def test_whenFormattedAddressDefaultSettings_thenReturnExpectedOrderAndDontReturnNoneComponents(self):
+    def test_whenFormattedAddressDefaultSettings_thenReturnExpectedOrderAndDontReturnNoneComponents(
+        self,
+    ):
         actual = self.parsed_address.format_address()
         expected = self.a_address_str
 
@@ -124,8 +136,14 @@ class FormattedParsedAddressTest(FormattedParsedAddressBase):
 
     def test_whenFormattedAddressFieldsChanged_thenReturnNewOrderFields(self):
         a_different_order = [
-            "GeneralDelivery", "Unit", "StreetName", "StreetNumber", "Orientation", "Municipality", "Province",
-            "PostalCode"
+            "GeneralDelivery",
+            "Unit",
+            "StreetName",
+            "StreetNumber",
+            "Orientation",
+            "Municipality",
+            "Province",
+            "PostalCode",
         ]
         actual = self.parsed_address.format_address(fields=a_different_order)
         expected = "test road 3"
@@ -137,7 +155,9 @@ class FormattedParsedAddressTest(FormattedParsedAddressBase):
 
         self.assertEqual(actual, expected)
 
-    def test_whenFormattedAddressFieldsSeparator_thenReturnAddressWithFieldsSeparator(self):
+    def test_whenFormattedAddressFieldsSeparator_thenReturnAddressWithFieldsSeparator(
+        self,
+    ):
         actual = self.parsed_address.format_address(field_separator=", ")
         expected = "3, test road"
 
@@ -148,7 +168,9 @@ class FormattedParsedAddressTest(FormattedParsedAddressBase):
 
         self.assertEqual(actual, expected)
 
-    def test_whenFormattedAddressCapitalizeFields_thenReturnAddressWithFieldsCapitalize(self):
+    def test_whenFormattedAddressCapitalizeFields_thenReturnAddressWithFieldsCapitalize(
+        self,
+    ):
         actual = self.parsed_address.format_address(capitalize_fields=["StreetName"])
         expected = "3 Test road"
 
@@ -166,7 +188,9 @@ class FormattedParsedAddressTest(FormattedParsedAddressBase):
         with self.assertRaises(KeyError):
             self.complete_parsed_address.format_address(capitalize_fields=["not_a_field"])
 
-    def test_whenFormattedAddressUpperCaseFields_thenReturnAddressWithFieldsUpperCase(self):
+    def test_whenFormattedAddressUpperCaseFields_thenReturnAddressWithFieldsUpperCase(
+        self,
+    ):
         actual = self.parsed_address.format_address(upper_case_fields=["StreetName"])
         expected = "3 TEST ROAD"
 
@@ -184,16 +208,26 @@ class FormattedParsedAddressTest(FormattedParsedAddressBase):
         with self.assertRaises(KeyError):
             self.complete_parsed_address.format_address(upper_case_fields=["not_a_field"])
 
-    def test_whenFormattedAddressAllArgsChanged_thenReturnAddressProperlyFormatted(self):
+    def test_whenFormattedAddressAllArgsChanged_thenReturnAddressProperlyFormatted(
+        self,
+    ):
         a_different_order = [
-            "GeneralDelivery", "Unit", "StreetName", "StreetNumber", "Orientation", "Municipality", "Province",
-            "PostalCode"
+            "GeneralDelivery",
+            "Unit",
+            "StreetName",
+            "StreetNumber",
+            "Orientation",
+            "Municipality",
+            "Province",
+            "PostalCode",
         ]
 
-        actual = self.complete_parsed_address.format_address(fields=a_different_order,
-                                                             field_separator=", ",
-                                                             capitalize_fields=["StreetName"],
-                                                             upper_case_fields=["PostalCode", "Province"])
+        actual = self.complete_parsed_address.format_address(
+            fields=a_different_order,
+            field_separator=", ",
+            capitalize_fields=["StreetName"],
+            upper_case_fields=["PostalCode", "Province"],
+        )
         expected = "delivery, unit, Test road, 3, west, city, PROVINCE, POSTAL_CODE"
 
         self.assertEqual(actual, expected)
@@ -206,8 +240,14 @@ class FormattedParsedAddressTest(FormattedParsedAddressBase):
 
         actual = self.complete_parsed_address.inferred_order
         expected = [
-            "StreetNumber", "StreetName", "Unit", "Orientation", "Municipality", "Province", "PostalCode",
-            "GeneralDelivery"
+            "StreetNumber",
+            "StreetName",
+            "Unit",
+            "Orientation",
+            "Municipality",
+            "Province",
+            "PostalCode",
+            "GeneralDelivery",
         ]
 
         self.assertEqual(actual, expected)
@@ -222,7 +262,11 @@ class FormattedParsedAddressTest(FormattedParsedAddressBase):
 
     def test_whenParsedAddressAsEOSTag_thenProperlySet(self):
         a_parsed_address_with_eos_tag = {
-            self.a_address_str: [("3", "StreetNumber"), ("test", "StreetName"), ("road", "EOS")]
+            self.a_address_str: [
+                ("3", "StreetNumber"),
+                ("test", "StreetName"),
+                ("road", "EOS"),
+            ]
         }
 
         actual_parsed_address = FormattedParsedAddress(a_parsed_address_with_eos_tag)

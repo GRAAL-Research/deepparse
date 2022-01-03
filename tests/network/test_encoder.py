@@ -6,7 +6,6 @@ from deepparse.network import Encoder
 
 
 class EncoderTest(TestCase):
-
     def setUp(self) -> None:
         self.input_size_dim = 300
         self.hidden_size = 1024
@@ -36,7 +35,15 @@ class EncoderTest(TestCase):
                     encoder.forward(to_predict_mock, lengths_tensor_mock)
 
                     pack_padded_sequence_mock.assert_has_calls(
-                        [call(to_predict_mock, lengths_tensor_mock.cpu(), batch_first=True, enforce_sorted=False)])
+                        [
+                            call(
+                                to_predict_mock,
+                                lengths_tensor_mock.cpu(),
+                                batch_first=True,
+                                enforce_sorted=False,
+                            )
+                        ]
+                    )
                     lstm_mock.assert_has_calls([call()(packed_sequence_mock)])
 
 

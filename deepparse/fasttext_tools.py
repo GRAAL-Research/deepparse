@@ -77,7 +77,7 @@ def download_fasttext_embeddings(saving_dir: str, verbose: bool = True) -> str:
     os.makedirs(saving_dir, exist_ok=True)
 
     file_name = "cc.fr.300.bin"
-    gz_file_name = "%s.gz" % file_name
+    gz_file_name = f"{file_name}.gz"
 
     file_name_path = os.path.join(saving_dir, file_name)
     if os.path.isfile(file_name_path):
@@ -102,7 +102,7 @@ def download_gz_model(gz_file_name: str, saving_path: str, verbose: bool = True)
     saving directory (saving_path).
     """
 
-    url = "https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/%s" % gz_file_name
+    url = f"https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/{gz_file_name}"
     if verbose:
         print(
             "The fastText pre-trained word embeddings will be downloaded (6.8 GO), "
@@ -114,7 +114,7 @@ def download_gz_model(gz_file_name: str, saving_path: str, verbose: bool = True)
 # No modification, we just need to call our _print_progress function
 def _download_file(url: str, write_file_name: str, chunk_size: int = 2 ** 13, verbose: bool = True) -> None:
     if verbose:
-        print("Downloading %s" % url)
+        print(f"Downloading {url}")
     response = urlopen(url)
     if hasattr(response, "getheader"):
         file_size = int(response.getheader("Content-Length").strip())

@@ -4,6 +4,7 @@ from deepparse.dataset_container import DatasetContainer
 
 
 def create_file(path: str, content: str):
+    # pylint: disable=unspecified-encoding
     """ "
     Function to create a file for test
     """

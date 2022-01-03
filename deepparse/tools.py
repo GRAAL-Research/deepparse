@@ -12,10 +12,10 @@ def latest_version(model: str, cache_path: str) -> bool:
     """
     Verify if the local model is the latest.
     """
-    with open(os.path.join(cache_path, model + ".version")) as local_model_hash_file:
+    with open(os.path.join(cache_path, model + ".version"), encoding="utf-8") as local_model_hash_file:
         local_model_hash_version = local_model_hash_file.readline()
     download_from_url(model, cache_path, "version")
-    with open(os.path.join(cache_path, model + ".version")) as remote_model_hash_file:
+    with open(os.path.join(cache_path, model + ".version"), encoding="utf-8") as remote_model_hash_file:
         remote_model_hash_version = remote_model_hash_file.readline()
     return local_model_hash_version.strip() == remote_model_hash_version.strip()
 
@@ -28,7 +28,7 @@ def download_from_url(file_name: str, saving_dir: str, file_extension: str):
     r = requests.get(url, timeout=5)
     r.raise_for_status()  # Raise exception
     os.makedirs(saving_dir, exist_ok=True)
-    with open(os.path.join(saving_dir, f"{file_name}.{file_extension}"), "wb") as file:
+    with open(os.path.join(saving_dir, f"{file_name}.{file_extension}"), "wb", encoding="utf-8") as file:
         file.write(r.content)
 
 

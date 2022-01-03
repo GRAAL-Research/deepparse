@@ -698,7 +698,7 @@ class AddressParser:
                         raise ValueError("String value should follow the pattern 'cuda:[int]'.")
                 elif isinstance(device, int):
                     if device >= 0:
-                        self.device = torch.device("cuda:%d" % device)
+                        self.device = torch.device(f"cuda:{device}")
                     else:
                         raise ValueError("Device should not be a negative number.")
                 else:

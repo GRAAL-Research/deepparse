@@ -7,14 +7,14 @@ from torch.utils.data import Dataset
 
 class DatasetContainer(Dataset, ABC):
     """
-    Interface for the dataset. This interface define most of the method that the dataset needs to define.
+    Interface for the dataset. This interface defines most of the method that the dataset needs to define.
     If you define another dataset container, the init must define the attribute data.
     """
 
     @abstractmethod
     def __init__(self) -> None:
         """
-        Need to be define by child class.
+        Need to be defined by child class.
         """
         self.data = None
 

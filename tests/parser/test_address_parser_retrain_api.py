@@ -298,6 +298,48 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         except ValueError as actual_error_message:
             self.assertEqual(actual_error_message.args[0], expect_error_message)
 
+    @patch("deepparse.parser.address_parser.torch.save")
+    @patch(
+        "deepparse.parser.address_parser.Experiment",
+        **{"return_value.train.side_effect": RuntimeError("Error during training")},
+    )
+    @patch("deepparse.parser.address_parser.os.listdir", return_value=[])
+    @patch("deepparse.parser.address_parser.SGD")
+    @patch("deepparse.parser.address_parser.DataTransform")
+    @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
+    @patch("deepparse.parser.address_parser.fasttext_data_padding")
+    @patch("deepparse.parser.address_parser.FastTextVectorizer")
+    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
+    def test_givenAModelDirectoryWithoutOtherRetrainModel_whenRetrainRaisesRuntimeError_thenReRaiseError(
+        self,
+        download_weights_mock,
+        embeddings_model_mock,
+        vectorizer_model_mock,
+        data_padding_mock,
+        model_mock,
+        data_transform_mock,
+        optimizer_mock,
+        experiment_mock,
+        torch_save_mock,
+        os_mock,
+    ):
+        # os_mock.listdir.return_value = []
+        self.address_parser = AddressParser(
+            model_type=self.a_best_model_type,
+            device=self.a_device,
+            verbose=self.verbose,
+        )
+
+        with self.assertRaises(RuntimeError):
+            self.address_parser_retrain_call()
+
+        expect_error_message = "Error during training"
+        try:
+            self.address_parser_retrain_call()
+        except RuntimeError as actual_error_message:
+            self.assertEqual(actual_error_message.args[0], expect_error_message)
+
     @patch("deepparse.parser.address_parser.Experiment")
     @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
     @patch("deepparse.parser.address_parser.fasttext_data_padding")

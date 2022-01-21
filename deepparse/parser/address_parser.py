@@ -817,6 +817,12 @@ class AddressParser:
         Handle the model type name matching with proper seq2seq model type name.
         """
         model_type = model_type.lower()
+        
+        if 'attention' in model_type:
+            model_type = model_type.replace('attention', '')
+            if not attention_mechanism:
+                raise ValueError(f"Model-type {model_type} requires attention mechanism.")
+        
         if model_type in ("lightest", "fasttext-light"):
             model_type = "fasttext-light"  # We change name to 'fasttext-light' since lightest = fasttext-light
             formatted_name = "FastTextLight"

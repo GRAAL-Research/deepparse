@@ -80,7 +80,8 @@ class AddressParser:
             - bpemb (need ~2 GO of RAM to be used),
             - fastest (quicker to process one address) (equivalent to fasttext),
             - lightest (the one using the less RAM and GPU usage) (equivalent to fasttext-light),
-            - best (the best accuracy performance) (equivalent to bpemb).
+            - best (the best accuracy performance) (equivalent to bpemb). To further improve performance,
+                consider using bpemb with the attention mechanism using the `attention_mechanism` flag.
 
             The default value is "best" for the most accurate model. Ignored if ``path_to_retrained_model`` is not
             ``None``.

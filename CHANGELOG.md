@@ -141,3 +141,9 @@
 
 - Fixed the printing capture to raise error with Poutyne as of version 1.8. We keep the previous approach as for compatibilities with previous Poutyne version.
 - Added a flag to disable or not Tensorboard during retrain.
+
+## 0.6.4
+
+- Bugfix reloading of retrain attention model (PR #110)
+- Improve error handling
+- Improve doc

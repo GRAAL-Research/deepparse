@@ -1,3 +1,4 @@
+# pylint: disable=too-many-public-methods
 import os
 import unittest
 from tempfile import TemporaryDirectory
@@ -333,6 +334,45 @@ class ToolsTests(CaptureOutputTestCase):
                 if attention_mechanism_setting:
                     expected_formatted_model_type += "Attention"
                 self.assertEqual(expected_formatted_model_type, actual_formatted_model_type)
+
+    def test_givenAModelTypeWithAttentionInName_whenHandleModelNameWithAttFlag_thenReturnProperModelType(self):
+        expected_model_type = "fasttextAttention"
+        actual_model_type, _ = handle_model_name("fasttextAttention", attention_mechanism=True)
+        self.assertEqual(expected_model_type, actual_model_type)
+
+        expected_model_type = "bpembAttention"
+        actual_model_type, _ = handle_model_name("bpembAttention", attention_mechanism=True)
+        self.assertEqual(expected_model_type, actual_model_type)
+
+    def test_givenAModelTypeWithAttentionInName_whenHandleModelNameWithAttFlag_thenReturnProperFormattedModelType(self):
+        expected_formatted_model_type = "FastTextAttention"
+        _, actual_formatted_model_type = handle_model_name("fasttextAttention", attention_mechanism=True)
+        self.assertEqual(expected_formatted_model_type, actual_formatted_model_type)
+
+        expected_formatted_model_type = "BPEmbAttention"
+        _, actual_formatted_model_type = handle_model_name("bpembAttention", attention_mechanism=True)
+        self.assertEqual(expected_formatted_model_type, actual_formatted_model_type)
+
+    def test_givenAModelTypeWithAttentionInName_whenHandleModelNameWithoutAttFlag_thenRaiseError(self):
+        with self.assertRaises(ValueError):
+            handle_model_name("fasttextAttention", attention_mechanism=False)
+
+        with self.assertRaises(ValueError):
+            handle_model_name("bpembAttention", attention_mechanism=False)
+
+    def test_givenAInvalidModelType_whenHandleModelName_thenRaiseError(self):
+        model_type = "invalid_model_type"
+        with self.assertRaises(ValueError):
+            handle_model_name(model_type, attention_mechanism=False)
+
+        expect_error_message = (
+            f"Could not handle {model_type}. Read the docs at https://deepparse.org/ for possible model types."
+        )
+
+        try:
+            handle_model_name(model_type, attention_mechanism=False)
+        except ValueError as actual_error_message:
+            self.assertEqual(actual_error_message.args[0], expect_error_message)
 
 
 if __name__ == "__main__":

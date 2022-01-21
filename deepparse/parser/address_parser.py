@@ -546,7 +546,7 @@ class AddressParser:
                             f" the one in the {logging_path}. Verify version."
                         ) from error
             else:
-                raise RuntimeError(error) from error
+                raise RuntimeError(error.args[0]) from error
         else:
             file_path = os.path.join(logging_path, f"retrained_{self.model_type}_address_parser.ckpt")
             torch_save = {

@@ -98,6 +98,7 @@ class AddressParser:
         verbose (bool): Turn on/off the verbosity of the model weights download and loading. The default value is True.
         path_to_retrained_model (Union[str, None]): The path to the retrained model to use for prediction. We will
             `'infer'` the ``model_type`` of the retrained model. Default is None, meaning we use our pre-trained model.
+            If the retrained model uses an attention mechanism, `attention_mechanism` needs to be set to True.
 
     Note:
         For both the networks, we will download the pre-trained weights and embeddings in the ``.cache`` directory
@@ -159,6 +160,15 @@ class AddressParser:
 
             # We don't give the model_type since it's ignored when using path_to_retrained_model
             address_parser = AddressParser(path_to_retrained_model='/path_to_a_retrain_fasttext_model')
+            parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
+
+        Using a retrained model with attention
+
+        .. code-block:: python
+
+            address_parser = AddressParser(model_type="fasttext",
+                                           path_to_retrained_model='/path_to_a_retrain_fasttext_attention_model',
+                                           attention_mechanism=True)
             parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
 
     """

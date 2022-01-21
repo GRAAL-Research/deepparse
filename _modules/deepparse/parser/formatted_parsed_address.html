@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>deepparse.parser.formatted_parsed_address &mdash; deepparse 0.6.3 documentation</title>
+  <title>deepparse.parser.formatted_parsed_address &mdash; deepparse 0.6.4 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -28,7 +28,7 @@
             <img src="../../../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.6.3
+                0.6.4
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -80,8 +80,15 @@
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="n">FIELDS</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;StreetNumber&quot;</span><span class="p">,</span> <span class="s2">&quot;Unit&quot;</span><span class="p">,</span> <span class="s2">&quot;StreetName&quot;</span><span class="p">,</span> <span class="s2">&quot;Orientation&quot;</span><span class="p">,</span> <span class="s2">&quot;Municipality&quot;</span><span class="p">,</span> <span class="s2">&quot;Province&quot;</span><span class="p">,</span> <span class="s2">&quot;PostalCode&quot;</span><span class="p">,</span> <span class="s2">&quot;GeneralDelivery&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;EOS&quot;</span>
+    <span class="s2">&quot;StreetNumber&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Unit&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;StreetName&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Orientation&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Municipality&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Province&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PostalCode&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;GeneralDelivery&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;EOS&quot;</span><span class="p">,</span>
 <span class="p">]</span>
 
 
@@ -137,7 +144,8 @@
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">values</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_get_attr_repr</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_get_attr_repr</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span>
             <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;raw_address&quot;</span><span class="p">,</span> <span class="s2">&quot;address_parsed_components&quot;</span><span class="p">,</span> <span class="s2">&quot;inferred_order&quot;</span><span class="p">)</span>
         <span class="p">]</span>
         <span class="n">joined_values</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span> <span class="k">if</span> <span class="n">v</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
@@ -159,11 +167,13 @@
                 <span class="k">return</span> <span class="kc">False</span>
         <span class="k">return</span> <span class="kc">True</span>
 
-<div class="viewcode-block" id="FormattedParsedAddress.format_address"><a class="viewcode-back" href="../../../parser.html#deepparse.parser.FormattedParsedAddress.format_address">[docs]</a>    <span class="k">def</span> <span class="nf">format_address</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                       <span class="n">fields</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                       <span class="n">capitalize_fields</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                       <span class="n">upper_case_fields</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                       <span class="n">field_separator</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="FormattedParsedAddress.format_address"><a class="viewcode-back" href="../../../parser.html#deepparse.parser.FormattedParsedAddress.format_address">[docs]</a>    <span class="k">def</span> <span class="nf">format_address</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">fields</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">capitalize_fields</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">upper_case_fields</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">field_separator</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to format the address components in a specific order. We also filter the empty components (None).</span>
 <span class="sd">        By default, the order is `&#39;StreetNumber, Unit, StreetName, Orientation, Municipality, Province, PostalCode,</span>
@@ -316,7 +326,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020-2021, Marouane Yassine &amp; David Beauchemin.</p>
+    <p>&#169; Copyright 2020-2022, Marouane Yassine &amp; David Beauchemin.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

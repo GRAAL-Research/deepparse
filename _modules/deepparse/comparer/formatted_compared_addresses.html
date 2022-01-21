@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>deepparse.comparer.formatted_compared_addresses &mdash; deepparse 0.6.3 documentation</title>
+  <title>deepparse.comparer.formatted_compared_addresses &mdash; deepparse 0.6.4 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -28,7 +28,7 @@
             <img src="../../../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.6.3
+                0.6.4
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -108,6 +108,7 @@
 <span class="sd">                                                        (&quot;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&quot;,</span>
 <span class="sd">                                                        &quot;450 rue des Lilas Ouest Quebec city Quebec G1L 1B6&quot;))</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">first_address</span><span class="p">:</span> <span class="n">FormattedParsedAddress</span>
     <span class="n">second_address</span><span class="p">:</span> <span class="n">FormattedParsedAddress</span>
     <span class="n">origin</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
@@ -123,8 +124,11 @@
 <span class="sd">            A list of the boolean.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bool_address_tags_are_the_same</span><span class="p">(</span>
-            <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">first_address</span><span class="o">.</span><span class="n">to_list_of_tuples</span><span class="p">(),</span>
-             <span class="bp">self</span><span class="o">.</span><span class="n">second_address</span><span class="o">.</span><span class="n">to_list_of_tuples</span><span class="p">()])</span>
+            <span class="p">[</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">first_address</span><span class="o">.</span><span class="n">to_list_of_tuples</span><span class="p">(),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">second_address</span><span class="o">.</span><span class="n">to_list_of_tuples</span><span class="p">(),</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">equivalent</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
@@ -226,24 +230,28 @@
         <span class="n">codes</span> <span class="o">=</span> <span class="n">SequenceMatcher</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">string_one</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">string_two</span><span class="p">)</span><span class="o">.</span><span class="n">get_opcodes</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">code</span> <span class="ow">in</span> <span class="n">codes</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">code</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;equal&quot;</span><span class="p">:</span>
-                <span class="n">result</span> <span class="o">+=</span> <span class="n">white</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="p">(</span><span class="n">string_one</span><span class="p">[</span><span class="n">code</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span><span class="n">code</span><span class="p">[</span><span class="mi">2</span><span class="p">]]))</span>
+                <span class="n">result</span> <span class="o">+=</span> <span class="n">white</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="p">(</span><span class="n">string_one</span><span class="p">[</span><span class="n">code</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">:</span> <span class="n">code</span><span class="p">[</span><span class="mi">2</span><span class="p">]]))</span>
             <span class="k">elif</span> <span class="n">code</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;delete&quot;</span><span class="p">:</span>
-                <span class="n">result</span> <span class="o">+=</span> <span class="n">color_1</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">code_type</span><span class="o">=</span><span class="n">code_type</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">string_one</span><span class="p">[</span><span class="n">code</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span><span class="n">code</span><span class="p">[</span><span class="mi">2</span><span class="p">]])</span>
+                <span class="n">result</span> <span class="o">+=</span> <span class="n">color_1</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">code_type</span><span class="o">=</span><span class="n">code_type</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">string_one</span><span class="p">[</span><span class="n">code</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">:</span> <span class="n">code</span><span class="p">[</span><span class="mi">2</span><span class="p">]])</span>
             <span class="k">elif</span> <span class="n">code</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;insert&quot;</span><span class="p">:</span>
-                <span class="n">result</span> <span class="o">+=</span> <span class="n">color_2</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">code_type</span><span class="o">=</span><span class="n">code_type</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">string_two</span><span class="p">[</span><span class="n">code</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span><span class="n">code</span><span class="p">[</span><span class="mi">4</span><span class="p">]])</span>
+                <span class="n">result</span> <span class="o">+=</span> <span class="n">color_2</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">code_type</span><span class="o">=</span><span class="n">code_type</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">string_two</span><span class="p">[</span><span class="n">code</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="p">:</span> <span class="n">code</span><span class="p">[</span><span class="mi">4</span><span class="p">]])</span>
             <span class="k">elif</span> <span class="n">code</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;replace&quot;</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">code</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">code</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span>
-                    <span class="n">result</span> <span class="o">+=</span> <span class="p">(</span><span class="n">color_1</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">code_type</span><span class="o">=</span><span class="n">code_type</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">string_one</span><span class="p">[</span><span class="n">code</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span><span class="n">code</span><span class="p">[</span><span class="mi">2</span><span class="p">]])</span> <span class="o">+</span>
-                               <span class="n">color_2</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">code_type</span><span class="o">=</span><span class="n">code_type</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">string_two</span><span class="p">[</span><span class="n">code</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span><span class="n">code</span><span class="p">[</span><span class="mi">4</span><span class="p">]]))</span>
+                    <span class="n">result</span> <span class="o">+=</span> <span class="n">color_1</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">code_type</span><span class="o">=</span><span class="n">code_type</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">string_one</span><span class="p">[</span><span class="n">code</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">:</span> <span class="n">code</span><span class="p">[</span><span class="mi">2</span><span class="p">]])</span> <span class="o">+</span> <span class="n">color_2</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">code_type</span><span class="o">=</span><span class="n">code_type</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">string_two</span><span class="p">[</span><span class="n">code</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="p">:</span> <span class="n">code</span><span class="p">[</span><span class="mi">4</span><span class="p">]]</span>
+                    <span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">result</span> <span class="o">+=</span> <span class="p">(</span><span class="n">color_2</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">code_type</span><span class="o">=</span><span class="n">code_type</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">string_two</span><span class="p">[</span><span class="n">code</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span><span class="n">code</span><span class="p">[</span><span class="mi">4</span><span class="p">]])</span> <span class="o">+</span>
-                               <span class="n">color_1</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">code_type</span><span class="o">=</span><span class="n">code_type</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">string_one</span><span class="p">[</span><span class="n">code</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span><span class="n">code</span><span class="p">[</span><span class="mi">2</span><span class="p">]]))</span>
+                    <span class="n">result</span> <span class="o">+=</span> <span class="n">color_2</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">code_type</span><span class="o">=</span><span class="n">code_type</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">string_two</span><span class="p">[</span><span class="n">code</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="p">:</span> <span class="n">code</span><span class="p">[</span><span class="mi">4</span><span class="p">]])</span> <span class="o">+</span> <span class="n">color_1</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">code_type</span><span class="o">=</span><span class="n">code_type</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">string_one</span><span class="p">[</span><span class="n">code</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">:</span> <span class="n">code</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span>
+                    <span class="p">)</span>
         <span class="k">return</span> <span class="n">result</span>
 
-    <span class="k">def</span> <span class="nf">_get_tags_diff_color</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                             <span class="n">name_one</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;first address&quot;</span><span class="p">,</span>
-                             <span class="n">name_two</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;second address&quot;</span><span class="p">,</span>
-                             <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_get_tags_diff_color</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">name_one</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;first address&quot;</span><span class="p">,</span>
+        <span class="n">name_two</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;second address&quot;</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Print the output of the string with colour codes that represent the differences between the two strings.</span>
 
@@ -266,9 +274,19 @@
 
         <span class="k">for</span> <span class="n">address_component_name</span> <span class="ow">in</span> <span class="n">address_component_names</span><span class="p">:</span>
             <span class="n">list_of_list_tag</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">for</span> <span class="n">parsed_address</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">first_address</span><span class="o">.</span><span class="n">to_list_of_tuples</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">second_address</span><span class="o">.</span><span class="n">to_list_of_tuples</span><span class="p">()]:</span>
-                <span class="n">list_of_list_tag</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">tag</span> <span class="k">for</span> <span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">tag_name</span><span class="p">)</span> <span class="ow">in</span> <span class="n">parsed_address</span> \
-                                                  <span class="k">if</span> <span class="n">tag_name</span> <span class="o">==</span> <span class="n">address_component_name</span> <span class="ow">and</span> <span class="n">tag</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]))</span>
+            <span class="k">for</span> <span class="n">parsed_address</span> <span class="ow">in</span> <span class="p">[</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">first_address</span><span class="o">.</span><span class="n">to_list_of_tuples</span><span class="p">(),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">second_address</span><span class="o">.</span><span class="n">to_list_of_tuples</span><span class="p">(),</span>
+            <span class="p">]:</span>
+                <span class="n">list_of_list_tag</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                        <span class="p">[</span>
+                            <span class="n">tag</span>
+                            <span class="k">for</span> <span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">tag_name</span><span class="p">)</span> <span class="ow">in</span> <span class="n">parsed_address</span>
+                            <span class="k">if</span> <span class="n">tag_name</span> <span class="o">==</span> <span class="n">address_component_name</span> <span class="ow">and</span> <span class="n">tag</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                        <span class="p">]</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
 
             <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_color_diff</span><span class="p">(</span><span class="n">list_of_list_tag</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">list_of_list_tag</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 
@@ -295,12 +313,22 @@
         <span class="k">for</span> <span class="n">address_component_name</span> <span class="ow">in</span> <span class="n">unique_address_component_names</span><span class="p">:</span>
             <span class="n">list_of_list_tag</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">parsed_address</span> <span class="ow">in</span> <span class="n">parsed_addresses</span><span class="p">:</span>
-                <span class="n">list_of_list_tag</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
-                    <span class="n">tag</span> <span class="k">for</span> <span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">tag_name</span><span class="p">)</span> <span class="ow">in</span> <span class="n">parsed_address</span> <span class="k">if</span> <span class="n">tag_name</span> <span class="o">==</span> <span class="n">address_component_name</span> <span class="ow">and</span> <span class="n">tag</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-                <span class="p">]))</span>
+                <span class="n">list_of_list_tag</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                        <span class="p">[</span>
+                            <span class="n">tag</span>
+                            <span class="k">for</span> <span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">tag_name</span><span class="p">)</span> <span class="ow">in</span> <span class="n">parsed_address</span>
+                            <span class="k">if</span> <span class="n">tag_name</span> <span class="o">==</span> <span class="n">address_component_name</span> <span class="ow">and</span> <span class="n">tag</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                        <span class="p">]</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
 
             <span class="n">list_of_bool_and_tag</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                <span class="p">(</span><span class="n">address_component_name</span><span class="p">,</span> <span class="nb">all</span><span class="p">(</span><span class="n">x</span> <span class="o">==</span> <span class="n">list_of_list_tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">list_of_list_tag</span><span class="p">)))</span>
+                <span class="p">(</span>
+                    <span class="n">address_component_name</span><span class="p">,</span>
+                    <span class="nb">all</span><span class="p">(</span><span class="n">x</span> <span class="o">==</span> <span class="n">list_of_list_tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">list_of_list_tag</span><span class="p">),</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">list_of_bool_and_tag</span>
 
@@ -333,7 +361,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020-2021, Marouane Yassine &amp; David Beauchemin.</p>
+    <p>&#169; Copyright 2020-2022, Marouane Yassine &amp; David Beauchemin.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

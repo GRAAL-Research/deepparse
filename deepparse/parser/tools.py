@@ -58,3 +58,43 @@ def indices_splitting(num_data: int, train_ratio: float, seed: int = 42):
     valid_indices = indices[split:]
 
     return train_indices, valid_indices
+
+
+def handle_model_name(model_type: str, attention_mechanism: bool) -> Tuple[str, str]:
+    """
+    Handle the model type name matching with proper seq2seq model type name.
+    Args:
+        model_type (str): The type of the model.
+        attention_mechanism (bool): Either or not the model uses an attention mechanism.
+
+    Return:
+        A tuple of two strings where the first element is the model_type and the second is the formatted name.
+    """
+    model_type = model_type.lower()
+
+    # To handle retrained model using attention mechanism.
+    if 'attention' in model_type:
+        if not attention_mechanism:
+            raise ValueError(
+                f"Model-type {model_type} requires attention mechanism. " f"Set attention_mechanism to True."
+            )
+        model_type = model_type.replace('attention', '')
+
+    if model_type in ("lightest", "fasttext-light"):
+        model_type = "fasttext-light"  # We change name to 'fasttext-light' since lightest = fasttext-light
+        formatted_name = "FastTextLight"
+    elif model_type in ("fastest", "fasttext"):
+        model_type = "fasttext"  # We change name to fasttext since fastest = fasttext
+        formatted_name = "FastText"
+    elif model_type in ("best", "bpemb"):
+        model_type = "bpemb"  # We change name to bpemb since best = bpemb
+        formatted_name = "BPEmb"
+    else:
+        raise ValueError(
+            f"Could not handle {model_type}. Read the docs at https://deepparse.org/ for possible model types."
+        )
+
+    if attention_mechanism:
+        model_type += "Attention"
+        formatted_name += "Attention"
+    return model_type, formatted_name

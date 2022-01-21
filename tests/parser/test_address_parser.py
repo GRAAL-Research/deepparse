@@ -18,10 +18,10 @@ class AddressParserTest(AddressParserPredictTestCase):
     @classmethod
     def setUpClass(cls):
         super(AddressParserTest, cls).setUpClass()
-        cls.a_BPemb_name = "BPEmbAddressParser"
+        cls.a_BPEmb_name = "BPEmbAddressParser"
         cls.a_fasttext_name = "FastTextAddressParser"
         cls.a_fasttext_light_name = "FastTextLightAddressParser"
-        cls.a_BPemb_att_name = "BPEmbAttentionAddressParser"
+        cls.a_BPEmb_att_name = "BPEmbAttentionAddressParser"
         cls.a_fasttext_att_name = "FastTextAttentionAddressParser"
         cls.a_fasttext_att_light_name = "FastTextLightAttentionAddressParser"
         cls.a_rounding = 5
@@ -1121,7 +1121,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
     @patch("deepparse.parser.address_parser.BPEmbVectorizer")
     @patch("deepparse.parser.address_parser.bpemb_data_padding")
-    def test_givenAnBPembAddressParser_whenStrAddressParser_thenStringIsModelTypeAddressParse(
+    def test_givenAnBPEmbAddressParser_whenStrAddressParser_thenStringIsModelTypeAddressParse(
         self, embeddings_model_mock, vectorizer_model_mock, data_padding_mock
     ):
         self._capture_output()
@@ -1135,12 +1135,12 @@ class AddressParserTest(AddressParserPredictTestCase):
             )
             print(address_parser)
 
-            self.assertEqual(self.a_BPemb_name, self.test_out.getvalue().strip())
+            self.assertEqual(self.a_BPEmb_name, self.test_out.getvalue().strip())
 
     @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
     @patch("deepparse.parser.address_parser.BPEmbVectorizer")
     @patch("deepparse.parser.address_parser.bpemb_data_padding")
-    def test_givenAnBPembAttAddressParser_whenStrAddressParser_thenStringIsModelTypeAddressParse(
+    def test_givenAnBPEmbAttAddressParser_whenStrAddressParser_thenStringIsModelTypeAddressParse(
         self, embeddings_model_mock, vectorizer_model_mock, data_padding_mock
     ):
         self._capture_output()
@@ -1155,12 +1155,12 @@ class AddressParserTest(AddressParserPredictTestCase):
             )
             print(address_parser)
 
-            self.assertEqual(self.a_BPemb_att_name, self.test_out.getvalue().strip())
+            self.assertEqual(self.a_BPEmb_att_name, self.test_out.getvalue().strip())
 
     @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
     @patch("deepparse.parser.address_parser.BPEmbVectorizer")
     @patch("deepparse.parser.address_parser.bpemb_data_padding")
-    def test_givenAnBPembAddressParser_whenReprAddressParser_thenStringIsModelTypeAddressParse(
+    def test_givenAnBPEmbAddressParser_whenReprAddressParser_thenStringIsModelTypeAddressParse(
         self, embeddings_model_mock, vectorizer_model_mock, data_padding_mock
     ):
         self._capture_output()
@@ -1174,12 +1174,12 @@ class AddressParserTest(AddressParserPredictTestCase):
             )
             print(address_parser.__repr__())
 
-            self.assertEqual(self.a_BPemb_name, self.test_out.getvalue().strip())
+            self.assertEqual(self.a_BPEmb_name, self.test_out.getvalue().strip())
 
     @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
     @patch("deepparse.parser.address_parser.BPEmbVectorizer")
     @patch("deepparse.parser.address_parser.bpemb_data_padding")
-    def test_givenAnBPembAttAddressParser_whenReprAddressParser_thenStringIsModelTypeAddressParse(
+    def test_givenAnBPEmbAttAddressParser_whenReprAddressParser_thenStringIsModelTypeAddressParse(
         self, embeddings_model_mock, vectorizer_model_mock, data_padding_mock
     ):
         self._capture_output()
@@ -1194,7 +1194,7 @@ class AddressParserTest(AddressParserPredictTestCase):
             )
             print(address_parser.__repr__())
 
-            self.assertEqual(self.a_BPemb_att_name, self.test_out.getvalue().strip())
+            self.assertEqual(self.a_BPEmb_att_name, self.test_out.getvalue().strip())
 
     @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
     @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
@@ -1419,7 +1419,7 @@ class AddressParserTest(AddressParserPredictTestCase):
             with self.assertRaises(ValueError):
                 address_parser.retrain(Mock(), 0.8, 1, 1, prediction_tags=self.incorrect_address_components)
 
-    # we do BPemb but can be fasttext or fasttext-light
+    # we do BPEmb but can be fasttext or fasttext-light
     @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
     @patch("deepparse.parser.address_parser.BPEmbVectorizer")
     @patch("deepparse.parser.address_parser.bpemb_data_padding")

@@ -21,6 +21,7 @@ from .tools import (
     get_files_in_directory,
     get_address_parser_in_directory,
     indices_splitting,
+    handle_model_name,
 )
 from ..converter import TagsConverter
 from ..converter import fasttext_data_padding, bpemb_data_padding, DataTransform
@@ -211,7 +212,7 @@ class AddressParser:
         formatted_parsed_address.FIELDS = fields
         self.tags_converter = TagsConverter(tags_to_idx)
 
-        self._set_model_name(model_type, attention_mechanism)
+        self.model_type, self._model_type_formatted = handle_model_name(model_type, attention_mechanism)
         self._model_factory(
             verbose=self.verbose,
             path_to_retrained_model=path_to_retrained_model,
@@ -821,33 +822,6 @@ class AddressParser:
         Pipeline to process data in a data loader for prediction.
         """
         return self.data_converter(self.vectorizer(data))
-
-    def _set_model_name(self, model_type: str, attention_mechanism: str):
-        """
-        Handle the model type name matching with proper seq2seq model type name.
-        """
-        model_type = model_type.lower()
-        
-        if 'attention' in model_type:
-            model_type = model_type.replace('attention', '')
-            if not attention_mechanism:
-                raise ValueError(f"Model-type {model_type} requires attention mechanism.")
-        
-        if model_type in ("lightest", "fasttext-light"):
-            model_type = "fasttext-light"  # We change name to 'fasttext-light' since lightest = fasttext-light
-            formatted_name = "FastTextLight"
-        elif model_type in ("fastest", "fasttext"):
-            model_type = "fasttext"  # We change name to fasttext since fastest = fasttext
-            formatted_name = "FastText"
-        elif model_type in ("best", "bpemb"):
-            model_type = "bpemb"  # We change name to bpemb since best = bpemb
-            formatted_name = "BPEmb"
-
-        if attention_mechanism:
-            model_type += "Attention"
-            formatted_name += "Attention"
-        self.model_type = model_type
-        self._model_type_formatted = formatted_name
 
     def get_formatted_model_name(self) -> str:
         """

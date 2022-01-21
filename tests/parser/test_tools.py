@@ -13,6 +13,7 @@ from deepparse.parser.tools import (
     get_address_parser_in_directory,
     get_files_in_directory,
     pretrained_parser_in_directory,
+    handle_model_name,
 )
 from tests.base_capture_output import CaptureOutputTestCase
 from tests.tools import create_file
@@ -264,6 +265,74 @@ class ToolsTests(CaptureOutputTestCase):
         self.assertEqual(len(actual_valid_indices), expected_len_valid_indices)
         self.assertEqual(actual_train_indices, expected_train_indices)
         self.assertEqual(actual_valid_indices, expected_valid_indices)
+
+    def test_givenModelTypes_whenHandleThem_then_ReturnProperModelType(self):
+        # "Normal" Fasttext setup
+        model_types = ["fasttext", "fastest"]
+        attention_mechanism_settings = [True, False]
+
+        for model_type in model_types:
+            for attention_mechanism_setting in attention_mechanism_settings:
+                expected_model_type = "fasttext"
+                actual_model_type, _ = handle_model_name(model_type, attention_mechanism=attention_mechanism_setting)
+                if attention_mechanism_setting:
+                    expected_model_type += "Attention"
+                self.assertEqual(expected_model_type, actual_model_type)
+
+        # fasttext-light setup
+        expected_model_type = "fasttext-light"
+        model_types = ["fasttext-light", "lightest"]
+        for model_type in model_types:
+            actual_model_type, _ = handle_model_name(model_type, attention_mechanism=False)
+            self.assertEqual(expected_model_type, actual_model_type)
+
+        # BPEmb setup
+        model_types = ["bpemb", "best"]
+        attention_mechanism_settings = [True, False]
+
+        for model_type in model_types:
+            for attention_mechanism_setting in attention_mechanism_settings:
+                expected_model_type = "bpemb"
+                actual_model_type, _ = handle_model_name(model_type, attention_mechanism=attention_mechanism_setting)
+                if attention_mechanism_setting:
+                    expected_model_type += "Attention"
+                self.assertEqual(expected_model_type, actual_model_type)
+
+    def test_givenModelTypes_whenHandleThem_then_ReturnProperFormattedModelType(self):
+        # "Normal" Fasttext setup
+        model_types = ["fasttext", "fastest"]
+        attention_mechanism_settings = [True, False]
+
+        for model_type in model_types:
+            for attention_mechanism_setting in attention_mechanism_settings:
+                expected_formatted_model_type = "FastText"
+                _, actual_formatted_model_type = handle_model_name(
+                    model_type, attention_mechanism=attention_mechanism_setting
+                )
+                if attention_mechanism_setting:
+                    expected_formatted_model_type += "Attention"
+                self.assertEqual(expected_formatted_model_type, actual_formatted_model_type)
+
+        # fasttext-light setup
+        expected_formatted_model_type = "FastTextLight"
+        model_types = ["fasttext-light", "lightest"]
+        for model_type in model_types:
+            _, actual_formatted_model_type = handle_model_name(model_type, attention_mechanism=False)
+            self.assertEqual(expected_formatted_model_type, actual_formatted_model_type)
+
+        # BPEmb setup
+        model_types = ["bpemb", "best"]
+        attention_mechanism_settings = [True, False]
+
+        for model_type in model_types:
+            for attention_mechanism_setting in attention_mechanism_settings:
+                expected_formatted_model_type = "BPEmb"
+                _, actual_formatted_model_type = handle_model_name(
+                    model_type, attention_mechanism=attention_mechanism_setting
+                )
+                if attention_mechanism_setting:
+                    expected_formatted_model_type += "Attention"
+                self.assertEqual(expected_formatted_model_type, actual_formatted_model_type)
 
 
 if __name__ == "__main__":

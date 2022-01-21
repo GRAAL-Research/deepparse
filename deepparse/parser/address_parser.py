@@ -83,7 +83,8 @@ class AddressParser:
             - best (the best accuracy performance) (equivalent to bpemb).
 
             The default value is "best" for the most accurate model. Ignored if ``path_to_retrained_model`` is not
-            ``None``.
+            ``None``. To further improve performance, consider using the models (fasttext or BPEmb) with their
+            counterpart using attention mechanism with the ``attention_mechanism`` flag.
         attention_mechanism (bool): Whether to use the model with an attention mechanism. The model will use an
             attention mechanism takes an extra 100 MB on GPU usage (see the doc for more statistics).
             The default value is False.

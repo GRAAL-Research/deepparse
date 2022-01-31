@@ -2,6 +2,7 @@ import unittest
 from unittest import TestCase
 from unittest.mock import Mock
 
+from deepparse.data_error import DataError
 from deepparse.embeddings_models import EmbeddingsModel
 from deepparse.vectorizer import FastTextVectorizer
 
@@ -31,6 +32,20 @@ class FasttextVectorizerTest(TestCase):
     def setUp(self):
         self.embedding_network = Mock(spec=EmbeddingsModel, side_effect=self.a_embedding_matrix)
         self.fasttext_vectorizer = FastTextVectorizer(self.embedding_network)
+
+    def test_given_a_empty_only_address_when_call_then_raise_error(self):
+        empty_only_address = ""
+        with self.assertRaises(DataError):
+            self.fasttext_vectorizer([empty_only_address])
+
+    def test_given_a_whitespace_only_address_when_call_then_raise_error(self):
+        a_whitespace_only_address = " "
+        with self.assertRaises(DataError):
+            self.fasttext_vectorizer([a_whitespace_only_address])
+
+        another_whitespace_only_address = "    "
+        with self.assertRaises(DataError):
+            self.fasttext_vectorizer([another_whitespace_only_address])
 
     def test_givenAnAddress_whenVectorizingTheAddress_thenShouldCallEmbeddingModelForEachWord(
         self,

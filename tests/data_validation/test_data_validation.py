@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from deepparse.data_validation.data_validation import is_whitespace_only_address
+from deepparse.data_validation import is_whitespace_only_address
 
 
 class DataValidationTest(TestCase):

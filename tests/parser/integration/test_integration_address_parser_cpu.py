@@ -4,7 +4,7 @@
 import os
 from unittest import skipIf
 
-from deepparse.data_error.data_error import DataError
+from deepparse.data_error import DataError
 from deepparse.parser import formatted_parsed_address
 from tests.parser.integration.base_predict import (
     AddressParserPredictBase,
@@ -183,7 +183,7 @@ class AddressParserPredictCPUMultiProcessTest(AddressParserPredictBase):
         self.assert_properly_parse(parse_address, multiple_address=True)
 
     def test_givenAAttentionModel_whenParseFastTextNumWorkers2_thenProperlyParseAddress(
-            self,
+        self,
     ):
         config = {
             "model_type": "fasttext",
@@ -197,7 +197,7 @@ class AddressParserPredictCPUMultiProcessTest(AddressParserPredictBase):
         self.assert_properly_parse(parse_address)
 
     def test_givenAAttentionModel_whenParseBPEmbNumWorkers2_thenProperlyParseAddress(
-            self,
+        self,
     ):
         config = {
             "model_type": "bpemb",

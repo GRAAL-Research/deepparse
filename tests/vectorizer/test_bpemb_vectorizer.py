@@ -4,6 +4,7 @@ from unittest.mock import Mock
 
 import numpy as np
 
+from deepparse.data_error import DataError
 from deepparse.embeddings_models.embeddings_model import EmbeddingsModel
 from deepparse.vectorizer import BPEmbVectorizer
 
@@ -47,6 +48,20 @@ class BpembVectorizerTest(TestCase):
         self.embedding_network = Mock(spec=EmbeddingsModel, side_effect=self.a_embedding_matrix)
         self.embedding_network.dim = 2
         self.bpemb_vectorizer = BPEmbVectorizer(self.embedding_network)
+
+    def test_given_a_empty_only_address_when_call_then_raise_error(self):
+        empty_only_address = ""
+        with self.assertRaises(DataError):
+            self.bpemb_vectorizer([empty_only_address])
+
+    def test_given_a_whitespace_only_address_when_call_then_raise_error(self):
+        a_whitespace_only_address = " "
+        with self.assertRaises(DataError):
+            self.bpemb_vectorizer([a_whitespace_only_address])
+
+        another_whitespace_only_address = "    "
+        with self.assertRaises(DataError):
+            self.bpemb_vectorizer([another_whitespace_only_address])
 
     def test_givenAnAddress_whenVectorizingTheAddress_thenShouldCallEmbeddingModelForEachWord(
         self,

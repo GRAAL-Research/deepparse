@@ -3,6 +3,7 @@ from typing import List
 from numpy import ndarray
 
 from .vectorizer import Vectorizer
+from .. import validate_data_to_parse
 
 
 class MagnitudeVectorizer(Vectorizer):
@@ -20,6 +21,8 @@ class MagnitudeVectorizer(Vectorizer):
         Return:
             A list of embeddings corresponding to the addresses' elements.
         """
+        validate_data_to_parse(addresses)
+
         return [self._vectorize_sequence(address) for address in addresses]
 
     def _vectorize_sequence(self, address: str) -> ndarray:

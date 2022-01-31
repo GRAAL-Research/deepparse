@@ -22,9 +22,8 @@ from .tools import (
     get_address_parser_in_directory,
     indices_splitting,
     handle_model_name,
-    whitespace_only_addresses,
-    validate_data_to_parse,
 )
+from .. import validate_data_to_parse, whitespace_only_addresses
 from ..converter import TagsConverter
 from ..converter import fasttext_data_padding, bpemb_data_padding, DataTransform
 from ..data_error.data_error import DataError

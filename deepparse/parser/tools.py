@@ -5,9 +5,6 @@ from typing import List, Tuple
 import numpy as np
 import torch
 
-from deepparse.data_error.data_error import DataError
-from deepparse.data_validation.data_validation import is_whitespace_only_address
-
 
 def validate_if_new_prediction_tags(checkpoint_weights: dict) -> bool:
     return checkpoint_weights.get("prediction_tags") is not None
@@ -101,30 +98,3 @@ def handle_model_name(model_type: str, attention_mechanism: bool) -> Tuple[str, 
         model_type += "Attention"
         formatted_name += "Attention"
     return model_type, formatted_name
-
-
-# todo add tests
-def validate_data_to_parse(addresses_to_parse: List[str]) -> None:
-    """
-    Validation tests on the addresses to parse to respect the following two criteria:
-        - no addresses are empty strings, and
-        - no addresses are whitespace-only strings.
-    """
-    if empty_address(addresses_to_parse):
-        raise DataError("Some addresses only include whitespace thus cannot be parsed.")
-    if whitespace_only_addresses(addresses_to_parse):
-        raise DataError("Some addresses only include whitespace thus cannot be parsed.")
-
-
-def empty_address(addresses_to_parse: List[str]) -> bool:
-    """
-    Return true if one of the addresses is an empty string.
-    """
-    return "" in addresses_to_parse
-
-
-def whitespace_only_addresses(addresses_to_parse: List[str]) -> bool:
-    """
-    Return true if one the address is composed of only whitespace.
-    """
-    return any([is_whitespace_only_address(data) for data in addresses_to_parse])

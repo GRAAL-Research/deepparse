@@ -20,14 +20,14 @@ test_container = PickleDatasetContainer(os.path.join(saving_dir, test_dataset_na
 # We will retrain the fasttext version of our pretrained model.
 address_parser = AddressParser(model_type="fasttext", device=0)
 
-# Now let's retrain for 5 epochs using a batch size of 8 since the data is really small for the example.
+# Now, let's retrain for 5 epochs using a batch size of 8 since the data is really small for the example.
 # Let's start with the default learning rate of 0.01 and use a learning rate scheduler to lower the learning rate
 # as we progress.
 lr_scheduler = poutyne.StepLR(step_size=1, gamma=0.1)  # reduce LR by a factor of 10 each epoch
 
 # The checkpoints (ckpt) are saved in the default "./checkpoints" directory, so if you wish to retrain
-# another model (let say BPEmb), you need to change the `logging_path` directory; otherwise you will get
-# an error when doing a retrain since Poutyne will try to use the last checkpoint.
+# another model (let's say BPEmb), you need to change the `logging_path` directory; otherwise, you will get
+# an error when retraining since Poutyne will try to use the last checkpoint.
 address_parser.retrain(
     training_container,
     0.8,
@@ -37,14 +37,14 @@ address_parser.retrain(
     callbacks=[lr_scheduler],
 )
 
-# Now let's test our fine-tuned model using the best checkpoint (default parameter).
+# Now, let's test our fine-tuned model using the best checkpoint (default parameter).
 address_parser.test(test_container, batch_size=256)
 
 # Now let's retrain the fasttext version but with an attention mechanism
 address_parser = AddressParser(model_type="fasttext", device=0, attention_mechanism=True)
 
-# Since the previous checkpoints where saved in the default "./checkpoints" directory, we need to use a new one.
-# Otherwise, poutyne will try to reload the previous checkpoints and our model have change.
+# Since the previous checkpoints were saved in the default "./checkpoints" directory, we need to use a new one.
+# Otherwise, poutyne will try to reload the previous checkpoints, and our model has changed.
 address_parser.retrain(
     training_container,
     0.8,
@@ -55,5 +55,5 @@ address_parser.retrain(
     logging_path="checkpoints_attention",
 )
 
-# Now let's test our fine-tuned model using the best checkpoint (default parameter).
+# Now, let's test our fine-tuned model using the best checkpoint (default parameter).
 address_parser.test(test_container, batch_size=256)

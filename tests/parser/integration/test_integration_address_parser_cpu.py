@@ -4,6 +4,7 @@
 import os
 from unittest import skipIf
 
+from deepparse.data_error.data_error import DataError
 from deepparse.parser import formatted_parsed_address
 from tests.parser.integration.base_predict import (
     AddressParserPredictBase,
@@ -182,7 +183,7 @@ class AddressParserPredictCPUMultiProcessTest(AddressParserPredictBase):
         self.assert_properly_parse(parse_address, multiple_address=True)
 
     def test_givenAAttentionModel_whenParseFastTextNumWorkers2_thenProperlyParseAddress(
-        self,
+            self,
     ):
         config = {
             "model_type": "fasttext",
@@ -196,7 +197,7 @@ class AddressParserPredictCPUMultiProcessTest(AddressParserPredictBase):
         self.assert_properly_parse(parse_address)
 
     def test_givenAAttentionModel_whenParseBPEmbNumWorkers2_thenProperlyParseAddress(
-        self,
+            self,
     ):
         config = {
             "model_type": "bpemb",
@@ -208,3 +209,37 @@ class AddressParserPredictCPUMultiProcessTest(AddressParserPredictBase):
 
         parse_address = self.a_model(self.an_address_to_parse, num_workers=2)
         self.assert_properly_parse(parse_address)
+
+    def test_givenAModel_whenParseWithEmptyString_raiseDataError(self):
+        config = {
+            "model_type": "bpemb",
+            "device": self.device,
+            "verbose": False,
+            "attention_mechanism": True,
+        }
+        self.setup_model_with_config(config)
+
+        empty_data = ["an address", ""]
+        another_empty_address = ""
+        with self.assertRaises(DataError):
+            self.a_model(empty_data)
+
+        with self.assertRaises(DataError):
+            self.a_model(another_empty_address)
+
+    def test_givenAModel_whenParseWithWhitespaceString_raiseDataError(self):
+        config = {
+            "model_type": "bpemb",
+            "device": self.device,
+            "verbose": False,
+            "attention_mechanism": True,
+        }
+        self.setup_model_with_config(config)
+
+        whitespace_data = ["an address", " "]
+        another_whitespace_address = " "
+        with self.assertRaises(DataError):
+            self.a_model(whitespace_data)
+
+        with self.assertRaises(DataError):
+            self.a_model(another_whitespace_address)

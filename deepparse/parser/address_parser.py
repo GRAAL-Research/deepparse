@@ -22,9 +22,12 @@ from .tools import (
     get_address_parser_in_directory,
     indices_splitting,
     handle_model_name,
+    whitespace_only_addresses,
+    validate_data_to_parse,
 )
 from ..converter import TagsConverter
 from ..converter import fasttext_data_padding, bpemb_data_padding, DataTransform
+from ..data_error.data_error import DataError
 from ..dataset_container import DatasetContainer
 from ..embeddings_models import BPEmbEmbeddingsModel
 from ..embeddings_models import FastTextEmbeddingsModel
@@ -239,12 +242,16 @@ class AddressParser:
         Callable method to parse the components of an address or a list of address.
 
         Args:
-            addresses_to_parse (Union[list[str], str]): The addresses to be parsed, can be either a single address
-                (when using str) or a list of address. When using a list of addresses, the addresses are processed in
-                batch, allowing a faster process. For example, using fastText model, a single address takes around
-                0.003 seconds to be parsed using a batch of 1 (1 element at the time is processed).
-                This time can be reduced to 0.00035 seconds per address when using a batch of 128
-                (128 elements at the time are processed).
+            addresses_to_parse (Union[list[str], str]): The addresses to be parsed, can be either a
+                single address (when using str) or a list of address. Validation tests on the dataset to parse are
+                done in order to validate the following basic criteria:
+                    - no address are empty string, and
+                    - no address are whitespace only string.
+
+                When using a list of addresses, the addresses are processed in batch, allowing a faster process.
+                For example, using fastText model, a single address takes around 0.003 seconds to be parsed using a
+                batch of 1 (1 element at the time is processed). This time can be reduced to 0.00035 seconds per
+                address when using a batch of 128 (128 elements at the time are processed).
             with_prob (bool): If true, return the probability of all the tags with the specified
                 rounding.
             batch_size (int): The size of the batch (default is 32).
@@ -259,23 +266,32 @@ class AddressParser:
 
             .. code-block:: python
 
-                address_parser = AddressParser(device=0) #on gpu device 0
+                address_parser = AddressParser(device=0)  # on gpu device 0
                 parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
+
+                # It also can be a list of addresses
+                parse_address = address_parser(["350 rue des Lilas Ouest Quebec city Quebec G1L 1B6",
+                                                "350 rue des Lilas Ouest Quebec city Quebec G1L 1B6"])
+
+                # It can also output the prob of the predictions
                 parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6",
-                                                with_prob=True)
+                                               with_prob=True)
 
             Using a larger batch size
 
             .. code-block:: python
 
                 address_parser = AddressParser(device=0) #on gpu device 0
-                parse_address = address_parser(a_large_dataset, batch_size=1024)
+                parse_address = address_parser(a_large_list_dataset, batch_size=1024)
+
                 # You can also use more worker
-                parse_address = address_parser(a_large_dataset, batch_size=1024, num_workers=2)
+                parse_address = address_parser(a_large_list_dataset, batch_size=1024, num_workers=2)
 
         """
         if isinstance(addresses_to_parse, str):
             addresses_to_parse = [addresses_to_parse]
+
+        validate_data_to_parse(addresses_to_parse)
 
         clean_addresses = AddressCleaner().clean(addresses_to_parse)
 
@@ -335,9 +351,7 @@ class AddressParser:
         prediction tags, and if new ``seq2seq_params`` were used, the new seq2seq parameters.
 
         Args:
-            dataset_container (~deepparse.dataset_container.DatasetContainer): The
-            dataset_container (~deepparse.dataset_container.DatasetContainer): The
-                dataset container of the data to use.
+            dataset_container (~deepparse.dataset_container.DatasetContainer): The dataset container of the data to use.
             train_ratio (float): The ratio to use of the dataset for the training. The rest of the data is used for the
                 validation (e.g. a train ratio of 0.8 mean a 80-20 train-valid split) (default is 0.8).
             batch_size (int): The size of the batch (default is 32).

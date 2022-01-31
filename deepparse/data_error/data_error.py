@@ -8,4 +8,4 @@ class DataError(Exception):
         self.value = value
 
     def __str__(self):
-        return repr(self.value)
+        return repr(self.value)  # pragma: no cover

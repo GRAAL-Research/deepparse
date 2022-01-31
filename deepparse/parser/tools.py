@@ -5,6 +5,9 @@ from typing import List, Tuple
 import numpy as np
 import torch
 
+from deepparse.data_error.data_error import DataError
+from deepparse.data_validation.data_validation import is_whitespace_only_address
+
 
 def validate_if_new_prediction_tags(checkpoint_weights: dict) -> bool:
     return checkpoint_weights.get("prediction_tags") is not None
@@ -38,7 +41,7 @@ def get_address_parser_in_directory(files_in_directory: List[str]) -> List:
 def load_tuple_to_device(padded_address: Tuple, device: torch.device):
     # pylint: disable=consider-using-generator
     """
-    Function to load the torch components of a tuple to a device. Since tuple are immutable we return a new tuple with
+    Function to load the torch components of a tuple to a device. Since tuples are immutable, we return a new tuple with
     the tensor loaded to the device.
     """
     return tuple([element.to(device) if isinstance(element, torch.Tensor) else element for element in padded_address])
@@ -65,7 +68,7 @@ def handle_model_name(model_type: str, attention_mechanism: bool) -> Tuple[str, 
     Handle the model type name matching with proper seq2seq model type name.
     Args:
         model_type (str): The type of the model.
-        attention_mechanism (bool): Either or not the model uses an attention mechanism.
+        attention_mechanism (bool): Either or not, the model uses an attention mechanism.
 
     Return:
         A tuple of two strings where the first element is the model_type and the second is the formatted name.
@@ -98,3 +101,30 @@ def handle_model_name(model_type: str, attention_mechanism: bool) -> Tuple[str, 
         model_type += "Attention"
         formatted_name += "Attention"
     return model_type, formatted_name
+
+
+# todo add tests
+def validate_data_to_parse(addresses_to_parse: List[str]) -> None:
+    """
+    Validation tests on the addresses to parse to respect the following two criteria:
+        - no addresses are empty strings, and
+        - no addresses are whitespace-only strings.
+    """
+    if empty_address(addresses_to_parse):
+        raise DataError("Some addresses only include whitespace thus cannot be parsed.")
+    if whitespace_only_addresses(addresses_to_parse):
+        raise DataError("Some addresses only include whitespace thus cannot be parsed.")
+
+
+def empty_address(addresses_to_parse: List[str]) -> bool:
+    """
+    Return true if one of the addresses is an empty string.
+    """
+    return "" in addresses_to_parse
+
+
+def whitespace_only_addresses(addresses_to_parse: List[str]) -> bool:
+    """
+    Return true if one the address is composed of only whitespace.
+    """
+    return any([is_whitespace_only_address(data) for data in addresses_to_parse])

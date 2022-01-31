@@ -6,6 +6,7 @@ from unittest import skipIf
 
 import torch
 
+from deepparse.data_error.data_error import DataError
 from deepparse.parser.tools import (
     indices_splitting,
     load_tuple_to_device,
@@ -15,6 +16,7 @@ from deepparse.parser.tools import (
     get_files_in_directory,
     pretrained_parser_in_directory,
     handle_model_name,
+    validate_data_to_parse,
 )
 from tests.base_capture_output import CaptureOutputTestCase
 from tests.tools import create_file
@@ -373,6 +375,24 @@ class ToolsTests(CaptureOutputTestCase):
             handle_model_name(model_type, attention_mechanism=False)
         except ValueError as actual_error_message:
             self.assertEqual(actual_error_message.args[0], expect_error_message)
+
+    def test_integrationValidateDataToParse(self):
+        valid_data = ["An address", "another address"]
+        validate_data_to_parse(valid_data)
+
+    def test_givenEmptyAddress_thenRaiseDataError(self):
+        empty_data = ["An address", "", '']
+        with self.assertRaises(DataError):
+            validate_data_to_parse(empty_data)
+
+    def test_givenWhiteSpaceAddress_thenRaiseDataError(self):
+        whitespace_data = ["An address", " "]
+        with self.assertRaises(DataError):
+            validate_data_to_parse(whitespace_data)
+
+        whitespace_data = ["An address", "   "]
+        with self.assertRaises(DataError):
+            validate_data_to_parse(whitespace_data)
 
 
 if __name__ == "__main__":

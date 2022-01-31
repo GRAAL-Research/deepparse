@@ -25,7 +25,7 @@ First, let's download the train and test data with "new tags" from the public re
     download_from_url(training_dataset_name, saving_dir, file_extension=file_extension)
     download_from_url(test_dataset_name, saving_dir, file_extension=file_extension)
 
-Now let's create a training and test container.
+Now, let's create a training and test container.
 
 .. code-block:: python
 
@@ -41,7 +41,7 @@ We will retrain the fasttext version of our pretrained model.
     model = "fasttext"
     address_parser = AddressParser(model_type=model, device=0)
 
-Now let's retrain for 5 epochs using a batch size of 8 since the data is really small for the example.
+Now, let's retrain for 5 epochs using a batch size of 8 since the data is really small for the example.
 Let's start with the default learning rate of 0.01 and use a learning rate scheduler to lower the learning rate as we progress.
 
 .. code-block:: python

@@ -4,7 +4,7 @@
 import os
 import unittest
 from unittest import skipIf
-from unittest.mock import patch, Mock, MagicMock
+from unittest.mock import patch, MagicMock
 
 import torch
 from torch import device
@@ -60,10 +60,10 @@ class AddressParserTest(AddressParserPredictTestCase):
 
     def setUp(self):
         super().setUp()
-        self.BPEmb_mock = Mock()
-        self.fasttext_mock = Mock()
+        self.BPEmb_mock = MagicMock()
+        self.fasttext_mock = MagicMock()
 
-        self.embeddings_model_mock = Mock()
+        self.embeddings_model_mock = MagicMock()
 
     def assert_equal_not_ordered(self, actual, expected_elements):
         for expected in expected_elements:
@@ -1404,7 +1404,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                 verbose=self.verbose,
             )
             with self.assertRaises(ValueError):
-                address_parser.retrain(Mock(), 0.8, 1, 1, prediction_tags=self.incorrect_address_components)
+                address_parser.retrain(MagicMock(), 0.8, 1, 1, prediction_tags=self.incorrect_address_components)
 
     @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
     @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
@@ -1418,7 +1418,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                 verbose=self.verbose,
             )
             with self.assertRaises(ValueError):
-                address_parser.retrain(Mock(), 0.8, 1, 1, prediction_tags=self.incorrect_address_components)
+                address_parser.retrain(MagicMock(), 0.8, 1, 1, prediction_tags=self.incorrect_address_components)
 
     # we do BPEmb but can be fasttext or fasttext-light
     @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")

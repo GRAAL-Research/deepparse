@@ -1,6 +1,6 @@
 import unittest
 from unittest import TestCase
-from unittest.mock import Mock
+from unittest.mock import MagicMock
 
 from deepparse.data_error import DataError
 from deepparse.embeddings_models import EmbeddingsModel
@@ -23,7 +23,7 @@ class MagnitudeVectorizerTest(TestCase):
         ]
 
     def setUp(self):
-        self.embedding_network = Mock(spec=EmbeddingsModel, side_effect=self.a_embedding_matrix)
+        self.embedding_network = MagicMock(spec=EmbeddingsModel, side_effect=self.a_embedding_matrix)
         self.magnitude_vectorizer = MagnitudeVectorizer(self.embedding_network)
 
     def test_given_a_empty_only_address_when_call_then_raise_error(self):

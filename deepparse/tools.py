@@ -135,4 +135,4 @@ def whitespace_only_addresses(addresses_to_parse: List[str]) -> bool:
     """
     Return true if one the address is composed of only whitespace.
     """
-    return any([is_whitespace_only_address(data) for data in addresses_to_parse])
+    return any((is_whitespace_only_address(data) for data in addresses_to_parse))

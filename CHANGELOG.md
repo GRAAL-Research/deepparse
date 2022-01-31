@@ -155,4 +155,4 @@
 - Parsing now include two validation on the data quality (not empty and not whitespace only)
 - DataContainer now includes data quality test (not empty, not whitespace only, tags not empty, tag same len as address,
   and data is list of tuple)
-- New DataContainer (CSV and text)
+- New CSVDatasetContainer

@@ -2,7 +2,7 @@
     :class: hidden-section
 
 Retrain an attention mechanism model
-***********************************
+************************************
 
 .. code-block:: python
 

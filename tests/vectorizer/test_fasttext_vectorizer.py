@@ -1,6 +1,6 @@
 import unittest
 from unittest import TestCase
-from unittest.mock import Mock
+from unittest.mock import MagicMock
 
 from deepparse.embeddings_models import EmbeddingsModel
 from deepparse.vectorizer import FastTextVectorizer
@@ -29,7 +29,7 @@ class FasttextVectorizerTest(TestCase):
         ]
 
     def setUp(self):
-        self.embedding_network = Mock(spec=EmbeddingsModel, side_effect=self.a_embedding_matrix)
+        self.embedding_network = MagicMock(spec=EmbeddingsModel, side_effect=self.a_embedding_matrix)
         self.fasttext_vectorizer = FastTextVectorizer(self.embedding_network)
 
     def test_givenAnAddress_whenVectorizingTheAddress_thenShouldCallEmbeddingModelForEachWord(

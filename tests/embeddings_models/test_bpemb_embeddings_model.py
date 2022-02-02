@@ -1,6 +1,6 @@
 import unittest
 from unittest import TestCase
-from unittest.mock import patch, Mock
+from unittest.mock import patch, MagicMock
 
 from deepparse.embeddings_models import BPEmbEmbeddingsModel
 
@@ -12,7 +12,7 @@ class BPEmbEmbeddingsModelTest(TestCase):
         cls.dim = 9
 
     def setUp(self):
-        self.model = Mock()
+        self.model = MagicMock()
         self.model.dim = self.dim
 
     def test_whenInstantiatedWithPath_thenShouldLoadBPEmbModel(self):

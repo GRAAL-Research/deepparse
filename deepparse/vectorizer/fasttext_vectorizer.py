@@ -1,6 +1,7 @@
 from typing import List
 
 from .vectorizer import Vectorizer
+from .. import validate_data_to_parse
 
 
 class FastTextVectorizer(Vectorizer):
@@ -18,6 +19,8 @@ class FastTextVectorizer(Vectorizer):
         Return:
             A list of embeddings corresponding to the addresses' elements.
         """
+        validate_data_to_parse(addresses)
+
         return [self._vectorize_sequence(address) for address in addresses]
 
     def _vectorize_sequence(self, address: str) -> List:

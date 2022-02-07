@@ -40,6 +40,17 @@ Let's use the BPEmb model on a GPU.
 
     parsed_addresses = address_parser(test_data[0:300])
 
+
+When parsing addresses, some data quality tests are applied to the dataset.
+First, it validates that no addresses to parse are empty.
+Second, it validates that no addresses are whitespace-only.
+The next two lines are rising a DataError.
+
+.. code-block:: python
+
+    address_parser("")  # Raise an error
+    address_parser(" ")  # Raise an error
+
 We can also put our parsed address into a pandas dataframe for analysis. You can choose the fields to use or use the
 default one.
 

@@ -719,8 +719,9 @@ API Reference
   :maxdepth: 1
   :caption: Examples
 
-  examples/fine_tuning
   examples/parse_addresses
+  examples/fine_tuning
+  examples/retrain_attention_model
   examples/retrain_with_new_prediction_tags
   examples/retrain_with_new_seq2seq_params
 

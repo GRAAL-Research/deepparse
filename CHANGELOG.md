@@ -139,7 +139,8 @@
 
 ## 0.6.3
 
-- Fixed the printing capture to raise error with Poutyne as of version 1.8. We keep the previous approach as for compatibilities with previous Poutyne version.
+- Fixed the printing capture to raise error with Poutyne as of version 1.8. We keep the previous approach as for
+  compatibilities with previous Poutyne version.
 - Added a flag to disable or not Tensorboard during retrain.
 
 ## 0.6.4
@@ -147,3 +148,11 @@
 - Bugfix reloading of retrain attention model (PR #110)
 - Improve error handling
 - Improve doc
+
+## 0.6.5
+
+- Improve error handling of empty data and whitespace only data.
+- Parsing now include two validation on the data quality (not empty and not whitespace only)
+- DataContainer now includes data quality test (not empty, not whitespace only, tags not empty, tag same len as address,
+  and data is list of tuple)
+- New CSVDatasetContainer

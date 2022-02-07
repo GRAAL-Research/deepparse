@@ -15,6 +15,8 @@ from deepparse import (
     handle_pre_trained_checkpoint,
     handle_poutyne_version,
     valid_poutyne_version,
+    validate_data_to_parse,
+    DataError,
 )
 from deepparse import handle_model_path, CACHE_PATH
 from tests.base_capture_output import CaptureOutputTestCase
@@ -336,6 +338,24 @@ class ToolsTests(CaptureOutputTestCase):
 
         actual = valid_poutyne_version()
         self.assertFalse(actual)
+
+    def test_integrationValidateDataToParse(self):
+        valid_data = ["An address", "another address"]
+        validate_data_to_parse(valid_data)
+
+    def test_givenEmptyAddress_thenRaiseDataError(self):
+        empty_data = ["An address", "", '']
+        with self.assertRaises(DataError):
+            validate_data_to_parse(empty_data)
+
+    def test_givenWhiteSpaceAddress_thenRaiseDataError(self):
+        whitespace_data = ["An address", " "]
+        with self.assertRaises(DataError):
+            validate_data_to_parse(whitespace_data)
+
+        whitespace_data = ["An address", "   "]
+        with self.assertRaises(DataError):
+            validate_data_to_parse(whitespace_data)
 
 
 if __name__ == "__main__":

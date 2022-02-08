@@ -38,7 +38,7 @@ def get_address_parser_in_directory(files_in_directory: List[str]) -> List:
 def load_tuple_to_device(padded_address: Tuple, device: torch.device):
     # pylint: disable=consider-using-generator
     """
-    Function to load the torch components of a tuple to a device. Since tuple are immutable we return a new tuple with
+    Function to load the torch components of a tuple to a device. Since tuples are immutable, we return a new tuple with
     the tensor loaded to the device.
     """
     return tuple([element.to(device) if isinstance(element, torch.Tensor) else element for element in padded_address])
@@ -65,7 +65,7 @@ def handle_model_name(model_type: str, attention_mechanism: bool) -> Tuple[str, 
     Handle the model type name matching with proper seq2seq model type name.
     Args:
         model_type (str): The type of the model.
-        attention_mechanism (bool): Either or not the model uses an attention mechanism.
+        attention_mechanism (bool): Either or not, the model uses an attention mechanism.
 
     Return:
         A tuple of two strings where the first element is the model_type and the second is the formatted name.

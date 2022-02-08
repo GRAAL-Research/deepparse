@@ -4,11 +4,12 @@
 import os
 import unittest
 from unittest import skipIf
-from unittest.mock import patch, Mock
+from unittest.mock import patch, MagicMock
 
 import torch
 from torch import device
 
+from deepparse.data_error import DataError
 from deepparse.parser import FormattedParsedAddress, formatted_parsed_address
 from deepparse.parser.address_parser import AddressParser
 from tests.parser.base import AddressParserPredictTestCase
@@ -59,10 +60,10 @@ class AddressParserTest(AddressParserPredictTestCase):
 
     def setUp(self):
         super().setUp()
-        self.BPEmb_mock = Mock()
-        self.fasttext_mock = Mock()
+        self.BPEmb_mock = MagicMock()
+        self.fasttext_mock = MagicMock()
 
-        self.embeddings_model_mock = Mock()
+        self.embeddings_model_mock = MagicMock()
 
     def assert_equal_not_ordered(self, actual, expected_elements):
         for expected in expected_elements:
@@ -1403,7 +1404,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                 verbose=self.verbose,
             )
             with self.assertRaises(ValueError):
-                address_parser.retrain(Mock(), 0.8, 1, 1, prediction_tags=self.incorrect_address_components)
+                address_parser.retrain(MagicMock(), 0.8, 1, 1, prediction_tags=self.incorrect_address_components)
 
     @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
     @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
@@ -1417,7 +1418,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                 verbose=self.verbose,
             )
             with self.assertRaises(ValueError):
-                address_parser.retrain(Mock(), 0.8, 1, 1, prediction_tags=self.incorrect_address_components)
+                address_parser.retrain(MagicMock(), 0.8, 1, 1, prediction_tags=self.incorrect_address_components)
 
     # we do BPEmb but can be fasttext or fasttext-light
     @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
@@ -1526,6 +1527,40 @@ class AddressParserTest(AddressParserPredictTestCase):
             actual = address_parser.get_formatted_model_name()
             expected = "BPEmbAttention"
             self.assertEqual(expected, actual)
+
+    @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.BPEmbVectorizer")
+    @patch("deepparse.parser.address_parser.bpemb_data_padding")
+    def test_givenEmptyData_whenParse_raiseDataError(
+        self, embeddings_model_mock, vectorizer_model_mock, data_padding_mock
+    ):
+        empty_data = ["an address", ""]
+        another_empty_address = ""
+        with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel") as model_mock:
+            self.mock_predictions_vectors(model_mock)
+            address_parser = AddressParser(model_type=self.a_bpemb_model_type, device=self.a_cpu_device)
+            with self.assertRaises(DataError):
+                address_parser(empty_data)
+
+            with self.assertRaises(DataError):
+                address_parser(another_empty_address)
+
+    @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.BPEmbVectorizer")
+    @patch("deepparse.parser.address_parser.bpemb_data_padding")
+    def test_givenWhiteSpaceOnlyData_whenParse_raiseDataError(
+        self, embeddings_model_mock, vectorizer_model_mock, data_padding_mock
+    ):
+        whitespace_data = ["an address", " "]
+        another_whitespace_address = " "
+        with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel") as model_mock:
+            self.mock_predictions_vectors(model_mock)
+            address_parser = AddressParser(model_type=self.a_bpemb_model_type, device=self.a_cpu_device)
+            with self.assertRaises(DataError):
+                address_parser(whitespace_data)
+
+            with self.assertRaises(DataError):
+                address_parser(another_whitespace_address)
 
 
 if __name__ == "__main__":

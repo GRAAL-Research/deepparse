@@ -3,6 +3,7 @@ from typing import List, Tuple
 import numpy as np
 
 from .vectorizer import Vectorizer
+from .. import validate_data_to_parse
 from ..embeddings_models.embeddings_model import EmbeddingsModel
 
 
@@ -25,8 +26,10 @@ class BPEmbVectorizer(Vectorizer):
             addresses (list[str]): The addresses to vectorize.
 
         Return:
-            A tuple of the addresses elements (components) embedding vectosr and the word decomposition lengths.
+            A tuple of the addresses elements (components) embedding vector and the word decomposition lengths.
         """
+        validate_data_to_parse(addresses)
+
         self._max_length = 0
         batch = [self._vectorize_sequence(address) for address in addresses]
         self._decomposed_sequence_padding(batch)
@@ -42,6 +45,7 @@ class BPEmbVectorizer(Vectorizer):
         Return:
             A tuple of list of word vector and the word decomposition lengths.
         """
+
         input_sequence = []
         word_decomposition_lengths = []
         for word in address.split():

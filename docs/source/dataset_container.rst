@@ -13,3 +13,7 @@ To load the data, we use dataset container that are implemented with respect to 
 
 .. autoclass:: PickleDatasetContainer
     :members:
+
+.. autoclass:: CSVDatasetContainer
+    :members:
+

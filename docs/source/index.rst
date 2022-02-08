@@ -22,10 +22,10 @@ Deepparse is a state-of-the-art library for parsing multinational street address
 
 Use deepparse to
 
-- use the pre-trained models to parse multinational addresses with or without attention mechanism,
-- retrain our pre-trained models on new data to parse multinational addresses,
-- retrain our pre-trained models with your own prediction tags easily,
-- retrain a new seq2seq addresses parsing models easily.
+- parse multinational address using one of our pre-trained models with or without attention mechanism,
+- retrain our pre-trained models on new data to improve parsing on specific country address patterns,
+- retrain our pre-trained models with new prediction tags easily,
+- train a new seq2seq addresses parsing models easily using a new model configuration.
 
 Deepparse is compatible with the **latest version of PyTorch** and  **Python >= 3.7**.
 
@@ -719,8 +719,9 @@ API Reference
   :maxdepth: 1
   :caption: Examples
 
-  examples/fine_tuning
   examples/parse_addresses
+  examples/fine_tuning
+  examples/retrain_attention_model
   examples/retrain_with_new_prediction_tags
   examples/retrain_with_new_seq2seq_params
 

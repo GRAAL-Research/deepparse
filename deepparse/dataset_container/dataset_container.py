@@ -8,7 +8,7 @@ from torch.utils.data import Dataset
 
 from .tools import former_python_list
 from ..data_error import DataError
-from ..data_validation import is_whitespace_only_address
+from ..data_validation import is_whitespace_only_address, is_empty_address
 
 
 class DatasetContainer(Dataset, ABC):
@@ -76,7 +76,7 @@ class DatasetContainer(Dataset, ABC):
         """
         Return true if one of the addresses is an empty string.
         """
-        return "" in self.data
+        return any((is_empty_address(data[0]) for data in self.data))
 
     def _whitespace_only_addresses(self) -> bool:
         """

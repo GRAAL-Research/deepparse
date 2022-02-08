@@ -564,6 +564,7 @@ Getting Started
 .. code-block:: python
 
    from deepparse.parser import AddressParser
+   from deepparse.dataset_container import CSVDatasetContainer
 
    address_parser = AddressParser(model_type="bpemb", device=0)
 
@@ -584,8 +585,12 @@ Getting Started
    parsed_address = address_parser("350 rue des Lilas Ouest Québec Québec G1L 1B6",
         with_prob=True)
 
+    # or using one of our dataset container
+    addresses_to_parse = CSVDatasetContainer("./a_path.csv", column_names=["address_column_name"],
+                                             is_training_container=False)
+    address_parser(addresses_to_parse)
 
-The predictions tags are the following
+The default predictions tags are the following
 
     - "StreetNumber": for the street number,
     - "StreetName": for the name of the street,

@@ -10,7 +10,7 @@
 [![codecov](https://codecov.io/gh/GRAAL-Research/deepparse/branch/master/graph/badge.svg)](https://codecov.io/gh/GRAAL-Research/deepparse)
 
 [![Download](https://img.shields.io/badge/Download%20Dataset-blue?style=for-the-badge&logo=download)](https://github.com/GRAAL-Research/deepparse-address-data)
-  
+
 [![Rate on Openbase](https://badges.openbase.com/python/rating/deepparse.svg)](https://openbase.com/python/deepparse?utm_source=embedded&utm_medium=badge&utm_campaign=rate-badge)
 </div>
 
@@ -84,7 +84,7 @@ in the next table.
 | Cyprus       |          89.64 |       89.47 | Slovakia      |          78.34 |       68.96 |
 | South Africa |          95.68 |       74.82 |
 
-Moreover, we also tested the performance when using attention mechanism to further improve zero-shot performance on 
+Moreover, we also tested the performance when using attention mechanism to further improve zero-shot performance on
 those countries; the result are shown in the next table.
 
 | Country       |   FastText (%) |   FastTextAtt (%) |   BPEmb (%) |   BPEmbAtt (%) | Country       |   FastText (%) |   FastTextAtt (%) |   BPEmb (%) |   BPEmbAtt (%) |
@@ -113,9 +113,9 @@ those countries; the result are shown in the next table.
 
 #### Incomplete Data
 
-The following table presents the accuracy on the 20 countries we used during training for both our models but for 
-incomplete data. We didn't test on the other 41 countries since we did not train on them and therefore do not expect
-to achieve an interesting performance. Attention mechanisms improve performance by around 0.5% for all countries.
+The following table presents the accuracy on the 20 countries we used during training for both our models but for
+incomplete data. We didn't test on the other 41 countries since we did not train on them and therefore do not expect to
+achieve an interesting performance. Attention mechanisms improve performance by around 0.5% for all countries.
 
 | Country        |   FastText (%) |   BPEmb (%) | Country     |   FastText (%) |   BPEmb (%) |
 |:---------------|---------------:|------------:|:------------|---------------:|------------:|
@@ -134,6 +134,7 @@ to achieve an interesting performance. Attention mechanisms improve performance 
 
 ```python
 from deepparse.parser import AddressParser
+from deepparse.dataset_container import CSVDatasetContainer
 
 address_parser = AddressParser(model_type="bpemb", device=0)
 
@@ -142,8 +143,8 @@ parsed_address = address_parser("350 rue des Lilas Ouest Québec Québec G1L 1B6
 
 # or multiple addresses
 parsed_address = address_parser(
-    ["350 rue des Lilas Ouest Québec Québec G1L 1B6", 
-    "350 rue des Lilas Ouest Québec Québec G1L 1B6"])
+    ["350 rue des Lilas Ouest Québec Québec G1L 1B6",
+     "350 rue des Lilas Ouest Québec Québec G1L 1B6"])
 
 # or multinational addresses
 # Canada, US, Germany, UK and South Korea
@@ -152,11 +153,16 @@ parsed_address = address_parser(
      "Ansgarstr. 4, Wallenhorst, 49134", "221 B Baker Street", "서울특별시 종로구 사직로3길 23"])
 
 # you can also get the probability of the predicted tags
-parsed_address = address_parser("350 rue des Lilas Ouest Québec Québec G1L 1B6", 
+parsed_address = address_parser("350 rue des Lilas Ouest Québec Québec G1L 1B6",
                                 with_prob=True)
+
+# or using one of our dataset container
+addresses_to_parse = CSVDatasetContainer("./a_path.csv", column_names=["address_column_name"],
+                                         is_training_container=False)
+address_parser(addresses_to_parse)
 ```
 
-The predictions tags are the following
+The default predictions tags are the following
 
 - "StreetNumber": for the street number,
 - "StreetName": for the name of the street,
@@ -197,21 +203,21 @@ address_parser.retrain(training_container, 0.8, epochs=5, batch_size=8)
 
 ```python
 
-address_components = {"ATag":0, "AnotherTag": 1, "EOS": 2}
-address_parser.retrain(training_container, 0.8, epochs=1, batch_size=128, 
+address_components = {"ATag": 0, "AnotherTag": 1, "EOS": 2}
+address_parser.retrain(training_container, 0.8, epochs=1, batch_size=128,
                        prediction_tags=address_components)
 
 ```
 
 ### Retrain a Seq2seq model from scratch
 
-> See [here](https://github.com/GRAAL-Research/deepparse/blob/master/examples/retrain_with_new_seq2seq_params.py) for 
+> See [here](https://github.com/GRAAL-Research/deepparse/blob/master/examples/retrain_with_new_seq2seq_params.py) for
 > a complete example.
 
 ```python
 
 seq2seq_params = {"encoder_hidden_size": 512, "decoder_hidden_size": 512}
-address_parser.retrain(training_container, 0.8, epochs=1, batch_size=128, 
+address_parser.retrain(training_container, 0.8, epochs=1, batch_size=128,
                        seq2seq_params=seq2seq_params)
 
 ```
@@ -224,7 +230,8 @@ Here are the URLs to download our pre-trained models directly
 - [FastTextAttention](https://graal.ift.ulaval.ca/public/deepparse/fasttext_attention.ckpt),
 - [BPEmb](https://graal.ift.ulaval.ca/public/deepparse/bpemb.ckpt),
 - [BPEmbAttention](https://graal.ift.ulaval.ca/public/deepparse/bpemb_attention.ckpt),
-- [FastText Light](https://graal.ift.ulaval.ca/public/deepparse/fasttext.magnitude.gz) (using [Magnitude Light](https://github.com/davebulaval/magnitude-light)).
+- [FastText Light](https://graal.ift.ulaval.ca/public/deepparse/fasttext.magnitude.gz) (
+  using [Magnitude Light](https://github.com/davebulaval/magnitude-light)).
 
 ------------------
 
@@ -276,8 +283,8 @@ and this one for the package;
 ## Contributing to Deepparse
 
 We welcome user input, whether it is regarding bugs found in the library or feature propositions ! Make sure to have a
-look at our [contributing guidelines](https://github.com/GRAAL-Research/deepparse/blob/master/.github/CONTRIBUTING.md) for more
-details on this matter.
+look at our [contributing guidelines](https://github.com/GRAAL-Research/deepparse/blob/master/.github/CONTRIBUTING.md)
+for more details on this matter.
 
 ## License
 

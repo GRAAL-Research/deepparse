@@ -4,6 +4,7 @@ import pickle
 import pandas as pd
 
 from deepparse import download_from_url
+from deepparse.dataset_container import CSVDatasetContainer
 from deepparse.parser import AddressParser
 
 # Here is an example on how to parse multiple addresses
@@ -13,18 +14,17 @@ file_extension = "p"
 test_dataset_name = "predict"
 download_from_url(test_dataset_name, saving_dir, file_extension=file_extension)
 
-# Now let's load the pickled data (in a list format)
-with open(os.path.join(saving_dir, test_dataset_name + "." + file_extension), "rb") as f:
-    test_data = pickle.load(f)  # a 30000 addresses list
+#  Now let's load the dataset using one of our dataset container
+addresses_to_parse = CSVDatasetContainer("./a_path.csv", column_names=["address_column_name"])
 
 # We can sneak peek some addresses
-print(test_data[:2])
+print(addresses_to_parse[:2])
 
 # Let's use the BPEmb model on a GPU
 address_parser = AddressParser(model_type="bpemb", device=0)
 
 # We can now parse some addresses
-parsed_addresses = address_parser(test_data[0:300])
+parsed_addresses = address_parser(addresses_to_parse[0:300])
 
 # When parsing addresses, some data quality tests are applied to the dataset.
 # First, it validates that no addresses to parse are empty.

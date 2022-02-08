@@ -14,7 +14,7 @@ from deepparse import (
 
 def main(args: argparse.Namespace) -> None:
     """
-    Script to manually download all the dependencies for a pre-trained model.
+    CLI function to manually download all the dependencies for a pre-trained model.
     """
     model_type = args.model_type
 

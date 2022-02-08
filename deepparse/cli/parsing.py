@@ -1,24 +1,65 @@
 import argparse
-import os
+import pickle
+from functools import partial
 
-from bpemb import BPEmb
-
-from deepparse import (
-    CACHE_PATH,
-    download_fasttext_magnitude_embeddings,
-    latest_version,
-    download_fasttext_embeddings,
-    download_weights,
-)
+from deepparse.cli.tools import is_csv_path, is_pickle_path, to_csv
+from deepparse.dataset_container import CSVDatasetContainer, PickleDatasetContainer
+from deepparse.parser import AddressParser
 
 
 def main(args: argparse.Namespace) -> None:
     """
     CLI function to rapidly parse an address dataset and output it in another file.
     """
+
+    dataset_path = args.dataset_path
+    if is_csv_path(dataset_path):
+        csv_column_name = args.csv_column_name
+        if csv_column_name is None:
+            raise ValueError("For a CSV dataset path, you need to specify the 'csv_column_name' argument to provide the"
+                             " column name to extract address.")
+        csv_column_separator = args.csv_column_separator
+        addresses_to_parse = CSVDatasetContainer(dataset_path,
+                                                 column_names=[csv_column_name],
+                                                 separator=csv_column_separator,
+                                                 is_training_container=False)
+    elif is_pickle_path(dataset_path):
+        addresses_to_parse = PickleDatasetContainer(dataset_path, is_training_container=False)
+    else:
+        raise ValueError("The dataset path argument is not a CSV or pickle file.")
+
+    export_file_name = args.export_file_name
+    export_path = dataset_path
+
+    file = None  # To handle more easily the pickle case
+    if is_csv_path(export_file_name):
+        export_fn = partial(to_csv, export_path=export_path, sep=csv_column_separator)
+    elif is_pickle_path(export_file_name):
+        file = open(export_path, "wb")
+        export_fn = partial(pickle.dump, file)
+    else:
+        ValueError("We do not support this type of export.")
+
     parsing_model = args.parsing_model
+    device = args.device
+    path_to_retrained_model = args.path_to_retrained_model
 
+    parser_args = {"model_type": parsing_model, "device": device}
+    if "-attention" in parsing_model:
+        parser_args.update({"attention_mechanism": True})
 
+    if path_to_retrained_model is not None:
+        parser_args.update({"path_to_retrained_model": path_to_retrained_model})
+
+    address_parser = AddressParser(**parser_args)
+
+    parsed_address = address_parser(addresses_to_parse)
+
+    export_fn(parsed_address)
+
+    if file is not None:
+        # We close to open file for the pickle case
+        file.close()
 
 
 if __name__ == "__main__":  # pragma: no cover
@@ -27,26 +68,53 @@ if __name__ == "__main__":  # pragma: no cover
         "parsing_model",
         choices=[
             "fasttext",
-            "fasttext_attention",
+            "fasttext-attention",
             "fasttext-light",
             "bpemb",
-            "bpemb_attention",
+            "bpemb-attention",
         ],
         help="The parsing module to use.",
     )
 
     parser.add_argument(
         "dataset_path",
-        help="The path to the dataset file in a pickle or CSV format.",
+        help="The path to the dataset file in a pickle (.p or .pickle) or CSV format.",
+        type=str
     )
 
     parser.add_argument(
-        "dataset_path",
-        help="The path to the dataset file in a pickle or CSV format.",
+        "export_file_name",
+        help="The file name to use for the export of the parsed addresses. We will infer the file format base on the "
+             "file extension. That is, if the file is a pickle (.p or .pickle), we will export it into a pickle file."
+             "The file will be exported in the same repositories as the dataset_path.",
+        type=str
     )
 
-    # arg pour le csv data container
-    # output file?
+    parser.add_argument(
+        "--device",
+        help="The device to use. It can be 'cpu' or a gpu device index such as '0' or '1'. By default '0'.",
+        type=str,
+        default="0"
+    )
+
+    parser.add_argument(
+        "--path_to_retrained_model",
+        help="A path to a retrained model to use for parsing.",
+        default=None
+    )
+
+    parser.add_argument(
+        "--csv_column_name",
+        help="The column name to extract address in the CSV. Need to be specified if the provided dataset_path is "
+             "leading to a CSV file.",
+        default=None
+    )
+
+    parser.add_argument(
+        "--csv_column_separator",
+        help="The column separator to use for the dataset container. By default '\t'.",
+        default="\t"
+    )
 
     args_parser = parser.parse_args()
 

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; deepparse 0.6.4 documentation</title>
+  <title>Index &mdash; deepparse 0.6.6 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -28,7 +28,7 @@
             <img src="_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.6.4
+                0.6.6
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -43,11 +43,14 @@
 <li class="toctree-l1"><a class="reference internal" href="parser.html">Parser</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dataset_container.html">Dataset Container</a></li>
 <li class="toctree-l1"><a class="reference internal" href="comparer.html">Comparer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">CLI</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="examples/fine_tuning.html">Retrain a Pretrained Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/parse_addresses.html">Parse Addresses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/parse_addresses_with_cli.html">Parse Addresses Using Our CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/fine_tuning.html">Retrain a Pretrained Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/retrain_attention_model.html">Retrain an attention mechanism model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/retrain_with_new_seq2seq_params.html">Retrain With New Seq2Seq Parameters</a></li>
 </ul>
@@ -88,6 +91,7 @@
  | <a href="#G"><strong>G</strong></a>
  | <a href="#I"><strong>I</strong></a>
  | <a href="#L"><strong>L</strong></a>
+ | <a href="#M"><strong>M</strong></a>
  | <a href="#P"><strong>P</strong></a>
  | <a href="#R"><strong>R</strong></a>
  | <a href="#T"><strong>T</strong></a>
@@ -120,11 +124,13 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="comparer.html#deepparse.comparer.AddressesComparer.compare_raw">compare_raw() (deepparse.comparer.AddressesComparer method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="comparer.html#deepparse.comparer.AddressesComparer.compare_tags">compare_tags() (deepparse.comparer.AddressesComparer method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="comparer.html#deepparse.comparer.FormattedComparedAddresses.comparison_report">comparison_report() (deepparse.comparer.FormattedComparedAddresses method)</a>
+</li>
+      <li><a href="dataset_container.html#deepparse.dataset_container.CSVDatasetContainer">CSVDatasetContainer (class in deepparse.dataset_container)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -187,6 +193,18 @@
   </ul></td>
 </tr></table>
 
+<h2 id="M">M</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="cli.html#deepparse.cli.download.main">main() (in module deepparse.cli.download)</a>
+
+      <ul>
+        <li><a href="cli.html#deepparse.cli.parse.main">(in module deepparse.cli.parse)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -212,11 +230,15 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="parser.html#deepparse.parser.AddressParser.test">test() (deepparse.parser.AddressParser method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="parser.html#deepparse.parser.FormattedParsedAddress.to_dict">to_dict() (deepparse.parser.FormattedParsedAddress method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="parser.html#deepparse.parser.FormattedParsedAddress.to_list_of_tuples">to_list_of_tuples() (deepparse.parser.FormattedParsedAddress method)</a>
+</li>
+      <li><a href="parser.html#deepparse.parser.FormattedParsedAddress.to_pandas">to_pandas() (deepparse.parser.FormattedParsedAddress method)</a>
+</li>
+      <li><a href="parser.html#deepparse.parser.FormattedParsedAddress.to_pickle">to_pickle() (deepparse.parser.FormattedParsedAddress method)</a>
 </li>
   </ul></td>
 </tr></table>

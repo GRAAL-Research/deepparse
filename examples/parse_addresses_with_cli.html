@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Overview: module code &mdash; deepparse 0.6.6 documentation</title>
+  <title>Parse Addresses Using Our CLI &mdash; deepparse 0.6.6 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -16,7 +17,9 @@
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Retrain a Pretrained Model" href="fine_tuning.html" />
+    <link rel="prev" title="Parse Addresses" href="parse_addresses.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -46,13 +49,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../cli.html">CLI</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Examples</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../examples/parse_addresses.html">Parse Addresses</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../examples/parse_addresses_with_cli.html">Parse Addresses Using Our CLI</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../examples/fine_tuning.html">Retrain a Pretrained Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../examples/retrain_attention_model.html">Retrain an attention mechanism model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../examples/retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../examples/retrain_with_new_seq2seq_params.html">Retrain With New Seq2Seq Parameters</a></li>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="parse_addresses.html">Parse Addresses</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Parse Addresses Using Our CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fine_tuning.html">Retrain a Pretrained Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="retrain_attention_model.html">Retrain an attention mechanism model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="retrain_with_new_seq2seq_params.html">Retrain With New Seq2Seq Parameters</a></li>
 </ul>
 
         </div>
@@ -69,8 +72,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Overview: module code</li>
+      <li>Parse Addresses Using Our CLI</li>
       <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/examples/parse_addresses_with_cli.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -78,21 +82,31 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>All modules for which code is available</h1>
-<ul><li><a href="deepparse/cli/download.html">deepparse.cli.download</a></li>
-<li><a href="deepparse/cli/parse.html">deepparse.cli.parse</a></li>
-<li><a href="deepparse/comparer/addresses_comparer.html">deepparse.comparer.addresses_comparer</a></li>
-<li><a href="deepparse/comparer/formatted_compared_addresses.html">deepparse.comparer.formatted_compared_addresses</a></li>
-<li><a href="deepparse/comparer/formatted_compared_addresses_raw.html">deepparse.comparer.formatted_compared_addresses_raw</a></li>
-<li><a href="deepparse/comparer/formatted_compared_addresses_tags.html">deepparse.comparer.formatted_compared_addresses_tags</a></li>
-<li><a href="deepparse/dataset_container/dataset_container.html">deepparse.dataset_container.dataset_container</a></li>
-<li><a href="deepparse/parser/address_parser.html">deepparse.parser.address_parser</a></li>
-<li><a href="deepparse/parser/formatted_parsed_address.html">deepparse.parser.formatted_parsed_address</a></li>
-</ul>
+  <section id="parse-addresses-using-our-cli">
+<h1>Parse Addresses Using Our CLI<a class="headerlink" href="#parse-addresses-using-our-cli" title="Permalink to this headline"></a></h1>
+<p>You can use our cli function to parse addresses rapidly and output them into a file.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m deepparse.cli.parse fasttext ./dataset_path.csv parsed_address.pickle
+</pre></div>
+</div>
+<p>The cli command will infer the output format (here in a pickle format) and export the parsed addresses next to the
+dataset.</p>
+<p>You can also specify a device using the optional <code class="docutils literal notranslate"><span class="pre">device</span></code> argument.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m deepparse.cli.parse fasttext ./dataset_path.csv parsed_address.pickle --device <span class="m">0</span>
+</pre></div>
+</div>
+<p>Or use one of your retrained models using the <cite>optional ̀</cite> path_to_retrained_model`` argument.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m deepparse.cli.parse fasttext ./dataset_path.csv parsed_address.pickle --path_to_retrained_model ./path
+</pre></div>
+</div>
+</section>
+
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="parse_addresses.html" class="btn btn-neutral float-left" title="Parse Addresses" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="fine_tuning.html" class="btn btn-neutral float-right" title="Retrain a Pretrained Model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>deepparse.parser.formatted_parsed_address &mdash; deepparse 0.6.4 documentation</title>
+  <title>deepparse.parser.formatted_parsed_address &mdash; deepparse 0.6.6 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -28,7 +28,7 @@
             <img src="../../../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.6.4
+                0.6.6
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -43,11 +43,14 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../parser.html">Parser</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../dataset_container.html">Dataset Container</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../comparer.html">Comparer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli.html">CLI</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../examples/fine_tuning.html">Retrain a Pretrained Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/parse_addresses.html">Parse Addresses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/parse_addresses_with_cli.html">Parse Addresses Using Our CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/fine_tuning.html">Retrain a Pretrained Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_attention_model.html">Retrain an attention mechanism model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_with_new_seq2seq_params.html">Retrain With New Seq2Seq Parameters</a></li>
 </ul>
@@ -277,6 +280,36 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">dict_of_attr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[(</span><span class="n">value</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">dict_of_attr</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span></div>
+
+<div class="viewcode-block" id="FormattedParsedAddress.to_pandas"><a class="viewcode-back" href="../../../parser.html#deepparse.parser.FormattedParsedAddress.to_pandas">[docs]</a>    <span class="k">def</span> <span class="nf">to_pandas</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to convert a parsed address into a dictionary for pandas where the first key is the raw address and</span>
+<span class="sd">        the followings keys are the address components, and the values are the value of those components.</span>
+<span class="sd">        For example, the parsed address ``&lt;StreetNumber&gt; 305 &lt;StreetName&gt; rue des Lilas`` will be converted into</span>
+<span class="sd">        the following dictionary: ``{&#39;Address&#39;: &#39;305 rue des Lilas&#39;, &#39;StreetNumber&#39;:&#39;305&#39;, &#39;StreetName&#39;:</span>
+<span class="sd">        &#39;rue des Lilas&#39;}``.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            A dictionary of the raw address and all is parsed components.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;Address&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw_address</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()}</span></div>
+
+<div class="viewcode-block" id="FormattedParsedAddress.to_pickle"><a class="viewcode-back" href="../../../parser.html#deepparse.parser.FormattedParsedAddress.to_pickle">[docs]</a>    <span class="k">def</span> <span class="nf">to_pickle</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to convert a parsed address into a list of tuple for pickle where the first tuple element is the</span>
+<span class="sd">        raw address and the followings tuples are the address components, and the values are the value of</span>
+<span class="sd">        those components. For example, the parsed address ``&lt;StreetNumber&gt; 305 &lt;StreetName&gt; rue des Lilas``</span>
+<span class="sd">        will be converted into the following list of tuples: ``&#39;305 rue des Lilas&#39;, (&#39;305&#39;, &#39;StreetNumber&#39;),</span>
+<span class="sd">        (&#39;rue des Lilas&#39;, &#39;StreetName&#39;)]``.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            A list of tuples of the raw address and all is parsed components.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">export_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">raw_address</span><span class="p">])</span>
+        <span class="n">export_list</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_list_of_tuples</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">export_list</span></div>
 
     <span class="k">def</span> <span class="nf">_resolve_tagged_affectation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tagged_address</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>

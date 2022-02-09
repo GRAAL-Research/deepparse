@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Parse Addresses &mdash; deepparse 0.6.4 documentation</title>
+  <title>Parse Addresses &mdash; deepparse 0.6.6 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -18,8 +18,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Retrain With New Prediction Tags" href="retrain_with_new_prediction_tags.html" />
-    <link rel="prev" title="Retrain a Pretrained Model" href="fine_tuning.html" /> 
+    <link rel="next" title="Parse Addresses Using Our CLI" href="parse_addresses_with_cli.html" />
+    <link rel="prev" title="CLI" href="../cli.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -31,7 +31,7 @@
             <img src="../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.6.4
+                0.6.6
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -46,11 +46,14 @@
 <li class="toctree-l1"><a class="reference internal" href="../parser.html">Parser</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../dataset_container.html">Dataset Container</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../comparer.html">Comparer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli.html">CLI</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="fine_tuning.html">Retrain a Pretrained Model</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Parse Addresses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parse_addresses_with_cli.html">Parse Addresses Using Our CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fine_tuning.html">Retrain a Pretrained Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="retrain_attention_model.html">Retrain an attention mechanism model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
 <li class="toctree-l1"><a class="reference internal" href="retrain_with_new_seq2seq_params.html">Retrain With New Seq2Seq Parameters</a></li>
 </ul>
@@ -97,9 +100,9 @@
 <span class="n">download_from_url</span><span class="p">(</span><span class="n">test_dataset_name</span><span class="p">,</span> <span class="n">saving_dir</span><span class="p">,</span> <span class="n">file_extension</span><span class="o">=</span><span class="n">file_extension</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Now let’s load the pickled data (in a list format).</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">saving_dir</span><span class="p">,</span> <span class="n">test_dataset_name</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="n">file_extension</span><span class="p">),</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-    <span class="n">test_data</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>  <span class="c1"># a 30000 addresses list</span>
+<p>Now let’s load the dataset using one of our dataset container</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">addresses_to_parse</span> <span class="o">=</span> <span class="n">CSVDatasetContainer</span><span class="p">(</span><span class="s2">&quot;./a_path.csv&quot;</span><span class="p">,</span> <span class="n">column_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;address_column_name&quot;</span><span class="p">],</span>
+                                         <span class="n">is_training_container</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Let’s use the BPEmb model on a GPU.</p>
@@ -107,6 +110,14 @@
 </pre></div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parsed_addresses</span> <span class="o">=</span> <span class="n">address_parser</span><span class="p">(</span><span class="n">test_data</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">300</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>When parsing addresses, some data quality tests are applied to the dataset.
+First, it validates that no addresses to parse are empty.
+Second, it validates that no addresses are whitespace-only.
+The next two lines are rising a DataError.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>  <span class="c1"># Raise an error</span>
+<span class="n">address_parser</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>  <span class="c1"># Raise an error</span>
 </pre></div>
 </div>
 <p>We can also put our parsed address into a pandas dataframe for analysis. You can choose the fields to use or use the
@@ -122,8 +133,8 @@ default one.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="fine_tuning.html" class="btn btn-neutral float-left" title="Retrain a Pretrained Model" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="retrain_with_new_prediction_tags.html" class="btn btn-neutral float-right" title="Retrain With New Prediction Tags" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../cli.html" class="btn btn-neutral float-left" title="CLI" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="parse_addresses_with_cli.html" class="btn btn-neutral float-right" title="Parse Addresses Using Our CLI" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

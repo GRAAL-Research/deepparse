@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Retrain a Pretrained Model &mdash; deepparse 0.6.4 documentation</title>
+  <title>Retrain a Pretrained Model &mdash; deepparse 0.6.6 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -18,8 +18,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Parse Addresses" href="parse_addresses.html" />
-    <link rel="prev" title="Comparer" href="../comparer.html" /> 
+    <link rel="next" title="Retrain an attention mechanism model" href="retrain_attention_model.html" />
+    <link rel="prev" title="Parse Addresses Using Our CLI" href="parse_addresses_with_cli.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -31,7 +31,7 @@
             <img src="../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.6.4
+                0.6.6
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -46,11 +46,14 @@
 <li class="toctree-l1"><a class="reference internal" href="../parser.html">Parser</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../dataset_container.html">Dataset Container</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../comparer.html">Comparer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli.html">CLI</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Retrain a Pretrained Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parse_addresses.html">Parse Addresses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parse_addresses_with_cli.html">Parse Addresses Using Our CLI</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Retrain a Pretrained Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="retrain_attention_model.html">Retrain an attention mechanism model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
 <li class="toctree-l1"><a class="reference internal" href="retrain_with_new_seq2seq_params.html">Retrain With New Seq2Seq Parameters</a></li>
 </ul>
@@ -108,28 +111,28 @@
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;fasttext&quot;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Now let’s retrain for 5 epochs using a batch size of 8 since the dataset is really small for the example.
+<p>Now, let’s retrain for 5 epochs using a batch size of 8 since the data is really small for the example.
 Let’s start with the default learning rate of 0.01 and use a learning rate scheduler to lower the learning rate as we progress.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Reduce LR by a factor of 10 each epoch</span>
 <span class="n">lr_scheduler</span> <span class="o">=</span> <span class="n">poutyne</span><span class="o">.</span><span class="n">StepLR</span><span class="p">(</span><span class="n">step_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The checkpoints (ckpt) are saved in the default “./checkpoints” directory, so if you wish to retrain
-another model (let say BPEmb), you need to change the <cite>logging_path</cite> directory otherwise you will get
-an error when doing a retrain since Poutyne will try to use the last checkpoint.</p>
+another model (let’s say BPEmb), you need to change the <cite>logging_path</cite> directory; otherwise, you will get
+an error when retraining since Poutyne will try to use the last checkpoint.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span><span class="o">.</span><span class="n">retrain</span><span class="p">(</span><span class="n">training_container</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">lr_scheduler</span><span class="p">])</span>
 </pre></div>
 </div>
-<p>Now let’s test our fine tuned model using the best ckeckpoint (default parameter).</p>
+<p>Now, let’s test our fine-tuned model using the best checkpoint (default parameter).</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="n">test_container</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Now let’s retrain the fasttext version but with an attention mechanism</p>
+<p>Now let’s retrain the fasttext version but with an attention mechanism.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;fasttext&quot;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">attention_mechanism</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Since the previous checkpoints where saved in the default “./checkpoints” directory, we need to use a new one.
-Otherwise, poutyne will try to reload the previous checkpoints and our model have change.</p>
+<p>Since the previous checkpoints were saved in the default “./checkpoints” directory, we need to use a new one.
+Otherwise, poutyne will try to reload the previous checkpoints, and our model has changed.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span><span class="o">.</span><span class="n">retrain</span><span class="p">(</span><span class="n">training_container</span><span class="p">,</span>
                        <span class="mf">0.8</span><span class="p">,</span>
                        <span class="n">epochs</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
@@ -139,7 +142,7 @@ Otherwise, poutyne will try to reload the previous checkpoints and our model hav
                        <span class="n">logging_path</span><span class="o">=</span><span class="s2">&quot;checkpoints_attention&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Now let’s test our fine-tuned model using the best checkpoint (default parameter).</p>
+<p>Now, let’s test our fine-tuned model using the best checkpoint (default parameter).</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="n">test_container</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -149,8 +152,8 @@ Otherwise, poutyne will try to reload the previous checkpoints and our model hav
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../comparer.html" class="btn btn-neutral float-left" title="Comparer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="parse_addresses.html" class="btn btn-neutral float-right" title="Parse Addresses" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="parse_addresses_with_cli.html" class="btn btn-neutral float-left" title="Parse Addresses Using Our CLI" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="retrain_attention_model.html" class="btn btn-neutral float-right" title="Retrain an attention mechanism model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

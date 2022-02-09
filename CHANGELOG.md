@@ -158,3 +158,8 @@
 - New CSVDatasetContainer
 - DataContainer can now be used to predict using a flag.
 - Add a CLI to parse addresses from the command line.
+
+## 0.6.6
+
+- Fixed errors in code examples
+- Improved doc of download_from_url

@@ -631,7 +631,7 @@ class AddressParser:
                 address_parser = AddressParser(device=0) #on gpu device 0
                 data_path = 'path_to_a_pickle_test_dataset.p'
 
-                test_container = PickleDatasetContainer(data_path)
+                test_container = PickleDatasetContainer(data_path, is_training_container=False)
 
                 address_parser.test(test_container) # We test the model on the data
 
@@ -653,7 +653,7 @@ class AddressParser:
                 # Test phase
                 data_path = 'path_to_a_pickle_test_dataset.p'
 
-                test_container = PickleDatasetContainer(data_path)
+                test_container = PickleDatasetContainer(data_path, is_training_container=False)
 
                 address_parser.test(test_container) # Test the retrained model
 

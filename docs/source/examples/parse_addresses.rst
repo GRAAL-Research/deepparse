@@ -27,7 +27,8 @@ Now let's load the dataset using one of our dataset container
 
 .. code-block:: python
 
-    addresses_to_parse = CSVDatasetContainer("./a_path.csv", column_names=["address_column_name"])
+    addresses_to_parse = CSVDatasetContainer("./a_path.csv", column_names=["address_column_name"],
+                                             is_training_container=False)
 
 Let's use the BPEmb model on a GPU.
 

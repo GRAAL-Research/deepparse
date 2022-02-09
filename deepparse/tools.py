@@ -27,6 +27,8 @@ def latest_version(model: str, cache_path: str) -> bool:
 def download_from_url(file_name: str, saving_dir: str, file_extension: str):
     """
     Simple function to download the content of a file from a distant repository.
+    The repository URL string is  ̀`'https://graal.ift.ulaval.ca/public/deepparse/{}.{}'``
+    where the first bracket is the file name and the second is the file extension.
     """
     url = BASE_URL.format(file_name, file_extension)
     r = requests.get(url, timeout=5)

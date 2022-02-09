@@ -30,7 +30,8 @@ Now let's create a training and test container.
 .. code-block:: python
 
     training_container = PickleDatasetContainer(os.path.join(saving_dir, training_dataset_name + "." + file_extension))
-    test_container = PickleDatasetContainer(os.path.join(saving_dir, test_dataset_name + "." + file_extension))
+    test_container = PickleDatasetContainer(os.path.join(saving_dir, test_dataset_name + "." + file_extension),
+                                            is_training_container=False)
 
 We will retrain the fasttext attention version of our pretrained model.
 

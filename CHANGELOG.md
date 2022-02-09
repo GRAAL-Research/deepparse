@@ -151,10 +151,10 @@
 
 ## 0.6.5
 
-- Improve error handling of empty data and whitespace only data.
+- Improve error handling of empty data and whitespace-only data.
 - Parsing now include two validation on the data quality (not empty and not whitespace only)
-- DataContainer now includes data quality test (not empty, not whitespace only, tags not empty, tag same len as address,
-  and data is list of tuple)
+- DataContainer now includes data quality test (not empty, not whitespace only, tags not empty, tag the same len as an address,
+  and data is a list of tuple)
 - New CSVDatasetContainer
-- DataContainer can now be use for predict using a flag.
-- Add a CLI to parse addresses from command line.
+- DataContainer can now be used to predict using a flag.
+- Add a CLI to parse addresses from the command line.

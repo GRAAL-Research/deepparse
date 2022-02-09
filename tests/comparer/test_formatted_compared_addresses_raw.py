@@ -90,8 +90,8 @@ class TestFormattedComparedAddressesRaw(TestCase):
         )
 
         expected_sentences = [
-            "Comparison report of the two raw addresses: Identical\n\nAddress : 350 rue des Lilas Ouest "
-            "Quebec Quebec G1L 1B6\n\n\nProbabilities of parsed tags for the addresses with deepparse using "
+            "Comparison report of the two raw addresses: Identical\n\nAddress : 350 rue des Lilas Ouest ",
+            "Quebec Quebec G1L 1B6\n\n\nProbabilities of parsed tags for the addresses with deepparse using ",
             "Bpemb:", "('350', ('StreetNumber', 1.0))", "('rue', ('StreetName', 0.9987))", "('Municipality', 0.9768))",
             "differences between the two addresses: \nWhite: Shared\nBlue:"]
 
@@ -129,8 +129,8 @@ class TestFormattedComparedAddressesRaw(TestCase):
         )
 
         expected_sentences = [
-            "Comparison report of the two raw addresses: Identical\n\nAddress : 350 rue des Lilas Ouest "
-            "Quebec Quebec G1L 1B6\n\n\nProbabilities of parsed tags for the addresses with deepparse using "
+            "Comparison report of the two raw addresses: Identical\n\nAddress : 350 rue des Lilas Ouest ",
+            "Quebec Quebec G1L 1B6\n\n\nProbabilities of parsed tags for the addresses with deepparse using ",
             "Bpemb:", "('350', ('StreetNumber', 1.0))", "('rue', ('StreetName', 0.9987))", "('Municipality', 0.9768))",
             " \n\x1b[38;2;26;123;220m3\x1b[0m\x1b[38;2;255;194;10m4\x1b[0", "m\x1b[38;2;255;255;255m50\x1b[0m\n"]
 

@@ -350,7 +350,7 @@ class AddressParser:
         prediction_tags: Union[Dict, None] = None,
         seq2seq_params: Union[Dict, None] = None,
     ) -> List[Dict]:
-        # pylint: disable=too-many-arguments, line-too-long, too-many-locals, too-many-branches
+        # pylint: disable=too-many-arguments, line-too-long, too-many-locals, too-many-branches, too-many-statements
         """
         Method to retrain the address parser model using a dataset with the same tags. We train using
         `experiment <https://poutyne.org/experiment.html>`_ from `poutyne <https://poutyne.org/index.html>`_
@@ -486,6 +486,9 @@ class AddressParser:
         """
         if "fasttext-light" in self.model_type:
             raise ValueError("It's not possible to retrain a fasttext-light due to pymagnitude problem.")
+
+        if not dataset_container.is_a_train_container():
+            raise ValueError("The dataset container is not a train container.")
 
         model_factory_dict = {"prediction_layer_len": 9}  # We set the default output dim size
 
@@ -663,6 +666,9 @@ class AddressParser:
                 "It's not possible to test a fasttext-light due to pymagnitude problem. See Retrain method"
                 "doc for more details."
             )
+
+        if not test_dataset_container.is_a_train_container():
+            raise ValueError("The dataset container is not a train container.")
 
         callbacks = [] if callbacks is None else callbacks
         data_transform = self._set_data_transformer()

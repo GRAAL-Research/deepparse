@@ -22,10 +22,8 @@ BATCH_SIZE = 32
 
 
 class ADataContainer(DatasetContainer):
-    def __init__(
-        self,
-    ):
-        super().__init__()
+    def __init__(self, is_training_container: bool = True):
+        super().__init__(is_training_container=is_training_container)
         self.data = (torch.rand(BATCH_SIZE, 1), torch.rand(BATCH_SIZE, 1))
 
 

@@ -98,6 +98,16 @@ class DatasetContainerTest(TestCase):
         with self.assertRaises(DataError):
             ADatasetContainer(some_invalid_data, is_training_container=False)
 
+    def test_when_training_container_when_is_data_set_container_return_true(self):
+        some_valid_data = [("An address", [1, 0]), ("Another address", [2, 0]), ("A last address", [3, 4, 0])]
+        a_dataset_container = ADatasetContainer(some_valid_data, is_training_container=True)
+        self.assertTrue(a_dataset_container.is_training_container)
+
+    def test_when_training_container_when_is_data_set_container_return_false(self):
+        some_valid_data = ["An address", "Another address", "A last address"]
+        a_dataset_container = ADatasetContainer(some_valid_data, is_training_container=False)
+        self.assertFalse(a_dataset_container.is_training_container)
+
 
 class PickleDatasetContainerTest(TestCase):
     def setUp(self) -> None:

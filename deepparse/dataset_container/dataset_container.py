@@ -128,6 +128,9 @@ class DatasetContainer(Dataset, ABC):
             generator = (is_whitespace_only(data) for data in self.data)
         return any(generator)
 
+    def is_a_train_container(self) -> bool:
+        return self.is_training_container
+
 
 class PickleDatasetContainer(DatasetContainer):
     """

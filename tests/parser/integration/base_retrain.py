@@ -29,7 +29,7 @@ class AddressParserRetrainTestCase(TestCase):
             os.path.join(cls.a_data_saving_dir, training_dataset_name + "." + file_extension)
         )
         cls.test_container = PickleDatasetContainer(
-            os.path.join(cls.a_data_saving_dir, test_dataset_name + "." + file_extension), is_training_container=False
+            os.path.join(cls.a_data_saving_dir, test_dataset_name + "." + file_extension)
         )
 
         cls.a_fasttext_model_type = "fasttext"

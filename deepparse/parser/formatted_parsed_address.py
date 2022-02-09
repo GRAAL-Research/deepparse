@@ -199,6 +199,36 @@ class FormattedParsedAddress:
         dict_of_attr = self.to_dict(fields)
         return [(value, key) for key, value in dict_of_attr.items()]
 
+    def to_pandas(self) -> Dict:
+        """
+        Method to convert a parsed address into a dictionary for pandas where the first key is the raw address and
+        the followings keys are the address components, and the values are the value of those components.
+        For example, the parsed address ``<StreetNumber> 305 <StreetName> rue des Lilas`` will be converted into
+        the following dictionary: ``{'Address': '305 rue des Lilas', 'StreetNumber':'305', 'StreetName':
+        'rue des Lilas'}``.
+
+        Return:
+            A dictionary of the raw address and all is parsed components.
+
+        """
+        return {"Address": self.raw_address, **self.to_dict()}
+
+    def to_pickle(self) -> List:
+        """
+        Method to convert a parsed address into a list of tuple for pickle where the first tuple element is the
+        raw address and the followings tuples are the address components, and the values are the value of
+        those components. For example, the parsed address ``<StreetNumber> 305 <StreetName> rue des Lilas``
+        will be converted into the following list of tuples: ``'305 rue des Lilas', ('305', 'StreetNumber'),
+        ('rue des Lilas', 'StreetName')]``.
+
+        Return:
+            A list of tuples of the raw address and all is parsed components.
+
+        """
+        export_list = list([self.raw_address])
+        export_list.extend(self.to_list_of_tuples())
+        return export_list
+
     def _resolve_tagged_affectation(self, tagged_address: List[Tuple]) -> None:
         """
         Private method to resolve the parsing of the tagged address.

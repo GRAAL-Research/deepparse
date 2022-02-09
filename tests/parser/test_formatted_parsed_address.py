@@ -273,6 +273,15 @@ class FormattedParsedAddressTest(FormattedParsedAddressBase):
 
         self.assertIsNotNone(actual_parsed_address.EOS)
 
+    def test_integration_to_pandas(self):
+        actual = self.parsed_address.to_pandas()
+        expected = {"Address": self.a_address_str, **self.a_parsed_address_in_dict_format}
+        self.assertEqual(actual, expected)
+
+        actual = self.complete_parsed_address.to_pandas()
+        expected = {"Address": self.a_complete_address_str, **self.a_complete_parsed_address_in_dict_format}
+        self.assertEqual(actual, expected)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -156,3 +156,4 @@
 - DataContainer now includes data quality test (not empty, not whitespace only, tags not empty, tag same len as address,
   and data is list of tuple)
 - New CSVDatasetContainer
+- DataContainer can now be use for predict using a flag.

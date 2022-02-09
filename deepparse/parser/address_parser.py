@@ -231,7 +231,7 @@ class AddressParser:
 
     def __call__(
         self,
-        addresses_to_parse: Union[List[str], str],
+        addresses_to_parse: Union[List[str], str, DatasetContainer],
         with_prob: bool = False,
         batch_size: int = 32,
         num_workers: int = 0,
@@ -286,11 +286,23 @@ class AddressParser:
                 # You can also use more worker
                 parse_address = address_parser(a_large_list_dataset, batch_size=1024, num_workers=2)
 
+
+            Or using one of our dataset container
+
+            .. code-block:: python
+
+                addresses_to_parse = CSVDatasetContainer("./a_path.csv", column_names=["address_column_name"],
+                                                         is_training_container=False)
+                address_parser(addresses_to_parse)
         """
         if isinstance(addresses_to_parse, str):
             addresses_to_parse = [addresses_to_parse]
 
-        validate_data_to_parse(addresses_to_parse)
+        if isinstance(addresses_to_parse, List):
+            validate_data_to_parse(addresses_to_parse)
+
+        if isinstance(addresses_to_parse, DatasetContainer):
+            addresses_to_parse = addresses_to_parse.data
 
         clean_addresses = AddressCleaner().clean(addresses_to_parse)
 

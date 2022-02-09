@@ -23,12 +23,11 @@ Here is an example on how to parse multiple addresses. First, let's download the
     test_dataset_name = "predict"
     download_from_url(test_dataset_name, saving_dir, file_extension=file_extension)
 
-Now let's load the pickled data (in a list format).
+Now let's load the dataset using one of our dataset container
 
 .. code-block:: python
 
-    with open(os.path.join(saving_dir, test_dataset_name + "." + file_extension), 'rb') as f:
-        test_data = pickle.load(f)  # a 30000 addresses list
+    addresses_to_parse = CSVDatasetContainer("./a_path.csv", column_names=["address_column_name"])
 
 Let's use the BPEmb model on a GPU.
 

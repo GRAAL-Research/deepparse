@@ -1,4 +1,4 @@
-# pylint: disable=unbalanced-tuple-unpacking, W0102
+# pylint: disable=unbalanced-tuple-unpacking, too-many-arguments, self-assigning-variable
 
 import os
 import pickle
@@ -23,16 +23,19 @@ a_tags_sequence = ["tag1", "tag2", "tag2", "tag3", "tag3", "tag4"]
 default_csv_column_name = ["Address", "Tags"]
 
 
-def create_data(number_of_data_points: int = 4) -> List:
-    file_content = [
-        (base_string.format(str(data_point)), a_tags_sequence) for data_point in range(number_of_data_points)
-    ]
+def create_data(number_of_data_points: int = 4, predict_container: bool = False) -> List:
+    if predict_container:
+        file_content = [base_string.format(str(data_point)) for data_point in range(number_of_data_points)]
+    else:
+        file_content = [
+            (base_string.format(str(data_point)), a_tags_sequence) for data_point in range(number_of_data_points)
+        ]
 
     return file_content
 
 
-def create_pickle_file(path: str, number_of_data_points: int = 4) -> None:
-    pickle_file_content = create_data(number_of_data_points)
+def create_pickle_file(path: str, number_of_data_points: int = 4, predict_container: bool = False) -> None:
+    pickle_file_content = create_data(number_of_data_points, predict_container)
 
     with open(path, "wb") as f:
         pickle.dump(pickle_file_content, f)
@@ -40,12 +43,19 @@ def create_pickle_file(path: str, number_of_data_points: int = 4) -> None:
 
 def create_csv_file(
     path: str,
+    predict_container: bool = False,
     number_of_data_points: int = 4,
-    column_names=default_csv_column_name,
+    column_names=None,
     separator="\t",
     reformat_list_fn=None,
 ) -> None:
-    csv_file_content = create_data(number_of_data_points)
+    csv_file_content = create_data(number_of_data_points, predict_container=predict_container)
+    if predict_container:
+        column_names = ["Address"]
+    elif column_names is None:
+        column_names = default_csv_column_name
+    elif column_names is not None:
+        column_names = column_names
     df = pd.DataFrame(csv_file_content, columns=column_names)
     if reformat_list_fn:
         df.Tags = df.Tags.apply(reformat_list_fn)
@@ -53,16 +63,21 @@ def create_csv_file(
 
 
 class ADatasetContainer(DatasetContainer):
-    def __init__(self, data):
-        super().__init__()
+    def __init__(self, data, is_training_container=True):
+        super().__init__(is_training_container)
         self.data = data
         self.validate_dataset()
 
 
 class DatasetContainerTest(TestCase):
-    def tests_test_integration(self):
+    def test_integration(self):
         some_valid_data = [("An address", [1, 0]), ("Another address", [2, 0]), ("A last address", [3, 4, 0])]
         a_dataset_container = ADatasetContainer(some_valid_data)
+        self.assertIsNotNone(a_dataset_container.data)
+
+    def test_integration_predict_container(self):
+        some_valid_data = ["An address", "Another address", "A last address"]
+        a_dataset_container = ADatasetContainer(some_valid_data, is_training_container=False)
         self.assertIsNotNone(a_dataset_container.data)
 
     def test_when_not_list_of_tuple_then_raise_type_error(self):
@@ -111,6 +126,25 @@ class DatasetContainerTest(TestCase):
         with self.assertRaises(DataError):
             ADatasetContainer(some_invalid_data)
 
+    def test_when_predict_container_when_data_is_not_a_list_raise_type_error(self):
+        some_invalid_data = "An address"
+        with self.assertRaises(TypeError):
+            ADatasetContainer(some_invalid_data, is_training_container=False)
+
+    def test_when_predict_container_when_data_is_empty_raise_data_error(self):
+        some_invalid_data = [""]
+        with self.assertRaises(DataError):
+            ADatasetContainer(some_invalid_data, is_training_container=False)
+
+    def test_when_predict_container_when_data_is_whitespace_only_raise_data_error(self):
+        some_invalid_data = [" "]
+        with self.assertRaises(DataError):
+            ADatasetContainer(some_invalid_data, is_training_container=False)
+
+        some_invalid_data = ["    "]
+        with self.assertRaises(DataError):
+            ADatasetContainer(some_invalid_data, is_training_container=False)
+
 
 class PickleDatasetContainerTest(TestCase):
     def setUp(self) -> None:
@@ -139,6 +173,29 @@ class PickleDatasetContainerTest(TestCase):
         )
 
         pickle_dataset_container = PickleDatasetContainer(self.a_pickle_data_container_path)
+        expected = number_of_data_points
+        self.assertEqual(expected, len(pickle_dataset_container))
+
+    def test_integration_predict_container(self):
+        number_of_data_points = 4
+        create_pickle_file(
+            self.a_pickle_data_container_path, number_of_data_points=number_of_data_points, predict_container=True
+        )
+
+        pickle_dataset_container = PickleDatasetContainer(
+            self.a_pickle_data_container_path, is_training_container=False
+        )
+        expected = number_of_data_points
+        self.assertEqual(expected, len(pickle_dataset_container))
+
+        number_of_data_points = 5
+        create_pickle_file(
+            self.a_pickle_data_container_path, number_of_data_points=number_of_data_points, predict_container=True
+        )
+
+        pickle_dataset_container = PickleDatasetContainer(
+            self.a_pickle_data_container_path, is_training_container=False
+        )
         expected = number_of_data_points
         self.assertEqual(expected, len(pickle_dataset_container))
 
@@ -207,6 +264,15 @@ class PickleDatasetContainerTest(TestCase):
             self.assertEqual(expected_address, actual_address)
             self.assertListEqual(expected_tags_idx, actual_tags_idx)
 
+    def test_given_list_of_tuple_data_when_predict_container_raise_data_error(self):
+        number_of_data_points = 4
+        create_pickle_file(
+            self.a_pickle_data_container_path, number_of_data_points=number_of_data_points, predict_container=False
+        )
+
+        with self.assertRaises(DataError):
+            PickleDatasetContainer(self.a_pickle_data_container_path, is_training_container=False)
+
 
 class CSVDatasetContainerTest(TestCase):
     def setUp(self) -> None:
@@ -238,6 +304,27 @@ class CSVDatasetContainerTest(TestCase):
         )
 
         csv_dataset_container = CSVDatasetContainer(self.a_data_container_path, column_names=default_csv_column_name)
+        self._test_integration(number_of_data_points, csv_dataset_container)
+
+    def test_integration_predict_container(self):
+        number_of_data_points = 4
+        create_csv_file(
+            self.a_data_container_path, number_of_data_points=number_of_data_points, predict_container=False
+        )
+
+        csv_dataset_container = CSVDatasetContainer(
+            self.a_data_container_path, column_names=["Address"], is_training_container=False
+        )
+        self._test_integration(number_of_data_points, csv_dataset_container)
+
+        number_of_data_points = 5
+        create_csv_file(
+            self.a_data_container_path, number_of_data_points=number_of_data_points, predict_container=False
+        )
+
+        csv_dataset_container = CSVDatasetContainer(
+            self.a_data_container_path, column_names=["Address"], is_training_container=False
+        )
         self._test_integration(number_of_data_points, csv_dataset_container)
 
     def test_integration_user_define_column_names(self):
@@ -382,6 +469,46 @@ class CSVDatasetContainerTest(TestCase):
             actual_address, actual_tags_idx = actual_address_tuple[0], actual_address_tuple[1]
             self.assertEqual(expected_address, actual_address)
             self.assertListEqual(expected_tags_idx, actual_tags_idx)
+
+    def test_given_a_training_container_when_column_names_not_2_raise_value_error(self):
+        with self.assertRaises(ValueError):
+            CSVDatasetContainer(self.a_data_container_path, column_names=[""])
+
+        with self.assertRaises(ValueError):
+            CSVDatasetContainer(self.a_data_container_path, column_names=["a single colum name"])
+
+        with self.assertRaises(ValueError):
+            CSVDatasetContainer(
+                self.a_data_container_path, column_names=["a three colum name", "second name", "third name"]
+            )
+
+    def test_given_a_predict_container_when_column_names_not_1_raise_value_error(self):
+        with self.assertRaises(ValueError):
+            CSVDatasetContainer(
+                self.a_data_container_path,
+                column_names=["a two colum name", "second name"],
+                is_training_container=False,
+            )
+
+        with self.assertRaises(ValueError):
+            CSVDatasetContainer(
+                self.a_data_container_path,
+                column_names=["a three colum name", "second name", "third name"],
+                is_training_container=False,
+            )
+
+    def test_given_a_data_container_with_improper_column_names_raise_value_error(self):
+        with self.assertRaises(ValueError):
+            CSVDatasetContainer(self.a_data_container_path, column_names=[""], is_training_container=False)
+
+        with self.assertRaises(ValueError):
+            CSVDatasetContainer(self.a_data_container_path, column_names=[" "], is_training_container=False)
+
+        with self.assertRaises(ValueError):
+            CSVDatasetContainer(self.a_data_container_path, column_names=["", ""], is_training_container=True)
+
+        with self.assertRaises(ValueError):
+            CSVDatasetContainer(self.a_data_container_path, column_names=[" ", " "], is_training_container=True)
 
 
 if __name__ == "__main__":

@@ -157,3 +157,4 @@
   and data is list of tuple)
 - New CSVDatasetContainer
 - DataContainer can now be use for predict using a flag.
+- Add a CLI to parse addresses from command line.

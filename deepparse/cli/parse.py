@@ -2,7 +2,7 @@ import argparse
 import pickle
 from functools import partial
 
-from deepparse.cli.tools import is_csv_path, is_pickle_path, to_csv
+from deepparse.cli.tools import is_csv_path, is_pickle_path, to_csv, to_pickle
 from deepparse.dataset_container import CSVDatasetContainer, PickleDatasetContainer
 from deepparse.parser import AddressParser
 
@@ -31,12 +31,10 @@ def main(args: argparse.Namespace) -> None:
     export_file_name = args.export_file_name
     export_path = dataset_path
 
-    file = None  # To handle more easily the pickle case
     if is_csv_path(export_file_name):
         export_fn = partial(to_csv, export_path=export_path, sep=csv_column_separator)
     elif is_pickle_path(export_file_name):
-        file = open(export_path, "wb")
-        export_fn = partial(pickle.dump, file)
+        export_fn = partial(to_pickle, export_path)
     else:
         ValueError("We do not support this type of export.")
 
@@ -56,10 +54,6 @@ def main(args: argparse.Namespace) -> None:
     parsed_address = address_parser(addresses_to_parse)
 
     export_fn(parsed_address)
-
-    if file is not None:
-        # We close to open file for the pickle case
-        file.close()
 
 
 if __name__ == "__main__":  # pragma: no cover
@@ -100,6 +94,7 @@ if __name__ == "__main__":  # pragma: no cover
     parser.add_argument(
         "--path_to_retrained_model",
         help="A path to a retrained model to use for parsing.",
+        type=str,
         default=None
     )
 
@@ -107,6 +102,7 @@ if __name__ == "__main__":  # pragma: no cover
         "--csv_column_name",
         help="The column name to extract address in the CSV. Need to be specified if the provided dataset_path is "
              "leading to a CSV file.",
+        type=str,
         default=None
     )
 

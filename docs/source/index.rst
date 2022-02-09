@@ -23,6 +23,7 @@ Deepparse is a state-of-the-art library for parsing multinational street address
 Use deepparse to
 
 - parse multinational address using one of our pre-trained models with or without attention mechanism,
+- parse addresses directly from the command line without no code to write,
 - retrain our pre-trained models on new data to improve parsing on specific country address patterns,
 - retrain our pre-trained models with new prediction tags easily,
 - train a new seq2seq addresses parsing models easily using a new model configuration.
@@ -601,6 +602,15 @@ The default predictions tags are the following
     - "Orientation": for the street orientation (e.g. west, east),
     - "GeneralDelivery": for other delivery information.
 
+Parse Addresses from the Command Line
+*************************************
+
+You can also use our cli to parse addresses using:
+
+.. code-block:: sh
+
+    python3 -m deepparse.cli.parse <parsing_model> <dataset_path> <export_file_name>
+
 Retrain a Model
 ***************
 See `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py>`_ for a complete example.
@@ -652,6 +662,12 @@ Here are the URLs to download our pre-trained models directly
     - `BPEmb <https://graal.ift.ulaval.ca/public/deepparse/bpemb.ckpt>`_,
     - `BPEmbAttention <https://graal.ift.ulaval.ca/public/deepparse/bpemb_attention.ckpt>`_,
     - `FastText Light <https://graal.ift.ulaval.ca/public/deepparse/fasttext.magnitude.gz>`_ (using `Magnitude Light <https://github.com/davebulaval/magnitude-light>`_),.
+
+Or you can use our cli to download our pre-trained models directly using:
+
+.. code-block:: sh
+
+    python3 -m deepparse.cli.download <model_name>
 
 
 Installation
@@ -725,6 +741,7 @@ API Reference
   :caption: Examples
 
   examples/parse_addresses
+  examples/parse_addresses_with_cli
   examples/fine_tuning
   examples/retrain_attention_model
   examples/retrain_with_new_prediction_tags

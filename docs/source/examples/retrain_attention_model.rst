@@ -20,8 +20,8 @@ First, let's download the train and test data with "new tags" from the public re
 
     saving_dir = "./data"
     file_extension = "p"
-    training_dataset_name = "sample_incomplete_data_new_prediction_tags"
-    test_dataset_name = "test_sample_data_new_prediction_tags"
+    training_dataset_name = "sample_incomplete_data"
+    test_dataset_name = "test_sample_data"
     download_from_url(training_dataset_name, saving_dir, file_extension=file_extension)
     download_from_url(test_dataset_name, saving_dir, file_extension=file_extension)
 
@@ -30,8 +30,7 @@ Now let's create a training and test container.
 .. code-block:: python
 
     training_container = PickleDatasetContainer(os.path.join(saving_dir, training_dataset_name + "." + file_extension))
-    test_container = PickleDatasetContainer(os.path.join(saving_dir, test_dataset_name + "." + file_extension),
-                                            is_training_container=False)
+    test_container = PickleDatasetContainer(os.path.join(saving_dir, test_dataset_name + "." + file_extension))
 
 We will retrain the fasttext attention version of our pretrained model.
 

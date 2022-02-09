@@ -33,8 +33,9 @@ def is_pickle_path(dataset_path: str) -> bool:
     return ".p" in dataset_path or ".pickle" in dataset_path
 
 
-def to_csv(parsed_addresses: Union[FormattedParsedAddress, List[FormattedParsedAddress]], export_path: str,
-           sep: str) -> None:
+def to_csv(
+    parsed_addresses: Union[FormattedParsedAddress, List[FormattedParsedAddress]], export_path: str, sep: str
+) -> None:
     """
     Function to convert some parsed addresses into a dictionary to be exported into a CSV file using pandas.
     """

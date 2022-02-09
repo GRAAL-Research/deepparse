@@ -16,13 +16,14 @@ def main(args: argparse.Namespace) -> None:
     if is_csv_path(dataset_path):
         csv_column_name = args.csv_column_name
         if csv_column_name is None:
-            raise ValueError("For a CSV dataset path, you need to specify the 'csv_column_name' argument to provide the"
-                             " column name to extract address.")
+            raise ValueError(
+                "For a CSV dataset path, you need to specify the 'csv_column_name' argument to provide the"
+                " column name to extract address."
+            )
         csv_column_separator = args.csv_column_separator
-        addresses_to_parse = CSVDatasetContainer(dataset_path,
-                                                 column_names=[csv_column_name],
-                                                 separator=csv_column_separator,
-                                                 is_training_container=False)
+        addresses_to_parse = CSVDatasetContainer(
+            dataset_path, column_names=[csv_column_name], separator=csv_column_separator, is_training_container=False
+        )
     elif is_pickle_path(dataset_path):
         addresses_to_parse = PickleDatasetContainer(dataset_path, is_training_container=False)
     else:
@@ -71,45 +72,40 @@ if __name__ == "__main__":  # pragma: no cover
     )
 
     parser.add_argument(
-        "dataset_path",
-        help="The path to the dataset file in a pickle (.p or .pickle) or CSV format.",
-        type=str
+        "dataset_path", help="The path to the dataset file in a pickle (.p or .pickle) or CSV format.", type=str
     )
 
     parser.add_argument(
         "export_file_name",
         help="The file name to use for the export of the parsed addresses. We will infer the file format base on the "
-             "file extension. That is, if the file is a pickle (.p or .pickle), we will export it into a pickle file."
-             "The file will be exported in the same repositories as the dataset_path.",
-        type=str
+        "file extension. That is, if the file is a pickle (.p or .pickle), we will export it into a pickle file."
+        "The file will be exported in the same repositories as the dataset_path.",
+        type=str,
     )
 
     parser.add_argument(
         "--device",
         help="The device to use. It can be 'cpu' or a gpu device index such as '0' or '1'. By default '0'.",
         type=str,
-        default="0"
+        default="0",
     )
 
     parser.add_argument(
-        "--path_to_retrained_model",
-        help="A path to a retrained model to use for parsing.",
-        type=str,
-        default=None
+        "--path_to_retrained_model", help="A path to a retrained model to use for parsing.", type=str, default=None
     )
 
     parser.add_argument(
         "--csv_column_name",
         help="The column name to extract address in the CSV. Need to be specified if the provided dataset_path is "
-             "leading to a CSV file.",
+        "leading to a CSV file.",
         type=str,
-        default=None
+        default=None,
     )
 
     parser.add_argument(
         "--csv_column_separator",
         help="The column separator to use for the dataset container. By default '\t'.",
-        default="\t"
+        default="\t",
     )
 
     args_parser = parser.parse_args()

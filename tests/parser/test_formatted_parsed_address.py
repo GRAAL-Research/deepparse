@@ -122,7 +122,7 @@ class FormattedParsedAddressTest(FormattedParsedAddressBase):
         self.assertEqual(actual, expected)
 
     def test_whenFormattedAddressDefaultSettings_thenReturnExpectedOrderAndDontReturnNoneComponents(
-            self,
+        self,
     ):
         actual = self.parsed_address.format_address()
         expected = self.a_address_str
@@ -156,7 +156,7 @@ class FormattedParsedAddressTest(FormattedParsedAddressBase):
         self.assertEqual(actual, expected)
 
     def test_whenFormattedAddressFieldsSeparator_thenReturnAddressWithFieldsSeparator(
-            self,
+        self,
     ):
         actual = self.parsed_address.format_address(field_separator=", ")
         expected = "3, test road"
@@ -169,7 +169,7 @@ class FormattedParsedAddressTest(FormattedParsedAddressBase):
         self.assertEqual(actual, expected)
 
     def test_whenFormattedAddressCapitalizeFields_thenReturnAddressWithFieldsCapitalize(
-            self,
+        self,
     ):
         actual = self.parsed_address.format_address(capitalize_fields=["StreetName"])
         expected = "3 Test road"
@@ -189,7 +189,7 @@ class FormattedParsedAddressTest(FormattedParsedAddressBase):
             self.complete_parsed_address.format_address(capitalize_fields=["not_a_field"])
 
     def test_whenFormattedAddressUpperCaseFields_thenReturnAddressWithFieldsUpperCase(
-            self,
+        self,
     ):
         actual = self.parsed_address.format_address(upper_case_fields=["StreetName"])
         expected = "3 TEST ROAD"
@@ -209,7 +209,7 @@ class FormattedParsedAddressTest(FormattedParsedAddressBase):
             self.complete_parsed_address.format_address(upper_case_fields=["not_a_field"])
 
     def test_whenFormattedAddressAllArgsChanged_thenReturnAddressProperlyFormatted(
-            self,
+        self,
     ):
         a_different_order = [
             "GeneralDelivery",

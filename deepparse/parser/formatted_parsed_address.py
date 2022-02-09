@@ -89,11 +89,11 @@ class FormattedParsedAddress:
         return True
 
     def format_address(
-            self,
-            fields: Union[List, None] = None,
-            capitalize_fields: Union[List[str], None] = None,
-            upper_case_fields: Union[List[str], None] = None,
-            field_separator: Union[str, None] = None,
+        self,
+        fields: Union[List, None] = None,
+        capitalize_fields: Union[List[str], None] = None,
+        upper_case_fields: Union[List[str], None] = None,
+        field_separator: Union[str, None] = None,
     ) -> str:
         """
         Method to format the address components in a specific order. We also filter the empty components (None).

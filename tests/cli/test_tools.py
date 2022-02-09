@@ -108,7 +108,8 @@ class ToolsTest(TestCase):
         ]
         a_list_of_parsed_addresses = [
             FormattedParsedAddress({a_address_str: a_parsed_address}),
-            FormattedParsedAddress({a_address_str: a_parsed_address})]
+            FormattedParsedAddress({a_address_str: a_parsed_address}),
+        ]
 
         to_csv(a_list_of_parsed_addresses, export_path=self.an_export_path, sep=self.sep)
 
@@ -139,7 +140,8 @@ class ToolsTest(TestCase):
         ]
         a_list_of_parsed_addresses = [
             FormattedParsedAddress({a_address_str: a_parsed_address}),
-            FormattedParsedAddress({a_address_str: a_parsed_address})]
+            FormattedParsedAddress({a_address_str: a_parsed_address}),
+        ]
 
         to_pickle(a_list_of_parsed_addresses, export_path=self.an_export_path)
 
@@ -162,4 +164,3 @@ class ToolsTest(TestCase):
         with open(self.an_export_path, "rb") as file:
             parsed_data = pickle.load(file)
         self.assertEqual(parsed_data[0][0], a_address_str)
-

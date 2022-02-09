@@ -1,5 +1,4 @@
 import argparse
-import pickle
 from functools import partial
 
 from deepparse.cli.tools import is_csv_path, is_pickle_path, to_csv, to_pickle
@@ -9,7 +8,26 @@ from deepparse.parser import AddressParser
 
 def main(args: argparse.Namespace) -> None:
     """
-    CLI function to rapidly parse an address dataset and output it in another file.
+    cli function to rapidly parse an addresses dataset and output it in another file.
+
+    Examples of usage:
+
+    .. code-block:: sh
+
+        python3 -m deepparse.cli.parse fasttext ./dataset_path.csv parsed_address.pickle
+
+    Using a gpu device
+
+    .. code-block:: sh
+
+        python3 -m deepparse.cli.parse fasttext ./dataset_path.csv parsed_address.pickle --device 0
+
+    Using a CSV dataset
+
+    .. code-block:: sh
+
+        python3 -m deepparse.cli.parse fasttext ./dataset.csv parsed_address.pickle --path_to_retrained_model ./path
+
     """
 
     dataset_path = args.dataset_path
@@ -35,7 +53,7 @@ def main(args: argparse.Namespace) -> None:
     if is_csv_path(export_file_name):
         export_fn = partial(to_csv, export_path=export_path, sep=csv_column_separator)
     elif is_pickle_path(export_file_name):
-        export_fn = partial(to_pickle, export_path)
+        export_fn = partial(to_pickle, export_path=export_path)
     else:
         ValueError("We do not support this type of export.")
 
@@ -43,9 +61,13 @@ def main(args: argparse.Namespace) -> None:
     device = args.device
     path_to_retrained_model = args.path_to_retrained_model
 
-    parser_args = {"model_type": parsing_model, "device": device}
+    if "cpu" not in device:
+        device = int(device)
+    parser_args = {"device": device}
     if "-attention" in parsing_model:
         parser_args.update({"attention_mechanism": True})
+        parsing_model = parsing_model.strip("attention").strip("-")
+    parser_args.update({"model_type": parsing_model})
 
     if path_to_retrained_model is not None:
         parser_args.update({"path_to_retrained_model": path_to_retrained_model})

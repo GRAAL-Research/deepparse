@@ -14,7 +14,13 @@ from deepparse import (
 
 def main(args: argparse.Namespace) -> None:
     """
-    CLI function to manually download all the dependencies for a pre-trained model.
+    cli function to manually download all the dependencies for a pre-trained model.
+
+    Example of usage:
+
+    .. code-block:: sh
+
+        python3 -m deepparse.cli.download fasttext
     """
     model_type = args.model_type
 

@@ -1,10 +1,12 @@
+# pylint: disable=no-member
+
 from tempfile import TemporaryDirectory
 from unittest import TestCase
 
 import os
 
-import pandas as pd
 import pickle
+import pandas as pd
 
 from deepparse.cli import is_csv_path, is_pickle_path, to_csv, to_pickle
 from deepparse.parser import FormattedParsedAddress

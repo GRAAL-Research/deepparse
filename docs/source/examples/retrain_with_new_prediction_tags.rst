@@ -32,8 +32,7 @@ Now, let's create a training and test container.
     training_container = PickleDatasetContainer(os.path.join(saving_dir,
                                                              training_dataset_name + "." + file_extension))
     test_container = PickleDatasetContainer(os.path.join(saving_dir,
-                                                         test_dataset_name + "." + file_extension),
-                                            is_training_container=False)
+                                                         test_dataset_name + "." + file_extension))
 
 We will retrain the fasttext version of our pretrained model.
 

@@ -10,12 +10,9 @@ from deepparse.parser import FormattedParsedAddress
 
 
 class TestFormattedComparedAddressesRaw(TestCase):
-    @classmethod
-    def setUpClass(cls):
-        cls.maxDiff = None
-
-        cls.original_raw_address = "350 rue des Lilas Ouest Quebec Quebec G1L 1B6"
-        cls.original_parsed_address = [
+    def setUp(self):
+        self.original_raw_address = "350 rue des Lilas Ouest Quebec Quebec G1L 1B6"
+        self.original_parsed_address = [
             ("350", ("StreetNumber", 1.0)),
             ("rue", ("StreetName", 0.9987)),
             ("des", ("StreetName", 0.9993)),
@@ -27,8 +24,8 @@ class TestFormattedComparedAddressesRaw(TestCase):
             ("1B6", ("PostalCode", 1.0)),
         ]
 
-        cls.original_formatted_parsed_address = FormattedParsedAddress(
-            {cls.original_raw_address: cls.original_parsed_address}
+        self.original_formatted_parsed_address = FormattedParsedAddress(
+            {self.original_raw_address: self.original_parsed_address}
         )
 
     def test_givenIdenticalAddressesRaw_whenCompareRaw_thenReturnIdenticalComparisonReport(

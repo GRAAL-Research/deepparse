@@ -11,7 +11,7 @@ from deepparse.parser import FormattedParsedAddress
 
 class TestFormattedComparedAddressesTags(TestCase):
     def test_givenIdenticalAddressesTags_whenCompareTags_thenReturnIdenticalComparisonReport(
-            self,
+        self,
     ):
         original_raw_address = "350 rue des Lilas Ouest Quebec Quebec G1L 1B6"
         original_parsed_address = [
@@ -51,7 +51,10 @@ class TestFormattedComparedAddressesTags(TestCase):
 
         expected_sentences = [
             "Comparison report of tags for parsed address: Identical\n\nRaw address: 350 rue des Lilas Ouest ",
-            "Quebec Quebec G1L 1B6\n\n\nTags: \nsource:", "('StreetName', 0.8176))", "('1B6', ('PostalCode', 1.0))"]
+            "Quebec Quebec G1L 1B6\n\n\nTags: \nsource:",
+            "('StreetName', 0.8176))",
+            "('1B6', ('PostalCode', 1.0))",
+        ]
 
         actual = identical_formatted_compared_addresses_tags._comparison_report_builder()
 
@@ -59,7 +62,7 @@ class TestFormattedComparedAddressesTags(TestCase):
             self.assertIn(expected_sentence, actual)
 
     def test_givenNotEquivalentAddressesTags_whenCompareTags_thenReturnNotEquivalentComparisonReport(
-            self,
+        self,
     ):
         original_raw_address = "350 rue des Lilas Ouest Quebec Quebec G1L 1B6"
         original_raw_address_with_probs = [
@@ -103,10 +106,12 @@ class TestFormattedComparedAddressesTags(TestCase):
             with_prob=True,
         )
 
-        expected_sentences = ["Shared\nBlue: Belongs only to the source\nYellow: Belongs only to the deepparse using ",
-                              "\n\x1b[38;2;26;123;220mOuest\x1b[0m\n",
-                              "Municipality: \n\x1b[38;2;255;194;10mOuest \x1b[0m\x1b[38;2;255;255;255m",
-                              "Quebec\x1b[0m\n"]
+        expected_sentences = [
+            "Shared\nBlue: Belongs only to the source\nYellow: Belongs only to the deepparse using ",
+            "\n\x1b[38;2;26;123;220mOuest\x1b[0m\n",
+            "Municipality: \n\x1b[38;2;255;194;10mOuest \x1b[0m\x1b[38;2;255;255;255m",
+            "Quebec\x1b[0m\n",
+        ]
 
         actual = not_equivalent_formatted_compared_addresses_raw_._comparison_report_builder()
         for expected_sentence in expected_sentences:

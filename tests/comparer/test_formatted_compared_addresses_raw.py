@@ -58,11 +58,10 @@ class TestFormattedComparedAddressesRaw(TestCase):
             "Quebec Quebec G1L 1B6\n\n\nProbabilities of parsed tags for the addresses with deepparse using "
             "Bpemb:", "('350', ('StreetNumber', 1.0))", "('rue', ('StreetName', 0.9987))"]
 
+        actual = identical_formatted_compared_addresses_raw._comparison_report_builder()
 
-    actual = identical_formatted_compared_addresses_raw._comparison_report_builder()
-
-    for expected_sentence in expected_sentences:
-        self.assertIn(expected_sentence, actual)
+        for expected_sentence in expected_sentences:
+            self.assertIn(expected_sentence, actual)
 
 
 def test_givenEquivalentAddressesRaw_whenCompareRaw_thenReturnEquivalentComparisonReport(

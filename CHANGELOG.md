@@ -163,3 +163,4 @@
 
 - Fixed errors in code examples
 - Improved doc of download_from_url
+- Improve error management of retrain and test

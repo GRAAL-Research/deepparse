@@ -213,7 +213,6 @@ class TestFormattedComparedAddresses(CaptureOutputTestCase):
 
         for element in actual_list_of_bool:
             self.assertIn(element, expected)
-        # self.assertEqual(actual_list_of_bool, expected)
 
 
 if __name__ == "__main__":

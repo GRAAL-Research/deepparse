@@ -10,10 +10,6 @@ from deepparse.parser import FormattedParsedAddress
 
 
 class TestFormattedComparedAddressesTags(TestCase):
-    @classmethod
-    def setUpClass(cls):
-        cls.maxDiff = None
-
     def test_givenIdenticalAddressesTags_whenCompareTags_thenReturnIdenticalComparisonReport(
         self,
     ):

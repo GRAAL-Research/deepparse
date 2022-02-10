@@ -33,6 +33,22 @@ class DatasetContainerTest(TestCase):
         a_dataset_container = ADatasetContainer(some_valid_data, is_training_container=False)
         self.assertIsNotNone(a_dataset_container.data)
 
+    def test_integration_slicing(self):
+        some_valid_data = ["An address", "Another address", "A last address"]
+        a_dataset_container = ADatasetContainer(some_valid_data, is_training_container=False)
+        expected = 2
+        self.assertEqual(len(a_dataset_container[0:2]), expected)
+
+        some_valid_data = ["An address", "Another address", "A last address"]
+        a_dataset_container = ADatasetContainer(some_valid_data, is_training_container=False)
+        expected = 2
+        self.assertEqual(len(a_dataset_container[:2]), expected)
+
+        some_valid_data = ["An address", "Another address", "A last address"]
+        a_dataset_container = ADatasetContainer(some_valid_data, is_training_container=False)
+        expected = 1
+        self.assertEqual(len(a_dataset_container[1:2]), expected)
+
     def test_when_not_list_of_tuple_then_raise_type_error(self):
         some_invalid_data = [1, 0]
         with self.assertRaises(TypeError):

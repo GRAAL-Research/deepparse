@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>deepparse.parser.address_parser &mdash; deepparse 0.6.6 documentation</title>
+  <title>deepparse.parser.address_parser &mdash; deepparse 0.6.7 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -28,7 +28,7 @@
             <img src="../../../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.6.6
+                0.6.7
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -49,6 +49,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/parse_addresses.html">Parse Addresses</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/parse_addresses_with_cli.html">Parse Addresses Using Our CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/retrained_model_parsing.html">Use a Retrained Model to Parse Addresses</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/fine_tuning.html">Retrain a Pretrained Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_attention_model.html">Retrain an attention mechanism model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
@@ -322,12 +323,15 @@
 <span class="sd">        Callable method to parse the components of an address or a list of address.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            addresses_to_parse (Union[list[str], str]): The addresses to be parsed, can be either a</span>
-<span class="sd">                single address (when using str) or a list of address. Validation tests on the dataset to parse are</span>
-<span class="sd">                done in order to validate the following basic criteria:</span>
+<span class="sd">            addresses_to_parse (Union[list[str], str, ~deepparse.dataset_container.DatasetContainer]): The addresses to</span>
+<span class="sd">                be parsed, can be either a single address (when using str), a list of address or a DatasetContainer.</span>
+<span class="sd">                We apply some validation tests before parsing to validate its content if the data to parse is a string</span>
+<span class="sd">                or a list of strings. We apply the following basic criteria:</span>
 
-<span class="sd">                    - no address are empty string, and</span>
-<span class="sd">                    - no address are whitespace only string.</span>
+<span class="sd">                    - no addresses are None value,</span>
+<span class="sd">                    - no addresses are empty string, and</span>
+<span class="sd">                    - no addresses are whitespace-only strings.</span>
+
 
 <span class="sd">                When using a list of addresses, the addresses are processed in batch, allowing a faster process.</span>
 <span class="sd">                For example, using fastText model, a single address takes around 0.003 seconds to be parsed using a</span>

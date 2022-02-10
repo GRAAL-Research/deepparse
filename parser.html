@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Parser &mdash; deepparse 0.6.6 documentation</title>
+  <title>Parser &mdash; deepparse 0.6.7 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -32,7 +32,7 @@
             <img src="_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.6.6
+                0.6.7
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -61,6 +61,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="examples/parse_addresses.html">Parse Addresses</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/parse_addresses_with_cli.html">Parse Addresses Using Our CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/retrained_model_parsing.html">Use a Retrained Model to Parse Addresses</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/fine_tuning.html">Retrain a Pretrained Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/retrain_attention_model.html">Retrain an attention mechanism model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
@@ -358,13 +359,15 @@ time this load doesn’t appear.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>addresses_to_parse</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>]</em>) – <p>The addresses to be parsed, can be either a
-single address (when using str) or a list of address. Validation tests on the dataset to parse are
-done in order to validate the following basic criteria:</p>
+<li><p><strong>addresses_to_parse</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><a class="reference internal" href="dataset_container.html#deepparse.dataset_container.DatasetContainer" title="deepparse.dataset_container.DatasetContainer"><em>DatasetContainer</em></a><em>]</em>) – <p>The addresses to
+be parsed, can be either a single address (when using str), a list of address or a DatasetContainer.
+We apply some validation tests before parsing to validate its content if the data to parse is a string
+or a list of strings. We apply the following basic criteria:</p>
 <blockquote>
 <div><ul>
-<li><p>no address are empty string, and</p></li>
-<li><p>no address are whitespace only string.</p></li>
+<li><p>no addresses are None value,</p></li>
+<li><p>no addresses are empty string, and</p></li>
+<li><p>no addresses are whitespace-only strings.</p></li>
 </ul>
 </div></blockquote>
 <p>When using a list of addresses, the addresses are processed in batch, allowing a faster process.

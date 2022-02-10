@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>deepparse.data_validation.data_validation &mdash; deepparse 0.6.7 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html">
+            <img src="../../../_static/deepparse.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.6.7
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../parser.html">Parser</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dataset_container.html">Dataset Container</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../comparer.html">Comparer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli.html">CLI</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/parse_addresses.html">Parse Addresses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/parse_addresses_with_cli.html">Parse Addresses Using Our CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/retrained_model_parsing.html">Use a Retrained Model to Parse Addresses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/fine_tuning.html">Retrain a Pretrained Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_attention_model.html">Retrain an attention mechanism model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_with_new_seq2seq_params.html">Retrain With New Seq2Seq Parameters</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">deepparse</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>deepparse.data_validation.data_validation</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for deepparse.data_validation.data_validation</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+
+
+<div class="viewcode-block" id="validate_if_any_empty"><a class="viewcode-back" href="../../../dataset_container.html#deepparse.data_validation.data_validation.validate_if_any_empty">[docs]</a><span class="k">def</span> <span class="nf">validate_if_any_empty</span><span class="p">(</span><span class="n">string_elements</span><span class="p">:</span> <span class="n">List</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return true if one of the string element is an empty one.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        string_elements (List): A list of string to validate.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">is_empty</span><span class="p">(</span><span class="n">string_element</span><span class="p">)</span> <span class="k">for</span> <span class="n">string_element</span> <span class="ow">in</span> <span class="n">string_elements</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="validate_if_any_whitespace_only"><a class="viewcode-back" href="../../../dataset_container.html#deepparse.data_validation.data_validation.validate_if_any_whitespace_only">[docs]</a><span class="k">def</span> <span class="nf">validate_if_any_whitespace_only</span><span class="p">(</span><span class="n">string_elements</span><span class="p">:</span> <span class="n">List</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return true if one of the string element is only whitespace.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        string_elements (List): A list of string to validate.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">is_whitespace_only</span><span class="p">(</span><span class="n">string_element</span><span class="p">)</span> <span class="k">for</span> <span class="n">string_element</span> <span class="ow">in</span> <span class="n">string_elements</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="validate_if_any_none"><a class="viewcode-back" href="../../../dataset_container.html#deepparse.data_validation.data_validation.validate_if_any_none">[docs]</a><span class="k">def</span> <span class="nf">validate_if_any_none</span><span class="p">(</span><span class="n">string_elements</span><span class="p">:</span> <span class="n">List</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return true if one of the string element is a None value.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        string_elements (List): A list of string to validate.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">is_none</span><span class="p">(</span><span class="n">string_element</span><span class="p">)</span> <span class="k">for</span> <span class="n">string_element</span> <span class="ow">in</span> <span class="n">string_elements</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">is_whitespace_only</span><span class="p">(</span><span class="n">a_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Validate if a string is composed of only whitespace.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        a_string (str): A string to validate.</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">        Either or not, the string is composed only of whitespace or not.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">a_string</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">())</span> <span class="o">==</span> <span class="mi">0</span>
+
+
+<span class="k">def</span> <span class="nf">is_empty</span><span class="p">(</span><span class="n">a_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Validate if a string is empty.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        a_string (str): A string to validate.</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">        Either or not, the string is empty.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">a_string</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+
+
+<span class="k">def</span> <span class="nf">is_none</span><span class="p">(</span><span class="n">a_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Validate if a string is a None.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        a_string (str): A string to validate.</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">        Either or not, the string is a None type.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">a_string</span> <span class="ow">is</span> <span class="kc">None</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2022, Marouane Yassine &amp; David Beauchemin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

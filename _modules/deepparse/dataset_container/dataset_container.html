@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>deepparse.dataset_container.dataset_container &mdash; deepparse 0.6.6 documentation</title>
+  <title>deepparse.dataset_container.dataset_container &mdash; deepparse 0.6.7 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -28,7 +28,7 @@
             <img src="../../../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.6.6
+                0.6.7
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -49,6 +49,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/parse_addresses.html">Parse Addresses</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/parse_addresses_with_cli.html">Parse Addresses Using Our CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/retrained_model_parsing.html">Use a Retrained Model to Parse Addresses</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/fine_tuning.html">Retrain a Pretrained Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_attention_model.html">Retrain an attention mechanism model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
@@ -90,7 +91,7 @@
 
 <span class="kn">from</span> <span class="nn">.tools</span> <span class="kn">import</span> <span class="n">former_python_list</span><span class="p">,</span> <span class="n">validate_column_names</span>
 <span class="kn">from</span> <span class="nn">..data_error</span> <span class="kn">import</span> <span class="n">DataError</span>
-<span class="kn">from</span> <span class="nn">..data_validation</span> <span class="kn">import</span> <span class="n">is_whitespace_only</span><span class="p">,</span> <span class="n">is_empty</span>
+<span class="kn">from</span> <span class="nn">..data_validation</span> <span class="kn">import</span> <span class="n">validate_if_any_empty</span><span class="p">,</span> <span class="n">validate_if_any_whitespace_only</span><span class="p">,</span> <span class="n">validate_if_any_none</span>
 
 
 <div class="viewcode-block" id="DatasetContainer"><a class="viewcode-back" href="../../../dataset_container.html#deepparse.dataset_container.DatasetContainer">[docs]</a><span class="k">class</span> <span class="nc">DatasetContainer</span><span class="p">(</span><span class="n">Dataset</span><span class="p">,</span> <span class="n">ABC</span><span class="p">):</span>
@@ -103,6 +104,7 @@
 
 <span class="sd">    For a training container, it validates the following:</span>
 
+<span class="sd">        - all addresses are not None value,</span>
 <span class="sd">        - all addresses are not empty,</span>
 <span class="sd">        - all addresses are not whitespace string,</span>
 <span class="sd">        - all tags are not empty, if data is a list of tuple (``[(&#39;an address&#39;, [&#39;a_tag&#39;, &#39;another_tag&#39;]), ...]``), and</span>
@@ -110,7 +112,8 @@
 
 <span class="sd">    While for a predict container (unknown prediction tag), it validates the following:</span>
 
-<span class="sd">        - all addresses are not empty,</span>
+<span class="sd">        - all addresses are not None,</span>
+<span class="sd">        - all addresses are not empty, and</span>
 <span class="sd">        - all addresses are not whitespace string.</span>
 
 <span class="sd">    Args:</span>
@@ -132,14 +135,10 @@
 
     <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">slice</span><span class="p">]):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="nb">slice</span><span class="p">):</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">idx</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">idx</span><span class="o">.</span><span class="n">stop</span><span class="p">):</span>
-                <span class="n">sample</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">element</span><span class="p">]</span>
-
-                <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+            <span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">idx</span><span class="o">.</span><span class="n">indices</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">)]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
-
         <span class="k">return</span> <span class="n">result</span>
 
     <span class="k">def</span> <span class="nf">validate_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -147,12 +146,21 @@
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;The dataset is not a list.&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_training_container</span><span class="p">:</span>
+            <span class="n">data_to_validate</span> <span class="o">=</span> <span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data_to_validate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span>
+
+        <span class="k">if</span> <span class="n">validate_if_any_none</span><span class="p">(</span><span class="n">string_elements</span><span class="o">=</span><span class="n">data_to_validate</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">DataError</span><span class="p">(</span><span class="s2">&quot;Some addresses data points are None value.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_training_container</span><span class="p">:</span>
+            <span class="c1"># Not done in previous similar if since none test not applied</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_training_validation</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_empty_address</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">validate_if_any_empty</span><span class="p">(</span><span class="n">string_elements</span><span class="o">=</span><span class="n">data_to_validate</span><span class="p">):</span>
             <span class="k">raise</span> <span class="n">DataError</span><span class="p">(</span><span class="s2">&quot;Some addresses data points are empty.&quot;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_whitespace_only_addresses</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">validate_if_any_whitespace_only</span><span class="p">(</span><span class="n">string_elements</span><span class="o">=</span><span class="n">data_to_validate</span><span class="p">):</span>
             <span class="k">raise</span> <span class="n">DataError</span><span class="p">(</span><span class="s2">&quot;Some addresses only include whitespace thus cannot be parsed.&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_data_is_a_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -190,26 +198,6 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">))</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_empty_address</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return true if one of the addresses is an empty string.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_training_container</span><span class="p">:</span>
-            <span class="n">generator</span> <span class="o">=</span> <span class="p">(</span><span class="n">is_empty</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>  <span class="c1"># Case where only address are in the dataset</span>
-            <span class="n">generator</span> <span class="o">=</span> <span class="p">(</span><span class="n">is_empty</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
-        <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">generator</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">_whitespace_only_addresses</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return true if one the address is composed of only whitespace.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_training_container</span><span class="p">:</span>
-            <span class="n">generator</span> <span class="o">=</span> <span class="p">(</span><span class="n">is_whitespace_only</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>  <span class="c1"># Case where only address are in the dataset</span>
-            <span class="n">generator</span> <span class="o">=</span> <span class="p">(</span><span class="n">is_whitespace_only</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
-        <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">generator</span><span class="p">)</span>
-
     <span class="k">def</span> <span class="nf">is_a_train_container</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_training_container</span></div>
 
@@ -224,6 +212,7 @@
 
 <span class="sd">    For a training container, the validation tests applied on the dataset are the following:</span>
 
+<span class="sd">        - all addresses are not None value,</span>
 <span class="sd">        - all addresses are not empty,</span>
 <span class="sd">        - all addresses are not whitespace string,</span>
 <span class="sd">        - all tags are not empty, if data is a list of tuple (``[(&#39;an address&#39;, [&#39;a_tag&#39;, &#39;another_tag&#39;]), ...]``), and</span>
@@ -232,7 +221,8 @@
 <span class="sd">    While for a predict container (unknown prediction tag), the validation tests applied on the dataset are the</span>
 <span class="sd">    following:</span>
 
-<span class="sd">        - all addresses are not empty,</span>
+<span class="sd">        - all addresses are not None value,</span>
+<span class="sd">        - all addresses are not empty, and</span>
 <span class="sd">        - all addresses are not whitespace string.</span>
 
 <span class="sd">    Args:</span>
@@ -271,15 +261,16 @@
 
 <span class="sd">    For a training container, the validation tests applied on the dataset are the following:</span>
 
+<span class="sd">        - all addresses are not None value,</span>
 <span class="sd">        - all addresses are not empty,</span>
-<span class="sd">        - all addresses are not whitespace string,</span>
-<span class="sd">        - all tags are not empty, and</span>
+<span class="sd">        - all addresses are not whitespace string, and</span>
 <span class="sd">        - if the addresses (whitespace-split) are the same length as their respective tags list.</span>
 
 <span class="sd">    While for a predict container (unknown prediction tag), the validation tests applied on the dataset are the</span>
 <span class="sd">    following:</span>
 
-<span class="sd">        - all addresses are not empty,</span>
+<span class="sd">        - all addresses are not None value,</span>
+<span class="sd">        - all addresses are not empty, and</span>
 <span class="sd">        - all addresses are not whitespace string.</span>
 
 <span class="sd">    Args:</span>

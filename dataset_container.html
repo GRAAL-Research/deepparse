@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dataset Container &mdash; deepparse 0.6.6 documentation</title>
+  <title>Dataset Container &mdash; deepparse 0.6.7 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -31,7 +31,7 @@
             <img src="_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.6.6
+                0.6.7
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -52,6 +52,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="examples/parse_addresses.html">Parse Addresses</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/parse_addresses_with_cli.html">Parse Addresses Using Our CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/retrained_model_parsing.html">Use a Retrained Model to Parse Addresses</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/fine_tuning.html">Retrain a Pretrained Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/retrain_attention_model.html">Retrain an attention mechanism model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
@@ -84,7 +85,7 @@
              
   <section id="dataset-container">
 <h1>Dataset Container<a class="headerlink" href="#dataset-container" title="Permalink to this headline"></a></h1>
-<p>To load the data, we use dataset container that are implemented with respect to an interface.</p>
+<p>To load the data, we use dataset containers that are implemented with respect to an interface.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="deepparse.dataset_container.DatasetContainer">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deepparse.dataset_container.</span></span><span class="sig-name descname"><span class="pre">DatasetContainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">is_training_container</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deepparse/dataset_container/dataset_container.html#DatasetContainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.dataset_container.DatasetContainer" title="Permalink to this definition"></a></dt>
@@ -95,6 +96,7 @@ dataset.</p>
 <p>For a training container, it validates the following:</p>
 <blockquote>
 <div><ul class="simple">
+<li><p>all addresses are not None value,</p></li>
 <li><p>all addresses are not empty,</p></li>
 <li><p>all addresses are not whitespace string,</p></li>
 <li><p>all tags are not empty, if data is a list of tuple (<code class="docutils literal notranslate"><span class="pre">[('an</span> <span class="pre">address',</span> <span class="pre">['a_tag',</span> <span class="pre">'another_tag']),</span> <span class="pre">...]</span></code>), and</p></li>
@@ -104,7 +106,8 @@ dataset.</p>
 <p>While for a predict container (unknown prediction tag), it validates the following:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>all addresses are not empty,</p></li>
+<li><p>all addresses are not None,</p></li>
+<li><p>all addresses are not empty, and</p></li>
 <li><p>all addresses are not whitespace string.</p></li>
 </ul>
 </div></blockquote>
@@ -127,6 +130,7 @@ The len of the tags needs to be the same as the len of the address when whitespa
 <p>For a training container, the validation tests applied on the dataset are the following:</p>
 <blockquote>
 <div><ul class="simple">
+<li><p>all addresses are not None value,</p></li>
 <li><p>all addresses are not empty,</p></li>
 <li><p>all addresses are not whitespace string,</p></li>
 <li><p>all tags are not empty, if data is a list of tuple (<code class="docutils literal notranslate"><span class="pre">[('an</span> <span class="pre">address',</span> <span class="pre">['a_tag',</span> <span class="pre">'another_tag']),</span> <span class="pre">...]</span></code>), and</p></li>
@@ -137,7 +141,8 @@ The len of the tags needs to be the same as the len of the address when whitespa
 following:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>all addresses are not empty,</p></li>
+<li><p>all addresses are not None value,</p></li>
+<li><p>all addresses are not empty, and</p></li>
 <li><p>all addresses are not whitespace string.</p></li>
 </ul>
 </div></blockquote>
@@ -163,9 +168,9 @@ least two columns, one with some addresses and another with a list of tags for e
 <p>For a training container, the validation tests applied on the dataset are the following:</p>
 <blockquote>
 <div><ul class="simple">
+<li><p>all addresses are not None value,</p></li>
 <li><p>all addresses are not empty,</p></li>
-<li><p>all addresses are not whitespace string,</p></li>
-<li><p>all tags are not empty, and</p></li>
+<li><p>all addresses are not whitespace string, and</p></li>
 <li><p>if the addresses (whitespace-split) are the same length as their respective tags list.</p></li>
 </ul>
 </div></blockquote>
@@ -173,7 +178,8 @@ least two columns, one with some addresses and another with a list of tags for e
 following:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>all addresses are not empty,</p></li>
+<li><p>all addresses are not None value,</p></li>
+<li><p>all addresses are not empty, and</p></li>
 <li><p>all addresses are not whitespace string.</p></li>
 </ul>
 </div></blockquote>
@@ -198,6 +204,40 @@ That is, it removes the <code class="docutils literal notranslate"><span class="
 the <code class="docutils literal notranslate"><span class="pre">data_path</span></code> is passed along with our default <code class="docutils literal notranslate"><span class="pre">sep</span></code> value ( <code class="docutils literal notranslate"><span class="pre">&quot;\t&quot;</span></code>) and the <code class="docutils literal notranslate"><span class="pre">&quot;utf-8&quot;</span></code> encoding
 format. However, this can be overridden by using this argument again.</p></li>
 </ul>
+</dd>
+</dl>
+</dd></dl>
+
+<p>We also applied data validations on our data container using the following three functions.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="deepparse.data_validation.data_validation.validate_if_any_empty">
+<span class="sig-prename descclassname"><span class="pre">deepparse.data_validation.data_validation.</span></span><span class="sig-name descname"><span class="pre">validate_if_any_empty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string_elements</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.List" title="(in Python v3.8)"><span class="pre">List</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/deepparse/data_validation/data_validation.html#validate_if_any_empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.data_validation.data_validation.validate_if_any_empty" title="Permalink to this definition"></a></dt>
+<dd><p>Return true if one of the string element is an empty one.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>string_elements</strong> (<em>List</em>) – A list of string to validate.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deepparse.data_validation.data_validation.validate_if_any_whitespace_only">
+<span class="sig-prename descclassname"><span class="pre">deepparse.data_validation.data_validation.</span></span><span class="sig-name descname"><span class="pre">validate_if_any_whitespace_only</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string_elements</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.List" title="(in Python v3.8)"><span class="pre">List</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/deepparse/data_validation/data_validation.html#validate_if_any_whitespace_only"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.data_validation.data_validation.validate_if_any_whitespace_only" title="Permalink to this definition"></a></dt>
+<dd><p>Return true if one of the string element is only whitespace.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>string_elements</strong> (<em>List</em>) – A list of string to validate.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deepparse.data_validation.data_validation.validate_if_any_none">
+<span class="sig-prename descclassname"><span class="pre">deepparse.data_validation.data_validation.</span></span><span class="sig-name descname"><span class="pre">validate_if_any_none</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string_elements</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.List" title="(in Python v3.8)"><span class="pre">List</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/deepparse/data_validation/data_validation.html#validate_if_any_none"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.data_validation.data_validation.validate_if_any_none" title="Permalink to this definition"></a></dt>
+<dd><p>Return true if one of the string element is a None value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>string_elements</strong> (<em>List</em>) – A list of string to validate.</p>
 </dd>
 </dl>
 </dd></dl>

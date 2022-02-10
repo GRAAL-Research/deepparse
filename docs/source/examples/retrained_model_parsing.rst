@@ -33,7 +33,7 @@ Let's download a BPEmb retrained model create just for this example, but you can
 
 .. code-block:: python
 
-    retrained_model_name = "retrained_bpemb_address_parser"
+    retrained_model_name = "retrained_light_bpemb_address_parser"
     model_file_extension = "ckpt"
     download_from_url(retrained_model_name, saving_dir, file_extension=model_file_extension)
 

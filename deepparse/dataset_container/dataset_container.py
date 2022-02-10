@@ -8,7 +8,7 @@ from torch.utils.data import Dataset
 
 from .tools import former_python_list, validate_column_names
 from ..data_error import DataError
-from ..data_validation import is_whitespace_only, is_empty
+from ..data_validation import validate_if_any_empty, validate_if_any_whitespace_only, validate_if_any_none
 
 
 class DatasetContainer(Dataset, ABC):
@@ -21,6 +21,7 @@ class DatasetContainer(Dataset, ABC):
 
     For a training container, it validates the following:
 
+        - all addresses are not None value,
         - all addresses are not empty,
         - all addresses are not whitespace string,
         - all tags are not empty, if data is a list of tuple (``[('an address', ['a_tag', 'another_tag']), ...]``), and
@@ -28,7 +29,8 @@ class DatasetContainer(Dataset, ABC):
 
     While for a predict container (unknown prediction tag), it validates the following:
 
-        - all addresses are not empty,
+        - all addresses are not None,
+        - all addresses are not empty, and
         - all addresses are not whitespace string.
 
     Args:
@@ -50,14 +52,10 @@ class DatasetContainer(Dataset, ABC):
 
     def __getitem__(self, idx: Union[int, slice]):
         if isinstance(idx, slice):
-            result = []
-            for element in range(idx.start, idx.stop):
-                sample = self.data[element]
-
-                result.append(sample)
+            start, stop, _ = idx.indices(len(self))
+            result = [self.data[index] for index in range(start, stop)]
         else:
             result = self.data[idx]
-
         return result
 
     def validate_dataset(self) -> None:
@@ -65,12 +63,21 @@ class DatasetContainer(Dataset, ABC):
             raise TypeError("The dataset is not a list.")
 
         if self.is_training_container:
+            data_to_validate = [data[0] for data in self.data]
+        else:
+            data_to_validate = self.data
+
+        if validate_if_any_none(string_elements=data_to_validate):
+            raise DataError("Some addresses data points are None value.")
+
+        if self.is_training_container:
+            # Not done in previous similar if since none test not applied
             self._training_validation()
 
-        if self._empty_address():
+        if validate_if_any_empty(string_elements=data_to_validate):
             raise DataError("Some addresses data points are empty.")
 
-        if self._whitespace_only_addresses():
+        if validate_if_any_whitespace_only(string_elements=data_to_validate):
             raise DataError("Some addresses only include whitespace thus cannot be parsed.")
 
     def _data_is_a_list(self):
@@ -108,25 +115,8 @@ class DatasetContainer(Dataset, ABC):
         """
         return all(len(data[0].split(" ")) == len(data[1]) for data in self.data)
 
-    def _empty_address(self) -> bool:
-        """
-        Return true if one of the addresses is an empty string.
-        """
-        if self.is_training_container:
-            generator = (is_empty(data[0]) for data in self.data)
-        else:  # Case where only address are in the dataset
-            generator = (is_empty(data) for data in self.data)
-        return any(generator)
-
-    def _whitespace_only_addresses(self) -> bool:
-        """
-        Return true if one the address is composed of only whitespace.
-        """
-        if self.is_training_container:
-            generator = (is_whitespace_only(data[0]) for data in self.data)
-        else:  # Case where only address are in the dataset
-            generator = (is_whitespace_only(data) for data in self.data)
-        return any(generator)
+    def is_a_train_container(self) -> bool:
+        return self.is_training_container
 
 
 class PickleDatasetContainer(DatasetContainer):
@@ -139,6 +129,7 @@ class PickleDatasetContainer(DatasetContainer):
 
     For a training container, the validation tests applied on the dataset are the following:
 
+        - all addresses are not None value,
         - all addresses are not empty,
         - all addresses are not whitespace string,
         - all tags are not empty, if data is a list of tuple (``[('an address', ['a_tag', 'another_tag']), ...]``), and
@@ -147,7 +138,8 @@ class PickleDatasetContainer(DatasetContainer):
     While for a predict container (unknown prediction tag), the validation tests applied on the dataset are the
     following:
 
-        - all addresses are not empty,
+        - all addresses are not None value,
+        - all addresses are not empty, and
         - all addresses are not whitespace string.
 
     Args:
@@ -186,15 +178,16 @@ class CSVDatasetContainer(DatasetContainer):
 
     For a training container, the validation tests applied on the dataset are the following:
 
+        - all addresses are not None value,
         - all addresses are not empty,
-        - all addresses are not whitespace string,
-        - all tags are not empty, and
+        - all addresses are not whitespace string, and
         - if the addresses (whitespace-split) are the same length as their respective tags list.
 
     While for a predict container (unknown prediction tag), the validation tests applied on the dataset are the
     following:
 
-        - all addresses are not empty,
+        - all addresses are not None value,
+        - all addresses are not empty, and
         - all addresses are not whitespace string.
 
     Args:

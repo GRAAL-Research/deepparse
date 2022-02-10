@@ -55,7 +55,7 @@ def main(args: argparse.Namespace) -> None:
     elif is_pickle_path(export_file_name):
         export_fn = partial(to_pickle, export_path=export_path)
     else:
-        ValueError("We do not support this type of export.")
+        raise ValueError("We do not support this type of export.")
 
     parsing_model = args.parsing_model
     device = args.device

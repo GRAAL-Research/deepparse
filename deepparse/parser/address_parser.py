@@ -240,12 +240,15 @@ class AddressParser:
         Callable method to parse the components of an address or a list of address.
 
         Args:
-            addresses_to_parse (Union[list[str], str]): The addresses to be parsed, can be either a
-                single address (when using str) or a list of address. Validation tests on the dataset to parse are
-                done in order to validate the following basic criteria:
+            addresses_to_parse (Union[list[str], str, ~deepparse.dataset_container.DatasetContainer]): The addresses to
+                be parsed, can be either a single address (when using str), a list of address or a DatasetContainer.
+                We apply some validation tests before parsing to validate its content if the data to parse is a string
+                or a list of strings. We apply the following basic criteria:
 
-                    - no address are empty string, and
-                    - no address are whitespace only string.
+                    - no addresses are None value,
+                    - no addresses are empty string, and
+                    - no addresses are whitespace-only strings.
+
 
                 When using a list of addresses, the addresses are processed in batch, allowing a faster process.
                 For example, using fastText model, a single address takes around 0.003 seconds to be parsed using a
@@ -350,7 +353,7 @@ class AddressParser:
         prediction_tags: Union[Dict, None] = None,
         seq2seq_params: Union[Dict, None] = None,
     ) -> List[Dict]:
-        # pylint: disable=too-many-arguments, line-too-long, too-many-locals, too-many-branches
+        # pylint: disable=too-many-arguments, line-too-long, too-many-locals, too-many-branches, too-many-statements
         """
         Method to retrain the address parser model using a dataset with the same tags. We train using
         `experiment <https://poutyne.org/experiment.html>`_ from `poutyne <https://poutyne.org/index.html>`_
@@ -486,6 +489,9 @@ class AddressParser:
         """
         if "fasttext-light" in self.model_type:
             raise ValueError("It's not possible to retrain a fasttext-light due to pymagnitude problem.")
+
+        if not dataset_container.is_a_train_container():
+            raise ValueError("The dataset container is not a train container.")
 
         model_factory_dict = {"prediction_layer_len": 9}  # We set the default output dim size
 
@@ -631,7 +637,7 @@ class AddressParser:
                 address_parser = AddressParser(device=0) #on gpu device 0
                 data_path = 'path_to_a_pickle_test_dataset.p'
 
-                test_container = PickleDatasetContainer(data_path)
+                test_container = PickleDatasetContainer(data_path, is_training_container=False)
 
                 address_parser.test(test_container) # We test the model on the data
 
@@ -653,7 +659,7 @@ class AddressParser:
                 # Test phase
                 data_path = 'path_to_a_pickle_test_dataset.p'
 
-                test_container = PickleDatasetContainer(data_path)
+                test_container = PickleDatasetContainer(data_path, is_training_container=False)
 
                 address_parser.test(test_container) # Test the retrained model
 
@@ -663,6 +669,9 @@ class AddressParser:
                 "It's not possible to test a fasttext-light due to pymagnitude problem. See Retrain method"
                 "doc for more details."
             )
+
+        if not test_dataset_container.is_a_train_container():
+            raise ValueError("The dataset container is not a train container.")
 
         callbacks = [] if callbacks is None else callbacks
         data_transform = self._set_data_transformer()

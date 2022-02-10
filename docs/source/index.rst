@@ -611,6 +611,18 @@ You can also use our cli to parse addresses using:
 
     python3 -m deepparse.cli.parse <parsing_model> <dataset_path> <export_file_name>
 
+Parse addresses using your own retrained model
+**********************************************
+
+See `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/retrained_model_parsing.py>`_ for a complete example.
+
+.. code-block:: python
+
+    address_parser = AddressParser(
+        model_type="bpemb", device=0, path_to_retrained_model="path/to/retrained/bpemb/model.p")
+
+    address_parser("350 rue des Lilas Ouest Québec Québec G1L 1B6")
+
 Retrain a Model
 ***************
 See `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py>`_ for a complete example.
@@ -743,6 +755,7 @@ API Reference
 
   examples/parse_addresses
   examples/parse_addresses_with_cli
+  examples/retrained_model_parsing
   examples/fine_tuning
   examples/retrain_attention_model
   examples/retrain_with_new_prediction_tags

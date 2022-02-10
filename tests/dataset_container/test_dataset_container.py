@@ -33,6 +33,22 @@ class DatasetContainerTest(TestCase):
         a_dataset_container = ADatasetContainer(some_valid_data, is_training_container=False)
         self.assertIsNotNone(a_dataset_container.data)
 
+    def test_integration_slicing(self):
+        some_valid_data = ["An address", "Another address", "A last address"]
+        a_dataset_container = ADatasetContainer(some_valid_data, is_training_container=False)
+        expected = 2
+        self.assertEqual(len(a_dataset_container[0:2]), expected)
+
+        some_valid_data = ["An address", "Another address", "A last address"]
+        a_dataset_container = ADatasetContainer(some_valid_data, is_training_container=False)
+        expected = 2
+        self.assertEqual(len(a_dataset_container[:2]), expected)
+
+        some_valid_data = ["An address", "Another address", "A last address"]
+        a_dataset_container = ADatasetContainer(some_valid_data, is_training_container=False)
+        expected = 1
+        self.assertEqual(len(a_dataset_container[1:2]), expected)
+
     def test_when_not_list_of_tuple_then_raise_type_error(self):
         some_invalid_data = [1, 0]
         with self.assertRaises(TypeError):
@@ -49,6 +65,11 @@ class DatasetContainerTest(TestCase):
     def test_when_data_is_not_a_list_then_raise_type_error(self):
         some_invalid_data = ("An address", [1, 0])
         with self.assertRaises(TypeError):
+            ADatasetContainer(some_invalid_data)
+
+    def test_when_none_then_raise_data_error(self):
+        some_invalid_data = [("An address", [1, 0]), (None, []), ("A last address", [3, 4, 0])]
+        with self.assertRaises(DataError):
             ADatasetContainer(some_invalid_data)
 
     def test_when_empty_address_then_raise_data_error(self):
@@ -97,6 +118,16 @@ class DatasetContainerTest(TestCase):
         some_invalid_data = ["    "]
         with self.assertRaises(DataError):
             ADatasetContainer(some_invalid_data, is_training_container=False)
+
+    def test_when_training_container_when_is_data_set_container_return_true(self):
+        some_valid_data = [("An address", [1, 0]), ("Another address", [2, 0]), ("A last address", [3, 4, 0])]
+        a_dataset_container = ADatasetContainer(some_valid_data, is_training_container=True)
+        self.assertTrue(a_dataset_container.is_training_container)
+
+    def test_when_training_container_when_is_data_set_container_return_false(self):
+        some_valid_data = ["An address", "Another address", "A last address"]
+        a_dataset_container = ADatasetContainer(some_valid_data, is_training_container=False)
+        self.assertFalse(a_dataset_container.is_training_container)
 
 
 class PickleDatasetContainerTest(TestCase):

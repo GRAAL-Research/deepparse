@@ -21,12 +21,12 @@
 
 ## 0.1.3.1
 
-- Added a verbose flag to trigger more message during embedding loading
+- Added a verbose flag to trigger more messages during embedding loading
 - Added a verbose flag in model/embeddings download
 
 ## 0.2
 
-- Added Fasttext light model using pymagnitude-light
+- Added FastText light model using pymagnitude-light
 - Added fine-tuning API to allow fine-tuning of our models (retrain)
 - Added a method to test models (test)
 - Added metric, loss and dataset container to facilitate fine-tuning training
@@ -47,7 +47,7 @@
 
 ## 0.3
 
-- Added Libpostal time in doc
+- Added Libpostal time in the doc
 - Documentation improvement
 - Added new models evaluation to doc
 - Release new models
@@ -55,19 +55,19 @@
 ## 0.3.3
 
 - We have improved the loading of data during prediction. We now use a data loader.
-- Updated the performance table of model with the data loader approach.
+- Updated the performance table of models with the data loader approach.
 - Fixed missing import in the parser module.
 - Bug fix of the `max_len` for the predictions
 
 ## 0.3.4
 
-- Fixed a bug when use batched address. Since we were sorting the address during the forward pass, the output prediction
+- Fixed a bug when using batched address. Since we were sorting the address during the forward pass, the output prediction
   tags were not aligned with the supposed parsed address. We have removed the sorting, and now the results are more
   aligned with our research.
 
 ## 0.3.5
 
-- Added verbose flag to training and test base on the __init__ of address parser.
+- Added verbose flag to training and test based on the __init__ of address parser.
 - **Breaking change** Since [SciPy 1.6](https://github.com/scipy/scipy/releases/tag/v1.6.0) is released on Python `3.7+`
   , we don't support Python `3.6`.
 - Added management for Windows where the FastText model cannot be pickled. On Windows, we use Gensim fasttext model,
@@ -81,7 +81,7 @@
 
 ## 0.4
 
-- Added verbose flag to training and test base on the __init__ of address parser.
+- Added verbose flag to training and test based on the __init__ of address parser.
 - Added a feature to retrain our models with prediction tags dictionary different from the default one.
 - Added in-doc code examples.
 - Added code examples.
@@ -100,7 +100,7 @@
 
 ## 0.4.3
 
-- Fixed typos in one of file name.
+- Fixed typos in one of a file name.
 - Added tools to compare addresses (tagged or not).
 - Fixed some tests errors.
 
@@ -134,14 +134,14 @@
 ## 0.6.2
 
 - Improved (slightly) code speed of data padding method as per PyTorch list or array to Tensor recommendation.
-- Improved doc for RuntimeError due to retraining FastText and BPEmb model in same directory.
+- Improved doc for RuntimeError due to retraining FastText and BPEmb model in the same directory.
 - Added error handling RuntimeError when retraining.
 
 ## 0.6.3
 
-- Fixed the printing capture to raise error with Poutyne as of version 1.8. We keep the previous approach as for
-  compatibilities with previous Poutyne version.
-- Added a flag to disable or not Tensorboard during retrain.
+- Fixed the printing capture to raise the error with Poutyne as of version 1.8. We keep the previous approach as for
+  compatibilities with the previous Poutyne version.
+- Added a flag to disable or not Tensorboard during retraining.
 
 ## 0.6.4
 
@@ -151,10 +151,23 @@
 
 ## 0.6.5
 
-- Improve error handling of empty data and whitespace only data.
+- Improve error handling of empty data and whitespace-only data.
 - Parsing now include two validation on the data quality (not empty and not whitespace only)
-- DataContainer now includes data quality test (not empty, not whitespace only, tags not empty, tag same len as address,
-  and data is list of tuple)
+- DataContainer now includes data quality test (not empty, not whitespace only, tags not empty, tag the same len as an
+  address and data is a list of tuple)
 - New CSVDatasetContainer
-- DataContainer can now be use for predict using a flag.
-- Add a CLI to parse addresses from command line.
+- DataContainer can now be used to predict using a flag.
+- Add a CLI to parse addresses from the command line.
+
+## 0.6.6
+
+- Fixed errors in code examples
+- Improved doc of download_from_url
+- Improve error management of retrain and test
+
+## 0.6.7
+
+- Fixed errors in data validation
+- Improved doc over data validation
+- Bugfix data slicing error with data containers
+- Add an example on how to use a retrained model

@@ -29,7 +29,7 @@ class TestFormattedComparedAddressesRaw(TestCase):
         )
 
     def test_givenIdenticalAddressesRaw_whenCompareRaw_thenReturnIdenticalComparisonReport(
-            self,
+        self,
     ):
         identical_address = "350 rue des Lilas Ouest Quebec Quebec G1L 1B6"
         identical_address_parsing = [
@@ -56,7 +56,10 @@ class TestFormattedComparedAddressesRaw(TestCase):
         expected_sentences = [
             "Comparison report of the two raw addresses: Identical\n\nAddress : 350 rue des Lilas Ouest "
             "Quebec Quebec G1L 1B6\n\n\nProbabilities of parsed tags for the addresses with deepparse using "
-            "Bpemb:", "('350', ('StreetNumber', 1.0))", "('rue', ('StreetName', 0.9987))"]
+            "Bpemb:",
+            "('350', ('StreetNumber', 1.0))",
+            "('rue', ('StreetName', 0.9987))",
+        ]
 
         actual = identical_formatted_compared_addresses_raw._comparison_report_builder()
 
@@ -64,7 +67,7 @@ class TestFormattedComparedAddressesRaw(TestCase):
             self.assertIn(expected_sentence, actual)
 
     def test_givenEquivalentAddressesRaw_whenCompareRaw_thenReturnEquivalentComparisonReport(
-            self,
+        self,
     ):
         # Not identical address with the preceding
         equivalent_address = "350  rue des Lilas Ouest Quebec Quebec G1L 1B6"
@@ -92,8 +95,12 @@ class TestFormattedComparedAddressesRaw(TestCase):
         expected_sentences = [
             "Equivalent",
             "Quebec Quebec G1L 1B6\n\n\nProbabilities of parsed tags for the addresses with deepparse using ",
-            "Bpemb:", "('350', ('StreetNumber', 1.0))", "('rue', ('StreetName', 0.9987))", "('Municipality', 0.9768))",
-            "differences between the two addresses: \nWhite: Shared\nBlue:"]
+            "Bpemb:",
+            "('350', ('StreetNumber', 1.0))",
+            "('rue', ('StreetName', 0.9987))",
+            "('Municipality', 0.9768))",
+            "differences between the two addresses: \nWhite: Shared\nBlue:",
+        ]
 
         actual = equivalent_formatted_compared_addresses_raw_._comparison_report_builder()
 
@@ -101,7 +108,7 @@ class TestFormattedComparedAddressesRaw(TestCase):
             self.assertIn(expected_sentence, actual)
 
     def test_givenDifferentAddressesRaw_whenCompareRaw_thenReturnDifferentComparisonReport(
-            self,
+        self,
     ):
         # Not identical address with the preceding
         not_equivalent_address = "450 rue des Lilas Ouest Quebec Quebec G1L 1B6"
@@ -131,8 +138,13 @@ class TestFormattedComparedAddressesRaw(TestCase):
         expected_sentences = [
             "Not equivalent",
             "Quebec Quebec G1L 1B6\n\n\nProbabilities of parsed tags for the addresses with deepparse using ",
-            "Bpemb:", "('350', ('StreetNumber', 1.0))", "('rue', ('StreetName', 0.9987))", "('Municipality', 0.9768))",
-            " \n\x1b[38;2;26;123;220m3\x1b[0m\x1b[38;2;255;194;10m4\x1b[0", "m\x1b[38;2;255;255;255m50\x1b[0m\n"]
+            "Bpemb:",
+            "('350', ('StreetNumber', 1.0))",
+            "('rue', ('StreetName', 0.9987))",
+            "('Municipality', 0.9768))",
+            " \n\x1b[38;2;26;123;220m3\x1b[0m\x1b[38;2;255;194;10m4\x1b[0",
+            "m\x1b[38;2;255;255;255m50\x1b[0m\n",
+        ]
 
         actual = not_equivalent_formatted_compared_addresses_raw_._comparison_report_builder()
         for expected_sentence in expected_sentences:

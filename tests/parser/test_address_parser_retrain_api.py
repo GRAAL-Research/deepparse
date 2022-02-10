@@ -960,6 +960,36 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
 
         model_mock.assert_has_calls(new_dim_call)
 
+    @patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel")
+    @patch("deepparse.parser.address_parser.bpemb_data_padding")
+    @patch("deepparse.parser.address_parser.BPEmbVectorizer")
+    @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
+    def test_givenNotTrainingDataContainer_thenRaiseValueError(
+        self,
+        embeddings_model_mock,
+        vectorizer_model_mock,
+        data_padding_mock,
+        model_patch,
+    ):
+        self.address_parser = AddressParser(
+            model_type=self.a_bpemb_model_type,
+            device=self.a_device,
+            verbose=self.verbose,
+        )
+        mocked_data_container = ADataContainer(is_training_container=False)
+        with self.assertRaises(ValueError):
+            self.address_parser.retrain(
+                mocked_data_container,
+                self.a_train_ratio,
+                self.a_batch_size,
+                self.a_epoch_number,
+                num_workers=self.a_number_of_workers,
+                learning_rate=self.a_learning_rate,
+                callbacks=self.a_callbacks_list,
+                seed=self.a_seed,
+                logging_path=self.a_logging_path,
+            )
+
 
 if __name__ == "__main__":
     unittest.main()

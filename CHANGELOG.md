@@ -164,3 +164,9 @@
 - Fixed errors in code examples
 - Improved doc of download_from_url
 - Improve error management of retrain and test
+
+## 0.6.7
+
+- Fixed errors in data validation
+- Improved doc over data validation
+- Bug fix data slicing error with data container

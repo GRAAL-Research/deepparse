@@ -6,7 +6,11 @@ import poutyne
 import requests
 
 from .data_error import DataError
-from .data_validation import is_whitespace_only
+from .data_validation import (
+    validate_if_any_none,
+    validate_if_any_whitespace_only,
+    validate_if_any_empty,
+)
 
 BASE_URL = "https://graal.ift.ulaval.ca/public/deepparse/{}.{}"
 CACHE_PATH = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
@@ -114,27 +118,16 @@ def handle_model_path(checkpoint: str) -> str:
     return checkpoint
 
 
-def validate_data_to_parse(addresses_to_parse: List[str]) -> None:
+def validate_data_to_parse(addresses_to_parse: List) -> None:
     """
     Validation tests on the addresses to parse to respect the following two criteria:
+        - no addresses are None value,
         - no addresses are empty strings, and
         - no addresses are whitespace-only strings.
     """
-    if empty_address(addresses_to_parse):
+    if validate_if_any_none(addresses_to_parse):
+        raise DataError("Some addresses are None value.")
+    if validate_if_any_empty(addresses_to_parse):
+        raise DataError("Some addresses are empty.")
+    if validate_if_any_whitespace_only(addresses_to_parse):
         raise DataError("Some addresses only include whitespace thus cannot be parsed.")
-    if whitespace_only_addresses(addresses_to_parse):
-        raise DataError("Some addresses only include whitespace thus cannot be parsed.")
-
-
-def empty_address(addresses_to_parse: List[str]) -> bool:
-    """
-    Return true if one of the addresses is an empty string.
-    """
-    return "" in addresses_to_parse
-
-
-def whitespace_only_addresses(addresses_to_parse: List[str]) -> bool:
-    """
-    Return true if one the address is composed of only whitespace.
-    """
-    return any((is_whitespace_only(data) for data in addresses_to_parse))

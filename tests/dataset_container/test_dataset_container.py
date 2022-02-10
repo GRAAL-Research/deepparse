@@ -51,6 +51,11 @@ class DatasetContainerTest(TestCase):
         with self.assertRaises(TypeError):
             ADatasetContainer(some_invalid_data)
 
+    def test_when_none_then_raise_data_error(self):
+        some_invalid_data = [("An address", [1, 0]), (None, []), ("A last address", [3, 4, 0])]
+        with self.assertRaises(DataError):
+            ADatasetContainer(some_invalid_data)
+
     def test_when_empty_address_then_raise_data_error(self):
         some_invalid_data = [("An address", [1, 0]), ("", []), ("A last address", [3, 4, 0])]
         with self.assertRaises(DataError):

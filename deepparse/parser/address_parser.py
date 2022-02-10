@@ -240,12 +240,15 @@ class AddressParser:
         Callable method to parse the components of an address or a list of address.
 
         Args:
-            addresses_to_parse (Union[list[str], str]): The addresses to be parsed, can be either a
-                single address (when using str) or a list of address. Validation tests on the dataset to parse are
-                done in order to validate the following basic criteria:
+            addresses_to_parse (Union[list[str], str, ~deepparse.dataset_container.DatasetContainer]): The addresses to
+                be parsed, can be either a single address (when using str), a list of address or a DatasetContainer.
+                We apply some validation tests before parsing to validate its content if the data to parse is a string
+                or a list of strings. We apply the following basic criteria:
 
-                    - no address are empty string, and
-                    - no address are whitespace only string.
+                    - no addresses are None value,
+                    - no addresses are empty string, and
+                    - no addresses are whitespace-only strings.
+
 
                 When using a list of addresses, the addresses are processed in batch, allowing a faster process.
                 For example, using fastText model, a single address takes around 0.003 seconds to be parsed using a

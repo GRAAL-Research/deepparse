@@ -357,6 +357,15 @@ class ToolsTests(CaptureOutputTestCase):
         with self.assertRaises(DataError):
             validate_data_to_parse(whitespace_data)
 
+    def test_givenNoneAddress_then_raiseDataError(self):
+        none_data = ["An address", None]
+        with self.assertRaises(DataError):
+            validate_data_to_parse(none_data)
+
+        none_data = [None]
+        with self.assertRaises(DataError):
+            validate_data_to_parse(none_data)
+
 
 if __name__ == "__main__":
     unittest.main()

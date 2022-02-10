@@ -1,6 +1,3 @@
-import os
-import pickle
-
 import pandas as pd
 
 from deepparse import download_from_url

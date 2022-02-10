@@ -1,10 +1,7 @@
-import os
-import pickle
-
 import pandas as pd
 
 from deepparse import download_from_url
-from deepparse.dataset_container import CSVDatasetContainer
+from deepparse.dataset_container import PickleDatasetContainer
 from deepparse.parser import AddressParser
 
 # Here is an example on how to parse multiple addresses
@@ -15,9 +12,7 @@ test_dataset_name = "predict"
 download_from_url(test_dataset_name, saving_dir, file_extension=file_extension)
 
 #  Now let's load the dataset using one of our dataset container
-addresses_to_parse = CSVDatasetContainer(
-    "./a_path.csv", column_names=["address_column_name"], is_training_container=False
-)
+addresses_to_parse = PickleDatasetContainer("./data/predict.p", is_training_container=False)
 
 # We can sneak peek some addresses
 print(addresses_to_parse[:2])

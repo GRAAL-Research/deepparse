@@ -52,14 +52,10 @@ class DatasetContainer(Dataset, ABC):
 
     def __getitem__(self, idx: Union[int, slice]):
         if isinstance(idx, slice):
-            result = []
-            for element in range(idx.start, idx.stop):
-                sample = self.data[element]
-
-                result.append(sample)
+            start, stop, _ = idx.indices(len(self))
+            result = [self.data[index] for index in range(start, stop)]
         else:
             result = self.data[idx]
-
         return result
 
     def validate_dataset(self) -> None:

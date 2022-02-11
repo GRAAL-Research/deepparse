@@ -47,6 +47,18 @@ class FormattedParsedAddressTest(FormattedParsedAddressBase):
             "EOS": None,
         }
 
+        cls.a_parsed_address_in_list_format = [
+            ("3", "StreetNumber"),
+            (None, "Unit"),
+            ("test road", "StreetName"),
+            (None, "Orientation"),
+            (None, "Municipality"),
+            (None, "Province"),
+            (None, "PostalCode"),
+            (None, "GeneralDelivery"),
+            (None, "EOS"),
+        ]
+
         cls.a_complete_parsed_address_in_dict_format = {
             "StreetNumber": "3",
             "Unit": "unit",
@@ -280,6 +292,11 @@ class FormattedParsedAddressTest(FormattedParsedAddressBase):
 
         actual = self.complete_parsed_address.to_pandas()
         expected = {"Address": self.a_complete_address_str, **self.a_complete_parsed_address_in_dict_format}
+        self.assertEqual(actual, expected)
+
+    def test_integration_to_pickle(self):
+        actual = self.parsed_address.to_pickle()
+        expected = (self.a_address_str, self.a_parsed_address_in_list_format)
         self.assertEqual(actual, expected)
 
 

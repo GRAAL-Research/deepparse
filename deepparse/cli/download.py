@@ -20,7 +20,7 @@ def main(args: argparse.Namespace) -> None:
 
     .. code-block:: sh
 
-        python3 -m deepparse.cli.download fasttext
+        download fasttext
     """
     model_type = args.model_type
 

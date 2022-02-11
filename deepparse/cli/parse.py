@@ -16,19 +16,19 @@ def main(args=None) -> None:
 
     .. code-block:: sh
 
-        python3 -m deepparse.cli.parse fasttext ./dataset_path.csv parsed_address.pickle
+        parse fasttext ./dataset_path.csv parsed_address.pickle
 
     Using a gpu device
 
     .. code-block:: sh
 
-        python3 -m deepparse.cli.parse fasttext ./dataset_path.csv parsed_address.pickle --device 0
+        parse fasttext ./dataset_path.csv parsed_address.pickle --device 0
 
     Using a CSV dataset
 
     .. code-block:: sh
 
-        python3 -m deepparse.cli.parse fasttext ./dataset.csv parsed_address.pickle --path_to_retrained_model ./path
+        parse fasttext ./dataset.csv parsed_address.pickle --path_to_retrained_model ./path
 
     """
     if args is None:
@@ -84,7 +84,7 @@ def main(args=None) -> None:
 
     export_fn(parsed_address)
 
-    print("Addresses have been parsed.")
+    print(f"{len(addresses_to_parse)} addresses have been parsed.")
 
 
 def get_parser() -> argparse.ArgumentParser:
@@ -113,6 +113,7 @@ def get_parser() -> argparse.ArgumentParser:
             "The file name to use for the export of the parsed addresses. We will infer the file format base on the "
             "file extension. That is, if the file is a pickle (.p or .pickle), we will export it into a pickle file."
             "The file will be exported in the same repositories as the dataset_path."
+            "See the doc for format exporting."
         ),
         type=str,
     )

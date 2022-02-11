@@ -180,7 +180,7 @@ You can also use our cli to parse addresses using:
 
 ```sh
 
-    python3 -m deepparse.cli.parse <parsing_model> <dataset_path> <export_file_name>
+    parse <parsing_model> <dataset_path> <export_file_name>
 ```
 
 ### Parse addresses using your own retrained model
@@ -257,7 +257,7 @@ Here are the URLs to download our pre-trained models directly
 Or you can use our cli to download our pre-trained models directly using:
 
 ```sh
-python3 -m deepparse.cli.download <model_name>
+    download <model_name>
 ```
 
 ------------------

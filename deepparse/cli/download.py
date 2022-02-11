@@ -21,7 +21,7 @@ def main(args=None) -> None:
 
     .. code-block:: sh
 
-        download fasttext
+        download_model fasttext
     """
     if args is None:
         args = sys.argv[1:]

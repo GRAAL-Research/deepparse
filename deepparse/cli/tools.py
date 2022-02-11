@@ -45,6 +45,7 @@ def to_csv(
         parsed_addresses = [parsed_addresses]
     csv_formatted_parsed_addresses = [parsed_address.to_pandas() for parsed_address in parsed_addresses]
     pd.DataFrame(csv_formatted_parsed_addresses).to_csv(export_path, sep=sep, index=False)
+    print(f"Data exported to {export_path}.")
 
 
 def to_pickle(parsed_addresses: Union[FormattedParsedAddress, List[FormattedParsedAddress]], export_path: str) -> None:
@@ -56,6 +57,7 @@ def to_pickle(parsed_addresses: Union[FormattedParsedAddress, List[FormattedPars
     parsed_addresses = [parsed_address.to_pickle() for parsed_address in parsed_addresses]
     with open(export_path, "wb") as file:
         pickle.dump(parsed_addresses, file)
+    print(f"Data exported to {export_path}.")
 
 
 def generate_export_path(dataset_path: str, export_file_name: str) -> str:

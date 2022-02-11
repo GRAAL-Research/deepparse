@@ -171,3 +171,9 @@
 - Improved doc over data validation
 - Bugfix data slicing error with data containers
 - Add an example on how to use a retrained model
+
+## 0.7
+
+- Improved CLI
+- Fixed bug in cli export dataset
+- Improved the doc of the CLI

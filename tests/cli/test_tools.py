@@ -8,7 +8,7 @@ import os
 import pickle
 import pandas as pd
 
-from deepparse.cli import is_csv_path, is_pickle_path, to_csv, to_pickle
+from deepparse.cli import is_csv_path, is_pickle_path, to_csv, to_pickle, generate_export_path
 from deepparse.parser import FormattedParsedAddress
 
 
@@ -166,3 +166,16 @@ class ToolsTest(TestCase):
         with open(self.an_export_path, "rb") as file:
             parsed_data = pickle.load(file)
         self.assertEqual(parsed_data[0][0], a_address_str)
+
+    def test_generate_export_path_export_proper_path(self):
+        a_export_file_name = "export.p"
+
+        a_relative_dataset_path = "./file_name.p"
+        actual = generate_export_path(a_relative_dataset_path, a_export_file_name)
+        expected = "./export.p"
+        self.assertEqual(actual, expected)
+
+        an_absolute_dataset_path = os.path.join(self.temp_dir_obj.name, "an_export_file.p")
+        actual = generate_export_path(an_absolute_dataset_path, a_export_file_name)
+        expected = os.path.join(self.temp_dir_obj.name, a_export_file_name)
+        self.assertEqual(actual, expected)

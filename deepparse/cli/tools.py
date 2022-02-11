@@ -1,3 +1,4 @@
+import os
 import pickle
 from typing import List, Union
 
@@ -54,3 +55,13 @@ def to_pickle(parsed_addresses: Union[FormattedParsedAddress, List[FormattedPars
     parsed_addresses = [parsed_address.to_pickle() for parsed_address in parsed_addresses]
     with open(export_path, "wb") as file:
         pickle.dump(parsed_addresses, file)
+
+
+def generate_export_path(dataset_path: str, export_file_name: str) -> str:
+    """
+    Function to generate the export path by using the dataset path.
+
+    Return:
+        The string path.
+    """
+    return os.path.join(os.path.dirname(dataset_path), export_file_name)

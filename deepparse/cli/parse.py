@@ -1,9 +1,9 @@
 import argparse
 import sys
-from functools import partial
 import textwrap
+from functools import partial
 
-from deepparse.cli.tools import is_csv_path, is_pickle_path, to_csv, to_pickle
+from deepparse.cli.tools import is_csv_path, is_pickle_path, to_csv, to_pickle, generate_export_path
 from deepparse.dataset_container import CSVDatasetContainer, PickleDatasetContainer
 from deepparse.parser import AddressParser
 
@@ -54,7 +54,7 @@ def main(args=None) -> None:
         raise ValueError("The dataset path argument is not a CSV or pickle file.")
 
     export_file_name = parsed_args.export_file_name
-    export_path = dataset_path
+    export_path = generate_export_path(dataset_path, export_file_name)
 
     if is_csv_path(export_file_name):
         export_fn = partial(to_csv, export_path=export_path, sep=csv_column_separator)
@@ -172,12 +172,12 @@ See project for complete license.
 """
 
 
-def get_args(args):
+def get_args(args):  # pragma: no cover
     """Parse arguments passed in from shell."""
     return get_parser().parse_args(args)
 
 
-def wrap(text, **kwargs):
+def wrap(text, **kwargs):  # pragma: no cover
     """Wrap lines in argparse, so they align nicely in 2 columns.
     Default width is 70.
     With gratitude to paul.j3 https://bugs.python.org/issue12806

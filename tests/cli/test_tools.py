@@ -170,9 +170,9 @@ class ToolsTest(TestCase):
     def test_generate_export_path_export_proper_path(self):
         a_export_file_name = "export.p"
 
-        a_relative_dataset_path = "./file_name.p"
+        a_relative_dataset_path = os.path.join(".", "file_name.p")
         actual = generate_export_path(a_relative_dataset_path, a_export_file_name)
-        expected = "./export.p"
+        expected = os.path.join(".", a_export_file_name)
         self.assertEqual(actual, expected)
 
         an_absolute_dataset_path = os.path.join(self.temp_dir_obj.name, "an_export_file.p")

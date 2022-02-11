@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Parse Addresses Using Our CLI &mdash; deepparse 0.6.7 documentation</title>
+  <title>Parse Addresses Using Our CLI &mdash; deepparse 0.7 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -31,7 +31,7 @@
             <img src="../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.6.7
+                0.7
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -86,17 +86,17 @@
   <section id="parse-addresses-using-our-cli">
 <h1>Parse Addresses Using Our CLI<a class="headerlink" href="#parse-addresses-using-our-cli" title="Permalink to this headline"></a></h1>
 <p>You can use our cli function to parse addresses rapidly and output them into a file.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m deepparse.cli.parse fasttext ./dataset_path.csv parsed_address.pickle
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>parse fasttext ./dataset_path.csv parsed_address.pickle
 </pre></div>
 </div>
 <p>The cli command will infer the output format (here in a pickle format) and export the parsed addresses next to the
 dataset.</p>
 <p>You can also specify a device using the optional <code class="docutils literal notranslate"><span class="pre">device</span></code> argument.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m deepparse.cli.parse fasttext ./dataset_path.csv parsed_address.pickle --device <span class="m">0</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>parse fasttext ./dataset_path.csv parsed_address.pickle --device <span class="m">0</span>
 </pre></div>
 </div>
 <p>Or use one of your retrained models using the <cite>optional ̀</cite> path_to_retrained_model`` argument.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m deepparse.cli.parse fasttext ./dataset_path.csv parsed_address.pickle --path_to_retrained_model ./path
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>parse fasttext ./dataset_path.csv parsed_address.pickle --path_to_retrained_model ./path
 </pre></div>
 </div>
 </section>

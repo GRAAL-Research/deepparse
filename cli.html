@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CLI &mdash; deepparse 0.6.7 documentation</title>
+  <title>CLI &mdash; deepparse 0.7 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -31,7 +31,7 @@
             <img src="_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.6.7
+                0.7
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -47,7 +47,10 @@
 <li class="toctree-l1"><a class="reference internal" href="dataset_container.html">Dataset Container</a></li>
 <li class="toctree-l1"><a class="reference internal" href="comparer.html">Comparer</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">CLI</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#download">Download</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exporting-format">Exporting Format</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#download">Download</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -88,37 +91,84 @@
              
   <section id="cli">
 <h1>CLI<a class="headerlink" href="#cli" title="Permalink to this headline"></a></h1>
-<p>You cas use our cli module to parsed addresses directly from the command line or download a pre-trained model.</p>
+<p>You cas use our cli to parsed addresses directly from the command line or download a pre-trained model.</p>
+<section id="exporting-format">
+<h2>Exporting Format<a class="headerlink" href="#exporting-format" title="Permalink to this headline"></a></h2>
+<p>We support two types of export: CSV and Pickle.</p>
+<p>The first export uses the following pattern column pattern:
+<code class="docutils literal notranslate"><span class="pre">&quot;Address&quot;,</span> <span class="pre">&quot;First</span> <span class="pre">address</span> <span class="pre">components</span> <span class="pre">class&quot;,</span> <span class="pre">&quot;Second</span> <span class="pre">class&quot;,</span> <span class="pre">...</span></code>.
+Which mean the address <code class="docutils literal notranslate"><span class="pre">305</span> <span class="pre">rue</span> <span class="pre">des</span> <span class="pre">Lilas</span> <span class="pre">0</span> <span class="pre">app</span> <span class="pre">2</span></code> will output the table bellow
+using our default tags:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Address</p></th>
+<th class="head"><p>StreetNumber</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>StreetName</p></th>
+<th class="head"><p>Orientation</p></th>
+<th class="head"><p>Municipality</p></th>
+<th class="head"><p>Province</p></th>
+<th class="head"><p>Postal Code</p></th>
+<th class="head"><p>GeneralDelivery</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>305 rue des Lilas 0 app 2</p></td>
+<td><p>305</p></td>
+<td><p>app 2</p></td>
+<td><p>rue des lilas</p></td>
+<td><p>o</p></td>
+<td><p>None</p></td>
+<td><p>None</p></td>
+<td><p>None</p></td>
+<td><p>None</p></td>
+</tr>
+</tbody>
+</table>
+<p>The second export uses a similar approach but using tuples and list. Using the same example will return the following
+tuple <code class="docutils literal notranslate"><span class="pre">(&quot;305</span> <span class="pre">rue</span> <span class="pre">des</span> <span class="pre">Lilas</span> <span class="pre">0</span> <span class="pre">app</span> <span class="pre">2&quot;,</span> <span class="pre">[(&quot;305&quot;,</span> <span class="pre">&quot;StreetNumber&quot;),</span> <span class="pre">(&quot;rue</span> <span class="pre">des</span> <span class="pre">lilas&quot;,</span> <span class="pre">&quot;StreetName&quot;),</span> <span class="pre">...])</span></code>.</p>
 <section id="download">
-<h2>Download<a class="headerlink" href="#download" title="Permalink to this headline"></a></h2>
+<h3>Download<a class="headerlink" href="#download" title="Permalink to this headline"></a></h3>
 <dl class="py function">
 <dt class="sig sig-object py" id="deepparse.cli.download.main">
-<span class="sig-prename descclassname"><span class="pre">deepparse.cli.download.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/argparse.html#argparse.Namespace" title="(in Python v3.8)"><span class="pre">argparse.Namespace</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/deepparse/cli/download.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.cli.download.main" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">deepparse.cli.download.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/deepparse/cli/download.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.cli.download.main" title="Permalink to this definition"></a></dt>
 <dd><p>cli function to manually download all the dependencies for a pre-trained model.</p>
 <p>Example of usage:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python3 -m deepparse.cli.download fasttext
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>download_model fasttext
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="deepparse.cli.parse.main">
-<span class="sig-prename descclassname"><span class="pre">deepparse.cli.parse.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/argparse.html#argparse.Namespace" title="(in Python v3.8)"><span class="pre">argparse.Namespace</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/deepparse/cli/parse.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.cli.parse.main" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">deepparse.cli.parse.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/deepparse/cli/parse.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.cli.parse.main" title="Permalink to this definition"></a></dt>
 <dd><p>cli function to rapidly parse an addresses dataset and output it in another file.</p>
 <p>Examples of usage:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python3 -m deepparse.cli.parse fasttext ./dataset_path.csv parsed_address.pickle
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>parse fasttext ./dataset_path.csv parsed_address.pickle
 </pre></div>
 </div>
 <p>Using a gpu device</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python3 -m deepparse.cli.parse fasttext ./dataset_path.csv parsed_address.pickle --device <span class="m">0</span>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>parse fasttext ./dataset_path.csv parsed_address.pickle --device <span class="m">0</span>
 </pre></div>
 </div>
 <p>Using a CSV dataset</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python3 -m deepparse.cli.parse fasttext ./dataset.csv parsed_address.pickle --path_to_retrained_model ./path
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>parse fasttext ./dataset.csv parsed_address.pickle --path_to_retrained_model ./path
 </pre></div>
 </div>
 </dd></dl>
 
+</section>
 </section>
 </section>
 

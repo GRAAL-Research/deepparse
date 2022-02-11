@@ -1,5 +1,6 @@
 import os
 import pickle
+import textwrap
 from typing import List, Union
 
 import pandas as pd
@@ -65,3 +66,35 @@ def generate_export_path(dataset_path: str, export_file_name: str) -> str:
         The string path.
     """
     return os.path.join(os.path.dirname(dataset_path), export_file_name)
+
+
+# pylint: disable=pointless-string-statement
+"""
+The code below was copied from the pypyr project, and has been modified for the purpose of this package.
+
+COPYRIGHT
+
+All contributions from the https://github.com/pypyr/pypyr authors.
+Copyright (c) 2018 - 2022
+All rights reserved.
+
+Each contributor holds copyright over their respective contributions. The project versioning (Git)
+records all such contribution source information.
+
+LICENSE
+
+The Apache License 2.0
+
+See project for complete license.
+"""
+
+
+def wrap(text, **kwargs):  # pragma: no cover
+    """Wrap lines in argparse, so they align nicely in 2 columns.
+    Default width is 70.
+    With gratitude to paul.j3 https://bugs.python.org/issue12806
+    """
+    # apply textwrap to each line individually
+    text = text.splitlines()
+    text = [textwrap.fill(line, **kwargs) for line in text]
+    return '\n'.join(text)

@@ -23,7 +23,7 @@ Deepparse is a state-of-the-art library for parsing multinational street address
 Use deepparse to
 
 - parse multinational address using one of our pre-trained models with or without attention mechanism,
-- parse addresses directly from the command line without no code to write,
+- parse addresses directly from the command line without code to write,
 - retrain our pre-trained models on new data to improve parsing on specific country address patterns,
 - retrain our pre-trained models with new prediction tags easily,
 - train a new seq2seq addresses parsing models easily using a new model configuration.

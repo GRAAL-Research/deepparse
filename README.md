@@ -257,7 +257,7 @@ Here are the URLs to download our pre-trained models directly
 Or you can use our cli to download our pre-trained models directly using:
 
 ```sh
-    download <model_name>
+    download_model <model_name>
 ```
 
 ------------------

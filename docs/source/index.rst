@@ -679,7 +679,7 @@ Or you can use our cli to download our pre-trained models directly using:
 
 .. code-block:: sh
 
-    download <model_name>
+    download_model <model_name>
 
 
 Installation

@@ -177,3 +177,7 @@
 - Improved CLI
 - Fixed bug in cli export dataset
 - Improved the doc of the CLI
+
+## dev
+
+- Added JSON output support

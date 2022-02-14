@@ -6,9 +6,11 @@ from unittest import TestCase
 import os
 
 import pickle
+
+import json
 import pandas as pd
 
-from deepparse.cli import is_csv_path, is_pickle_path, to_csv, to_pickle, generate_export_path
+from deepparse.cli import is_csv_path, is_pickle_path, to_csv, to_pickle, generate_export_path, is_json_path, to_json
 from deepparse.parser import FormattedParsedAddress
 
 
@@ -101,6 +103,40 @@ class ToolsTest(TestCase):
 
         self.assertFalse(is_pickle_path(not_a_pickle_path))
 
+    def test_givenJSONPath_whenJSONPath_returnTrue(self):
+        a_json_path = "a_path.json"
+
+        self.assertTrue(is_json_path(a_json_path))
+
+        a_json_path = "a/path/a_path.json"
+
+        self.assertTrue(is_json_path(a_json_path))
+
+        a_json_path = "./relative/path/a_path.json"
+
+        self.assertTrue(is_json_path(a_json_path))
+
+    def test_givenNotAJSONPath_whenJSONPath_returnFalse(self):
+        not_a_json_path = "a_path.tsv"
+
+        self.assertFalse(is_json_path(not_a_json_path))
+
+        not_a_json_path = "a_path.doc"
+
+        self.assertFalse(is_json_path(not_a_json_path))
+
+        not_a_json_path = "a_path.txt"
+
+        self.assertFalse(is_json_path(not_a_json_path))
+
+        not_a_json_path = "a_path.csv"
+
+        self.assertFalse(is_json_path(not_a_json_path))
+
+        not_a_json_path = "a_path.md"
+
+        self.assertFalse(is_json_path(not_a_json_path))
+
     def test_integration_list_formatted_addresses_to_csv(self):
         a_address_str = "3 test road"
         a_parsed_address = [
@@ -166,6 +202,42 @@ class ToolsTest(TestCase):
         with open(self.an_export_path, "rb") as file:
             parsed_data = pickle.load(file)
         self.assertEqual(parsed_data[0][0], a_address_str)
+
+    def test_integration_list_formatted_addresses_to_json(self):
+        a_address_str = "3 test road"
+        a_parsed_address = [
+            ("3", "StreetNumber"),
+            ("test", "StreetName"),
+            ("road", "StreetName"),
+        ]
+        a_list_of_parsed_addresses = [
+            FormattedParsedAddress({a_address_str: a_parsed_address}),
+            FormattedParsedAddress({a_address_str: a_parsed_address}),
+        ]
+
+        to_json(a_list_of_parsed_addresses, export_path=self.an_export_path)
+
+        with open(self.an_export_path, "r", encoding='utf-8') as file:
+            parsed_data = json.load(file)
+        self.assertIsInstance(parsed_data[0], dict)
+        self.assertEqual(parsed_data[0].get("Address"), a_address_str)
+        self.assertEqual(parsed_data[1].get("Address"), a_address_str)
+
+    def test_integration_formatted_address_to_json(self):
+        a_address_str = "3 test road"
+        a_parsed_address = [
+            ("3", "StreetNumber"),
+            ("test", "StreetName"),
+            ("road", "StreetName"),
+        ]
+        a_parsed_address = FormattedParsedAddress({a_address_str: a_parsed_address})
+
+        to_json(a_parsed_address, export_path=self.an_export_path)
+
+        with open(self.an_export_path, "r", encoding='utf-8') as file:
+            parsed_data = json.load(file)
+        self.assertIsInstance(parsed_data[0], dict)
+        self.assertEqual(parsed_data[0].get("Address"), a_address_str)
 
     def test_generate_export_path_export_proper_path(self):
         a_export_file_name = "export.p"

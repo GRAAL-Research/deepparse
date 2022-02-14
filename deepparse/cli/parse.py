@@ -2,7 +2,16 @@ import argparse
 import sys
 from functools import partial
 
-from deepparse.cli.tools import is_csv_path, is_pickle_path, to_csv, to_pickle, generate_export_path, wrap
+from deepparse.cli.tools import (
+    is_csv_path,
+    is_pickle_path,
+    to_csv,
+    to_pickle,
+    generate_export_path,
+    wrap,
+    is_json_path,
+    to_json,
+)
 from deepparse.dataset_container import CSVDatasetContainer, PickleDatasetContainer
 from deepparse.parser import AddressParser
 
@@ -59,6 +68,8 @@ def main(args=None) -> None:
         export_fn = partial(to_csv, export_path=export_path, sep=csv_column_separator)
     elif is_pickle_path(export_file_name):
         export_fn = partial(to_pickle, export_path=export_path)
+    elif is_json_path(export_file_name):
+        export_fn = partial(to_json, export_path=export_path)
     else:
         raise ValueError("We do not support this type of export.")
 
@@ -103,7 +114,9 @@ def get_parser() -> argparse.ArgumentParser:
     )
 
     parser.add_argument(
-        "dataset_path", help=wrap("The path to the dataset file in a pickle (.p or .pickle) or CSV format."), type=str
+        "dataset_path",
+        help=wrap("The path to the dataset file in a pickle (.p or .pickle), CSV format or JSON format."),
+        type=str,
     )
 
     parser.add_argument(
@@ -111,8 +124,9 @@ def get_parser() -> argparse.ArgumentParser:
         help=wrap(
             "The file name to use for the export of the parsed addresses. We will infer the file format base on the "
             "file extension. That is, if the file is a pickle (.p or .pickle), we will export it into a pickle file."
+            "The supported format are Pickle, CSV and JSON."
             "The file will be exported in the same repositories as the dataset_path."
-            "See the doc for format exporting."
+            "See the doc for more details on the format exporting."
         ),
         type=str,
     )

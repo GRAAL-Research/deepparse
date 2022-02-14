@@ -21,10 +21,12 @@ class ParseTests(TestCase):
 
         self.fake_data_path_csv = os.path.join(self.temp_dir_obj.name, "fake_data.csv")
         self.a_unsupported_data_path = os.path.join(self.temp_dir_obj.name, "fake_data.txt")
+        self.fake_data_path_json = os.path.join(self.temp_dir_obj.name, "fake_data.json")
 
         self.pickle_p_export_file_name = "a_file.p"
         self.pickle_pickle_export_file_name = "a_file.pickle"
         self.csv_export_file_name = "a_file.csv"
+        self.json_export_file_name = "a_file.json"
 
         self.a_fasttext_model_type = "fasttext"
         self.a_fasttext_att_model_type = "fasttext-attention"
@@ -117,6 +119,26 @@ class ParseTests(TestCase):
         )
 
         export_path = generate_export_path(self.fake_data_path_pickle, self.pickle_p_export_file_name)
+        self.assertTrue(os.path.isfile(export_path))
+
+    @skipIf(
+        not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
+        "download of model too long for test in runner",
+    )
+    def test_integration_json(self):
+        create_pickle_file(self.fake_data_path_pickle, predict_container=True)
+
+        parse.main(
+            [
+                self.a_fasttext_att_model_type,
+                self.fake_data_path_pickle,
+                self.json_export_file_name,
+                "--device",
+                self.cpu_device,
+            ]
+        )
+
+        export_path = generate_export_path(self.fake_data_path_pickle, self.json_export_file_name)
         self.assertTrue(os.path.isfile(export_path))
 
     @skipIf(

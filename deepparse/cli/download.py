@@ -1,5 +1,6 @@
 import argparse
 import os
+import sys
 
 from bpemb import BPEmb
 
@@ -12,7 +13,7 @@ from deepparse import (
 )
 
 
-def main(args: argparse.Namespace) -> None:
+def main(args=None) -> None:
     """
     cli function to manually download all the dependencies for a pre-trained model.
 
@@ -20,9 +21,14 @@ def main(args: argparse.Namespace) -> None:
 
     .. code-block:: sh
 
-        python3 -m deepparse.cli.download fasttext
+        download_model fasttext
     """
-    model_type = args.model_type
+    if args is None:
+        args = sys.argv[1:]
+
+    parsed_args = get_args(args)
+
+    model_type = parsed_args.model_type
 
     if "fasttext" in model_type and "fasttext-light" not in model_type:
         download_fasttext_embeddings(saving_dir=CACHE_PATH)
@@ -40,20 +46,24 @@ def main(args: argparse.Namespace) -> None:
         download_weights(model_type, CACHE_PATH)
 
 
-if __name__ == "__main__":  # pragma: no cover
+def get_parser() -> argparse.ArgumentParser:
+    """Return ArgumentParser for the cli."""
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "model_type",
         choices=[
             "fasttext",
-            "fasttext_attention",
+            "fasttext-attention",
             "fasttext-light",
             "bpemb",
-            "bpemb_attention",
+            "bpemb-attention",
         ],
         help="The model type to download.",
     )
 
-    args_parser = parser.parse_args()
+    return parser
 
-    main(args_parser)
+
+def get_args(args):  # pragma: no cover
+    """Parse arguments passed in from shell."""
+    return get_parser().parse_args(args)

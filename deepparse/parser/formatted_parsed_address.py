@@ -213,7 +213,7 @@ class FormattedParsedAddress:
         """
         return {"Address": self.raw_address, **self.to_dict()}
 
-    def to_pickle(self) -> List:
+    def to_pickle(self) -> Tuple[str, List]:
         """
         Method to convert a parsed address into a list of tuple for pickle where the first tuple element is the
         raw address and the followings tuples are the address components, and the values are the value of
@@ -222,12 +222,12 @@ class FormattedParsedAddress:
         ('rue des Lilas', 'StreetName')]``.
 
         Return:
-            A list of tuples of the raw address and all is parsed components.
+            A tuple where the first element is the raw address (a string) and the second element is a list of
+            tuple of the parsed addresses. The first element of each tuple is the address components and the second
+            is the tag.
 
         """
-        export_list = list([self.raw_address])
-        export_list.extend(self.to_list_of_tuples())
-        return export_list
+        return self.raw_address, self.to_list_of_tuples()
 
     def _resolve_tagged_affectation(self, tagged_address: List[Tuple]) -> None:
         """

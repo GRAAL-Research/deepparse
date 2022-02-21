@@ -9,7 +9,7 @@ from unittest import TestCase, skipIf
 
 import torch
 
-from deepparse.cli import parse
+from deepparse.cli import parse, generate_export_path
 from tests.tools import create_pickle_file, create_csv_file
 
 
@@ -21,10 +21,12 @@ class ParseTests(TestCase):
 
         self.fake_data_path_csv = os.path.join(self.temp_dir_obj.name, "fake_data.csv")
         self.a_unsupported_data_path = os.path.join(self.temp_dir_obj.name, "fake_data.txt")
+        self.fake_data_path_json = os.path.join(self.temp_dir_obj.name, "fake_data.json")
 
         self.pickle_p_export_file_name = "a_file.p"
         self.pickle_pickle_export_file_name = "a_file.pickle"
         self.csv_export_file_name = "a_file.csv"
+        self.json_export_file_name = "a_file.json"
 
         self.a_fasttext_model_type = "fasttext"
         self.a_fasttext_att_model_type = "fasttext-attention"
@@ -72,7 +74,7 @@ class ParseTests(TestCase):
     def test_integration_cpu(self):
         create_pickle_file(self.fake_data_path_pickle, predict_container=True)
 
-        args_parser = self.parser.parse_args(
+        parse.main(
             [
                 self.a_fasttext_model_type,
                 self.fake_data_path_pickle,
@@ -81,13 +83,15 @@ class ParseTests(TestCase):
                 self.cpu_device,
             ]
         )
-        parse.main(args_parser)
+
+        export_path = generate_export_path(self.fake_data_path_pickle, self.pickle_p_export_file_name)
+        self.assertTrue(os.path.isfile(export_path))
 
     @skipIf(not torch.cuda.is_available(), "no gpu available")
     def test_integration_gpu(self):
         create_pickle_file(self.fake_data_path_pickle, predict_container=True)
 
-        args_parser = self.parser.parse_args(
+        parse.main(
             [
                 self.a_fasttext_model_type,
                 self.fake_data_path_pickle,
@@ -96,13 +100,15 @@ class ParseTests(TestCase):
                 self.gpu_device,
             ]
         )
-        parse.main(args_parser)
+
+        export_path = generate_export_path(self.fake_data_path_pickle, self.pickle_p_export_file_name)
+        self.assertTrue(os.path.isfile(export_path))
 
     @skipIf(not torch.cuda.is_available(), "no gpu available")
     def test_integration_attention_model(self):
         create_pickle_file(self.fake_data_path_pickle, predict_container=True)
 
-        args_parser = self.parser.parse_args(
+        parse.main(
             [
                 self.a_fasttext_att_model_type,
                 self.fake_data_path_pickle,
@@ -111,7 +117,29 @@ class ParseTests(TestCase):
                 self.cpu_device,
             ]
         )
-        parse.main(args_parser)
+
+        export_path = generate_export_path(self.fake_data_path_pickle, self.pickle_p_export_file_name)
+        self.assertTrue(os.path.isfile(export_path))
+
+    @skipIf(
+        not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
+        "download of model too long for test in runner",
+    )
+    def test_integration_json(self):
+        create_pickle_file(self.fake_data_path_pickle, predict_container=True)
+
+        parse.main(
+            [
+                self.a_fasttext_att_model_type,
+                self.fake_data_path_pickle,
+                self.json_export_file_name,
+                "--device",
+                self.cpu_device,
+            ]
+        )
+
+        export_path = generate_export_path(self.fake_data_path_pickle, self.json_export_file_name)
+        self.assertTrue(os.path.isfile(export_path))
 
     @skipIf(
         not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
@@ -120,9 +148,9 @@ class ParseTests(TestCase):
     def test_integration_csv(self):
         create_csv_file(self.fake_data_path_csv, predict_container=True)
 
-        args_parser = self.parser.parse_args(
+        parse.main(
             [
-                self.a_fasttext_model_type,
+                self.a_fasttext_att_model_type,
                 self.fake_data_path_csv,
                 self.csv_export_file_name,
                 "--device",
@@ -131,7 +159,9 @@ class ParseTests(TestCase):
                 "Address",
             ]
         )
-        parse.main(args_parser)
+
+        export_path = generate_export_path(self.fake_data_path_csv, self.csv_export_file_name)
+        self.assertTrue(os.path.isfile(export_path))
 
     @skipIf(
         not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
@@ -141,7 +171,7 @@ class ParseTests(TestCase):
         sep = ";"
         create_csv_file(self.fake_data_path_csv, predict_container=True, separator=sep)
 
-        args_parser = self.parser.parse_args(
+        parse.main(
             [
                 self.a_fasttext_model_type,
                 self.fake_data_path_csv,
@@ -154,7 +184,9 @@ class ParseTests(TestCase):
                 sep,
             ]
         )
-        parse.main(args_parser)
+
+        export_path = generate_export_path(self.fake_data_path_pickle, self.csv_export_file_name)
+        self.assertTrue(os.path.isfile(export_path))
 
     @skipIf(
         not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
@@ -163,17 +195,16 @@ class ParseTests(TestCase):
     def test_ifIsCSVFile_noColumnName_raiseValueError(self):
         create_csv_file(self.fake_data_path_csv, predict_container=True)
 
-        args_parser = self.parser.parse_args(
-            [
-                self.a_fasttext_model_type,
-                self.fake_data_path_csv,
-                self.csv_export_file_name,
-                "--device",
-                self.cpu_device,
-            ]
-        )
         with self.assertRaises(ValueError):
-            parse.main(args_parser)
+            parse.main(
+                [
+                    self.a_fasttext_model_type,
+                    self.fake_data_path_csv,
+                    self.csv_export_file_name,
+                    "--device",
+                    self.cpu_device,
+                ]
+            )
 
     @skipIf(
         not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
@@ -182,17 +213,16 @@ class ParseTests(TestCase):
     def test_ifIsNotSupportedFile_raiseValueError(self):
         create_csv_file(self.fake_data_path_csv, predict_container=True)
 
-        args_parser = self.parser.parse_args(
-            [
-                self.a_fasttext_model_type,
-                self.a_unsupported_data_path,
-                self.csv_export_file_name,
-                "--device",
-                self.cpu_device,
-            ]
-        )
         with self.assertRaises(ValueError):
-            parse.main(args_parser)
+            parse.main(
+                [
+                    self.a_fasttext_model_type,
+                    self.a_unsupported_data_path,
+                    self.csv_export_file_name,
+                    "--device",
+                    self.cpu_device,
+                ]
+            )
 
     @skipIf(
         not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
@@ -201,17 +231,16 @@ class ParseTests(TestCase):
     def test_ifIsNotSupportedExportFile_raiseValueError(self):
         create_csv_file(self.fake_data_path_csv, predict_container=True)
 
-        args_parser = self.parser.parse_args(
-            [
-                self.a_fasttext_model_type,
-                self.fake_data_path_csv,
-                self.a_unsupported_data_path,
-                "--device",
-                self.cpu_device,
-            ]
-        )
         with self.assertRaises(ValueError):
-            parse.main(args_parser)
+            parse.main(
+                [
+                    self.a_fasttext_model_type,
+                    self.fake_data_path_csv,
+                    self.a_unsupported_data_path,
+                    "--device",
+                    self.cpu_device,
+                ]
+            )
 
     @skipIf(
         not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
@@ -220,7 +249,7 @@ class ParseTests(TestCase):
     def test_ifPathToRetrainModel_thenUseRetrainModel(self):
         create_pickle_file(self.fake_data_path_pickle, predict_container=True)
 
-        args_parser = self.parser.parse_args(
+        parse.main(
             [
                 self.a_fasttext_model_type,
                 self.fake_data_path_pickle,
@@ -230,7 +259,8 @@ class ParseTests(TestCase):
             ]
         )
 
-        parse.main(args_parser)
+        export_path = generate_export_path(self.fake_data_path_pickle, self.pickle_p_export_file_name)
+        self.assertTrue(os.path.isfile(export_path))
 
 
 if __name__ == "__main__":

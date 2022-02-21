@@ -1,4 +1,5 @@
 import argparse
+import logging
 import sys
 from functools import partial
 
@@ -11,12 +12,15 @@ from deepparse.cli.tools import (
     wrap,
     is_json_path,
     to_json,
+    bool_parse,
+    replace_path_extension,
 )
 from deepparse.dataset_container import CSVDatasetContainer, PickleDatasetContainer
 from deepparse.parser import AddressParser
 
 
 def main(args=None) -> None:
+    # pylint: disable=too-many-locals, too-many-branches
     """
     cli function to rapidly parse an addresses dataset and output it in another file.
 
@@ -90,11 +94,24 @@ def main(args=None) -> None:
 
     address_parser = AddressParser(**parser_args)
 
+    if parsed_args.log:
+        logging_export_path = replace_path_extension(export_path, ".log")
+        logging.basicConfig(
+            filename=logging_export_path, format="%(asctime)s : %(levelname)s : %(message)s", level=logging.INFO
+        )
+
+        text_to_log = f"Parsing using {address_parser}"
+        logging.info(text_to_log)
+
     parsed_address = address_parser(addresses_to_parse)
 
     export_fn(parsed_address)
 
     print(f"{len(addresses_to_parse)} addresses have been parsed.")
+
+    if parsed_args.log:
+        text_to_log = f"{len(addresses_to_parse)} addresses have been parsed."
+        logging.info(text_to_log)
 
 
 def get_parser() -> argparse.ArgumentParser:
@@ -159,6 +176,17 @@ def get_parser() -> argparse.ArgumentParser:
         "--csv_column_separator",
         help=wrap("The column separator to use for the dataset container. By default '\t'."),
         default="\t",
+    )
+
+    parser.add_argument(
+        "--log",
+        help=wrap(
+            "Either or not to log the parsing process into a `.log` file exported at the same place as the"
+            "parsed data using the same name as the export file. "
+            "The bool value can be (not case sensitive) 'true/false', 't/f', 'yes/no', 'y/n' or '0/1'."
+        ),
+        type=bool_parse,
+        default="True",
     )
 
     return parser

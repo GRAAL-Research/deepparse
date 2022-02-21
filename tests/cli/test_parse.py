@@ -9,7 +9,7 @@ from unittest import TestCase, skipIf
 
 import torch
 
-from deepparse.cli import parse, generate_export_path
+from deepparse.cli import parse, generate_export_path, bool_parse
 from tests.tools import create_pickle_file, create_csv_file
 
 
@@ -66,6 +66,8 @@ class ParseTests(TestCase):
         self.parser.add_argument("--csv_column_name", type=str, default=None)
 
         self.parser.add_argument("--csv_column_separator", type=str, default="\t")
+
+        self.parser.add_argument("--log", type=bool_parse, default="True")
 
     @skipIf(
         not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),

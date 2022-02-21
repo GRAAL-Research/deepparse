@@ -248,7 +248,6 @@ class AddressParser:
                     - no addresses are empty string, and
                     - no addresses are whitespace-only strings.
 
-
                 When using a list of addresses, the addresses are processed in batch, allowing a faster process.
                 For example, using fastText model, a single address takes around 0.003 seconds to be parsed using a
                 batch of 1 (1 element at the time is processed). This time can be reduced to 0.00035 seconds per

@@ -61,9 +61,9 @@
 
 ## 0.3.4
 
-- Fixed a bug when using batched address. Since we were sorting the address during the forward pass, the output prediction
-  tags were not aligned with the supposed parsed address. We have removed the sorting, and now the results are more
-  aligned with our research.
+- Fixed a bug when using batched address. Since we were sorting the address during the forward pass, the output
+  prediction tags were not aligned with the supposed parsed address. We have removed the sorting, and now the results
+  are more aligned with our research.
 
 ## 0.3.5
 
@@ -181,3 +181,4 @@
 ## dev
 
 - Added JSON output support
+- Add logging output of parse cli function

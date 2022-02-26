@@ -476,6 +476,13 @@ Parameters that can be modified are:</p>
 </dl>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
+<p>We recommend using a learning rate scheduler procedure during retraining to reduce the chance
+of losing too much of our learned weights, thus increasing retraining time. We
+personally use the following <code class="docutils literal notranslate"><span class="pre">poutyne.StepLR(step_size=1,</span> <span class="pre">gamma=0.1)</span></code>.
+Also, starting learning rate should be relatively low (i.e. 0.01 or lower).</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
 <p>We use SGD optimizer, NLL loss and accuracy as a metric, the data is shuffled, and we use teacher forcing
 during training (with a prob of 0.5) as in the <a class="reference external" href="https://arxiv.org/abs/2006.16152">article</a>.</p>
 </div>

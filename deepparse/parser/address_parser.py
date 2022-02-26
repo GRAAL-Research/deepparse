@@ -405,6 +405,12 @@ class AddressParser:
             <https://poutyne.org/experiment.html#poutyne.Experiment.train>`_ for details).
 
         Note:
+            We recommend using a learning rate scheduler procedure during retraining to reduce the chance
+            of losing too much of our learned weights, thus increasing retraining time. We
+            personally use the following ``poutyne.StepLR(step_size=1, gamma=0.1)``.
+            Also, starting learning rate should be relatively low (i.e. 0.01 or lower).
+
+        Note:
             We use SGD optimizer, NLL loss and accuracy as a metric, the data is shuffled, and we use teacher forcing
             during training (with a prob of 0.5) as in the `article <https://arxiv.org/abs/2006.16152>`_.
 

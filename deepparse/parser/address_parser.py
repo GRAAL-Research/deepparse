@@ -176,13 +176,13 @@ class AddressParser:
     """
 
     def __init__(
-        self,
-        model_type: str = "best",
-        attention_mechanism: bool = False,
-        device: Union[int, str, torch.device] = 0,
-        rounding: int = 4,
-        verbose: bool = True,
-        path_to_retrained_model: Union[str, None] = None,
+            self,
+            model_type: str = "best",
+            attention_mechanism: bool = False,
+            device: Union[int, str, torch.device] = 0,
+            rounding: int = 4,
+            verbose: bool = True,
+            path_to_retrained_model: Union[str, None] = None,
     ) -> None:
         # pylint: disable=too-many-arguments
         self._process_device(device)
@@ -229,11 +229,11 @@ class AddressParser:
     __repr__ = __str__  # to call __str__ when list of address
 
     def __call__(
-        self,
-        addresses_to_parse: Union[List[str], str, DatasetContainer],
-        with_prob: bool = False,
-        batch_size: int = 32,
-        num_workers: int = 0,
+            self,
+            addresses_to_parse: Union[List[str], str, DatasetContainer],
+            with_prob: bool = False,
+            batch_size: int = 32,
+            num_workers: int = 0,
     ) -> Union[FormattedParsedAddress, List[FormattedParsedAddress]]:
         """
         Callable method to parse the components of an address or a list of address.
@@ -337,19 +337,20 @@ class AddressParser:
         return tagged_addresses_components
 
     def retrain(
-        self,
-        dataset_container: DatasetContainer,
-        train_ratio: float = 0.8,
-        batch_size: int = 32,
-        epochs: int = 5,
-        num_workers: int = 1,
-        learning_rate: float = 0.01,
-        callbacks: Union[List, None] = None,
-        seed: int = 42,
-        logging_path: str = "./checkpoints",
-        disable_tensorboard: bool = True,
-        prediction_tags: Union[Dict, None] = None,
-        seq2seq_params: Union[Dict, None] = None,
+            self,
+            dataset_container: DatasetContainer,
+            train_ratio: float = 0.8,
+            batch_size: int = 32,
+            epochs: int = 5,
+            num_workers: int = 1,
+            learning_rate: float = 0.01,
+            callbacks: Union[List, None] = None,
+            seed: int = 42,
+            logging_path: str = "./checkpoints",
+            disable_tensorboard: bool = True,
+            prediction_tags: Union[Dict, None] = None,
+            seq2seq_params: Union[Dict, None] = None,
+            layers_to_freeze: Union[str, None] = None,
     ) -> List[Dict]:
         # pylint: disable=too-many-arguments, line-too-long, too-many-locals, too-many-branches, too-many-statements
         """
@@ -398,6 +399,21 @@ class AddressParser:
                     - The number of ``encoder_num_layers`` of the encoder. The default value is 1.
                     - The size of the ``decoder_hidden_size`` of the decoder. The default value is 1024.
                     - The number of ``decoder_num_layers`` of the decoder. The default value is 1.
+                Default is None, meaning we use the default seq2seq architecture.
+            layers_to_freeze (Union[str, None]): Name of the portion of the seq2seq to freeze layers,
+                thus reducing the number of parameters to learn. Will be ignored if ``seq2seq_params`` is not None.
+                Possible freezing settings are:
+
+                    - ``None``: No layers are frozen.
+                    - 'encoder': To freeze the encoder part of the seq2seq. That is the part that encodes the address
+                    into a more dense representation.
+                    - 'decoder': To freeze the decoder part of the seq2seq. That is the part that decodes a dense
+                    address representation.
+                    - 'prediction_layer': To freeze the last layer that predicts a tag class (i.e. a fully connected
+                    with an output size of the same length as the prediction tags).
+                    - 'seq2seq': To freeze the encoder and decoder but **not** the prediction layer.
+
+               Default is ``None``, meaning we do not freeze any layers.
 
         Return:
             A list of dictionary with the best epoch stats (see `Experiment class
@@ -532,6 +548,10 @@ class AddressParser:
             dataset_container, train_ratio, batch_size, num_workers, seed=seed
         )
 
+        if layers_to_freeze is not None and seq2seq_params is None:
+            # We ignore the layers to freeze if seq2seq_params is not None
+            self._freeze_model_params(layers_to_freeze)
+
         optimizer = SGD(self.model.parameters(), learning_rate)
 
         exp = Experiment(
@@ -603,12 +623,12 @@ class AddressParser:
             return train_res
 
     def test(
-        self,
-        test_dataset_container: DatasetContainer,
-        batch_size: int = 32,
-        num_workers: int = 1,
-        callbacks: Union[List, None] = None,
-        seed: int = 42,
+            self,
+            test_dataset_container: DatasetContainer,
+            batch_size: int = 32,
+            num_workers: int = 1,
+            callbacks: Union[List, None] = None,
+            seed: int = 42,
     ) -> Dict:
         # pylint: disable=too-many-arguments, too-many-locals
         """
@@ -701,12 +721,12 @@ class AddressParser:
         return test_res
 
     def _fill_tagged_addresses_components(
-        self,
-        tags_predictions: List,
-        tags_predictions_prob: List,
-        addresses_to_parse: List[str],
-        clean_addresses: List[str],
-        with_prob: bool,
+            self,
+            tags_predictions: List,
+            tags_predictions_prob: List,
+            addresses_to_parse: List[str],
+            clean_addresses: List[str],
+            with_prob: bool,
     ) -> Union[FormattedParsedAddress, List[FormattedParsedAddress]]:
         # pylint: disable=too-many-arguments, too-many-locals
         """
@@ -715,10 +735,10 @@ class AddressParser:
         """
         tagged_addresses_components = []
         for (
-            address_to_parse,
-            clean_address,
-            tags_prediction,
-            tags_prediction_prob,
+                address_to_parse,
+                clean_address,
+                tags_prediction,
+                tags_prediction_prob,
         ) in zip(addresses_to_parse, clean_addresses, tags_predictions, tags_predictions_prob):
             tagged_address_components = []
             for word, predicted_idx_tag, tag_proba in zip(clean_address.split(), tags_prediction, tags_prediction_prob):
@@ -768,12 +788,12 @@ class AddressParser:
         return data_transform
 
     def _create_training_data_generator(
-        self,
-        dataset_container: DatasetContainer,
-        train_ratio: float,
-        batch_size: int,
-        num_workers: int,
-        seed: int,
+            self,
+            dataset_container: DatasetContainer,
+            train_ratio: float,
+            batch_size: int,
+            num_workers: int,
+            seed: int,
     ) -> Tuple:
         # pylint: disable=too-many-arguments
         data_transform = self._set_data_transformer()
@@ -802,12 +822,12 @@ class AddressParser:
         return train_generator, valid_generator
 
     def _model_factory(
-        self,
-        verbose: bool,
-        path_to_retrained_model: Union[str, None] = None,
-        prediction_layer_len: int = 9,
-        attention_mechanism=False,
-        seq2seq_kwargs: Union[dict, None] = None,
+            self,
+            verbose: bool,
+            path_to_retrained_model: Union[str, None] = None,
+            prediction_layer_len: int = 9,
+            attention_mechanism=False,
+            seq2seq_kwargs: Union[dict, None] = None,
     ) -> None:
         # pylint: disable=too-many-arguments
         """
@@ -873,15 +893,15 @@ class AddressParser:
         return self._model_type_formatted
 
     def _retrain(
-        self,
-        experiment: Experiment,
-        train_generator: DatasetContainer,
-        valid_generator: DatasetContainer,
-        epochs: int,
-        seed: int,
-        callbacks: List,
-        disable_tensorboard: bool,
-        capturing_context: bool,
+            self,
+            experiment: Experiment,
+            train_generator: DatasetContainer,
+            valid_generator: DatasetContainer,
+            epochs: int,
+            seed: int,
+            callbacks: List,
+            disable_tensorboard: bool,
+            capturing_context: bool,
     ) -> List[Dict]:
         # pylint: disable=too-many-arguments
         # If Poutyne 1.7 and before, we capture poutyne print since it print some exception.
@@ -897,3 +917,33 @@ class AddressParser:
                 disable_tensorboard=disable_tensorboard,
             )
         return train_res
+
+    def _freeze_model_params(self, layers_to_freeze: Union[str]) -> None:
+        layers_to_freeze = layers_to_freeze.lower()
+        if layers_to_freeze not in ["encoder", "decoder", "prediction_layer", "seq2seq"]:
+            raise ValueError(
+                f"{layers_to_freeze} freezing setting is not supported. Value can be 'encoder', 'decoder', "
+                f"'prediction_layer' and 'seq2seq'. See doc for more details.")
+        layers_exclude = ""
+        if layers_to_freeze == "decoder":
+            layers_to_freeze = [layers_to_freeze + "."]
+            if "bpemb" in self.model_type:
+                layers_to_freeze.append("embedding_network.")
+            layers_exclude = "decoder.linear."
+        elif layers_to_freeze == 'prediction_layer':
+            layers_to_freeze = ["decoder.linear."]
+        elif 'seq2seq' in layers_to_freeze:
+            layers_to_freeze = ["encoder.", "decoder."]
+            if "bpemb" in self.model_type:
+                layers_to_freeze.append("embedding_network.")
+            layers_exclude = "decoder.linear."
+        else:
+            layers_to_freeze = [layers_to_freeze + "."]
+
+        for layer_name, param in self.model.named_parameters():
+            if any(layer_to_freeze for layer_to_freeze in layers_to_freeze if
+                   (layer_to_freeze in layer_name)) and layers_exclude not in layer_name:
+                # if the layer name is in the layer list to exclude, we set the weights update to false
+                # except if the layer name is a layers exclude. Namely, the decoder.linear when we freeze the decoder,
+                # but we expect the final layer to be unfrozen.
+                param.requires_grad = False

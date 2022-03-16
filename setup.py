@@ -74,6 +74,7 @@ def main():
             "fasttext",
             "pymagnitude-light",
             "poutyne",
+            "pandas",
         ],
         python_requires=">=3.7",
         description="A library for parsing multinational street addresses using deep learning.",

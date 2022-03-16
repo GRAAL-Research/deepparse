@@ -177,3 +177,7 @@
 - Improved CLI
 - Fixed bug in cli export dataset
 - Improved the doc of the CLI
+
+## 0.7.1
+
+- Hotfix for missing dependency

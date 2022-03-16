@@ -181,3 +181,4 @@
 ## 0.7.1
 
 - Hotfix for missing dependency
+- Fixed bug with poutyne version handling

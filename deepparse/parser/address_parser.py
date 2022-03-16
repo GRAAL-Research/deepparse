@@ -546,7 +546,7 @@ class AddressParser:
 
         try:
             with_capturing_context = False
-            if float(poutyne.version.__version__) < 1.8:
+            if float(".".join(poutyne.version.__version__.split(".")[:2])) < 1.8:
                 print(
                     "You are using a older version of Poutyne that does not support properly error management."
                     " Due to that, we cannot show retrain progress. To fix that, update Poutyne to "

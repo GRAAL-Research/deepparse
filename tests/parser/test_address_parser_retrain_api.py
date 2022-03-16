@@ -150,7 +150,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         torch_save_mock,
         poutyne_mock,
     ):
-        poutyne_mock.version.__version__ = 1.7
+        poutyne_mock.version.__version__ = "1.7"
         self._capture_output()
         self.address_parser = AddressParser(
             model_type=self.a_fasttext_model_type,
@@ -190,7 +190,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         torch_save_mock,
         poutyne_mock,
     ):
-        poutyne_mock.version.__version__ = 1.8
+        poutyne_mock.version.__version__ = "1.8"
         self._capture_output()
         self.address_parser = AddressParser(
             model_type=self.a_fasttext_model_type,

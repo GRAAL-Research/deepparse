@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Parser &mdash; deepparse 0.7 documentation</title>
+  <title>Parser &mdash; deepparse 0.7.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -32,7 +32,7 @@
             <img src="_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.7
+                0.7.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -270,11 +270,11 @@ counterpart using attention mechanism with the <code class="docutils literal not
 <li><p><strong>attention_mechanism</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Whether to use the model with an attention mechanism. The model will use an
 attention mechanism takes an extra 100 MB on GPU usage (see the doc for more statistics).
 The default value is False.</p></li>
-<li><p><strong>device</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><a class="reference external" href="https://pytorch.org/docs/stable/tensor_attributes.html#torch.torch.device" title="(in PyTorch v1.10.0)"><em>torch.torch.device</em></a><em>]</em>) – <p>The device to use can be either:</p>
+<li><p><strong>device</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><a class="reference external" href="https://pytorch.org/docs/stable/tensor_attributes.html#torch.torch.device" title="(in PyTorch v1.11.0)"><em>torch.torch.device</em></a><em>]</em>) – <p>The device to use can be either:</p>
 <ul>
 <li><p>a <code class="docutils literal notranslate"><span class="pre">GPU</span></code> index in int format (e.g. <code class="docutils literal notranslate"><span class="pre">0</span></code>),</p></li>
 <li><p>a complete device name in a string format (e.g. <code class="docutils literal notranslate"><span class="pre">'cuda:0'</span></code>),</p></li>
-<li><p>a <a class="reference external" href="https://pytorch.org/docs/stable/tensor_attributes.html#torch.torch.device" title="(in PyTorch v1.10.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">device</span></code></a> object,</p></li>
+<li><p>a <a class="reference external" href="https://pytorch.org/docs/stable/tensor_attributes.html#torch.torch.device" title="(in PyTorch v1.11.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">device</span></code></a> object,</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'cpu'</span></code> for a  <code class="docutils literal notranslate"><span class="pre">CPU</span></code> use.</p></li>
 </ul>
 <p>The default value is GPU with the index <code class="docutils literal notranslate"><span class="pre">0</span></code> if it exists, otherwise the value is <code class="docutils literal notranslate"><span class="pre">CPU</span></code>.</p>
@@ -430,7 +430,7 @@ prediction tags, and if new <code class="docutils literal notranslate"><span cla
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>dataset_container</strong> (<a class="reference internal" href="dataset_container.html#deepparse.dataset_container.DatasetContainer" title="deepparse.dataset_container.DatasetContainer"><em>DatasetContainer</em></a>) – The dataset container of the data to use
-such as any PyTorch Dataset (<a class="reference external" href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset" title="(in PyTorch v1.10.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code></a>) user define class or one of our two
+such as any PyTorch Dataset (<a class="reference external" href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset" title="(in PyTorch v1.11.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code></a>) user define class or one of our two
 DatasetContainer (<a class="reference internal" href="dataset_container.html#deepparse.dataset_container.PickleDatasetContainer" title="deepparse.dataset_container.PickleDatasetContainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">PickleDatasetContainer</span></code></a> or
 <a class="reference internal" href="dataset_container.html#deepparse.dataset_container.CSVDatasetContainer" title="deepparse.dataset_container.CSVDatasetContainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">CSVDatasetContainer</span></code></a>)</p></li>
 <li><p><strong>train_ratio</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – The ratio to use of the dataset for the training. The rest of the data is used for the

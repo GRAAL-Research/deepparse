@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>deepparse.parser.address_parser &mdash; deepparse 0.7 documentation</title>
+  <title>deepparse.parser.address_parser &mdash; deepparse 0.7.1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -28,7 +28,7 @@
             <img src="../../../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.7
+                0.7.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -629,7 +629,7 @@
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">with_capturing_context</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="k">if</span> <span class="nb">float</span><span class="p">(</span><span class="n">poutyne</span><span class="o">.</span><span class="n">version</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1.8</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">poutyne</span><span class="o">.</span><span class="n">version</span><span class="o">.</span><span class="n">__version__</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[:</span><span class="mi">2</span><span class="p">]))</span> <span class="o">&lt;</span> <span class="mf">1.8</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span>
                     <span class="s2">&quot;You are using a older version of Poutyne that does not support properly error management.&quot;</span>
                     <span class="s2">&quot; Due to that, we cannot show retrain progress. To fix that, update Poutyne to &quot;</span>

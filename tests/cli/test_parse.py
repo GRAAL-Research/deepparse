@@ -2,11 +2,14 @@
 # pylint: disable=unused-argument
 
 import argparse
+import logging
 import os
 import unittest
 from tempfile import TemporaryDirectory
 from unittest import TestCase, skipIf
+from unittest.mock import patch
 
+import pytest
 import torch
 
 from deepparse.cli import parse, generate_export_path, bool_parse
@@ -14,6 +17,10 @@ from tests.tools import create_pickle_file, create_csv_file
 
 
 class ParseTests(TestCase):
+    @pytest.fixture(autouse=True)
+    def inject_fixtures(self, caplog):
+        self._caplog = caplog
+
     def setUp(self) -> None:
         self.temp_dir_obj = TemporaryDirectory()
 
@@ -105,6 +112,55 @@ class ParseTests(TestCase):
 
         export_path = generate_export_path(self.fake_data_path_pickle, self.pickle_p_export_file_name)
         self.assertTrue(os.path.isfile(export_path))
+
+    @skipIf(
+        not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
+        "download of model too long for test in runner",
+    )
+    def test_integration_logging(self):
+        with self._caplog.at_level(logging.INFO):
+            create_pickle_file(self.fake_data_path_pickle, predict_container=True)
+            parse.main(
+                [
+                    self.a_fasttext_model_type,
+                    self.fake_data_path_pickle,
+                    self.pickle_p_export_file_name,
+                    "--device",
+                    self.cpu_device,
+                ]
+            )
+        expected_first_message = (
+            f"Parsing dataset file {self.fake_data_path_pickle} using the parser " f"FastTextAddressParser"
+        )
+        actual_first_message = self._caplog.records[0].message
+        self.assertEqual(expected_first_message, actual_first_message)
+
+        export_path = generate_export_path(self.fake_data_path_pickle, "a_file.p")
+        expected_second_message = (
+            f"4 addresses have been parsed.\n" f"The parsed addresses are outputted here: {export_path}"
+        )
+        actual_second_message = self._caplog.records[1].message
+        self.assertEqual(expected_second_message, actual_second_message)
+
+    @skipIf(
+        not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
+        "download of model too long for test in runner",
+    )
+    def test_integration_no_logging(self):
+        with self._caplog.at_level(logging.INFO):
+            create_pickle_file(self.fake_data_path_pickle, predict_container=True)
+            parse.main(
+                [
+                    self.a_fasttext_model_type,
+                    self.fake_data_path_pickle,
+                    self.pickle_p_export_file_name,
+                    "--device",
+                    self.cpu_device,
+                    "--log",
+                    "False",
+                ]
+            )
+        self.assertEqual(0, len(self._caplog.records))
 
     @skipIf(not torch.cuda.is_available(), "no gpu available")
     def test_integration_attention_model(self):

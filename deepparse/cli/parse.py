@@ -100,7 +100,7 @@ def main(args=None) -> None:
             filename=logging_export_path, format="%(asctime)s : %(levelname)s : %(message)s", level=logging.INFO
         )
 
-        text_to_log = f"Parsing using {address_parser}"
+        text_to_log = f"Parsing dataset file {dataset_path} using the parser {address_parser}"
         logging.info(text_to_log)
 
     parsed_address = address_parser(addresses_to_parse)
@@ -110,7 +110,10 @@ def main(args=None) -> None:
     print(f"{len(addresses_to_parse)} addresses have been parsed.")
 
     if parsed_args.log:
-        text_to_log = f"{len(addresses_to_parse)} addresses have been parsed."
+        text_to_log = (
+            f"{len(addresses_to_parse)} addresses have been parsed.\n"
+            f"The parsed addresses are outputted here: {export_path}"
+        )
         logging.info(text_to_log)
 
 

@@ -6,12 +6,21 @@ CLI
 
 You cas use our cli to parsed addresses directly from the command line or download a pre-trained model.
 
+Parse
+*****
+The parsing of the addresses to parse ``dataset_path`` is done using the selected ``parsing_model``.
+The exported parsed addresses are to be exported in the same directory as the addresses to parse but
+given the ``export_file_name`` using the encoding format of the address dataset file. For example,
+if the dataset is in a CSV format, the output file format will be a CSV. Moreover, by default,
+we log some information (``--log``) such as the parser model name, the parsed dataset path
+and the number of parsed addresses.
+
 Dataset Format
-**************
+--------------
 For the dataset format see our :class:`~deepparse.dataset_container.DatasetContainer`.
 
 Exporting Format
-****************
+----------------
 We support three types of export format: CSV, Pickle and JSON.
 
 The first export uses the following pattern column pattern:
@@ -48,7 +57,7 @@ The third export uses a similar approach as the CSV format but instead use a dic
 same example will return the following dict ``{"Address": "305 rue des Lilas 0 app 2", "StreetNumber": "305", ...}``.
 
 Download
---------
+********
 
 .. autofunction:: deepparse.cli.download.main
 .. autofunction:: deepparse.cli.parse.main

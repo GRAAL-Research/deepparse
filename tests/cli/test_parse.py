@@ -7,7 +7,6 @@ import os
 import unittest
 from tempfile import TemporaryDirectory
 from unittest import TestCase, skipIf
-from unittest.mock import patch
 
 import pytest
 import torch

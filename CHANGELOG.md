@@ -183,7 +183,7 @@
 - Hotfix for missing dependency
 - Fixed bug with poutyne version handling
 
-## dev
+## 0.7.2
 
 - Added JSON output support
 - Add logging output of parse cli function

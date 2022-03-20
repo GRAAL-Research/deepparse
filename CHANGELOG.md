@@ -178,6 +178,11 @@
 - Fixed bug in cli export dataset
 - Improved the doc of the CLI
 
+## 0.7.1
+
+- Hotfix for missing dependency
+- Fixed bug with poutyne version handling
+
 ## dev
 
 - Added JSON output support

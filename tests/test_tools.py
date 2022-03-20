@@ -276,7 +276,7 @@ class ToolsTests(CaptureOutputTestCase):
         poutyne_mock.version.__version__ = "1.1.1"
 
         actual = handle_poutyne_version()
-        expected = 1.1
+        expected = "1.1"
         self.assertEqual(expected, actual)
 
     @patch("deepparse.tools.poutyne")
@@ -284,7 +284,7 @@ class ToolsTests(CaptureOutputTestCase):
         poutyne_mock.version.__version__ = "1.1.1.1"
 
         actual = handle_poutyne_version()
-        expected = 1.1
+        expected = "1.1"
         self.assertEqual(expected, actual)
 
     @patch("deepparse.tools.poutyne")
@@ -292,7 +292,7 @@ class ToolsTests(CaptureOutputTestCase):
         poutyne_mock.version.__version__ = "1.1.dev1+81b3c7b"
 
         actual = handle_poutyne_version()
-        expected = 1.1
+        expected = "1.1"
         self.assertEqual(expected, actual)
 
     @patch("deepparse.tools.poutyne")
@@ -300,7 +300,7 @@ class ToolsTests(CaptureOutputTestCase):
         poutyne_mock.version.__version__ = "1.1.dev1+81b3c7b"
 
         actual = handle_poutyne_version()
-        expected = 1.1
+        expected = "1.1"
         self.assertEqual(expected, actual)
 
     @patch("deepparse.tools.poutyne")
@@ -308,7 +308,7 @@ class ToolsTests(CaptureOutputTestCase):
         poutyne_mock.version.__version__ = "1.2"
 
         actual = handle_poutyne_version()
-        expected = 1.2
+        expected = "1.2"
         self.assertEqual(expected, actual)
 
     @patch("deepparse.tools.poutyne")

@@ -187,3 +187,4 @@
 
 - Added JSON output support
 - Add logging output of parse cli function
+- Hotfix Poutyne version handling

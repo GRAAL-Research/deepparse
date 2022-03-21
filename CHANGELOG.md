@@ -175,7 +175,7 @@
 ## 0.7
 
 - Improved CLI
-- Fixed bug in cli export dataset
+- Fixed bug in CLI export dataset
 - Improved the doc of the CLI
 
 ## 0.7.1
@@ -186,5 +186,8 @@
 ## 0.7.2
 
 - Added JSON output support
-- Add logging output of parse cli function
+- Add logging output of parse CLI function
 - Hotfix Poutyne version handling
+
+## dev
+- Add freeze layers parameters to freeze layers during retraining

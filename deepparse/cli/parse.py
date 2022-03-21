@@ -22,7 +22,7 @@ from deepparse.parser import AddressParser
 def main(args=None) -> None:
     # pylint: disable=too-many-locals, too-many-branches
     """
-    cli function to rapidly parse an addresses dataset and output it in another file.
+    CLI function to rapidly parse an addresses dataset and output it in another file.
 
     Examples of usage:
 

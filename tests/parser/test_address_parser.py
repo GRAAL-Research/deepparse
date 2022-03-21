@@ -1562,9 +1562,6 @@ class AddressParserTest(AddressParserPredictTestCase):
             with self.assertRaises(DataError):
                 address_parser(another_whitespace_address)
 
-    # test ignore freeze when seq2seq_params is not none
-    
-
 
 if __name__ == "__main__":
     unittest.main()

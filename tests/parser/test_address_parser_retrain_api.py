@@ -990,6 +990,49 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
                 logging_path=self.a_logging_path,
             )
 
+    @patch("deepparse.parser.address_parser.torch.save")
+    @patch("deepparse.parser.address_parser.DataLoader")
+    @patch("deepparse.parser.address_parser.Experiment")
+    @patch("deepparse.parser.address_parser.SGD")
+    @patch("deepparse.parser.address_parser.DataTransform")
+    @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
+    @patch("deepparse.parser.address_parser.fasttext_data_padding")
+    @patch("deepparse.parser.address_parser.FastTextVectorizer")
+    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
+    def test_givenNoneFreezeLayers_thenRetrainAllLayers(
+        self,
+        download_weights_mock,
+        embeddings_model_mock,
+        vectorizer_model_mock,
+        data_padding_mock,
+        model_mock,
+        data_transform_mock,
+        optimizer_mock,
+        experiment_mock,
+        data_loader_mock,
+        torch_save_mock,
+    ):
+        self.address_parser = MagicMock(spec=AddressParser)
+        self.address_parser_retrain_call(seq2seq_params=self.seq2seq_params)
+
+        saving_model_path = self.saving_template_path.format(self.a_fasttext_model_type)
+        save_call = [
+            call(
+                {
+                    "address_tagger_model": experiment_mock().model.network.state_dict(),
+                    "model_type": self.a_fasttext_model_type,
+                    "seq2seq_params": self.seq2seq_params,
+                },
+                saving_model_path,
+            )
+        ]
+
+        torch_save_mock.assert_has_calls(save_call)
+
+
+# test ignore freeze when seq2seq_params is not none
+
 
 if __name__ == "__main__":
     unittest.main()

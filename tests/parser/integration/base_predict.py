@@ -38,8 +38,8 @@ class AddressParserPredictNewParamsBase(TestCase):
     @classmethod
     def setUpClass(cls):
         cls.an_address_to_parse = "350 rue des lilas o"
-        cls.data_temp_dir_obj = TemporaryDirectory()
-        cls.a_data_saving_dir = os.path.join(cls.data_temp_dir_obj.name, "data")
+        cls.temp_dir_obj = TemporaryDirectory()
+        cls.a_data_saving_dir = os.path.join(cls.temp_dir_obj.name, "data")
         os.makedirs(cls.a_data_saving_dir, exist_ok=True)
         file_extension = "p"
         training_dataset_name = "sample_incomplete_data"
@@ -82,7 +82,7 @@ class AddressParserPredictNewParamsBase(TestCase):
 
     @classmethod
     def tearDownClass(cls) -> None:
-        cls.data_temp_dir_obj.cleanup()
+        cls.temp_dir_obj.cleanup()
 
     def tearDown(self) -> None:
         self.training_temp_dir_obj.cleanup()

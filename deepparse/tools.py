@@ -65,7 +65,7 @@ def handle_poutyne_version() -> float:
     major = components_parts[0]
     minor = components_parts[1]
     version = f"{major}.{minor}"
-    return float(version)
+    return version
 
 
 def valid_poutyne_version():
@@ -73,7 +73,12 @@ def valid_poutyne_version():
     Validate Poutyne version is greater than 1.2 for using a str checkpoint. Version before does not support that
     feature.
     """
-    return handle_poutyne_version() >= 1.2
+    version_components = handle_poutyne_version().split(".")
+
+    major = int(version_components[0])
+    minor = int(version_components[1])
+
+    return major >= 1 and minor >= 2
 
 
 def handle_pre_trained_checkpoint(model_type_checkpoint: str) -> str:

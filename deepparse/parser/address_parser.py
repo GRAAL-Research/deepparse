@@ -22,6 +22,7 @@ from .tools import (
     get_address_parser_in_directory,
     indices_splitting,
     handle_model_name,
+    infer_model_type,
 )
 from .. import validate_data_to_parse
 from ..converter import TagsConverter
@@ -207,8 +208,10 @@ class AddressParser:
                 # We change the FIELDS for the FormattedParsedAddress
                 fields = list(tags_to_idx)
 
-            # We "infer" the model type
-            model_type = checkpoint_weights.get("model_type")
+            # We "infer" the model type, thus we also had to handle the attention_mechanism bool
+            model_type, attention_mechanism = infer_model_type(
+                checkpoint_weights, attention_mechanism=attention_mechanism
+            )
 
         formatted_parsed_address.FIELDS = fields
         self.tags_converter = TagsConverter(tags_to_idx)
@@ -247,7 +250,6 @@ class AddressParser:
                     - no addresses are None value,
                     - no addresses are empty string, and
                     - no addresses are whitespace-only strings.
-
 
                 When using a list of addresses, the addresses are processed in batch, allowing a faster process.
                 For example, using fastText model, a single address takes around 0.003 seconds to be parsed using a
@@ -405,6 +407,12 @@ class AddressParser:
             <https://poutyne.org/experiment.html#poutyne.Experiment.train>`_ for details).
 
         Note:
+            We recommend using a learning rate scheduler procedure during retraining to reduce the chance
+            of losing too much of our learned weights, thus increasing retraining time. We
+            personally use the following ``poutyne.StepLR(step_size=1, gamma=0.1)``.
+            Also, starting learning rate should be relatively low (i.e. 0.01 or lower).
+
+        Note:
             We use SGD optimizer, NLL loss and accuracy as a metric, the data is shuffled, and we use teacher forcing
             during training (with a prob of 0.5) as in the `article <https://arxiv.org/abs/2006.16152>`_.
 
@@ -540,7 +548,7 @@ class AddressParser:
 
         try:
             with_capturing_context = False
-            if float(poutyne.version.__version__) < 1.8:
+            if float(".".join(str(poutyne.version.__version__).split(".")[:2])) < 1.8:
                 print(
                     "You are using a older version of Poutyne that does not support properly error management."
                     " Due to that, we cannot show retrain progress. To fix that, update Poutyne to "

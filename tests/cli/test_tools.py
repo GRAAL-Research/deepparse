@@ -1,16 +1,23 @@
 # pylint: disable=no-member
 
+import json
+import os
+import pickle
 from tempfile import TemporaryDirectory
 from unittest import TestCase
 
-import os
-
-import pickle
-
-import json
 import pandas as pd
 
-from deepparse.cli import is_csv_path, is_pickle_path, to_csv, to_pickle, generate_export_path, is_json_path, to_json
+from deepparse.cli import (
+    is_csv_path,
+    is_pickle_path,
+    to_csv,
+    to_pickle,
+    generate_export_path,
+    is_json_path,
+    to_json,
+    replace_path_extension,
+)
 from deepparse.parser import FormattedParsedAddress
 
 
@@ -250,4 +257,23 @@ class ToolsTest(TestCase):
         an_absolute_dataset_path = os.path.join(self.temp_dir_obj.name, "an_export_file.p")
         actual = generate_export_path(an_absolute_dataset_path, a_export_file_name)
         expected = os.path.join(self.temp_dir_obj.name, a_export_file_name)
+        self.assertEqual(actual, expected)
+
+    def test_replace_path_extension(self):
+        a_relative_dataset_path = os.path.join(".", "file_name.p")
+        actual = replace_path_extension(a_relative_dataset_path, ".log")
+        expected = a_relative_dataset_path.replace(".p", ".log")
+
+        self.assertEqual(actual, expected)
+
+        an_absolute_dataset_path = os.path.join(self.temp_dir_obj.name, "an_export_file.p")
+        actual = replace_path_extension(an_absolute_dataset_path, ".log")
+        expected = an_absolute_dataset_path.replace(".p", ".log")
+
+        self.assertEqual(actual, expected)
+
+        an_absolute_dataset_path = os.path.join(self.temp_dir_obj.name, "an_export_file.p")
+        actual = replace_path_extension(an_absolute_dataset_path, ".txt")
+        expected = an_absolute_dataset_path.replace(".p", ".txt")
+
         self.assertEqual(actual, expected)

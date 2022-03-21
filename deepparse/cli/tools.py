@@ -1,3 +1,4 @@
+import argparse
 import json
 import os
 import pickle
@@ -86,14 +87,52 @@ def to_json(parsed_addresses: Union[FormattedParsedAddress, List[FormattedParsed
     print(f"Data exported to {export_path}.")
 
 
+def bool_parse(arg: str) -> bool:
+    """
+    Function to fix the argparse bool parsing.
+
+    Args:
+        arg (str): The argument to bool parse.
+
+    Return:
+        A Python bool.
+    """
+    if arg.lower() in ('true', 't', 'yes', 'y', '1'):
+        parsed_bool = True
+    elif arg.lower() in ('false', 'f', 'no', 'n', '0'):
+        parsed_bool = False
+    else:
+        raise argparse.ArgumentTypeError('Boolean value expected.')
+    return parsed_bool
+
+
 def generate_export_path(dataset_path: str, export_file_name: str) -> str:
     """
     Function to generate the export path by using the dataset path.
+
+    Args:
+        dataset_path (str): The dataset path to base the generated export path.
+        export_file_name (str): The export file name to use for the path.
 
     Return:
         The string path.
     """
     return os.path.join(os.path.dirname(dataset_path), export_file_name)
+
+
+def replace_path_extension(path: str, extension: str) -> str:
+    """
+    Function to replace a path extension.
+
+    Args:
+        path (str): The path to replace the extension.
+        extension (str): The extension to use for the replacement.
+
+    Return:
+        The modified path using the new extension.
+    """
+    pre, _ = os.path.splitext(path)
+    return os.path.join(pre + extension)
 
 
 # pylint: disable=pointless-string-statement

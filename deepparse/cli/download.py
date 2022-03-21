@@ -15,7 +15,7 @@ from deepparse import (
 
 def main(args=None) -> None:
     """
-    cli function to manually download all the dependencies for a pre-trained model.
+    CLI function to manually download all the dependencies for a pre-trained model.
 
     Example of usage:
 

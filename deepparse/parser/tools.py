@@ -1,6 +1,6 @@
 import math
 import os
-from typing import List, Tuple
+from typing import List, Tuple, OrderedDict
 
 import numpy as np
 import torch
@@ -98,3 +98,37 @@ def handle_model_name(model_type: str, attention_mechanism: bool) -> Tuple[str, 
         model_type += "Attention"
         formatted_name += "Attention"
     return model_type, formatted_name
+
+
+def infer_model_type(checkpoint_weights: OrderedDict, attention_mechanism: bool) -> (str, bool):
+    """
+    Function to infer the model type using the weights matrix.
+    We first try to use the "model_type" key added by our retrain process.
+    If this fails, we infer it using our knowledge of the layers' names.
+    For example, BPEmb model uses an embedding network, thus, if `embedding_network.model.weight_ih_l0` is present,
+    we can say that it is such a type; otherwise, it is a FastText model.
+    Finally, to handle the attention model, we use a similar approach but using the
+    `decoder.linear_attention_mechanism_encoder_outputs.weight` layer name to deduct the presence of
+    attention mechanism.
+
+    Args:
+        checkpoint_weights (OrderedDict): The weights matrix.
+        attention_mechanism (bool): Either or not the model uses an attention mechanism or not.
+
+    Return:
+        A tuple where the first element is the model_type name and the second element is the attention_mechanism flag.
+
+    """
+    inferred_model_type = checkpoint_weights.get("model_type")
+    if inferred_model_type is not None:
+        model_type = inferred_model_type
+    else:
+        if "embedding_network.model.weight_ih_l0" in checkpoint_weights.keys():
+            model_type = "bpemb"
+        else:
+            model_type = "fasttext"
+
+    if "decoder.linear_attention_mechanism_encoder_outputs.weight" in checkpoint_weights.keys():
+        attention_mechanism = True
+
+    return model_type, attention_mechanism

@@ -3,9 +3,7 @@
 import unittest
 from unittest import TestCase
 
-from deepparse.comparer.formatted_compared_addresses_raw import (
-    FormattedComparedAddressesRaw,
-)
+from deepparse.comparer.formatted_compared_addresses_raw import FormattedComparedAddressesRaw
 from deepparse.parser import FormattedParsedAddress
 
 

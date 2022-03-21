@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CLI &mdash; deepparse 0.7.1 documentation</title>
+  <title>CLI &mdash; deepparse 0.7.2 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -31,7 +31,7 @@
             <img src="_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.7.1
+                0.7.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -47,10 +47,12 @@
 <li class="toctree-l1"><a class="reference internal" href="dataset_container.html">Dataset Container</a></li>
 <li class="toctree-l1"><a class="reference internal" href="comparer.html">Comparer</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">CLI</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#exporting-format">Exporting Format</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#download">Download</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#parse">Parse</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dataset-format">Dataset Format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#exporting-format">Exporting Format</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#download">Download</a></li>
 </ul>
 </li>
 </ul>
@@ -92,9 +94,21 @@
   <section id="cli">
 <h1>CLI<a class="headerlink" href="#cli" title="Permalink to this headline"></a></h1>
 <p>You cas use our cli to parsed addresses directly from the command line or download a pre-trained model.</p>
+<section id="parse">
+<h2>Parse<a class="headerlink" href="#parse" title="Permalink to this headline"></a></h2>
+<p>The parsing of the addresses to parse <code class="docutils literal notranslate"><span class="pre">dataset_path</span></code> is done using the selected <code class="docutils literal notranslate"><span class="pre">parsing_model</span></code>.
+The exported parsed addresses are to be exported in the same directory as the addresses to parse but
+given the <code class="docutils literal notranslate"><span class="pre">export_file_name</span></code> using the encoding format of the address dataset file. For example,
+if the dataset is in a CSV format, the output file format will be a CSV. Moreover, by default,
+we log some information (<code class="docutils literal notranslate"><span class="pre">--log</span></code>) such as the parser model name, the parsed dataset path
+and the number of parsed addresses.</p>
+<section id="dataset-format">
+<h3>Dataset Format<a class="headerlink" href="#dataset-format" title="Permalink to this headline"></a></h3>
+<p>For the dataset format see our <a class="reference internal" href="dataset_container.html#deepparse.dataset_container.DatasetContainer" title="deepparse.dataset_container.DatasetContainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DatasetContainer</span></code></a>.</p>
+</section>
 <section id="exporting-format">
-<h2>Exporting Format<a class="headerlink" href="#exporting-format" title="Permalink to this headline"></a></h2>
-<p>We support two types of export: CSV and Pickle.</p>
+<h3>Exporting Format<a class="headerlink" href="#exporting-format" title="Permalink to this headline"></a></h3>
+<p>We support three types of export format: CSV, Pickle and JSON.</p>
 <p>The first export uses the following pattern column pattern:
 <code class="docutils literal notranslate"><span class="pre">&quot;Address&quot;,</span> <span class="pre">&quot;First</span> <span class="pre">address</span> <span class="pre">components</span> <span class="pre">class&quot;,</span> <span class="pre">&quot;Second</span> <span class="pre">class&quot;,</span> <span class="pre">...</span></code>.
 Which mean the address <code class="docutils literal notranslate"><span class="pre">305</span> <span class="pre">rue</span> <span class="pre">des</span> <span class="pre">Lilas</span> <span class="pre">0</span> <span class="pre">app</span> <span class="pre">2</span></code> will output the table bellow
@@ -138,8 +152,12 @@ using our default tags:</p>
 </table>
 <p>The second export uses a similar approach but using tuples and list. Using the same example will return the following
 tuple <code class="docutils literal notranslate"><span class="pre">(&quot;305</span> <span class="pre">rue</span> <span class="pre">des</span> <span class="pre">Lilas</span> <span class="pre">0</span> <span class="pre">app</span> <span class="pre">2&quot;,</span> <span class="pre">[(&quot;305&quot;,</span> <span class="pre">&quot;StreetNumber&quot;),</span> <span class="pre">(&quot;rue</span> <span class="pre">des</span> <span class="pre">lilas&quot;,</span> <span class="pre">&quot;StreetName&quot;),</span> <span class="pre">...])</span></code>.</p>
+<p>The third export uses a similar approach as the CSV format but instead use a dictionary-like formatting. Using the
+same example will return the following dict <code class="docutils literal notranslate"><span class="pre">{&quot;Address&quot;:</span> <span class="pre">&quot;305</span> <span class="pre">rue</span> <span class="pre">des</span> <span class="pre">Lilas</span> <span class="pre">0</span> <span class="pre">app</span> <span class="pre">2&quot;,</span> <span class="pre">&quot;StreetNumber&quot;:</span> <span class="pre">&quot;305&quot;,</span> <span class="pre">...}</span></code>.</p>
+</section>
+</section>
 <section id="download">
-<h3>Download<a class="headerlink" href="#download" title="Permalink to this headline"></a></h3>
+<h2>Download<a class="headerlink" href="#download" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="deepparse.cli.download.main">
 <span class="sig-prename descclassname"><span class="pre">deepparse.cli.download.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/deepparse/cli/download.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.cli.download.main" title="Permalink to this definition"></a></dt>
@@ -168,7 +186,6 @@ tuple <code class="docutils literal notranslate"><span class="pre">(&quot;305</s
 </div>
 </dd></dl>
 
-</section>
 </section>
 </section>
 

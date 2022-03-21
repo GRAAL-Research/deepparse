@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>deepparse.cli.parse &mdash; deepparse 0.7.1 documentation</title>
+  <title>deepparse.cli.parse &mdash; deepparse 0.7.2 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -28,7 +28,7 @@
             <img src="../../../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.7.1
+                0.7.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -82,15 +82,28 @@
              
   <h1>Source code for deepparse.cli.parse</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
 
-<span class="kn">from</span> <span class="nn">deepparse.cli.tools</span> <span class="kn">import</span> <span class="n">is_csv_path</span><span class="p">,</span> <span class="n">is_pickle_path</span><span class="p">,</span> <span class="n">to_csv</span><span class="p">,</span> <span class="n">to_pickle</span><span class="p">,</span> <span class="n">generate_export_path</span><span class="p">,</span> <span class="n">wrap</span>
+<span class="kn">from</span> <span class="nn">deepparse.cli.tools</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">is_csv_path</span><span class="p">,</span>
+    <span class="n">is_pickle_path</span><span class="p">,</span>
+    <span class="n">to_csv</span><span class="p">,</span>
+    <span class="n">to_pickle</span><span class="p">,</span>
+    <span class="n">generate_export_path</span><span class="p">,</span>
+    <span class="n">wrap</span><span class="p">,</span>
+    <span class="n">is_json_path</span><span class="p">,</span>
+    <span class="n">to_json</span><span class="p">,</span>
+    <span class="n">bool_parse</span><span class="p">,</span>
+    <span class="n">replace_path_extension</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">deepparse.dataset_container</span> <span class="kn">import</span> <span class="n">CSVDatasetContainer</span><span class="p">,</span> <span class="n">PickleDatasetContainer</span>
 <span class="kn">from</span> <span class="nn">deepparse.parser</span> <span class="kn">import</span> <span class="n">AddressParser</span>
 
 
 <div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../cli.html#deepparse.cli.parse.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="c1"># pylint: disable=too-many-locals, too-many-branches</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    cli function to rapidly parse an addresses dataset and output it in another file.</span>
 
@@ -142,6 +155,8 @@
         <span class="n">export_fn</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">to_csv</span><span class="p">,</span> <span class="n">export_path</span><span class="o">=</span><span class="n">export_path</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="n">csv_column_separator</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">is_pickle_path</span><span class="p">(</span><span class="n">export_file_name</span><span class="p">):</span>
         <span class="n">export_fn</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">to_pickle</span><span class="p">,</span> <span class="n">export_path</span><span class="o">=</span><span class="n">export_path</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">is_json_path</span><span class="p">(</span><span class="n">export_file_name</span><span class="p">):</span>
+        <span class="n">export_fn</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">to_json</span><span class="p">,</span> <span class="n">export_path</span><span class="o">=</span><span class="n">export_path</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;We do not support this type of export.&quot;</span><span class="p">)</span>
 
@@ -162,11 +177,27 @@
 
     <span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="o">**</span><span class="n">parser_args</span><span class="p">)</span>
 
+    <span class="k">if</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">log</span><span class="p">:</span>
+        <span class="n">logging_export_path</span> <span class="o">=</span> <span class="n">replace_path_extension</span><span class="p">(</span><span class="n">export_path</span><span class="p">,</span> <span class="s2">&quot;.log&quot;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span>
+            <span class="n">filename</span><span class="o">=</span><span class="n">logging_export_path</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%(asctime)s</span><span class="s2"> : </span><span class="si">%(levelname)s</span><span class="s2"> : </span><span class="si">%(message)s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span>
+        <span class="p">)</span>
+
+        <span class="n">text_to_log</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Parsing dataset file </span><span class="si">{</span><span class="n">dataset_path</span><span class="si">}</span><span class="s2"> using the parser </span><span class="si">{</span><span class="n">address_parser</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">text_to_log</span><span class="p">)</span>
+
     <span class="n">parsed_address</span> <span class="o">=</span> <span class="n">address_parser</span><span class="p">(</span><span class="n">addresses_to_parse</span><span class="p">)</span>
 
     <span class="n">export_fn</span><span class="p">(</span><span class="n">parsed_address</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">addresses_to_parse</span><span class="p">)</span><span class="si">}</span><span class="s2"> addresses have been parsed.&quot;</span><span class="p">)</span></div>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">addresses_to_parse</span><span class="p">)</span><span class="si">}</span><span class="s2"> addresses have been parsed.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">log</span><span class="p">:</span>
+        <span class="n">text_to_log</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">addresses_to_parse</span><span class="p">)</span><span class="si">}</span><span class="s2"> addresses have been parsed.</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;The parsed addresses are outputted here: </span><span class="si">{</span><span class="n">export_path</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">text_to_log</span><span class="p">)</span></div>
 
 
 <span class="k">def</span> <span class="nf">get_parser</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
@@ -186,7 +217,9 @@
     <span class="p">)</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;dataset_path&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span><span class="s2">&quot;The path to the dataset file in a pickle (.p or .pickle) or CSV format.&quot;</span><span class="p">),</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span>
+        <span class="s2">&quot;dataset_path&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span><span class="s2">&quot;The path to the dataset file in a pickle (.p or .pickle), CSV format or JSON format.&quot;</span><span class="p">),</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
@@ -194,8 +227,9 @@
         <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span>
             <span class="s2">&quot;The file name to use for the export of the parsed addresses. We will infer the file format base on the &quot;</span>
             <span class="s2">&quot;file extension. That is, if the file is a pickle (.p or .pickle), we will export it into a pickle file.&quot;</span>
+            <span class="s2">&quot;The supported format are Pickle, CSV and JSON.&quot;</span>
             <span class="s2">&quot;The file will be exported in the same repositories as the dataset_path.&quot;</span>
-            <span class="s2">&quot;See the doc for format exporting.&quot;</span>
+            <span class="s2">&quot;See the doc for more details on the format exporting.&quot;</span>
         <span class="p">),</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
     <span class="p">)</span>
@@ -228,6 +262,17 @@
         <span class="s2">&quot;--csv_column_separator&quot;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span><span class="s2">&quot;The column separator to use for the dataset container. By default &#39;</span><span class="se">\t</span><span class="s2">&#39;.&quot;</span><span class="p">),</span>
         <span class="n">default</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--log&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span>
+            <span class="s2">&quot;Either or not to log the parsing process into a `.log` file exported at the same place as the&quot;</span>
+            <span class="s2">&quot;parsed data using the same name as the export file. &quot;</span>
+            <span class="s2">&quot;The bool value can be (not case sensitive) &#39;true/false&#39;, &#39;t/f&#39;, &#39;yes/no&#39;, &#39;y/n&#39; or &#39;0/1&#39;.&quot;</span>
+        <span class="p">),</span>
+        <span class="nb">type</span><span class="o">=</span><span class="n">bool_parse</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;True&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">parser</span>

@@ -12,10 +12,15 @@ import pytest
 import torch
 
 from deepparse.cli import parse, generate_export_path, bool_parse
+from tests.parser.base import PretrainedWeightsBase
 from tests.tools import create_pickle_file, create_csv_file
 
 
-class ParseTests(TestCase):
+class ParseTests(TestCase, PretrainedWeightsBase):
+    @classmethod
+    def setUpClass(cls):
+        cls.download_pre_trained_weights(cls)
+
     @pytest.fixture(autouse=True)
     def inject_fixtures(self, caplog):
         self._caplog = caplog
@@ -303,10 +308,10 @@ class ParseTests(TestCase):
         not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
         "download of model too long for test in runner",
     )
-    def test_ifPathToRetrainModel_thenUseRetrainModel(self):
+    def test_ifPathToFakeRetrainModel_thenUseFakeRetrainModel(self):
         with self._caplog.at_level(logging.INFO):
             # We use the default path to fasttext model as a "retrain model path"
-            path_to_retrain_model = os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "fasttext.ckpt")
+            path_to_retrained_model = os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "fasttext.ckpt")
             create_pickle_file(self.fake_data_path_pickle, predict_container=True)
 
             parse.main(
@@ -317,7 +322,7 @@ class ParseTests(TestCase):
                     "--device",
                     self.cpu_device,
                     "--path_to_retrained_model",
-                    path_to_retrain_model,
+                    path_to_retrained_model,
                 ]
             )
 
@@ -325,6 +330,62 @@ class ParseTests(TestCase):
             f"Parsing dataset file {self.fake_data_path_pickle} using the parser " f"FastTextAddressParser"
         )
         actual_first_message = self._caplog.records[0].message
+        self.assertEqual(expected_first_message, actual_first_message)
+
+    @skipIf(
+        not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
+        "download of model too long for test in runner",
+    )
+    def test_ifPathToFastTextRetrainModel_thenUseFastTextRetrainModel(self):
+        with self._caplog.at_level(logging.INFO):
+            path_to_retrained_model = self.path_to_retrain_fasttext
+            create_pickle_file(self.fake_data_path_pickle, predict_container=True)
+
+            parse.main(
+                [
+                    self.a_fasttext_model_type,
+                    self.fake_data_path_pickle,
+                    self.pickle_p_export_filename,
+                    "--device",
+                    self.cpu_device,
+                    "--path_to_retrained_model",
+                    path_to_retrained_model,
+                ]
+            )
+
+        expected_first_message = (
+            f"Parsing dataset file {self.fake_data_path_pickle} using the parser " f"FastTextAddressParser"
+        )
+        actual_first_message = self._caplog.records[0].message
+        self.assertEqual(expected_first_message, actual_first_message)
+
+    @skipIf(
+        not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
+        "download of model too long for test in runner",
+    )
+    def test_ifPathToBPEmbRetrainModel_thenUseBPEmbRetrainModel(self):
+        with self._caplog.at_level(logging.INFO):
+            path_to_retrained_model = self.path_to_retrain_bpemb
+            create_pickle_file(self.fake_data_path_pickle, predict_container=True)
+
+            parse.main(
+                [
+                    self.a_fasttext_model_type,
+                    self.fake_data_path_pickle,
+                    self.pickle_p_export_filename,
+                    "--device",
+                    self.cpu_device,
+                    "--path_to_retrained_model",
+                    path_to_retrained_model,
+                ]
+            )
+
+        expected_first_message = (
+            f"Parsing dataset file {self.fake_data_path_pickle} using the parser " f"BPEmbAddressParser"
+        )
+
+        # Not the same position as with fasttext due to BPEmb messages
+        actual_first_message = self._caplog.records[2].message
         self.assertEqual(expected_first_message, actual_first_message)
 
 

@@ -43,7 +43,7 @@ def main(args=None) -> None:
         parse fasttext ./dataset.csv parsed_address.pickle --path_to_retrained_model ./path
 
     """
-    if args is None:
+    if args is None:  # pragma: no cover
         args = sys.argv[1:]
 
     parsed_args = get_args(args)
@@ -65,14 +65,14 @@ def main(args=None) -> None:
     else:
         raise ValueError("The dataset path argument is not a CSV or pickle file.")
 
-    export_file_name = parsed_args.export_file_name
-    export_path = generate_export_path(dataset_path, export_file_name)
+    export_filename = parsed_args.export_filename
+    export_path = generate_export_path(dataset_path, export_filename)
 
-    if is_csv_path(export_file_name):
+    if is_csv_path(export_filename):
         export_fn = partial(to_csv, export_path=export_path, sep=csv_column_separator)
-    elif is_pickle_path(export_file_name):
+    elif is_pickle_path(export_filename):
         export_fn = partial(to_pickle, export_path=export_path)
-    elif is_json_path(export_file_name):
+    elif is_json_path(export_filename):
         export_fn = partial(to_json, export_path=export_path)
     else:
         raise ValueError("We do not support this type of export.")
@@ -140,12 +140,12 @@ def get_parser() -> argparse.ArgumentParser:
     )
 
     parser.add_argument(
-        "export_file_name",
+        "export_filename",
         help=wrap(
-            "The file name to use for the export of the parsed addresses. We will infer the file format base on the "
-            "file extension. That is, if the file is a pickle (.p or .pickle), we will export it into a pickle file."
-            "The supported format are Pickle, CSV and JSON."
-            "The file will be exported in the same repositories as the dataset_path."
+            "The filename to use to export the parsed addresses. We will infer the file format base on the "
+            "file extension. That is, if the file is a pickle (.p or .pickle), we will export it into a pickle file. "
+            "The supported format are Pickle, CSV and JSON. "
+            "The file will be exported in the same repositories as the dataset_path. "
             "See the doc for more details on the format exporting."
         ),
         type=str,
@@ -153,7 +153,7 @@ def get_parser() -> argparse.ArgumentParser:
 
     parser.add_argument(
         "--device",
-        help=wrap("The device to use. It can be 'cpu' or a gpu device index such as '0' or '1'. By default '0'."),
+        help=wrap("The device to use. It can be 'cpu' or a GPU device index such as '0' or '1'. By default '0'."),
         type=str,
         default="0",
     )
@@ -168,8 +168,8 @@ def get_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--csv_column_name",
         help=wrap(
-            "The column name to extract address in the CSV. Need to be specified if the provided dataset_path is "
-            "leading to a CSV file."
+            "The column name to extract address in the CSV. Need to be specified if the provided dataset_path "
+            "leads to a CSV file."
         ),
         type=str,
         default=None,
@@ -177,14 +177,17 @@ def get_parser() -> argparse.ArgumentParser:
 
     parser.add_argument(
         "--csv_column_separator",
-        help=wrap("The column separator to use for the dataset container. By default '\t'."),
+        help=wrap(
+            "The column separator for the dataset container will only be used if the dataset is a CSV one."
+            " By default '\t'."
+        ),
         default="\t",
     )
 
     parser.add_argument(
         "--log",
         help=wrap(
-            "Either or not to log the parsing process into a `.log` file exported at the same place as the"
+            "Either or not to log the parsing process into a `.log` file exported at the same place as the "
             "parsed data using the same name as the export file. "
             "The bool value can be (not case sensitive) 'true/false', 't/f', 'yes/no', 'y/n' or '0/1'."
         ),

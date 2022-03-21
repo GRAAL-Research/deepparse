@@ -2,11 +2,13 @@
 # pylint: disable=not-callable, too-many-public-methods, no-name-in-module
 
 import os
+from tempfile import TemporaryDirectory
 from unittest import TestCase
 
 import torch
 from torch import tensor
 
+from deepparse import download_from_url
 from deepparse.parser import formatted_parsed_address
 from tests.base_capture_output import CaptureOutputTestCase
 
@@ -190,3 +192,15 @@ class FormattedParsedAddressBase(TestCase):
     @staticmethod
     def set_fields(fields_value):
         formatted_parsed_address.FIELDS = fields_value
+
+
+class PretrainedWeightsBase:
+    def download_pre_trained_weights(self):
+        self.temp_dir_obj = TemporaryDirectory()
+        self.fake_cache_path = os.path.join(self.temp_dir_obj.name, "fake_cache")
+
+        download_from_url("retrained_fasttext_address_parser", self.fake_cache_path, "ckpt")
+        self.path_to_retrain_fasttext = os.path.join(self.fake_cache_path, "retrained_fasttext_address_parser.ckpt")
+
+        download_from_url("retrained_bpemb_address_parser", self.fake_cache_path, "ckpt")
+        self.path_to_retrain_bpemb = os.path.join(self.fake_cache_path, "retrained_bpemb_address_parser.ckpt")

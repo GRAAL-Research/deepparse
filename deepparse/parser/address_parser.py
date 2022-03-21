@@ -22,6 +22,7 @@ from .tools import (
     get_address_parser_in_directory,
     indices_splitting,
     handle_model_name,
+    infer_model_type,
 )
 from .. import validate_data_to_parse
 from ..converter import TagsConverter
@@ -207,8 +208,10 @@ class AddressParser:
                 # We change the FIELDS for the FormattedParsedAddress
                 fields = list(tags_to_idx)
 
-            # We "infer" the model type
-            model_type = checkpoint_weights.get("model_type")
+            # We "infer" the model type, thus we also had to handle the attention_mechanism bool
+            model_type, attention_mechanism = infer_model_type(
+                checkpoint_weights, attention_mechanism=attention_mechanism
+            )
 
         formatted_parsed_address.FIELDS = fields
         self.tags_converter = TagsConverter(tags_to_idx)

@@ -15,12 +15,18 @@ from deepparse.parser.tools import (
     get_files_in_directory,
     pretrained_parser_in_directory,
     handle_model_name,
+    infer_model_type,
 )
 from tests.base_capture_output import CaptureOutputTestCase
+from tests.parser.base import PretrainedWeightsBase
 from tests.tools import create_file
 
 
-class ToolsTests(CaptureOutputTestCase):
+class ToolsTests(CaptureOutputTestCase, PretrainedWeightsBase):
+    @classmethod
+    def setUpClass(cls):
+        cls.download_pre_trained_weights(cls)
+
     def setUp(self) -> None:
         self.a_seed = 42
         self.temp_dir_obj = TemporaryDirectory()
@@ -373,6 +379,114 @@ class ToolsTests(CaptureOutputTestCase):
             handle_model_name(model_type, attention_mechanism=False)
         except ValueError as actual_error_message:
             self.assertEqual(actual_error_message.args[0], expect_error_message)
+
+    @skipIf(
+        not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
+        "download of model too long for test in runner",
+    )
+    def test_givenAModelTypeToInfer_whenNotRealRetrainFastText_thenReturnFasttext(self):
+        path_to_retrained_model = os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "fasttext.ckpt")
+        checkpoint_weights = torch.load(path_to_retrained_model, map_location="cpu")
+        attention_mechanism = False
+
+        expected_inferred_model_type = "fasttext"
+        expected_attention_mechanism = False
+
+        actual_inferred_model_type, actual_inferred_attention_mechanism = infer_model_type(
+            checkpoint_weights, attention_mechanism
+        )
+
+        self.assertEqual(expected_inferred_model_type, actual_inferred_model_type)
+        self.assertEqual(expected_attention_mechanism, actual_inferred_attention_mechanism)
+
+    @skipIf(
+        not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
+        "download of model too long for test in runner",
+    )
+    def test_givenAModelTypeToInfer_whenNotRealRetrainFastTextAttention_thenReturnAttention(self):
+        path_to_retrained_model = os.path.join(
+            os.path.expanduser("~"), ".cache", "deepparse", "fasttext_attention.ckpt"
+        )
+        checkpoint_weights = torch.load(path_to_retrained_model, map_location="cpu")
+        attention_mechanism = False
+
+        expected_inferred_model_type = "fasttext"
+        expected_attention_mechanism = True
+
+        actual_inferred_model_type, actual_inferred_attention_mechanism = infer_model_type(
+            checkpoint_weights, attention_mechanism
+        )
+
+        self.assertEqual(expected_inferred_model_type, actual_inferred_model_type)
+        self.assertEqual(expected_attention_mechanism, actual_inferred_attention_mechanism)
+
+    @skipIf(
+        not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
+        "download of model too long for test in runner",
+    )
+    def test_givenAModelTypeToInfer_whenNotRealRetrainBPEmb_thenReturnBPEmb(self):
+        path_to_retrained_model = os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "bpemb.ckpt")
+        checkpoint_weights = torch.load(path_to_retrained_model, map_location="cpu")
+        attention_mechanism = False
+
+        expected_inferred_model_type = "bpemb"
+        expected_attention_mechanism = False
+
+        actual_inferred_model_type, actual_inferred_attention_mechanism = infer_model_type(
+            checkpoint_weights, attention_mechanism
+        )
+
+        self.assertEqual(expected_inferred_model_type, actual_inferred_model_type)
+        self.assertEqual(expected_attention_mechanism, actual_inferred_attention_mechanism)
+
+    @skipIf(
+        not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
+        "download of model too long for test in runner",
+    )
+    def test_givenAModelTypeToInfer_whenNotRealRetrainBPEmbAttention_thenReturnAttention(self):
+        path_to_retrained_model = os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "bpemb_attention.ckpt")
+        checkpoint_weights = torch.load(path_to_retrained_model, map_location="cpu")
+        attention_mechanism = False
+
+        expected_inferred_model_type = "bpemb"
+        expected_attention_mechanism = True
+
+        actual_inferred_model_type, actual_inferred_attention_mechanism = infer_model_type(
+            checkpoint_weights, attention_mechanism
+        )
+
+        self.assertEqual(expected_inferred_model_type, actual_inferred_model_type)
+        self.assertEqual(expected_attention_mechanism, actual_inferred_attention_mechanism)
+
+    @skipIf(
+        not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
+        "download of model too long for test in runner",
+    )
+    def test_givenAModelTypeToInfer_whenRealRetrainFastText_thenReturnFastText(self):
+        path_to_retrained_model = self.path_to_retrain_fasttext
+        checkpoint_weights = torch.load(path_to_retrained_model, map_location="cpu")
+        attention_mechanism = False
+
+        expected_inferred_model_type = "fasttext"
+
+        actual_inferred_model_type, _ = infer_model_type(checkpoint_weights, attention_mechanism)
+
+        self.assertEqual(expected_inferred_model_type, actual_inferred_model_type)
+
+    @skipIf(
+        not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
+        "download of model too long for test in runner",
+    )
+    def test_givenAModelTypeToInfer_whenRealRetrainBPEmb_thenReturnBPEmb(self):
+        path_to_retrained_model = self.path_to_retrain_bpemb
+        checkpoint_weights = torch.load(path_to_retrained_model, map_location="cpu")
+        attention_mechanism = False
+
+        expected_inferred_model_type = "bpemb"
+
+        actual_inferred_model_type, _ = infer_model_type(checkpoint_weights, attention_mechanism)
+
+        self.assertEqual(expected_inferred_model_type, actual_inferred_model_type)
 
 
 if __name__ == "__main__":

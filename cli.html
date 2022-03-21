@@ -102,6 +102,24 @@ given the <code class="docutils literal notranslate"><span class="pre">export_fi
 if the dataset is in a CSV format, the output file format will be a CSV. Moreover, by default,
 we log some information (<code class="docutils literal notranslate"><span class="pre">--log</span></code>) such as the parser model name, the parsed dataset path
 and the number of parsed addresses.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="deepparse.cli.parse.main">
+<span class="sig-prename descclassname"><span class="pre">deepparse.cli.parse.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/deepparse/cli/parse.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.cli.parse.main" title="Permalink to this definition"></a></dt>
+<dd><p>cli function to rapidly parse an addresses dataset and output it in another file.</p>
+<p>Examples of usage:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>parse fasttext ./dataset_path.csv parsed_address.pickle
+</pre></div>
+</div>
+<p>Using a gpu device</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>parse fasttext ./dataset_path.csv parsed_address.pickle --device <span class="m">0</span>
+</pre></div>
+</div>
+<p>Using a CSV dataset</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>parse fasttext ./dataset.csv parsed_address.pickle --path_to_retrained_model ./path
+</pre></div>
+</div>
+</dd></dl>
+
 <section id="dataset-format">
 <h3>Dataset Format<a class="headerlink" href="#dataset-format" title="Permalink to this headline"></a></h3>
 <p>For the dataset format see our <a class="reference internal" href="dataset_container.html#deepparse.dataset_container.DatasetContainer" title="deepparse.dataset_container.DatasetContainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DatasetContainer</span></code></a>.</p>
@@ -164,24 +182,6 @@ same example will return the following dict <code class="docutils literal notran
 <dd><p>cli function to manually download all the dependencies for a pre-trained model.</p>
 <p>Example of usage:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>download_model fasttext
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="deepparse.cli.parse.main">
-<span class="sig-prename descclassname"><span class="pre">deepparse.cli.parse.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/deepparse/cli/parse.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.cli.parse.main" title="Permalink to this definition"></a></dt>
-<dd><p>cli function to rapidly parse an addresses dataset and output it in another file.</p>
-<p>Examples of usage:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>parse fasttext ./dataset_path.csv parsed_address.pickle
-</pre></div>
-</div>
-<p>Using a gpu device</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>parse fasttext ./dataset_path.csv parsed_address.pickle --device <span class="m">0</span>
-</pre></div>
-</div>
-<p>Using a CSV dataset</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>parse fasttext ./dataset.csv parsed_address.pickle --path_to_retrained_model ./path
 </pre></div>
 </div>
 </dd></dl>

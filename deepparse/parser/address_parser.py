@@ -453,6 +453,16 @@ class AddressParser:
 
                 address_parser.retrain(container, 0.8, epochs=1, batch_size=128)
 
+            Using the freezing layers parameters to freeze layers during training
+
+            .. code-block:: python
+
+                address_parser = AddressParser(device=0)
+                data_path = 'path_to_a_csv_dataset.p'
+
+                container = CSVDatasetContainer(data_path)
+                address_parser.retrain(container, 0.8, epochs=5, batch_size=128, layers_to_freeze="encoder")
+
             Using learning rate scheduler callback.
 
             .. code-block:: python
@@ -928,28 +938,34 @@ class AddressParser:
                 f"{layers_to_freeze} freezing setting is not supported. Value can be 'encoder', 'decoder', "
                 f"'prediction_layer' and 'seq2seq'. See doc for more details."
             )
-        layers_exclude = ""
+        layer_exclude = None
         if layers_to_freeze == "decoder":
             layers_to_freeze = [layers_to_freeze + "."]
             if "bpemb" in self.model_type:
                 layers_to_freeze.append("embedding_network.")
-            layers_exclude = "decoder.linear."
+            layer_exclude = "decoder.linear."
         elif layers_to_freeze == 'prediction_layer':
             layers_to_freeze = ["decoder.linear."]
         elif 'seq2seq' in layers_to_freeze:
             layers_to_freeze = ["encoder.", "decoder."]
             if "bpemb" in self.model_type:
                 layers_to_freeze.append("embedding_network.")
-            layers_exclude = "decoder.linear."
+            layer_exclude = "decoder.linear."
         else:
             layers_to_freeze = [layers_to_freeze + "."]
 
         for layer_name, param in self.model.named_parameters():
-            if (
-                any(layer_to_freeze for layer_to_freeze in layers_to_freeze if (layer_to_freeze in layer_name))
-                and layers_exclude not in layer_name
-            ):
-                # if the layer name is in the layer list to exclude, we set the weights update to false
-                # except if the layer name is a layers exclude. Namely, the decoder.linear when we freeze the decoder,
-                # but we expect the final layer to be unfrozen.
-                param.requires_grad = False
+            # If the layer name is in the layer list to freeze, we set the weights update to false
+            # except if the layer name is a layers exclude. Namely, the decoder.linear when we freeze the decoder,
+            # but we expect the final layer to be unfrozen.
+            # The layers_exclude is not None was added since the base case: "" not in layer_name is equal to False.
+            if any(layer_to_freeze for layer_to_freeze in layers_to_freeze if layer_to_freeze in layer_name):
+                if layer_exclude is None:
+                    # Meaning we don't have a layer to exclude from the layer to freeze.
+                    param.requires_grad = False
+                elif layer_exclude not in layer_name:
+                    # Meaning the layer is not in the layer to exclude from the layer to freeze.
+                    param.requires_grad = False
+                # The implicit else mean the layer_name is in a layers to exclude BUT it is a layer to exclude from
+                # the freezing. Namely, the decoder.linear when we freeze the decoder, but we expect the final layer
+                # to be unfrozen.

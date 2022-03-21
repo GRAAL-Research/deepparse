@@ -31,7 +31,14 @@ lr_scheduler = poutyne.StepLR(step_size=1, gamma=0.1)  # reduce LR by a factor o
 logging_path = "./checkpoints"
 
 address_parser.retrain(
-    training_container, 0.8, epochs=5, batch_size=8, num_workers=2, callbacks=[lr_scheduler], logging_path=logging_path
+    training_container,
+    0.8,
+    epochs=5,
+    batch_size=8,
+    num_workers=2,
+    callbacks=[lr_scheduler],
+    logging_path=logging_path,
+    layers_to_freeze="seq2seq",
 )
 
 # Now, let's test our fine-tuned model using the best checkpoint (default parameter).

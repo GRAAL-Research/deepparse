@@ -1,5 +1,5 @@
 # Since we use a patch as model mock we skip the unused argument error
-# pylint: disable=unused-argument, too-many-arguments, too-many-public-methods, protected-access
+# pylint: disable=unused-argument, too-many-arguments, too-many-public-methods, protected-access, too-many-lines
 import os
 import unittest
 from tempfile import TemporaryDirectory
@@ -55,7 +55,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
     def tearDown(self) -> None:
         self.temp_dir_obj.cleanup()
 
-    def address_parser_retrain_call(self, prediction_tags=None, seq2seq_params=None):
+    def address_parser_retrain_call(self, prediction_tags=None, seq2seq_params=None, layers_to_freeze=None):
         self.address_parser.retrain(
             self.mocked_data_container,
             self.a_train_ratio,
@@ -68,6 +68,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
             logging_path=self.a_logging_path,
             prediction_tags=prediction_tags,
             seq2seq_params=seq2seq_params,
+            layers_to_freeze=layers_to_freeze,
         )
 
     def assert_experiment_retrain(self, experiment_mock, model_mock, optimizer_mock, device):
@@ -989,6 +990,212 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
                 seed=self.a_seed,
                 logging_path=self.a_logging_path,
             )
+
+    @patch("deepparse.parser.address_parser.torch.save")
+    @patch("deepparse.parser.address_parser.DataLoader")
+    @patch("deepparse.parser.address_parser.Experiment")
+    @patch("deepparse.parser.address_parser.SGD")
+    @patch("deepparse.parser.address_parser.DataTransform")
+    @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
+    @patch("deepparse.parser.address_parser.fasttext_data_padding")
+    @patch("deepparse.parser.address_parser.FastTextVectorizer")
+    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
+    def test_givenNotFreezeLayers_thenFreezeLayerMethodNotCalled(
+        self,
+        download_weights_mock,
+        embeddings_model_mock,
+        vectorizer_model_mock,
+        data_padding_mock,
+        model_mock,
+        data_transform_mock,
+        optimizer_mock,
+        experiment_mock,
+        data_loader_mock,
+        torch_save_mock,
+    ):
+        self.address_parser = AddressParser(
+            model_type=self.a_fasttext_model_type,
+            device=self.a_device,
+            verbose=self.verbose,
+        )
+        freeze_model_params_method_mock = MagicMock()
+        self.address_parser._freeze_model_params = freeze_model_params_method_mock
+        self.address_parser_retrain_call(layers_to_freeze=None)
+
+        freeze_model_params_method_mock.assert_not_called()
+
+    @patch("deepparse.parser.address_parser.torch.save")
+    @patch("deepparse.parser.address_parser.DataLoader")
+    @patch("deepparse.parser.address_parser.Experiment")
+    @patch("deepparse.parser.address_parser.SGD")
+    @patch("deepparse.parser.address_parser.DataTransform")
+    @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
+    @patch("deepparse.parser.address_parser.fasttext_data_padding")
+    @patch("deepparse.parser.address_parser.FastTextVectorizer")
+    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
+    def test_givenFreezeLayersEncoder_thenFreezeLayerMethodCalledWithEncoder(
+        self,
+        download_weights_mock,
+        embeddings_model_mock,
+        vectorizer_model_mock,
+        data_padding_mock,
+        model_mock,
+        data_transform_mock,
+        optimizer_mock,
+        experiment_mock,
+        data_loader_mock,
+        torch_save_mock,
+    ):
+        self.address_parser = AddressParser(
+            model_type=self.a_fasttext_model_type,
+            device=self.a_device,
+            verbose=self.verbose,
+        )
+        freeze_model_params_method_mock = MagicMock()
+        self.address_parser._freeze_model_params = freeze_model_params_method_mock
+        self.address_parser_retrain_call(layers_to_freeze="encoder")
+
+        freeze_model_params_method_mock.assert_called()
+        freeze_model_params_method_mock.assert_called_with("encoder")
+
+    @patch("deepparse.parser.address_parser.torch.save")
+    @patch("deepparse.parser.address_parser.DataLoader")
+    @patch("deepparse.parser.address_parser.Experiment")
+    @patch("deepparse.parser.address_parser.SGD")
+    @patch("deepparse.parser.address_parser.DataTransform")
+    @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
+    @patch("deepparse.parser.address_parser.fasttext_data_padding")
+    @patch("deepparse.parser.address_parser.FastTextVectorizer")
+    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
+    def test_givenFreezeLayersDecoder_thenFreezeLayerMethodCalledWithDecoder(
+        self,
+        download_weights_mock,
+        embeddings_model_mock,
+        vectorizer_model_mock,
+        data_padding_mock,
+        model_mock,
+        data_transform_mock,
+        optimizer_mock,
+        experiment_mock,
+        data_loader_mock,
+        torch_save_mock,
+    ):
+        self.address_parser = AddressParser(
+            model_type=self.a_fasttext_model_type,
+            device=self.a_device,
+            verbose=self.verbose,
+        )
+        freeze_model_params_method_mock = MagicMock()
+        self.address_parser._freeze_model_params = freeze_model_params_method_mock
+        self.address_parser_retrain_call(layers_to_freeze="decoder")
+
+        freeze_model_params_method_mock.assert_called()
+        freeze_model_params_method_mock.assert_called_with("decoder")
+
+    @patch("deepparse.parser.address_parser.torch.save")
+    @patch("deepparse.parser.address_parser.DataLoader")
+    @patch("deepparse.parser.address_parser.Experiment")
+    @patch("deepparse.parser.address_parser.SGD")
+    @patch("deepparse.parser.address_parser.DataTransform")
+    @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
+    @patch("deepparse.parser.address_parser.fasttext_data_padding")
+    @patch("deepparse.parser.address_parser.FastTextVectorizer")
+    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
+    def test_givenFreezeLayersPredictionLayer_thenFreezeLayerMethodCalledWithPredictionLayer(
+        self,
+        download_weights_mock,
+        embeddings_model_mock,
+        vectorizer_model_mock,
+        data_padding_mock,
+        model_mock,
+        data_transform_mock,
+        optimizer_mock,
+        experiment_mock,
+        data_loader_mock,
+        torch_save_mock,
+    ):
+        self.address_parser = AddressParser(
+            model_type=self.a_fasttext_model_type,
+            device=self.a_device,
+            verbose=self.verbose,
+        )
+        freeze_model_params_method_mock = MagicMock()
+        self.address_parser._freeze_model_params = freeze_model_params_method_mock
+        self.address_parser_retrain_call(layers_to_freeze="prediction_layer")
+
+        freeze_model_params_method_mock.assert_called()
+        freeze_model_params_method_mock.assert_called_with("prediction_layer")
+
+    @patch("deepparse.parser.address_parser.torch.save")
+    @patch("deepparse.parser.address_parser.DataLoader")
+    @patch("deepparse.parser.address_parser.Experiment")
+    @patch("deepparse.parser.address_parser.SGD")
+    @patch("deepparse.parser.address_parser.DataTransform")
+    @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
+    @patch("deepparse.parser.address_parser.fasttext_data_padding")
+    @patch("deepparse.parser.address_parser.FastTextVectorizer")
+    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
+    def test_givenFreezeLayersSeq2Seq_thenFreezeLayerMethodCalledWithSeq2Seq(
+        self,
+        download_weights_mock,
+        embeddings_model_mock,
+        vectorizer_model_mock,
+        data_padding_mock,
+        model_mock,
+        data_transform_mock,
+        optimizer_mock,
+        experiment_mock,
+        data_loader_mock,
+        torch_save_mock,
+    ):
+        self.address_parser = AddressParser(
+            model_type=self.a_fasttext_model_type,
+            device=self.a_device,
+            verbose=self.verbose,
+        )
+        freeze_model_params_method_mock = MagicMock()
+        self.address_parser._freeze_model_params = freeze_model_params_method_mock
+        self.address_parser_retrain_call(layers_to_freeze="seq2seq")
+
+        freeze_model_params_method_mock.assert_called()
+        freeze_model_params_method_mock.assert_called_with("seq2seq")
+
+    @patch("deepparse.parser.address_parser.torch.save")
+    @patch("deepparse.parser.address_parser.DataLoader")
+    @patch("deepparse.parser.address_parser.Experiment")
+    @patch("deepparse.parser.address_parser.SGD")
+    @patch("deepparse.parser.address_parser.DataTransform")
+    @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
+    @patch("deepparse.parser.address_parser.fasttext_data_padding")
+    @patch("deepparse.parser.address_parser.FastTextVectorizer")
+    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
+    def test_givenWrongFreezeLayersName_thenRaiseValueError(
+        self,
+        download_weights_mock,
+        embeddings_model_mock,
+        vectorizer_model_mock,
+        data_padding_mock,
+        model_mock,
+        data_transform_mock,
+        optimizer_mock,
+        experiment_mock,
+        data_loader_mock,
+        torch_save_mock,
+    ):
+        self.address_parser = AddressParser(
+            model_type=self.a_fasttext_model_type,
+            device=self.a_device,
+            verbose=self.verbose,
+        )
+
+        with self.assertRaises(ValueError):
+            self.address_parser_retrain_call(layers_to_freeze="error_in_name")
 
 
 if __name__ == "__main__":

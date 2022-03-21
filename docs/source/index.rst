@@ -26,6 +26,7 @@ Use deepparse to
 - parse addresses directly from the command line without code to write,
 - retrain our pre-trained models on new data to improve parsing on specific country address patterns,
 - retrain our pre-trained models with new prediction tags easily,
+- retrain our pre-trained models with or without freezing some layers,
 - train a new seq2seq addresses parsing models easily using a new model configuration.
 
 Deepparse is compatible with the **latest version of PyTorch** and  **Python >= 3.7**.
@@ -630,6 +631,13 @@ See `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine
 .. code-block:: python
 
     address_parser.retrain(training_container, 0.8, epochs=5, batch_size=8)
+
+One can also freeze some layers to speed up the training using the ``layers_to_freeze`` parameter.
+
+.. code-block:: python
+
+    address_parser.retrain(training_container, 0.8, epochs=5, batch_size=8, layers_to_freeze="seq2seq2")
+
 
 Retrain a Model with an attention mechanism
 *******************************************

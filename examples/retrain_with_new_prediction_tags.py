@@ -46,3 +46,17 @@ address_parser.retrain(
 
 # Now, let's test our fine-tuned model using the best checkpoint (default parameter).
 address_parser.test(test_container, batch_size=256)
+
+# One can also freeze the seq2seq layer to only retrain the prediction layer using the new tag prediction space.
+# That way, training will be faster.
+address_parser.retrain(
+    training_container,
+    0.8,
+    epochs=5,
+    batch_size=8,
+    num_workers=2,
+    callbacks=[lr_scheduler],
+    prediction_tags=tag_dictionary,
+    logging_path=logging_path,
+    layers_to_freeze="seq2seq",
+)

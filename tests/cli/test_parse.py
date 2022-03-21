@@ -29,10 +29,10 @@ class ParseTests(TestCase):
         self.a_unsupported_data_path = os.path.join(self.temp_dir_obj.name, "fake_data.txt")
         self.fake_data_path_json = os.path.join(self.temp_dir_obj.name, "fake_data.json")
 
-        self.pickle_p_export_file_name = "a_file.p"
-        self.pickle_pickle_export_file_name = "a_file.pickle"
-        self.csv_export_file_name = "a_file.csv"
-        self.json_export_file_name = "a_file.json"
+        self.pickle_p_export_filename = "a_file.p"
+        self.pickle_pickle_export_filename = "a_file.pickle"
+        self.csv_export_filename = "a_file.csv"
+        self.json_export_filename = "a_file.json"
 
         self.a_fasttext_model_type = "fasttext"
         self.a_fasttext_att_model_type = "fasttext-attention"
@@ -63,7 +63,7 @@ class ParseTests(TestCase):
 
         self.parser.add_argument("dataset_path", type=str)
 
-        self.parser.add_argument("export_file_name", type=str)
+        self.parser.add_argument("export_filename", type=str)
 
         self.parser.add_argument("--device", type=str, default="0")
 
@@ -86,13 +86,13 @@ class ParseTests(TestCase):
             [
                 self.a_fasttext_model_type,
                 self.fake_data_path_pickle,
-                self.pickle_p_export_file_name,
+                self.pickle_p_export_filename,
                 "--device",
                 self.cpu_device,
             ]
         )
 
-        export_path = generate_export_path(self.fake_data_path_pickle, self.pickle_p_export_file_name)
+        export_path = generate_export_path(self.fake_data_path_pickle, self.pickle_p_export_filename)
         self.assertTrue(os.path.isfile(export_path))
 
     @skipIf(not torch.cuda.is_available(), "no gpu available")
@@ -103,13 +103,13 @@ class ParseTests(TestCase):
             [
                 self.a_fasttext_model_type,
                 self.fake_data_path_pickle,
-                self.pickle_p_export_file_name,
+                self.pickle_p_export_filename,
                 "--device",
                 self.gpu_device,
             ]
         )
 
-        export_path = generate_export_path(self.fake_data_path_pickle, self.pickle_p_export_file_name)
+        export_path = generate_export_path(self.fake_data_path_pickle, self.pickle_p_export_filename)
         self.assertTrue(os.path.isfile(export_path))
 
     @skipIf(
@@ -123,7 +123,7 @@ class ParseTests(TestCase):
                 [
                     self.a_fasttext_model_type,
                     self.fake_data_path_pickle,
-                    self.pickle_p_export_file_name,
+                    self.pickle_p_export_filename,
                     "--device",
                     self.cpu_device,
                 ]
@@ -152,7 +152,7 @@ class ParseTests(TestCase):
                 [
                     self.a_fasttext_model_type,
                     self.fake_data_path_pickle,
-                    self.pickle_p_export_file_name,
+                    self.pickle_p_export_filename,
                     "--device",
                     self.cpu_device,
                     "--log",
@@ -169,13 +169,13 @@ class ParseTests(TestCase):
             [
                 self.a_fasttext_att_model_type,
                 self.fake_data_path_pickle,
-                self.pickle_p_export_file_name,
+                self.pickle_p_export_filename,
                 "--device",
                 self.cpu_device,
             ]
         )
 
-        export_path = generate_export_path(self.fake_data_path_pickle, self.pickle_p_export_file_name)
+        export_path = generate_export_path(self.fake_data_path_pickle, self.pickle_p_export_filename)
         self.assertTrue(os.path.isfile(export_path))
 
     @skipIf(
@@ -189,13 +189,13 @@ class ParseTests(TestCase):
             [
                 self.a_fasttext_att_model_type,
                 self.fake_data_path_pickle,
-                self.json_export_file_name,
+                self.json_export_filename,
                 "--device",
                 self.cpu_device,
             ]
         )
 
-        export_path = generate_export_path(self.fake_data_path_pickle, self.json_export_file_name)
+        export_path = generate_export_path(self.fake_data_path_pickle, self.json_export_filename)
         self.assertTrue(os.path.isfile(export_path))
 
     @skipIf(
@@ -209,7 +209,7 @@ class ParseTests(TestCase):
             [
                 self.a_fasttext_att_model_type,
                 self.fake_data_path_csv,
-                self.csv_export_file_name,
+                self.csv_export_filename,
                 "--device",
                 self.cpu_device,
                 "--csv_column_name",
@@ -217,7 +217,7 @@ class ParseTests(TestCase):
             ]
         )
 
-        export_path = generate_export_path(self.fake_data_path_csv, self.csv_export_file_name)
+        export_path = generate_export_path(self.fake_data_path_csv, self.csv_export_filename)
         self.assertTrue(os.path.isfile(export_path))
 
     @skipIf(
@@ -232,7 +232,7 @@ class ParseTests(TestCase):
             [
                 self.a_fasttext_model_type,
                 self.fake_data_path_csv,
-                self.csv_export_file_name,
+                self.csv_export_filename,
                 "--device",
                 self.cpu_device,
                 "--csv_column_name",
@@ -242,7 +242,7 @@ class ParseTests(TestCase):
             ]
         )
 
-        export_path = generate_export_path(self.fake_data_path_pickle, self.csv_export_file_name)
+        export_path = generate_export_path(self.fake_data_path_pickle, self.csv_export_filename)
         self.assertTrue(os.path.isfile(export_path))
 
     @skipIf(
@@ -257,7 +257,7 @@ class ParseTests(TestCase):
                 [
                     self.a_fasttext_model_type,
                     self.fake_data_path_csv,
-                    self.csv_export_file_name,
+                    self.csv_export_filename,
                     "--device",
                     self.cpu_device,
                 ]
@@ -275,7 +275,7 @@ class ParseTests(TestCase):
                 [
                     self.a_fasttext_model_type,
                     self.a_unsupported_data_path,
-                    self.csv_export_file_name,
+                    self.csv_export_filename,
                     "--device",
                     self.cpu_device,
                 ]
@@ -304,20 +304,28 @@ class ParseTests(TestCase):
         "download of model too long for test in runner",
     )
     def test_ifPathToRetrainModel_thenUseRetrainModel(self):
-        create_pickle_file(self.fake_data_path_pickle, predict_container=True)
+        with self._caplog.at_level(logging.INFO):
+            # We use the default path to fasttext model as a "retrain model path"
+            path_to_retrain_model = os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "fasttext.ckpt")
+            create_pickle_file(self.fake_data_path_pickle, predict_container=True)
 
-        parse.main(
-            [
-                self.a_fasttext_model_type,
-                self.fake_data_path_pickle,
-                self.pickle_p_export_file_name,
-                "--device",
-                self.cpu_device,
-            ]
+            parse.main(
+                [
+                    self.a_fasttext_model_type,
+                    self.fake_data_path_pickle,
+                    self.pickle_p_export_filename,
+                    "--device",
+                    self.cpu_device,
+                    "--path_to_retrained_model",
+                    path_to_retrain_model,
+                ]
+            )
+
+        expected_first_message = (
+            f"Parsing dataset file {self.fake_data_path_pickle} using the parser " f"FastTextAddressParser"
         )
-
-        export_path = generate_export_path(self.fake_data_path_pickle, self.pickle_p_export_file_name)
-        self.assertTrue(os.path.isfile(export_path))
+        actual_first_message = self._caplog.records[0].message
+        self.assertEqual(expected_first_message, actual_first_message)
 
 
 if __name__ == "__main__":

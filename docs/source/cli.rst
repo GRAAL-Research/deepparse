@@ -15,6 +15,8 @@ if the dataset is in a CSV format, the output file format will be a CSV. Moreove
 we log some information (``--log``) such as the parser model name, the parsed dataset path
 and the number of parsed addresses.
 
+.. autofunction:: deepparse.cli.parse.main
+
 Dataset Format
 --------------
 For the dataset format see our :class:`~deepparse.dataset_container.DatasetContainer`.
@@ -60,5 +62,4 @@ Download
 ********
 
 .. autofunction:: deepparse.cli.download.main
-.. autofunction:: deepparse.cli.parse.main
 

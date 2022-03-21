@@ -178,7 +178,13 @@
 - Fixed bug in cli export dataset
 - Improved the doc of the CLI
 
-## dev
+## 0.7.1
+
+- Hotfix for missing dependency
+- Fixed bug with poutyne version handling
+
+## 0.7.2
 
 - Added JSON output support
 - Add logging output of parse cli function
+- Hotfix Poutyne version handling

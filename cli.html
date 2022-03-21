@@ -101,7 +101,18 @@ The exported parsed addresses are to be exported in the same directory as the ad
 given the <code class="docutils literal notranslate"><span class="pre">export_file_name</span></code> using the encoding format of the address dataset file. For example,
 if the dataset is in a CSV format, the output file format will be a CSV. Moreover, by default,
 we log some information (<code class="docutils literal notranslate"><span class="pre">--log</span></code>) such as the parser model name, the parsed dataset path
-and the number of parsed addresses.</p>
+and the number of parsed addresses. Here is the list of the arguments and their descriptions. One can use
+the command <code class="docutils literal notranslate"><span class="pre">parse</span> <span class="pre">--help</span></code> to output the same description in your command line.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">parsing_model</span></code>: The parsing module to use.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dataset_path</span></code>: The path to the dataset file in a pickle (.p or .pickle), CSV format or JSON format.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">export_file_name</span></code>: The filename to use to export the parsed addresses. We will infer the file format base on the file extension. That is, if the file is a pickle (.p or .pickle), we will export it into a pickle file. The supported format are Pickle, CSV and JSON. The file will be exported in the same repositories as the dataset_path. See the doc for more details on the format exporting.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--device</span></code>: The device to use. It can be ‘cpu’ or a GPU device index such as ‘0’ or ‘1’. By default ‘0’.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--path_to_retrained_model</span></code>: A path to a retrained model to use for parsing.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--csv_column_name</span></code>: The column name to extract address in the CSV. Need to be specified if the provided dataset_path leads to a CSV file.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--csv_column_separator</span></code>: The column separator for the dataset container will only be used if the dataset is a CSV one. By default ‘t’.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--log</span></code>: Either or not to log the parsing process into a <cite>.log</cite> file exported at the same place as the parsed data using the same name as the export file. The bool value can be (not case sensitive) ‘true/false’, ‘t/f’, ‘yes/no’, ‘y/n’ or ‘0/1’.</p></li>
+</ul>
 <dl class="py function">
 <dt class="sig sig-object py" id="deepparse.cli.parse.main">
 <span class="sig-prename descclassname"><span class="pre">deepparse.cli.parse.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/deepparse/cli/parse.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.cli.parse.main" title="Permalink to this definition"></a></dt>
@@ -176,6 +187,12 @@ same example will return the following dict <code class="docutils literal notran
 </section>
 <section id="download">
 <h2>Download<a class="headerlink" href="#download" title="Permalink to this headline"></a></h2>
+<p>Command to pre-download model weights and requirements. Here is the argument, its description and possible choices,
+one can use the command <code class="docutils literal notranslate"><span class="pre">parse</span> <span class="pre">--help</span></code> to output the same description in your command line.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">model_type</span></code>: The parsing module to download. The possible choice are <code class="docutils literal notranslate"><span class="pre">fasttext</span></code>, <code class="docutils literal notranslate"><span class="pre">fasttext-attention</span></code>,</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">fasttext-light</span></code>, <code class="docutils literal notranslate"><span class="pre">bpemb</span></code> and <code class="docutils literal notranslate"><span class="pre">bpemb-attention</span></code>.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="deepparse.cli.download.main">
 <span class="sig-prename descclassname"><span class="pre">deepparse.cli.download.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/deepparse/cli/download.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.cli.download.main" title="Permalink to this definition"></a></dt>

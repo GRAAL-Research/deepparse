@@ -118,6 +118,13 @@ class DatasetContainer(Dataset, ABC):
     def is_a_train_container(self) -> bool:
         return self.is_training_container
 
+    def data_tags_not_the_same_len_diff(self) -> None:
+        diff_indexes = [index for index, data in enumerate(self.data) if len(data[0].split(" ")) != len(data[1])]
+        for diff_index in diff_indexes:
+            print(f"The data point: {self.data[diff_index]}"
+                  f"\n\tLen of the address: {len(self.data[diff_index][0].split(' '))}"
+                  f"\n\tLen of the tags: {len(self.data[diff_index][1])}")
+
 
 class PickleDatasetContainer(DatasetContainer):
     """
@@ -212,13 +219,13 @@ class CSVDatasetContainer(DatasetContainer):
     """
 
     def __init__(
-        self,
-        data_path: str,
-        column_names: Union[List, str],
-        is_training_container: bool = True,
-        separator: str = "\t",
-        tag_seperator_reformat_fn: Union[None, Callable] = None,
-        csv_reader_kwargs: Union[None, Dict] = None,
+            self,
+            data_path: str,
+            column_names: Union[List, str],
+            is_training_container: bool = True,
+            separator: str = "\t",
+            tag_seperator_reformat_fn: Union[None, Callable] = None,
+            csv_reader_kwargs: Union[None, Dict] = None,
     ) -> None:
         super().__init__(is_training_container=is_training_container)
         if is_training_container:

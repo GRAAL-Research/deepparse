@@ -78,6 +78,7 @@ class DatasetContainer(Dataset, ABC):
             raise DataError("Some addresses data points are empty.")
 
         if validate_if_any_whitespace_only(string_elements=data_to_validate):
+            self.data_tags_not_the_same_len_diff()
             raise DataError("Some addresses only include whitespace thus cannot be parsed.")
 
     def _data_is_a_list(self):

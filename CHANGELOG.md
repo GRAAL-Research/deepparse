@@ -192,4 +192,6 @@
 ## dev
 - Add freeze layers parameters to freeze layers during retraining
 - Improve parsed address print
-- Bug-fix #124: comma separated list without whitespace in CSVDatasetContainer.
+- Bug-fix #124: comma-separated list without whitespace in CSVDatasetContainer
+- Add a report when addresses to parse and tags list len differ
+- Add an example on how to fine-tune using our CSVDatasetContainer

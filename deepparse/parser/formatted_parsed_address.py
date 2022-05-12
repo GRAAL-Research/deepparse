@@ -73,7 +73,7 @@ class FormattedParsedAddress:
         formatted_string = ""
         for component_tuple in self.address_parsed_components:
             formatted_string += str(component_tuple) + " "
-        return formatted_string
+        return formatted_string.strip()  # Strip to remove trailing ending whitespace
 
     def __repr__(self) -> str:
         values = [

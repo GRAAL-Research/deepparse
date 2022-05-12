@@ -109,7 +109,7 @@ class FormattedParsedAddressTest(FormattedParsedAddressBase):
 
         expected = (
             "The unparsed address is '3 test road' and the parsed address is '('3', "
-            "'StreetNumber') ('test', 'StreetName') ('road', 'StreetName') '"
+            "'StreetNumber') ('test', 'StreetName') ('road', 'StreetName')'"
         )
 
         self.assertEqual(expected, actual)

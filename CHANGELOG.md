@@ -195,3 +195,4 @@
 - Bug-fix #124: comma-separated list without whitespace in CSVDatasetContainer
 - Add a report when addresses to parse and tags list len differ
 - Add an example on how to fine-tune using our CSVDatasetContainer
+- Improve data validation for data to parse

@@ -96,8 +96,9 @@ class DatasetContainer(Dataset, ABC):
 
         if not self._data_tags_is_same_len_then_address():
             print(
-                f"Some addresses (whitespace-split) and the tags associated with them are not the same len. Here is"
-                f"the report of those cases where len differ to help you out:\n"
+                f"Some addresses (whitespace-split) and the tags associated with them are not the same len. "
+                f"If you are using a CSVDatasetContainer, consider using the tag_seperator_reformat_fn argument."
+                f"Here is the report of those cases where len differ to help you out:\n"
                 f"{self._data_tags_not_the_same_len_diff()}"
             )
             raise DataError("Some addresses (whitespace-split) and the tags associated with them are not the same len.")

@@ -126,10 +126,13 @@ def handle_model_path(checkpoint: str) -> str:
 def validate_data_to_parse(addresses_to_parse: List) -> None:
     """
     Validation tests on the addresses to parse to respect the following two criteria:
+        - addresses are not tuple,
         - no addresses are None value,
         - no addresses are empty strings, and
         - no addresses are whitespace-only strings.
     """
+    if isinstance(addresses_to_parse[0], tuple):
+        DataError("Addresses to parsed are tuples. They need to be a list of string. Are you using training data?")
     if validate_if_any_none(addresses_to_parse):
         raise DataError("Some addresses are None value.")
     if validate_if_any_empty(addresses_to_parse):

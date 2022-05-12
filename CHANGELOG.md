@@ -191,3 +191,4 @@
 
 ## dev
 - Add freeze layers parameters to freeze layers during retraining
+- Improve parsed address print

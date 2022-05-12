@@ -37,6 +37,9 @@ Let's use the BPEmb model on a GPU.
 
     parsed_addresses = address_parser(test_data[0:300])
 
+    # Print one of the parsed address
+    print(parsed_addresses[0])
+
 
 When parsing addresses, some data quality tests are applied to the dataset.
 First, it validates that no addresses to parse are empty.

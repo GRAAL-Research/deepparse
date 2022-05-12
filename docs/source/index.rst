@@ -587,6 +587,9 @@ Getting Started
    parsed_address = address_parser("350 rue des Lilas Ouest Québec Québec G1L 1B6",
         with_prob=True)
 
+   # Print the parsed address
+   print(parsed_address)
+
     # or using one of our dataset container
     addresses_to_parse = CSVDatasetContainer("./a_path.csv", column_names=["address_column_name"],
                                              is_training_container=False)

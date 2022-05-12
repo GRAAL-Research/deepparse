@@ -1,8 +1,8 @@
 .. role:: hidden
     :class: hidden-section
 
-Retrain a Pretrained Model
-**************************
+Retrain a Pretrained Model Using a CSV Dataset
+**********************************************
 
 .. code-block:: python
 

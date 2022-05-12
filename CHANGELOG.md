@@ -191,3 +191,4 @@
 
 ## 0.7.3
 - Add freeze layers parameters to freeze layers during retraining
+- Improve parsed address print

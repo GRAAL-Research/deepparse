@@ -40,6 +40,9 @@ class FormattedParsedAddress:
             print(parse_address.StreetNumber) # 350
             print(parse_address.PostalCode) # G1L 1B6
 
+            # Print the parsed address
+            print(parsed_address)
+
     Note:
         Since an address component can be composed of multiple elements (e.g. Wolfe street), when the probability
         values are asked of the address parser, the address components don't keep it. It's only available through the
@@ -59,9 +62,18 @@ class FormattedParsedAddress:
 
     def __str__(self) -> str:
         """
-        Return raw address as a string.
+        Return the unparsed address plus the parsed address components.
         """
-        return self.raw_address
+        return (
+            f"The unparsed address is '{self.raw_address}' and the parsed address is "
+            f"'{self._formatted_parsed_address_components()}'"
+        )
+
+    def _formatted_parsed_address_components(self) -> str:
+        formatted_string = ""
+        for component_tuple in self.address_parsed_components:
+            formatted_string += str(component_tuple) + " "
+        return formatted_string.strip()  # Strip to remove trailing ending whitespace
 
     def __repr__(self) -> str:
         values = [

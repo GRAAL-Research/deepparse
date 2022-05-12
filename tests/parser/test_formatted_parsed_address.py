@@ -101,12 +101,18 @@ class FormattedParsedAddressTest(FormattedParsedAddressBase):
 
         self.assertIsNone(unit)
 
-    def test_whenStrAnParseAddress_thenStringIsTheRawAddress(self):
+    def test_whenStrAnParseAddress_thenStringIsTheRawAddressPlusParsedComponents(self):
         self._capture_output()
 
         print(self.parsed_address)
+        actual = self.test_out.getvalue().strip()
 
-        self.assertEqual(self.a_address_str, self.test_out.getvalue().strip())
+        expected = (
+            "The unparsed address is '3 test road' and the parsed address is '('3', "
+            "'StreetNumber') ('test', 'StreetName') ('road', 'StreetName')'"
+        )
+
+        self.assertEqual(expected, actual)
 
     def test_whenReprAnParseAddress_thenStringIsTheAddressFormatted(self):
         self._capture_output()

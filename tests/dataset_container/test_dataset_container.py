@@ -3,6 +3,7 @@
 import os
 import unittest
 from tempfile import TemporaryDirectory
+from typing import List
 from unittest import TestCase
 
 from deepparse import DataError
@@ -10,9 +11,21 @@ from deepparse.dataset_container import (
     PickleDatasetContainer,
     DatasetContainer,
     CSVDatasetContainer,
-    comma_separated_list_reformat,
 )
 from tests.tools import base_string, a_tags_sequence, create_pickle_file, create_csv_file, default_csv_column_name
+
+
+def comma_separated_list_reformat(tags: str) -> List:
+    """
+    Function to parse a comma separated "list" of tag.
+
+    Args:
+        tags (str): A tag set string to parse.
+
+    Return:
+        A list of the parsed tag set.
+    """
+    return tags.split(", ")
 
 
 class ADatasetContainer(DatasetContainer):

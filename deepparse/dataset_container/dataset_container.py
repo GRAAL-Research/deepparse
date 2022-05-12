@@ -95,6 +95,11 @@ class DatasetContainer(Dataset, ABC):
             raise DataError("Some tags data points are empty.")
 
         if not self._data_tags_is_same_len_then_address():
+            print(
+                f"Some addresses (whitespace-split) and the tags associated with them are not the same len. Here is"
+                f"the report of those cases where len differ to help you out:\n"
+                f"{self._data_tags_not_the_same_len_diff()}"
+            )
             raise DataError("Some addresses (whitespace-split) and the tags associated with them are not the same len.")
 
     def _data_is_list_of_tuple(self) -> bool:
@@ -117,6 +122,17 @@ class DatasetContainer(Dataset, ABC):
 
     def is_a_train_container(self) -> bool:
         return self.is_training_container
+
+    def _data_tags_not_the_same_len_diff(self) -> str:
+        diff_indexes = [index for index, data in enumerate(self.data) if len(data[0].split(" ")) != len(data[1])]
+        report = ""
+        for diff_index in diff_indexes:
+            report += (
+                f"The data point (with index: {diff_index}: {self.data[diff_index]}"
+                f"\n\tLen of the address: {len(self.data[diff_index][0].split(' '))}"
+                f"\n\tLen of the tags: {len(self.data[diff_index][1])}\n"
+            )
+        return report
 
 
 class PickleDatasetContainer(DatasetContainer):

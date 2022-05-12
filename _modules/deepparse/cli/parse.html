@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>deepparse.cli.parse &mdash; deepparse 0.7.2 documentation</title>
+  <title>deepparse.cli.parse &mdash; deepparse 0.7.4 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -28,7 +28,7 @@
             <img src="../../../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.7.2
+                0.7.4
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -51,6 +51,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/parse_addresses_with_cli.html">Parse Addresses Using Our CLI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/retrained_model_parsing.html">Use a Retrained Model to Parse Addresses</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/fine_tuning.html">Retrain a Pretrained Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/fine_tuning_with_csv_dataset.html">Retrain a Pretrained Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_attention_model.html">Retrain an attention mechanism model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_with_new_seq2seq_params.html">Retrain With New Seq2Seq Parameters</a></li>
@@ -126,7 +127,7 @@
 <span class="sd">        parse fasttext ./dataset.csv parsed_address.pickle --path_to_retrained_model ./path</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">args</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">args</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
         <span class="n">args</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
 
     <span class="n">parsed_args</span> <span class="o">=</span> <span class="n">get_args</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
@@ -148,14 +149,14 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The dataset path argument is not a CSV or pickle file.&quot;</span><span class="p">)</span>
 
-    <span class="n">export_file_name</span> <span class="o">=</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">export_file_name</span>
-    <span class="n">export_path</span> <span class="o">=</span> <span class="n">generate_export_path</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">,</span> <span class="n">export_file_name</span><span class="p">)</span>
+    <span class="n">export_filename</span> <span class="o">=</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">export_filename</span>
+    <span class="n">export_path</span> <span class="o">=</span> <span class="n">generate_export_path</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">,</span> <span class="n">export_filename</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">is_csv_path</span><span class="p">(</span><span class="n">export_file_name</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">is_csv_path</span><span class="p">(</span><span class="n">export_filename</span><span class="p">):</span>
         <span class="n">export_fn</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">to_csv</span><span class="p">,</span> <span class="n">export_path</span><span class="o">=</span><span class="n">export_path</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="n">csv_column_separator</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">is_pickle_path</span><span class="p">(</span><span class="n">export_file_name</span><span class="p">):</span>
+    <span class="k">elif</span> <span class="n">is_pickle_path</span><span class="p">(</span><span class="n">export_filename</span><span class="p">):</span>
         <span class="n">export_fn</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">to_pickle</span><span class="p">,</span> <span class="n">export_path</span><span class="o">=</span><span class="n">export_path</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">is_json_path</span><span class="p">(</span><span class="n">export_file_name</span><span class="p">):</span>
+    <span class="k">elif</span> <span class="n">is_json_path</span><span class="p">(</span><span class="n">export_filename</span><span class="p">):</span>
         <span class="n">export_fn</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">to_json</span><span class="p">,</span> <span class="n">export_path</span><span class="o">=</span><span class="n">export_path</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;We do not support this type of export.&quot;</span><span class="p">)</span>
@@ -223,12 +224,12 @@
     <span class="p">)</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;export_file_name&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;export_filename&quot;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span>
-            <span class="s2">&quot;The file name to use for the export of the parsed addresses. We will infer the file format base on the &quot;</span>
-            <span class="s2">&quot;file extension. That is, if the file is a pickle (.p or .pickle), we will export it into a pickle file.&quot;</span>
-            <span class="s2">&quot;The supported format are Pickle, CSV and JSON.&quot;</span>
-            <span class="s2">&quot;The file will be exported in the same repositories as the dataset_path.&quot;</span>
+            <span class="s2">&quot;The filename to use to export the parsed addresses. We will infer the file format base on the &quot;</span>
+            <span class="s2">&quot;file extension. That is, if the file is a pickle (.p or .pickle), we will export it into a pickle file. &quot;</span>
+            <span class="s2">&quot;The supported format are Pickle, CSV and JSON. &quot;</span>
+            <span class="s2">&quot;The file will be exported in the same repositories as the dataset_path. &quot;</span>
             <span class="s2">&quot;See the doc for more details on the format exporting.&quot;</span>
         <span class="p">),</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
@@ -236,7 +237,7 @@
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
         <span class="s2">&quot;--device&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span><span class="s2">&quot;The device to use. It can be &#39;cpu&#39; or a gpu device index such as &#39;0&#39; or &#39;1&#39;. By default &#39;0&#39;.&quot;</span><span class="p">),</span>
+        <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span><span class="s2">&quot;The device to use. It can be &#39;cpu&#39; or a GPU device index such as &#39;0&#39; or &#39;1&#39;. By default &#39;0&#39;.&quot;</span><span class="p">),</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="s2">&quot;0&quot;</span><span class="p">,</span>
     <span class="p">)</span>
@@ -251,8 +252,8 @@
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
         <span class="s2">&quot;--csv_column_name&quot;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span>
-            <span class="s2">&quot;The column name to extract address in the CSV. Need to be specified if the provided dataset_path is &quot;</span>
-            <span class="s2">&quot;leading to a CSV file.&quot;</span>
+            <span class="s2">&quot;The column name to extract address in the CSV. Need to be specified if the provided dataset_path &quot;</span>
+            <span class="s2">&quot;leads to a CSV file.&quot;</span>
         <span class="p">),</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -260,14 +261,17 @@
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
         <span class="s2">&quot;--csv_column_separator&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span><span class="s2">&quot;The column separator to use for the dataset container. By default &#39;</span><span class="se">\t</span><span class="s2">&#39;.&quot;</span><span class="p">),</span>
+        <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span>
+            <span class="s2">&quot;The column separator for the dataset container will only be used if the dataset is a CSV one.&quot;</span>
+            <span class="s2">&quot; By default &#39;</span><span class="se">\t</span><span class="s2">&#39;.&quot;</span>
+        <span class="p">),</span>
         <span class="n">default</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
         <span class="s2">&quot;--log&quot;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span>
-            <span class="s2">&quot;Either or not to log the parsing process into a `.log` file exported at the same place as the&quot;</span>
+            <span class="s2">&quot;Either or not to log the parsing process into a `.log` file exported at the same place as the &quot;</span>
             <span class="s2">&quot;parsed data using the same name as the export file. &quot;</span>
             <span class="s2">&quot;The bool value can be (not case sensitive) &#39;true/false&#39;, &#39;t/f&#39;, &#39;yes/no&#39;, &#39;y/n&#39; or &#39;0/1&#39;.&quot;</span>
         <span class="p">),</span>

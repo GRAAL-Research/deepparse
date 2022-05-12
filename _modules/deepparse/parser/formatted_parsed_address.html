@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>deepparse.parser.formatted_parsed_address &mdash; deepparse 0.7.2 documentation</title>
+  <title>deepparse.parser.formatted_parsed_address &mdash; deepparse 0.7.4 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -28,7 +28,7 @@
             <img src="../../../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.7.2
+                0.7.4
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -51,6 +51,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/parse_addresses_with_cli.html">Parse Addresses Using Our CLI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/retrained_model_parsing.html">Use a Retrained Model to Parse Addresses</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/fine_tuning.html">Retrain a Pretrained Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/fine_tuning_with_csv_dataset.html">Retrain a Pretrained Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_attention_model.html">Retrain an attention mechanism model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_with_new_seq2seq_params.html">Retrain With New Seq2Seq Parameters</a></li>
@@ -123,6 +124,9 @@
 <span class="sd">            print(parse_address.StreetNumber) # 350</span>
 <span class="sd">            print(parse_address.PostalCode) # G1L 1B6</span>
 
+<span class="sd">            # Print the parsed address</span>
+<span class="sd">            print(parsed_address)</span>
+
 <span class="sd">    Note:</span>
 <span class="sd">        Since an address component can be composed of multiple elements (e.g. Wolfe street), when the probability</span>
 <span class="sd">        values are asked of the address parser, the address components don&#39;t keep it. It&#39;s only available through the</span>
@@ -142,9 +146,18 @@
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return raw address as a string.</span>
+<span class="sd">        Return the unparsed address plus the parsed address components.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw_address</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;The unparsed address is &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">raw_address</span><span class="si">}</span><span class="s2">&#39; and the parsed address is &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_formatted_parsed_address_components</span><span class="p">()</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_formatted_parsed_address_components</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">formatted_string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">component_tuple</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">address_parsed_components</span><span class="p">:</span>
+            <span class="n">formatted_string</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="n">component_tuple</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span>
+        <span class="k">return</span> <span class="n">formatted_string</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>  <span class="c1"># Strip to remove trailing ending whitespace</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">values</span> <span class="o">=</span> <span class="p">[</span>

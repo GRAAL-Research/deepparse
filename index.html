@@ -8,7 +8,7 @@
 <meta content="https://deepparse.org/_static/logos/deepparse.png" property="og:image" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Here is deepparse &mdash; deepparse 0.7.2 documentation</title>
+  <title>Here is deepparse &mdash; deepparse 0.7.4 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -34,7 +34,7 @@
             <img src="_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.7.2
+                0.7.4
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -57,6 +57,7 @@
 <li class="toctree-l1"><a class="reference internal" href="examples/parse_addresses_with_cli.html">Parse Addresses Using Our CLI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/retrained_model_parsing.html">Use a Retrained Model to Parse Addresses</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/fine_tuning.html">Retrain a Pretrained Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/fine_tuning_with_csv_dataset.html">Retrain a Pretrained Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/retrain_attention_model.html">Retrain an attention mechanism model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/retrain_with_new_seq2seq_params.html">Retrain With New Seq2Seq Parameters</a></li>
@@ -99,6 +100,7 @@
 <li><p>parse addresses directly from the command line without code to write,</p></li>
 <li><p>retrain our pre-trained models on new data to improve parsing on specific country address patterns,</p></li>
 <li><p>retrain our pre-trained models with new prediction tags easily,</p></li>
+<li><p>retrain our pre-trained models with or without freezing some layers,</p></li>
 <li><p>train a new seq2seq addresses parsing models easily using a new model configuration.</p></li>
 </ul>
 <p>Deepparse is compatible with the <strong>latest version of PyTorch</strong> and  <strong>Python &gt;= 3.7</strong>.</p>
@@ -760,6 +762,9 @@ to achieve an interesting performance. Attention mechanisms improve performance 
 <span class="n">parsed_address</span> <span class="o">=</span> <span class="n">address_parser</span><span class="p">(</span><span class="s2">&quot;350 rue des Lilas Ouest Québec Québec G1L 1B6&quot;</span><span class="p">,</span>
      <span class="n">with_prob</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
+<span class="c1"># Print the parsed address</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">parsed_address</span><span class="p">)</span>
+
  <span class="c1"># or using one of our dataset container</span>
  <span class="n">addresses_to_parse</span> <span class="o">=</span> <span class="n">CSVDatasetContainer</span><span class="p">(</span><span class="s2">&quot;./a_path.csv&quot;</span><span class="p">,</span> <span class="n">column_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;address_column_name&quot;</span><span class="p">],</span>
                                           <span class="n">is_training_container</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -798,14 +803,20 @@ to achieve an interesting performance. Attention mechanisms improve performance 
 </section>
 <section id="retrain-a-model">
 <h2>Retrain a Model<a class="headerlink" href="#retrain-a-model" title="Permalink to this headline"></a></h2>
-<p>See <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py">here</a> for a complete example.</p>
+<p>See <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py">here</a> for a complete example
+using Pickle and <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning_with_csv_dataset.py">here</a>
+for a complete example using CSV.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span><span class="o">.</span><span class="n">retrain</span><span class="p">(</span><span class="n">training_container</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>One can also freeze some layers to speed up the training using the <code class="docutils literal notranslate"><span class="pre">layers_to_freeze</span></code> parameter.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span><span class="o">.</span><span class="n">retrain</span><span class="p">(</span><span class="n">training_container</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">layers_to_freeze</span><span class="o">=</span><span class="s2">&quot;seq2seq2&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
 <section id="retrain-a-model-with-an-attention-mechanism">
 <h2>Retrain a Model with an attention mechanism<a class="headerlink" href="#retrain-a-model-with-an-attention-mechanism" title="Permalink to this headline"></a></h2>
-<p>See <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py">here</a> for a complete example.</p>
+<p>See <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/master/examples/retrain_attention_model.py">here</a> for a complete example.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># We will retrain the fasttext version of our pretrained model.</span>
 <span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;fasttext&quot;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">attention_mechanism</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
@@ -815,7 +826,7 @@ to achieve an interesting performance. Attention mechanisms improve performance 
 </section>
 <section id="retrain-a-model-with-new-tags">
 <h2>Retrain a Model With New Tags<a class="headerlink" href="#retrain-a-model-with-new-tags" title="Permalink to this headline"></a></h2>
-<p>See <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py">here</a> for a complete example.</p>
+<p>See <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/master/examples/retrain_with_new_prediction_tags.py">here</a> for a complete example.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_components</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ATag&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;AnotherTag&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;EOS&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
 <span class="n">address_parser</span><span class="o">.</span><span class="n">retrain</span><span class="p">(</span><span class="n">training_container</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">prediction_tags</span><span class="o">=</span><span class="n">address_components</span><span class="p">)</span>
 </pre></div>
@@ -913,6 +924,7 @@ details on this matter.</p>
 <li class="toctree-l1"><a class="reference internal" href="examples/parse_addresses_with_cli.html">Parse Addresses Using Our CLI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/retrained_model_parsing.html">Use a Retrained Model to Parse Addresses</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/fine_tuning.html">Retrain a Pretrained Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/fine_tuning_with_csv_dataset.html">Retrain a Pretrained Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/retrain_attention_model.html">Retrain an attention mechanism model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/retrain_with_new_seq2seq_params.html">Retrain With New Seq2Seq Parameters</a></li>

@@ -18,8 +18,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Retrain a Pretrained Model" href="fine_tuning_with_csv_dataset.html" />
-    <link rel="prev" title="Use a Retrained Model to Parse Addresses" href="retrained_model_parsing.html" /> 
+    <link rel="next" title="Retrain an attention mechanism model" href="retrain_attention_model.html" />
+    <link rel="prev" title="Retrain a Pretrained Model" href="fine_tuning.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -53,8 +53,8 @@
 <li class="toctree-l1"><a class="reference internal" href="parse_addresses.html">Parse Addresses</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parse_addresses_with_cli.html">Parse Addresses Using Our CLI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="retrained_model_parsing.html">Use a Retrained Model to Parse Addresses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fine_tuning.html">Retrain a Pretrained Model</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Retrain a Pretrained Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="fine_tuning_with_csv_dataset.html">Retrain a Pretrained Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="retrain_attention_model.html">Retrain an attention mechanism model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
 <li class="toctree-l1"><a class="reference internal" href="retrain_with_new_seq2seq_params.html">Retrain With New Seq2Seq Parameters</a></li>
@@ -76,7 +76,7 @@
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
       <li>Retrain a Pretrained Model</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/examples/fine_tuning.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/examples/fine_tuning_with_csv_dataset.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -89,13 +89,13 @@
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">poutyne</span>
 
 <span class="kn">from</span> <span class="nn">deepparse</span> <span class="kn">import</span> <span class="n">download_from_url</span>
-<span class="kn">from</span> <span class="nn">deepparse.dataset_container</span> <span class="kn">import</span> <span class="n">PickleDatasetContainer</span>
+<span class="kn">from</span> <span class="nn">deepparse.dataset_container</span> <span class="kn">import</span> <span class="n">CSVDatasetContainer</span>
 <span class="kn">from</span> <span class="nn">deepparse.parser</span> <span class="kn">import</span> <span class="n">AddressParser</span>
 </pre></div>
 </div>
 <p>First, let’s download the train and test data from the public repository.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">saving_dir</span> <span class="o">=</span> <span class="s2">&quot;./data&quot;</span>
-<span class="n">file_extension</span> <span class="o">=</span> <span class="s2">&quot;p&quot;</span>
+<span class="n">file_extension</span> <span class="o">=</span> <span class="s2">&quot;csv&quot;</span>
 <span class="n">training_dataset_name</span> <span class="o">=</span> <span class="s2">&quot;sample_incomplete_data&quot;</span>
 <span class="n">test_dataset_name</span> <span class="o">=</span> <span class="s2">&quot;test_sample_data&quot;</span>
 <span class="n">download_from_url</span><span class="p">(</span><span class="n">training_dataset_name</span><span class="p">,</span> <span class="n">saving_dir</span><span class="p">,</span> <span class="n">file_extension</span><span class="o">=</span><span class="n">file_extension</span><span class="p">)</span>
@@ -103,10 +103,10 @@
 </pre></div>
 </div>
 <p>Now let’s create a training and test container.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">training_container</span> <span class="o">=</span> <span class="n">PickleDatasetContainer</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">saving_dir</span><span class="p">,</span>
-                                                         <span class="n">training_dataset_name</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="n">file_extension</span><span class="p">))</span>
-<span class="n">test_container</span> <span class="o">=</span> <span class="n">PickleDatasetContainer</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">saving_dir</span><span class="p">,</span>
-                                                     <span class="n">test_dataset_name</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="n">file_extension</span><span class="p">))</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">training_container</span> <span class="o">=</span> <span class="n">CSVDatasetContainer</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">saving_dir</span><span class="p">,</span> <span class="n">training_dataset_name</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="n">file_extension</span><span class="p">),</span>
+                                         <span class="n">column_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Address&#39;</span><span class="p">,</span> <span class="s1">&#39;Tags&#39;</span><span class="p">],</span> <span class="n">separator</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+<span class="n">test_container</span> <span class="o">=</span> <span class="n">CSVDatasetContainer</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">saving_dir</span><span class="p">,</span> <span class="n">test_dataset_name</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="n">file_extension</span><span class="p">),</span>
+                                     <span class="n">column_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Address&#39;</span><span class="p">,</span> <span class="s1">&#39;Tags&#39;</span><span class="p">],</span> <span class="n">separator</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>We will retrain the fasttext version of our pretrained model.</p>
@@ -154,8 +154,8 @@ Otherwise, poutyne will try to reload the previous checkpoints, and our model ha
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="retrained_model_parsing.html" class="btn btn-neutral float-left" title="Use a Retrained Model to Parse Addresses" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="fine_tuning_with_csv_dataset.html" class="btn btn-neutral float-right" title="Retrain a Pretrained Model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="fine_tuning.html" class="btn btn-neutral float-left" title="Retrain a Pretrained Model" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="retrain_attention_model.html" class="btn btn-neutral float-right" title="Retrain an attention mechanism model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

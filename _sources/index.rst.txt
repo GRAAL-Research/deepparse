@@ -26,6 +26,7 @@ Use deepparse to
 - parse addresses directly from the command line without code to write,
 - retrain our pre-trained models on new data to improve parsing on specific country address patterns,
 - retrain our pre-trained models with new prediction tags easily,
+- retrain our pre-trained models with or without freezing some layers,
 - train a new seq2seq addresses parsing models easily using a new model configuration.
 
 Deepparse is compatible with the **latest version of PyTorch** and  **Python >= 3.7**.
@@ -586,6 +587,9 @@ Getting Started
    parsed_address = address_parser("350 rue des Lilas Ouest Québec Québec G1L 1B6",
         with_prob=True)
 
+   # Print the parsed address
+   print(parsed_address)
+
     # or using one of our dataset container
     addresses_to_parse = CSVDatasetContainer("./a_path.csv", column_names=["address_column_name"],
                                              is_training_container=False)
@@ -625,15 +629,24 @@ See `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/retr
 
 Retrain a Model
 ***************
-See `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py>`_ for a complete example.
+See `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py>`_ for a complete example
+using Pickle and `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning_with_csv_dataset.py>`_
+for a complete example using CSV.
 
 .. code-block:: python
 
     address_parser.retrain(training_container, 0.8, epochs=5, batch_size=8)
 
+One can also freeze some layers to speed up the training using the ``layers_to_freeze`` parameter.
+
+.. code-block:: python
+
+    address_parser.retrain(training_container, 0.8, epochs=5, batch_size=8, layers_to_freeze="seq2seq2")
+
+
 Retrain a Model with an attention mechanism
 *******************************************
-See `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py>`_ for a complete example.
+See `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/retrain_attention_model.py>`_ for a complete example.
 
 .. code-block:: python
 
@@ -645,7 +658,7 @@ See `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine
 
 Retrain a Model With New Tags
 *****************************
-See `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py>`_ for a complete example.
+See `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/retrain_with_new_prediction_tags.py>`_ for a complete example.
 
 .. code-block:: python
 
@@ -757,6 +770,7 @@ API Reference
   examples/parse_addresses_with_cli
   examples/retrained_model_parsing
   examples/fine_tuning
+  examples/fine_tuning_with_csv_dataset
   examples/retrain_attention_model
   examples/retrain_with_new_prediction_tags
   examples/retrain_with_new_seq2seq_params

@@ -189,8 +189,10 @@
 - Add logging output of parse CLI function
 - Hotfix Poutyne version handling
 
-## dev
+## 0.7.3
 - Add freeze layers parameters to freeze layers during retraining
+
+## 0.7.4
 - Improve parsed address print
 - Bug-fix #124: comma-separated list without whitespace in CSVDatasetContainer
 - Add a report when addresses to parse and tags list len differ

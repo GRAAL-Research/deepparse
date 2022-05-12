@@ -280,6 +280,9 @@ class AddressParser:
                 parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6",
                                                with_prob=True)
 
+                # Print the parsed address
+                print(parsed_address)
+
             Using a larger batch size
 
             .. code-block:: python

@@ -23,6 +23,9 @@ address_parser = AddressParser(model_type="bpemb", device=0)
 # We can now parse some addresses
 parsed_addresses = address_parser(addresses_to_parse[0:300])
 
+# Print one of the parsed address
+print(parsed_addresses[0])
+
 # When parsing addresses, some data quality tests are applied to the dataset.
 # First, it validates that no addresses to parse are empty.
 # Second, it validates that no addresses are whitespace-only.

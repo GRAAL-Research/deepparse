@@ -64,8 +64,10 @@ class FormattedParsedAddress:
         """
         Return the unparsed address plus the parsed address components.
         """
-        return f"The unparsed address is '{self.raw_address}' and the parsed address is " \
-               f"'{self._formatted_parsed_address_components()}'"
+        return (
+            f"The unparsed address is '{self.raw_address}' and the parsed address is "
+            f"'{self._formatted_parsed_address_components()}'"
+        )
 
     def _formatted_parsed_address_components(self) -> str:
         formatted_string = ""

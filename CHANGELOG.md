@@ -189,6 +189,6 @@
 - Add logging output of parse CLI function
 - Hotfix Poutyne version handling
 
-## dev
+## 0.7.3
 - Add freeze layers parameters to freeze layers during retraining
 - Improve parsed address print

@@ -332,7 +332,7 @@ class Timer:
 
     def _update_iter_stats(self):
         mean_time = sum(self.laps) / len(self.laps)
-        std = math.sqrt(sum(t ** 2 for t in self.laps) / len(self.laps) - mean_time ** 2)
+        std = math.sqrt(sum(t**2 for t in self.laps) / len(self.laps) - mean_time**2)
         shortest_time = min((t, i) for i, t in enumerate(self.laps))
         longest_time = max((t, i) for i, t in enumerate(self.laps))
         self.iter_stats = (

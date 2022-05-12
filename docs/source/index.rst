@@ -629,7 +629,9 @@ See `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/retr
 
 Retrain a Model
 ***************
-See `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py>`_ for a complete example.
+See `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py>`_ for a complete example
+using Pickle and `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning_with_csv_dataset.py>`_
+for a complete example using CSV.
 
 .. code-block:: python
 
@@ -644,7 +646,7 @@ One can also freeze some layers to speed up the training using the ``layers_to_f
 
 Retrain a Model with an attention mechanism
 *******************************************
-See `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py>`_ for a complete example.
+See `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/retrain_attention_model.py>`_ for a complete example.
 
 .. code-block:: python
 
@@ -656,7 +658,7 @@ See `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine
 
 Retrain a Model With New Tags
 *****************************
-See `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py>`_ for a complete example.
+See `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/retrain_with_new_prediction_tags.py>`_ for a complete example.
 
 .. code-block:: python
 
@@ -768,6 +770,7 @@ API Reference
   examples/parse_addresses_with_cli
   examples/retrained_model_parsing
   examples/fine_tuning
+  examples/fine_tuning_with_csv_dataset
   examples/retrain_attention_model
   examples/retrain_with_new_prediction_tags
   examples/retrain_with_new_seq2seq_params

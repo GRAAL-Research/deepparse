@@ -128,7 +128,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
 
         optimizer_mock.assert_called_with(model_mock().parameters(), self.a_learning_rate)
 
-    @patch("deepparse.parser.address_parser.poutyne")
+    @patch("deepparse.tools.poutyne")
     @patch("deepparse.parser.address_parser.torch.save")
     @patch("deepparse.parser.address_parser.Experiment")
     @patch("deepparse.parser.address_parser.SGD")
@@ -168,7 +168,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
 
         self.assertEqual(actual, expected)
 
-    @patch("deepparse.parser.address_parser.poutyne")
+    @patch("deepparse.tools.poutyne")
     @patch("deepparse.parser.address_parser.torch.save")
     @patch("deepparse.parser.address_parser.Experiment")
     @patch("deepparse.parser.address_parser.SGD")

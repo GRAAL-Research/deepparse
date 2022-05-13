@@ -339,6 +339,41 @@ class ToolsTests(CaptureOutputTestCase):
         actual = valid_poutyne_version()
         self.assertFalse(actual)
 
+    @patch("deepparse.tools.poutyne")
+    def test_givenPoutyneVersion1_8_givenValidPoutyneVersion1_8_thenReturnTrue(self, poutyne_mock):
+        poutyne_mock.version.__version__ = "1.8"
+
+        actual = valid_poutyne_version(min_major=1, min_minor=8)
+        self.assertTrue(actual)
+
+    @patch("deepparse.tools.poutyne")
+    def test_givenPoutyneVersion1_11_givenValidPoutyneVersion1_8_thenReturnTrue(self, poutyne_mock):
+        poutyne_mock.version.__version__ = "1.11"
+
+        actual = valid_poutyne_version(min_major=1, min_minor=8)
+        self.assertTrue(actual)
+
+    @patch("deepparse.tools.poutyne")
+    def test_givenPoutyneVersion2_givenValidPoutyneVersion1_8_thenReturnTrue(self, poutyne_mock):
+        poutyne_mock.version.__version__ = "2.0"
+
+        actual = valid_poutyne_version(min_major=1, min_minor=8)
+        self.assertTrue(actual)
+
+    @patch("deepparse.tools.poutyne")
+    def test_givenPoutyneVersion2_11_givenValidPoutyneVersion1_8_thenReturnTrue(self, poutyne_mock):
+        poutyne_mock.version.__version__ = "2.11"
+
+        actual = valid_poutyne_version(min_major=1, min_minor=8)
+        self.assertTrue(actual)
+
+    @patch("deepparse.tools.poutyne")
+    def test_givenPoutyneVersion2_givenValidPoutyneVersion3_thenReturnFalse(self, poutyne_mock):
+        poutyne_mock.version.__version__ = "2.0"
+
+        actual = valid_poutyne_version(min_major=3, min_minor=0)
+        self.assertFalse(actual)
+
     def test_integrationValidateDataToParse(self):
         valid_data = ["An address", "another address"]
         validate_data_to_parse(valid_data)

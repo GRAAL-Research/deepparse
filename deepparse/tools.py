@@ -56,7 +56,7 @@ def download_weights(model: str, saving_dir: str, verbose: bool = True) -> None:
     download_from_url(model, saving_dir, "version")
 
 
-def handle_poutyne_version() -> float:
+def handle_poutyne_version() -> str:
     """
     Handle the retrieval of the major and minor part of the Poutyne version
     """
@@ -68,17 +68,23 @@ def handle_poutyne_version() -> float:
     return version
 
 
-def valid_poutyne_version():
+def valid_poutyne_version(min_major: int = 1, min_minor: int = 2):
     """
-    Validate Poutyne version is greater than 1.2 for using a str checkpoint. Version before does not support that
-    feature.
+    Validate Poutyne version is greater than min_major.min_minor for using a str checkpoint. Some version before
+    does not support all the features we need. By default, min_major.min_minor equal version 1.2 which is the
+    lowest version we can use.
     """
     version_components = handle_poutyne_version().split(".")
 
     major = int(version_components[0])
     minor = int(version_components[1])
 
-    return major >= 1 and minor >= 2
+    if major > min_major:
+        is_valid_poutyne_version = True
+    else:
+        is_valid_poutyne_version = major >= min_major and minor >= min_minor
+
+    return is_valid_poutyne_version
 
 
 def handle_pre_trained_checkpoint(model_type_checkpoint: str) -> str:

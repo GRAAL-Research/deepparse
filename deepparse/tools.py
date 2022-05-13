@@ -44,7 +44,7 @@ def download_from_url(file_name: str, saving_dir: str, file_extension: str):
 
 def download_weights(model: str, saving_dir: str, verbose: bool = True) -> None:
     """
-    Function to download the pre-trained weights of the models.
+    Function to download the pretrained weights of the models.
     Args:
         model: The network type (i.e. fasttext or bpemb).
         saving_dir: The path to the saving directory.
@@ -83,11 +83,11 @@ def valid_poutyne_version():
 
 def handle_pre_trained_checkpoint(model_type_checkpoint: str) -> str:
     """
-    Handle the checkpoint formatting for pre trained models.
+    Handle the checkpoint formatting for pretrained models.
     """
     if not valid_poutyne_version():
         raise NotImplementedError(
-            f"To load the pre-trained {model_type_checkpoint} model, you need to have a Poutyne version"
+            f"To load the pretrained {model_type_checkpoint} model, you need to have a Poutyne version"
             "greater than 1.1 (>1.1)"
         )
     model_path = os.path.join(CACHE_PATH, f"{model_type_checkpoint}.ckpt")

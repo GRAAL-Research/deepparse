@@ -22,11 +22,11 @@ Deepparse is a state-of-the-art library for parsing multinational street address
 
 Use deepparse to
 
-- parse multinational address using one of our pre-trained models with or without attention mechanism,
+- parse multinational address using one of our pretrained models with or without attention mechanism,
 - parse addresses directly from the command line without code to write,
-- retrain our pre-trained models on new data to improve parsing on specific country address patterns,
-- retrain our pre-trained models with new prediction tags easily,
-- retrain our pre-trained models with or without freezing some layers,
+- retrain our pretrained models on new data to improve parsing on specific country address patterns,
+- retrain our pretrained models with new prediction tags easily,
+- retrain our pretrained models with or without freezing some layers,
 - train a new seq2seq addresses parsing models easily using a new model configuration.
 
 Deepparse is compatible with the **latest version of PyTorch** and  **Python >= 3.7**.
@@ -681,14 +681,14 @@ a complete example.
 Download our Models
 *******************
 
-Here are the URLs to download our pre-trained models directly
+Here are the URLs to download our pretrained models directly
     - `FastText <https://graal.ift.ulaval.ca/public/deepparse/fasttext.ckpt>`_,
     - `FastTextAttention <https://graal.ift.ulaval.ca/public/deepparse/fasttext_attention.ckpt>`_,
     - `BPEmb <https://graal.ift.ulaval.ca/public/deepparse/bpemb.ckpt>`_,
     - `BPEmbAttention <https://graal.ift.ulaval.ca/public/deepparse/bpemb_attention.ckpt>`_,
     - `FastText Light <https://graal.ift.ulaval.ca/public/deepparse/fasttext.magnitude.gz>`_ (using `Magnitude Light <https://github.com/davebulaval/magnitude-light>`_),.
 
-Or you can use our cli to download our pre-trained models directly using:
+Or you can use our cli to download our pretrained models directly using:
 
 .. code-block:: sh
 

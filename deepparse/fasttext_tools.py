@@ -11,7 +11,7 @@ from .tools import download_from_url
 
 def download_fasttext_magnitude_embeddings(saving_dir: str, verbose: bool = True) -> str:
     """
-    Function to download the magnitude pre-trained fastText model.
+    Function to download the magnitude pretrained fastText model.
     """
     os.makedirs(saving_dir, exist_ok=True)
 
@@ -21,7 +21,7 @@ def download_fasttext_magnitude_embeddings(saving_dir: str, verbose: bool = True
     if not os.path.isfile(file_name):
         if verbose:
             print(
-                "The fastText pre-trained word embeddings will be download in magnitude format (2.3 GO), "
+                "The fastText pretrained word embeddings will be download in magnitude format (2.3 GO), "
                 "this process will take several minutes."
             )
         extension = extension + ".gz"
@@ -70,7 +70,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 def download_fasttext_embeddings(saving_dir: str, verbose: bool = True) -> str:
     """
-    Simpler version of the download_model function from fastText to download pre-trained common-crawl
+    Simpler version of the download_model function from fastText to download pretrained common-crawl
     vectors from fastText's website https://fasttext.cc/docs/en/crawl-vectors.html and save it in the
     saving directory (saving_dir).
     """
@@ -97,7 +97,7 @@ def download_fasttext_embeddings(saving_dir: str, verbose: bool = True) -> str:
 # Now use a saving path and don't return a bool
 def download_gz_model(gz_file_name: str, saving_path: str, verbose: bool = True) -> None:
     """
-    Simpler version of the _download_gz_model function from fastText to download pre-trained common-crawl
+    Simpler version of the _download_gz_model function from fastText to download pretrained common-crawl
     vectors from fastText's website https://fasttext.cc/docs/en/crawl-vectors.html and save it in the
     saving directory (saving_path).
     """
@@ -105,7 +105,7 @@ def download_gz_model(gz_file_name: str, saving_path: str, verbose: bool = True)
     url = f"https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/{gz_file_name}"
     if verbose:
         print(
-            "The fastText pre-trained word embeddings will be downloaded (6.8 GO), "
+            "The fastText pretrained word embeddings will be downloaded (6.8 GO), "
             "this process will take several minutes."
         )
     _download_file(url, saving_path, verbose=verbose)

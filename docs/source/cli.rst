@@ -4,7 +4,7 @@
 CLI
 ===
 
-You cas use our cli to parsed addresses directly from the command line or download a pre-trained model.
+You cas use our cli to parsed addresses directly from the command line or download a pretrained model.
 
 Parse
 *****

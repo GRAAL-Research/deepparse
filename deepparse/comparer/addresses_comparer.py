@@ -11,7 +11,7 @@ from ..parser.formatted_parsed_address import FormattedParsedAddress
 class AddressesComparer:
     """
     Address comparer to compare addresses with each other and retrieves the differences between them. The addresses
-    are parsed using an address parser based on one of the seq2seq pre-trained networks either with fastText or BPEmb.
+    are parsed using an address parser based on one of the seq2seq pretrained networks either with fastText or BPEmb.
 
     The address comparer can compare already parsed addresses. The address parser first recompose the raw
     addresses then suggests its own tags, then it makes a comparison with the tags of the source parsing and the

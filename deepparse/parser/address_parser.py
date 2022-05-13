@@ -61,7 +61,7 @@ PREDICTION_TIME_PERFORMANCE_THRESHOLD = 64
 
 class AddressParser:
     """
-    Address parser to parse an address or a list of address using one of the seq2seq pre-trained
+    Address parser to parse an address or a list of address using one of the seq2seq pretrained
     networks either with fastText or BPEmb. The default prediction tags are the following
 
             - "StreetNumber": for the street number,
@@ -101,18 +101,18 @@ class AddressParser:
         rounding (int): The rounding to use when asking the probability of the tags. The default value is 4 digits.
         verbose (bool): Turn on/off the verbosity of the model weights download and loading. The default value is True.
         path_to_retrained_model (Union[str, None]): The path to the retrained model to use for prediction. We will
-            `'infer'` the ``model_type`` of the retrained model. Default is None, meaning we use our pre-trained model.
+            `'infer'` the ``model_type`` of the retrained model. Default is None, meaning we use our pretrained model.
             If the retrained model uses an attention mechanism, `attention_mechanism` needs to be set to True.
 
     Note:
-        For both the networks, we will download the pre-trained weights and embeddings in the ``.cache`` directory
-        for the root user. The pre-trained weights take at most 44 MB. The fastText embeddings take 6.8 GO,
+        For both the networks, we will download the pretrained weights and embeddings in the ``.cache`` directory
+        for the root user. The pretrained weights take at most 44 MB. The fastText embeddings take 6.8 GO,
         the fastText-light embeddings take 3.3 GO and bpemb take 116 MB (in .cache/bpemb).
 
-        Also, one can download all the dependencies of our pre-trained model using our CLI
+        Also, one can download all the dependencies of our pretrained model using our CLI
         (e.g. download_model fasttext) before sending it to a node without access to Internet.
 
-        Here are the URLs to download our pre-trained models directly
+        Here are the URLs to download our pretrained models directly
 
             - `FastText <https://graal.ift.ulaval.ca/public/deepparse/fasttext.ckpt>`_
             - `BPEmb <https://graal.ift.ulaval.ca/public/deepparse/bpemb.ckpt>`_
@@ -191,7 +191,7 @@ class AddressParser:
         self.rounding = rounding
         self.verbose = verbose
 
-        # Default pre-trained tag are loaded
+        # Default pretrained tag are loaded
         tags_to_idx = _pre_trained_tags_to_idx
         # Default FIELDS of the formatted address
         fields = list(tags_to_idx)
@@ -227,7 +227,7 @@ class AddressParser:
         self.model.eval()
 
     def __str__(self) -> str:
-        return f"{self._model_type_formatted}AddressParser"
+        return f"Pretrained{self._model_type_formatted}AddressParser"
 
     __repr__ = __str__  # to call __str__ when list of address
 
@@ -395,7 +395,7 @@ class AddressParser:
                 of a model. The ``+ 1`` corresponds to the End Of Sequence (EOS) token that needs to be included in the
                 dictionary. We will use the length of this dictionary for the output size of the prediction layer.
                 We also save the dictionary to be used later on when you load the model. Default is None, meaning
-                we use our pre-trained model prediction tags.
+                we use our pretrained model prediction tags.
             seq2seq_params (Union[dict, None]): A dictionary of seq2seq parameters to modify the seq2seq architecture
                 to train. Note that if you change the seq2seq parameters, a new model will be trained from scratch.
                 Parameters that can be modified are:
@@ -552,7 +552,7 @@ class AddressParser:
 
         if seq2seq_params is not None:
             # Handle seq2seq params
-            # We set the flag to use the pre-trained weights to false since we train new ones
+            # We set the flag to use the pretrained weights to false since we train new ones
             seq2seq_params.update({"pre_trained_weights": False})
 
             model_factory_dict.update({"seq2seq_kwargs": seq2seq_params})
@@ -648,7 +648,7 @@ class AddressParser:
     ) -> Dict:
         # pylint: disable=too-many-arguments, too-many-locals
         """
-        Method to test a retrained or a pre-trained model using a dataset with the default tags. If you test a
+        Method to test a retrained or a pretrained model using a dataset with the default tags. If you test a
         retrained model with different prediction tags, we will use those tags.
 
         Args:
@@ -847,7 +847,7 @@ class AddressParser:
     ) -> None:
         # pylint: disable=too-many-arguments
         """
-        Model factory to create the vectorizer, the data converter and the pre-trained model
+        Model factory to create the vectorizer, the data converter and the pretrained model
         """
         # We switch the case where seq2seq_kwargs is None to an empty dict
         seq2seq_kwargs = seq2seq_kwargs if seq2seq_kwargs is not None else {}

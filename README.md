@@ -20,11 +20,11 @@ Deepparse is a state-of-the-art library for parsing multinational street address
 
 Use deepparse to
 
-- parse multinational address using one of our pre-trained models with or without attention mechanism,
+- parse multinational address using one of our pretrained models with or without attention mechanism,
 - parse addresses directly from the command line without code to write,
-- retrain our pre-trained models on new data to improve parsing on specific country address patterns,
-- retrain our pre-trained models with new prediction tags easily,
-- retrain our pre-trained models with or without freezing some layers,
+- retrain our pretrained models on new data to improve parsing on specific country address patterns,
+- retrain our pretrained models with new prediction tags easily,
+- retrain our pretrained models with or without freezing some layers,
 - train a new seq2seq addresses parsing models easily using a new model configuration.
 
 Read the documentation at [deepparse.org](https://deepparse.org).
@@ -257,7 +257,7 @@ address_parser.retrain(training_container, 0.8, epochs=1, batch_size=128,
 
 ### Download our Models
 
-Here are the URLs to download our pre-trained models directly
+Here are the URLs to download our pretrained models directly
 
 - [FastText](https://graal.ift.ulaval.ca/public/deepparse/fasttext.ckpt),
 - [FastTextAttention](https://graal.ift.ulaval.ca/public/deepparse/fasttext_attention.ckpt),
@@ -266,7 +266,7 @@ Here are the URLs to download our pre-trained models directly
 - [FastText Light](https://graal.ift.ulaval.ca/public/deepparse/fasttext.magnitude.gz) (
   using [Magnitude Light](https://github.com/davebulaval/magnitude-light)).
 
-Or you can use our cli to download our pre-trained models directly using:
+Or you can use our cli to download our pretrained models directly using:
 
 ```sh
     download_model <model_name>

@@ -53,7 +53,7 @@ class FastTextSeq2SeqModel(Seq2SeqModel):
         if path_to_retrained_model is not None:
             self._load_weights(path_to_retrained_model)
         elif pre_trained_weights:
-            # Means we use the pre-trained weights
+            # Means we use the pretrained weights
             model_weights_name = "fasttext"
             if attention_mechanism:
                 model_weights_name += "_attention"

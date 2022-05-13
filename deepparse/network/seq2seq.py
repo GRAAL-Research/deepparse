@@ -87,10 +87,10 @@ class Seq2SeqModel(ABC, nn.Module):
 
     def _load_pre_trained_weights(self, model_type: str) -> None:
         """
-        Method to download and resolved the loading (into the network) of the pre-trained weights.
+        Method to download and resolved the loading (into the network) of the pretrained weights.
 
         Args:
-            model_type (str): The network pre-trained weights to load.
+            model_type (str): The network pretrained weights to load.
         """
         model_path = os.path.join(CACHE_PATH, f"{model_type}.ckpt")
 
@@ -99,7 +99,7 @@ class Seq2SeqModel(ABC, nn.Module):
         elif not latest_version(model_type, cache_path=CACHE_PATH):
             if self.verbose:
                 warnings.warn(
-                    "A new version of the pre-trained model is available. " "The newest model will be downloaded."
+                    "A new version of the pretrained model is available. " "The newest model will be downloaded."
                 )
             download_weights(model_type, CACHE_PATH, verbose=self.verbose)
 

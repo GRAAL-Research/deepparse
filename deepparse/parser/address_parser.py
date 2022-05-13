@@ -37,7 +37,7 @@ from ..metrics import nll_loss, accuracy
 from ..network.bpemb_seq2seq import BPEmbSeq2SeqModel
 from ..network.fasttext_seq2seq import FastTextSeq2SeqModel
 from ..preprocessing import AddressCleaner
-from ..tools import CACHE_PATH
+from ..tools import CACHE_PATH, valid_poutyne_version
 from ..vectorizer import FastTextVectorizer, BPEmbVectorizer
 from ..vectorizer import TrainVectorizer
 from ..vectorizer.magnitude_vectorizer import MagnitudeVectorizer
@@ -177,13 +177,13 @@ class AddressParser:
     """
 
     def __init__(
-        self,
-        model_type: str = "best",
-        attention_mechanism: bool = False,
-        device: Union[int, str, torch.device] = 0,
-        rounding: int = 4,
-        verbose: bool = True,
-        path_to_retrained_model: Union[str, None] = None,
+            self,
+            model_type: str = "best",
+            attention_mechanism: bool = False,
+            device: Union[int, str, torch.device] = 0,
+            rounding: int = 4,
+            verbose: bool = True,
+            path_to_retrained_model: Union[str, None] = None,
     ) -> None:
         # pylint: disable=too-many-arguments
         self._process_device(device)
@@ -232,11 +232,11 @@ class AddressParser:
     __repr__ = __str__  # to call __str__ when list of address
 
     def __call__(
-        self,
-        addresses_to_parse: Union[List[str], str, DatasetContainer],
-        with_prob: bool = False,
-        batch_size: int = 32,
-        num_workers: int = 0,
+            self,
+            addresses_to_parse: Union[List[str], str, DatasetContainer],
+            with_prob: bool = False,
+            batch_size: int = 32,
+            num_workers: int = 0,
     ) -> Union[FormattedParsedAddress, List[FormattedParsedAddress]]:
         """
         Callable method to parse the components of an address or a list of address.
@@ -343,20 +343,20 @@ class AddressParser:
         return tagged_addresses_components
 
     def retrain(
-        self,
-        dataset_container: DatasetContainer,
-        train_ratio: float = 0.8,
-        batch_size: int = 32,
-        epochs: int = 5,
-        num_workers: int = 1,
-        learning_rate: float = 0.01,
-        callbacks: Union[List, None] = None,
-        seed: int = 42,
-        logging_path: str = "./checkpoints",
-        disable_tensorboard: bool = True,
-        prediction_tags: Union[Dict, None] = None,
-        seq2seq_params: Union[Dict, None] = None,
-        layers_to_freeze: Union[str, None] = None,
+            self,
+            dataset_container: DatasetContainer,
+            train_ratio: float = 0.8,
+            batch_size: int = 32,
+            epochs: int = 5,
+            num_workers: int = 1,
+            learning_rate: float = 0.01,
+            callbacks: Union[List, None] = None,
+            seed: int = 42,
+            logging_path: str = "./checkpoints",
+            disable_tensorboard: bool = True,
+            prediction_tags: Union[Dict, None] = None,
+            seq2seq_params: Union[Dict, None] = None,
+            layers_to_freeze: Union[str, None] = None,
     ) -> List[Dict]:
         # pylint: disable=too-many-arguments, line-too-long, too-many-locals, too-many-branches, too-many-statements
         """
@@ -581,7 +581,7 @@ class AddressParser:
 
         try:
             with_capturing_context = False
-            if float(".".join(str(poutyne.version.__version__).split(".")[:2])) < 1.8:
+            if not valid_poutyne_version(min_major=1, min_minor=8):
                 print(
                     "You are using a older version of Poutyne that does not support properly error management."
                     " Due to that, we cannot show retrain progress. To fix that, update Poutyne to "
@@ -639,12 +639,12 @@ class AddressParser:
             return train_res
 
     def test(
-        self,
-        test_dataset_container: DatasetContainer,
-        batch_size: int = 32,
-        num_workers: int = 1,
-        callbacks: Union[List, None] = None,
-        seed: int = 42,
+            self,
+            test_dataset_container: DatasetContainer,
+            batch_size: int = 32,
+            num_workers: int = 1,
+            callbacks: Union[List, None] = None,
+            seed: int = 42,
     ) -> Dict:
         # pylint: disable=too-many-arguments, too-many-locals
         """
@@ -737,12 +737,12 @@ class AddressParser:
         return test_res
 
     def _fill_tagged_addresses_components(
-        self,
-        tags_predictions: List,
-        tags_predictions_prob: List,
-        addresses_to_parse: List[str],
-        clean_addresses: List[str],
-        with_prob: bool,
+            self,
+            tags_predictions: List,
+            tags_predictions_prob: List,
+            addresses_to_parse: List[str],
+            clean_addresses: List[str],
+            with_prob: bool,
     ) -> Union[FormattedParsedAddress, List[FormattedParsedAddress]]:
         # pylint: disable=too-many-arguments, too-many-locals
         """
@@ -751,10 +751,10 @@ class AddressParser:
         """
         tagged_addresses_components = []
         for (
-            address_to_parse,
-            clean_address,
-            tags_prediction,
-            tags_prediction_prob,
+                address_to_parse,
+                clean_address,
+                tags_prediction,
+                tags_prediction_prob,
         ) in zip(addresses_to_parse, clean_addresses, tags_predictions, tags_predictions_prob):
             tagged_address_components = []
             for word, predicted_idx_tag, tag_proba in zip(clean_address.split(), tags_prediction, tags_prediction_prob):
@@ -804,12 +804,12 @@ class AddressParser:
         return data_transform
 
     def _create_training_data_generator(
-        self,
-        dataset_container: DatasetContainer,
-        train_ratio: float,
-        batch_size: int,
-        num_workers: int,
-        seed: int,
+            self,
+            dataset_container: DatasetContainer,
+            train_ratio: float,
+            batch_size: int,
+            num_workers: int,
+            seed: int,
     ) -> Tuple:
         # pylint: disable=too-many-arguments
         data_transform = self._set_data_transformer()
@@ -838,12 +838,12 @@ class AddressParser:
         return train_generator, valid_generator
 
     def _model_factory(
-        self,
-        verbose: bool,
-        path_to_retrained_model: Union[str, None] = None,
-        prediction_layer_len: int = 9,
-        attention_mechanism=False,
-        seq2seq_kwargs: Union[dict, None] = None,
+            self,
+            verbose: bool,
+            path_to_retrained_model: Union[str, None] = None,
+            prediction_layer_len: int = 9,
+            attention_mechanism=False,
+            seq2seq_kwargs: Union[dict, None] = None,
     ) -> None:
         # pylint: disable=too-many-arguments
         """
@@ -909,15 +909,15 @@ class AddressParser:
         return self._model_type_formatted
 
     def _retrain(
-        self,
-        experiment: Experiment,
-        train_generator: DatasetContainer,
-        valid_generator: DatasetContainer,
-        epochs: int,
-        seed: int,
-        callbacks: List,
-        disable_tensorboard: bool,
-        capturing_context: bool,
+            self,
+            experiment: Experiment,
+            train_generator: DatasetContainer,
+            valid_generator: DatasetContainer,
+            epochs: int,
+            seed: int,
+            callbacks: List,
+            disable_tensorboard: bool,
+            capturing_context: bool,
     ) -> List[Dict]:
         # pylint: disable=too-many-arguments
         # If Poutyne 1.7 and before, we capture poutyne print since it print some exception.

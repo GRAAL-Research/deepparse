@@ -208,7 +208,9 @@ class AddressParser:
                 tags_to_idx = checkpoint_weights.get("prediction_tags")
                 # We change the FIELDS for the FormattedParsedAddress
                 fields = list(tags_to_idx)
-                named_parser = checkpoint_weights.get("named_parser")
+
+            # In any case, we have given a new name to the parser using either the default or user given name
+            named_parser = checkpoint_weights.get("named_parser")
 
             # We "infer" the model type, thus we also had to handle the attention_mechanism bool
             model_type, attention_mechanism = infer_model_type(
@@ -429,13 +431,18 @@ class AddressParser:
 
                Default is ``None``, meaning we do not freeze any layers.
             name_of_the_retrain_parser (Union[str, None]): Name to give to the retrained parser that will be use
-                when reloaded as the printed name, it is not the file name. By default None, which mean we will use
-                the training settings for the name using the following pattern:
+                when reloaded as the printed name, and to the saving file name. By default None.
+
+                Default settings for the parser name will use the training settings for the name using the
+                following pattern:
 
                     - the pretrained architecture (fasttext or bpemb and with or without attention mechanism),
                     - if prediction_tags is not None, the following tag: ModifiedPredictionTags,
                     - if seq2seq_params is not None, the following tag: ModifiedSeq2SeqConfiguration, and
                     - if layers_to_freeze is not None, the following tag: FreezedLayer{portion}.
+
+                Default settings for the file name will use the following pattern
+                "retrained_{model_type}_address_parser.ckpt".
         Return:
             A list of dictionary with the best epoch stats (see `Experiment class
             <https://poutyne.org/experiment.html#poutyne.Experiment.train>`_ for details).
@@ -650,7 +657,12 @@ class AddressParser:
             else:
                 raise RuntimeError(error.args[0]) from error
         else:
-            file_path = os.path.join(logging_path, f"retrained_{self.model_type}_address_parser.ckpt")
+            file_name = (
+                name_of_the_retrain_parser
+                if name_of_the_retrain_parser is not None
+                else f"retrained_{self.model_type}_address_parser.ckpt"
+            )
+            file_path = os.path.join(logging_path, file_name)
             torch_save = {
                 "address_tagger_model": exp.model.network.state_dict(),
                 "model_type": self.model_type,

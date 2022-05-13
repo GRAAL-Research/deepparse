@@ -40,6 +40,8 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
 
         cls.seq2seq_params = {"encoder_hidden_size": 512, "decoder_hidden_size": 512}
 
+        cls.a_named_parser_name = "AModelName"
+
     def setUp(self):
         self.temp_dir_obj = TemporaryDirectory()
         self.a_logging_path = os.path.join(self.temp_dir_obj.name, "ckpts")
@@ -55,7 +57,9 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
     def tearDown(self) -> None:
         self.temp_dir_obj.cleanup()
 
-    def address_parser_retrain_call(self, prediction_tags=None, seq2seq_params=None, layers_to_freeze=None):
+    def address_parser_retrain_call(
+        self, prediction_tags=None, seq2seq_params=None, layers_to_freeze=None, name_of_the_retrain_parser=None
+    ):
         self.address_parser.retrain(
             self.mocked_data_container,
             self.a_train_ratio,
@@ -69,6 +73,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
             prediction_tags=prediction_tags,
             seq2seq_params=seq2seq_params,
             layers_to_freeze=layers_to_freeze,
+            name_of_the_retrain_parser=name_of_the_retrain_parser,
         )
 
     def assert_experiment_retrain(self, experiment_mock, model_mock, optimizer_mock, device):
@@ -1426,6 +1431,43 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
                             self.assertIn("prediction_layer", actual)
                         elif seq2seq_params_setting == "seq2seq":
                             self.assertIn("seq2seq", actual)
+
+    @patch("deepparse.parser.address_parser.os.path.join")
+    @patch("deepparse.parser.address_parser.torch.save")
+    @patch("deepparse.parser.address_parser.DataLoader")
+    @patch("deepparse.parser.address_parser.Experiment")
+    @patch("deepparse.parser.address_parser.SGD")
+    @patch("deepparse.parser.address_parser.DataTransform")
+    @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
+    @patch("deepparse.parser.address_parser.fasttext_data_padding")
+    @patch("deepparse.parser.address_parser.FastTextVectorizer")
+    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
+    def test_givenWrongFreezeLayersName_thenRaiseValueError(
+        self,
+        download_weights_mock,
+        embeddings_model_mock,
+        vectorizer_model_mock,
+        data_padding_mock,
+        model_mock,
+        data_transform_mock,
+        optimizer_mock,
+        experiment_mock,
+        data_loader_mock,
+        torch_save_mock,
+        os_path_join_mock,
+    ):
+        self.address_parser = AddressParser(
+            model_type=self.a_fasttext_model_type,
+            device=self.a_device,
+            verbose=self.verbose,
+        )
+
+        self.address_parser_retrain_call(name_of_the_retrain_parser=self.a_named_parser_name)
+
+        os_path_join_mock.assert_called()
+
+        os_path_join_mock.assert_called_with(self.a_logging_path, self.a_named_parser_name)
 
 
 if __name__ == "__main__":

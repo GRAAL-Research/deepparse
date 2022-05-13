@@ -234,7 +234,7 @@ class AddressParser:
         if self.named_parser is not None:
             return self.named_parser
         else:
-            return f"Pretrained{self._model_type_formatted}AddressParser"
+            return f"PreTrained{self._model_type_formatted}AddressParser"
 
     __repr__ = __str__  # to call __str__ when list of address
 

@@ -4,7 +4,6 @@ import re
 import warnings
 from typing import List, Union, Dict, Tuple
 
-import poutyne
 import torch
 from poutyne.framework import Experiment
 from torch.optim import SGD
@@ -37,7 +36,7 @@ from ..metrics import nll_loss, accuracy
 from ..network.bpemb_seq2seq import BPEmbSeq2SeqModel
 from ..network.fasttext_seq2seq import FastTextSeq2SeqModel
 from ..preprocessing import AddressCleaner
-from ..tools import CACHE_PATH
+from ..tools import CACHE_PATH, valid_poutyne_version
 from ..vectorizer import FastTextVectorizer, BPEmbVectorizer
 from ..vectorizer import TrainVectorizer
 from ..vectorizer.magnitude_vectorizer import MagnitudeVectorizer
@@ -581,7 +580,7 @@ class AddressParser:
 
         try:
             with_capturing_context = False
-            if float(".".join(str(poutyne.version.__version__).split(".")[:2])) < 1.8:
+            if not valid_poutyne_version(min_major=1, min_minor=8):
                 print(
                     "You are using a older version of Poutyne that does not support properly error management."
                     " Due to that, we cannot show retrain progress. To fix that, update Poutyne to "

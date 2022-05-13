@@ -130,9 +130,7 @@ class AddressParserIntegrationRetrainTest(AddressParserRetrainTestCase, CaptureO
         self.assertNotRegex(actual, not_expected)
 
     @patch("deepparse.tools.poutyne")
-    def test_givenAnAddressParser_whenRetrainWithPoutyne2_thenTrainingOccurWithoutAWarningPrint(
-        self, poutyne_mock
-    ):
+    def test_givenAnAddressParser_whenRetrainWithPoutyne2_thenTrainingOccurWithoutAWarningPrint(self, poutyne_mock):
         poutyne_mock.version.__version__ = "2.0"
         self._capture_output()
         address_parser = AddressParser(

@@ -138,7 +138,9 @@ def validate_data_to_parse(addresses_to_parse: List) -> None:
         - no addresses are whitespace-only strings.
     """
     if isinstance(addresses_to_parse[0], tuple):
-        DataError("Addresses to parsed are tuples. They need to be a list of string. Are you using training data?")
+        raise DataError(
+            "Addresses to parsed are tuples. They need to be a list of string. Are you using training data?"
+        )
     if validate_if_any_none(addresses_to_parse):
         raise DataError("Some addresses are None value.")
     if validate_if_any_empty(addresses_to_parse):

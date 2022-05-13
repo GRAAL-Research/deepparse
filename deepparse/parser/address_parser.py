@@ -4,7 +4,6 @@ import re
 import warnings
 from typing import List, Union, Dict, Tuple
 
-import poutyne
 import torch
 from poutyne.framework import Experiment
 from torch.optim import SGD

@@ -205,3 +205,4 @@
 
 - Bug-fix Poutyne version handling that cause a print error when version is 1.11 when retraining
 - Add option to create a named retrain parsing model using by default the architecture setting or using user given name.
+- Hot-fix missing raise for DataError validation of address to parse when address are tuple

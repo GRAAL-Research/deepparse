@@ -134,7 +134,7 @@ class ParseTests(TestCase, PretrainedWeightsBase):
                 ]
             )
         expected_first_message = (
-            f"Parsing dataset file {self.fake_data_path_pickle} using the parser " f"FastTextAddressParser"
+            f"Parsing dataset file {self.fake_data_path_pickle} using the parser " f"PreTrainedFastTextAddressParser"
         )
         actual_first_message = self._caplog.records[0].message
         self.assertEqual(expected_first_message, actual_first_message)
@@ -327,7 +327,7 @@ class ParseTests(TestCase, PretrainedWeightsBase):
             )
 
         expected_first_message = (
-            f"Parsing dataset file {self.fake_data_path_pickle} using the parser " f"FastTextAddressParser"
+            f"Parsing dataset file {self.fake_data_path_pickle} using the parser " f"PreTrainedFastTextAddressParser"
         )
         actual_first_message = self._caplog.records[0].message
         self.assertEqual(expected_first_message, actual_first_message)
@@ -354,7 +354,7 @@ class ParseTests(TestCase, PretrainedWeightsBase):
             )
 
         expected_first_message = (
-            f"Parsing dataset file {self.fake_data_path_pickle} using the parser " f"FastTextAddressParser"
+            f"Parsing dataset file {self.fake_data_path_pickle} using the parser " f"PreTrainedFastTextAddressParser"
         )
         actual_first_message = self._caplog.records[0].message
         self.assertEqual(expected_first_message, actual_first_message)
@@ -381,7 +381,7 @@ class ParseTests(TestCase, PretrainedWeightsBase):
             )
 
         expected_first_message = (
-            f"Parsing dataset file {self.fake_data_path_pickle} using the parser " f"BPEmbAddressParser"
+            f"Parsing dataset file {self.fake_data_path_pickle} using the parser " f"PreTrainedBPEmbAddressParser"
         )
 
         # Not the same position as with fasttext due to BPEmb messages

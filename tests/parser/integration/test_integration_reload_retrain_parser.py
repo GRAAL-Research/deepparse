@@ -32,3 +32,14 @@ class AddressParserIntegrationTestAPITest(AddressParserRetrainTestCase, Pretrain
 
         address_parser = AddressParser(model_type=model_type, path_to_retrained_model=path_to_retrained_model)
         self.assertEqual(model_type, address_parser.model_type)
+
+    def test_integration_parsing_with_retrain_named_model(self):
+        model_type = "fasttext"  # Base architecture of the named model is a FastText
+        path_to_retrained_model = self.path_to_named_model
+
+        address_parser = AddressParser(model_type=model_type, path_to_retrained_model=path_to_retrained_model)
+        self.assertEqual(model_type, address_parser.model_type)
+
+        expected_name = "MyModelNewName"
+        actual_name = str(address_parser)
+        self.assertEqual(expected_name, actual_name)

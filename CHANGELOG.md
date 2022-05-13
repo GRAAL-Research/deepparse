@@ -190,9 +190,11 @@
 - Hotfix Poutyne version handling
 
 ## 0.7.3
+
 - Add freeze layers parameters to freeze layers during retraining
 
 ## 0.7.4
+
 - Improve parsed address print
 - Bug-fix #124: comma-separated list without whitespace in CSVDatasetContainer
 - Add a report when addresses to parse and tags list len differ
@@ -200,4 +202,5 @@
 - Improve data validation for data to parse
 
 ## dev
-- Bug-fix Poutyne version handling that cause a print error when version is 1.11
+
+- Bug-fix Poutyne version handling that cause a print error when version is 1.11 when retraining

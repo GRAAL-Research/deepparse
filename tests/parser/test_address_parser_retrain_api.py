@@ -394,13 +394,14 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
             verbose=self.verbose,
         )
         self.address_parser_retrain_call()
-
+        expected_named_parser_name = "FastText"
         saving_model_path = self.saving_template_path.format(self.a_fasttext_model_type)
         save_call = [
             call(
                 {
                     "address_tagger_model": experiment_mock().model.network.state_dict(),
                     "model_type": self.a_fasttext_model_type,
+                    "named_parser": expected_named_parser_name,
                 },
                 saving_model_path,
             )
@@ -503,6 +504,8 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         )
         self.address_parser_retrain_call(prediction_tags=self.address_components)
 
+        expected_named_parser_name = "FastTextModifiedPredictionTags"
+
         saving_model_path = self.saving_template_path.format(self.a_fasttext_model_type)
         save_call = [
             call(
@@ -510,6 +513,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
                     "address_tagger_model": experiment_mock().model.network.state_dict(),
                     "prediction_tags": self.address_components,
                     "model_type": self.a_fasttext_model_type,
+                    "named_parser": expected_named_parser_name,
                 },
                 saving_model_path,
             )
@@ -581,6 +585,8 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         )
         self.address_parser_retrain_call(seq2seq_params=self.seq2seq_params)
 
+        expected_named_parser_name = "FastTextModifiedSeq2SeqConfiguration"
+
         saving_model_path = self.saving_template_path.format(self.a_fasttext_model_type)
         save_call = [
             call(
@@ -588,6 +594,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
                     "address_tagger_model": experiment_mock().model.network.state_dict(),
                     "model_type": self.a_fasttext_model_type,
                     "seq2seq_params": self.seq2seq_params,
+                    "named_parser": expected_named_parser_name,
                 },
                 saving_model_path,
             )
@@ -625,6 +632,8 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         )
         self.address_parser_retrain_call(prediction_tags=self.address_components, seq2seq_params=self.seq2seq_params)
 
+        expected_named_parser_name = "FastTextModifiedPredictionTagsModifiedSeq2SeqConfiguration"
+
         saving_model_path = self.saving_template_path.format(self.a_fasttext_model_type)
         save_call = [
             call(
@@ -633,6 +642,57 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
                     "model_type": self.a_fasttext_model_type,
                     "seq2seq_params": self.seq2seq_params,
                     "prediction_tags": self.address_components,
+                    "named_parser": expected_named_parser_name,
+                },
+                saving_model_path,
+            )
+        ]
+
+        torch_save_mock.assert_has_calls(save_call)
+
+    @patch("deepparse.parser.address_parser.torch.save")
+    @patch("deepparse.parser.address_parser.DataLoader")
+    @patch("deepparse.parser.address_parser.Experiment")
+    @patch("deepparse.parser.address_parser.SGD")
+    @patch("deepparse.parser.address_parser.DataTransform")
+    @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
+    @patch("deepparse.parser.address_parser.fasttext_data_padding")
+    @patch("deepparse.parser.address_parser.FastTextVectorizer")
+    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
+    def test_givenAFasttextModel_whenRetrainWithNewParamsAndNewTagsAndFreezeLayers_thenSaveNewParamsDictAndParams(
+        self,
+        download_weights_mock,
+        embeddings_model_mock,
+        vectorizer_model_mock,
+        data_padding_mock,
+        model_mock,
+        data_transform_mock,
+        optimizer_mock,
+        experiment_mock,
+        data_loader_mock,
+        torch_save_mock,
+    ):
+        self.address_parser = AddressParser(
+            model_type=self.a_fasttext_model_type,
+            device=self.a_device,
+            verbose=self.verbose,
+        )
+        self.address_parser_retrain_call(
+            prediction_tags=self.address_components, seq2seq_params=self.seq2seq_params, layers_to_freeze="encoder"
+        )
+
+        expected_named_parser_name = "FastTextModifiedPredictionTagsModifiedSeq2SeqConfigurationFreezedLayerEncoder"
+
+        saving_model_path = self.saving_template_path.format(self.a_fasttext_model_type)
+        save_call = [
+            call(
+                {
+                    "address_tagger_model": experiment_mock().model.network.state_dict(),
+                    "model_type": self.a_fasttext_model_type,
+                    "seq2seq_params": self.seq2seq_params,
+                    "prediction_tags": self.address_components,
+                    "named_parser": expected_named_parser_name,
                 },
                 saving_model_path,
             )
@@ -771,6 +831,48 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
     @patch("deepparse.parser.address_parser.bpemb_data_padding")
     @patch("deepparse.parser.address_parser.BPEmbVectorizer")
     @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
+    def test_givenABPEmbModel_whenRetrain_thenSaveModelProperly(
+        self,
+        embeddings_model_mock,
+        vectorizer_model_mock,
+        data_padding_mock,
+        model_mock,
+        data_transform_mock,
+        optimizer_mock,
+        experiment_mock,
+        data_loader_mock,
+        torch_save_mock,
+    ):
+        self.address_parser = AddressParser(
+            model_type=self.a_bpemb_model_type,
+            device=self.a_device,
+            verbose=self.verbose,
+        )
+        self.address_parser_retrain_call()
+        expected_named_parser_name = "BPEmb"
+        saving_model_path = self.saving_template_path.format(self.a_bpemb_model_type)
+        save_call = [
+            call(
+                {
+                    "address_tagger_model": experiment_mock().model.network.state_dict(),
+                    "model_type": self.a_bpemb_model_type,
+                    "named_parser": expected_named_parser_name,
+                },
+                saving_model_path,
+            )
+        ]
+
+        torch_save_mock.assert_has_calls(save_call)
+
+    @patch("deepparse.parser.address_parser.torch.save")
+    @patch("deepparse.parser.address_parser.DataLoader")
+    @patch("deepparse.parser.address_parser.Experiment")
+    @patch("deepparse.parser.address_parser.SGD")
+    @patch("deepparse.parser.address_parser.DataTransform")
+    @patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel")
+    @patch("deepparse.parser.address_parser.bpemb_data_padding")
+    @patch("deepparse.parser.address_parser.BPEmbVectorizer")
+    @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
     def test_givenABPEmbModel_whenRetrainWithUserTags_thenSaveTagsDict(
         self,
         embeddings_model_mock,
@@ -788,7 +890,11 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
             device=self.a_device,
             verbose=self.verbose,
         )
+
         self.address_parser_retrain_call(prediction_tags=self.address_components)
+
+        expected_named_parser_name = "BPEmbModifiedPredictionTags"
+
         saving_model_path = self.saving_template_path.format(self.a_bpemb_model_type)
         save_call = [
             call(
@@ -796,6 +902,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
                     "address_tagger_model": experiment_mock().model.network.state_dict(),
                     "prediction_tags": self.address_components,
                     "model_type": self.a_bpemb_model_type,
+                    "named_parser": expected_named_parser_name,
                 },
                 saving_model_path,
             )
@@ -863,6 +970,8 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         )
         self.address_parser_retrain_call(seq2seq_params=self.seq2seq_params)
 
+        expected_named_parser_name = "BPEmbModifiedSeq2SeqConfiguration"
+
         saving_model_path = self.saving_template_path.format(self.a_bpemb_model_type)
         save_call = [
             call(
@@ -870,6 +979,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
                     "address_tagger_model": experiment_mock().model.network.state_dict(),
                     "model_type": self.a_bpemb_model_type,
                     "seq2seq_params": self.seq2seq_params,
+                    "named_parser": expected_named_parser_name,
                 },
                 saving_model_path,
             )
@@ -905,6 +1015,8 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         )
         self.address_parser_retrain_call(prediction_tags=self.address_components, seq2seq_params=self.seq2seq_params)
 
+        expected_named_parser_name = "BPEmbModifiedPredictionTagsModifiedSeq2SeqConfiguration"
+
         saving_model_path = self.saving_template_path.format(self.a_bpemb_model_type)
         save_call = [
             call(
@@ -913,6 +1025,55 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
                     "model_type": self.a_bpemb_model_type,
                     "seq2seq_params": self.seq2seq_params,
                     "prediction_tags": self.address_components,
+                    "named_parser": expected_named_parser_name,
+                },
+                saving_model_path,
+            )
+        ]
+
+        torch_save_mock.assert_has_calls(save_call)
+
+    @patch("deepparse.parser.address_parser.torch.save")
+    @patch("deepparse.parser.address_parser.DataLoader")
+    @patch("deepparse.parser.address_parser.Experiment")
+    @patch("deepparse.parser.address_parser.SGD")
+    @patch("deepparse.parser.address_parser.DataTransform")
+    @patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel")
+    @patch("deepparse.parser.address_parser.bpemb_data_padding")
+    @patch("deepparse.parser.address_parser.BPEmbVectorizer")
+    @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
+    def test_givenABPEmbModel_whenRetrainWithNewParamsAndNewTagsAndFreezeLayers_thenSaveNewParamsDictAndParams(
+        self,
+        embeddings_model_mock,
+        vectorizer_model_mock,
+        data_padding_mock,
+        model_mock,
+        data_transform_mock,
+        optimizer_mock,
+        experiment_mock,
+        data_loader_mock,
+        torch_save_mock,
+    ):
+        self.address_parser = AddressParser(
+            model_type=self.a_bpemb_model_type,
+            device=self.a_device,
+            verbose=self.verbose,
+        )
+        self.address_parser_retrain_call(
+            prediction_tags=self.address_components, seq2seq_params=self.seq2seq_params, layers_to_freeze="encoder"
+        )
+
+        expected_named_parser_name = "BPEmbModifiedPredictionTagsModifiedSeq2SeqConfigurationFreezedLayerEncoder"
+
+        saving_model_path = self.saving_template_path.format(self.a_bpemb_model_type)
+        save_call = [
+            call(
+                {
+                    "address_tagger_model": experiment_mock().model.network.state_dict(),
+                    "model_type": self.a_bpemb_model_type,
+                    "seq2seq_params": self.seq2seq_params,
+                    "prediction_tags": self.address_components,
+                    "named_parser": expected_named_parser_name,
                 },
                 saving_model_path,
             )
@@ -1196,6 +1357,75 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
 
         with self.assertRaises(ValueError):
             self.address_parser_retrain_call(layers_to_freeze="error_in_name")
+
+    @patch("deepparse.parser.address_parser.torch.save")
+    @patch("deepparse.parser.address_parser.DataLoader")
+    @patch("deepparse.parser.address_parser.Experiment")
+    @patch("deepparse.parser.address_parser.SGD")
+    @patch("deepparse.parser.address_parser.DataTransform")
+    @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
+    @patch("deepparse.parser.address_parser.fasttext_data_padding")
+    @patch("deepparse.parser.address_parser.FastTextVectorizer")
+    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
+    def test_givenRetrainSettings_whenFormattedNameParserName_thenReturnProperNaming(
+        self,
+        download_weights_mock,
+        embeddings_model_mock,
+        vectorizer_model_mock,
+        data_padding_mock,
+        model_mock,
+        data_transform_mock,
+        optimizer_mock,
+        experiment_mock,
+        data_loader_mock,
+        torch_save_mock,
+    ):
+        self.address_parser = AddressParser(
+            model_type=self.a_fasttext_model_type,
+            device=self.a_device,
+            verbose=self.verbose,
+        )
+
+        # We set possible params type with a value
+        prediction_tags_settings = [{"A dict": 1.0}, None]  # Can be a dict or a None
+        seq2seq_params_settings = [{"A dict": 1.0}, None]  # Can be a dict or a None
+        layers_to_freeze_settings = [None, "encoder", "decoder", "prediction_layer", "seq2seq"]  # From the doc
+
+        # We loop all possible settings
+        # Namely, not only elements settings but combinaison of settings altogether
+        for prediction_tags_setting in prediction_tags_settings:
+            for seq2seq_params_setting in seq2seq_params_settings:
+                for layers_to_freeze_setting in layers_to_freeze_settings:
+                    actual = self.address_parser._formatted_named_parser_name(
+                        prediction_tags=prediction_tags_setting,
+                        seq2seq_params=seq2seq_params_setting,
+                        layers_to_freeze=layers_to_freeze_setting,
+                    )
+                    # We test if extected text is include depending on the settings
+                    if prediction_tags_setting is None:
+                        self.assertNotIn("ModifiedPredictionTags", actual)
+                    else:
+                        self.assertIn("ModifiedPredictionTags", actual)
+
+                    if seq2seq_params_setting is None:
+                        self.assertNotIn("ModifiedSeq2SeqConfiguration", actual)
+                    else:
+                        self.assertIn("ModifiedSeq2SeqConfiguration", actual)
+
+                    if layers_to_freeze_setting is None:
+                        self.assertNotIn("FreezedLayer", actual)
+                    else:
+                        self.assertIn("FreezedLayer", actual)
+
+                        if seq2seq_params_setting == "encoder":
+                            self.assertIn("encoder", actual)
+                        elif seq2seq_params_setting == "decoder":
+                            self.assertIn("decoder", actual)
+                        elif seq2seq_params_setting == "prediction_layer":
+                            self.assertIn("prediction_layer", actual)
+                        elif seq2seq_params_setting == "seq2seq":
+                            self.assertIn("seq2seq", actual)
 
 
 if __name__ == "__main__":

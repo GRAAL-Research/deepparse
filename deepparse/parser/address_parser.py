@@ -190,6 +190,8 @@ class AddressParser:
         self.rounding = rounding
         self.verbose = verbose
 
+        named_parser = None
+
         # Default pretrained tag are loaded
         tags_to_idx = _pre_trained_tags_to_idx
         # Default FIELDS of the formatted address
@@ -206,6 +208,7 @@ class AddressParser:
                 tags_to_idx = checkpoint_weights.get("prediction_tags")
                 # We change the FIELDS for the FormattedParsedAddress
                 fields = list(tags_to_idx)
+                named_parser = checkpoint_weights.get("named_parser")
 
             # We "infer" the model type, thus we also had to handle the attention_mechanism bool
             model_type, attention_mechanism = infer_model_type(
@@ -214,6 +217,8 @@ class AddressParser:
 
         formatted_parsed_address.FIELDS = fields
         self.tags_converter = TagsConverter(tags_to_idx)
+
+        self.named_parser = named_parser
 
         self.model_type, self._model_type_formatted = handle_model_name(model_type, attention_mechanism)
         self._model_factory(
@@ -226,7 +231,10 @@ class AddressParser:
         self.model.eval()
 
     def __str__(self) -> str:
-        return f"Pretrained{self._model_type_formatted}AddressParser"
+        if self.named_parser is not None:
+            return self.named_parser
+        else:
+            return f"Pretrained{self._model_type_formatted}AddressParser"
 
     __repr__ = __str__  # to call __str__ when list of address
 
@@ -356,6 +364,7 @@ class AddressParser:
         prediction_tags: Union[Dict, None] = None,
         seq2seq_params: Union[Dict, None] = None,
         layers_to_freeze: Union[str, None] = None,
+        name_of_the_retrain_parser: Union[None, str] = None,
     ) -> List[Dict]:
         # pylint: disable=too-many-arguments, line-too-long, too-many-locals, too-many-branches, too-many-statements
         """
@@ -419,7 +428,14 @@ class AddressParser:
                     - 'seq2seq': To freeze the encoder and decoder but **not** the prediction layer.
 
                Default is ``None``, meaning we do not freeze any layers.
+            name_of_the_retrain_parser (Union[str, None]): Name to give to the retrained parser that will be use
+                when reloaded as the printed name, it is not the file name. By default None, which mean we will use
+                the training settings for the name using the following pattern:
 
+                    - the pretrained architecture (fasttext or bpemb and with or without attention mechanism),
+                    - if prediction_tags is not None, the following tag: ModifiedPredictionTags,
+                    - if seq2seq_params is not None, the following tag: ModifiedSeq2SeqConfiguration, and
+                    - if layers_to_freeze is not None, the following tag: FreezedLayer{portion}.
         Return:
             A list of dictionary with the best epoch stats (see `Experiment class
             <https://poutyne.org/experiment.html#poutyne.Experiment.train>`_ for details).
@@ -520,6 +536,18 @@ class AddressParser:
 
                 address_parser.retrain(container, 0.8, epochs=1, batch_size=128, seq2seq_params=seq2seq_params,
                     prediction_tags=address_components)
+
+            Using a named retrain parser name.
+
+            .. code-block:: python
+
+                address_parser = AddressParser(device=0) #on gpu device 0
+                data_path = 'path_to_a_pickle_dataset.p'
+
+                container = PickleDatasetContainer(data_path)
+
+                address_parser.retrain(container, 0.8, epochs=1, batch_size=128,
+                    name_of_the_retrain_parser="MyParserName")
 
         """
         if "fasttext-light" in self.model_type:
@@ -627,12 +655,21 @@ class AddressParser:
                 "address_tagger_model": exp.model.network.state_dict(),
                 "model_type": self.model_type,
             }
+
             if seq2seq_params is not None:
                 # Means we have changed the seq2seq params
                 torch_save.update({"seq2seq_params": seq2seq_params})
             if prediction_tags is not None:
                 #  Means we have changed the predictions tags
                 torch_save.update({"prediction_tags": prediction_tags})
+
+            torch_save.update(
+                {
+                    "named_parser": name_of_the_retrain_parser
+                    if name_of_the_retrain_parser is not None
+                    else self._formatted_named_parser_name(prediction_tags, seq2seq_params, layers_to_freeze)
+                }
+            )
 
             torch.save(torch_save, file_path)
             return train_res
@@ -971,3 +1008,10 @@ class AddressParser:
                 # The implicit else mean the layer_name is in a layers to exclude BUT it is a layer to exclude from
                 # the freezing. Namely, the decoder.linear when we freeze the decoder, but we expect the final layer
                 # to be unfrozen.
+
+    def _formatted_named_parser_name(self, prediction_tags: Dict, seq2seq_params: Dict, layers_to_freeze: str) -> str:
+        prediction_tags_str = "ModifiedPredictionTags" if prediction_tags is not None else ""
+        seq2seq_params_str = "ModifiedSeq2SeqConfiguration" if seq2seq_params is not None else ""
+        layers_to_freeze_str = f"FreezedLayer{layers_to_freeze.capitalize()}" if layers_to_freeze is not None else ""
+        parser_name = self._model_type_formatted + prediction_tags_str + seq2seq_params_str + layers_to_freeze_str
+        return parser_name

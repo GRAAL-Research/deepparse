@@ -204,3 +204,6 @@ class PretrainedWeightsBase:
 
         download_from_url("retrained_bpemb_address_parser", self.fake_cache_path, "ckpt")
         self.path_to_retrain_bpemb = os.path.join(self.fake_cache_path, "retrained_bpemb_address_parser.ckpt")
+
+        download_from_url("retrained_named_address_parser", self.fake_cache_path, "ckpt")
+        self.path_to_named_model = os.path.join(self.fake_cache_path, "retrained_named_address_parser.ckpt")

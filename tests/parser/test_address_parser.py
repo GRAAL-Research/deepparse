@@ -19,12 +19,12 @@ class AddressParserTest(AddressParserPredictTestCase):
     @classmethod
     def setUpClass(cls):
         super(AddressParserTest, cls).setUpClass()
-        cls.a_BPEmb_name = "BPEmbAddressParser"
-        cls.a_fasttext_name = "FastTextAddressParser"
-        cls.a_fasttext_light_name = "FastTextLightAddressParser"
-        cls.a_BPEmb_att_name = "BPEmbAttentionAddressParser"
-        cls.a_fasttext_att_name = "FastTextAttentionAddressParser"
-        cls.a_fasttext_att_light_name = "FastTextLightAttentionAddressParser"
+        cls.a_BPEmb_name = "PreTrainedBPEmbAddressParser"
+        cls.a_fasttext_name = "PreTrainedFastTextAddressParser"
+        cls.a_fasttext_light_name = "PreTrainedFastTextLightAddressParser"
+        cls.a_BPEmb_att_name = "PreTrainedBPEmbAttentionAddressParser"
+        cls.a_fasttext_att_name = "PreTrainedFastTextAttentionAddressParser"
+        cls.a_fasttext_att_light_name = "PreTrainedFastTextLightAttentionAddressParser"
         cls.a_rounding = 5
         cls.a_cpu_device = "cpu"
         cls.a_cpu_torch_device = device(cls.a_cpu_device)

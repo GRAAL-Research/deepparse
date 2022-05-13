@@ -1386,6 +1386,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         data_loader_mock,
         torch_save_mock,
     ):
+        # pylint: disable=too-many-locals, too-many-branches
         self.address_parser = AddressParser(
             model_type=self.a_fasttext_model_type,
             device=self.a_device,
@@ -1443,7 +1444,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
     @patch("deepparse.parser.address_parser.FastTextVectorizer")
     @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
     @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
-    def test_givenWrongFreezeLayersName_thenRaiseValueError(
+    def test_givenNewNamedModelName_thenSavingPathIsModified(
         self,
         download_weights_mock,
         embeddings_model_mock,

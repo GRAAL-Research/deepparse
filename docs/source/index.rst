@@ -644,6 +644,14 @@ One can also freeze some layers to speed up the training using the ``layers_to_f
     address_parser.retrain(training_container, 0.8, epochs=5, batch_size=8, layers_to_freeze="seq2seq2")
 
 
+Or you can also give a specific name to the retrained model. This name will be use as the model name (for print and
+class name) when reloading it.
+
+.. code-block:: python
+
+    address_parser.retrain(training_container, 0.8, epochs=5, batch_size=8, name_of_the_retrain_parser="MyNewParser")
+
+
 Retrain a Model with an attention mechanism
 *******************************************
 See `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/retrain_attention_model.py>`_ for a complete example.

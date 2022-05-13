@@ -1,3 +1,5 @@
+# pylint: disable=too-many-lines
+
 import contextlib
 import os
 import re
@@ -235,8 +237,7 @@ class AddressParser:
     def __str__(self) -> str:
         if self.named_parser is not None:
             return self.named_parser
-        else:
-            return f"PreTrained{self._model_type_formatted}AddressParser"
+        return f"PreTrained{self._model_type_formatted}AddressParser"
 
     __repr__ = __str__  # to call __str__ when list of address
 

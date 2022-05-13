@@ -198,3 +198,6 @@
 - Add a report when addresses to parse and tags list len differ
 - Add an example on how to fine-tune using our CSVDatasetContainer
 - Improve data validation for data to parse
+
+## dev
+- Bug-fix Poutyne version handling that cause a print error when version is 1.11

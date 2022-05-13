@@ -401,6 +401,11 @@ class ToolsTests(CaptureOutputTestCase):
         with self.assertRaises(DataError):
             validate_data_to_parse(none_data)
 
+    def test_givenTupleAddressesToParse_then_raiseDataError(self):
+        tuple_data = [("An address", 0), ("Another address", 1)]
+        with self.assertRaises(DataError):
+            validate_data_to_parse(tuple_data)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -229,20 +229,26 @@ class CSVDatasetContainer(DatasetContainer):
     """
 
     def __init__(
-        self,
-        data_path: str,
-        column_names: Union[List, str],
-        is_training_container: bool = True,
-        separator: str = "\t",
-        tag_seperator_reformat_fn: Union[None, Callable] = None,
-        csv_reader_kwargs: Union[None, Dict] = None,
+            self,
+            data_path: str,
+            column_names: Union[List, str],
+            is_training_container: bool = True,
+            separator: str = "\t",
+            tag_seperator_reformat_fn: Union[None, Callable] = None,
+            csv_reader_kwargs: Union[None, Dict] = None,
     ) -> None:
         super().__init__(is_training_container=is_training_container)
         if is_training_container:
+            if isinstance(column_names, str):
+                raise ValueError("When the dataset is a training container, the column names should be a list of"
+                                 "column name.")
             if len(column_names) != 2:
                 raise ValueError("When the dataset is a training container, two column names must be provided.")
-        else:  # A predict container
-            if len(list(column_names)) != 1:
+        else:  # It means it is a predict container
+            if isinstance(column_names, str):
+                # We transform the str into a list to assess is len
+                column_names = [column_names]
+            if len(column_names) != 1:
                 raise ValueError("When the dataset is a predict container, one column name must be provided.")
 
         if validate_column_names(column_names):

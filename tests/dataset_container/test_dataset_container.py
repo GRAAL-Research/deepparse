@@ -324,6 +324,11 @@ class CSVDatasetContainerTest(TestCase):
         )
         self._test_integration(number_of_data_points, csv_dataset_container)
 
+        csv_dataset_container = CSVDatasetContainer(
+            self.a_data_container_path, column_names="Address", is_training_container=False
+        )
+        self._test_integration(number_of_data_points, csv_dataset_container)
+
     def test_integration_user_define_column_names(self):
         user_define_column_names = ["a_name", "Another_name"]
         number_of_data_points = 4
@@ -466,6 +471,14 @@ class CSVDatasetContainerTest(TestCase):
             actual_address, actual_tags_idx = actual_address_tuple[0], actual_address_tuple[1]
             self.assertEqual(expected_address, actual_address)
             self.assertListEqual(expected_tags_idx, actual_tags_idx)
+
+    def test_given_a_training_container_when_column_names_a_str_raise_value_error(self):
+        with self.assertRaises(ValueError):
+            CSVDatasetContainer(self.a_data_container_path, "")
+
+        with self.assertRaises(ValueError):
+            CSVDatasetContainer(self.a_data_container_path, column_names="a single colum name")
+
 
     def test_given_a_training_container_when_column_names_not_2_raise_value_error(self):
         with self.assertRaises(ValueError):

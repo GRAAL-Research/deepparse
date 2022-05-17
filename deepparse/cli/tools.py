@@ -34,7 +34,7 @@ def is_pickle_path(export_file_name: str) -> bool:
     Return:
         Either or not, the path is a pickle file extension.
     """
-    return ".p" in export_file_name or ".pickle" in export_file_name
+    return ".p" in export_file_name or ".pickle" in export_file_name or ".pckl" in export_file_name
 
 
 def is_json_path(export_file_name: str) -> bool:

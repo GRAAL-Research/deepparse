@@ -34,13 +34,13 @@ def main(args=None) -> None:
 
     .. code-block:: sh
 
-        parse fasttext ./dataset_path.csv parsed_address.pickle --device 0
+        parse fasttext ./dataset_path.csv parsed_address.p --device 0
 
     Using a CSV dataset
 
     .. code-block:: sh
 
-        parse fasttext ./dataset.csv parsed_address.pickle --path_to_retrained_model ./path
+        parse fasttext ./dataset.csv parsed_address.pckl --path_to_retrained_model ./path
 
     """
     if args is None:  # pragma: no cover
@@ -58,12 +58,12 @@ def main(args=None) -> None:
             )
         csv_column_separator = parsed_args.csv_column_separator
         addresses_to_parse = CSVDatasetContainer(
-            dataset_path, column_names=[csv_column_name], separator=csv_column_separator, is_training_container=False
+            dataset_path, column_names=csv_column_name, separator=csv_column_separator, is_training_container=False
         )
     elif is_pickle_path(dataset_path):
         addresses_to_parse = PickleDatasetContainer(dataset_path, is_training_container=False)
     else:
-        raise ValueError("The dataset path argument is not a CSV or pickle file.")
+        raise ValueError("The dataset path argument is not a CSV or a pickle file.")
 
     export_filename = parsed_args.export_filename
     export_path = generate_export_path(dataset_path, export_filename)
@@ -135,7 +135,7 @@ def get_parser() -> argparse.ArgumentParser:
 
     parser.add_argument(
         "dataset_path",
-        help=wrap("The path to the dataset file in a pickle (.p or .pickle), CSV format or JSON format."),
+        help=wrap("The path to the dataset file in a pickle (.p, .pickle, .pckl) or CSV format."),
         type=str,
     )
 

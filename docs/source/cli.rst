@@ -17,7 +17,7 @@ and the number of parsed addresses. Here is the list of the arguments and their 
 the command ``parse --help`` to output the same description in your command line.
 
 - ``parsing_model``: The parsing module to use.
-- ``dataset_path``: The path to the dataset file in a pickle (.p or .pickle), CSV format or JSON format.
+- ``dataset_path``: The path to the dataset file in a pickle (.p, .pickle or .pckl) or CSV format.
 - ``export_file_name``: The filename to use to export the parsed addresses. We will infer the file format base on the file extension. That is, if the file is a pickle (.p or .pickle), we will export it into a pickle file. The supported format are Pickle, CSV and JSON. The file will be exported in the same repositories as the dataset_path. See the doc for more details on the format exporting.
 - ``--device``: The device to use. It can be 'cpu' or a GPU device index such as '0' or '1'. By default '0'.
 - ``--path_to_retrained_model``: A path to a retrained model to use for parsing.

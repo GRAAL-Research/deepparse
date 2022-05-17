@@ -135,7 +135,7 @@ def get_parser() -> argparse.ArgumentParser:
 
     parser.add_argument(
         "dataset_path",
-        help=wrap("The path to the dataset file in a pickle (.p, .pickle, .pckl) or CSV format."),
+        help=wrap("The path to the dataset file in a pickle (.p, .pickle or .pckl) or CSV format."),
         type=str,
     )
 

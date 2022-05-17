@@ -479,7 +479,6 @@ class CSVDatasetContainerTest(TestCase):
         with self.assertRaises(ValueError):
             CSVDatasetContainer(self.a_data_container_path, column_names="a single colum name")
 
-
     def test_given_a_training_container_when_column_names_not_2_raise_value_error(self):
         with self.assertRaises(ValueError):
             CSVDatasetContainer(self.a_data_container_path, column_names=[""])

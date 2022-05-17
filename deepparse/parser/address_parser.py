@@ -388,13 +388,13 @@ class AddressParser:
             train_ratio (float): The ratio to use of the dataset for the training. The rest of the data is used for the
                 validation (e.g. a train ratio of 0.8 mean a 80-20 train-valid split) (default is 0.8).
             batch_size (int): The size of the batch (default is 32).
-            epochs (int): number of training epochs (default is 5).
-            num_workers (int): Number of workers to use for the data loader (default is 1 worker).
+            epochs (int): The number of training epochs (default is 5).
+            num_workers (int): The number of workers to use for the data loader (default is 1 worker).
             learning_rate (float): The learning rate (LR) to use for training (default 0.01).
             callbacks (Union[list, None]): List of callbacks to use during training.
                 See Poutyne `callback <https://poutyne.org/callbacks.html#callback-class>`_ for more information. By
                 default, we set no callback.
-            seed (int): Seed to use (by default 42).
+            seed (int): The seed to use (default 42).
             logging_path (str): The logging path for the checkpoints. Poutyne will use the best one and reload the
                 state if any checkpoints are there. Thus, an error will be raised if you change the model type.
                 For example,  you retrain a FastText model and then retrain a BPEmb in the same logging path directory.

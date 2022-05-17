@@ -103,7 +103,7 @@ def main(args=None) -> None:
         text_to_log = f"Parsing dataset file {dataset_path} using the parser {address_parser}"
         logging.info(text_to_log)
 
-    parsed_address = address_parser(addresses_to_parse)
+    parsed_address = address_parser(addresses_to_parse, batch_size=parsed_args.batch_size)
 
     export_fn(parsed_address)
 
@@ -156,6 +156,13 @@ def get_parser() -> argparse.ArgumentParser:
         help=wrap("The device to use. It can be 'cpu' or a GPU device index such as '0' or '1'. By default '0'."),
         type=str,
         default="0",
+    )
+
+    parser.add_argument(
+        "--batch_size",
+        help=wrap("The size of the batch (default is 32)."),
+        type=int,
+        default=32,
     )
 
     parser.add_argument(

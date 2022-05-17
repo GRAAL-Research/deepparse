@@ -204,7 +204,8 @@
 ## dev
 
 - Bug-fix Poutyne version handling that cause a print error when version is 1.11 when retraining
-- Add option to create a named retrain parsing model using by default the architecture setting or using user given name.
+- Add option to create a named retrain parsing model using by default the architecture setting or using user given name
 - Hot-fix missing raise for DataError validation of address to parse when address are tuple
-- Bug-fix handling of string column name for CSVDatasetContainer that raised ValueError.
-- Improve parse CLI doc and fix error in doc stating JSON format is supported as input data.
+- Bug-fix handling of string column name for CSVDatasetContainer that raised ValueError
+- Improve parse CLI doc and fix error in doc stating JSON format is supported as input data
+- Add batch_size to parse CLI

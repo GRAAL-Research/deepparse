@@ -72,6 +72,8 @@ class ParseTests(TestCase, PretrainedWeightsBase):
 
         self.parser.add_argument("--device", type=str, default="0")
 
+        self.parser.add_argument("--batch_size", type=int, default=32)
+
         self.parser.add_argument("--path_to_retrained_model", type=str, default=None)
 
         self.parser.add_argument("--csv_column_name", type=str, default=None)

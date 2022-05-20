@@ -32,7 +32,6 @@ class ParseTests(TestCase, PretrainedWeightsBase):
 
         self.fake_data_path_csv = os.path.join(self.temp_dir_obj.name, "fake_data.csv")
         self.a_unsupported_data_path = os.path.join(self.temp_dir_obj.name, "fake_data.txt")
-        self.fake_data_path_json = os.path.join(self.temp_dir_obj.name, "fake_data.json")
 
         self.pickle_p_export_filename = "a_file.p"
         self.pickle_pickle_export_filename = "a_file.pickle"

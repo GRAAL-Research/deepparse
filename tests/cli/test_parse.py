@@ -47,39 +47,8 @@ class ParseTests(TestCase, PretrainedWeightsBase):
         self.cpu_device = "cpu"
         self.gpu_device = "0"
 
-        self.create_parser()
-
     def tearDown(self) -> None:
         self.temp_dir_obj.cleanup()
-
-    def create_parser(self):
-        self.parser = argparse.ArgumentParser()
-        self.parser.add_argument(
-            "parsing_model",
-            choices=[
-                self.a_fasttext_model_type,
-                self.a_fasttext_att_model_type,
-                self.a_fasttext_light_model_type,
-                self.a_bpemb_model_type,
-                self.a_bpemb_att_model_type,
-            ],
-        )
-
-        self.parser.add_argument("dataset_path", type=str)
-
-        self.parser.add_argument("export_filename", type=str)
-
-        self.parser.add_argument("--device", type=str, default="0")
-
-        self.parser.add_argument("--batch_size", type=int, default=32)
-
-        self.parser.add_argument("--path_to_retrained_model", type=str, default=None)
-
-        self.parser.add_argument("--csv_column_name", type=str, default=None)
-
-        self.parser.add_argument("--csv_column_separator", type=str, default="\t")
-
-        self.parser.add_argument("--log", type=bool_parse, default="True")
 
     @skipIf(
         not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),

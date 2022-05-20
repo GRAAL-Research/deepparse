@@ -283,7 +283,7 @@ class ToolsTests(CaptureOutputTestCase, PretrainedWeightsBase):
                 expected_model_type = "fasttext"
                 actual_model_type, _ = handle_model_name(model_type, attention_mechanism=attention_mechanism_setting)
                 if attention_mechanism_setting:
-                    expected_model_type += "Attention"
+                    expected_model_type += "_attention"
                 self.assertEqual(expected_model_type, actual_model_type)
 
         # fasttext-light setup
@@ -302,7 +302,7 @@ class ToolsTests(CaptureOutputTestCase, PretrainedWeightsBase):
                 expected_model_type = "bpemb"
                 actual_model_type, _ = handle_model_name(model_type, attention_mechanism=attention_mechanism_setting)
                 if attention_mechanism_setting:
-                    expected_model_type += "Attention"
+                    expected_model_type += "_attention"
                 self.assertEqual(expected_model_type, actual_model_type)
 
     def test_givenModelTypes_whenHandleThem_then_ReturnProperFormattedModelType(self):
@@ -342,11 +342,11 @@ class ToolsTests(CaptureOutputTestCase, PretrainedWeightsBase):
                 self.assertEqual(expected_formatted_model_type, actual_formatted_model_type)
 
     def test_givenAModelTypeWithAttentionInName_whenHandleModelNameWithAttFlag_thenReturnProperModelType(self):
-        expected_model_type = "fasttextAttention"
+        expected_model_type = "fasttext_attention"
         actual_model_type, _ = handle_model_name("fasttextAttention", attention_mechanism=True)
         self.assertEqual(expected_model_type, actual_model_type)
 
-        expected_model_type = "bpembAttention"
+        expected_model_type = "bpemb_attention"
         actual_model_type, _ = handle_model_name("bpembAttention", attention_mechanism=True)
         self.assertEqual(expected_model_type, actual_model_type)
 

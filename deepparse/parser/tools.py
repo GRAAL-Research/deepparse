@@ -76,7 +76,7 @@ def handle_model_name(model_type: str, attention_mechanism: bool) -> Tuple[str, 
     if 'attention' in model_type:
         if not attention_mechanism:
             raise ValueError(
-                f"Model-type {model_type} requires attention mechanism. " f"Set attention_mechanism to True."
+                f"Model-type {model_type} requires attention mechanism. Set attention_mechanism flag to True."
             )
         model_type = model_type.replace('attention', '')
 
@@ -95,7 +95,7 @@ def handle_model_name(model_type: str, attention_mechanism: bool) -> Tuple[str, 
         )
 
     if attention_mechanism:
-        model_type += "Attention"
+        model_type += "_attention"
         formatted_name += "Attention"
     return model_type, formatted_name
 

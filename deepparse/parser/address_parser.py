@@ -432,7 +432,8 @@ class AddressParser:
 
                Default is ``None``, meaning we do not freeze any layers.
             name_of_the_retrain_parser (Union[str, None]): Name to give to the retrained parser that will be use
-                when reloaded as the printed name, and to the saving file name. By default None.
+                when reloaded as the printed name, and to the saving file name (note that we will manually add
+                the extension `.ckpt` to the name for the file name). By default None.
 
                 Default settings for the parser name will use the training settings for the name using the
                 following pattern:
@@ -442,11 +443,11 @@ class AddressParser:
                     - if seq2seq_params is not None, the following tag: ModifiedSeq2SeqConfiguration, and
                     - if layers_to_freeze is not None, the following tag: FreezedLayer{portion}.
 
-                Default settings for the file name will use the following pattern
-                "retrained_{model_type}_address_parser.ckpt".
         Return:
             A list of dictionary with the best epoch stats (see `Experiment class
-            <https://poutyne.org/experiment.html#poutyne.Experiment.train>`_ for details).
+            <https://poutyne.org/experiment.html#poutyne.Experiment.train>`_ for details). The pretrained is
+            saved using a default file name of using the name_of_the_retrain_parser. See the last note for
+            more details.
 
         Note:
             We recommend using a learning rate scheduler procedure during retraining to reduce the chance
@@ -467,6 +468,12 @@ class AddressParser:
             When retraining a model, Poutyne will create checkpoints. After the training, we use the best checkpoint
             in a directory as the model to load. Thus, if you train two different models in the same directory,
             the second retrain will not work due to model differences.
+
+        Note:
+            The default settings for the file name to save the retrained model use following pattern
+            "retrained_{model_type}_address_parser.ckpt" if name_of_the_retrain_parser is set to
+            `None`. Otherwise, the file name to save the retrained model will correspond to
+            `name_of_the_retrain_parser` plus the file extension `.ckpt`.
 
         Examples:
 
@@ -558,6 +565,12 @@ class AddressParser:
                     name_of_the_retrain_parser="MyParserName")
 
         """
+        if name_of_the_retrain_parser is not None:
+            if len(name_of_the_retrain_parser.split(".")) > 1:
+                raise ValueError(
+                    "The name_of_the_retrain_parser should NOT include a file extension or a dot-like" "filename style."
+                )
+
         if "fasttext-light" in self.model_type:
             raise ValueError("It's not possible to retrain a fasttext-light due to pymagnitude problem.")
 
@@ -659,7 +672,7 @@ class AddressParser:
                 raise RuntimeError(error.args[0]) from error
         else:
             file_name = (
-                name_of_the_retrain_parser
+                name_of_the_retrain_parser + ".ckpt"
                 if name_of_the_retrain_parser is not None
                 else f"retrained_{self.model_type}_address_parser.ckpt"
             )

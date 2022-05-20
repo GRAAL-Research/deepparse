@@ -1444,6 +1444,44 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
     @patch("deepparse.parser.address_parser.FastTextVectorizer")
     @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
     @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
+    def test_givenNoneNewNamedModelName_thenSavingPathIsDefaultPathWithExtension(
+        self,
+        download_weights_mock,
+        embeddings_model_mock,
+        vectorizer_model_mock,
+        data_padding_mock,
+        model_mock,
+        data_transform_mock,
+        optimizer_mock,
+        experiment_mock,
+        data_loader_mock,
+        torch_save_mock,
+        os_path_join_mock,
+    ):
+        self.address_parser = AddressParser(
+            model_type=self.a_fasttext_model_type,
+            device=self.a_device,
+            verbose=self.verbose,
+        )
+
+        self.address_parser_retrain_call(name_of_the_retrain_parser=None)
+
+        os_path_join_mock.assert_called()
+
+        default_filename = "retrained_fasttext_address_parser.ckpt"
+        os_path_join_mock.assert_called_with(self.a_logging_path, default_filename)
+
+    @patch("deepparse.parser.address_parser.os.path.join")
+    @patch("deepparse.parser.address_parser.torch.save")
+    @patch("deepparse.parser.address_parser.DataLoader")
+    @patch("deepparse.parser.address_parser.Experiment")
+    @patch("deepparse.parser.address_parser.SGD")
+    @patch("deepparse.parser.address_parser.DataTransform")
+    @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
+    @patch("deepparse.parser.address_parser.fasttext_data_padding")
+    @patch("deepparse.parser.address_parser.FastTextVectorizer")
+    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
     def test_givenNewNamedModelName_thenSavingPathIsModified(
         self,
         download_weights_mock,
@@ -1468,7 +1506,43 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
 
         os_path_join_mock.assert_called()
 
-        os_path_join_mock.assert_called_with(self.a_logging_path, self.a_named_parser_name)
+        file_extension = ".ckpt"
+        expected_filename = self.a_named_parser_name + file_extension
+        os_path_join_mock.assert_called_with(self.a_logging_path, expected_filename)
+
+    @patch("deepparse.parser.address_parser.os.path.join")
+    @patch("deepparse.parser.address_parser.torch.save")
+    @patch("deepparse.parser.address_parser.DataLoader")
+    @patch("deepparse.parser.address_parser.Experiment")
+    @patch("deepparse.parser.address_parser.SGD")
+    @patch("deepparse.parser.address_parser.DataTransform")
+    @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
+    @patch("deepparse.parser.address_parser.fasttext_data_padding")
+    @patch("deepparse.parser.address_parser.FastTextVectorizer")
+    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
+    def test_givenWrongNewNamedModelName_thenRaiseValueError(
+        self,
+        download_weights_mock,
+        embeddings_model_mock,
+        vectorizer_model_mock,
+        data_padding_mock,
+        model_mock,
+        data_transform_mock,
+        optimizer_mock,
+        experiment_mock,
+        data_loader_mock,
+        torch_save_mock,
+        os_path_join_mock,
+    ):
+        self.address_parser = AddressParser(
+            model_type=self.a_fasttext_model_type,
+            device=self.a_device,
+            verbose=self.verbose,
+        )
+
+        with self.assertRaises(ValueError):
+            self.address_parser_retrain_call(name_of_the_retrain_parser="a_wrong_named_parser_name.ckpt")
 
 
 if __name__ == "__main__":

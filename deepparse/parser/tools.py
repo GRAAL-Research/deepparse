@@ -95,7 +95,7 @@ def handle_model_name(model_type: str, attention_mechanism: bool) -> Tuple[str, 
         )
 
     if attention_mechanism:
-        model_type += "-attention"
+        model_type += "_attention"
         formatted_name += "Attention"
     return model_type, formatted_name
 

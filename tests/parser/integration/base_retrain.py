@@ -31,6 +31,12 @@ class RetrainTestCase(TestCase):
         cls.a_test_pickle_dataset_path = os.path.join(cls.a_data_saving_dir,
                                                       test_dataset_name + "." + file_extension)
 
+        file_extension = "csv"
+        download_from_url(training_dataset_name, cls.a_data_saving_dir, file_extension=file_extension)
+
+        cls.a_train_csv_dataset_path = os.path.join(cls.a_data_saving_dir,
+                                                    training_dataset_name + "." + file_extension)
+
     @classmethod
     def tearDownClass(cls) -> None:
         cls.temp_dir_obj.cleanup()

@@ -49,10 +49,19 @@ class RetrainTests(RetrainTestCase):
     def tearDown(self) -> None:
         self.temp_checkpoints_obj.cleanup()
 
-    def set_up_params(self, train_ratio="0.8", batch_size="32", epochs="5", num_workers="1", learning_rate="0.01",
-                      seed="42",
-                      logging_path="./checkpoints", disable_tensorboard="False", layers_to_freeze='seq2seq',
-                      name_of_the_retrain_parser="") -> List:
+    def set_up_params(
+        self,
+        train_ratio="0.8",
+        batch_size="32",
+        epochs="5",
+        num_workers="1",
+        learning_rate="0.01",
+        seed="42",
+        logging_path="./checkpoints",
+        disable_tensorboard="False",
+        layers_to_freeze='seq2seq',
+        name_of_the_retrain_parser="",
+    ) -> List:
         parser_params = [
             self.a_fasttext_att_model_type,
             self.a_train_pickle_dataset_path,
@@ -75,7 +84,7 @@ class RetrainTests(RetrainTestCase):
             "--layers_to_freeze",
             layers_to_freeze,
             "--name_of_the_retrain_parser",
-            name_of_the_retrain_parser
+            name_of_the_retrain_parser,
         ]
         return parser_params
 
@@ -131,8 +140,9 @@ class RetrainTests(RetrainTestCase):
 
         self.assertTrue(
             os.path.isfile(
-                os.path.join(self.temp_checkpoints_obj.name, "checkpoints",
-                             "retrained_fasttext_attention_address_parser.ckpt")
+                os.path.join(
+                    self.temp_checkpoints_obj.name, "checkpoints", "retrained_fasttext_attention_address_parser.ckpt"
+                )
             )
         )
 
@@ -150,7 +160,7 @@ class RetrainTests(RetrainTestCase):
             "Address",
             "Tags",
             "--csv_column_separator",  # Our dataset use a comma as separator
-            ","
+            ",",
         ]
 
         parser_params.extend(self.parser_test_default_settings)
@@ -158,8 +168,9 @@ class RetrainTests(RetrainTestCase):
 
         self.assertTrue(
             os.path.isfile(
-                os.path.join(self.temp_checkpoints_obj.name, "checkpoints",
-                             "retrained_fasttext_attention_address_parser.ckpt")
+                os.path.join(
+                    self.temp_checkpoints_obj.name, "checkpoints", "retrained_fasttext_attention_address_parser.ckpt"
+                )
             )
         )
 
@@ -175,7 +186,7 @@ class RetrainTests(RetrainTestCase):
                 "--device",
                 self.cpu_device,
                 "--csv_column_separator",  # Our dataset use a comma as separator
-                ","
+                ",",
             ]
 
             parser_params.extend(self.parser_test_default_settings)
@@ -232,9 +243,12 @@ class RetrainTests(RetrainTestCase):
         name_of_the_retrain_parser = "AName"
         logging_path = "APath/"
         override_values = [layers_to_freeze, bool(disable_tensorboard), name_of_the_retrain_parser, logging_path]
-        parser_params = self.set_up_params(layers_to_freeze=layers_to_freeze, disable_tensorboard=disable_tensorboard,
-                                           name_of_the_retrain_parser=name_of_the_retrain_parser,
-                                           logging_path=logging_path)
+        parser_params = self.set_up_params(
+            layers_to_freeze=layers_to_freeze,
+            disable_tensorboard=disable_tensorboard,
+            name_of_the_retrain_parser=name_of_the_retrain_parser,
+            logging_path=logging_path,
+        )
 
         parsed_args = get_args(parser_params)
 
@@ -258,16 +272,20 @@ class RetrainTests(RetrainTestCase):
         name_of_the_retrain_parser = "AName"
         logging_path = self.logging_path
 
-        parser_params = self.set_up_params(train_ratio=train_ratio, batch_size=batch_size, num_workers=num_workers, epochs=epochs, layers_to_freeze=layers_to_freeze, disable_tensorboard=disable_tensorboard,
-                                           name_of_the_retrain_parser=name_of_the_retrain_parser,
-                                           logging_path=logging_path)
+        parser_params = self.set_up_params(
+            train_ratio=train_ratio,
+            batch_size=batch_size,
+            num_workers=num_workers,
+            epochs=epochs,
+            layers_to_freeze=layers_to_freeze,
+            disable_tensorboard=disable_tensorboard,
+            name_of_the_retrain_parser=name_of_the_retrain_parser,
+            logging_path=logging_path,
+        )
         retrain.main(parser_params)
 
-        self.assertTrue(
-            os.path.isfile(
-                os.path.join(self.temp_checkpoints_obj.name, "checkpoints", "AName.ckpt")
-            )
-        )
+        self.assertTrue(os.path.isfile(os.path.join(self.temp_checkpoints_obj.name, "checkpoints", "AName.ckpt")))
+
 
 if __name__ == "__main__":
     unittest.main()

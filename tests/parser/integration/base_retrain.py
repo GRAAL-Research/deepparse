@@ -25,17 +25,16 @@ class RetrainTestCase(TestCase):
         download_from_url(training_dataset_name, cls.a_data_saving_dir, file_extension=file_extension)
         download_from_url(test_dataset_name, cls.a_data_saving_dir, file_extension=file_extension)
 
-        cls.a_train_pickle_dataset_path = os.path.join(cls.a_data_saving_dir,
-                                                       training_dataset_name + "." + file_extension)
+        cls.a_train_pickle_dataset_path = os.path.join(
+            cls.a_data_saving_dir, training_dataset_name + "." + file_extension
+        )
 
-        cls.a_test_pickle_dataset_path = os.path.join(cls.a_data_saving_dir,
-                                                      test_dataset_name + "." + file_extension)
+        cls.a_test_pickle_dataset_path = os.path.join(cls.a_data_saving_dir, test_dataset_name + "." + file_extension)
 
         file_extension = "csv"
         download_from_url(training_dataset_name, cls.a_data_saving_dir, file_extension=file_extension)
 
-        cls.a_train_csv_dataset_path = os.path.join(cls.a_data_saving_dir,
-                                                    training_dataset_name + "." + file_extension)
+        cls.a_train_csv_dataset_path = os.path.join(cls.a_data_saving_dir, training_dataset_name + "." + file_extension)
 
     @classmethod
     def tearDownClass(cls) -> None:
@@ -87,11 +86,11 @@ class AddressParserRetrainTestCase(RetrainTestCase):
         self.training_temp_dir_obj.cleanup()
 
     def training(
-            self,
-            address_parser: AddressParser,
-            data_container: DatasetContainer,
-            num_workers: int,
-            prediction_tags=None,
+        self,
+        address_parser: AddressParser,
+        data_container: DatasetContainer,
+        num_workers: int,
+        prediction_tags=None,
     ):
         address_parser.retrain(
             data_container,

@@ -257,7 +257,7 @@ class AddressParser:
                 We apply some validation tests before parsing to validate its content if the data to parse is a string
                 or a list of strings. We apply the following basic criteria:
 
-                    - no addresses are None value,
+                    - no addresses are ``None`` value,
                     - no addresses are empty string, and
                     - no addresses are whitespace-only strings.
 
@@ -419,33 +419,28 @@ class AddressParser:
 
                 Default is ``None``, meaning we use the default seq2seq architecture.
             layers_to_freeze (Union[str, None]): Name of the portion of the seq2seq to freeze layers, thus reducing
-                the number of parameters to learn. Will be ignored if ``seq2seq_params`` is not None.
+                the number of parameters to learn. Will be ignored if ``seq2seq_params`` is not ``None``.
+
                 Possible freezing settings are:
 
                     - ``None``: No layers are frozen.
-                    - ``'encoder'``: To freeze the encoder part of the seq2seq. That is the part that encodes the
-                    address into a more dense representation.
-
-                    - ``'decoder'``: To freeze the decoder part of the seq2seq. That is the part that decodes a dense
-                    address representation.
-
-                    - ``'prediction_layer'``: To freeze the last layer that predicts a tag class (i.e. a fully connected
-                    with an output size of the same length as the prediction tags).
-
+                    - ``'encoder'``: To freeze the encoder part of the seq2seq. That is the part that encodes the address into a more dense representation.
+                    - ``'decoder'``: To freeze the decoder part of the seq2seq. That is the part that decodes a dense address representation.
+                    - ``'prediction_layer'``: To freeze the last layer that predicts a tag class (i.e. a fully connected with an output size of the same length as the prediction tags).
                     - ``'seq2seq'``: To freeze the encoder and decoder but **not** the prediction layer.
 
                Default is ``None``, meaning we do not freeze any layers.
             name_of_the_retrain_parser (Union[str, None]): Name to give to the retrained parser that will be use
                 when reloaded as the printed name, and to the saving file name (note that we will manually add
-                the extension ``'.ckpt'`` to the name for the file name). By default, None.
+                the extension ``'.ckpt'`` to the name for the file name). By default, ``None``.
 
                 Default settings for the parser name will use the training settings for the name using the
                 following pattern:
 
                     - the pretrained architecture (fasttext or bpemb and with or without attention mechanism),
-                    - if prediction_tags is not None, the following tag: ModifiedPredictionTags,
-                    - if seq2seq_params is not None, the following tag: ModifiedSeq2SeqConfiguration, and
-                    - if layers_to_freeze is not None, the following tag: FreezedLayer{portion}.
+                    - if prediction_tags is not ``None``, the following tag: ``ModifiedPredictionTags``,
+                    - if seq2seq_params is not ``None``, the following tag: ``ModifiedSeq2SeqConfiguration``, and
+                    - if layers_to_freeze is not ``None``, the following tag: ``FreezedLayer{portion}``.
 
 
         Return:

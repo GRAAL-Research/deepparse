@@ -7,6 +7,7 @@ from deepparse.cli.tools import (
     is_pickle_path,
     wrap,
     bool_parse,
+    attention_model_type_handling,
 )
 from deepparse.dataset_container import CSVDatasetContainer, PickleDatasetContainer
 from deepparse.parser import AddressParser
@@ -105,10 +106,8 @@ def main(args=None) -> None:
     if "cpu" not in device:
         device = int(device)
     parser_args = {"device": device}
-    if "-attention" in base_parsing_model:
-        parser_args.update({"attention_mechanism": True})
-        base_parsing_model = base_parsing_model.strip("attention").strip("-")
-    parser_args.update({"model_type": base_parsing_model})
+    parser_args_update_args = attention_model_type_handling(base_parsing_model)
+    parser_args.update(**parser_args_update_args)
 
     address_parser = AddressParser(**parser_args)
 

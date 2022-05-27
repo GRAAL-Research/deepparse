@@ -17,6 +17,7 @@ from deepparse.cli import (
     is_json_path,
     to_json,
     replace_path_extension,
+    attention_model_type_handling,
 )
 from deepparse.parser import FormattedParsedAddress
 
@@ -277,3 +278,21 @@ class ToolsTest(TestCase):
         expected = an_absolute_dataset_path.replace(".p", ".txt")
 
         self.assertEqual(actual, expected)
+
+    def test_givenAnAttModel_whenHandlingAttentionModelType_returnTrue(self):
+        a_att_parsing_model = "fasttext-attention"
+        actual_update_args = attention_model_type_handling(a_att_parsing_model)
+        self.assertTrue(actual_update_args.get("attention_mechanism"))
+
+        a_att_parsing_model = "bpemb-attention"
+        actual_update_args = attention_model_type_handling(a_att_parsing_model)
+        self.assertTrue(actual_update_args.get("attention_mechanism"))
+
+    def test_givenNotAnAttModel_whenHandlingAttentionModelType_returnFalse(self):
+        not_a_att_parsing_model = "fasttext"
+        actual_update_args = attention_model_type_handling(not_a_att_parsing_model)
+        self.assertFalse(actual_update_args.get("attention_mechanism"))
+
+        not_a_att_parsing_model = "bpemb"
+        actual_update_args = attention_model_type_handling(not_a_att_parsing_model)
+        self.assertFalse(actual_update_args.get("attention_mechanism"))

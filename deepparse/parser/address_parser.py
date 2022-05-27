@@ -416,6 +416,7 @@ class AddressParser:
                     - The number of ``encoder_num_layers`` of the encoder. The default value is 1.
                     - The size of the ``decoder_hidden_size`` of the decoder. The default value is 1024.
                     - The number of ``decoder_num_layers`` of the decoder. The default value is 1.
+
                 Default is None, meaning we use the default seq2seq architecture.
             layers_to_freeze (Union[str, None]): Name of the portion of the seq2seq to freeze layers,
                 thus reducing the number of parameters to learn. Will be ignored if ``seq2seq_params`` is not None.
@@ -442,6 +443,7 @@ class AddressParser:
                     - if prediction_tags is not None, the following tag: ModifiedPredictionTags,
                     - if seq2seq_params is not None, the following tag: ModifiedSeq2SeqConfiguration, and
                     - if layers_to_freeze is not None, the following tag: FreezedLayer{portion}.
+                
 
         Return:
             A list of dictionary with the best epoch stats (see `Experiment class

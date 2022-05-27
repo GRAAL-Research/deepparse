@@ -211,3 +211,4 @@
 - Add batch_size to parse CLI
 - Add minimum version to Gensim 4.0.0.
 - Add a new CLI function, retrain, to retrain from the command line
+- Improve doc

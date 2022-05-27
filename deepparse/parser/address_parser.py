@@ -443,7 +443,7 @@ class AddressParser:
                     - if prediction_tags is not None, the following tag: ModifiedPredictionTags,
                     - if seq2seq_params is not None, the following tag: ModifiedSeq2SeqConfiguration, and
                     - if layers_to_freeze is not None, the following tag: FreezedLayer{portion}.
-                
+                    
 
         Return:
             A list of dictionary with the best epoch stats (see `Experiment class

@@ -102,7 +102,7 @@ class AddressParser:
         rounding (int): The rounding to use when asking the probability of the tags. The default value is 4 digits.
         verbose (bool): Turn on/off the verbosity of the model weights download and loading. The default value is True.
         path_to_retrained_model (Union[str, None]): The path to the retrained model to use for prediction. We will
-            infer the ``model_type`` of the retrained model. Default is None, meaning we use our pretrained model.
+            infer the ``model_type`` of the retrained model. Default is ``None``, meaning we use our pretrained model.
             If the retrained model uses an attention mechanism, ``attention_mechanism`` needs to be set to True.
 
     Note:
@@ -405,7 +405,7 @@ class AddressParser:
                 (e.g. street name) and the values are the components indices (from 0 to N + 1) to use during retraining
                 of a model. The ``+ 1`` corresponds to the End Of Sequence (EOS) token that needs to be included in the
                 dictionary. We will use the length of this dictionary for the output size of the prediction layer.
-                We also save the dictionary to be used later on when you load the model. Default is None, meaning
+                We also save the dictionary to be used later on when you load the model. Default is ``None``, meaning
                 we use our pretrained model prediction tags.
             seq2seq_params (Union[dict, None]): A dictionary of seq2seq parameters to modify the seq2seq architecture
                 to train. Note that if you change the seq2seq parameters, a new model will be trained from scratch.
@@ -417,18 +417,21 @@ class AddressParser:
                     - The size of the ``decoder_hidden_size`` of the decoder. The default value is 1024.
                     - The number of ``decoder_num_layers`` of the decoder. The default value is 1.
 
-                Default is None, meaning we use the default seq2seq architecture.
-            layers_to_freeze (Union[str, None]): Name of the portion of the seq2seq to freeze layers,
-                thus reducing the number of parameters to learn. Will be ignored if ``seq2seq_params`` is not None.
+                Default is ``None``, meaning we use the default seq2seq architecture.
+            layers_to_freeze (Union[str, None]): Name of the portion of the seq2seq to freeze layers, thus reducing
+                the number of parameters to learn. Will be ignored if ``seq2seq_params`` is not None.
                 Possible freezing settings are:
 
                     - ``None``: No layers are frozen.
                     - ``'encoder'``: To freeze the encoder part of the seq2seq. That is the part that encodes the
-                        address into a more dense representation.
+                    address into a more dense representation.
+
                     - ``'decoder'``: To freeze the decoder part of the seq2seq. That is the part that decodes a dense
-                        address representation.
+                    address representation.
+
                     - ``'prediction_layer'``: To freeze the last layer that predicts a tag class (i.e. a fully connected
-                        with an output size of the same length as the prediction tags).
+                    with an output size of the same length as the prediction tags).
+
                     - ``'seq2seq'``: To freeze the encoder and decoder but **not** the prediction layer.
 
                Default is ``None``, meaning we do not freeze any layers.

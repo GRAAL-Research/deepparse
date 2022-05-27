@@ -267,9 +267,9 @@ class AddressParser:
                 address when using a batch of 128 (128 elements at the time are processed).
             with_prob (bool): If true, return the probability of all the tags with the specified
                 rounding.
-            batch_size (int): The size of the batch (default is 32).
-            num_workers (int): Number of workers to use for the data loader (default is 0, which means that the data
-                will be loaded in the main process.).
+            batch_size (int): The size of the batch (by default, ``32``).
+            num_workers (int): Number of workers to use for the data loader (default is ``0``, which means that the data
+                will be loaded in the main process).
 
         Return:
             Either a :class:`~FormattedParsedAddress` or a list of
@@ -386,10 +386,10 @@ class AddressParser:
                 DatasetContainer (:class:`~deepparse.dataset_container.PickleDatasetContainer` or
                 :class:`~deepparse.dataset_container.CSVDatasetContainer`)
             train_ratio (float): The ratio to use of the dataset for the training. The rest of the data is used for the
-                validation (e.g. a train ratio of 0.8 mean a 80-20 train-valid split) (default is 0.8).
-            batch_size (int): The size of the batch (default is 32).
-            epochs (int): The number of training epochs (default is 5).
-            num_workers (int): The number of workers to use for the data loader (default is 1 worker).
+                validation (e.g. a train ratio of 0.8 mean a 80-20 train-valid split) (by default, ``0.8``).
+            batch_size (int): The size of the batch (by default, ``32``).
+            epochs (int): The number of training epochs (by default, ``5``).
+            num_workers (int): The number of workers to use for the data loader (by default, ``1`` worker).
             learning_rate (float): The learning rate (LR) to use for training (default 0.01).
             callbacks (Union[list, None]): List of callbacks to use during training.
                 See Poutyne `callback <https://poutyne.org/callbacks.html#callback-class>`_ for more information. By
@@ -718,12 +718,12 @@ class AddressParser:
         Args:
             test_dataset_container (~deepparse.dataset_container.DatasetContainer):
                 The test dataset container of the data to use.
-            batch_size (int): The size of the batch (default is 32).
-            num_workers (int): Number of workers to use for the data loader (default is 1 worker).
+            batch_size (int): The size of the batch (by default, ``32``).
+            num_workers (int): Number of workers to use for the data loader (by default, ``1`` worker).
             callbacks (Union[list, None]): List of callbacks to use during training.
                 See Poutyne `callback <https://poutyne.org/callbacks.html#callback-class>`_ for more information.
                 By default, we set no callback.
-            seed (int): Seed to use (by default 42).
+            seed (int): Seed to use (by default, ``42``).
             callbacks (Union[list, None]): List of callbacks to use during training.
                 See Poutyne `callback <https://poutyne.org/callbacks.html#callback-class>`_ for more information.
                 By default, we set no callback.

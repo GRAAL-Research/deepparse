@@ -130,7 +130,7 @@ def get_parser() -> argparse.ArgumentParser:
             "bpemb",
             "bpemb-attention",
         ],
-        help=wrap("The base parsing module to use."),
+        help=wrap("The base parsing module to use for retraining."),
     )
 
     parser.add_argument(
@@ -143,7 +143,7 @@ def get_parser() -> argparse.ArgumentParser:
         "--train_ratio",
         help=wrap(
             "The ratio to use of the dataset for the training. The rest of the data is used for the "
-            "validation (e.g. a train ratio of 0.8 mean a 80-20 train-valid split) (default is 0.8)."
+            "validation (e.g. a training ratio of 0.8 mean an 80-20 train-valid split) (default is 0.8)."
         ),
         type=float,
         default=0.8,
@@ -165,7 +165,7 @@ def get_parser() -> argparse.ArgumentParser:
 
     parser.add_argument(
         "--num_workers",
-        help=wrap("The number of workers to use for the data loader (default is 1 worker)"),
+        help=wrap("The number of workers to use for the data loader (default is 1 worker)."),
         type=int,
         default=1,
     )
@@ -179,7 +179,7 @@ def get_parser() -> argparse.ArgumentParser:
 
     parser.add_argument(
         "--seed",
-        help=wrap("The seed to use (default 42)"),
+        help=wrap("The seed to use (default 42)."),
         type=int,
         default=42,
     )
@@ -188,8 +188,8 @@ def get_parser() -> argparse.ArgumentParser:
         "--logging_path",
         help=wrap(
             "The logging path for the checkpoints and the retrained model. "
-            "Note that training creates checkpoint and we use Poutyne library that use the best epoch "
-            "model and reload the state if any checkpoints are already there. "
+            "Note that training creates checkpoints, and we use Poutyne library that use the best epoch "
+            "model and reloads the state if any checkpoints are already there. "
             "Thus, an error will be raised if you change the model type. For example, "
             "you retrain a FastText model and then retrain a BPEmb in the same logging path directory."
             "By default, the path is './checkpoints'."
@@ -219,8 +219,8 @@ def get_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--name_of_the_retrain_parser",
         help=wrap(
-            "Name to give to the retrained parser that will be use when reloaded as the printed name, "
-            "and to the saving file name. By default None, thus, the default name. See the complete parser retrain "
+            "Name to give to the retrained parser that will be used when reloaded as the printed name, "
+            "and to the saving file name. By default, None, thus, the default name. See the complete parser retrain "
             "method for more details."
         ),
         default=None,
@@ -229,7 +229,7 @@ def get_parser() -> argparse.ArgumentParser:
 
     parser.add_argument(
         "--device",
-        help=wrap("The device to use. It can be 'cpu' or a GPU device index such as '0' or '1'. By default '0'."),
+        help=wrap("The device to use. It can be 'cpu' or a GPU device index such as '0' or '1'. By default, '0'."),
         type=str,
         default="0",
     )
@@ -239,7 +239,7 @@ def get_parser() -> argparse.ArgumentParser:
         help=wrap(
             "The column names to extract address in the CSV. Need to be specified if the provided dataset_path "
             "leads to a CSV file. Column names have to be separated by a whitespace. For"
-            "example, --csv_column_names column1 column2."
+            "example, --csv_column_names column1 column2. By default, None."
         ),
         default=None,
         nargs=2,
@@ -250,7 +250,7 @@ def get_parser() -> argparse.ArgumentParser:
         "--csv_column_separator",
         help=wrap(
             "The column separator for the dataset container will only be used if the dataset is a CSV one."
-            " By default '\t'."
+            " By default, '\t'."
         ),
         default="\t",
     )

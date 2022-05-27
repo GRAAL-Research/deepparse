@@ -65,15 +65,15 @@ class AddressParser:
     Address parser to parse an address or a list of address using one of the seq2seq pretrained
     networks either with fastText or BPEmb. The default prediction tags are the following
 
-            - "StreetNumber": for the street number,
-            - "StreetName": for the name of the street,
-            - "Unit": for the unit (such as apartment),
-            - "Municipality": for the municipality,
-            - "Province": for the province or local region,
-            - "PostalCode": for the postal code,
-            - "Orientation": for the street orientation (e.g. west, east),
-            - "GeneralDelivery": for other delivery information,
-            - "EOS": (End Of Sequence) since we use an EOS tag during training, sometimes the models return an EOS tag.
+            - 'StreetNumber': for the street number,
+            - 'StreetName': for the name of the street,
+            - 'Unit': for the unit (such as apartment),
+            - 'Municipality': for the municipality,
+            - 'Province': for the province or local region,
+            - 'PostalCode': for the postal code,
+            - 'Orientation': for the street orientation (e.g. west, east),
+            - 'GeneralDelivery': for other delivery information,
+            - 'EOS': (End Of Sequence) since we use an EOS tag during training, sometimes the models return an EOS tag.
 
     Args:
         model_type (str): The network name to use, can be either:
@@ -85,7 +85,7 @@ class AddressParser:
             - lightest (the one using the less RAM and GPU usage) (equivalent to fasttext-light),
             - best (the best accuracy performance) (equivalent to bpemb).
 
-            The default value is "best" for the most accurate model. Ignored if ``path_to_retrained_model`` is not
+            The default value is ``"best"`` for the most accurate model. Ignored if ``path_to_retrained_model`` is not
             ``None``. To further improve performance, consider using the models (fasttext or BPEmb) with their
             counterpart using attention mechanism with the ``attention_mechanism`` flag.
         attention_mechanism (bool): Whether to use the model with an attention mechanism. The model will use an
@@ -94,9 +94,9 @@ class AddressParser:
         device (Union[int, str, torch.torch.device]): The device to use can be either:
 
             - a ``GPU`` index in int format (e.g. ``0``),
-            - a complete device name in a string format (e.g. ``'cuda:0'``),
+            - a complete device name in a string format (e.g. ``"cuda:0"``),
             - a :class:`~torch.torch.device` object,
-            - ``'cpu'`` for a  ``CPU`` use.
+            - ``"cpu"`` for a  ``CPU`` use.
 
             The default value is GPU with the index ``0`` if it exists, otherwise the value is ``CPU``.
         rounding (int): The rounding to use when asking the probability of the tags. The default value is 4 digits.
@@ -155,7 +155,7 @@ class AddressParser:
         .. code-block:: python
 
             address_parser = AddressParser(model_type="fasttext",
-                                           path_to_retrained_model='/path_to_a_retrain_fasttext_model')
+                                           path_to_retrained_model="/path_to_a_retrain_fasttext_model")
             parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
 
         Using a retrained model trained on different tags
@@ -163,7 +163,7 @@ class AddressParser:
         .. code-block:: python
 
             # We don't give the model_type since it's ignored when using path_to_retrained_model
-            address_parser = AddressParser(path_to_retrained_model='/path_to_a_retrain_fasttext_model')
+            address_parser = AddressParser(path_to_retrained_model="/path_to_a_retrain_fasttext_model")
             parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
 
         Using a retrained model with attention
@@ -171,7 +171,7 @@ class AddressParser:
         .. code-block:: python
 
             address_parser = AddressParser(model_type="fasttext",
-                                           path_to_retrained_model='/path_to_a_retrain_fasttext_attention_model',
+                                           path_to_retrained_model="/path_to_a_retrain_fasttext_attention_model",
                                            attention_mechanism=True)
             parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
 
@@ -418,21 +418,23 @@ class AddressParser:
                     - The number of ``decoder_num_layers`` of the decoder. The default value is 1.
 
                 Default is ``None``, meaning we use the default seq2seq architecture.
-            layers_to_freeze (Union[str, None]): Name of the portion of the seq2seq to freeze layers, thus reducing the number of parameters to learn. Will be ignored if ``seq2seq_params`` is not ``None``. Possible freezing settings are:
+            layers_to_freeze (Union[str, None]): Name of the portion of the seq2seq to freeze layers. Thus, it reduces
+                the number of parameters to learn. Will be ignored if ``seq2seq_params`` is not ``None``. A seq2seq is
+                composed of three part, an encoder, decoder, and prediction layer. The encoder is the part that
+                encodes the address into a more dense representation. The decoder is the part that decodes a dense
+                address representation. The prediction layer is a fully-connected with an output size of the same
+                length as the prediction tags. Available freezing settings are:
 
                     - ``None``: No layers are frozen.
-                    - ``'encoder'``: To freeze the encoder part of the seq2seq. That is the part that encodes the
-                        address into a more dense representation.
-                    - ``'decoder'``: To freeze the decoder part of the seq2seq. That is the part that decodes a dense
-                        address representation.
-                    - ``'prediction_layer'``: To freeze the last layer that predicts a tag class (i.e. a fully
-                        connected with an output size of the same length as the prediction tags).
-                    - ``'seq2seq'``: To freeze the encoder and decoder but **not** the prediction layer.
+                    - ``"encoder"``: To freeze the encoder part of the seq2seq.
+                    - ``"decoder"``: To freeze the decoder part of the seq2seq.
+                    - ``"prediction_layer"``: To freeze the last layer that predicts a tag class .
+                    - ``"seq2seq"``: To freeze the encoder and decoder but **not** the prediction layer.
 
-               Default is ``None``, meaning we do not freeze any layers.
+                Default is ``None``, meaning we do not freeze any layers.
             name_of_the_retrain_parser (Union[str, None]): Name to give to the retrained parser that will be use
                 when reloaded as the printed name, and to the saving file name (note that we will manually add
-                the extension ``'.ckpt'`` to the name for the file name). By default, ``None``.
+                the extension ``".ckpt"`` to the name for the file name). By default, ``None``.
 
                 Default settings for the parser name will use the training settings for the name using the
                 following pattern:
@@ -473,14 +475,14 @@ class AddressParser:
             The default settings for the file name to save the retrained model use following pattern
             "retrained_{model_type}_address_parser.ckpt" if name_of_the_retrain_parser is set to
             ``None``. Otherwise, the file name to save the retrained model will correspond to
-            ``name_of_the_retrain_parser`` plus the file extension ``'.ckpt'``.
+            ``name_of_the_retrain_parser`` plus the file extension ``".ckpt"``.
 
         Examples:
 
             .. code-block:: python
 
                 address_parser = AddressParser(device=0) #on gpu device 0
-                data_path = 'path_to_a_pickle_dataset.p'
+                data_path = "path_to_a_pickle_dataset.p"
 
                 container = PickleDatasetContainer(data_path)
 
@@ -491,7 +493,7 @@ class AddressParser:
             .. code-block:: python
 
                 address_parser = AddressParser(device=0)
-                data_path = 'path_to_a_csv_dataset.p'
+                data_path = "path_to_a_csv_dataset.p"
 
                 container = CSVDatasetContainer(data_path)
                 address_parser.retrain(container, 0.8, epochs=5, batch_size=128, layers_to_freeze="encoder")
@@ -503,7 +505,7 @@ class AddressParser:
                 import poutyne
 
                 address_parser = AddressParser(device=0)
-                data_path = 'path_to_a_csv_dataset.p'
+                data_path = "path_to_a_csv_dataset.p"
 
                 container = CSVDatasetContainer(data_path)
 
@@ -517,7 +519,7 @@ class AddressParser:
                 address_components = {"ATag":0, "AnotherTag": 1, "EOS": 2}
 
                 address_parser = AddressParser(device=0) #on gpu device 0
-                data_path = 'path_to_a_pickle_dataset.p'
+                data_path = "path_to_a_pickle_dataset.p"
 
                 container = PickleDatasetContainer(data_path)
 
@@ -530,7 +532,7 @@ class AddressParser:
                 seq2seq_params = {"encoder_hidden_size": 512, "decoder_hidden_size": 512}
 
                 address_parser = AddressParser(device=0) #on gpu device 0
-                data_path = 'path_to_a_pickle_dataset.p'
+                data_path = "path_to_a_pickle_dataset.p"
 
                 container = PickleDatasetContainer(data_path)
 
@@ -545,7 +547,7 @@ class AddressParser:
                 address_components = {"ATag":0, "AnotherTag": 1, "EOS": 2}
 
                 address_parser = AddressParser(device=0) #on gpu device 0
-                data_path = 'path_to_a_pickle_dataset.p'
+                data_path = "path_to_a_pickle_dataset.p"
 
                 container = PickleDatasetContainer(data_path)
 
@@ -557,7 +559,7 @@ class AddressParser:
             .. code-block:: python
 
                 address_parser = AddressParser(device=0) #on gpu device 0
-                data_path = 'path_to_a_pickle_dataset.p'
+                data_path = "path_to_a_pickle_dataset.p"
 
                 container = PickleDatasetContainer(data_path)
 
@@ -737,7 +739,7 @@ class AddressParser:
             .. code-block:: python
 
                 address_parser = AddressParser(device=0) #on gpu device 0
-                data_path = 'path_to_a_pickle_test_dataset.p'
+                data_path = "path_to_a_pickle_test_dataset.p"
 
                 test_container = PickleDatasetContainer(data_path, is_training_container=False)
 
@@ -752,14 +754,14 @@ class AddressParser:
                 address_parser = AddressParser(device=0) #on gpu device 0
 
                 # Train phase
-                data_path = 'path_to_a_pickle_train_dataset.p'
+                data_path = "path_to_a_pickle_train_dataset.p"
 
                 train_container = PickleDatasetContainer(data_path)
 
                 address_parser.retrain(container, 0.8, epochs=1, batch_size=128, prediction_tags=address_components)
 
                 # Test phase
-                data_path = 'path_to_a_pickle_test_dataset.p'
+                data_path = "path_to_a_pickle_test_dataset.p"
 
                 test_container = PickleDatasetContainer(data_path, is_training_container=False)
 
@@ -965,8 +967,8 @@ class AddressParser:
 
     def get_formatted_model_name(self) -> str:
         """
-        Return the model type formatted name. For example, if the model type is ``'fasttext'`` the formatted name is
-        ``'FastText'``.
+        Return the model type formatted name. For example, if the model type is ``"fasttext"`` the formatted name is
+        ``"FastText"``.
         """
         return self._model_type_formatted
 
@@ -1009,9 +1011,9 @@ class AddressParser:
             if "bpemb" in self.model_type:
                 layers_to_freeze.append("embedding_network.")
             layer_exclude = "decoder.linear."
-        elif layers_to_freeze == 'prediction_layer':
+        elif layers_to_freeze == "prediction_layer":
             layers_to_freeze = ["decoder.linear."]
-        elif 'seq2seq' in layers_to_freeze:
+        elif "seq2seq" in layers_to_freeze:
             layers_to_freeze = ["encoder.", "decoder."]
             if "bpemb" in self.model_type:
                 layers_to_freeze.append("embedding_network.")

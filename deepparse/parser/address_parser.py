@@ -724,9 +724,7 @@ class AddressParser:
                 See Poutyne `callback <https://poutyne.org/callbacks.html#callback-class>`_ for more information.
                 By default, we set no callback.
             seed (int): Seed to use (by default, ``42``).
-            callbacks (Union[list, None]): List of callbacks to use during training.
-                See Poutyne `callback <https://poutyne.org/callbacks.html#callback-class>`_ for more information.
-                By default, we set no callback.
+
         Return:
             A dictionary with the stats (see `Experiment class
             <https://poutyne.org/experiment.html#poutyne.Experiment.train>`_ for details).

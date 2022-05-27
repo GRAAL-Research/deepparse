@@ -106,9 +106,7 @@ Download
 Command to pre-download model weights and requirements. Here is the argument, its description and possible choices,
 one can use the command ``parse --help`` to output the same description in your command line.
 
-- ``model_type``: The parsing module to download. The possible choice are ``fasttext``, ``fasttext-attention``,
-``fasttext-light``, ``bpemb`` and ``bpemb-attention``.
-
+    - ``model_type``: The parsing module to download. The possible choice are ``'fasttext'``, ``'fasttext-attention'``, ``'fasttext-light'``, ``'bpemb'`` and ``'bpemb-attention'``.
 
 .. autofunction:: deepparse.cli.download.main
 

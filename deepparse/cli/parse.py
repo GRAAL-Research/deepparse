@@ -100,7 +100,7 @@ def main(args=None) -> None:
             filename=logging_export_path, format="%(asctime)s : %(levelname)s : %(message)s", level=logging.INFO
         )
 
-        text_to_log = f"Parsing dataset file {dataset_path} using the parser {address_parser}"
+        text_to_log = f"Parsing dataset file {dataset_path} using the parser {str(address_parser)}"
         logging.info(text_to_log)
 
     parsed_address = address_parser(addresses_to_parse, batch_size=parsed_args.batch_size)

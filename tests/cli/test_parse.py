@@ -1,7 +1,5 @@
-# Since we use a patch as model mock we skip the unused argument error
-# pylint: disable=unused-argument
+# pylint: disable=too-many-arguments, too-many-locals
 
-import argparse
 import logging
 import os
 import unittest
@@ -11,7 +9,7 @@ from unittest import TestCase, skipIf
 import pytest
 import torch
 
-from deepparse.cli import parse, generate_export_path, bool_parse
+from deepparse.cli import parse, generate_export_path
 from tests.parser.base import PretrainedWeightsBase
 from tests.tools import create_pickle_file, create_csv_file
 

@@ -418,14 +418,15 @@ class AddressParser:
                     - The number of ``decoder_num_layers`` of the decoder. The default value is 1.
 
                 Default is ``None``, meaning we use the default seq2seq architecture.
-            layers_to_freeze (Union[str, None]): Name of the portion of the seq2seq to freeze layers, thus reducing the
-                number of parameters to learn. Will be ignored if ``seq2seq_params`` is not ``None``. Possible
-                freezing settings are:
+            layers_to_freeze (Union[str, None]): Name of the portion of the seq2seq to freeze layers, thus reducing the number of parameters to learn. Will be ignored if ``seq2seq_params`` is not ``None``. Possible freezing settings are:
 
                     - ``None``: No layers are frozen.
-                    - ``'encoder'``: To freeze the encoder part of the seq2seq. That is the part that encodes the address into a more dense representation.
-                    - ``'decoder'``: To freeze the decoder part of the seq2seq. That is the part that decodes a dense address representation.
-                    - ``'prediction_layer'``: To freeze the last layer that predicts a tag class (i.e. a fully connected with an output size of the same length as the prediction tags).
+                    - ``'encoder'``: To freeze the encoder part of the seq2seq. That is the part that encodes the
+                        address into a more dense representation.
+                    - ``'decoder'``: To freeze the decoder part of the seq2seq. That is the part that decodes a dense
+                        address representation.
+                    - ``'prediction_layer'``: To freeze the last layer that predicts a tag class (i.e. a fully
+                        connected with an output size of the same length as the prediction tags).
                     - ``'seq2seq'``: To freeze the encoder and decoder but **not** the prediction layer.
 
                Default is ``None``, meaning we do not freeze any layers.

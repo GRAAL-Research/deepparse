@@ -121,6 +121,12 @@ You can then see the local html files in your favorite browser. Here is an examp
 firefox _build/html/index.html
 ```
 
+or using Python
+
+```python
+python -m http.server -d _build/html/
+```
+
 ## License
 By contributing, you agree that your contributions will be licensed under its LGPLv3 License.
 

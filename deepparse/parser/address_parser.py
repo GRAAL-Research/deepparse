@@ -102,8 +102,8 @@ class AddressParser:
         rounding (int): The rounding to use when asking the probability of the tags. The default value is 4 digits.
         verbose (bool): Turn on/off the verbosity of the model weights download and loading. The default value is True.
         path_to_retrained_model (Union[str, None]): The path to the retrained model to use for prediction. We will
-            `'infer'` the ``model_type`` of the retrained model. Default is None, meaning we use our pretrained model.
-            If the retrained model uses an attention mechanism, `attention_mechanism` needs to be set to True.
+            infer the ``model_type`` of the retrained model. Default is None, meaning we use our pretrained model.
+            If the retrained model uses an attention mechanism, ``attention_mechanism`` needs to be set to True.
 
     Note:
         For both the networks, we will download the pretrained weights and embeddings in the ``.cache`` directory
@@ -120,15 +120,15 @@ class AddressParser:
             - `FastText Light <https://graal.ift.ulaval.ca/public/deepparse/fasttext.magnitude.gz>`_.
 
     Note:
-        Since Windows uses `spawn` instead of `fork` during multiprocess (for the data loading pre-processing
-        `num_worker` > 0) we use the Gensim model, which takes more RAM (~10 GO) than the Fasttext one (~8 GO).
+        Since Windows uses ``spawn`` instead of ``fork`` during multiprocess (for the data loading pre-processing
+        ``num_worker`` > 0) we use the Gensim model, which takes more RAM (~10 GO) than the Fasttext one (~8 GO).
         It also takes a longer time to load. See here the
         `issue <https://github.com/GRAAL-Research/deepparse/issues/89>`_.
 
     Note:
         You may observe a 100% CPU load the first time you call the fasttext-light model. We
         `hypotheses <https://github.com/GRAAL-Research/deepparse/pull/54#issuecomment-743463855>`_ that this is due
-        to the SQLite database behind `pymagnitude`. This approach create a cache to speed up processing and since the
+        to the SQLite database behind ``pymagnitude``. This approach create a cache to speed up processing and since the
         memory mapping is saved between the runs, it's more intensive the first time you call it and subsequent
         time this load doesn't appear.
 
@@ -423,18 +423,18 @@ class AddressParser:
                 Possible freezing settings are:
 
                     - ``None``: No layers are frozen.
-                    - 'encoder': To freeze the encoder part of the seq2seq. That is the part that encodes the address
-                    into a more dense representation.
-                    - 'decoder': To freeze the decoder part of the seq2seq. That is the part that decodes a dense
-                    address representation.
-                    - 'prediction_layer': To freeze the last layer that predicts a tag class (i.e. a fully connected
-                    with an output size of the same length as the prediction tags).
-                    - 'seq2seq': To freeze the encoder and decoder but **not** the prediction layer.
+                    - ``'encoder'``: To freeze the encoder part of the seq2seq. That is the part that encodes the
+                        address into a more dense representation.
+                    - ``'decoder'``: To freeze the decoder part of the seq2seq. That is the part that decodes a dense
+                        address representation.
+                    - ``'prediction_layer'``: To freeze the last layer that predicts a tag class (i.e. a fully connected
+                        with an output size of the same length as the prediction tags).
+                    - ``'seq2seq'``: To freeze the encoder and decoder but **not** the prediction layer.
 
                Default is ``None``, meaning we do not freeze any layers.
             name_of_the_retrain_parser (Union[str, None]): Name to give to the retrained parser that will be use
                 when reloaded as the printed name, and to the saving file name (note that we will manually add
-                the extension `.ckpt` to the name for the file name). By default None.
+                the extension ``'.ckpt'`` to the name for the file name). By default, None.
 
                 Default settings for the parser name will use the training settings for the name using the
                 following pattern:
@@ -443,7 +443,7 @@ class AddressParser:
                     - if prediction_tags is not None, the following tag: ModifiedPredictionTags,
                     - if seq2seq_params is not None, the following tag: ModifiedSeq2SeqConfiguration, and
                     - if layers_to_freeze is not None, the following tag: FreezedLayer{portion}.
-                    
+
 
         Return:
             A list of dictionary with the best epoch stats (see `Experiment class
@@ -474,8 +474,8 @@ class AddressParser:
         Note:
             The default settings for the file name to save the retrained model use following pattern
             "retrained_{model_type}_address_parser.ckpt" if name_of_the_retrain_parser is set to
-            `None`. Otherwise, the file name to save the retrained model will correspond to
-            `name_of_the_retrain_parser` plus the file extension `.ckpt`.
+            ``None``. Otherwise, the file name to save the retrained model will correspond to
+            ``name_of_the_retrain_parser`` plus the file extension ``'.ckpt'``.
 
         Examples:
 
@@ -967,8 +967,8 @@ class AddressParser:
 
     def get_formatted_model_name(self) -> str:
         """
-        Return the model type formatted name. For example, if the model type is `'fasttext'` the formatted name is
-        `"FastText"`.
+        Return the model type formatted name. For example, if the model type is ``'fasttext'`` the formatted name is
+        ``'FastText'``.
         """
         return self._model_type_formatted
 

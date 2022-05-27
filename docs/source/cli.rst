@@ -95,7 +95,7 @@ One can use the command ``parse --help`` to output the same description in your 
     - ``--name_of_the_retrain_parser``: Name to give to the retrained parser that will be used when reloaded as the printed name, and to the saving file name. By default ``None``, thus, the default name. See the complete parser retrain method for more details.
     - ``--device``: The device to use. It can be ``'cpu'`` or a GPU device index such as ``'0'`` or ``'1'``. By default ``'0'``.
     - ``--csv_column_names``: The column names to extract address in the CSV. Need to be specified if the provided dataset_path leads to a CSV file. Column names have to be separated by a whitespace. For example, ``--csv_column_names column1 column2``.
-    - ``--csv_column_separator``: The column separator for the dataset container will only be used if the dataset is a CSV one. By default ``'\\t'``.
+    - ``--csv_column_separator``: The column separator for the dataset container will only be used if the dataset is a CSV one. By default ``'\t'``.
 
 .. autofunction:: deepparse.cli.retrain.main
 

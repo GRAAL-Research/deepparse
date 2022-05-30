@@ -13,16 +13,17 @@ class BPEmbEmbeddingsModel(EmbeddingsModel):
     `BPEmb class <https://github.com/bheinzerling/bpemb/blob/master/bpemb/bpemb.py>`_
 
     Params:
+        embeddings_path (str): Path to the embeddings vector cache dir.
         verbose (bool): Either or not to make the loading of the embeddings verbose.
     """
 
-    def __init__(self, verbose: bool = True) -> None:
+    def __init__(self, embeddings_path: str, verbose: bool = True) -> None:
         super().__init__(verbose=verbose)
         with warnings.catch_warnings():
             # annoying scipy.sparcetools private module warnings removal
             # annoying boto warnings
             warnings.filterwarnings("ignore")
-            model = BPEmb(lang="multi", vs=100000, dim=300)  # defaults parameters
+            model = BPEmb(lang="multi", vs=100000, dim=300, cache_dir=Path(embeddings_path))  # defaults parameters
         self.model = model
 
     def __call__(self, word: str) -> ndarray:

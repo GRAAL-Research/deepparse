@@ -938,7 +938,9 @@ class AddressParser:
             )
 
         elif "bpemb" in self.model_type:
-            self.vectorizer = BPEmbVectorizer(embeddings_model=BPEmbEmbeddingsModel(verbose=verbose))
+            self.vectorizer = BPEmbVectorizer(
+                embeddings_model=BPEmbEmbeddingsModel(verbose=verbose, embeddings_path=CACHE_PATH)
+            )
 
             self.data_converter = bpemb_data_padding
 

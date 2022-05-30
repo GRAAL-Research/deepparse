@@ -34,7 +34,7 @@ class RetrainTests(RetrainTestCase):
 
         self.export_named_retrain_path = os.path.join(self.temp_checkpoints_obj.name, self.a_named_model + ".ckpt")
 
-        # We use the default checkpoints loggign path but redirect it into the
+        # We use the default checkpoints logging path but redirect it into the
         # temp directory
         self.logging_path = os.path.join(self.temp_checkpoints_obj.name, "checkpoints")
 

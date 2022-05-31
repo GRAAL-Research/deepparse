@@ -39,6 +39,7 @@ class AddressParserTest(AddressParserPredictTestCase):
         cls.BPEmb_embeddings_model_param = {"lang": "multi", "vs": 100000, "dim": 300}
         cls.fasttext_download_path = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
         os.makedirs(cls.fasttext_download_path, exist_ok=True)
+        cls.cache_dir = cls.fasttext_download_path
         cls.a_embeddings_path = "."
 
         cls.new_seq2seq_params = {
@@ -179,7 +180,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                 verbose=self.verbose,
             )
 
-            embeddings_model_mock.assert_called_with(verbose=self.verbose)
+            embeddings_model_mock.assert_called_with(verbose=self.verbose, cache_dir=self.cache_dir)
 
         with patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel") as embeddings_model_mock:
             AddressParser(
@@ -188,7 +189,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                 verbose=self.verbose,
             )
 
-            embeddings_model_mock.assert_called_with(verbose=self.verbose)
+            embeddings_model_mock.assert_called_with(verbose=self.verbose, cache_dir=self.cache_dir)
 
     @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
     @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
@@ -239,7 +240,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                 verbose=self.verbose,
             )
 
-            embeddings_model_mock.assert_called_with(verbose=self.verbose)
+            embeddings_model_mock.assert_called_with(verbose=self.verbose, cache_dir=self.cache_dir)
 
     @patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel")
     def test_givenABPEmbModelType_whenInstantiatingParser_thenInstantiateBPEmbEmbeddingsModelWithCorrectParameters(
@@ -252,7 +253,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                 verbose=self.verbose,
             )
 
-            embeddings_model_mock.assert_called_with(verbose=self.verbose)
+            embeddings_model_mock.assert_called_with(verbose=self.verbose, cache_dir=self.cache_dir)
 
     @patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel")
     def test_givenABestModelType_whenInstantiatingParser_thenInstantiateBPEmbVectorizerWithCorrectParameters(

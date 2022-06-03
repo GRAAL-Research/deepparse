@@ -104,6 +104,8 @@ class AddressParser:
         path_to_retrained_model (Union[str, None]): The path to the retrained model to use for prediction. We will
             infer the ``model_type`` of the retrained model. Default is ``None``, meaning we use our pretrained model.
             If the retrained model uses an attention mechanism, ``attention_mechanism`` needs to be set to True.
+        cache_dir (Union[str, None]): The path to the cached directory to use for downloading (and loading) the
+            embeddings model.
 
     Note:
         For both the networks, we will download the pretrained weights and embeddings in the ``.cache`` directory
@@ -185,6 +187,7 @@ class AddressParser:
         rounding: int = 4,
         verbose: bool = True,
         path_to_retrained_model: Union[str, None] = None,
+        cache_dir: Union[str, None] = None,
     ) -> None:
         # pylint: disable=too-many-arguments
         self._process_device(device)
@@ -231,6 +234,7 @@ class AddressParser:
             prediction_layer_len=self.tags_converter.dim,
             attention_mechanism=attention_mechanism,
             seq2seq_kwargs=seq2seq_kwargs,
+            cache_dir=cache_dir,
         )
         self.model.eval()
 
@@ -906,6 +910,7 @@ class AddressParser:
         prediction_layer_len: int = 9,
         attention_mechanism=False,
         seq2seq_kwargs: Union[dict, None] = None,
+        cache_dir: Union[dict, None] = None,
     ) -> None:
         # pylint: disable=too-many-arguments
         """
@@ -914,14 +919,18 @@ class AddressParser:
         # We switch the case where seq2seq_kwargs is None to an empty dict
         seq2seq_kwargs = seq2seq_kwargs if seq2seq_kwargs is not None else {}
 
+        if cache_dir is None:
+            # Set to default cache_path value
+            cache_dir = CACHE_PATH
+
         if "fasttext" in self.model_type:
             if "fasttext-light" in self.model_type:
-                file_name = download_fasttext_magnitude_embeddings(saving_dir=CACHE_PATH, verbose=verbose)
+                file_name = download_fasttext_magnitude_embeddings(saving_dir=cache_dir, verbose=verbose)
 
                 embeddings_model = MagnitudeEmbeddingsModel(file_name, verbose=verbose)
                 self.vectorizer = MagnitudeVectorizer(embeddings_model=embeddings_model)
             else:
-                file_name = download_fasttext_embeddings(saving_dir=CACHE_PATH, verbose=verbose)
+                file_name = download_fasttext_embeddings(saving_dir=cache_dir, verbose=verbose)
 
                 embeddings_model = FastTextEmbeddingsModel(file_name, verbose=verbose)
                 self.vectorizer = FastTextVectorizer(embeddings_model=embeddings_model)
@@ -938,9 +947,8 @@ class AddressParser:
             )
 
         elif "bpemb" in self.model_type:
-            self.vectorizer = BPEmbVectorizer(
-                embeddings_model=BPEmbEmbeddingsModel(verbose=verbose, cache_dir=CACHE_PATH)
-            )
+            embeddings_model = BPEmbEmbeddingsModel(verbose=verbose, cache_dir=cache_dir)
+            self.vectorizer = BPEmbVectorizer(embeddings_model=embeddings_model)
 
             self.data_converter = bpemb_data_padding
 

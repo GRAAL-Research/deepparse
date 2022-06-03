@@ -23,7 +23,7 @@ def main(args=None) -> None:
 
         download_model fasttext
     """
-    if args is None:
+    if args is None:  # pragma: no cover
         args = sys.argv[1:]
 
     parsed_args = get_args(args)

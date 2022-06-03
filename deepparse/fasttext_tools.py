@@ -16,7 +16,10 @@ def download_fasttext_magnitude_embeddings(cache_dir: str, verbose: bool = True,
     """
     if saving_dir is not None:  # pragma: no cover
         # Deprecated argument handling
-        warnings.warn("Argument saving_dir is deprecated, use cache_dir instead.", DeprecationWarning)
+        warnings.warn(
+            "Argument saving_dir is deprecated. Use cache_dir instead. The argument will be removed " "in release 0.8.",
+            DeprecationWarning,
+        )
         cache_dir = saving_dir
 
     os.makedirs(cache_dir, exist_ok=True)
@@ -82,7 +85,10 @@ def download_fasttext_embeddings(cache_dir: str, verbose: bool = True, saving_di
     """
     if saving_dir is not None:  # pragma: no cover
         # Deprecated argument handling
-        warnings.warn("Argument saving_dir is deprecated, use cache_dir instead.", DeprecationWarning)
+        warnings.warn(
+            "Argument saving_dir is deprecated. Use cache_dir instead. The argument will be removed " "in release 0.8.",
+            DeprecationWarning,
+        )
         cache_dir = saving_dir
 
     os.makedirs(cache_dir, exist_ok=True)

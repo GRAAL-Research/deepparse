@@ -925,12 +925,12 @@ class AddressParser:
 
         if "fasttext" in self.model_type:
             if "fasttext-light" in self.model_type:
-                file_name = download_fasttext_magnitude_embeddings(saving_dir=cache_dir, verbose=verbose)
+                file_name = download_fasttext_magnitude_embeddings(cache_dir=cache_dir, verbose=verbose)
 
                 embeddings_model = MagnitudeEmbeddingsModel(file_name, verbose=verbose)
                 self.vectorizer = MagnitudeVectorizer(embeddings_model=embeddings_model)
             else:
-                file_name = download_fasttext_embeddings(saving_dir=cache_dir, verbose=verbose)
+                file_name = download_fasttext_embeddings(cache_dir=cache_dir, verbose=verbose)
 
                 embeddings_model = FastTextEmbeddingsModel(file_name, verbose=verbose)
                 self.vectorizer = FastTextVectorizer(embeddings_model=embeddings_model)

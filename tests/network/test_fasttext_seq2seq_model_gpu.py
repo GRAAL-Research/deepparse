@@ -2,7 +2,6 @@
 # We also skip protected-access since we test the encoder and decoder step
 # Bug with PyTorch source code makes torch.tensor as not callable for pylint.
 # pylint: disable=unused-argument, protected-access, too-many-arguments, not-callable, too-many-locals
-import os
 import unittest
 from unittest import skipIf
 from unittest.mock import patch, call, MagicMock

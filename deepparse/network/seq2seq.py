@@ -11,7 +11,6 @@ import torch.nn as nn
 
 from .decoder import Decoder
 from .encoder import Encoder
-from ..tools import CACHE_PATH
 from ..tools import download_weights, latest_version
 
 

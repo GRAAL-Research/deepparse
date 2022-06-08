@@ -3,7 +3,6 @@
 # pylint: disable=W0613, protected-access, too-many-arguments, too-many-locals
 # Bug with PyTorch source code makes torch.tensor as not callable for pylint.
 # pylint: disable=not-callable
-import os
 import unittest
 from unittest.mock import patch, call, MagicMock
 

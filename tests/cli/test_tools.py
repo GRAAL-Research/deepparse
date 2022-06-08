@@ -1,4 +1,4 @@
-# pylint: disable=no-member
+# pylint: disable=no-member, too-many-public-methods
 
 import argparse
 import json

@@ -302,6 +302,7 @@ class AddressParserTest(AddressParserPredictTestCase):
             )
 
             model_mock.assert_called_with(
+                cache_dir=self.cache_dir,
                 device=self.a_cpu_torch_device,
                 output_size=self.number_tags,
                 verbose=self.verbose,
@@ -323,6 +324,7 @@ class AddressParserTest(AddressParserPredictTestCase):
             )
 
             model_mock.assert_called_with(
+                cache_dir=self.cache_dir,
                 device=self.a_cpu_torch_device,
                 output_size=len(self.correct_address_components),
                 verbose=self.verbose,
@@ -344,6 +346,7 @@ class AddressParserTest(AddressParserPredictTestCase):
             )
 
             model_mock.assert_called_with(
+                cache_dir=self.cache_dir,
                 device=self.a_cpu_torch_device,
                 output_size=self.number_tags,
                 verbose=self.verbose,
@@ -368,6 +371,7 @@ class AddressParserTest(AddressParserPredictTestCase):
             )
 
             model_mock.assert_called_with(
+                cache_dir=self.cache_dir,
                 device=self.a_cpu_torch_device,
                 output_size=len(self.incorrect_address_components),
                 verbose=self.verbose,
@@ -390,6 +394,7 @@ class AddressParserTest(AddressParserPredictTestCase):
             )
 
             model_mock.assert_called_with(
+                cache_dir=self.cache_dir,
                 device=self.a_cpu_torch_device,
                 output_size=self.number_tags,
                 verbose=self.verbose,
@@ -411,6 +416,7 @@ class AddressParserTest(AddressParserPredictTestCase):
             )
 
             model_mock.assert_called_with(
+                cache_dir=self.cache_dir,
                 device=self.a_cpu_torch_device,
                 output_size=self.number_tags,
                 verbose=self.verbose,
@@ -592,6 +598,7 @@ class AddressParserTest(AddressParserPredictTestCase):
             )
 
             model_mock.assert_called_with(
+                cache_dir=self.cache_dir,
                 device=self.a_cpu_torch_device,
                 output_size=self.number_tags,
                 verbose=self.verbose,
@@ -612,6 +619,7 @@ class AddressParserTest(AddressParserPredictTestCase):
             )
 
             model_mock.assert_called_with(
+                cache_dir=self.cache_dir,
                 device=self.a_cpu_torch_device,
                 output_size=self.number_tags,
                 verbose=self.verbose,

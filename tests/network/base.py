@@ -28,6 +28,8 @@ class Seq2SeqTestCase(TestCase):
 
         cls.output_size = 9
 
+        cls.cache_dir = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
+
     def setup_encoder_mocks(self):
         to_predict_mock = MagicMock()
         lengths_tensor_mock = MagicMock()

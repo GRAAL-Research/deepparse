@@ -85,23 +85,25 @@ class Seq2SeqModel(ABC, nn.Module):
         self.decoder.linear_layer_set_up(output_size=new_dim)
         self.output_size = new_dim
 
-    def _load_pre_trained_weights(self, model_type: str) -> None:
+    def _load_pre_trained_weights(self, model_type: str, cache_dir: str) -> None:
         """
         Method to download and resolved the loading (into the network) of the pretrained weights.
 
         Args:
             model_type (str): The network pretrained weights to load.
+            cache_dir (str): The path to the cached directory to use for downloading (and loading) the
+                model weights.
         """
-        model_path = os.path.join(CACHE_PATH, f"{model_type}.ckpt")
+        model_path = os.path.join(cache_dir, f"{model_type}.ckpt")
 
         if not os.path.isfile(model_path):
-            download_weights(model_type, CACHE_PATH, verbose=self.verbose)
-        elif not latest_version(model_type, cache_path=CACHE_PATH):
+            download_weights(model_type, cache_dir, verbose=self.verbose)
+        elif not latest_version(model_type, cache_path=cache_dir):
             if self.verbose:
                 warnings.warn(
                     "A new version of the pretrained model is available. " "The newest model will be downloaded."
                 )
-            download_weights(model_type, CACHE_PATH, verbose=self.verbose)
+            download_weights(model_type, cache_dir, verbose=self.verbose)
 
         all_layers_params = torch.load(model_path, map_location=self.device)
         self.load_state_dict(all_layers_params)

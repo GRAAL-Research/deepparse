@@ -2,7 +2,7 @@
 # Since we use patch we skip the unused argument error
 # We also skip protected-access since we test the _load_weights
 # pylint: disable=protected-access, unused-argument, not-callable
-
+import os
 import unittest
 from unittest import TestCase
 from unittest import skipIf
@@ -15,19 +15,22 @@ from deepparse.network import Seq2SeqModel
 
 
 class Seq2SeqTest(TestCase):
-    def setUp(self) -> None:
-        self.a_torch_device = torch.device("cuda:0")
-        self.a_cpu_device = torch.device("cpu")
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.a_torch_device = torch.device("cuda:0")
+        cls.a_cpu_device = torch.device("cpu")
 
-        self.encoder_input_size_dim = 300
-        self.encoder_hidden_size = 1024
-        self.encoder_num_layers = 1
-        self.decoder_input_size_dim = 1
-        self.decoder_hidden_size = 1024
-        self.decoder_num_layers = 1
-        self.decoder_output_size = 9
+        cls.encoder_input_size_dim = 300
+        cls.encoder_hidden_size = 1024
+        cls.encoder_num_layers = 1
+        cls.decoder_input_size_dim = 1
+        cls.decoder_hidden_size = 1024
+        cls.decoder_num_layers = 1
+        cls.decoder_output_size = 9
 
-        self.a_fake_retrain_path = "a/fake/path/retrain/model"
+        cls.a_fake_retrain_path = "a/fake/path/retrain/model"
+
+        cls.cache_dir = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
 
     def test_whenInstantiateASeq2SeqModel_thenParametersAreOk(self):
         seq2seq_model = Seq2SeqModel(
@@ -145,7 +148,7 @@ class Seq2SeqTest(TestCase):
         last_version_mock.return_value = False
         with patch("deepparse.network.seq2seq.download_weights"):
             with self.assertWarns(UserWarning):
-                seq2seq_model._load_pre_trained_weights("a_model_type")
+                seq2seq_model._load_pre_trained_weights("a_model_type", cache_dir=self.cache_dir)
 
     @patch("deepparse.network.seq2seq.latest_version")
     @patch("os.path.isfile")
@@ -169,7 +172,7 @@ class Seq2SeqTest(TestCase):
         last_version_mock.return_value = False
         with patch("deepparse.network.seq2seq.download_weights"):
             with pytest.warns(None) as record:
-                seq2seq_model._load_pre_trained_weights("a_model_type")
+                seq2seq_model._load_pre_trained_weights("a_model_type", cache_dir=self.cache_dir)
             self.assertEqual(0, len(record))
 
     @patch("deepparse.network.seq2seq.latest_version")
@@ -193,7 +196,7 @@ class Seq2SeqTest(TestCase):
         last_version_mock.return_value = False
         with patch("deepparse.network.seq2seq.download_weights"):
             with self.assertWarns(UserWarning):
-                seq2seq_model._load_pre_trained_weights("a_model_type")
+                seq2seq_model._load_pre_trained_weights("a_model_type", cache_dir=self.cache_dir)
 
     @patch("deepparse.network.seq2seq.latest_version")
     @patch("os.path.isfile")
@@ -216,7 +219,7 @@ class Seq2SeqTest(TestCase):
         last_version_mock.return_value = False
         with patch("deepparse.network.seq2seq.download_weights"):
             with pytest.warns(None) as record:
-                seq2seq_model._load_pre_trained_weights("a_model_type")
+                seq2seq_model._load_pre_trained_weights("a_model_type", cache_dir=self.cache_dir)
             self.assertEqual(0, len(record))
 
     @patch("deepparse.network.seq2seq.torch")

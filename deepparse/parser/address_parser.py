@@ -105,7 +105,7 @@ class AddressParser:
             infer the ``model_type`` of the retrained model. Default is ``None``, meaning we use our pretrained model.
             If the retrained model uses an attention mechanism, ``attention_mechanism`` needs to be set to True.
         cache_dir (Union[str, None]): The path to the cached directory to use for downloading (and loading) the
-            embeddings model.
+            embeddings model and the model pretrained weights.
 
     Note:
         For both the networks, we will download the pretrained weights and embeddings in the ``.cache`` directory
@@ -938,6 +938,7 @@ class AddressParser:
             self.data_converter = fasttext_data_padding
 
             self.model = FastTextSeq2SeqModel(
+                cache_dir=cache_dir,
                 device=self.device,
                 output_size=prediction_layer_len,
                 verbose=verbose,
@@ -953,6 +954,7 @@ class AddressParser:
             self.data_converter = bpemb_data_padding
 
             self.model = BPEmbSeq2SeqModel(
+                cache_dir=cache_dir,
                 device=self.device,
                 output_size=prediction_layer_len,
                 verbose=verbose,

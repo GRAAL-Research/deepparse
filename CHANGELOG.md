@@ -212,6 +212,6 @@
 - Add minimum version to Gensim 4.0.0.
 - Add a new CLI function, retrain, to retrain from the command line
 - Improve doc
-- Add `cache_dir` to BPEmb embedding model and to `AddressParser` to change the embeddings cache directory
+- Add `cache_dir` to BPEmb embedding model and to `AddressParser` to change the embeddings cache directory and models weights cache directory
 - Change the `saving_dir` argument of `download_fastext_embeddings` and `download_fasttext_magnitude_embeddings` function
 to `cache_dir`. `saving_dir` is now deprecated and will be remove in version 0.8.

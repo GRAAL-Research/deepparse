@@ -53,6 +53,8 @@
 <li class="toctree-l3"><a class="reference internal" href="#exporting-format">Exporting Format</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#retrain">Retrain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#test">Test</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#download">Download</a></li>
 </ul>
 </li>
@@ -95,7 +97,8 @@
              
   <section id="cli">
 <h1>CLI<a class="headerlink" href="#cli" title="Permalink to this heading"></a></h1>
-<p>You cas use our cli to parsed addresses directly from the command line or download a pre-trained model.</p>
+<p>You can use our CLI to parse addresses directly from the command line, retrain a parsing model or download a
+pretrained model.</p>
 <section id="parse">
 <h2>Parse<a class="headerlink" href="#parse" title="Permalink to this heading"></a></h2>
 <p>The parsing of the addresses to parse <code class="docutils literal notranslate"><span class="pre">dataset_path</span></code> is done using the selected <code class="docutils literal notranslate"><span class="pre">parsing_model</span></code>.
@@ -103,18 +106,21 @@ The exported parsed addresses are to be exported in the same directory as the ad
 given the <code class="docutils literal notranslate"><span class="pre">export_file_name</span></code> using the encoding format of the address dataset file. For example,
 if the dataset is in a CSV format, the output file format will be a CSV. Moreover, by default,
 we log some information (<code class="docutils literal notranslate"><span class="pre">--log</span></code>) such as the parser model name, the parsed dataset path
-and the number of parsed addresses. Here is the list of the arguments and their descriptions. One can use
-the command <code class="docutils literal notranslate"><span class="pre">parse</span> <span class="pre">--help</span></code> to output the same description in your command line.</p>
-<ul class="simple">
+and the number of parsed addresses. Here is the list of the arguments, their descriptions and default values.
+One can use the command <code class="docutils literal notranslate"><span class="pre">parse</span> <span class="pre">--help</span></code> to output the same description in your command line.</p>
+<blockquote>
+<div><ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">parsing_model</span></code>: The parsing module to use.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">dataset_path</span></code>: The path to the dataset file in a pickle (.p or .pickle), CSV format or JSON format.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">export_file_name</span></code>: The filename to use to export the parsed addresses. We will infer the file format base on the file extension. That is, if the file is a pickle (.p or .pickle), we will export it into a pickle file. The supported format are Pickle, CSV and JSON. The file will be exported in the same repositories as the dataset_path. See the doc for more details on the format exporting.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--device</span></code>: The device to use. It can be ‘cpu’ or a GPU device index such as ‘0’ or ‘1’. By default ‘0’.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--path_to_retrained_model</span></code>: A path to a retrained model to use for parsing.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--csv_column_name</span></code>: The column name to extract address in the CSV. Need to be specified if the provided dataset_path leads to a CSV file.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--csv_column_separator</span></code>: The column separator for the dataset container will only be used if the dataset is a CSV one. By default ‘t’.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--log</span></code>: Either or not to log the parsing process into a <cite>.log</cite> file exported at the same place as the parsed data using the same name as the export file. The bool value can be (not case sensitive) ‘true/false’, ‘t/f’, ‘yes/no’, ‘y/n’ or ‘0/1’.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dataset_path</span></code>: The path to the dataset file in a pickle (<code class="docutils literal notranslate"><span class="pre">.p</span></code>, <code class="docutils literal notranslate"><span class="pre">.pickle</span></code> or <code class="docutils literal notranslate"><span class="pre">.pckl</span></code>) or CSV format.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">export_file_name</span></code>: The filename to use to export the parsed addresses. We will infer the file format base on the file extension. That is, if the file is a pickle (<code class="docutils literal notranslate"><span class="pre">.p</span></code> or <code class="docutils literal notranslate"><span class="pre">.pickle</span></code>), we will export it into a pickle file. The supported format are Pickle, CSV and JSON. The file will be exported in the same repositories as the dataset_path. See the doc for more details on the format exporting.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--device</span></code>: The device to use. It can be ‘cpu’ or a GPU device index such as <code class="docutils literal notranslate"><span class="pre">'0'</span></code> or <code class="docutils literal notranslate"><span class="pre">'1'</span></code>. By default, <code class="docutils literal notranslate"><span class="pre">'0'</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--batch_size</span></code>: The batch size to use to process the dataset. By default, <code class="docutils literal notranslate"><span class="pre">32</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--path_to_retrained_model</span></code>: A path to a retrained model to use for parsing. By default, <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--csv_column_name</span></code>: The column name to extract address in the CSV. Need to be specified if the provided <code class="docutils literal notranslate"><span class="pre">dataset_path</span></code> leads to a CSV file. By default, <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--csv_column_separator</span></code>: The column separator for the dataset container will only be used if the dataset is a CSV one. By default <code class="docutils literal notranslate"><span class="pre">'\t'</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--log</span></code>: Either or not to log the parsing process into a <code class="docutils literal notranslate"><span class="pre">.log</span></code> file exported at the same place as the parsed data using the same name as the export file. The bool value can be (not case sensitive) <code class="docutils literal notranslate"><span class="pre">'true/false'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t/f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'yes/no'</span></code>, <code class="docutils literal notranslate"><span class="pre">'y/n'</span></code> or <code class="docutils literal notranslate"><span class="pre">'0/1'</span></code>. By default, <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
 </ul>
+</div></blockquote>
 <dl class="py function">
 <dt class="sig sig-object py" id="deepparse.cli.parse.main">
 <span class="sig-prename descclassname"><span class="pre">deepparse.cli.parse.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/deepparse/cli/parse.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.cli.parse.main" title="Permalink to this definition"></a></dt>
@@ -124,11 +130,11 @@ the command <code class="docutils literal notranslate"><span class="pre">parse</
 </pre></div>
 </div>
 <p>Using a gpu device</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>parse fasttext ./dataset_path.csv parsed_address.pickle --device <span class="m">0</span>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>parse fasttext ./dataset_path.csv parsed_address.p --device <span class="m">0</span>
 </pre></div>
 </div>
 <p>Using a CSV dataset</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>parse fasttext ./dataset.csv parsed_address.pickle --path_to_retrained_model ./path
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>parse fasttext ./dataset.csv parsed_address.pckl --path_to_retrained_model ./path
 </pre></div>
 </div>
 </dd></dl>
@@ -139,10 +145,10 @@ the command <code class="docutils literal notranslate"><span class="pre">parse</
 </section>
 <section id="exporting-format">
 <h3>Exporting Format<a class="headerlink" href="#exporting-format" title="Permalink to this heading"></a></h3>
-<p>We support three types of export format: CSV, Pickle and JSON.</p>
+<p>We support three types of export formats: CSV, Pickle and JSON.</p>
 <p>The first export uses the following pattern column pattern:
 <code class="docutils literal notranslate"><span class="pre">&quot;Address&quot;,</span> <span class="pre">&quot;First</span> <span class="pre">address</span> <span class="pre">components</span> <span class="pre">class&quot;,</span> <span class="pre">&quot;Second</span> <span class="pre">class&quot;,</span> <span class="pre">...</span></code>.
-Which mean the address <code class="docutils literal notranslate"><span class="pre">305</span> <span class="pre">rue</span> <span class="pre">des</span> <span class="pre">Lilas</span> <span class="pre">0</span> <span class="pre">app</span> <span class="pre">2</span></code> will output the table bellow
+Which means the address <code class="docutils literal notranslate"><span class="pre">305</span> <span class="pre">rue</span> <span class="pre">des</span> <span class="pre">Lilas</span> <span class="pre">0</span> <span class="pre">app</span> <span class="pre">2</span></code> will output the table bellow
 using our default tags:</p>
 <table class="docutils align-default">
 <colgroup>
@@ -183,22 +189,126 @@ using our default tags:</p>
 </table>
 <p>The second export uses a similar approach but using tuples and list. Using the same example will return the following
 tuple <code class="docutils literal notranslate"><span class="pre">(&quot;305</span> <span class="pre">rue</span> <span class="pre">des</span> <span class="pre">Lilas</span> <span class="pre">0</span> <span class="pre">app</span> <span class="pre">2&quot;,</span> <span class="pre">[(&quot;305&quot;,</span> <span class="pre">&quot;StreetNumber&quot;),</span> <span class="pre">(&quot;rue</span> <span class="pre">des</span> <span class="pre">lilas&quot;,</span> <span class="pre">&quot;StreetName&quot;),</span> <span class="pre">...])</span></code>.</p>
-<p>The third export uses a similar approach as the CSV format but instead use a dictionary-like formatting. Using the
+<p>The third export uses a similar approach to the CSV format but uses dictionary-like formatting. Using the
 same example will return the following dict <code class="docutils literal notranslate"><span class="pre">{&quot;Address&quot;:</span> <span class="pre">&quot;305</span> <span class="pre">rue</span> <span class="pre">des</span> <span class="pre">Lilas</span> <span class="pre">0</span> <span class="pre">app</span> <span class="pre">2&quot;,</span> <span class="pre">&quot;StreetNumber&quot;:</span> <span class="pre">&quot;305&quot;,</span> <span class="pre">...}</span></code>.</p>
 </section>
+</section>
+<section id="retrain">
+<h2>Retrain<a class="headerlink" href="#retrain" title="Permalink to this heading"></a></h2>
+<p>This command allows a user to retrain the <code class="docutils literal notranslate"><span class="pre">base_parsing_model</span></code> on the <code class="docutils literal notranslate"><span class="pre">train_dataset_path</span></code> dataset.
+For the training, the CSV or Pickle dataset is loader in a specific dataloader (see
+<a class="reference internal" href="dataset_container.html#deepparse.dataset_container.DatasetContainer" title="deepparse.dataset_container.DatasetContainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DatasetContainer</span></code></a> for more details). We use poutyne’s automatic logging
+functionalities during training. Thus, it creates an epoch checkpoint and outputs the epoch metrics in a TSV file.
+Moreover, we save the best epoch model under the retrain model name (either the default one or a given name using
+the <code class="docutils literal notranslate"><span class="pre">name_of_the_retrain_parser</span></code> argument). Here is the list of the arguments, their descriptions and default values.
+One can use the command <code class="docutils literal notranslate"><span class="pre">parse</span> <span class="pre">--help</span></code> to output the same description in your command line.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">base_parsing_model</span></code>: The parsing module to retrain.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">train_dataset_path</span></code>: The path to the dataset file in a pickle (<code class="docutils literal notranslate"><span class="pre">.p</span></code>, <code class="docutils literal notranslate"><span class="pre">.pickle</span></code> or <code class="docutils literal notranslate"><span class="pre">.pckl</span></code>) or CSV format.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--train_ratio</span></code>: The ratio to use of the dataset for the training. The rest of the data is used for the validation (e.g. a training ratio of 0.8 mean an 80-20 train-valid split) (default is 0.8).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--batch_size</span></code>: The size of the batch (default is <code class="docutils literal notranslate"><span class="pre">32</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--epochs</span></code>: The number of training epochs (default is <code class="docutils literal notranslate"><span class="pre">5</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--num_workers</span></code>: The number of workers to use for the data loader (default is <code class="docutils literal notranslate"><span class="pre">1</span></code> worker).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--learning_rate</span></code>: The learning rate (LR) to use for training (default <code class="docutils literal notranslate"><span class="pre">0.01</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--seed</span></code>: The seed to use (default <code class="docutils literal notranslate"><span class="pre">42</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--logging_path</span></code>: The logging path for the checkpoints and the retrained model. Note that training creates checkpoints, and we use the Poutyne library that uses the best epoch model and reloads the state if any checkpoints are already there. Thus, an error will be raised if you change the model type. For example, you retrain a FastText model and then retrain a BPEmb in the same logging path directory. By default, the path is <code class="docutils literal notranslate"><span class="pre">'./checkpoints'</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--disable_tensorboard</span></code>: To disable Poutyne automatic Tensorboard monitoring. By default, we disable them (<code class="docutils literal notranslate"><span class="pre">True</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--layers_to_freeze</span></code>: Name of the portion of the seq2seq to freeze layers, thus reducing the number of parameters to learn. Default to <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--name_of_the_retrain_parser</span></code>: Name to give to the retrained parser that will be used when reloaded as the printed name, and to the saving file name. By default <code class="docutils literal notranslate"><span class="pre">None</span></code>, thus, the default name. See the complete parser retrain method for more details.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--device</span></code>: The device to use. It can be <code class="docutils literal notranslate"><span class="pre">'cpu'</span></code> or a GPU device index such as <code class="docutils literal notranslate"><span class="pre">'0'</span></code> or <code class="docutils literal notranslate"><span class="pre">'1'</span></code>. By default <code class="docutils literal notranslate"><span class="pre">'0'</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--csv_column_names</span></code>: The column names to extract address in the CSV. Need to be specified if the provided dataset_path leads to a CSV file. Column names have to be separated by a whitespace. For example, <code class="docutils literal notranslate"><span class="pre">--csv_column_names</span> <span class="pre">column1</span> <span class="pre">column2</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--csv_column_separator</span></code>: The column separator for the dataset container will only be used if the dataset is a CSV one. By default <code class="docutils literal notranslate"><span class="pre">'\t'</span></code>.</p></li>
+</ul>
+</div></blockquote>
+<dl class="py function">
+<dt class="sig sig-object py" id="deepparse.cli.retrain.main">
+<span class="sig-prename descclassname"><span class="pre">deepparse.cli.retrain.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/deepparse/cli/retrain.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.cli.retrain.main" title="Permalink to this definition"></a></dt>
+<dd><p>CLI function to rapidly fine-tuned an addresses parser and saves it. One can retrain a base pretrained model
+using most of the arguments as the <code class="xref py py-meth docutils literal notranslate"><span class="pre">retrain()</span></code> method. By default, all the parameters have
+the same default value as the <code class="xref py py-meth docutils literal notranslate"><span class="pre">retrain()</span></code> method. The supported parameters are the following:</p>
+<ul class="simple">
+<li><p><cite>train_ratio</cite>,</p></li>
+<li><p><cite>batch_size</cite>,</p></li>
+<li><p><cite>epochs</cite>,</p></li>
+<li><p><cite>num_workers</cite>,</p></li>
+<li><p><cite>learning_rate</cite>,</p></li>
+<li><p><cite>seed</cite>,</p></li>
+<li><p><cite>logging_path</cite>,</p></li>
+<li><p><cite>disable_tensorboard</cite>,</p></li>
+<li><p><cite>layers_to_freeze</cite>, and</p></li>
+<li><p><cite>name_of_the_retrain_parser</cite>.</p></li>
+</ul>
+<p>Examples of usage:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>retrain fasttext ./train_dataset_path.csv
+</pre></div>
+</div>
+<p>Using a gpu device</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>retrain bpemb ./train_dataset_path.csv --device <span class="m">0</span>
+</pre></div>
+</div>
+<p>Modifying training parameters</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>retrain bpemb ./train_dataset_path.csv --device <span class="m">0</span> --batch_size <span class="m">128</span> --learning_rate <span class="m">0</span>.001
+</pre></div>
+</div>
+</dd></dl>
+
+<p>We do not handle the <code class="docutils literal notranslate"><span class="pre">seq2seq_params</span></code> and <code class="docutils literal notranslate"><span class="pre">prediction_tags</span></code> fine-tuning argument for now.</p>
+</section>
+<section id="test">
+<h2>Test<a class="headerlink" href="#test" title="Permalink to this heading"></a></h2>
+<p>This command allows a user to test the <code class="docutils literal notranslate"><span class="pre">base_parsing_model</span></code> (or the retrained one using the
+<code class="docutils literal notranslate"><span class="pre">--path_to_retrained_model</span></code>) on the <code class="docutils literal notranslate"><span class="pre">train_dataset_path</span></code> dataset.
+For the testing, the CSV or Pickle dataset is loader in a specific dataloader (see
+<a class="reference internal" href="dataset_container.html#deepparse.dataset_container.DatasetContainer" title="deepparse.dataset_container.DatasetContainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DatasetContainer</span></code></a> for more details). Moreover, by default,
+we log some information (<code class="docutils literal notranslate"><span class="pre">--log</span></code>) such as the tested address parser model name and the parsed dataset path. Plus,
+we also log the testing results in a TSV file. The two files are exported at the same path as the testing dataset.
+Here is the list of the arguments, their descriptions and default values.
+One can use the command <code class="docutils literal notranslate"><span class="pre">parse</span> <span class="pre">--help</span></code> to output the same description in your command line.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">base_parsing_model</span></code>: The parsing module to test.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_dataset_path</span></code>: The path to the dataset file in a pickle (<code class="docutils literal notranslate"><span class="pre">.p</span></code>, <code class="docutils literal notranslate"><span class="pre">.pickle</span></code> or <code class="docutils literal notranslate"><span class="pre">.pckl</span></code>) or CSV format.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--device</span></code>: The device to use. It can be ‘cpu’ or a GPU device index such as <code class="docutils literal notranslate"><span class="pre">'0'</span></code> or <code class="docutils literal notranslate"><span class="pre">'1'</span></code>. By default, <code class="docutils literal notranslate"><span class="pre">'0'</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--path_to_retrained_model</span></code>: A path to a retrained model to use test (need to be the same model type as <code class="docutils literal notranslate"><span class="pre">base_parsing_model</span></code>). By default, <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--batch_size</span></code>: The batch size to use to process the dataset. By default, <code class="docutils literal notranslate"><span class="pre">32</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--num_workers</span></code>: The number of workers to use for the data loader (default is <code class="docutils literal notranslate"><span class="pre">1</span></code> worker).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--seed</span></code>: The seed to use to make the sampling deterministic (default <code class="docutils literal notranslate"><span class="pre">42</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--csv_column_name</span></code>: The column name to extract address in the CSV. Need to be specified if the provided <code class="docutils literal notranslate"><span class="pre">dataset_path</span></code> leads to a CSV file. By default, <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--csv_column_separator</span></code>: The column separator for the dataset container will only be used if the dataset is a CSV one. By default <code class="docutils literal notranslate"><span class="pre">'\t'</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--log</span></code>: Either or not to log the parsing process into a <code class="docutils literal notranslate"><span class="pre">.log</span></code> file exported at the same place as the parsed data using the same name as the export file. The bool value can be (not case sensitive) <code class="docutils literal notranslate"><span class="pre">'true/false'</span></code>, <code class="docutils literal notranslate"><span class="pre">'t/f'</span></code>, <code class="docutils literal notranslate"><span class="pre">'yes/no'</span></code>, <code class="docutils literal notranslate"><span class="pre">'y/n'</span></code> or <code class="docutils literal notranslate"><span class="pre">'0/1'</span></code>. By default, <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+</ul>
+</div></blockquote>
+<dl class="py function">
+<dt class="sig sig-object py" id="deepparse.cli.test.main">
+<span class="sig-prename descclassname"><span class="pre">deepparse.cli.test.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/deepparse/cli/test.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.cli.test.main" title="Permalink to this definition"></a></dt>
+<dd><p>CLI function to rapidly test an address parser on test data using the same argument as the
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">test()</span></code> method (with the same default values) except for the callbacks.
+The results will be logged in a CSV file next to the test dataset.</p>
+<p>Examples of usage:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nb">test</span> fasttext ./test_dataset_path.csv
+</pre></div>
+</div>
+<p>Modifying testing parameters</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nb">test</span> bpemb ./test_dataset_path.csv --batch_size <span class="m">128</span> --logging_path <span class="s2">&quot;./logging_test&quot;</span>
+</pre></div>
+</div>
+</dd></dl>
+
 </section>
 <section id="download">
 <h2>Download<a class="headerlink" href="#download" title="Permalink to this heading"></a></h2>
 <p>Command to pre-download model weights and requirements. Here is the argument, its description and possible choices,
 one can use the command <code class="docutils literal notranslate"><span class="pre">parse</span> <span class="pre">--help</span></code> to output the same description in your command line.</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">model_type</span></code>: The parsing module to download. The possible choice are <code class="docutils literal notranslate"><span class="pre">fasttext</span></code>, <code class="docutils literal notranslate"><span class="pre">fasttext-attention</span></code>,</p></li>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">model_type</span></code>: The parsing module to download. The possible choice are <code class="docutils literal notranslate"><span class="pre">'fasttext'</span></code>, <code class="docutils literal notranslate"><span class="pre">'fasttext-attention'</span></code>, <code class="docutils literal notranslate"><span class="pre">'fasttext-light'</span></code>, <code class="docutils literal notranslate"><span class="pre">'bpemb'</span></code> and <code class="docutils literal notranslate"><span class="pre">'bpemb-attention'</span></code>.</p></li>
 </ul>
-<p><code class="docutils literal notranslate"><span class="pre">fasttext-light</span></code>, <code class="docutils literal notranslate"><span class="pre">bpemb</span></code> and <code class="docutils literal notranslate"><span class="pre">bpemb-attention</span></code>.</p>
+</div></blockquote>
 <dl class="py function">
 <dt class="sig sig-object py" id="deepparse.cli.download.main">
 <span class="sig-prename descclassname"><span class="pre">deepparse.cli.download.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/deepparse/cli/download.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.cli.download.main" title="Permalink to this definition"></a></dt>
-<dd><p>CLI function to manually download all the dependencies for a pre-trained model.</p>
+<dd><p>CLI function to manually download all the dependencies for a pretrained model.</p>
 <p>Example of usage:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>download_model fasttext
 </pre></div>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>deepparse.cli.parse &mdash; deepparse 0.7.5 documentation</title>
+  <title>deepparse.cli.test &mdash; deepparse 0.7.5 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -73,7 +73,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>deepparse.cli.parse</li>
+      <li>deepparse.cli.test</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -82,51 +82,45 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for deepparse.cli.parse</h1><div class="highlight"><pre>
+  <h1>Source code for deepparse.cli.test</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <span class="kn">from</span> <span class="nn">deepparse.cli.tools</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">is_csv_path</span><span class="p">,</span>
     <span class="n">is_pickle_path</span><span class="p">,</span>
-    <span class="n">to_csv</span><span class="p">,</span>
-    <span class="n">to_pickle</span><span class="p">,</span>
-    <span class="n">generate_export_path</span><span class="p">,</span>
     <span class="n">wrap</span><span class="p">,</span>
-    <span class="n">is_json_path</span><span class="p">,</span>
-    <span class="n">to_json</span><span class="p">,</span>
     <span class="n">bool_parse</span><span class="p">,</span>
-    <span class="n">replace_path_extension</span><span class="p">,</span>
     <span class="n">attention_model_type_handling</span><span class="p">,</span>
+    <span class="n">generate_export_path</span><span class="p">,</span>
+    <span class="n">replace_path_extension</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">deepparse.dataset_container</span> <span class="kn">import</span> <span class="n">CSVDatasetContainer</span><span class="p">,</span> <span class="n">PickleDatasetContainer</span>
 <span class="kn">from</span> <span class="nn">deepparse.parser</span> <span class="kn">import</span> <span class="n">AddressParser</span>
 
 
-<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../cli.html#deepparse.cli.parse.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../cli.html#deepparse.cli.test.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="c1"># pylint: disable=too-many-locals, too-many-branches</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    CLI function to rapidly parse an addresses dataset and output it in another file.</span>
+<span class="sd">    CLI function to rapidly test an address parser on test data using the same argument as the</span>
+<span class="sd">    :meth:`~AddressParser.test` method (with the same default values) except for the callbacks.</span>
+<span class="sd">    The results will be logged in a CSV file next to the test dataset.</span>
+
 
 <span class="sd">    Examples of usage:</span>
 
 <span class="sd">    .. code-block:: sh</span>
 
-<span class="sd">        parse fasttext ./dataset_path.csv parsed_address.pickle</span>
+<span class="sd">        test fasttext ./test_dataset_path.csv</span>
 
-<span class="sd">    Using a gpu device</span>
-
-<span class="sd">    .. code-block:: sh</span>
-
-<span class="sd">        parse fasttext ./dataset_path.csv parsed_address.p --device 0</span>
-
-<span class="sd">    Using a CSV dataset</span>
+<span class="sd">    Modifying testing parameters</span>
 
 <span class="sd">    .. code-block:: sh</span>
 
-<span class="sd">        parse fasttext ./dataset.csv parsed_address.pckl --path_to_retrained_model ./path</span>
+<span class="sd">        test bpemb ./test_dataset_path.csv --batch_size 128 --logging_path &quot;./logging_test&quot;</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">args</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
@@ -134,70 +128,68 @@
 
     <span class="n">parsed_args</span> <span class="o">=</span> <span class="n">get_args</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
 
-    <span class="n">dataset_path</span> <span class="o">=</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">dataset_path</span>
-    <span class="k">if</span> <span class="n">is_csv_path</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">):</span>
-        <span class="n">csv_column_name</span> <span class="o">=</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">csv_column_name</span>
-        <span class="k">if</span> <span class="n">csv_column_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">test_dataset_path</span> <span class="o">=</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">test_dataset_path</span>
+    <span class="k">if</span> <span class="n">is_csv_path</span><span class="p">(</span><span class="n">test_dataset_path</span><span class="p">):</span>
+        <span class="n">csv_column_names</span> <span class="o">=</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">csv_column_names</span>
+        <span class="k">if</span> <span class="n">csv_column_names</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;For a CSV dataset path, you need to specify the &#39;csv_column_name&#39; argument to provide the&quot;</span>
+                <span class="s2">&quot;To use a CSV dataset to test on, you need to specify the &#39;csv_column_names&#39; argument to provide the&quot;</span>
                 <span class="s2">&quot; column name to extract address.&quot;</span>
             <span class="p">)</span>
         <span class="n">csv_column_separator</span> <span class="o">=</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">csv_column_separator</span>
-        <span class="n">addresses_to_parse</span> <span class="o">=</span> <span class="n">CSVDatasetContainer</span><span class="p">(</span>
-            <span class="n">dataset_path</span><span class="p">,</span> <span class="n">column_names</span><span class="o">=</span><span class="n">csv_column_name</span><span class="p">,</span> <span class="n">separator</span><span class="o">=</span><span class="n">csv_column_separator</span><span class="p">,</span> <span class="n">is_training_container</span><span class="o">=</span><span class="kc">False</span>
+        <span class="n">testing_data</span> <span class="o">=</span> <span class="n">CSVDatasetContainer</span><span class="p">(</span>
+            <span class="n">test_dataset_path</span><span class="p">,</span>
+            <span class="n">column_names</span><span class="o">=</span><span class="n">csv_column_names</span><span class="p">,</span>
+            <span class="n">separator</span><span class="o">=</span><span class="n">csv_column_separator</span><span class="p">,</span>
+            <span class="n">is_training_container</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">)</span>
-    <span class="k">elif</span> <span class="n">is_pickle_path</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">):</span>
-        <span class="n">addresses_to_parse</span> <span class="o">=</span> <span class="n">PickleDatasetContainer</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">,</span> <span class="n">is_training_container</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">is_pickle_path</span><span class="p">(</span><span class="n">test_dataset_path</span><span class="p">):</span>
+        <span class="n">testing_data</span> <span class="o">=</span> <span class="n">PickleDatasetContainer</span><span class="p">(</span><span class="n">test_dataset_path</span><span class="p">,</span> <span class="n">is_training_container</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The dataset path argument is not a CSV or a pickle file.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The test dataset path argument is not a CSV or a pickle file.&quot;</span><span class="p">)</span>
 
-    <span class="n">export_filename</span> <span class="o">=</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">export_filename</span>
-    <span class="n">export_path</span> <span class="o">=</span> <span class="n">generate_export_path</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">,</span> <span class="n">export_filename</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">is_csv_path</span><span class="p">(</span><span class="n">export_filename</span><span class="p">):</span>
-        <span class="n">export_fn</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">to_csv</span><span class="p">,</span> <span class="n">export_path</span><span class="o">=</span><span class="n">export_path</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="n">csv_column_separator</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">is_pickle_path</span><span class="p">(</span><span class="n">export_filename</span><span class="p">):</span>
-        <span class="n">export_fn</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">to_pickle</span><span class="p">,</span> <span class="n">export_path</span><span class="o">=</span><span class="n">export_path</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">is_json_path</span><span class="p">(</span><span class="n">export_filename</span><span class="p">):</span>
-        <span class="n">export_fn</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">to_json</span><span class="p">,</span> <span class="n">export_path</span><span class="o">=</span><span class="n">export_path</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;We do not support this type of export.&quot;</span><span class="p">)</span>
-
-    <span class="n">parsing_model</span> <span class="o">=</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">parsing_model</span>
     <span class="n">device</span> <span class="o">=</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">device</span>
-    <span class="n">path_to_retrained_model</span> <span class="o">=</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">path_to_retrained_model</span>
 
     <span class="k">if</span> <span class="s2">&quot;cpu&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">device</span><span class="p">:</span>
         <span class="n">device</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
     <span class="n">parser_args</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;device&quot;</span><span class="p">:</span> <span class="n">device</span><span class="p">}</span>
 
-    <span class="n">parser_args_update_args</span> <span class="o">=</span> <span class="n">attention_model_type_handling</span><span class="p">(</span><span class="n">parsing_model</span><span class="p">)</span>
-    <span class="n">parser_args</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">parser_args_update_args</span><span class="p">)</span>
-
+    <span class="n">path_to_retrained_model</span> <span class="o">=</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">path_to_retrained_model</span>
     <span class="k">if</span> <span class="n">path_to_retrained_model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">parser_args</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;path_to_retrained_model&quot;</span><span class="p">:</span> <span class="n">path_to_retrained_model</span><span class="p">})</span>
 
+    <span class="n">base_parsing_model</span> <span class="o">=</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">base_parsing_model</span>
+    <span class="n">parser_args_update_args</span> <span class="o">=</span> <span class="n">attention_model_type_handling</span><span class="p">(</span><span class="n">base_parsing_model</span><span class="p">)</span>
+    <span class="n">parser_args</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">parser_args_update_args</span><span class="p">)</span>
+
     <span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="o">**</span><span class="n">parser_args</span><span class="p">)</span>
 
+    <span class="n">batch_size</span> <span class="o">=</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">batch_size</span>
+    <span class="n">num_workers</span> <span class="o">=</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">num_workers</span>
+    <span class="n">seed</span> <span class="o">=</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">seed</span>
+    <span class="n">parser_args</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;batch_size&quot;</span><span class="p">:</span> <span class="n">batch_size</span><span class="p">,</span>
+        <span class="s2">&quot;num_workers&quot;</span><span class="p">:</span> <span class="n">num_workers</span><span class="p">,</span>
+        <span class="s2">&quot;seed&quot;</span><span class="p">:</span> <span class="n">seed</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="n">results_export_path</span> <span class="o">=</span> <span class="n">generate_export_path</span><span class="p">(</span><span class="n">test_dataset_path</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">address_parser</span><span class="p">)</span><span class="si">}</span><span class="s2">_testing.tsv&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">log</span><span class="p">:</span>
-        <span class="n">logging_export_path</span> <span class="o">=</span> <span class="n">replace_path_extension</span><span class="p">(</span><span class="n">export_path</span><span class="p">,</span> <span class="s2">&quot;.log&quot;</span><span class="p">)</span>
+        <span class="n">logging_export_path</span> <span class="o">=</span> <span class="n">replace_path_extension</span><span class="p">(</span><span class="n">results_export_path</span><span class="p">,</span> <span class="s2">&quot;.log&quot;</span><span class="p">)</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span>
             <span class="n">filename</span><span class="o">=</span><span class="n">logging_export_path</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%(asctime)s</span><span class="s2"> : </span><span class="si">%(levelname)s</span><span class="s2"> : </span><span class="si">%(message)s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span>
         <span class="p">)</span>
 
-        <span class="n">text_to_log</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Parsing dataset file </span><span class="si">{</span><span class="n">dataset_path</span><span class="si">}</span><span class="s2"> using the parser </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">address_parser</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">text_to_log</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Testing results on dataset file </span><span class="si">{</span><span class="n">test_dataset_path</span><span class="si">}</span><span class="s2"> using the parser </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">address_parser</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">text_to_log</span><span class="p">)</span>
 
-    <span class="n">parsed_address</span> <span class="o">=</span> <span class="n">address_parser</span><span class="p">(</span><span class="n">addresses_to_parse</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">parsed_args</span><span class="o">.</span><span class="n">batch_size</span><span class="p">)</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">address_parser</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="n">test_dataset_container</span><span class="o">=</span><span class="n">testing_data</span><span class="p">,</span> <span class="o">**</span><span class="n">parser_args</span><span class="p">)</span>
 
-    <span class="n">export_fn</span><span class="p">(</span><span class="n">parsed_address</span><span class="p">)</span>
-
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">addresses_to_parse</span><span class="p">)</span><span class="si">}</span><span class="s2"> addresses have been parsed.&quot;</span><span class="p">)</span>
-
+    <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">results_export_path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">log</span><span class="p">:</span>
         <span class="n">text_to_log</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">addresses_to_parse</span><span class="p">)</span><span class="si">}</span><span class="s2"> addresses have been parsed.</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;The parsed addresses are outputted here: </span><span class="si">{</span><span class="n">export_path</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Testing on the dataset file </span><span class="si">{</span><span class="n">test_dataset_path</span><span class="si">}</span><span class="s2"> is finished. The results are logged in &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;the CSV file at </span><span class="si">{</span><span class="n">results_export_path</span><span class="si">}</span><span class="s2">.&quot;</span>
         <span class="p">)</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">text_to_log</span><span class="p">)</span></div>
 
@@ -207,7 +199,7 @@
 
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">RawTextHelpFormatter</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;parsing_model&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;base_parsing_model&quot;</span><span class="p">,</span>
         <span class="n">choices</span><span class="o">=</span><span class="p">[</span>
             <span class="s2">&quot;fasttext&quot;</span><span class="p">,</span>
             <span class="s2">&quot;fasttext-attention&quot;</span><span class="p">,</span>
@@ -215,24 +207,12 @@
             <span class="s2">&quot;bpemb&quot;</span><span class="p">,</span>
             <span class="s2">&quot;bpemb-attention&quot;</span><span class="p">,</span>
         <span class="p">],</span>
-        <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span><span class="s2">&quot;The parsing module to use.&quot;</span><span class="p">),</span>
+        <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span><span class="s2">&quot;The base parsing module to use for testing.&quot;</span><span class="p">),</span>
     <span class="p">)</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;dataset_path&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;test_dataset_path&quot;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span><span class="s2">&quot;The path to the dataset file in a pickle (.p, .pickle or .pckl) or CSV format.&quot;</span><span class="p">),</span>
-        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
-    <span class="p">)</span>
-
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;export_filename&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span>
-            <span class="s2">&quot;The filename to use to export the parsed addresses. We will infer the file format base on the &quot;</span>
-            <span class="s2">&quot;file extension. That is, if the file is a pickle (.p or .pickle), we will export it into a pickle file. &quot;</span>
-            <span class="s2">&quot;The supported format are Pickle, CSV and JSON. &quot;</span>
-            <span class="s2">&quot;The file will be exported in the same repositories as the dataset_path. &quot;</span>
-            <span class="s2">&quot;See the doc for more details on the format exporting.&quot;</span>
-        <span class="p">),</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
     <span class="p">)</span>
 
@@ -244,6 +224,13 @@
     <span class="p">)</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--path_to_retrained_model&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span><span class="s2">&quot;A path to a retrained model to use for testing.&quot;</span><span class="p">),</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
         <span class="s2">&quot;--batch_size&quot;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span><span class="s2">&quot;The size of the batch (default is 32).&quot;</span><span class="p">),</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
@@ -251,20 +238,29 @@
     <span class="p">)</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--path_to_retrained_model&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span><span class="s2">&quot;A path to a retrained model to use for parsing.&quot;</span><span class="p">),</span>
-        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="s2">&quot;--num_workers&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span><span class="s2">&quot;The number of workers to use for the data loader (default is 1 worker).&quot;</span><span class="p">),</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--csv_column_name&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--seed&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span><span class="s2">&quot;The seed to use to make the sampling deterministic (default 42).&quot;</span><span class="p">),</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--csv_column_names&quot;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span>
-            <span class="s2">&quot;The column name to extract address in the CSV. Need to be specified if the provided dataset_path &quot;</span>
-            <span class="s2">&quot;leads to a CSV file.&quot;</span>
+            <span class="s2">&quot;The column names to extract address and tags in the CSV. Need to be specified if the provided &quot;</span>
+            <span class="s2">&quot;dataset_path leads to a CSV file. Column names have to be separated by a whitespace. For&quot;</span>
+            <span class="s2">&quot;example, --csv_column_names column1 column2. By default, None.&quot;</span>
         <span class="p">),</span>
-        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>

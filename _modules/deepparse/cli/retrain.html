@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>deepparse.cli.retrain &mdash; deepparse 0.7.5 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html">
+            <img src="../../../_static/deepparse.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.7.5
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../parser.html">Parser</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dataset_container.html">Dataset Container</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../comparer.html">Comparer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli.html">CLI</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/parse_addresses.html">Parse Addresses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/parse_addresses_with_cli.html">Parse Addresses Using Our CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/retrained_model_parsing.html">Use a Retrained Model to Parse Addresses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/fine_tuning.html">Retrain a Pretrained Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/fine_tuning_with_csv_dataset.html">Retrain a Pretrained Model Using a CSV Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_attention_model.html">Retrain an attention mechanism model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_with_new_seq2seq_params.html">Retrain With New Seq2Seq Parameters</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">deepparse</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>deepparse.cli.retrain</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for deepparse.cli.retrain</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span>
+
+<span class="kn">from</span> <span class="nn">deepparse.cli.tools</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">is_csv_path</span><span class="p">,</span>
+    <span class="n">is_pickle_path</span><span class="p">,</span>
+    <span class="n">wrap</span><span class="p">,</span>
+    <span class="n">bool_parse</span><span class="p">,</span>
+    <span class="n">attention_model_type_handling</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">deepparse.dataset_container</span> <span class="kn">import</span> <span class="n">CSVDatasetContainer</span><span class="p">,</span> <span class="n">PickleDatasetContainer</span>
+<span class="kn">from</span> <span class="nn">deepparse.parser</span> <span class="kn">import</span> <span class="n">AddressParser</span>
+
+<span class="n">_retrain_parameters</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;train_ratio&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;batch_size&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;epochs&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;num_workers&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;learning_rate&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;seed&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;logging_path&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;disable_tensorboard&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;layers_to_freeze&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;name_of_the_retrain_parser&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">parse_retrained_arguments</span><span class="p">(</span><span class="n">parsed_args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+    <span class="n">dict_parsed_args</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="n">parsed_args</span><span class="p">)</span>
+    <span class="n">parsed_retain_arguments</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">retrain_parameter</span> <span class="ow">in</span> <span class="n">_retrain_parameters</span><span class="p">:</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">dict_parsed_args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">retrain_parameter</span><span class="p">)</span>
+        <span class="n">parsed_retain_arguments</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">retrain_parameter</span><span class="p">:</span> <span class="n">value</span><span class="p">})</span>
+
+    <span class="k">return</span> <span class="n">parsed_retain_arguments</span>
+
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../cli.html#deepparse.cli.retrain.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="c1"># pylint: disable=too-many-locals, too-many-branches</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    CLI function to rapidly fine-tuned an addresses parser and saves it. One can retrain a base pretrained model</span>
+<span class="sd">    using most of the arguments as the :meth:`~AddressParser.retrain` method. By default, all the parameters have</span>
+<span class="sd">    the same default value as the :meth:`~AddressParser.retrain` method. The supported parameters are the following:</span>
+
+<span class="sd">    - `train_ratio`,</span>
+<span class="sd">    - `batch_size`,</span>
+<span class="sd">    - `epochs`,</span>
+<span class="sd">    - `num_workers`,</span>
+<span class="sd">    - `learning_rate`,</span>
+<span class="sd">    - `seed`,</span>
+<span class="sd">    - `logging_path`,</span>
+<span class="sd">    - `disable_tensorboard`,</span>
+<span class="sd">    - `layers_to_freeze`, and</span>
+<span class="sd">    - `name_of_the_retrain_parser`.</span>
+
+
+<span class="sd">    Examples of usage:</span>
+
+<span class="sd">    .. code-block:: sh</span>
+
+<span class="sd">        retrain fasttext ./train_dataset_path.csv</span>
+
+<span class="sd">    Using a gpu device</span>
+
+<span class="sd">    .. code-block:: sh</span>
+
+<span class="sd">        retrain bpemb ./train_dataset_path.csv --device 0</span>
+
+<span class="sd">    Modifying training parameters</span>
+
+<span class="sd">    .. code-block:: sh</span>
+
+<span class="sd">        retrain bpemb ./train_dataset_path.csv --device 0 --batch_size 128 --learning_rate 0.001</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">args</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+    <span class="n">parsed_args</span> <span class="o">=</span> <span class="n">get_args</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+
+    <span class="n">train_dataset_path</span> <span class="o">=</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">train_dataset_path</span>
+    <span class="k">if</span> <span class="n">is_csv_path</span><span class="p">(</span><span class="n">train_dataset_path</span><span class="p">):</span>
+        <span class="n">csv_column_names</span> <span class="o">=</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">csv_column_names</span>
+        <span class="k">if</span> <span class="n">csv_column_names</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;To use a CSV dataset to retrain on, you need to specify the &#39;csv_column_names&#39; argument to provide the&quot;</span>
+                <span class="s2">&quot; column names to extract address and labels (respectively). For example, Address Tags.&quot;</span>
+            <span class="p">)</span>
+        <span class="n">csv_column_separator</span> <span class="o">=</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">csv_column_separator</span>
+        <span class="n">training_data</span> <span class="o">=</span> <span class="n">CSVDatasetContainer</span><span class="p">(</span>
+            <span class="n">train_dataset_path</span><span class="p">,</span>
+            <span class="n">column_names</span><span class="o">=</span><span class="n">csv_column_names</span><span class="p">,</span>
+            <span class="n">separator</span><span class="o">=</span><span class="n">csv_column_separator</span><span class="p">,</span>
+            <span class="n">is_training_container</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">elif</span> <span class="n">is_pickle_path</span><span class="p">(</span><span class="n">train_dataset_path</span><span class="p">):</span>
+        <span class="n">training_data</span> <span class="o">=</span> <span class="n">PickleDatasetContainer</span><span class="p">(</span><span class="n">train_dataset_path</span><span class="p">,</span> <span class="n">is_training_container</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The train dataset path argument is not a CSV or a pickle file.&quot;</span><span class="p">)</span>
+
+    <span class="n">base_parsing_model</span> <span class="o">=</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">base_parsing_model</span>
+    <span class="n">device</span> <span class="o">=</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">device</span>
+
+    <span class="k">if</span> <span class="s2">&quot;cpu&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">device</span><span class="p">:</span>
+        <span class="n">device</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+    <span class="n">parser_args</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;device&quot;</span><span class="p">:</span> <span class="n">device</span><span class="p">}</span>
+    <span class="n">parser_args_update_args</span> <span class="o">=</span> <span class="n">attention_model_type_handling</span><span class="p">(</span><span class="n">base_parsing_model</span><span class="p">)</span>
+    <span class="n">parser_args</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">parser_args_update_args</span><span class="p">)</span>
+
+    <span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="o">**</span><span class="n">parser_args</span><span class="p">)</span>
+
+    <span class="n">parsed_retain_arguments</span> <span class="o">=</span> <span class="n">parse_retrained_arguments</span><span class="p">(</span><span class="n">parsed_args</span><span class="p">)</span>
+
+    <span class="n">address_parser</span><span class="o">.</span><span class="n">retrain</span><span class="p">(</span><span class="n">dataset_container</span><span class="o">=</span><span class="n">training_data</span><span class="p">,</span> <span class="o">**</span><span class="n">parsed_retain_arguments</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">get_parser</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Return ArgumentParser for the cli.&quot;&quot;&quot;</span>
+
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">RawTextHelpFormatter</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;base_parsing_model&quot;</span><span class="p">,</span>
+        <span class="n">choices</span><span class="o">=</span><span class="p">[</span>
+            <span class="s2">&quot;fasttext&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;fasttext-attention&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;fasttext-light&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;bpemb&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;bpemb-attention&quot;</span><span class="p">,</span>
+        <span class="p">],</span>
+        <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span><span class="s2">&quot;The base parsing module to use for retraining.&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;train_dataset_path&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span><span class="s2">&quot;The path to the dataset file in a pickle (.p, .pickle or .pckl) or CSV format.&quot;</span><span class="p">),</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--train_ratio&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span>
+            <span class="s2">&quot;The ratio to use of the dataset for the training. The rest of the data is used for the &quot;</span>
+            <span class="s2">&quot;validation (e.g. a training ratio of 0.8 mean an 80-20 train-valid split) (default is 0.8).&quot;</span>
+        <span class="p">),</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--batch_size&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span><span class="s2">&quot;The size of the batch (default is 32).&quot;</span><span class="p">),</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--epochs&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span><span class="s2">&quot;The number of training epochs (default is 5).&quot;</span><span class="p">),</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--num_workers&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span><span class="s2">&quot;The number of workers to use for the data loader (default is 1 worker).&quot;</span><span class="p">),</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--learning_rate&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span><span class="s2">&quot;The learning rate (LR) to use for training (default 0.01).&quot;</span><span class="p">),</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--seed&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span><span class="s2">&quot;The seed to use (default 42).&quot;</span><span class="p">),</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--logging_path&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span>
+            <span class="s2">&quot;The logging path for the checkpoints and the retrained model. &quot;</span>
+            <span class="s2">&quot;Note that training creates checkpoints, and we use Poutyne library that use the best epoch &quot;</span>
+            <span class="s2">&quot;model and reloads the state if any checkpoints are already there. &quot;</span>
+            <span class="s2">&quot;Thus, an error will be raised if you change the model type. For example, &quot;</span>
+            <span class="s2">&quot;you retrain a FastText model and then retrain a BPEmb in the same logging path directory.&quot;</span>
+            <span class="s2">&quot;By default, the path is &#39;./checkpoints&#39;.&quot;</span>
+        <span class="p">),</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;./checkpoints&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--disable_tensorboard&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span><span class="s2">&quot;To disable Poutyne automatic Tensorboard monitoring. By default, we disable them (true).&quot;</span><span class="p">),</span>
+        <span class="nb">type</span><span class="o">=</span><span class="n">bool_parse</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;True&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--layers_to_freeze&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span>
+            <span class="s2">&quot;Name of the portion of the seq2seq to freeze layers, thus reducing the number of parameters to learn. &quot;</span>
+            <span class="s2">&quot;Default to None.&quot;</span>
+        <span class="p">),</span>
+        <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;encoder&quot;</span><span class="p">,</span> <span class="s2">&quot;decoder&quot;</span><span class="p">,</span> <span class="s2">&quot;prediction_layer&quot;</span><span class="p">,</span> <span class="s2">&quot;seq2seq&quot;</span><span class="p">],</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--name_of_the_retrain_parser&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span>
+            <span class="s2">&quot;Name to give to the retrained parser that will be used when reloaded as the printed name, &quot;</span>
+            <span class="s2">&quot;and to the saving file name. By default, None, thus, the default name. See the complete parser retrain &quot;</span>
+            <span class="s2">&quot;method for more details.&quot;</span>
+        <span class="p">),</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--device&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span><span class="s2">&quot;The device to use. It can be &#39;cpu&#39; or a GPU device index such as &#39;0&#39; or &#39;1&#39;. By default, &#39;0&#39;.&quot;</span><span class="p">),</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;0&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--csv_column_names&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span>
+            <span class="s2">&quot;The column names to extract address and tags in the CSV. Need to be specified if the provided &quot;</span>
+            <span class="s2">&quot;dataset_path leads to a CSV file. Column names have to be separated by a whitespace. For&quot;</span>
+            <span class="s2">&quot;example, --csv_column_names column1 column2. By default, None.&quot;</span>
+        <span class="p">),</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--csv_column_separator&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span>
+            <span class="s2">&quot;The column separator for the dataset container will only be used if the dataset is a CSV one.&quot;</span>
+            <span class="s2">&quot; By default, &#39;</span><span class="se">\t</span><span class="s2">&#39;.&quot;</span>
+        <span class="p">),</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">parser</span>
+
+
+<span class="k">def</span> <span class="nf">get_args</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
+    <span class="sd">&quot;&quot;&quot;Parse arguments passed in from shell.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">get_parser</span><span class="p">()</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2022, Marouane Yassine &amp; David Beauchemin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -97,11 +97,11 @@
 <p>Deepparse is a state-of-the-art library for parsing multinational street addresses using deep learning.</p>
 <p>Use deepparse to</p>
 <ul class="simple">
-<li><p>parse multinational address using one of our pre-trained models with or without attention mechanism,</p></li>
+<li><p>parse multinational address using one of our pretrained models with or without attention mechanism,</p></li>
 <li><p>parse addresses directly from the command line without code to write,</p></li>
-<li><p>retrain our pre-trained models on new data to improve parsing on specific country address patterns,</p></li>
-<li><p>retrain our pre-trained models with new prediction tags easily,</p></li>
-<li><p>retrain our pre-trained models with or without freezing some layers,</p></li>
+<li><p>retrain our pretrained models on new data to improve parsing on specific country address patterns,</p></li>
+<li><p>retrain our pretrained models with new prediction tags easily,</p></li>
+<li><p>retrain our pretrained models with or without freezing some layers,</p></li>
 <li><p>train a new seq2seq addresses parsing models easily using a new model configuration.</p></li>
 </ul>
 <p>Deepparse is compatible with the <strong>latest version of PyTorch</strong> and  <strong>Python &gt;= 3.7</strong>.</p>
@@ -814,6 +814,11 @@ for a complete example using CSV.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span><span class="o">.</span><span class="n">retrain</span><span class="p">(</span><span class="n">training_container</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">layers_to_freeze</span><span class="o">=</span><span class="s2">&quot;seq2seq2&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>Or you can also give a specific name to the retrained model. This name will be use as the model name (for print and
+class name) when reloading it.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span><span class="o">.</span><span class="n">retrain</span><span class="p">(</span><span class="n">training_container</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">name_of_the_retrain_parser</span><span class="o">=</span><span class="s2">&quot;MyNewParser&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 </section>
 <section id="retrain-a-model-with-an-attention-mechanism">
 <h2>Retrain a Model with an attention mechanism<a class="headerlink" href="#retrain-a-model-with-an-attention-mechanism" title="Permalink to this heading"></a></h2>
@@ -845,7 +850,7 @@ a complete example.</p>
 <section id="download-our-models">
 <h2>Download our Models<a class="headerlink" href="#download-our-models" title="Permalink to this heading"></a></h2>
 <dl class="simple">
-<dt>Here are the URLs to download our pre-trained models directly</dt><dd><ul class="simple">
+<dt>Here are the URLs to download our pretrained models directly</dt><dd><ul class="simple">
 <li><p><a class="reference external" href="https://graal.ift.ulaval.ca/public/deepparse/fasttext.ckpt">FastText</a>,</p></li>
 <li><p><a class="reference external" href="https://graal.ift.ulaval.ca/public/deepparse/fasttext_attention.ckpt">FastTextAttention</a>,</p></li>
 <li><p><a class="reference external" href="https://graal.ift.ulaval.ca/public/deepparse/bpemb.ckpt">BPEmb</a>,</p></li>
@@ -854,7 +859,7 @@ a complete example.</p>
 </ul>
 </dd>
 </dl>
-<p>Or you can use our cli to download our pre-trained models directly using:</p>
+<p>Or you can use our cli to download our pretrained models directly using:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>download_model &lt;model_name&gt;
 </pre></div>
 </div>

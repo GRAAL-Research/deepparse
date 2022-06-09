@@ -324,10 +324,17 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">is_training_container</span><span class="o">=</span><span class="n">is_training_container</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">is_training_container</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">column_names</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;When the dataset is a training container, the column names should be a list of&quot;</span> <span class="s2">&quot;column name.&quot;</span>
+                <span class="p">)</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">column_names</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;When the dataset is a training container, two column names must be provided.&quot;</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>  <span class="c1"># A predict container</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">column_names</span><span class="p">))</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># It means it is a predict container</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">column_names</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="c1"># We transform the str into a list to assess is len</span>
+                <span class="n">column_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">column_names</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">column_names</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;When the dataset is a predict container, one column name must be provided.&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">validate_column_names</span><span class="p">(</span><span class="n">column_names</span><span class="p">):</span>

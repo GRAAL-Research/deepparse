@@ -99,7 +99,7 @@
 <dt class="sig sig-object py" id="deepparse.comparer.AddressesComparer">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deepparse.comparer.</span></span><span class="sig-name descname"><span class="pre">AddressesComparer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="parser.html#deepparse.parser.AddressParser" title="deepparse.parser.address_parser.AddressParser"><span class="pre">AddressParser</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deepparse/comparer/addresses_comparer.html#AddressesComparer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.comparer.AddressesComparer" title="Permalink to this definition"></a></dt>
 <dd><p>Address comparer to compare addresses with each other and retrieves the differences between them. The addresses
-are parsed using an address parser based on one of the seq2seq pre-trained networks either with fastText or BPEmb.</p>
+are parsed using an address parser based on one of the seq2seq pretrained networks either with fastText or BPEmb.</p>
 <p>The address comparer can compare already parsed addresses. The address parser first recompose the raw
 addresses then suggests its own tags, then it makes a comparison with the tags of the source parsing and the
 newly parsed address</p>
@@ -215,7 +215,7 @@ The default value is None, which means not taking into account.</p></li>
 for the first one.</p></li>
 <li><p><strong>second_address</strong> (<a class="reference internal" href="parser.html#deepparse.parser.FormattedParsedAddress" title="deepparse.parser.FormattedParsedAddress"><em>FormattedParsedAddress</em></a>) – A formatted parsed address that contains the parsing information
 for the second one.</p></li>
-<li><p><strong>origin</strong> – (Tuple[str, str]): The origin of the parsing (ex : from source or from a deepparse pre-trained model).</p></li>
+<li><p><strong>origin</strong> – (Tuple[str, str]): The origin of the parsing (ex : from source or from a deepparse pretrained model).</p></li>
 </ul>
 </dd>
 </dl>

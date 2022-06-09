@@ -236,8 +236,8 @@ def get_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--csv_column_names",
         help=wrap(
-            "The column names to extract address in the CSV. Need to be specified if the provided dataset_path "
-            "leads to a CSV file. Column names have to be separated by a whitespace. For"
+            "The column names to extract address and tags in the CSV. Need to be specified if the provided "
+            "dataset_path leads to a CSV file. Column names have to be separated by a whitespace. For"
             "example, --csv_column_names column1 column2. By default, None."
         ),
         default=None,

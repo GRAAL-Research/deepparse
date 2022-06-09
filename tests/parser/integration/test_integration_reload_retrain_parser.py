@@ -17,6 +17,7 @@ from tests.parser.integration.base_retrain import AddressParserRetrainTestCase
 class AddressParserIntegrationTestAPITest(AddressParserRetrainTestCase, PretrainedWeightsBase):
     @classmethod
     def setUpClass(cls):
+        super(AddressParserIntegrationTestAPITest, cls).setUpClass()
         cls.download_pre_trained_weights(cls)
 
     def test_integration_parsing_with_retrain_fasttext(self):

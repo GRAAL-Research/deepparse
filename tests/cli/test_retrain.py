@@ -154,7 +154,7 @@ class RetrainTests(RetrainTestCase):
             self.a_train_csv_dataset_path,
             "--device",
             self.cpu_device,
-            "--csv_column_name",
+            "--csv_column_names",
             "Address",
             "Tags",
             "--csv_column_separator",  # Our dataset use a comma as separator

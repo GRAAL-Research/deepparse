@@ -45,16 +45,16 @@ def main(args=None) -> None:
 
     test_dataset_path = parsed_args.test_dataset_path
     if is_csv_path(test_dataset_path):
-        csv_column_name = parsed_args.csv_column_name
-        if csv_column_name is None:
+        csv_column_names = parsed_args.csv_column_names
+        if csv_column_names is None:
             raise ValueError(
-                "To use a CSV dataset to test on, you need to specify the 'csv_column_name' argument to provide the"
+                "To use a CSV dataset to test on, you need to specify the 'csv_column_names' argument to provide the"
                 " column name to extract address."
             )
         csv_column_separator = parsed_args.csv_column_separator
         testing_data = CSVDatasetContainer(
             test_dataset_path,
-            column_names=csv_column_name,
+            column_names=csv_column_names,
             separator=csv_column_separator,
             is_training_container=True,
         )
@@ -167,10 +167,11 @@ def get_parser() -> argparse.ArgumentParser:
     )
 
     parser.add_argument(
-        "--csv_column_name",
+        "--csv_column_names",
         help=wrap(
-            "The column name to extract address in the CSV. Need to be specified if the provided dataset_path "
-            "leads to a CSV file."
+            "The column names to extract address and tags in the CSV. Need to be specified if the provided "
+            "dataset_path leads to a CSV file. Column names have to be separated by a whitespace. For"
+            "example, --csv_column_names column1 column2. By default, None."
         ),
         type=str,
         default=None,

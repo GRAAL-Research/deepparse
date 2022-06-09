@@ -48,7 +48,7 @@ class DownloadTests(TestCase):
                 download.main([self.a_fasttext_model_type])
 
                 downloader.assert_called()
-                downloader.assert_called_with(saving_dir=self.fake_cache_path)
+                downloader.assert_called_with(cache_dir=self.fake_cache_path)
 
     @patch("deepparse.cli.download.download_weights")
     def test_givenAFasttextMagnitudeDownload_whenModelIsNotLocal_thenDownloadEmbeddings(self, weights_download_mock):
@@ -57,7 +57,7 @@ class DownloadTests(TestCase):
                 download.main([self.a_fasttext_light_model_type])
 
                 downloader.assert_called()
-                downloader.assert_called_with(saving_dir=self.fake_cache_path)
+                downloader.assert_called_with(cache_dir=self.fake_cache_path)
 
     @patch("deepparse.cli.download.download_weights")
     def test_givenABPembDownload_whenModelIsNotLocal_thenDownloadEmbeddings(self, weights_download_mock):

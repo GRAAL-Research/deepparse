@@ -1,4 +1,6 @@
+import os
 import platform
+from tempfile import TemporaryDirectory
 from unittest import skipIf
 
 from bpemb import BPEmb
@@ -13,26 +15,32 @@ class BPEmbEmbeddingsModelIntegrationTest(AddressParserRetrainTestCase):
     @classmethod
     def setUpClass(cls):
         super(BPEmbEmbeddingsModelIntegrationTest, cls).setUpClass()
+        cls.temp_dir_obj = TemporaryDirectory()
+        cls.fake_cache_path = os.path.join(cls.temp_dir_obj.name, "fake_cache")
+
         cls.verbose = False
+
+    @skipIf(platform.system() == "Windows", "Integration test not on Windows env.")
+    def test_givenANewCacheDir_whenBPEmbModelInit_thenCreateNewCache(self):
+        BPEmbEmbeddingsModel(self.fake_cache_path, verbose=self.verbose)
+
+        self.assertTrue(os.path.exists(os.path.join(self.fake_cache_path, "multi")))
 
     @skipIf(platform.system() != "Windows", "Integration test on Windows env.")
     def test_givenAWindowsOS_whenBPEmbModelInit_thenLoadWithProperFunction(self):
-        # we setup a smaller model for simplicity
-        model = BPEmbEmbeddingsModel(verbose=self.verbose)
+        model = BPEmbEmbeddingsModel(self.fake_cache_path, verbose=self.verbose)
 
         self.assertIsInstance(model.model, BPEmb)
 
     @skipIf(platform.system() == "Windows", "Integration test not on Windows env.")
     def test_givenANotWindowsOS_whenBPEmbModelInit_thenLoadWithProperFunction(self):
-        # we setup a smaller model for simplicity
-        model = BPEmbEmbeddingsModel(verbose=self.verbose)
+        model = BPEmbEmbeddingsModel(self.fake_cache_path, verbose=self.verbose)
 
         self.assertIsInstance(model.model, BPEmb)
 
     @skipIf(platform.system() != "Windows", "Integration test on Windows env.")
     def test_givenAWindowsOS_whenBPEmbModelCollateFnInDataLoader_thenWorkProperly(self):
-        # we setup a smaller model for simplicity
-        model = BPEmbEmbeddingsModel(verbose=self.verbose)
+        model = BPEmbEmbeddingsModel(self.fake_cache_path, verbose=self.verbose)
         data_transform = MockedDataTransform(model)
 
         data_loader = DataLoader(
@@ -50,8 +58,7 @@ class BPEmbEmbeddingsModelIntegrationTest(AddressParserRetrainTestCase):
     def test_givenAWindowsOS_whenBPEmbModelCollateFnInDataLoaderNumWorkers1_thenWorkProperly(
         self,
     ):
-        # we setup a smaller model for simplicity
-        model = BPEmbEmbeddingsModel(verbose=self.verbose)
+        model = BPEmbEmbeddingsModel(self.fake_cache_path, verbose=self.verbose)
         data_transform = MockedDataTransform(model)
 
         data_loader = DataLoader(
@@ -69,8 +76,7 @@ class BPEmbEmbeddingsModelIntegrationTest(AddressParserRetrainTestCase):
     def test_givenAWindowsOS_whenBPEmbModelCollateFnInDataLoaderNumWorkers2_thenWorkProperly(
         self,
     ):
-        # we setup a smaller model for simplicity
-        model = BPEmbEmbeddingsModel(verbose=self.verbose)
+        model = BPEmbEmbeddingsModel(self.fake_cache_path, verbose=self.verbose)
         data_transform = MockedDataTransform(model)
 
         data_loader = DataLoader(
@@ -88,8 +94,7 @@ class BPEmbEmbeddingsModelIntegrationTest(AddressParserRetrainTestCase):
     def test_givenANotWindowsOS_whenBPEmbModelCollateFnInDataLoaderForWindows_thenWorkProperly(
         self,
     ):
-        # we setup a smaller model for simplicity
-        model = BPEmbEmbeddingsModel(verbose=self.verbose)
+        model = BPEmbEmbeddingsModel(self.fake_cache_path, verbose=self.verbose)
 
         data_transform = MockedDataTransform(model)
 
@@ -108,8 +113,7 @@ class BPEmbEmbeddingsModelIntegrationTest(AddressParserRetrainTestCase):
     def test_givenANotWindowsOS_whenBPEmbModelCollateFnInDataLoaderForWindowsNumWorkers1_thenWorkProperly(
         self,
     ):
-        # we setup a smaller model for simplicity
-        model = BPEmbEmbeddingsModel(verbose=self.verbose)
+        model = BPEmbEmbeddingsModel(self.fake_cache_path, verbose=self.verbose)
 
         data_transform = MockedDataTransform(model)
 
@@ -128,8 +132,7 @@ class BPEmbEmbeddingsModelIntegrationTest(AddressParserRetrainTestCase):
     def test_givenANotWindowsOS_whenBPEmbModelCollateFnInDataLoaderForWindowsNumWorkers2_thenWorkProperly(
         self,
     ):
-        # we setup a smaller model for simplicity
-        model = BPEmbEmbeddingsModel(verbose=self.verbose)
+        model = BPEmbEmbeddingsModel(self.fake_cache_path, verbose=self.verbose)
 
         data_transform = MockedDataTransform(model)
 

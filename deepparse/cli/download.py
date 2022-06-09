@@ -23,7 +23,7 @@ def main(args=None) -> None:
 
         download_model fasttext
     """
-    if args is None:
+    if args is None:  # pragma: no cover
         args = sys.argv[1:]
 
     parsed_args = get_args(args)
@@ -31,9 +31,9 @@ def main(args=None) -> None:
     model_type = parsed_args.model_type
 
     if "fasttext" in model_type and "fasttext-light" not in model_type:
-        download_fasttext_embeddings(saving_dir=CACHE_PATH)
+        download_fasttext_embeddings(cache_dir=CACHE_PATH)
     elif model_type == "fasttext-light":
-        download_fasttext_magnitude_embeddings(saving_dir=CACHE_PATH)
+        download_fasttext_magnitude_embeddings(cache_dir=CACHE_PATH)
     elif "bpemb" in model_type:
         BPEmb(lang="multi", vs=100000, dim=300)  # The class manage the download of the pretrained words embedding
 

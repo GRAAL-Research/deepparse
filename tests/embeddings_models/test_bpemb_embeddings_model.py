@@ -1,4 +1,5 @@
 import unittest
+from pathlib import Path
 from unittest import TestCase
 from unittest.mock import patch, MagicMock
 
@@ -8,6 +9,7 @@ from deepparse.embeddings_models import BPEmbEmbeddingsModel
 class BPEmbEmbeddingsModelTest(TestCase):
     @classmethod
     def setUpClass(cls):
+        cls.a_path = "."
         cls.a_word = "test"
         cls.dim = 9
 
@@ -20,16 +22,16 @@ class BPEmbEmbeddingsModelTest(TestCase):
             "deepparse.embeddings_models.bpemb_embeddings_model.BPEmb",
             return_value=self.model,
         ) as loader:
-            _ = BPEmbEmbeddingsModel(verbose=False)
+            _ = BPEmbEmbeddingsModel(self.a_path, verbose=False)
 
-            loader.assert_called_with(lang="multi", vs=100000, dim=300)
+            loader.assert_called_with(lang="multi", vs=100000, dim=300, cache_dir=Path(self.a_path))
 
     def test_whenCalledToEmbed_thenShouldCallLoadedModel(self):
         with patch(
             "deepparse.embeddings_models.bpemb_embeddings_model.BPEmb",
             return_value=self.model,
         ):
-            embeddings_model = BPEmbEmbeddingsModel(verbose=False)
+            embeddings_model = BPEmbEmbeddingsModel(self.a_path, verbose=False)
 
             embeddings_model(self.a_word)
 
@@ -40,7 +42,7 @@ class BPEmbEmbeddingsModelTest(TestCase):
             "deepparse.embeddings_models.bpemb_embeddings_model.BPEmb",
             return_value=self.model,
         ):
-            embeddings_model = BPEmbEmbeddingsModel(verbose=False)
+            embeddings_model = BPEmbEmbeddingsModel(self.a_path, verbose=False)
 
             actual = embeddings_model.dim
             expected = self.dim

@@ -16,7 +16,7 @@ class FastTextSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
     @classmethod
     def setUpClass(cls):
         super(FastTextSeq2SeqIntegrationTest, cls).setUpClass()
-        cls.models_setup(model="fasttext")
+        cls.models_setup(model_type="fasttext", cache_dir=cls.path)
         cls.a_retrain_model_path = os.path.join(cls.path, cls.retrain_file_name_format.format("fasttext") + ".ckpt")
 
     def setUp(self) -> None:
@@ -27,7 +27,7 @@ class FastTextSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
         self.a_target_vector = torch.tensor([[0, 1, 1, 4, 5, 8], [1, 0, 3, 8, 0, 0]], device=self.a_torch_device)
 
     def test_whenForwardStep_thenStepIsOk(self):
-        self.seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device, output_size=self.number_of_tags)
+        self.seq2seq_model = FastTextSeq2SeqModel(self.cache_dir, self.a_torch_device, output_size=self.number_of_tags)
         # forward pass for two address: "["15 major st london ontario n5z1e1", "15 major st london ontario n5z1e1"]"
         self.decoder_input_setUp()
 
@@ -36,7 +36,7 @@ class FastTextSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
         self.assert_output_is_valid_dim(predictions, output_dim=self.number_of_tags)
 
     def test_whenForwardStepWithTarget_thenStepIsOk(self):
-        self.seq2seq_model = FastTextSeq2SeqModel(self.a_torch_device, output_size=self.number_of_tags)
+        self.seq2seq_model = FastTextSeq2SeqModel(self.cache_dir, self.a_torch_device, output_size=self.number_of_tags)
         # forward pass for two address: "["15 major st london ontario n5z1e1", "15 major st london ontario n5z1e1"]"
         self.decoder_input_setUp()
 
@@ -46,6 +46,7 @@ class FastTextSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
 
     def test_retrainedModel_whenForwardStep_thenStepIsOk(self):
         self.seq2seq_model = FastTextSeq2SeqModel(
+            self.cache_dir,
             self.a_torch_device,
             output_size=self.re_trained_output_dim,
             verbose=self.verbose,
@@ -60,6 +61,7 @@ class FastTextSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
 
     def test_retrainedModel_whenForwardStepWithTarget_thenStepIsOk(self):
         self.seq2seq_model = FastTextSeq2SeqModel(
+            self.cache_dir,
             self.a_torch_device,
             output_size=self.re_trained_output_dim,
             verbose=self.verbose,

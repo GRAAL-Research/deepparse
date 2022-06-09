@@ -12,6 +12,8 @@ class BPEmbSeq2SeqModel(Seq2SeqModel):
     BPEmb Seq2Seq network, the best of the two model we propose, but takes more ``GPU``/``CPU`` resources.
 
      Args:
+        cache_dir (str): The path to the cached directory to use for downloading (and loading) the
+            model weights.
         device (~torch.device): The device tu use for the prediction.
         input_size (int): The input size of the encoder (i.e. the embeddings size). It will also be used to initialize
             the internal embeddings network input size, hidden size and output dim. The default value is 300.
@@ -27,6 +29,7 @@ class BPEmbSeq2SeqModel(Seq2SeqModel):
 
     def __init__(
         self,
+        cache_dir: str,
         device: torch.device,
         input_size: int = 300,
         encoder_hidden_size: int = 1024,
@@ -63,7 +66,7 @@ class BPEmbSeq2SeqModel(Seq2SeqModel):
             model_weights_name = "bpemb"
             if attention_mechanism:
                 model_weights_name += "_attention"
-            self._load_pre_trained_weights(model_weights_name)
+            self._load_pre_trained_weights(model_weights_name, cache_dir=cache_dir)
 
     def forward(
         self,

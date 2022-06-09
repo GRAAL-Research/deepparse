@@ -13,7 +13,7 @@ from deepparse.dataset_container import PickleDatasetContainer, DatasetContainer
 from deepparse.parser import CACHE_PATH, AddressParser
 
 
-class AddressParserRetrainTestCase(TestCase):
+class RetrainTestCase(TestCase):
     @classmethod
     def setUpClass(cls):
         cls.temp_dir_obj = TemporaryDirectory()
@@ -25,12 +25,29 @@ class AddressParserRetrainTestCase(TestCase):
         download_from_url(training_dataset_name, cls.a_data_saving_dir, file_extension=file_extension)
         download_from_url(test_dataset_name, cls.a_data_saving_dir, file_extension=file_extension)
 
-        cls.training_container = PickleDatasetContainer(
-            os.path.join(cls.a_data_saving_dir, training_dataset_name + "." + file_extension)
+        cls.a_train_pickle_dataset_path = os.path.join(
+            cls.a_data_saving_dir, training_dataset_name + "." + file_extension
         )
-        cls.test_container = PickleDatasetContainer(
-            os.path.join(cls.a_data_saving_dir, test_dataset_name + "." + file_extension)
-        )
+
+        cls.a_test_pickle_dataset_path = os.path.join(cls.a_data_saving_dir, test_dataset_name + "." + file_extension)
+
+        file_extension = "csv"
+        download_from_url(training_dataset_name, cls.a_data_saving_dir, file_extension=file_extension)
+
+        cls.a_train_csv_dataset_path = os.path.join(cls.a_data_saving_dir, training_dataset_name + "." + file_extension)
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        cls.temp_dir_obj.cleanup()
+
+
+class AddressParserRetrainTestCase(RetrainTestCase):
+    @classmethod
+    def setUpClass(cls):
+        super(AddressParserRetrainTestCase, cls).setUpClass()
+
+        cls.training_container = PickleDatasetContainer(cls.a_train_pickle_dataset_path)
+        cls.test_container = PickleDatasetContainer(cls.a_test_pickle_dataset_path)
 
         cls.a_fasttext_model_type = "fasttext"
         cls.a_fasttext_light_model_type = "fasttext-light"
@@ -64,10 +81,6 @@ class AddressParserRetrainTestCase(TestCase):
     def setUp(self) -> None:
         self.training_temp_dir_obj = TemporaryDirectory()
         self.a_checkpoints_saving_dir = os.path.join(self.training_temp_dir_obj.name, "checkpoints")
-
-    @classmethod
-    def tearDownClass(cls) -> None:
-        cls.temp_dir_obj.cleanup()
 
     def tearDown(self) -> None:
         self.training_temp_dir_obj.cleanup()

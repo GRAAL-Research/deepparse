@@ -3,7 +3,7 @@ import json
 import os
 import pickle
 import textwrap
-from typing import List, Union
+from typing import List, Union, Dict
 
 import pandas as pd
 
@@ -34,7 +34,7 @@ def is_pickle_path(export_file_name: str) -> bool:
     Return:
         Either or not, the path is a pickle file extension.
     """
-    return ".p" in export_file_name or ".pickle" in export_file_name
+    return ".p" in export_file_name or ".pickle" in export_file_name or ".pckl" in export_file_name
 
 
 def is_json_path(export_file_name: str) -> bool:
@@ -133,6 +133,20 @@ def replace_path_extension(path: str, extension: str) -> str:
     """
     pre, _ = os.path.splitext(path)
     return os.path.join(pre + extension)
+
+
+def attention_model_type_handling(parsing_model) -> Dict:
+    """
+    Function to handle the attention_mechanism flag base on model type name.
+    Return:
+        A params dict.
+    """
+    parser_args_update_args = {}
+    if "-attention" in parsing_model:
+        parser_args_update_args.update({"attention_mechanism": True})
+        parsing_model = parsing_model.strip("attention").strip("-")
+    parser_args_update_args.update({"model_type": parsing_model})
+    return parser_args_update_args
 
 
 # pylint: disable=pointless-string-statement

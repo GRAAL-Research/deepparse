@@ -1,7 +1,5 @@
-# Since we use a patch as model mock we skip the unused argument error
-# pylint: disable=unused-argument
+# pylint: disable=too-many-arguments, too-many-locals
 
-import argparse
 import logging
 import os
 import unittest
@@ -11,7 +9,7 @@ from unittest import TestCase, skipIf
 import pytest
 import torch
 
-from deepparse.cli import parse, generate_export_path, bool_parse
+from deepparse.cli import parse, generate_export_path
 from tests.parser.base import PretrainedWeightsBase
 from tests.tools import create_pickle_file, create_csv_file
 
@@ -32,7 +30,6 @@ class ParseTests(TestCase, PretrainedWeightsBase):
 
         self.fake_data_path_csv = os.path.join(self.temp_dir_obj.name, "fake_data.csv")
         self.a_unsupported_data_path = os.path.join(self.temp_dir_obj.name, "fake_data.txt")
-        self.fake_data_path_json = os.path.join(self.temp_dir_obj.name, "fake_data.json")
 
         self.pickle_p_export_filename = "a_file.p"
         self.pickle_pickle_export_filename = "a_file.pickle"
@@ -48,37 +45,8 @@ class ParseTests(TestCase, PretrainedWeightsBase):
         self.cpu_device = "cpu"
         self.gpu_device = "0"
 
-        self.create_parser()
-
     def tearDown(self) -> None:
         self.temp_dir_obj.cleanup()
-
-    def create_parser(self):
-        self.parser = argparse.ArgumentParser()
-        self.parser.add_argument(
-            "parsing_model",
-            choices=[
-                self.a_fasttext_model_type,
-                self.a_fasttext_att_model_type,
-                self.a_fasttext_light_model_type,
-                self.a_bpemb_model_type,
-                self.a_bpemb_att_model_type,
-            ],
-        )
-
-        self.parser.add_argument("dataset_path", type=str)
-
-        self.parser.add_argument("export_filename", type=str)
-
-        self.parser.add_argument("--device", type=str, default="0")
-
-        self.parser.add_argument("--path_to_retrained_model", type=str, default=None)
-
-        self.parser.add_argument("--csv_column_name", type=str, default=None)
-
-        self.parser.add_argument("--csv_column_separator", type=str, default="\t")
-
-        self.parser.add_argument("--log", type=bool_parse, default="True")
 
     @skipIf(
         not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
@@ -134,7 +102,7 @@ class ParseTests(TestCase, PretrainedWeightsBase):
                 ]
             )
         expected_first_message = (
-            f"Parsing dataset file {self.fake_data_path_pickle} using the parser " f"FastTextAddressParser"
+            f"Parsing dataset file {self.fake_data_path_pickle} using the parser " f"PreTrainedFastTextAddressParser"
         )
         actual_first_message = self._caplog.records[0].message
         self.assertEqual(expected_first_message, actual_first_message)
@@ -327,7 +295,7 @@ class ParseTests(TestCase, PretrainedWeightsBase):
             )
 
         expected_first_message = (
-            f"Parsing dataset file {self.fake_data_path_pickle} using the parser " f"FastTextAddressParser"
+            f"Parsing dataset file {self.fake_data_path_pickle} using the parser " f"PreTrainedFastTextAddressParser"
         )
         actual_first_message = self._caplog.records[0].message
         self.assertEqual(expected_first_message, actual_first_message)
@@ -354,7 +322,7 @@ class ParseTests(TestCase, PretrainedWeightsBase):
             )
 
         expected_first_message = (
-            f"Parsing dataset file {self.fake_data_path_pickle} using the parser " f"FastTextAddressParser"
+            f"Parsing dataset file {self.fake_data_path_pickle} using the parser " f"PreTrainedFastTextAddressParser"
         )
         actual_first_message = self._caplog.records[0].message
         self.assertEqual(expected_first_message, actual_first_message)
@@ -365,23 +333,20 @@ class ParseTests(TestCase, PretrainedWeightsBase):
     )
     def test_ifPathToBPEmbRetrainModel_thenUseBPEmbRetrainModel(self):
         with self._caplog.at_level(logging.INFO):
-            path_to_retrained_model = self.path_to_retrain_bpemb
             create_pickle_file(self.fake_data_path_pickle, predict_container=True)
 
             parse.main(
                 [
-                    self.a_fasttext_model_type,
+                    self.a_bpemb_model_type,
                     self.fake_data_path_pickle,
                     self.pickle_p_export_filename,
                     "--device",
                     self.cpu_device,
-                    "--path_to_retrained_model",
-                    path_to_retrained_model,
                 ]
             )
 
         expected_first_message = (
-            f"Parsing dataset file {self.fake_data_path_pickle} using the parser " f"BPEmbAddressParser"
+            f"Parsing dataset file {self.fake_data_path_pickle} using the parser " f"PreTrainedBPEmbAddressParser"
         )
 
         # Not the same position as with fasttext due to BPEmb messages

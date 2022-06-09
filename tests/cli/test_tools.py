@@ -1,5 +1,6 @@
-# pylint: disable=no-member
+# pylint: disable=no-member, too-many-public-methods
 
+import argparse
 import json
 import os
 import pickle
@@ -17,6 +18,8 @@ from deepparse.cli import (
     is_json_path,
     to_json,
     replace_path_extension,
+    attention_model_type_handling,
+    bool_parse,
 )
 from deepparse.parser import FormattedParsedAddress
 
@@ -277,3 +280,40 @@ class ToolsTest(TestCase):
         expected = an_absolute_dataset_path.replace(".p", ".txt")
 
         self.assertEqual(actual, expected)
+
+    def test_givenAnAttModel_whenHandlingAttentionModelType_returnTrue(self):
+        a_att_parsing_model = "fasttext-attention"
+        actual_update_args = attention_model_type_handling(a_att_parsing_model)
+        self.assertTrue(actual_update_args.get("attention_mechanism"))
+
+        a_att_parsing_model = "bpemb-attention"
+        actual_update_args = attention_model_type_handling(a_att_parsing_model)
+        self.assertTrue(actual_update_args.get("attention_mechanism"))
+
+    def test_givenNotAnAttModel_whenHandlingAttentionModelType_returnFalse(self):
+        not_a_att_parsing_model = "fasttext"
+        actual_update_args = attention_model_type_handling(not_a_att_parsing_model)
+        self.assertFalse(actual_update_args.get("attention_mechanism"))
+
+        not_a_att_parsing_model = "bpemb"
+        actual_update_args = attention_model_type_handling(not_a_att_parsing_model)
+        self.assertFalse(actual_update_args.get("attention_mechanism"))
+
+    def test_givenVariousTrueArgValue_whenCallBoolParse_thenReturnTrue(self):
+        true_values_arg = ["true", "t", "yes", "y", "1"]
+
+        for true_value in true_values_arg:
+            self.assertTrue(bool_parse(arg=true_value))
+
+    def test_givenVariousFalseArgValue_whenCallBoolParse_thenReturnFalse(self):
+        false_values_arg = ["false", "f", "no", "n", "0"]
+
+        for false_value in false_values_arg:
+            self.assertFalse(bool_parse(arg=false_value))
+
+    def test_givenNotVariousTrueOrFalseValue_whenCallBoolParse_thenRaiseError(self):
+        wrong_values = ["tt", "nn", "10", "a_value", "bad", "value", "another"]
+
+        for wrong_value in wrong_values:
+            with self.assertRaises(argparse.ArgumentTypeError):
+                bool_parse(wrong_value)

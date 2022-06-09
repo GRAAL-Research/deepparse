@@ -2,6 +2,7 @@ import gzip
 import os
 import shutil
 import sys
+import warnings
 from urllib.request import urlopen
 
 from fasttext.FastText import _FastText
@@ -9,28 +10,36 @@ from fasttext.FastText import _FastText
 from .tools import download_from_url
 
 
-def download_fasttext_magnitude_embeddings(saving_dir: str, verbose: bool = True) -> str:
+def download_fasttext_magnitude_embeddings(cache_dir: str, verbose: bool = True, saving_dir=None) -> str:
     """
-    Function to download the magnitude pre-trained fastText model.
+    Function to download the magnitude pretrained fastText model.
     """
-    os.makedirs(saving_dir, exist_ok=True)
+    if saving_dir is not None:  # pragma: no cover
+        # Deprecated argument handling
+        warnings.warn(
+            "Argument saving_dir is deprecated. Use cache_dir instead. The argument will be removed " "in release 0.8.",
+            DeprecationWarning,
+        )
+        cache_dir = saving_dir
+
+    os.makedirs(cache_dir, exist_ok=True)
 
     model = "fasttext"
     extension = "magnitude"
-    file_name = os.path.join(saving_dir, f"{model}.{extension}")
+    file_name = os.path.join(cache_dir, f"{model}.{extension}")
     if not os.path.isfile(file_name):
         if verbose:
             print(
-                "The fastText pre-trained word embeddings will be download in magnitude format (2.3 GO), "
+                "The fastText pretrained word embeddings will be download in magnitude format (2.3 GO), "
                 "this process will take several minutes."
             )
         extension = extension + ".gz"
-        download_from_url(file_name=model, saving_dir=saving_dir, file_extension=extension)
+        download_from_url(file_name=model, saving_dir=cache_dir, file_extension=extension)
         gz_file_name = file_name + ".gz"
-        with gzip.open(os.path.join(saving_dir, gz_file_name), "rb") as f:
-            with open(os.path.join(saving_dir, file_name), "wb") as f_out:
+        with gzip.open(os.path.join(cache_dir, gz_file_name), "rb") as f:
+            with open(os.path.join(cache_dir, file_name), "wb") as f_out:
                 shutil.copyfileobj(f, f_out)
-        os.remove(os.path.join(saving_dir, gz_file_name))
+        os.remove(os.path.join(cache_dir, gz_file_name))
     return file_name
 
 
@@ -68,28 +77,36 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
 
-def download_fasttext_embeddings(saving_dir: str, verbose: bool = True) -> str:
+def download_fasttext_embeddings(cache_dir: str, verbose: bool = True, saving_dir=None) -> str:
     """
-    Simpler version of the download_model function from fastText to download pre-trained common-crawl
+    Simpler version of the download_model function from fastText to download pretrained common-crawl
     vectors from fastText's website https://fasttext.cc/docs/en/crawl-vectors.html and save it in the
     saving directory (saving_dir).
     """
-    os.makedirs(saving_dir, exist_ok=True)
+    if saving_dir is not None:  # pragma: no cover
+        # Deprecated argument handling
+        warnings.warn(
+            "Argument saving_dir is deprecated. Use cache_dir instead. The argument will be removed " "in release 0.8.",
+            DeprecationWarning,
+        )
+        cache_dir = saving_dir
+
+    os.makedirs(cache_dir, exist_ok=True)
 
     file_name = "cc.fr.300.bin"
     gz_file_name = f"{file_name}.gz"
 
-    file_name_path = os.path.join(saving_dir, file_name)
+    file_name_path = os.path.join(cache_dir, file_name)
     if os.path.isfile(file_name_path):
         return file_name_path  # return the full path to the fastText embeddings
 
-    saving_file_path = os.path.join(saving_dir, gz_file_name)
+    saving_file_path = os.path.join(cache_dir, gz_file_name)
 
     download_gz_model(gz_file_name, saving_file_path, verbose=verbose)
-    with gzip.open(os.path.join(saving_dir, gz_file_name), "rb") as f:
-        with open(os.path.join(saving_dir, file_name), "wb") as f_out:
+    with gzip.open(os.path.join(cache_dir, gz_file_name), "rb") as f:
+        with open(os.path.join(cache_dir, file_name), "wb") as f_out:
             shutil.copyfileobj(f, f_out)
-    os.remove(os.path.join(saving_dir, gz_file_name))
+    os.remove(os.path.join(cache_dir, gz_file_name))
 
     return file_name_path  # return the full path to the fastText embeddings
 
@@ -97,7 +114,7 @@ def download_fasttext_embeddings(saving_dir: str, verbose: bool = True) -> str:
 # Now use a saving path and don't return a bool
 def download_gz_model(gz_file_name: str, saving_path: str, verbose: bool = True) -> None:
     """
-    Simpler version of the _download_gz_model function from fastText to download pre-trained common-crawl
+    Simpler version of the _download_gz_model function from fastText to download pretrained common-crawl
     vectors from fastText's website https://fasttext.cc/docs/en/crawl-vectors.html and save it in the
     saving directory (saving_path).
     """
@@ -105,7 +122,7 @@ def download_gz_model(gz_file_name: str, saving_path: str, verbose: bool = True)
     url = f"https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/{gz_file_name}"
     if verbose:
         print(
-            "The fastText pre-trained word embeddings will be downloaded (6.8 GO), "
+            "The fastText pretrained word embeddings will be downloaded (6.8 GO), "
             "this process will take several minutes."
         )
     _download_file(url, saving_path, verbose=verbose)

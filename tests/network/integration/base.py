@@ -7,7 +7,7 @@ from unittest import TestCase
 
 import torch
 
-from deepparse import download_from_url
+from deepparse import download_from_url, download_weights
 
 
 class Seq2SeqIntegrationTestCase(TestCase):
@@ -41,14 +41,16 @@ class Seq2SeqIntegrationTestCase(TestCase):
         cls.path = os.path.join(cls.temp_dir_obj.name, ".cache", "deepparse")
         cls.retrain_file_name_format = "retrained_{}_address_parser"
 
-    @classmethod
-    def models_setup(cls, model: str) -> None:
-        # We download the "normal" model
-        download_from_url(file_name=model, saving_dir=cls.path, file_extension="ckpt")
+        cls.cache_dir = cls.path  # We use the same cache dir as the path we download the models and weights
 
-        # We download the "pre_trained" model
-        model = cls.retrain_file_name_format.format(model)
-        download_from_url(file_name=model, saving_dir=cls.path, file_extension="ckpt")
+    @classmethod
+    def models_setup(cls, model_type: str, cache_dir: str) -> None:
+        # We download the "normal" model and the .version file
+        download_weights(model_type, cache_dir, verbose=False)
+
+        # We also download the "pre_trained" model
+        model = cls.retrain_file_name_format.format(model_type)
+        download_from_url(file_name=model, saving_dir=cache_dir, file_extension="ckpt")
         cls.re_trained_output_dim = 3
 
     @classmethod

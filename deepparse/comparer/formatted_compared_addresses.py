@@ -18,7 +18,7 @@ class FormattedComparedAddresses(ABC):
                                                 for the first one.
         second_address(FormattedParsedAddress): A formatted parsed address that contains the parsing information
                                                 for the second one.
-        origin: (Tuple[str, str]): The origin of the parsing (ex : from source or from a deepparse pre-trained model).
+        origin: (Tuple[str, str]): The origin of the parsing (ex : from source or from a deepparse pretrained model).
 
     Example:
 

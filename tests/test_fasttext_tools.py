@@ -126,7 +126,7 @@ class ToolsTests(CaptureOutputTestCase):
             download_fasttext_magnitude_embeddings(self.a_directory_path, verbose=True)
 
             expected = (
-                "The fastText pre-trained word embeddings will be download in magnitude format (2.3 GO), "
+                "The fastText pretrained word embeddings will be download in magnitude format (2.3 GO), "
                 "this process will take several minutes."
             )
 
@@ -209,7 +209,7 @@ class ToolsTests(CaptureOutputTestCase):
         actual = self.test_out.getvalue().strip()
 
         expected = (
-            "The fastText pre-trained word embeddings will be downloaded (6.8 GO), "
+            "The fastText pretrained word embeddings will be downloaded (6.8 GO), "
             "this process will take several minutes."
         )
         self.assertIn(expected, actual)

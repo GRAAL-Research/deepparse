@@ -14,6 +14,7 @@ from deepparse.cli.tools import (
     to_json,
     bool_parse,
     replace_path_extension,
+    attention_model_type_handling,
 )
 from deepparse.dataset_container import CSVDatasetContainer, PickleDatasetContainer
 from deepparse.parser import AddressParser
@@ -34,13 +35,13 @@ def main(args=None) -> None:
 
     .. code-block:: sh
 
-        parse fasttext ./dataset_path.csv parsed_address.pickle --device 0
+        parse fasttext ./dataset_path.csv parsed_address.p --device 0
 
     Using a CSV dataset
 
     .. code-block:: sh
 
-        parse fasttext ./dataset.csv parsed_address.pickle --path_to_retrained_model ./path
+        parse fasttext ./dataset.csv parsed_address.pckl --path_to_retrained_model ./path
 
     """
     if args is None:  # pragma: no cover
@@ -58,12 +59,12 @@ def main(args=None) -> None:
             )
         csv_column_separator = parsed_args.csv_column_separator
         addresses_to_parse = CSVDatasetContainer(
-            dataset_path, column_names=[csv_column_name], separator=csv_column_separator, is_training_container=False
+            dataset_path, column_names=csv_column_name, separator=csv_column_separator, is_training_container=False
         )
     elif is_pickle_path(dataset_path):
         addresses_to_parse = PickleDatasetContainer(dataset_path, is_training_container=False)
     else:
-        raise ValueError("The dataset path argument is not a CSV or pickle file.")
+        raise ValueError("The dataset path argument is not a CSV or a pickle file.")
 
     export_filename = parsed_args.export_filename
     export_path = generate_export_path(dataset_path, export_filename)
@@ -84,10 +85,9 @@ def main(args=None) -> None:
     if "cpu" not in device:
         device = int(device)
     parser_args = {"device": device}
-    if "-attention" in parsing_model:
-        parser_args.update({"attention_mechanism": True})
-        parsing_model = parsing_model.strip("attention").strip("-")
-    parser_args.update({"model_type": parsing_model})
+
+    parser_args_update_args = attention_model_type_handling(parsing_model)
+    parser_args.update(**parser_args_update_args)
 
     if path_to_retrained_model is not None:
         parser_args.update({"path_to_retrained_model": path_to_retrained_model})
@@ -100,10 +100,10 @@ def main(args=None) -> None:
             filename=logging_export_path, format="%(asctime)s : %(levelname)s : %(message)s", level=logging.INFO
         )
 
-        text_to_log = f"Parsing dataset file {dataset_path} using the parser {address_parser}"
+        text_to_log = f"Parsing dataset file {dataset_path} using the parser {str(address_parser)}"
         logging.info(text_to_log)
 
-    parsed_address = address_parser(addresses_to_parse)
+    parsed_address = address_parser(addresses_to_parse, batch_size=parsed_args.batch_size)
 
     export_fn(parsed_address)
 
@@ -135,7 +135,7 @@ def get_parser() -> argparse.ArgumentParser:
 
     parser.add_argument(
         "dataset_path",
-        help=wrap("The path to the dataset file in a pickle (.p or .pickle), CSV format or JSON format."),
+        help=wrap("The path to the dataset file in a pickle (.p, .pickle or .pckl) or CSV format."),
         type=str,
     )
 
@@ -156,6 +156,13 @@ def get_parser() -> argparse.ArgumentParser:
         help=wrap("The device to use. It can be 'cpu' or a GPU device index such as '0' or '1'. By default '0'."),
         type=str,
         default="0",
+    )
+
+    parser.add_argument(
+        "--batch_size",
+        help=wrap("The size of the batch (default is 32)."),
+        type=int,
+        default=32,
     )
 
     parser.add_argument(

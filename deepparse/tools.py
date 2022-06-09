@@ -44,7 +44,7 @@ def download_from_url(file_name: str, saving_dir: str, file_extension: str):
 
 def download_weights(model: str, saving_dir: str, verbose: bool = True) -> None:
     """
-    Function to download the pre-trained weights of the models.
+    Function to download the pretrained weights of the models.
     Args:
         model: The network type (i.e. fasttext or bpemb).
         saving_dir: The path to the saving directory.
@@ -56,7 +56,7 @@ def download_weights(model: str, saving_dir: str, verbose: bool = True) -> None:
     download_from_url(model, saving_dir, "version")
 
 
-def handle_poutyne_version() -> float:
+def handle_poutyne_version() -> str:
     """
     Handle the retrieval of the major and minor part of the Poutyne version
     """
@@ -68,26 +68,32 @@ def handle_poutyne_version() -> float:
     return version
 
 
-def valid_poutyne_version():
+def valid_poutyne_version(min_major: int = 1, min_minor: int = 2):
     """
-    Validate Poutyne version is greater than 1.2 for using a str checkpoint. Version before does not support that
-    feature.
+    Validate Poutyne version is greater than min_major.min_minor for using a str checkpoint. Some version before
+    does not support all the features we need. By default, min_major.min_minor equal version 1.2 which is the
+    lowest version we can use.
     """
     version_components = handle_poutyne_version().split(".")
 
     major = int(version_components[0])
     minor = int(version_components[1])
 
-    return major >= 1 and minor >= 2
+    if major > min_major:
+        is_valid_poutyne_version = True
+    else:
+        is_valid_poutyne_version = major >= min_major and minor >= min_minor
+
+    return is_valid_poutyne_version
 
 
 def handle_pre_trained_checkpoint(model_type_checkpoint: str) -> str:
     """
-    Handle the checkpoint formatting for pre trained models.
+    Handle the checkpoint formatting for pretrained models.
     """
     if not valid_poutyne_version():
         raise NotImplementedError(
-            f"To load the pre-trained {model_type_checkpoint} model, you need to have a Poutyne version"
+            f"To load the pretrained {model_type_checkpoint} model, you need to have a Poutyne version"
             "greater than 1.1 (>1.1)"
         )
     model_path = os.path.join(CACHE_PATH, f"{model_type_checkpoint}.ckpt")
@@ -132,7 +138,9 @@ def validate_data_to_parse(addresses_to_parse: List) -> None:
         - no addresses are whitespace-only strings.
     """
     if isinstance(addresses_to_parse[0], tuple):
-        DataError("Addresses to parsed are tuples. They need to be a list of string. Are you using training data?")
+        raise DataError(
+            "Addresses to parsed are tuples. They need to be a list of string. Are you using training data?"
+        )
     if validate_if_any_none(addresses_to_parse):
         raise DataError("Some addresses are None value.")
     if validate_if_any_empty(addresses_to_parse):

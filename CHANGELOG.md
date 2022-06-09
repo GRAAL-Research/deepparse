@@ -1,6 +1,6 @@
 ## Beta (0.1)
 
-- Initial release of the pre-trained models
+- Initial release of the pretrained models
 - Beta version of the API
 
 ## 0.1.2
@@ -190,9 +190,11 @@
 - Hotfix Poutyne version handling
 
 ## 0.7.3
+
 - Add freeze layers parameters to freeze layers during retraining
 
 ## 0.7.4
+
 - Improve parsed address print
 - Bug-fix #124: comma-separated list without whitespace in CSVDatasetContainer
 - Add a report when addresses to parse and tags list len differ

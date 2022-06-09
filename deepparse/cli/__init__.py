@@ -1,4 +1,6 @@
 # pylint: disable=wildcard-import
-from .parse import *
 from .download import *
+from .parse import *
+from .retrain import *
+from .test import *
 from .tools import *

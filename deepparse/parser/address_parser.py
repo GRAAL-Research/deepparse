@@ -1,10 +1,11 @@
+# pylint: disable=too-many-lines
+
 import contextlib
 import os
 import re
 import warnings
 from typing import List, Union, Dict, Tuple
 
-import poutyne
 import torch
 from poutyne.framework import Experiment
 from torch.optim import SGD
@@ -37,7 +38,7 @@ from ..metrics import nll_loss, accuracy
 from ..network.bpemb_seq2seq import BPEmbSeq2SeqModel
 from ..network.fasttext_seq2seq import FastTextSeq2SeqModel
 from ..preprocessing import AddressCleaner
-from ..tools import CACHE_PATH
+from ..tools import CACHE_PATH, valid_poutyne_version
 from ..vectorizer import FastTextVectorizer, BPEmbVectorizer
 from ..vectorizer import TrainVectorizer
 from ..vectorizer.magnitude_vectorizer import MagnitudeVectorizer
@@ -61,18 +62,18 @@ PREDICTION_TIME_PERFORMANCE_THRESHOLD = 64
 
 class AddressParser:
     """
-    Address parser to parse an address or a list of address using one of the seq2seq pre-trained
+    Address parser to parse an address or a list of address using one of the seq2seq pretrained
     networks either with fastText or BPEmb. The default prediction tags are the following
 
-            - "StreetNumber": for the street number,
-            - "StreetName": for the name of the street,
-            - "Unit": for the unit (such as apartment),
-            - "Municipality": for the municipality,
-            - "Province": for the province or local region,
-            - "PostalCode": for the postal code,
-            - "Orientation": for the street orientation (e.g. west, east),
-            - "GeneralDelivery": for other delivery information,
-            - "EOS": (End Of Sequence) since we use an EOS tag during training, sometimes the models return an EOS tag.
+            - 'StreetNumber': for the street number,
+            - 'StreetName': for the name of the street,
+            - 'Unit': for the unit (such as apartment),
+            - 'Municipality': for the municipality,
+            - 'Province': for the province or local region,
+            - 'PostalCode': for the postal code,
+            - 'Orientation': for the street orientation (e.g. west, east),
+            - 'GeneralDelivery': for other delivery information,
+            - 'EOS': (End Of Sequence) since we use an EOS tag during training, sometimes the models return an EOS tag.
 
     Args:
         model_type (str): The network name to use, can be either:
@@ -84,7 +85,7 @@ class AddressParser:
             - lightest (the one using the less RAM and GPU usage) (equivalent to fasttext-light),
             - best (the best accuracy performance) (equivalent to bpemb).
 
-            The default value is "best" for the most accurate model. Ignored if ``path_to_retrained_model`` is not
+            The default value is ``"best"`` for the most accurate model. Ignored if ``path_to_retrained_model`` is not
             ``None``. To further improve performance, consider using the models (fasttext or BPEmb) with their
             counterpart using attention mechanism with the ``attention_mechanism`` flag.
         attention_mechanism (bool): Whether to use the model with an attention mechanism. The model will use an
@@ -93,41 +94,43 @@ class AddressParser:
         device (Union[int, str, torch.torch.device]): The device to use can be either:
 
             - a ``GPU`` index in int format (e.g. ``0``),
-            - a complete device name in a string format (e.g. ``'cuda:0'``),
+            - a complete device name in a string format (e.g. ``"cuda:0"``),
             - a :class:`~torch.torch.device` object,
-            - ``'cpu'`` for a  ``CPU`` use.
+            - ``"cpu"`` for a  ``CPU`` use.
 
             The default value is GPU with the index ``0`` if it exists, otherwise the value is ``CPU``.
         rounding (int): The rounding to use when asking the probability of the tags. The default value is 4 digits.
         verbose (bool): Turn on/off the verbosity of the model weights download and loading. The default value is True.
         path_to_retrained_model (Union[str, None]): The path to the retrained model to use for prediction. We will
-            `'infer'` the ``model_type`` of the retrained model. Default is None, meaning we use our pre-trained model.
-            If the retrained model uses an attention mechanism, `attention_mechanism` needs to be set to True.
+            infer the ``model_type`` of the retrained model. Default is ``None``, meaning we use our pretrained model.
+            If the retrained model uses an attention mechanism, ``attention_mechanism`` needs to be set to True.
+        cache_dir (Union[str, None]): The path to the cached directory to use for downloading (and loading) the
+            embeddings model and the model pretrained weights.
 
     Note:
-        For both the networks, we will download the pre-trained weights and embeddings in the ``.cache`` directory
-        for the root user. The pre-trained weights take at most 44 MB. The fastText embeddings take 6.8 GO,
+        For both the networks, we will download the pretrained weights and embeddings in the ``.cache`` directory
+        for the root user. The pretrained weights take at most 44 MB. The fastText embeddings take 6.8 GO,
         the fastText-light embeddings take 3.3 GO and bpemb take 116 MB (in .cache/bpemb).
 
-        Also, one can download all the dependencies of our pre-trained model using our CLI
+        Also, one can download all the dependencies of our pretrained model using our CLI
         (e.g. download_model fasttext) before sending it to a node without access to Internet.
 
-        Here are the URLs to download our pre-trained models directly
+        Here are the URLs to download our pretrained models directly
 
             - `FastText <https://graal.ift.ulaval.ca/public/deepparse/fasttext.ckpt>`_
             - `BPEmb <https://graal.ift.ulaval.ca/public/deepparse/bpemb.ckpt>`_
             - `FastText Light <https://graal.ift.ulaval.ca/public/deepparse/fasttext.magnitude.gz>`_.
 
     Note:
-        Since Windows uses `spawn` instead of `fork` during multiprocess (for the data loading pre-processing
-        `num_worker` > 0) we use the Gensim model, which takes more RAM (~10 GO) than the Fasttext one (~8 GO).
+        Since Windows uses ``spawn`` instead of ``fork`` during multiprocess (for the data loading pre-processing
+        ``num_worker`` > 0) we use the Gensim model, which takes more RAM (~10 GO) than the Fasttext one (~8 GO).
         It also takes a longer time to load. See here the
         `issue <https://github.com/GRAAL-Research/deepparse/issues/89>`_.
 
     Note:
         You may observe a 100% CPU load the first time you call the fasttext-light model. We
         `hypotheses <https://github.com/GRAAL-Research/deepparse/pull/54#issuecomment-743463855>`_ that this is due
-        to the SQLite database behind `pymagnitude`. This approach create a cache to speed up processing and since the
+        to the SQLite database behind ``pymagnitude``. This approach create a cache to speed up processing and since the
         memory mapping is saved between the runs, it's more intensive the first time you call it and subsequent
         time this load doesn't appear.
 
@@ -154,7 +157,7 @@ class AddressParser:
         .. code-block:: python
 
             address_parser = AddressParser(model_type="fasttext",
-                                           path_to_retrained_model='/path_to_a_retrain_fasttext_model')
+                                           path_to_retrained_model="/path_to_a_retrain_fasttext_model")
             parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
 
         Using a retrained model trained on different tags
@@ -162,7 +165,7 @@ class AddressParser:
         .. code-block:: python
 
             # We don't give the model_type since it's ignored when using path_to_retrained_model
-            address_parser = AddressParser(path_to_retrained_model='/path_to_a_retrain_fasttext_model')
+            address_parser = AddressParser(path_to_retrained_model="/path_to_a_retrain_fasttext_model")
             parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
 
         Using a retrained model with attention
@@ -170,7 +173,7 @@ class AddressParser:
         .. code-block:: python
 
             address_parser = AddressParser(model_type="fasttext",
-                                           path_to_retrained_model='/path_to_a_retrain_fasttext_attention_model',
+                                           path_to_retrained_model="/path_to_a_retrain_fasttext_attention_model",
                                            attention_mechanism=True)
             parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
 
@@ -184,6 +187,7 @@ class AddressParser:
         rounding: int = 4,
         verbose: bool = True,
         path_to_retrained_model: Union[str, None] = None,
+        cache_dir: Union[str, None] = None,
     ) -> None:
         # pylint: disable=too-many-arguments
         self._process_device(device)
@@ -191,7 +195,9 @@ class AddressParser:
         self.rounding = rounding
         self.verbose = verbose
 
-        # Default pre-trained tag are loaded
+        named_parser = None
+
+        # Default pretrained tag are loaded
         tags_to_idx = _pre_trained_tags_to_idx
         # Default FIELDS of the formatted address
         fields = list(tags_to_idx)
@@ -208,6 +214,9 @@ class AddressParser:
                 # We change the FIELDS for the FormattedParsedAddress
                 fields = list(tags_to_idx)
 
+            # In any case, we have given a new name to the parser using either the default or user given name
+            named_parser = checkpoint_weights.get("named_parser")
+
             # We "infer" the model type, thus we also had to handle the attention_mechanism bool
             model_type, attention_mechanism = infer_model_type(
                 checkpoint_weights, attention_mechanism=attention_mechanism
@@ -216,6 +225,8 @@ class AddressParser:
         formatted_parsed_address.FIELDS = fields
         self.tags_converter = TagsConverter(tags_to_idx)
 
+        self.named_parser = named_parser
+
         self.model_type, self._model_type_formatted = handle_model_name(model_type, attention_mechanism)
         self._model_factory(
             verbose=self.verbose,
@@ -223,11 +234,14 @@ class AddressParser:
             prediction_layer_len=self.tags_converter.dim,
             attention_mechanism=attention_mechanism,
             seq2seq_kwargs=seq2seq_kwargs,
+            cache_dir=cache_dir,
         )
         self.model.eval()
 
     def __str__(self) -> str:
-        return f"{self._model_type_formatted}AddressParser"
+        if self.named_parser is not None:
+            return self.named_parser
+        return f"PreTrained{self._model_type_formatted}AddressParser"
 
     __repr__ = __str__  # to call __str__ when list of address
 
@@ -247,7 +261,7 @@ class AddressParser:
                 We apply some validation tests before parsing to validate its content if the data to parse is a string
                 or a list of strings. We apply the following basic criteria:
 
-                    - no addresses are None value,
+                    - no addresses are ``None`` value,
                     - no addresses are empty string, and
                     - no addresses are whitespace-only strings.
 
@@ -257,9 +271,9 @@ class AddressParser:
                 address when using a batch of 128 (128 elements at the time are processed).
             with_prob (bool): If true, return the probability of all the tags with the specified
                 rounding.
-            batch_size (int): The size of the batch (default is 32).
-            num_workers (int): Number of workers to use for the data loader (default is 0, which means that the data
-                will be loaded in the main process.).
+            batch_size (int): The size of the batch (by default, ``32``).
+            num_workers (int): Number of workers to use for the data loader (default is ``0``, which means that the data
+                will be loaded in the main process).
 
         Return:
             Either a :class:`~FormattedParsedAddress` or a list of
@@ -357,6 +371,7 @@ class AddressParser:
         prediction_tags: Union[Dict, None] = None,
         seq2seq_params: Union[Dict, None] = None,
         layers_to_freeze: Union[str, None] = None,
+        name_of_the_retrain_parser: Union[None, str] = None,
     ) -> List[Dict]:
         # pylint: disable=too-many-arguments, line-too-long, too-many-locals, too-many-branches, too-many-statements
         """
@@ -375,15 +390,15 @@ class AddressParser:
                 DatasetContainer (:class:`~deepparse.dataset_container.PickleDatasetContainer` or
                 :class:`~deepparse.dataset_container.CSVDatasetContainer`)
             train_ratio (float): The ratio to use of the dataset for the training. The rest of the data is used for the
-                validation (e.g. a train ratio of 0.8 mean a 80-20 train-valid split) (default is 0.8).
-            batch_size (int): The size of the batch (default is 32).
-            epochs (int): number of training epochs (default is 5).
-            num_workers (int): Number of workers to use for the data loader (default is 1 worker).
+                validation (e.g. a train ratio of 0.8 mean a 80-20 train-valid split) (by default, ``0.8``).
+            batch_size (int): The size of the batch (by default, ``32``).
+            epochs (int): The number of training epochs (by default, ``5``).
+            num_workers (int): The number of workers to use for the data loader (by default, ``1`` worker).
             learning_rate (float): The learning rate (LR) to use for training (default 0.01).
             callbacks (Union[list, None]): List of callbacks to use during training.
                 See Poutyne `callback <https://poutyne.org/callbacks.html#callback-class>`_ for more information. By
                 default, we set no callback.
-            seed (int): Seed to use (by default 42).
+            seed (int): The seed to use (default 42).
             logging_path (str): The logging path for the checkpoints. Poutyne will use the best one and reload the
                 state if any checkpoints are there. Thus, an error will be raised if you change the model type.
                 For example,  you retrain a FastText model and then retrain a BPEmb in the same logging path directory.
@@ -394,8 +409,8 @@ class AddressParser:
                 (e.g. street name) and the values are the components indices (from 0 to N + 1) to use during retraining
                 of a model. The ``+ 1`` corresponds to the End Of Sequence (EOS) token that needs to be included in the
                 dictionary. We will use the length of this dictionary for the output size of the prediction layer.
-                We also save the dictionary to be used later on when you load the model. Default is None, meaning
-                we use our pre-trained model prediction tags.
+                We also save the dictionary to be used later on when you load the model. Default is ``None``, meaning
+                we use our pretrained model prediction tags.
             seq2seq_params (Union[dict, None]): A dictionary of seq2seq parameters to modify the seq2seq architecture
                 to train. Note that if you change the seq2seq parameters, a new model will be trained from scratch.
                 Parameters that can be modified are:
@@ -405,25 +420,40 @@ class AddressParser:
                     - The number of ``encoder_num_layers`` of the encoder. The default value is 1.
                     - The size of the ``decoder_hidden_size`` of the decoder. The default value is 1024.
                     - The number of ``decoder_num_layers`` of the decoder. The default value is 1.
-                Default is None, meaning we use the default seq2seq architecture.
-            layers_to_freeze (Union[str, None]): Name of the portion of the seq2seq to freeze layers,
-                thus reducing the number of parameters to learn. Will be ignored if ``seq2seq_params`` is not None.
-                Possible freezing settings are:
+
+                Default is ``None``, meaning we use the default seq2seq architecture.
+            layers_to_freeze (Union[str, None]): Name of the portion of the seq2seq to freeze layers. Thus, it reduces
+                the number of parameters to learn. Will be ignored if ``seq2seq_params`` is not ``None``. A seq2seq is
+                composed of three part, an encoder, decoder, and prediction layer. The encoder is the part that
+                encodes the address into a more dense representation. The decoder is the part that decodes a dense
+                address representation. The prediction layer is a fully-connected with an output size of the same
+                length as the prediction tags. Available freezing settings are:
 
                     - ``None``: No layers are frozen.
-                    - 'encoder': To freeze the encoder part of the seq2seq. That is the part that encodes the address
-                    into a more dense representation.
-                    - 'decoder': To freeze the decoder part of the seq2seq. That is the part that decodes a dense
-                    address representation.
-                    - 'prediction_layer': To freeze the last layer that predicts a tag class (i.e. a fully connected
-                    with an output size of the same length as the prediction tags).
-                    - 'seq2seq': To freeze the encoder and decoder but **not** the prediction layer.
+                    - ``"encoder"``: To freeze the encoder part of the seq2seq.
+                    - ``"decoder"``: To freeze the decoder part of the seq2seq.
+                    - ``"prediction_layer"``: To freeze the last layer that predicts a tag class .
+                    - ``"seq2seq"``: To freeze the encoder and decoder but **not** the prediction layer.
 
-               Default is ``None``, meaning we do not freeze any layers.
+                Default is ``None``, meaning we do not freeze any layers.
+            name_of_the_retrain_parser (Union[str, None]): Name to give to the retrained parser that will be use
+                when reloaded as the printed name, and to the saving file name (note that we will manually add
+                the extension ``".ckpt"`` to the name for the file name). By default, ``None``.
+
+                Default settings for the parser name will use the training settings for the name using the
+                following pattern:
+
+                    - the pretrained architecture (fasttext or bpemb and with or without attention mechanism),
+                    - if prediction_tags is not ``None``, the following tag: ``ModifiedPredictionTags``,
+                    - if seq2seq_params is not ``None``, the following tag: ``ModifiedSeq2SeqConfiguration``, and
+                    - if layers_to_freeze is not ``None``, the following tag: ``FreezedLayer{portion}``.
+
 
         Return:
             A list of dictionary with the best epoch stats (see `Experiment class
-            <https://poutyne.org/experiment.html#poutyne.Experiment.train>`_ for details).
+            <https://poutyne.org/experiment.html#poutyne.Experiment.train>`_ for details). The pretrained is
+            saved using a default file name of using the name_of_the_retrain_parser. See the last note for
+            more details.
 
         Note:
             We recommend using a learning rate scheduler procedure during retraining to reduce the chance
@@ -445,12 +475,18 @@ class AddressParser:
             in a directory as the model to load. Thus, if you train two different models in the same directory,
             the second retrain will not work due to model differences.
 
+        Note:
+            The default settings for the file name to save the retrained model use following pattern
+            "retrained_{model_type}_address_parser.ckpt" if name_of_the_retrain_parser is set to
+            ``None``. Otherwise, the file name to save the retrained model will correspond to
+            ``name_of_the_retrain_parser`` plus the file extension ``".ckpt"``.
+
         Examples:
 
             .. code-block:: python
 
                 address_parser = AddressParser(device=0) #on gpu device 0
-                data_path = 'path_to_a_pickle_dataset.p'
+                data_path = "path_to_a_pickle_dataset.p"
 
                 container = PickleDatasetContainer(data_path)
 
@@ -461,7 +497,7 @@ class AddressParser:
             .. code-block:: python
 
                 address_parser = AddressParser(device=0)
-                data_path = 'path_to_a_csv_dataset.p'
+                data_path = "path_to_a_csv_dataset.p"
 
                 container = CSVDatasetContainer(data_path)
                 address_parser.retrain(container, 0.8, epochs=5, batch_size=128, layers_to_freeze="encoder")
@@ -473,7 +509,7 @@ class AddressParser:
                 import poutyne
 
                 address_parser = AddressParser(device=0)
-                data_path = 'path_to_a_csv_dataset.p'
+                data_path = "path_to_a_csv_dataset.p"
 
                 container = CSVDatasetContainer(data_path)
 
@@ -487,7 +523,7 @@ class AddressParser:
                 address_components = {"ATag":0, "AnotherTag": 1, "EOS": 2}
 
                 address_parser = AddressParser(device=0) #on gpu device 0
-                data_path = 'path_to_a_pickle_dataset.p'
+                data_path = "path_to_a_pickle_dataset.p"
 
                 container = PickleDatasetContainer(data_path)
 
@@ -500,7 +536,7 @@ class AddressParser:
                 seq2seq_params = {"encoder_hidden_size": 512, "decoder_hidden_size": 512}
 
                 address_parser = AddressParser(device=0) #on gpu device 0
-                data_path = 'path_to_a_pickle_dataset.p'
+                data_path = "path_to_a_pickle_dataset.p"
 
                 container = PickleDatasetContainer(data_path)
 
@@ -515,14 +551,32 @@ class AddressParser:
                 address_components = {"ATag":0, "AnotherTag": 1, "EOS": 2}
 
                 address_parser = AddressParser(device=0) #on gpu device 0
-                data_path = 'path_to_a_pickle_dataset.p'
+                data_path = "path_to_a_pickle_dataset.p"
 
                 container = PickleDatasetContainer(data_path)
 
                 address_parser.retrain(container, 0.8, epochs=1, batch_size=128, seq2seq_params=seq2seq_params,
                     prediction_tags=address_components)
 
+            Using a named retrain parser name.
+
+            .. code-block:: python
+
+                address_parser = AddressParser(device=0) #on gpu device 0
+                data_path = "path_to_a_pickle_dataset.p"
+
+                container = PickleDatasetContainer(data_path)
+
+                address_parser.retrain(container, 0.8, epochs=1, batch_size=128,
+                    name_of_the_retrain_parser="MyParserName")
+
         """
+        if name_of_the_retrain_parser is not None:
+            if len(name_of_the_retrain_parser.split(".")) > 1:
+                raise ValueError(
+                    "The name_of_the_retrain_parser should NOT include a file extension or a dot-like" "filename style."
+                )
+
         if "fasttext-light" in self.model_type:
             raise ValueError("It's not possible to retrain a fasttext-light due to pymagnitude problem.")
 
@@ -552,7 +606,7 @@ class AddressParser:
 
         if seq2seq_params is not None:
             # Handle seq2seq params
-            # We set the flag to use the pre-trained weights to false since we train new ones
+            # We set the flag to use the pretrained weights to false since we train new ones
             seq2seq_params.update({"pre_trained_weights": False})
 
             model_factory_dict.update({"seq2seq_kwargs": seq2seq_params})
@@ -581,7 +635,7 @@ class AddressParser:
 
         try:
             with_capturing_context = False
-            if float(".".join(str(poutyne.version.__version__).split(".")[:2])) < 1.8:
+            if not valid_poutyne_version(min_major=1, min_minor=8):
                 print(
                     "You are using a older version of Poutyne that does not support properly error management."
                     " Due to that, we cannot show retrain progress. To fix that, update Poutyne to "
@@ -623,17 +677,31 @@ class AddressParser:
             else:
                 raise RuntimeError(error.args[0]) from error
         else:
-            file_path = os.path.join(logging_path, f"retrained_{self.model_type}_address_parser.ckpt")
+            file_name = (
+                name_of_the_retrain_parser + ".ckpt"
+                if name_of_the_retrain_parser is not None
+                else f"retrained_{self.model_type}_address_parser.ckpt"
+            )
+            file_path = os.path.join(logging_path, file_name)
             torch_save = {
                 "address_tagger_model": exp.model.network.state_dict(),
                 "model_type": self.model_type,
             }
+
             if seq2seq_params is not None:
                 # Means we have changed the seq2seq params
                 torch_save.update({"seq2seq_params": seq2seq_params})
             if prediction_tags is not None:
                 #  Means we have changed the predictions tags
                 torch_save.update({"prediction_tags": prediction_tags})
+
+            torch_save.update(
+                {
+                    "named_parser": name_of_the_retrain_parser
+                    if name_of_the_retrain_parser is not None
+                    else self._formatted_named_parser_name(prediction_tags, seq2seq_params, layers_to_freeze)
+                }
+            )
 
             torch.save(torch_save, file_path)
             return train_res
@@ -648,21 +716,19 @@ class AddressParser:
     ) -> Dict:
         # pylint: disable=too-many-arguments, too-many-locals
         """
-        Method to test a retrained or a pre-trained model using a dataset with the default tags. If you test a
+        Method to test a retrained or a pretrained model using a dataset with the default tags. If you test a
         retrained model with different prediction tags, we will use those tags.
 
         Args:
             test_dataset_container (~deepparse.dataset_container.DatasetContainer):
                 The test dataset container of the data to use.
-            batch_size (int): The size of the batch (default is 32).
-            num_workers (int): Number of workers to use for the data loader (default is 1 worker).
+            batch_size (int): The size of the batch (by default, ``32``).
+            num_workers (int): Number of workers to use for the data loader (by default, ``1`` worker).
             callbacks (Union[list, None]): List of callbacks to use during training.
                 See Poutyne `callback <https://poutyne.org/callbacks.html#callback-class>`_ for more information.
                 By default, we set no callback.
-            seed (int): Seed to use (by default 42).
-            callbacks (Union[list, None]): List of callbacks to use during training.
-                See Poutyne `callback <https://poutyne.org/callbacks.html#callback-class>`_ for more information.
-                By default, we set no callback.
+            seed (int): Seed to use (by default, ``42``).
+
         Return:
             A dictionary with the stats (see `Experiment class
             <https://poutyne.org/experiment.html#poutyne.Experiment.train>`_ for details).
@@ -675,7 +741,7 @@ class AddressParser:
             .. code-block:: python
 
                 address_parser = AddressParser(device=0) #on gpu device 0
-                data_path = 'path_to_a_pickle_test_dataset.p'
+                data_path = "path_to_a_pickle_test_dataset.p"
 
                 test_container = PickleDatasetContainer(data_path, is_training_container=False)
 
@@ -690,14 +756,14 @@ class AddressParser:
                 address_parser = AddressParser(device=0) #on gpu device 0
 
                 # Train phase
-                data_path = 'path_to_a_pickle_train_dataset.p'
+                data_path = "path_to_a_pickle_train_dataset.p"
 
                 train_container = PickleDatasetContainer(data_path)
 
                 address_parser.retrain(container, 0.8, epochs=1, batch_size=128, prediction_tags=address_components)
 
                 # Test phase
-                data_path = 'path_to_a_pickle_test_dataset.p'
+                data_path = "path_to_a_pickle_test_dataset.p"
 
                 test_container = PickleDatasetContainer(data_path, is_training_container=False)
 
@@ -844,22 +910,27 @@ class AddressParser:
         prediction_layer_len: int = 9,
         attention_mechanism=False,
         seq2seq_kwargs: Union[dict, None] = None,
+        cache_dir: Union[dict, None] = None,
     ) -> None:
         # pylint: disable=too-many-arguments
         """
-        Model factory to create the vectorizer, the data converter and the pre-trained model
+        Model factory to create the vectorizer, the data converter and the pretrained model
         """
         # We switch the case where seq2seq_kwargs is None to an empty dict
         seq2seq_kwargs = seq2seq_kwargs if seq2seq_kwargs is not None else {}
 
+        if cache_dir is None:
+            # Set to default cache_path value
+            cache_dir = CACHE_PATH
+
         if "fasttext" in self.model_type:
             if "fasttext-light" in self.model_type:
-                file_name = download_fasttext_magnitude_embeddings(saving_dir=CACHE_PATH, verbose=verbose)
+                file_name = download_fasttext_magnitude_embeddings(cache_dir=cache_dir, verbose=verbose)
 
                 embeddings_model = MagnitudeEmbeddingsModel(file_name, verbose=verbose)
                 self.vectorizer = MagnitudeVectorizer(embeddings_model=embeddings_model)
             else:
-                file_name = download_fasttext_embeddings(saving_dir=CACHE_PATH, verbose=verbose)
+                file_name = download_fasttext_embeddings(cache_dir=cache_dir, verbose=verbose)
 
                 embeddings_model = FastTextEmbeddingsModel(file_name, verbose=verbose)
                 self.vectorizer = FastTextVectorizer(embeddings_model=embeddings_model)
@@ -867,6 +938,7 @@ class AddressParser:
             self.data_converter = fasttext_data_padding
 
             self.model = FastTextSeq2SeqModel(
+                cache_dir=cache_dir,
                 device=self.device,
                 output_size=prediction_layer_len,
                 verbose=verbose,
@@ -876,11 +948,13 @@ class AddressParser:
             )
 
         elif "bpemb" in self.model_type:
-            self.vectorizer = BPEmbVectorizer(embeddings_model=BPEmbEmbeddingsModel(verbose=verbose))
+            embeddings_model = BPEmbEmbeddingsModel(verbose=verbose, cache_dir=cache_dir)
+            self.vectorizer = BPEmbVectorizer(embeddings_model=embeddings_model)
 
             self.data_converter = bpemb_data_padding
 
             self.model = BPEmbSeq2SeqModel(
+                cache_dir=cache_dir,
                 device=self.device,
                 output_size=prediction_layer_len,
                 verbose=verbose,
@@ -903,8 +977,8 @@ class AddressParser:
 
     def get_formatted_model_name(self) -> str:
         """
-        Return the model type formatted name. For example, if the model type is `'fasttext'` the formatted name is
-        `"FastText"`.
+        Return the model type formatted name. For example, if the model type is ``"fasttext"`` the formatted name is
+        ``"FastText"``.
         """
         return self._model_type_formatted
 
@@ -947,9 +1021,9 @@ class AddressParser:
             if "bpemb" in self.model_type:
                 layers_to_freeze.append("embedding_network.")
             layer_exclude = "decoder.linear."
-        elif layers_to_freeze == 'prediction_layer':
+        elif layers_to_freeze == "prediction_layer":
             layers_to_freeze = ["decoder.linear."]
-        elif 'seq2seq' in layers_to_freeze:
+        elif "seq2seq" in layers_to_freeze:
             layers_to_freeze = ["encoder.", "decoder."]
             if "bpemb" in self.model_type:
                 layers_to_freeze.append("embedding_network.")
@@ -972,3 +1046,10 @@ class AddressParser:
                 # The implicit else mean the layer_name is in a layers to exclude BUT it is a layer to exclude from
                 # the freezing. Namely, the decoder.linear when we freeze the decoder, but we expect the final layer
                 # to be unfrozen.
+
+    def _formatted_named_parser_name(self, prediction_tags: Dict, seq2seq_params: Dict, layers_to_freeze: str) -> str:
+        prediction_tags_str = "ModifiedPredictionTags" if prediction_tags is not None else ""
+        seq2seq_params_str = "ModifiedSeq2SeqConfiguration" if seq2seq_params is not None else ""
+        layers_to_freeze_str = f"FreezedLayer{layers_to_freeze.capitalize()}" if layers_to_freeze is not None else ""
+        parser_name = self._model_type_formatted + prediction_tags_str + seq2seq_params_str + layers_to_freeze_str
+        return parser_name

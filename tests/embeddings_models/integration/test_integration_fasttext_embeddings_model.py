@@ -18,7 +18,7 @@ class FastTextEmbeddingsModelIntegrationTest(AddressParserRetrainTestCase):
     @classmethod
     def setUpClass(cls):
         super(FastTextEmbeddingsModelIntegrationTest, cls).setUpClass()
-        cls.file_name = "fake_embeddings_cc.fr.300"
+        cls.file_name = "fake_embeddings_cc.fr.300"  # We download fake embeddings for the tests
         cls.temp_dir_obj = TemporaryDirectory()
         cls.fake_cache_path = os.path.join(cls.temp_dir_obj.name, "fake_cache")
         download_from_url(cls.file_name, cls.fake_cache_path, "bin")

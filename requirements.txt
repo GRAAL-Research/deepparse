@@ -3,8 +3,8 @@ bpemb
 numpy
 requests
 pymagnitude-light
-colorama
+colorama>=0.4.3
 Poutyne
-gensim
+gensim>=4.2.0
 fasttext
 pandas

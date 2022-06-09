@@ -196,11 +196,19 @@ class FormattedParsedAddressBase(TestCase):
 
 class PretrainedWeightsBase:
     def download_pre_trained_weights(self):
-        self.temp_dir_obj = TemporaryDirectory()
-        self.fake_cache_path = os.path.join(self.temp_dir_obj.name, "fake_cache")
+        self.model_weights_temp_dir = TemporaryDirectory()
+        self.fake_cache_path = os.path.join(self.model_weights_temp_dir.name, "fake_cache")
 
         download_from_url("retrained_fasttext_address_parser", self.fake_cache_path, "ckpt")
         self.path_to_retrain_fasttext = os.path.join(self.fake_cache_path, "retrained_fasttext_address_parser.ckpt")
 
         download_from_url("retrained_bpemb_address_parser", self.fake_cache_path, "ckpt")
         self.path_to_retrain_bpemb = os.path.join(self.fake_cache_path, "retrained_bpemb_address_parser.ckpt")
+
+        download_from_url("retrained_named_address_parser", self.fake_cache_path, "ckpt")
+        self.path_to_named_model = os.path.join(self.fake_cache_path, "retrained_named_address_parser.ckpt")
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        # pylint: disable=no-member
+        cls.model_weights_temp_dir.cleanup()

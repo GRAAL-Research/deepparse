@@ -69,7 +69,7 @@ def main():
             "numpy",
             "torch",
             "bpemb",
-            "gensim",
+            "gensim>=4.0.0",
             "requests",
             "fasttext",
             "pymagnitude-light",

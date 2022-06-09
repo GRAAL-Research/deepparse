@@ -4,7 +4,7 @@
 .. meta::
 
   :description: deepparse is a state-of-the-art library for parsing multinational street addresses using deep learning
-  :keywords: deepparse, deep learning, pytorch, neural network, machine learning, natural language processing, parsing, data science, python
+  :keywords: deepparse, deep learning, pytorch, neural network, machine learning, natural language processing, parsing, data science, python, address parsing, us address parsing, multilingual address parsing, european address parsing, canadian address parsing, street address parser
   :author: Marouane Yassine & David Beauchemin
   :property="og:image": https://deepparse.org/_static/logos/deepparse.png
 

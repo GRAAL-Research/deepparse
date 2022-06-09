@@ -88,7 +88,7 @@ def main(args=None) -> None:
         "seed": seed,
     }
 
-    results_export_path = generate_export_path(test_dataset_path, f"{str(address_parser)}_testing.csv")
+    results_export_path = generate_export_path(test_dataset_path, f"{str(address_parser)}_testing.tsv")
     if parsed_args.log:
         logging_export_path = replace_path_extension(results_export_path, ".log")
         logging.basicConfig(
@@ -100,7 +100,7 @@ def main(args=None) -> None:
 
     results = address_parser.test(test_dataset_container=testing_data, **parser_args)
 
-    pd.DataFrame(results).to_csv(results_export_path)
+    pd.DataFrame(results, index=[0]).to_csv(results_export_path, index=False, sep="\t")
     if parsed_args.log:
         text_to_log = (
             f"Testing on the dataset file {test_dataset_path} is finished. The results are logged in"

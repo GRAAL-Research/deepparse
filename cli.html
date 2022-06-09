@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CLI &mdash; deepparse 0.7.4 documentation</title>
+  <title>CLI &mdash; deepparse 0.7.5 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -14,6 +14,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -31,7 +32,7 @@
             <img src="_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.7.4
+                0.7.5
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -93,10 +94,10 @@
            <div itemprop="articleBody">
              
   <section id="cli">
-<h1>CLI<a class="headerlink" href="#cli" title="Permalink to this headline"></a></h1>
+<h1>CLI<a class="headerlink" href="#cli" title="Permalink to this heading"></a></h1>
 <p>You cas use our cli to parsed addresses directly from the command line or download a pre-trained model.</p>
 <section id="parse">
-<h2>Parse<a class="headerlink" href="#parse" title="Permalink to this headline"></a></h2>
+<h2>Parse<a class="headerlink" href="#parse" title="Permalink to this heading"></a></h2>
 <p>The parsing of the addresses to parse <code class="docutils literal notranslate"><span class="pre">dataset_path</span></code> is done using the selected <code class="docutils literal notranslate"><span class="pre">parsing_model</span></code>.
 The exported parsed addresses are to be exported in the same directory as the addresses to parse but
 given the <code class="docutils literal notranslate"><span class="pre">export_file_name</span></code> using the encoding format of the address dataset file. For example,
@@ -133,11 +134,11 @@ the command <code class="docutils literal notranslate"><span class="pre">parse</
 </dd></dl>
 
 <section id="dataset-format">
-<h3>Dataset Format<a class="headerlink" href="#dataset-format" title="Permalink to this headline"></a></h3>
+<h3>Dataset Format<a class="headerlink" href="#dataset-format" title="Permalink to this heading"></a></h3>
 <p>For the dataset format see our <a class="reference internal" href="dataset_container.html#deepparse.dataset_container.DatasetContainer" title="deepparse.dataset_container.DatasetContainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DatasetContainer</span></code></a>.</p>
 </section>
 <section id="exporting-format">
-<h3>Exporting Format<a class="headerlink" href="#exporting-format" title="Permalink to this headline"></a></h3>
+<h3>Exporting Format<a class="headerlink" href="#exporting-format" title="Permalink to this heading"></a></h3>
 <p>We support three types of export format: CSV, Pickle and JSON.</p>
 <p>The first export uses the following pattern column pattern:
 <code class="docutils literal notranslate"><span class="pre">&quot;Address&quot;,</span> <span class="pre">&quot;First</span> <span class="pre">address</span> <span class="pre">components</span> <span class="pre">class&quot;,</span> <span class="pre">&quot;Second</span> <span class="pre">class&quot;,</span> <span class="pre">...</span></code>.
@@ -187,7 +188,7 @@ same example will return the following dict <code class="docutils literal notran
 </section>
 </section>
 <section id="download">
-<h2>Download<a class="headerlink" href="#download" title="Permalink to this headline"></a></h2>
+<h2>Download<a class="headerlink" href="#download" title="Permalink to this heading"></a></h2>
 <p>Command to pre-download model weights and requirements. Here is the argument, its description and possible choices,
 one can use the command <code class="docutils literal notranslate"><span class="pre">parse</span> <span class="pre">--help</span></code> to output the same description in your command line.</p>
 <ul class="simple">

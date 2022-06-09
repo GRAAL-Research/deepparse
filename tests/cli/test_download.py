@@ -6,7 +6,7 @@ import os
 import unittest
 from tempfile import TemporaryDirectory
 from unittest import TestCase
-from unittest.mock import patch
+from unittest.mock import patch, call
 
 from deepparse.cli import download
 
@@ -47,7 +47,8 @@ class DownloadTests(TestCase):
             with patch("deepparse.cli.download.download_fasttext_embeddings") as downloader:
                 download.main([self.a_fasttext_model_type])
 
-                downloader.assert_any_call(saving_dir=self.fake_cache_path)
+                downloader.assert_called()
+                downloader.assert_called_with(saving_dir=self.fake_cache_path)
 
     @patch("deepparse.cli.download.download_weights")
     def test_givenAFasttextMagnitudeDownload_whenModelIsNotLocal_thenDownloadEmbeddings(self, weights_download_mock):
@@ -55,7 +56,8 @@ class DownloadTests(TestCase):
             with patch("deepparse.cli.download.download_fasttext_magnitude_embeddings") as downloader:
                 download.main([self.a_fasttext_light_model_type])
 
-                downloader.assert_any_call(saving_dir=self.fake_cache_path)
+                downloader.assert_called()
+                downloader.assert_called_with(saving_dir=self.fake_cache_path)
 
     @patch("deepparse.cli.download.download_weights")
     def test_givenABPembDownload_whenModelIsNotLocal_thenDownloadEmbeddings(self, weights_download_mock):
@@ -63,6 +65,7 @@ class DownloadTests(TestCase):
             with patch("deepparse.cli.download.BPEmb") as downloader:
                 download.main([self.a_bpemb_model_type])
 
+                downloader.assert_called()
                 downloader.assert_any_call(lang="multi", vs=100000, dim=300)  # settings for BPemb
 
     @patch("deepparse.cli.download.download_fasttext_embeddings")
@@ -71,6 +74,7 @@ class DownloadTests(TestCase):
             with patch("deepparse.cli.download.download_weights") as downloader:
                 download.main([self.a_fasttext_model_type])
 
+                downloader.assert_called()
                 downloader.assert_any_call(self.a_fasttext_model_type, self.fake_cache_path)
 
     @patch("deepparse.cli.download.download_fasttext_embeddings")
@@ -79,6 +83,7 @@ class DownloadTests(TestCase):
             with patch("deepparse.cli.download.download_weights") as downloader:
                 download.main([self.a_fasttext_att_model_type])
 
+                downloader.assert_called()
                 downloader.assert_any_call(self.a_fasttext_att_model_type, self.fake_cache_path)
 
     @patch("deepparse.cli.download.download_fasttext_magnitude_embeddings")
@@ -87,6 +92,7 @@ class DownloadTests(TestCase):
             with patch("deepparse.cli.download.download_weights") as downloader:
                 download.main([self.a_fasttext_light_model_type])
 
+                downloader.assert_called()
                 downloader.assert_any_call(self.a_fasttext_light_model_type, self.fake_cache_path)
 
     @patch("deepparse.cli.download.BPEmb")
@@ -95,6 +101,7 @@ class DownloadTests(TestCase):
             with patch("deepparse.cli.download.download_weights") as downloader:
                 download.main([self.a_bpemb_model_type])
 
+                downloader.assert_called()
                 downloader.assert_any_call(self.a_bpemb_model_type, self.fake_cache_path)
 
     @patch("deepparse.cli.download.BPEmb")
@@ -103,6 +110,7 @@ class DownloadTests(TestCase):
             with patch("deepparse.cli.download.download_weights") as downloader:
                 download.main([self.a_bpemb_att_model_type])
 
+                downloader.assert_called()
                 downloader.assert_any_call(self.a_bpemb_att_model_type, self.fake_cache_path)
 
     @patch("deepparse.cli.download.download_fasttext_embeddings")
@@ -115,6 +123,7 @@ class DownloadTests(TestCase):
             with patch("deepparse.cli.download.download_weights") as downloader:
                 download.main([self.a_fasttext_model_type])
 
+                downloader.assert_called()
                 downloader.assert_any_call(self.a_fasttext_model_type, self.fake_cache_path)
 
     @patch("deepparse.cli.download.download_fasttext_magnitude_embeddings")
@@ -127,6 +136,7 @@ class DownloadTests(TestCase):
             with patch("deepparse.cli.download.download_weights") as downloader:
                 download.main([self.a_fasttext_light_model_type])
 
+                downloader.assert_called()
                 downloader.assert_any_call(self.a_fasttext_light_model_type, self.fake_cache_path)
 
     @patch("deepparse.cli.download.BPEmb")
@@ -139,6 +149,7 @@ class DownloadTests(TestCase):
             with patch("deepparse.cli.download.download_weights") as downloader:
                 download.main([self.a_bpemb_model_type])
 
+                downloader.assert_called()
                 downloader.assert_any_call(self.a_bpemb_model_type, self.fake_cache_path)
 
     @patch("deepparse.cli.download.download_fasttext_embeddings")
@@ -192,6 +203,7 @@ class DownloadTests(TestCase):
             with patch("deepparse.cli.download.download_weights") as downloader:
                 download.main([self.a_fasttext_model_type])
 
+                downloader.assert_called()
                 downloader.assert_any_call(self.a_fasttext_model_type, self.fake_cache_path)
 
     @patch("deepparse.cli.download.download_fasttext_magnitude_embeddings")
@@ -203,6 +215,7 @@ class DownloadTests(TestCase):
             with patch("deepparse.cli.download.download_weights") as downloader:
                 download.main([self.a_fasttext_light_model_type])
 
+                downloader.assert_called()
                 downloader.assert_any_call(self.a_fasttext_light_model_type, self.fake_cache_path)
 
     @patch("deepparse.cli.download.BPEmb")
@@ -214,6 +227,7 @@ class DownloadTests(TestCase):
             with patch("deepparse.cli.download.download_weights") as downloader:
                 download.main([self.a_bpemb_model_type])
 
+                downloader.assert_called()
                 downloader.assert_any_call(self.a_bpemb_model_type, self.fake_cache_path)
 
 

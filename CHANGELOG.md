@@ -201,16 +201,16 @@
 
 ## 0.7.5
 
-- Bug-fix Poutyne version handling that cause a print error when version is 1.11 when retraining
-- Add option to create a named retrain parsing model using by default the architecture setting or using user given name
-- Hot-fix missing raise for DataError validation of address to parse when address are tuple
+- Bug-fix Poutyne version handling that causes a print error when a version is 1.11 when retraining
+- Add the option to create a named retrain parsing model using by default the architecture setting or using the user-given name
+- Hot-fix missing raise for DataError validation of address to parse when address is tuple
 - Bug-fix handling of string column name for CSVDatasetContainer that raised ValueError
 - Improve parse CLI doc and fix error in doc stating JSON format is supported as input data
 - Add batch_size to parse CLI
 - Add minimum version to Gensim 4.0.0.
 - Add a new CLI function, retrain, to retrain from the command line
 - Improve doc
-- Add `cache_dir` to BPEmb embedding model and to `AddressParser` to change the embeddings cache directory and models weights cache directory
+- Add `cache_dir` to the BPEmb embedding model and to `AddressParser` to change the embeddings cache directory and models weights cache directory
 - Change the `saving_dir` argument of `download_fastext_embeddings` and `download_fasttext_magnitude_embeddings` function
 to `cache_dir`. `saving_dir` is now deprecated and will be remove in version 0.8.
 - Add a new CLI function, test, to test from the command line

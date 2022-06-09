@@ -167,7 +167,7 @@ class RetrainTests(RetrainTestCase):
         self.assertTrue(
             os.path.isfile(
                 os.path.join(
-                    self.temp_checkpoints_obj.name, "checkpoints", "retrained_fasttext_attention_address_parser.ckpt"
+                    self.temp_checkpoints_obj.name, "checkpoints", "retrained_fasttext_address_parser.ckpt"
                 )
             )
         )

@@ -86,7 +86,7 @@ def main(args=None) -> None:
         if csv_column_names is None:
             raise ValueError(
                 "To use a CSV dataset to retrain on, you need to specify the 'csv_column_names' argument to provide the"
-                " column names to extract address and labels (respectively). For example, ['Address', 'Tags']."
+                " column names to extract address and labels (respectively). For example, Address Tags."
             )
         csv_column_separator = parsed_args.csv_column_separator
         training_data = CSVDatasetContainer(

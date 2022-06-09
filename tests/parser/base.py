@@ -210,4 +210,5 @@ class PretrainedWeightsBase:
 
     @classmethod
     def tearDownClass(cls) -> None:
+        # pylint: disable=no-member
         cls.model_weights_temp_dir.cleanup()

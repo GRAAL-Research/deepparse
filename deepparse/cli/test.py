@@ -173,8 +173,9 @@ def get_parser() -> argparse.ArgumentParser:
             "dataset_path leads to a CSV file. Column names have to be separated by a whitespace. For"
             "example, --csv_column_names column1 column2. By default, None."
         ),
-        type=str,
         default=None,
+        nargs=2,
+        type=str,
     )
 
     parser.add_argument(

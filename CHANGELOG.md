@@ -220,3 +220,7 @@ to `cache_dir`. `saving_dir` is now deprecated and will be remove in version 0.8
 ## 0.7.6
 
 - Re-release the version 0.7.5 into 0.7.6 due to manipulation error and change in PyPi (now delete does not delete release by yank does).
+
+## dev
+
+- Improve SEO 

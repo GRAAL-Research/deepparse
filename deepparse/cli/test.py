@@ -45,16 +45,16 @@ def main(args=None) -> None:
 
     test_dataset_path = parsed_args.test_dataset_path
     if is_csv_path(test_dataset_path):
-        csv_column_names = parsed_args.csv_column_names
-        if csv_column_names is None:
+        csv_column_name = parsed_args.csv_column_name
+        if csv_column_name is None:
             raise ValueError(
-                "To use a CSV dataset to test on, you need to specify the 'csv_column_names' argument to provide the"
-                " column names to extract address and labels (respectively). For example, ['Address', 'Tags']."
+                "To use a CSV dataset to test on, you need to specify the 'csv_column_name' argument to provide the"
+                " column name to extract address."
             )
         csv_column_separator = parsed_args.csv_column_separator
         testing_data = CSVDatasetContainer(
             test_dataset_path,
-            column_names=csv_column_names,
+            column_names=csv_column_name,
             separator=csv_column_separator,
             is_training_container=True,
         )
@@ -95,7 +95,7 @@ def main(args=None) -> None:
             filename=logging_export_path, format="%(asctime)s : %(levelname)s : %(message)s", level=logging.INFO
         )
 
-        text_to_log = f"Testing results on dataset file {test_dataset_path} using the parser {str(address_parser)}"
+        text_to_log = f"Testing results on dataset file {test_dataset_path} using the parser {str(address_parser)}."
         logging.info(text_to_log)
 
     results = address_parser.test(test_dataset_container=testing_data, **parser_args)
@@ -103,7 +103,7 @@ def main(args=None) -> None:
     pd.DataFrame(results, index=[0]).to_csv(results_export_path, index=False, sep="\t")
     if parsed_args.log:
         text_to_log = (
-            f"Testing on the dataset file {test_dataset_path} is finished. The results are logged in"
+            f"Testing on the dataset file {test_dataset_path} is finished. The results are logged in "
             f"the CSV file at {results_export_path}."
         )
         logging.info(text_to_log)
@@ -161,9 +161,28 @@ def get_parser() -> argparse.ArgumentParser:
 
     parser.add_argument(
         "--seed",
-        help=wrap("The seed to use (default 42)."),
+        help=wrap("The seed to use to make the sampling deterministic (default 42)."),
         type=int,
         default=42,
+    )
+
+    parser.add_argument(
+        "--csv_column_name",
+        help=wrap(
+            "The column name to extract address in the CSV. Need to be specified if the provided dataset_path "
+            "leads to a CSV file."
+        ),
+        type=str,
+        default=None,
+    )
+
+    parser.add_argument(
+        "--csv_column_separator",
+        help=wrap(
+            "The column separator for the dataset container will only be used if the dataset is a CSV one."
+            " By default '\t'."
+        ),
+        default="\t",
     )
 
     parser.add_argument(

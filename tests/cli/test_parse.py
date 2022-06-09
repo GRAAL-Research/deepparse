@@ -333,18 +333,15 @@ class ParseTests(TestCase, PretrainedWeightsBase):
     )
     def test_ifPathToBPEmbRetrainModel_thenUseBPEmbRetrainModel(self):
         with self._caplog.at_level(logging.INFO):
-            path_to_retrained_model = self.path_to_retrain_bpemb
             create_pickle_file(self.fake_data_path_pickle, predict_container=True)
 
             parse.main(
                 [
-                    self.a_fasttext_model_type,
+                    self.a_bpemb_model_type,
                     self.fake_data_path_pickle,
                     self.pickle_p_export_filename,
                     "--device",
                     self.cpu_device,
-                    "--path_to_retrained_model",
-                    path_to_retrained_model,
                 ]
             )
 

@@ -150,7 +150,7 @@ class RetrainTests(RetrainTestCase):
     )
     def test_integration_csv(self):
         parser_params = [
-            self.a_fasttext_att_model_type,
+            self.a_fasttext_model_type,
             self.a_train_csv_dataset_path,
             "--device",
             self.cpu_device,
@@ -179,12 +179,10 @@ class RetrainTests(RetrainTestCase):
     def test_ifIsCSVFile_noColumnName_raiseValueError(self):
         with self.assertRaises(ValueError):
             parser_params = [
-                self.a_fasttext_att_model_type,
+                self.a_fasttext_model_type,
                 self.a_train_csv_dataset_path,
                 "--device",
                 self.cpu_device,
-                "--csv_column_separator",  # Our dataset use a comma as separator
-                ",",
             ]
 
             parser_params.extend(self.parser_test_default_settings)
@@ -197,7 +195,7 @@ class RetrainTests(RetrainTestCase):
     def test_ifIsNotSupportedFile_raiseValueError(self):
         with self.assertRaises(ValueError):
             parser_params = [
-                self.a_fasttext_att_model_type,
+                self.a_fasttext_model_type,
                 "an_unsupported_extension.json",
                 "--device",
                 self.cpu_device,

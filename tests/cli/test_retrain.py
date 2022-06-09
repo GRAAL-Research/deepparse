@@ -61,7 +61,7 @@ class RetrainTests(RetrainTestCase):
         name_of_the_retrain_parser="",
     ) -> List:
         parser_params = [
-            self.a_fasttext_att_model_type,
+            self.a_fasttext_model_type,
             self.a_train_pickle_dataset_path,
             "--train_ratio",
             train_ratio,

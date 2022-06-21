@@ -4,6 +4,7 @@ from typing import List
 
 import poutyne
 import requests
+from requests import HTTPError
 
 from .data_error import DataError
 from .data_validation import (
@@ -14,15 +15,28 @@ from .data_validation import (
 
 BASE_URL = "https://graal.ift.ulaval.ca/public/deepparse/{}.{}"
 CACHE_PATH = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
+OFFLINE_HTTP_SERVER_ERROR_LOWEST_RANGE = 500
 
 
 def latest_version(model: str, cache_path: str) -> bool:
     """
     Verify if the local model is the latest.
     """
+
     with open(os.path.join(cache_path, model + ".version"), encoding="utf-8") as local_model_hash_file:
         local_model_hash_version = local_model_hash_file.readline()
-    download_from_url(model, cache_path, "version")
+    try:
+        download_from_url(model, cache_path, "version")
+    except HTTPError as exception:
+        # Todo handling and testing
+        if exception.response.status_code >= OFFLINE_HTTP_SERVOR_ERROR_LOWEST_RANGE:
+            warnings.warn(
+                f"We where not able to verify the cached model in the cache directory {cache_path}. We "
+                f"recommend to verify if you have the latest using our download cli function."
+            )
+        else:
+            # We re-raise the exception if not the status_code we are interested in
+            raise
     with open(os.path.join(cache_path, model + ".version"), encoding="utf-8") as remote_model_hash_file:
         remote_model_hash_version = remote_model_hash_file.readline()
     return local_model_hash_version.strip() == remote_model_hash_version.strip()

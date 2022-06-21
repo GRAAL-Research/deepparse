@@ -15,7 +15,13 @@ from .data_validation import (
 
 BASE_URL = "https://graal.ift.ulaval.ca/public/deepparse/{}.{}"
 CACHE_PATH = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
-OFFLINE_HTTP_SERVER_ERROR_LOWEST_RANGE = 500
+
+# Status code starting in the 4xx are client error status code.
+# That is Deepparse, server problem (e.g. Deepparse server is offline).
+HTTP_CLIENT_ERROR_STATUS_CODE = 400
+# Status code starting in the 5xx are server error.
+# That is, internal server error (e.g. no internet connexion).
+OFFLINE_HTTP_SERVER_ERROR_STATUS_CODE = 500
 
 
 def latest_version(model: str, cache_path: str) -> bool:
@@ -29,10 +35,19 @@ def latest_version(model: str, cache_path: str) -> bool:
         download_from_url(model, cache_path, "version")
     except HTTPError as exception:
         # Todo handling and testing
-        if exception.response.status_code >= OFFLINE_HTTP_SERVOR_ERROR_LOWEST_RANGE:
+        if exception.response.status_code >= OFFLINE_HTTP_SERVER_ERROR_STATUS_CODE:
+            # Case where the use does not have an Internet connection.
             warnings.warn(
-                f"We where not able to verify the cached model in the cache directory {cache_path}. We "
-                f"recommend to verify if you have the latest using our download cli function."
+                f"We where not able to verify the cached model in the cache directory {cache_path}. It seems like"
+                f"you are not connected to the Internet. We recommend to verify if you have the latest using our "
+                f"download CLI function."
+            )
+        elif HTTP_CLIENT_ERROR_STATUS_CODE <= exception.response.status_code < OFFLINE_HTTP_SERVER_ERROR_STATUS_CODE:
+            # Case where Deepparse server is down.
+            warnings.warn(
+                f"We where not able to verify the cached model in the cache directory {cache_path}. It seems like"
+                f"Deepparse server is not available at the moment. We recommend to attempt to verify the model version"
+                f"another time using our download CLI function."
             )
         else:
             # We re-raise the exception if not the status_code we are interested in

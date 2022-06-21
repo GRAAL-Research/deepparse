@@ -96,11 +96,16 @@ class Seq2SeqModel(ABC, nn.Module):
         model_path = os.path.join(cache_dir, f"{model_type}.ckpt")
 
         if not os.path.isfile(model_path):
+            # Todo add warning test handling
+            warnings.warn(
+                f"No pre-trained model where found in the cache directory {cache_dir}. Thus, we will"
+                f"automatically download the pre-trained model."
+            )
             download_weights(model_type, cache_dir, verbose=self.verbose)
         elif not latest_version(model_type, cache_path=cache_dir):
             if self.verbose:
                 warnings.warn(
-                    "A new version of the pretrained model is available. " "The newest model will be downloaded."
+                    "A new version of the pretrained model is available. The newest model will be downloaded."
                 )
             download_weights(model_type, cache_dir, verbose=self.verbose)
 

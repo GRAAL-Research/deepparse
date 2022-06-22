@@ -31,8 +31,6 @@ def latest_version(model: str, cache_path: str) -> bool:
     """
     # Todo handling and testing
 
-    is_latest_version = False
-
     # Reading of the actual local version
     with open(os.path.join(cache_path, model + ".version"), encoding="utf-8") as local_model_hash_file:
         local_model_hash_version = local_model_hash_file.readline()

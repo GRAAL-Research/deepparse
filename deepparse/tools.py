@@ -29,8 +29,6 @@ def latest_version(model: str, cache_path: str, verbose: bool) -> bool:
     """
     Verify if the local model is the latest.
     """
-    # Todo handling and testing
-
     # Reading of the actual local version
     with open(os.path.join(cache_path, model + ".version"), encoding="utf-8") as local_model_hash_file:
         local_model_hash_version = local_model_hash_file.readline()
@@ -77,7 +75,8 @@ def latest_version(model: str, cache_path: str, verbose: bool) -> bool:
         is_latest_version = True
     finally:
         # Cleaning the temporary directory
-        shutil.rmtree(tmp_cache)
+        if os.path.exists(tmp_cache):
+            shutil.rmtree(tmp_cache)
 
     return is_latest_version
 

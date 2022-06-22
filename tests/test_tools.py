@@ -4,9 +4,11 @@
 import os
 import unittest
 from tempfile import TemporaryDirectory
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 
 import requests
+from requests import HTTPError
+from urllib3.exceptions import MaxRetryError
 
 from deepparse import (
     download_from_url,
@@ -17,7 +19,6 @@ from deepparse import (
     validate_data_to_parse,
     DataError,
 )
-from deepparse import CACHE_PATH
 from tests.base_capture_output import CaptureOutputTestCase
 from tests.tools import create_file
 
@@ -45,23 +46,83 @@ class ToolsTests(CaptureOutputTestCase):
 
     def test_givenAFasttextLatestVersion_whenVerifyIfLastVersion_thenReturnTrue(self):
         self.create_cache_version("fasttext", self.latest_fasttext_version)
-        self.assertTrue(latest_version("fasttext", self.fake_cache_path))
+        self.assertTrue(latest_version("fasttext", self.fake_cache_path, verbose=False))
 
     def test_givenAFasttextNotTheLatestVersion_whenVerifyIfLastVersion_thenReturnFalse(
         self,
     ):
         self.create_cache_version("fasttext", "not_the_last_version")
-        self.assertFalse(latest_version("fasttext", self.fake_cache_path))
+        self.assertFalse(latest_version("fasttext", self.fake_cache_path, verbose=False))
 
     def test_givenABPEmbLatestVersion_whenVerifyIfLastVersion_thenReturnTrue(self):
         self.create_cache_version("bpemb", self.latest_bpemb_version)
-        self.assertTrue(latest_version("bpemb", self.fake_cache_path))
+        self.assertTrue(latest_version("bpemb", self.fake_cache_path, verbose=False))
 
     def test_givenABPEmbNotTheLatestVersion_whenVerifyIfLastVersion_thenReturnFalse(
         self,
     ):
         self.create_cache_version("bpemb", "not_the_last_version")
-        self.assertFalse(latest_version("bpemb", self.fake_cache_path))
+        self.assertFalse(latest_version("bpemb", self.fake_cache_path, verbose=False))
+
+    def test_givenAHTTPError_whenLatestVersionCall_thenReturnTrue(
+        self,
+    ):
+        self.create_cache_version("bpemb", self.latest_fasttext_version)
+
+        an_http_error_msg = "An http error message"
+        response_mock = MagicMock()
+        response_mock.status_code = 400
+        with patch("deepparse.tools.download_from_url") as download_from_url_mock:
+            download_from_url_mock.side_effect = HTTPError(an_http_error_msg, response=response_mock)
+
+            self.assertTrue(latest_version("bpemb", self.fake_cache_path, verbose=False))
+
+    def test_givenANotHandledHTTPError_whenLatestVersionCall_thenRaiseError(self):
+        self.create_cache_version("bpemb", self.latest_fasttext_version)
+
+        an_http_error_msg = "An http error message"
+        response_mock = MagicMock()
+        response_mock.status_code = 300
+        with patch("deepparse.tools.download_from_url") as download_from_url_mock:
+            download_from_url_mock.side_effect = HTTPError(an_http_error_msg, response=response_mock)
+
+            with self.assertRaises(HTTPError):
+                latest_version("bpemb", self.fake_cache_path, verbose=False)
+
+    def test_givenAHTTPErrorRemoteServer_whenLatestVersionCall_thenPrintWarning(
+        self,
+    ):
+        self.create_cache_version("bpemb", self.latest_fasttext_version)
+
+        an_http_error_msg = "An http error message"
+        response_mock = MagicMock()
+        response_mock.status_code = 400
+        with patch("deepparse.tools.download_from_url") as download_from_url_mock:
+            download_from_url_mock.side_effect = HTTPError(an_http_error_msg, response=response_mock)
+
+            with self.assertWarns(UserWarning):
+                latest_version("bpemb", self.fake_cache_path, verbose=True)
+
+    def test_givenANoInternetError_whenLatestVersionCall_thenReturnTrue(
+        self,
+    ):
+        self.create_cache_version("bpemb", self.latest_fasttext_version)
+
+        with patch("deepparse.tools.download_from_url") as download_from_url_mock:
+            download_from_url_mock.side_effect = MaxRetryError(pool=MagicMock(), url=MagicMock())
+
+            self.assertTrue(latest_version("bpemb", self.fake_cache_path, verbose=False))
+
+    def test_givenANoInternetError_whenLatestVersionCall_thenPrintWarning(
+        self,
+    ):
+        self.create_cache_version("bpemb", self.latest_fasttext_version)
+
+        with patch("deepparse.tools.download_from_url") as download_from_url_mock:
+            download_from_url_mock.side_effect = MaxRetryError(pool=MagicMock(), url=MagicMock())
+
+            with self.assertWarns(UserWarning):
+                latest_version("bpemb", self.fake_cache_path, verbose=True)
 
     def test_givenFasttextVersion_whenDownloadOk_thenDownloadIt(self):
         file_name = "fasttext"
@@ -258,6 +319,10 @@ class ToolsTests(CaptureOutputTestCase):
         tuple_data = [("An address", 0), ("Another address", 1)]
         with self.assertRaises(DataError):
             validate_data_to_parse(tuple_data)
+
+
+def raise_error_side_effect(an_http_error_msg, response_mock):
+    raise HTTPError(an_http_error_msg, response=response_mock)
 
 
 if __name__ == "__main__":

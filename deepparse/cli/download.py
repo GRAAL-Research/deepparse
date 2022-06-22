@@ -12,6 +12,8 @@ from deepparse import (
     download_weights,
 )
 
+# todo add cache path arg and test for it
+
 
 def main(args=None) -> None:
     """

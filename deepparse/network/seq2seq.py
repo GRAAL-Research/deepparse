@@ -102,7 +102,7 @@ class Seq2SeqModel(ABC, nn.Module):
                 f"automatically download the pre-trained model."
             )
             download_weights(model_type, cache_dir, verbose=self.verbose)
-        elif not latest_version(model_type, cache_path=cache_dir):
+        elif not latest_version(model_type, cache_path=cache_dir, verbose=self.verbose):
             if self.verbose:
                 warnings.warn(
                     "A new version of the pretrained model is available. The newest model will be downloaded."

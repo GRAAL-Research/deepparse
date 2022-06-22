@@ -6,6 +6,7 @@ from typing import List
 import poutyne
 import requests
 from requests import HTTPError
+from urllib3.exceptions import MaxRetryError
 
 from .data_error import DataError
 from .data_validation import (
@@ -20,12 +21,11 @@ CACHE_PATH = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
 # Status code starting in the 4xx are client error status code.
 # That is Deepparse, server problem (e.g. Deepparse server is offline).
 HTTP_CLIENT_ERROR_STATUS_CODE = 400
-# Status code starting in the 5xx are server error.
-# That is, internal server error (e.g. no internet connexion).
-OFFLINE_HTTP_SERVER_ERROR_STATUS_CODE = 500
+# Status code starting in the 5xx are the next range status code.
+NEXT_RANGE_STATUS_CODE = 500
 
 
-def latest_version(model: str, cache_path: str) -> bool:
+def latest_version(model: str, cache_path: str, verbose: bool) -> bool:
     """
     Verify if the local model is the latest.
     """
@@ -48,23 +48,14 @@ def latest_version(model: str, cache_path: str) -> bool:
         is_latest_version = local_model_hash_version.strip() == remote_model_hash_version.strip()
 
     except HTTPError as exception:  # HTTP connection error handling
-        if exception.response.status_code >= OFFLINE_HTTP_SERVER_ERROR_STATUS_CODE:
-            # Case where the use does not have an Internet connection.
-            warnings.warn(
-                f"We where not able to verify the cached model in the cache directory {cache_path}. It seems like"
-                f"you are not connected to the Internet. We recommend to verify if you have the latest using our "
-                f"download CLI function."
-            )
-            # The is_lastest_version is set to True even if we were not able to validate the version. We do so not to
-            # block the rest of the process.
-            is_latest_version = True
-        elif HTTP_CLIENT_ERROR_STATUS_CODE <= exception.response.status_code < OFFLINE_HTTP_SERVER_ERROR_STATUS_CODE:
+        if HTTP_CLIENT_ERROR_STATUS_CODE <= exception.response.status_code < NEXT_RANGE_STATUS_CODE:
             # Case where Deepparse server is down.
-            warnings.warn(
-                f"We where not able to verify the cached model in the cache directory {cache_path}. It seems like"
-                f"Deepparse server is not available at the moment. We recommend to attempt to verify the model version"
-                f"another time using our download CLI function."
-            )
+            if verbose:
+                warnings.warn(
+                    f"We where not able to verify the cached model in the cache directory {cache_path}. It seems like"
+                    f"Deepparse server is not available at the moment. We recommend to attempt to verify "
+                    f"the model version another time using our download CLI function."
+                )
             # The is_lastest_version is set to True even if we were not able to validate the version. We do so not to
             # block the rest of the process.
             is_latest_version = True
@@ -72,6 +63,18 @@ def latest_version(model: str, cache_path: str) -> bool:
             # We re-raise the exception if the status_code is not in the two ranges we are interested in
             # (local server or remote server error).
             raise
+    except MaxRetryError:
+        # Case where the user does not have an Internet connection. For example, one can run it in a
+        # Docker container not connected to the Internet.
+        if verbose:
+            warnings.warn(
+                f"We where not able to verify the cached model in the cache directory {cache_path}. It seems like"
+                f"you are not connected to the Internet. We recommend to verify if you have the latest using our "
+                f"download CLI function."
+            )
+        # The is_lastest_version is set to True even if we were not able to validate the version. We do so not to
+        # block the rest of the process.
+        is_latest_version = True
     finally:
         # Cleaning the temporary directory
         shutil.rmtree(tmp_cache)

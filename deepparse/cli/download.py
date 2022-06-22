@@ -41,7 +41,7 @@ def main(args=None) -> None:
     version_path = os.path.join(CACHE_PATH, f"{model_type}.version")
     if not os.path.isfile(model_path) or not os.path.isfile(version_path):
         download_weights(model_type, CACHE_PATH)
-    elif not latest_version(model_type, cache_path=CACHE_PATH):
+    elif not latest_version(model_type, cache_path=CACHE_PATH, verbose=True):
         print("A new version of the pretrained model is available. The newest model will be downloaded.")
         download_weights(model_type, CACHE_PATH)
 

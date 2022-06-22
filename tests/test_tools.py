@@ -12,13 +12,12 @@ from deepparse import (
     download_from_url,
     latest_version,
     download_weights,
-    handle_pre_trained_checkpoint,
     handle_poutyne_version,
     valid_poutyne_version,
     validate_data_to_parse,
     DataError,
 )
-from deepparse import handle_model_path, CACHE_PATH
+from deepparse import CACHE_PATH
 from tests.base_capture_output import CaptureOutputTestCase
 from tests.tools import create_file
 
@@ -124,152 +123,6 @@ class ToolsTests(CaptureOutputTestCase):
         expected = "Downloading the weights for the network bpemb."
 
         self.assertEqual(actual, expected)
-
-    @patch("os.path.isfile")
-    @patch("deepparse.tools.latest_version")
-    def test_givenAFasttextCheckpoint_whenHandleCheckpoint_thenReturnCachedFasttextPath(
-        self, latest_version_check, isfile_mock
-    ):
-        isfile_mock.return_value = True
-        checkpoint = "fasttext"
-
-        actual = handle_model_path(checkpoint)
-        expected = os.path.join(CACHE_PATH, checkpoint + ".ckpt")
-
-        self.assertEqual(actual, expected)
-
-    @patch("os.path.isfile")
-    @patch("deepparse.tools.latest_version")
-    def test_givenABPEmbCheckpoint_whenHandleCheckpoint_thenReturnCachedBPEmbPath(
-        self, latest_version_check, isfile_mock
-    ):
-        isfile_mock.return_value = True
-        checkpoint = "bpemb"
-
-        actual = handle_model_path(checkpoint)
-        expected = os.path.join(CACHE_PATH, checkpoint + ".ckpt")
-
-        self.assertEqual(actual, expected)
-
-    def test_givenAStringCheckpoint_whenHandleCheckpoint_thenReturnSamePath(self):
-        pickle_checkpoint = "/a/path/to/a/model.ckpt"
-
-        actual = handle_model_path(pickle_checkpoint)
-        expected = pickle_checkpoint
-
-        self.assertEqual(actual, expected)
-
-    def test_givenBadNamesCheckpoint_whenHandleCheckpoint_thenRaiseErrors(self):
-        with self.assertRaises(ValueError):
-            bad_best_checkpoint = "bests"
-            handle_model_path(bad_best_checkpoint)
-
-        with self.assertRaises(ValueError):
-            bad_last_checkpoint = "lasts"
-            handle_model_path(bad_last_checkpoint)
-
-        with self.assertRaises(ValueError):
-            string_int_bad_checkpoint = "1"
-            handle_model_path(string_int_bad_checkpoint)
-
-        with self.assertRaises(ValueError):
-            bad_fasttext_checkpoint = "fasttexts"
-            handle_model_path(bad_fasttext_checkpoint)
-
-        with self.assertRaises(ValueError):
-            bad_bpemb_checkpoint = "bpembds"
-            handle_model_path(bad_bpemb_checkpoint)
-
-        with self.assertRaises(ValueError):
-            bad_pickle_extension_checkpoint = "/a/path/to/a/model.pck"
-            handle_model_path(bad_pickle_extension_checkpoint)
-
-    @patch("deepparse.tools.poutyne")
-    def test_givenPoutyneVersionLowerThan12_givenHandlePreTrainedCheckpoint_thenRaiseError(self, poutyne_mock):
-        poutyne_mock.version.__version__ = "1.1"
-
-        with self.assertRaises(NotImplementedError):
-            handle_pre_trained_checkpoint(self.a_model_type_checkpoint)
-
-    @patch("os.path.isfile")
-    @patch("deepparse.tools.latest_version")
-    @patch("deepparse.tools.poutyne")
-    def test_givenPoutyneVersionGreaterThan12_givenHandlePreTrainedCheckpointFasttext_thenReturnFasttext(
-        self, poutyne_mock, latest_version_mock, isfile_mock
-    ):
-        poutyne_mock.version.__version__ = "1.2"
-        isfile_mock.return_value = True
-
-        actual = handle_pre_trained_checkpoint(self.a_fasttext_model_type_checkpoint)
-        expected = os.path.join(CACHE_PATH, f"{self.a_fasttext_model_type_checkpoint}.ckpt")
-        self.assertEqual(expected, actual)
-
-    @patch("os.path.isfile")
-    @patch("deepparse.tools.latest_version")
-    @patch("deepparse.tools.poutyne")
-    def test_givenPoutyneVersionGreaterThan12_givenHandlePreTrainedCheckpointFasttextNoLocalFile_thenReturnFasttext(
-        self, poutyne_mock, latest_version_mock, isfile_mock
-    ):
-        poutyne_mock.version.__version__ = "1.2"
-        isfile_mock.return_value = False
-
-        with patch("deepparse.tools.download_weights"):
-            actual = handle_pre_trained_checkpoint(self.a_fasttext_model_type_checkpoint)
-        expected = os.path.join(CACHE_PATH, f"{self.a_fasttext_model_type_checkpoint}.ckpt")
-        self.assertEqual(expected, actual)
-
-    @patch("os.path.isfile")
-    @patch("deepparse.tools.latest_version")
-    @patch("deepparse.tools.poutyne")
-    def test_givenPoutyneVersionGreaterThan12_givenHandlePreTrainedCheckpointBPEmb_thenReturnBPEmb(
-        self, poutyne_mock, latest_version_mock, isfile_mock
-    ):
-        poutyne_mock.version.__version__ = "1.2"
-        isfile_mock.return_value = True
-
-        actual = handle_pre_trained_checkpoint(self.a_bpemb_model_type_checkpoint)
-        expected = os.path.join(CACHE_PATH, f"{self.a_bpemb_model_type_checkpoint}.ckpt")
-        self.assertEqual(expected, actual)
-
-    @patch("os.path.isfile")
-    @patch("deepparse.tools.latest_version")
-    @patch("deepparse.tools.poutyne")
-    def test_givenPoutyneVersionGreaterThan12_givenHandlePreTrainedCheckpointBPEmbNoLocalFile_thenReturnBPEmb(
-        self, poutyne_mock, latest_version_mock, isfile_mock
-    ):
-        poutyne_mock.version.__version__ = "1.2"
-        isfile_mock.return_value = False
-
-        with patch("deepparse.tools.download_weights"):
-            actual = handle_pre_trained_checkpoint(self.a_fasttext_model_type_checkpoint)
-        expected = os.path.join(CACHE_PATH, f"{self.a_fasttext_model_type_checkpoint}.ckpt")
-        self.assertEqual(expected, actual)
-
-    @patch("os.path.isfile")
-    @patch("deepparse.tools.latest_version")
-    @patch("deepparse.tools.poutyne")
-    def test_givenPoutyneVersionGreaterThan12_givenHandlePreTrainedCheckpointFasttextNotLatestVersion_thenRaiseWarning(
-        self, poutyne_mock, latest_version_mock, isfile_mock
-    ):
-        isfile_mock.return_value = True
-        latest_version_mock.return_value = False  # Not the latest version
-        poutyne_mock.version.__version__ = "1.2"
-
-        with self.assertWarns(UserWarning):
-            handle_pre_trained_checkpoint(self.a_bpemb_model_type_checkpoint)
-
-    @patch("os.path.isfile")
-    @patch("deepparse.tools.latest_version")
-    @patch("deepparse.tools.poutyne")
-    def test_givenPoutyneVersionGreaterThan12_givenHandlePreTrainedCheckpointBPEmbNotLatestVersion_thenRaiseWarning(
-        self, poutyne_mock, latest_version_mock, isfile_mock
-    ):
-        isfile_mock.return_value = True
-        latest_version_mock.return_value = False  # Not the latest version
-        poutyne_mock.version.__version__ = "1.2"
-
-        with self.assertWarns(UserWarning):
-            handle_pre_trained_checkpoint(self.a_bpemb_model_type_checkpoint)
 
     @patch("deepparse.tools.poutyne")
     def test_givenPoutyneVersion1_1_1_givenHandlePoutyneVersion_thenReturnVersion1_1(self, poutyne_mock):

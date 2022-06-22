@@ -96,7 +96,6 @@ class Seq2SeqModel(ABC, nn.Module):
         model_path = os.path.join(cache_dir, f"{model_type}.ckpt")
 
         if not os.path.isfile(model_path):
-            # Todo add warning test handling
             warnings.warn(
                 f"No pre-trained model where found in the cache directory {cache_dir}. Thus, we will"
                 f"automatically download the pre-trained model."

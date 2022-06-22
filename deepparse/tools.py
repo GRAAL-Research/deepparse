@@ -1,4 +1,5 @@
 import os
+import shutil
 import warnings
 from typing import List
 
@@ -28,13 +29,27 @@ def latest_version(model: str, cache_path: str) -> bool:
     """
     Verify if the local model is the latest.
     """
+    # Todo handling and testing
 
+    is_latest_version = False
+
+    # Reading of the actual local version
     with open(os.path.join(cache_path, model + ".version"), encoding="utf-8") as local_model_hash_file:
         local_model_hash_version = local_model_hash_file.readline()
     try:
-        download_from_url(model, cache_path, "version")
-    except HTTPError as exception:
-        # Todo handling and testing
+        # We create a temporary directory for the server-side version file
+        tmp_cache = os.path.join(cache_path, "tmp")
+        os.makedirs(tmp_cache, exist_ok=True)
+
+        download_from_url(model, tmp_cache, "version")
+
+        # Reading of the server-side version
+        with open(os.path.join(tmp_cache, model + ".version"), encoding="utf-8") as remote_model_hash_file:
+            remote_model_hash_version = remote_model_hash_file.readline()
+
+        is_latest_version = local_model_hash_version.strip() == remote_model_hash_version.strip()
+
+    except HTTPError as exception:  # HTTP connection error handling
         if exception.response.status_code >= OFFLINE_HTTP_SERVER_ERROR_STATUS_CODE:
             # Case where the use does not have an Internet connection.
             warnings.warn(
@@ -42,6 +57,9 @@ def latest_version(model: str, cache_path: str) -> bool:
                 f"you are not connected to the Internet. We recommend to verify if you have the latest using our "
                 f"download CLI function."
             )
+            # The is_lastest_version is set to True even if we were not able to validate the version. We do so not to
+            # block the rest of the process.
+            is_latest_version = True
         elif HTTP_CLIENT_ERROR_STATUS_CODE <= exception.response.status_code < OFFLINE_HTTP_SERVER_ERROR_STATUS_CODE:
             # Case where Deepparse server is down.
             warnings.warn(
@@ -49,12 +67,18 @@ def latest_version(model: str, cache_path: str) -> bool:
                 f"Deepparse server is not available at the moment. We recommend to attempt to verify the model version"
                 f"another time using our download CLI function."
             )
+            # The is_lastest_version is set to True even if we were not able to validate the version. We do so not to
+            # block the rest of the process.
+            is_latest_version = True
         else:
-            # We re-raise the exception if not the status_code we are interested in
+            # We re-raise the exception if the status_code is not in the two ranges we are interested in
+            # (local server or remote server error).
             raise
-    with open(os.path.join(cache_path, model + ".version"), encoding="utf-8") as remote_model_hash_file:
-        remote_model_hash_version = remote_model_hash_file.readline()
-    return local_model_hash_version.strip() == remote_model_hash_version.strip()
+    finally:
+        # Cleaning the temporary directory
+        shutil.rmtree(tmp_cache)
+
+    return is_latest_version
 
 
 def download_from_url(file_name: str, saving_dir: str, file_extension: str):

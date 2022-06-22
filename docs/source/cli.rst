@@ -130,7 +130,7 @@ Download
 Command to pre-download model weights and requirements. Here is the list of arguments. One can use the command ``parse --help`` to output the same description in your command line.
 
     - ``model_type``: The parsing module to download. The possible choice are ``'fasttext'``, ``'fasttext-attention'``, ``'fasttext-light'``, ``'bpemb'`` and ``'bpemb-attention'``.
-    - ``saving_cache_path``: To change the default saving cache directory (default to None e.g. default path).
+    - ``--saving_cache_path``: To change the default saving cache directory (default to None e.g. default path).
 
 .. autofunction:: deepparse.cli.download.main
 

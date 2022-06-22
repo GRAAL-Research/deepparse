@@ -1,7 +1,6 @@
 # Since we use a patch as model mock we skip the unused argument error
 # pylint: disable=unused-argument
 
-import argparse
 import os
 import unittest
 from tempfile import TemporaryDirectory
@@ -38,7 +37,7 @@ class DownloadTests(TestCase):
     @patch("deepparse.cli.download.download_weights")
     def test_givenADownload_whenCachePathIsChange_thenDownloadInCacheDir(self, weights_download_mock):
         with patch("deepparse.cli.download.download_fasttext_embeddings") as downloader:
-            download.main([self.a_fasttext_model_type, self.fake_cache_path])
+            download.main([self.a_fasttext_model_type, "--saving_cache_path", self.fake_cache_path])
 
             downloader.assert_called()
             downloader.assert_called_with(cache_dir=self.fake_cache_path)

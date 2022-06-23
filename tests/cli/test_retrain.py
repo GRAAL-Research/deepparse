@@ -60,8 +60,8 @@ class RetrainTests(RetrainTestCase):
         disable_tensorboard="False",
         layers_to_freeze='seq2seq',
         name_of_the_retrain_parser="",
-        cache_dir="",
-        device="cpu",  # By default we set it to cpu instead of gpu device 0 as the CLI function.
+        cache_dir=None,  # None to handle the default library default value (CACHE_PATH)
+        device="cpu",  # By default, we set it to cpu instead of gpu device 0 as the CLI function.
         csv_column_names: List = None,
         csv_column_separator="\t",
     ) -> List:
@@ -98,13 +98,16 @@ class RetrainTests(RetrainTestCase):
             layers_to_freeze,
             "--name_of_the_retrain_parser",
             name_of_the_retrain_parser,
-            "--cache_dir",
-            cache_dir,
             "--device",
             device,
             "--csv_column_separator",
             csv_column_separator,
         ]
+
+        if cache_dir is not None:
+            # To handle the None case (that is using the default None of the argparser).
+            parser_params.extend(["--cache_dir", cache_dir])
+
         if csv_column_names is not None:
             parser_params.extend(["--csv_column_names"])
             parser_params.extend(csv_column_names)  # Since csv_column_names is a list
@@ -158,13 +161,13 @@ class RetrainTests(RetrainTestCase):
         with self.assertRaises(ValueError):
             # We set up the params with the default value of csv_column_names of the test case method set_up_params,
             # which is None, thus no column names.
-            parser_params = self.set_up_params()
+            parser_params = self.set_up_params(train_dataset_path=self.a_train_csv_dataset_path)
 
             retrain.main(parser_params)
 
     def test_ifIsNotSupportedFile_raiseValueError(self):
         with self.assertRaises(ValueError):
-            parser_params = self.set_up_params("an_unsupported_extension.json")
+            parser_params = self.set_up_params(train_dataset_path="an_unsupported_extension.json")
 
             retrain.main(parser_params)
 
@@ -249,7 +252,7 @@ class RetrainTests(RetrainTestCase):
 
             address_parser_mock.assert_called()
             address_parser_mock.assert_called_with(
-                device=0, cache_dir=self.a_cache_dir, model_type=self.a_fasttext_model_type
+                device=self.cpu_device, cache_dir=self.a_cache_dir, model_type=self.a_fasttext_model_type
             )  # Default tests case default model type is the FastText model
 
 

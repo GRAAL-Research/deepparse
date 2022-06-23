@@ -59,7 +59,7 @@ class RetrainTests(RetrainTestCase):
         logging_path=None,  # None to handle the default case logging path for the tests.
         disable_tensorboard="False",
         layers_to_freeze='seq2seq',
-        name_of_the_retrain_parser="",
+        name_of_the_retrain_parser=None,
         cache_dir=None,  # None to handle the default library default value (CACHE_PATH)
         device="cpu",  # By default, we set it to cpu instead of gpu device 0 as the CLI function.
         csv_column_names: List = None,
@@ -96,8 +96,6 @@ class RetrainTests(RetrainTestCase):
             disable_tensorboard,
             "--layers_to_freeze",
             layers_to_freeze,
-            "--name_of_the_retrain_parser",
-            name_of_the_retrain_parser,
             "--device",
             device,
             "--csv_column_separator",
@@ -107,6 +105,10 @@ class RetrainTests(RetrainTestCase):
         if cache_dir is not None:
             # To handle the None case (that is using the default None of the argparser).
             parser_params.extend(["--cache_dir", cache_dir])
+
+        if name_of_the_retrain_parser is not None:
+            # To handle the None case (that is using the default None of the argparser).
+            parser_params.extend(["--name_of_the_retrain_parser", name_of_the_retrain_parser])
 
         if csv_column_names is not None:
             parser_params.extend(["--csv_column_names"])

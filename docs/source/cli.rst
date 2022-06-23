@@ -26,6 +26,7 @@ One can use the command ``parse --help`` to output the same description in your 
     - ``--csv_column_name``: The column name to extract address in the CSV. Need to be specified if the provided ``dataset_path`` leads to a CSV file. By default, ``None``.
     - ``--csv_column_separator``: The column separator for the dataset container will only be used if the dataset is a CSV one. By default ``'\t'``.
     - ``--log``: Either or not to log the parsing process into a ``.log`` file exported at the same place as the parsed data using the same name as the export file. The bool value can be (not case sensitive) ``'true/false'``, ``'t/f'``, ``'yes/no'``, ``'y/n'`` or ``'0/1'``. By default, ``True``.
+    - ``--cache_dir``: To change the default cache directory (default to None e.g. default path).
 
 .. autofunction:: deepparse.cli.parse.main
 
@@ -96,6 +97,7 @@ One can use the command ``parse --help`` to output the same description in your 
     - ``--device``: The device to use. It can be ``'cpu'`` or a GPU device index such as ``'0'`` or ``'1'``. By default ``'0'``.
     - ``--csv_column_names``: The column names to extract address in the CSV. Need to be specified if the provided dataset_path leads to a CSV file. Column names have to be separated by a whitespace. For example, ``--csv_column_names column1 column2``.
     - ``--csv_column_separator``: The column separator for the dataset container will only be used if the dataset is a CSV one. By default ``'\t'``.
+    - ``--cache_dir``: To change the default cache directory (default to None e.g. default path).
 
 .. autofunction:: deepparse.cli.retrain.main
 
@@ -122,6 +124,7 @@ One can use the command ``parse --help`` to output the same description in your 
     - ``--csv_column_name``: The column name to extract address in the CSV. Need to be specified if the provided ``dataset_path`` leads to a CSV file. By default, ``None``.
     - ``--csv_column_separator``: The column separator for the dataset container will only be used if the dataset is a CSV one. By default ``'\t'``.
     - ``--log``: Either or not to log the parsing process into a ``.log`` file exported at the same place as the parsed data using the same name as the export file. The bool value can be (not case sensitive) ``'true/false'``, ``'t/f'``, ``'yes/no'``, ``'y/n'`` or ``'0/1'``. By default, ``True``.
+    - ``--cache_dir``: To change the default cache directory (default to None e.g. default path).
 
 .. autofunction:: deepparse.cli.test.main
 
@@ -130,7 +133,7 @@ Download
 Command to pre-download model weights and requirements. Here is the list of arguments. One can use the command ``parse --help`` to output the same description in your command line.
 
     - ``model_type``: The parsing module to download. The possible choice are ``'fasttext'``, ``'fasttext-attention'``, ``'fasttext-light'``, ``'bpemb'`` and ``'bpemb-attention'``.
-    - ``--saving_cache_path``: To change the default saving cache directory (default to None e.g. default path).
+    - ``--saving_cache_dir``: To change the default saving cache directory (default to None e.g. default path).
 
 .. autofunction:: deepparse.cli.download.main
 

@@ -84,7 +84,7 @@ def main(args=None) -> None:
 
     if "cpu" not in device:
         device = int(device)
-    parser_args = {"device": device}
+    parser_args = {"device": device, "cache_dir": parsed_args.cache_dir}
 
     parser_args_update_args = attention_model_type_handling(parsing_model)
     parser_args.update(**parser_args_update_args)
@@ -200,6 +200,12 @@ def get_parser() -> argparse.ArgumentParser:
         ),
         type=bool_parse,
         default="True",
+    )
+    parser.add_argument(
+        "--cache_dir",
+        type=str,
+        default=None,
+        help="To change the default cache directory (default to None e.g. default path).",
     )
 
     return parser

@@ -32,7 +32,7 @@ def main(args=None) -> None:
 
     model_type = parsed_args.model_type
 
-    saving_cache_path = parsed_args.saving_cache_path
+    saving_cache_path = parsed_args.saving_cache_dir
 
     if saving_cache_path is None:
         saving_cache_path = CACHE_PATH
@@ -68,7 +68,7 @@ def get_parser() -> argparse.ArgumentParser:
         help="The model type to download.",
     )
     parser.add_argument(
-        "--saving_cache_path",
+        "--saving_cache_dir",
         type=str,
         default=None,
         help="To change the default saving cache directory (default to None e.g. default path).",

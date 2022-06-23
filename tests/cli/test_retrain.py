@@ -5,6 +5,7 @@ import unittest
 from tempfile import TemporaryDirectory
 from typing import List
 from unittest import skipIf
+from unittest.mock import patch
 
 import torch
 
@@ -28,6 +29,8 @@ class RetrainTests(RetrainTestCase):
         cls.gpu_device = "0"
 
         cls.a_named_model = "a_retrained_model"
+
+        cls.a_cache_dir = "a_cache_dir"
 
     def setUp(self) -> None:
         self.temp_checkpoints_obj = TemporaryDirectory()
@@ -59,6 +62,7 @@ class RetrainTests(RetrainTestCase):
         disable_tensorboard="False",
         layers_to_freeze='seq2seq',
         name_of_the_retrain_parser="",
+        cache_dir="",
     ) -> List:
         parser_params = [
             self.a_fasttext_model_type,
@@ -83,6 +87,8 @@ class RetrainTests(RetrainTestCase):
             layers_to_freeze,
             "--name_of_the_retrain_parser",
             name_of_the_retrain_parser,
+            "--cache_dir",
+            cache_dir,
         ]
         return parser_params
 
@@ -279,6 +285,20 @@ class RetrainTests(RetrainTestCase):
         retrain.main(parser_params)
 
         self.assertTrue(os.path.isfile(os.path.join(self.temp_checkpoints_obj.name, "checkpoints", "AName.ckpt")))
+
+    @skipIf(
+        not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
+        "download of model too long for test in runner",
+    )
+    def test_ifCachePath_thenUseNewCachePath(self):
+        with patch("deepparse.cli.retrain.AddressParser") as address_parser_mock:
+            parser_params = self.set_up_params(cache_dir=self.a_cache_dir, epochs="1")
+            retrain.main(parser_params)
+
+            address_parser_mock.assert_called()
+            address_parser_mock.assert_called_with(
+                device=0, cache_dir=self.a_cache_dir, model_type=self.a_fasttext_model_type
+            )  # always fasttext model
 
 
 if __name__ == "__main__":

@@ -224,3 +224,7 @@ to `cache_dir`. `saving_dir` is now deprecated and will be remove in version 0.8
 ## dev
 
 - Improve SEO 
+- Add cache_dir arg in all CLI functions
+- Improve handling of HTTP error in models version verification
+- Improve doc
+- 

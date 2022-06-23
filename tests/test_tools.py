@@ -124,6 +124,15 @@ class ToolsTests(CaptureOutputTestCase):
             with self.assertWarns(UserWarning):
                 latest_version("bpemb", self.fake_cache_path, verbose=True)
 
+    @patch("deepparse.tools.os.path.exists", return_value=True)
+    @patch("deepparse.tools.shutil.rmtree")
+    def test_givenAModelVersion_whenVerifyIfLastVersion_thenCleanTmpRepo(self, os_path_exists_mock, shutil_rmtree_mock):
+        self.create_cache_version("bpemb", "a_version")
+        latest_version("bpemb", self.fake_cache_path, verbose=False)
+
+        os_path_exists_mock.assert_called()
+        shutil_rmtree_mock.assert_called()
+
     def test_givenFasttextVersion_whenDownloadOk_thenDownloadIt(self):
         file_name = "fasttext"
 

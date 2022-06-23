@@ -330,9 +330,5 @@ class ToolsTests(CaptureOutputTestCase):
             validate_data_to_parse(tuple_data)
 
 
-def raise_error_side_effect(an_http_error_msg, response_mock):
-    raise HTTPError(an_http_error_msg, response=response_mock)
-
-
 if __name__ == "__main__":
     unittest.main()

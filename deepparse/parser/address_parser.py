@@ -245,6 +245,13 @@ class AddressParser:
 
     __repr__ = __str__  # to call __str__ when list of address
 
+    def get_formatted_model_name(self) -> str:
+        """
+        Return the model type formatted name. For example, if the model type is ``"fasttext"`` the formatted name is
+        ``"FastText"``.
+        """
+        return self._model_type_formatted
+
     def __call__(
         self,
         addresses_to_parse: Union[List[str], str, DatasetContainer],
@@ -974,13 +981,6 @@ class AddressParser:
         Pipeline to process data in a data loader for prediction.
         """
         return self.data_converter(self.vectorizer(data))
-
-    def get_formatted_model_name(self) -> str:
-        """
-        Return the model type formatted name. For example, if the model type is ``"fasttext"`` the formatted name is
-        ``"FastText"``.
-        """
-        return self._model_type_formatted
 
     def _retrain(
         self,

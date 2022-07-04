@@ -11,8 +11,24 @@ class AddressCleanerTest(TestCase):
         cls.a_commas_separated_address = "350, rue des lilas, ouest, québec, québec, g1l 1b6"
         cls.a_dirty_address_with_uppercase = "350 rue des Lilas Ouest Québec Québec G1L 1B6"
         cls.a_dirty_address_with_whitespaces = "350     rue des Lilas Ouest Québec Québec G1L 1B6"
+
         cls.an_address_with_hyphen_split_address_components = "3-350 rue des lilas ouest"
         cls.a_unit_clean_address = "3 350 rue des lilas ouest"
+
+        cls.an_address_with_hyphen_split_address_components_with_hyphen_city = "3-350 rue des lilas ouest, saint-jean"
+        cls.a_unit_hyphen_city_name_clean_address = "3 350 rue des lilas ouest saint-jean"
+
+        cls.a_unit_with_letter_hyphen_split = "3a-350 rue des lilas ouest saint-jean"
+        cls.a_unit_with_letter_hyphen_split_clean_address = "3a 350 rue des lilas ouest saint-jean"
+
+        cls.a_unit_with_letter_only_hyphen_split = "a-350 rue des lilas ouest saint-jean"
+        cls.a_unit_with_letter_only_hyphen_split_clean_address = "a 350 rue des lilas ouest saint-jean"
+
+        cls.a_street_number_with_letter_hyphen_split = "3-350a rue des lilas ouest saint-jean"
+        cls.a_street_number_with_letter_hyphen_split_clean_address = "3 350a rue des lilas ouest saint-jean"
+
+        cls.letters_hyphen_address = "3a-350b rue des lilas ouest saint-jean"
+        cls.letters_hyphen_address_split_clean_address = "3a 350b rue des lilas ouest saint-jean"
 
     def test_givenACleanAddress_whenCleaningAddress_thenShouldNotMakeAnyChange(self):
         cleaned_address = AddressCleaner().clean([self.a_clean_address])
@@ -56,3 +72,34 @@ class AddressCleanerTest(TestCase):
         cleaned_address = AddressCleaner().clean([self.an_address_with_hyphen_split_address_components])
 
         self.assertEqual(self.a_unit_clean_address, cleaned_address[0])
+
+    def test_givenAHyphenUnitAndCityAddress_whenCleaningAddress_thenShouldReplaceUnitStreetNumberHyphenWithWhiteSpace(
+        self,
+    ):
+        cleaned_address = AddressCleaner().clean(
+            [self.an_address_with_hyphen_split_address_components_with_hyphen_city]
+        )
+
+        self.assertEqual(self.a_unit_hyphen_city_name_clean_address, cleaned_address[0])
+
+    def test_givenAnAlphabeticalUnitStreetNumberHyphen_whenCleaningAddress_thenShouldReplaceHyphenWithWhiteSpace(self):
+        cleaned_address = AddressCleaner().clean([self.a_unit_with_letter_hyphen_split])
+
+        self.assertEqual(self.a_unit_with_letter_hyphen_split_clean_address, cleaned_address[0])
+
+    def test_givenAnAlphabeticalOnlyUnitHyphen_whenCleaningAddress_thenShouldReplaceHyphenWithWhiteSpace(self):
+        cleaned_address = AddressCleaner().clean([self.a_unit_with_letter_only_hyphen_split])
+
+        self.assertEqual(self.a_unit_with_letter_only_hyphen_split_clean_address, cleaned_address[0])
+
+    def test_givenAnAlphabeticalStreetNumberUnitHyphen_whenCleaningAddress_thenShouldReplaceHyphenWithWhiteSpace(self):
+        cleaned_address = AddressCleaner().clean([self.a_street_number_with_letter_hyphen_split])
+
+        self.assertEqual(self.a_street_number_with_letter_hyphen_split_clean_address, cleaned_address[0])
+
+    def test_givenAnAlphabeticalComponentsStreetNumberUnit_whenCleaningAddress_thenShouldReplaceHyphenWithWhiteSpace(
+        self,
+    ):
+        cleaned_address = AddressCleaner().clean([self.letters_hyphen_address])
+
+        self.assertEqual(self.letters_hyphen_address_split_clean_address, cleaned_address[0])

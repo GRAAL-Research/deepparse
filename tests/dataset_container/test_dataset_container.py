@@ -1,6 +1,7 @@
 # pylint: disable=unbalanced-tuple-unpacking
 
 import os
+import pickle
 import unittest
 from tempfile import TemporaryDirectory
 from typing import List
@@ -11,6 +12,7 @@ from deepparse.dataset_container import (
     PickleDatasetContainer,
     DatasetContainer,
     CSVDatasetContainer,
+    ListDatasetContainer,
 )
 from tests.tools import base_string, a_tags_sequence, create_pickle_file, create_csv_file, default_csv_column_name
 
@@ -518,6 +520,43 @@ class CSVDatasetContainerTest(TestCase):
 
         with self.assertRaises(ValueError):
             CSVDatasetContainer(self.a_data_container_path, column_names=[" ", " "], is_training_container=True)
+
+
+class ListDatasetContainerTest(TestCase):
+    def setUp(self) -> None:
+        self.temp_dir_obj = TemporaryDirectory()
+
+        self.a_pickle_data_container_path = os.path.join(self.temp_dir_obj.name, "fake_pickle_data_container.p")
+
+    def tearDown(self) -> None:
+        self.temp_dir_obj.cleanup()
+
+    def test_integration(self):
+        number_of_data_points = 4
+        create_pickle_file(
+            self.a_pickle_data_container_path,
+            number_of_data_points=number_of_data_points,
+        )
+
+        with open(self.a_pickle_data_container_path, "rb") as file:
+            data = pickle.load(file)
+
+        list_dataset_container = ListDatasetContainer(data)
+        expected = number_of_data_points
+        self.assertEqual(expected, len(list_dataset_container))
+
+    def test_integration_predict_container(self):
+        number_of_data_points = 4
+        create_pickle_file(
+            self.a_pickle_data_container_path, number_of_data_points=number_of_data_points, predict_container=True
+        )
+
+        with open(self.a_pickle_data_container_path, "rb") as file:
+            data = pickle.load(file)
+
+        list_dataset_container = ListDatasetContainer(data, is_training_container=False)
+        expected = number_of_data_points
+        self.assertEqual(expected, len(list_dataset_container))
 
 
 if __name__ == "__main__":

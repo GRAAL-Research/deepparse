@@ -4,7 +4,7 @@ from typing import List
 # The first group is the unit, and the second is the street number.
 # Both include letters since they can include letters in some countries. For example,
 # unit 3a or address 305a.
-hyphen_splitted_unit_and_street_number_regex = r"^([0-9a-z]*)-([0-9a-z]*)"
+hyphen_splitted_unit_and_street_number_regex = r"^([0-9]*[a-z]?)-([0-9]*[a-z]?)"
 
 
 class AddressCleaner:

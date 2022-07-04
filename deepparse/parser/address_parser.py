@@ -258,6 +258,7 @@ class AddressParser:
         with_prob: bool = False,
         batch_size: int = 32,
         num_workers: int = 0,
+        with_hyphen_split: bool = False,
     ) -> Union[FormattedParsedAddress, List[FormattedParsedAddress]]:
         """
         Callable method to parse the components of an address or a list of address.
@@ -281,16 +282,19 @@ class AddressParser:
             batch_size (int): The size of the batch (by default, ``32``).
             num_workers (int): Number of workers to use for the data loader (default is ``0``, which means that the data
                 will be loaded in the main process).
+            with_hyphen_split (bool): Either or not to use the hyphen whitespace replacing for countries that use
+                hyphen split between the unit and the street number (e.g. Canada). For example, `'3-305'` will be
+                replaced as `'3 305'` for the parsing. Where 3 is the unit, and 305 is the street number.
+                We use a regular expression for the replacement. Default is False.
 
         Return:
             Either a :class:`~FormattedParsedAddress` or a list of
             :class:`~FormattedParsedAddress` when given more than one address.
 
         Note:
-            During the parsing, the addresses are lowercase, commas are removed, and hyphens (used to separate units
-            from street numbers, e.g. 3-305  a street name) are replaced by whitespace for proper cleaning. Since the
-            training dataset was lowercase, there were no commas, and few proper cases of a unit-linked to a street
-            number were seen (e.g. 3-305, where 3 is the unit and 305 is the street number).
+            During the parsing, the addresses are lowercase and commas are removed. One can also use the
+            `with_hyphen_split` to replace hyphens (used to separate units from street numbers, e.g. 3-305
+            a street name) by whitespace for proper cleaning.
 
         Examples:
 

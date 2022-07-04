@@ -4,10 +4,13 @@ from typing import List
 # The first group is the unit, and the second is the street number.
 # Both include letters since they can include letters in some countries. For example,
 # unit 3a or address 305a.
-hyphen_splitted_unit_and_street_number_regex = r"^([0-9]*[a-z]?)-([0-9]*[a-z]?)"
+hyphen_splitted_unit_and_street_number_regex = r"^([0-9]*[a-z]?)-([0-9]*[a-z]?) "
 
 
 class AddressCleaner:
+    def __init__(self, with_hyphen_split: bool = False):
+        self.with_hyphen_split = with_hyphen_split
+
     def clean(self, addresses: List[str]) -> List[str]:
         res = []
 
@@ -16,7 +19,8 @@ class AddressCleaner:
 
             processed_address = self.lower_cleaning(processed_address)
 
-            processed_address = self.hyphen_cleaning(processed_address)
+            if self.with_hyphen_split:
+                processed_address = self.hyphen_cleaning(processed_address)
 
             res.append(" ".join(processed_address.split()))
         return res
@@ -40,4 +44,4 @@ class AddressCleaner:
         # Unit: 3, StreetNumber: 305, StreetName: street name.
         # Note: the hyphen is also used in some cities' names, such as Saint-Jean; thus, we use regex to detect
         # the proper hyphen to replace.
-        return re.sub(hyphen_splitted_unit_and_street_number_regex, r"\1 \2", text)
+        return re.sub(hyphen_splitted_unit_and_street_number_regex, r"\1 \2 ", text)

@@ -228,5 +228,5 @@ to `cache_dir`. `saving_dir` is now deprecated and will be remove in version 0.8
 - Improve handling of HTTP error in models version verification
 - Improve doc
 - Add a note for parsing data cleaning (i.e. lowercase, commas removal, and hyphen replacing).
-- Add hyphen parsing cleaning step to improve Canada address parsing (see [issue 137](https://github.com/GRAAL-Research/deepparse/issues/137)).
+- Add hyphen parsing cleaning step (with a bool flag to activate or not) to improve some country address parsing (see [issue 137](https://github.com/GRAAL-Research/deepparse/issues/137)).
 - Add ListDatasetContainer for Python list dataset.

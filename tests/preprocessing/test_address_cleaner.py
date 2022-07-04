@@ -30,38 +30,40 @@ class AddressCleanerTest(TestCase):
         cls.letters_hyphen_address = "3a-350b rue des lilas ouest saint-jean"
         cls.letters_hyphen_address_split_clean_address = "3a 350b rue des lilas ouest saint-jean"
 
+        cls.address_cleaner = AddressCleaner()
+
     def test_givenACleanAddress_whenCleaningAddress_thenShouldNotMakeAnyChange(self):
-        cleaned_address = AddressCleaner().clean([self.a_clean_address])
+        cleaned_address = self.address_cleaner.clean([self.a_clean_address])
 
         self.assertEqual(self.a_clean_address, cleaned_address[0])
 
     def test_givenADirtyAddressWithCommas_whenCleaningAddress_thenShouldRemoveCommas(
         self,
     ):
-        cleaned_address = AddressCleaner().clean([self.a_dirty_address_with_commas])
+        cleaned_address = self.address_cleaner.clean([self.a_dirty_address_with_commas])
 
         self.assertEqual(self.a_clean_address, cleaned_address[0])
 
-        cleaned_address = AddressCleaner().clean([self.a_commas_separated_address])
+        cleaned_address = self.address_cleaner.clean([self.a_commas_separated_address])
 
         self.assertEqual(self.a_clean_address, cleaned_address[0])
 
     def test_givenADirtyAddressWithUppercase_whenCleaningAddress_thenShouldLower(self):
-        cleaned_address = AddressCleaner().clean([self.a_dirty_address_with_uppercase])
+        cleaned_address = self.address_cleaner.clean([self.a_dirty_address_with_uppercase])
 
         self.assertEqual(self.a_clean_address, cleaned_address[0])
 
     def test_givenADirtyAddressWithWhitespaces_whenCleaningAddress_thenShouldRemoveWhitespaces(
         self,
     ):
-        cleaned_address = AddressCleaner().clean([self.a_dirty_address_with_whitespaces])
+        cleaned_address = self.address_cleaner.clean([self.a_dirty_address_with_whitespaces])
 
         self.assertEqual(self.a_clean_address, cleaned_address[0])
 
     def test_givenMultipleDirtyAddresses_whenCleaningAddresses_thenShouldCleanAllAddresses(
         self,
     ):
-        cleaned_address = AddressCleaner().clean(
+        cleaned_address = self.address_cleaner.clean(
             [self.a_dirty_address_with_whitespaces, self.a_dirty_address_with_uppercase]
         )
 
@@ -69,37 +71,37 @@ class AddressCleanerTest(TestCase):
         self.assertEqual(self.a_clean_address, cleaned_address[1])
 
     def test_givenAHyphenUnitStreetNumberAddress_whenCleaningAddress_thenShouldReplaceHyphenWithWhiteSpace(self):
-        cleaned_address = AddressCleaner().clean([self.an_address_with_hyphen_split_address_components])
+        cleaned_address = self.address_cleaner.clean([self.an_address_with_hyphen_split_address_components])
 
         self.assertEqual(self.a_unit_clean_address, cleaned_address[0])
 
     def test_givenAHyphenUnitAndCityAddress_whenCleaningAddress_thenShouldReplaceUnitStreetNumberHyphenWithWhiteSpace(
         self,
     ):
-        cleaned_address = AddressCleaner().clean(
+        cleaned_address = self.address_cleaner.clean(
             [self.an_address_with_hyphen_split_address_components_with_hyphen_city]
         )
 
         self.assertEqual(self.a_unit_hyphen_city_name_clean_address, cleaned_address[0])
 
     def test_givenAnAlphabeticalUnitStreetNumberHyphen_whenCleaningAddress_thenShouldReplaceHyphenWithWhiteSpace(self):
-        cleaned_address = AddressCleaner().clean([self.a_unit_with_letter_hyphen_split])
+        cleaned_address = self.address_cleaner.clean([self.a_unit_with_letter_hyphen_split])
 
         self.assertEqual(self.a_unit_with_letter_hyphen_split_clean_address, cleaned_address[0])
 
     def test_givenAnAlphabeticalOnlyUnitHyphen_whenCleaningAddress_thenShouldReplaceHyphenWithWhiteSpace(self):
-        cleaned_address = AddressCleaner().clean([self.a_unit_with_letter_only_hyphen_split])
+        cleaned_address = self.address_cleaner.clean([self.a_unit_with_letter_only_hyphen_split])
 
         self.assertEqual(self.a_unit_with_letter_only_hyphen_split_clean_address, cleaned_address[0])
 
     def test_givenAnAlphabeticalStreetNumberUnitHyphen_whenCleaningAddress_thenShouldReplaceHyphenWithWhiteSpace(self):
-        cleaned_address = AddressCleaner().clean([self.a_street_number_with_letter_hyphen_split])
+        cleaned_address = self.address_cleaner.clean([self.a_street_number_with_letter_hyphen_split])
 
         self.assertEqual(self.a_street_number_with_letter_hyphen_split_clean_address, cleaned_address[0])
 
     def test_givenAnAlphabeticalComponentsStreetNumberUnit_whenCleaningAddress_thenShouldReplaceHyphenWithWhiteSpace(
         self,
     ):
-        cleaned_address = AddressCleaner().clean([self.letters_hyphen_address])
+        cleaned_address = self.address_cleaner.clean([self.letters_hyphen_address])
 
         self.assertEqual(self.letters_hyphen_address_split_clean_address, cleaned_address[0])

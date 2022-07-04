@@ -1,4 +1,4 @@
-Fixes #{issue number}
+This PR fixe issue #{issue number}
 
 <description of the problem>
 

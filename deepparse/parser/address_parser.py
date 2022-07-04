@@ -286,6 +286,11 @@ class AddressParser:
             Either a :class:`~FormattedParsedAddress` or a list of
             :class:`~FormattedParsedAddress` when given more than one address.
 
+        Note:
+            During the parsing, the addresses are lowercase, commas are removed, and hyphens are replaced but whitespace
+            for proper cleaning. Since the training dataset was lowercase, there were no comas, and no cases of a unit
+            linked to a street number were seen (e.g. 3-305, where 3 is the unit and 305 is the street number).
+
         Examples:
 
             .. code-block:: python

@@ -287,9 +287,10 @@ class AddressParser:
             :class:`~FormattedParsedAddress` when given more than one address.
 
         Note:
-            During the parsing, the addresses are lowercase, commas are removed, and hyphens are replaced but whitespace
-            for proper cleaning. Since the training dataset was lowercase, there were no comas, and no cases of a unit
-            linked to a street number were seen (e.g. 3-305, where 3 is the unit and 305 is the street number).
+            During the parsing, the addresses are lowercase, commas are removed, and hyphens (used to separate units
+            from street numbers, e.g. 3-305  a street name) are replaced by whitespace for proper cleaning. Since the
+            training dataset was lowercase, there were no commas, and few proper cases of a unit-linked to a street
+            number were seen (e.g. 3-305, where 3 is the unit and 305 is the street number).
 
         Examples:
 

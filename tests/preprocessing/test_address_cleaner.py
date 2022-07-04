@@ -8,8 +8,11 @@ class AddressCleanerTest(TestCase):
     def setUpClass(cls):
         cls.a_clean_address = "350 rue des lilas ouest québec québec g1l 1b6"
         cls.a_dirty_address_with_commas = "350 rue des lilas , ouest ,québec québec, g1l 1b6"
+        cls.a_commas_separated_address = "350, rue des lilas, ouest, québec, québec, g1l 1b6"
         cls.a_dirty_address_with_uppercase = "350 rue des Lilas Ouest Québec Québec G1L 1B6"
         cls.a_dirty_address_with_whitespaces = "350     rue des Lilas Ouest Québec Québec G1L 1B6"
+        cls.an_address_with_hyphen_split_address_components = "3-350 rue des lilas ouest"
+        cls.a_unit_clean_address = "3 350 rue des lilas ouest"
 
     def test_givenACleanAddress_whenCleaningAddress_thenShouldNotMakeAnyChange(self):
         cleaned_address = AddressCleaner().clean([self.a_clean_address])
@@ -20,6 +23,10 @@ class AddressCleanerTest(TestCase):
         self,
     ):
         cleaned_address = AddressCleaner().clean([self.a_dirty_address_with_commas])
+
+        self.assertEqual(self.a_clean_address, cleaned_address[0])
+
+        cleaned_address = AddressCleaner().clean([self.a_commas_separated_address])
 
         self.assertEqual(self.a_clean_address, cleaned_address[0])
 
@@ -44,3 +51,8 @@ class AddressCleanerTest(TestCase):
 
         self.assertEqual(self.a_clean_address, cleaned_address[0])
         self.assertEqual(self.a_clean_address, cleaned_address[1])
+
+    def test_givenAHyphenUnitStreetNumberAddress_whenCleaningAddress_thenShouldReplaceHyphenWithWhiteSpace(self):
+        cleaned_address = AddressCleaner().clean([self.an_address_with_hyphen_split_address_components])
+
+        self.assertEqual(self.a_unit_clean_address, cleaned_address[0])

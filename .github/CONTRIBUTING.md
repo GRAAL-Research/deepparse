@@ -64,14 +64,14 @@ We created three requirements files to install all the tools used for the develo
 
 You can install all the requirements with
 
-```
+``` shell
 pip install -r tests/requirements.txt
 pip install -r styling_requirements.txt
 pip install -r docs/requirements.txt
 ```
 
 Also, you should run `python setup.py develop` to build the project and be able to build the documentation.
-```
+``` shell
 python setup.py develop
 ```
 
@@ -80,14 +80,14 @@ python setup.py develop
 All of the code is formatted using [black](https://black.readthedocs.io) with the associated [config file](https://github.com/GRAAL-Research/deepparse/blob/master/pyproject.toml). In order to format the code of your submission, simply run
 > See the [styling requirements](https://github.com/GRAAL-Research/deepparse/blob/master/styling_requirements.txt) for the proper black version to use.
 
-```
+``` shell
 black .
 ```
 
 We also have our own `pylint` [config file](https://github.com/GRAAL-Research/deepparse/blob/master/.pylintrc). Try not to introduce code incoherences detected by the linting. You can run the linting procedure with
 > See the [styling requirements](https://github.com/GRAAL-Research/deepparse/blob/master/styling_requirements.txt) for the proper pylint version to use.
 
-```
+``` shell
 pylint deepparse
 pylint tests
 ```
@@ -98,11 +98,19 @@ If your pull request introduces a new feature, please deliver it with tests that
 
 For any pull request submitted, **ALL** of the tests must succeed. You can run the tests with
 
-```
+``` shell
 python -m unittest
 ```
 
 > The integration tests need to be executed on a device with a GPU.
+
+We also provide a script, `run_tests_python_envs.sh`, to run all the tests in all the supported versions. To do so, you need to install Conda and run
+the following command
+
+``` shell
+bash -l run_tests_python_envs.sh # For bash terminal
+zsh -i run_tests_python_envs.sh # For ZSH terminal
+```
 
 ## Documentation
 
@@ -110,20 +118,20 @@ When submitting a pull request for a new feature, try to include documentation f
 
  All of Deepparse's html documentation is automatically generated from the Python files' documentation. To have a preview of what the final html will look like with your modifications, first start by rebuilding the html pages.
 
- ```
+ ``` shell
 cd docs
 ./rebuild_html_doc.sh
  ```
 
 You can then see the local html files in your favorite browser. Here is an example using Firefox:
 
-```
+``` shell
 firefox _build/html/index.html
 ```
 
 or using Python
 
-```python
+```shell
 python -m http.server -d _build/html/
 ```
 

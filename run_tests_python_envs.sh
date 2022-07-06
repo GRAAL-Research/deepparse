@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# We test on supported Python version, namely, 3.7, 3.8, 3.9 and 3.10
+# We test on Deepparse supported Python versions, namely, 3.7, 3.8, 3.9 and 3.10
 echo "*****Starting of testing Deepparse on Python version 3.7, 3.8, 3.9, 3.10*****"
 
 # We export the reports into a directory. But to do so, we need to move into that directory

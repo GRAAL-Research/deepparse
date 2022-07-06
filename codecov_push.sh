@@ -11,7 +11,9 @@ pip install -Ur tests/requirements.txt
 pip install -Ur requirements.txt
 
 # Run pytest from conda env
-conda run -n deepparse_pytest_3_10 pytest --cov ./deepparse --cov-report html --cov-report xml --cov-config=.coveragerc
+echo "Running test in Conda - No update"
+# --live-stream is to remove the Conda capture of the stream
+conda run -n deepparse_pytest_3_10 --live-stream pytest --cov ./deepparse --cov-report html --cov-report xml --cov-config=.coveragerc
 
 # Push the coverage file
 ./codecov -f coverage.xml -n unittest-integrationtest -t $CODECOVKEYDEEPPARSE

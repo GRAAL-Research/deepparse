@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash -l
 
 # We test on supported Python version, namely, 3.7, 3.8, 3.9 and 3.10
 echo "*****Starting of testing Deepparse on Python version 3.7, 3.8, 3.9, 3.10*****"

@@ -24,19 +24,20 @@ class ToolsTests(CaptureOutputTestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.temp_dir_obj = TemporaryDirectory()
-        cls.a_directory_path = os.path.join(cls.temp_dir_obj.name, "./")
+        cls.a_directory_path = cls.temp_dir_obj.name
         cls.a_fasttext_file_name_path = os.path.join(cls.a_directory_path, "cc.fr.300.bin")
         cls.a_fasttext_gz_file_name_path = os.path.join(cls.a_directory_path, "cc.fr.300.bin.gz")
         cls.a_fasttext_light_name_path = os.path.join(cls.a_directory_path, "fasttext.magnitude")
         cls.a_fasttext_light_gz_file_name_path = os.path.join(cls.a_directory_path, "fasttext.magnitude.gz")
 
-        # the payload is a first "chunk" a, a second chunk "b" and a empty chunk "" to end the loop
+        # The payload is a first chunk "a", a second chunk "b" and a empty chunk ("") to end the loop
         cls.a_response_payload = ["a", "b", ""]
 
         cls.a_fake_embeddings_path = os.path.join(cls.temp_dir_obj.name, "fake_embeddings_cc.fr.300.bin")
 
-    def tearDown(self) -> None:
-        self.temp_dir_obj.cleanup()
+    @classmethod
+    def tearDownClass(cls) -> None:
+        cls.temp_dir_obj.cleanup()
 
     def assertStdoutContains(self, values):
         for value in values:

@@ -62,24 +62,6 @@ class FastTextEmbeddingsModelIntegrationTest(AddressParserRetrainTestCase):
         self.assertGreater(len(dataset), 0)
 
     @skipIf(platform.system() != "Windows", "Integration test on Windows env.")
-    def test_givenAWindowsOS_whenFasttextModelCollateFnInDataLoaderNumWorkers1_thenWorkProperly(
-        self,
-    ):
-        model = FastTextEmbeddingsModel(self.a_fasttext_model_path, verbose=self.verbose)
-        data_transform = MockedDataTransform(model)
-
-        data_loader = DataLoader(
-            self.training_container,
-            collate_fn=data_transform.collate_fn,
-            batch_size=32,
-            num_workers=1,
-        )
-        dataset = []
-        for data in data_loader:
-            dataset.append(data)
-        self.assertGreater(len(dataset), 0)
-
-    @skipIf(platform.system() != "Windows", "Integration test on Windows env.")
     def test_givenAWindowsOS_whenFasttextModelCollateFnInDataLoaderNumWorkers2_thenWorkProperly(
         self,
     ):
@@ -97,12 +79,12 @@ class FastTextEmbeddingsModelIntegrationTest(AddressParserRetrainTestCase):
             dataset.append(data)
         self.assertGreater(len(dataset), 0)
 
-    @skipIf(platform.system() != "Windows", "Integration test on Windows env.")
+    @skipIf(platform.system() == "Windows", "Integration test not on Windows env.")
     @patch("deepparse.embeddings_models.fasttext_embeddings_model.platform")
-    def test_givenAWindowsOS_whenFasttextModelCollateFnInDataLoaderEvenWithWindowsSetup_thenWorkProperly(
+    def test_givenUbuntu_whenFasttextModelCollateFnInDataLoaderEvenWithWindowsSetup_thenWorkProperly(
         self, platform_mock
     ):
-        platform_mock.system().__eq__.return_value = True
+        platform_mock.system().__eq__.return_value = False
         with platform_mock:
             model = FastTextEmbeddingsModel(self.a_fasttext_model_path, verbose=self.verbose)
         data_transform = MockedDataTransform(model)
@@ -118,49 +100,14 @@ class FastTextEmbeddingsModelIntegrationTest(AddressParserRetrainTestCase):
             dataset.append(data)
         self.assertGreater(len(dataset), 0)
 
-    @skipIf(platform.system() != "Windows", "Integration test on Windows env.")
-    def test_givenAWindowsOS_whenFasttextModelCollateFnInDataLoaderForWindows_thenRaiseError(
-        self,
+    @skipIf(platform.system() == "Windows", "Integration test not on Windows env.")
+    @patch("deepparse.embeddings_models.fasttext_embeddings_model.platform")
+    def test_givenUbuntu_whenFasttextModelCollateFnInDataLoaderForWindowsNumWorkers2_thenWorkProperly(
+        self, platform_mock
     ):
-        model = FastTextEmbeddingsModel(self.a_fasttext_model_path, verbose=self.verbose)
-
-        data_transform = MockedDataTransform(model)
-
-        data_loader = DataLoader(
-            self.training_container,
-            collate_fn=data_transform.collate_fn,
-            batch_size=32,
-            num_workers=0,
-        )
-        dataset = []
-        for data in data_loader:
-            dataset.append(data)
-        self.assertGreater(len(dataset), 0)
-
-    @skipIf(platform.system() != "Windows", "Integration test on Windows env.")
-    def test_givenAWindowsOS_whenFasttextModelCollateFnInDataLoaderForWindowsNumWorkers1_thenRaiseError(
-        self,
-    ):
-        model = FastTextEmbeddingsModel(self.a_fasttext_model_path, verbose=self.verbose)
-
-        data_transform = MockedDataTransform(model)
-
-        data_loader = DataLoader(
-            self.training_container,
-            collate_fn=data_transform.collate_fn,
-            batch_size=32,
-            num_workers=1,
-        )
-        dataset = []
-        for data in data_loader:
-            dataset.append(data)
-        self.assertGreater(len(dataset), 0)
-
-    @skipIf(platform.system() != "Windows", "Integration test on Windows env.")
-    def test_givenAWindowsOS_whenFasttextModelCollateFnInDataLoaderForWindowsNumWorkers2_thenRaiseError(
-        self,
-    ):
-        model = FastTextEmbeddingsModel(self.a_fasttext_model_path, verbose=self.verbose)
+        platform_mock.system().__eq__.return_value = False
+        with platform_mock:
+            model = FastTextEmbeddingsModel(self.a_fasttext_model_path, verbose=self.verbose)
 
         data_transform = MockedDataTransform(model)
 
@@ -174,22 +121,3 @@ class FastTextEmbeddingsModelIntegrationTest(AddressParserRetrainTestCase):
         for data in data_loader:
             dataset.append(data)
         self.assertGreater(len(dataset), 0)
-
-    @skipIf(platform.system() != "Windows", "Integration test on Windows env.")
-    @patch("deepparse.embeddings_models.fasttext_embeddings_model.platform")
-    def test_givenAWindowsOS_whenFasttextModelCollateFnInDataLoaderForNotWindows_thenRaiseError(self, platform_mock):
-        platform_mock.system().__eq__.return_value = True
-        with platform_mock:
-            model = FastTextEmbeddingsModel(self.a_fasttext_model_path, verbose=self.verbose)
-
-        data_transform = MockedDataTransform(model)
-
-        data_loader = DataLoader(
-            self.training_container,
-            collate_fn=data_transform.collate_fn,
-            batch_size=32,
-            num_workers=0,
-        )
-        with self.assertRaises(TypeError):
-            for _ in data_loader:
-                pass

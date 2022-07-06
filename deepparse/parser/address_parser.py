@@ -138,7 +138,7 @@ class AddressParser:
 
         .. code-block:: python
 
-            address_parser = AddressParser(device=0) #on gpu device 0
+            address_parser = AddressParser(device=0) # On GPU device 0
             parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
 
             address_parser = AddressParser(model_type="fasttext", device="cpu") # fasttext model on cpu
@@ -148,7 +148,7 @@ class AddressParser:
 
         .. code-block:: python
 
-            # fasttext model with attention
+            # FasTtext model with attention mechanism
             address_parser = AddressParser(model_type="fasttext", attention_mechanism=True)
             parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
 
@@ -282,10 +282,11 @@ class AddressParser:
             batch_size (int): The size of the batch (by default, ``32``).
             num_workers (int): Number of workers to use for the data loader (default is ``0``, which means that the data
                 will be loaded in the main process).
-            with_hyphen_split (bool): Either or not to use the hyphen whitespace replacing for countries that use
-                hyphen split between the unit and the street number (e.g. Canada). For example, `'3-305'` will be
-                replaced as `'3 305'` for the parsing. Where 3 is the unit, and 305 is the street number.
-                We use a regular expression for the replacement. Default is False.
+            with_hyphen_split (bool): Either or not, use the hyphen split whitespace replacing for countries that use
+                the hyphen split between the unit and the street number (e.g. Canada). For example, ``'3-305'`` will be
+                replaced as ``'3 305'`` for the parsing. Where 3 is the unit, and 305 is the street number.
+                We use a regular expression to replace alphanumerical characters separated by a hyphen at
+                the start of the string. We do so since some cities use hyphens in their names. Default is ``False``.
 
         Return:
             Either a :class:`~FormattedParsedAddress` or a list of
@@ -293,14 +294,14 @@ class AddressParser:
 
         Note:
             During the parsing, the addresses are lowercase and commas are removed. One can also use the
-            `with_hyphen_split` to replace hyphens (used to separate units from street numbers, e.g. 3-305
-            a street name) by whitespace for proper cleaning.
+            ``with_hyphen_split`` bool argument to replace hyphens (used to separate units from street numbers,
+            e.g. ``'3-305 a street name'``) by whitespace for proper cleaning.
 
         Examples:
 
             .. code-block:: python
 
-                address_parser = AddressParser(device=0)  # on gpu device 0
+                address_parser = AddressParser(device=0)  # On GPU device 0
                 parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
 
                 # It also can be a list of addresses
@@ -318,7 +319,7 @@ class AddressParser:
 
             .. code-block:: python
 
-                address_parser = AddressParser(device=0) #on gpu device 0
+                address_parser = AddressParser(device=0) # On GPU device 0
                 parse_address = address_parser(a_large_list_dataset, batch_size=1024)
 
                 # You can also use more worker

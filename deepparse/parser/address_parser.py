@@ -138,7 +138,7 @@ class AddressParser:
 
         .. code-block:: python
 
-            address_parser = AddressParser(device=0) #on gpu device 0
+            address_parser = AddressParser(device=0) # On GPU device 0
             parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
 
             address_parser = AddressParser(model_type="fasttext", device="cpu") # fasttext model on cpu
@@ -148,7 +148,7 @@ class AddressParser:
 
         .. code-block:: python
 
-            # fasttext model with attention
+            # FasTtext model with attention mechanism
             address_parser = AddressParser(model_type="fasttext", attention_mechanism=True)
             parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
 
@@ -245,12 +245,20 @@ class AddressParser:
 
     __repr__ = __str__  # to call __str__ when list of address
 
+    def get_formatted_model_name(self) -> str:
+        """
+        Return the model type formatted name. For example, if the model type is ``"fasttext"`` the formatted name is
+        ``"FastText"``.
+        """
+        return self._model_type_formatted
+
     def __call__(
         self,
         addresses_to_parse: Union[List[str], str, DatasetContainer],
         with_prob: bool = False,
         batch_size: int = 32,
         num_workers: int = 0,
+        with_hyphen_split: bool = False,
     ) -> Union[FormattedParsedAddress, List[FormattedParsedAddress]]:
         """
         Callable method to parse the components of an address or a list of address.
@@ -274,16 +282,26 @@ class AddressParser:
             batch_size (int): The size of the batch (by default, ``32``).
             num_workers (int): Number of workers to use for the data loader (default is ``0``, which means that the data
                 will be loaded in the main process).
+            with_hyphen_split (bool): Either or not, use the hyphen split whitespace replacing for countries that use
+                the hyphen split between the unit and the street number (e.g. Canada). For example, ``'3-305'`` will be
+                replaced as ``'3 305'`` for the parsing. Where ``'3'`` is the unit, and ``'305'`` is the street number.
+                We use a regular expression to replace alphanumerical characters separated by a hyphen at
+                the start of the string. We do so since some cities use hyphens in their names. Default is ``False``.
 
         Return:
             Either a :class:`~FormattedParsedAddress` or a list of
             :class:`~FormattedParsedAddress` when given more than one address.
 
+        Note:
+            During the parsing, the addresses are lowercase and commas are removed. One can also use the
+            ``with_hyphen_split`` bool argument to replace hyphens (used to separate units from street numbers,
+            e.g. ``'3-305 a street name'``) by whitespace for proper cleaning.
+
         Examples:
 
             .. code-block:: python
 
-                address_parser = AddressParser(device=0)  # on gpu device 0
+                address_parser = AddressParser(device=0)  # On GPU device 0
                 parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
 
                 # It also can be a list of addresses
@@ -301,7 +319,7 @@ class AddressParser:
 
             .. code-block:: python
 
-                address_parser = AddressParser(device=0) #on gpu device 0
+                address_parser = AddressParser(device=0) # On GPU device 0
                 parse_address = address_parser(a_large_list_dataset, batch_size=1024)
 
                 # You can also use more worker
@@ -415,11 +433,11 @@ class AddressParser:
                 to train. Note that if you change the seq2seq parameters, a new model will be trained from scratch.
                 Parameters that can be modified are:
 
-                    - The ``input_size`` of the encoder (i.e. the embeddings size). The default value is 300.
-                    - The size of the ``encoder_hidden_size`` of the encoder. The default value is 1024.
-                    - The number of ``encoder_num_layers`` of the encoder. The default value is 1.
-                    - The size of the ``decoder_hidden_size`` of the decoder. The default value is 1024.
-                    - The number of ``decoder_num_layers`` of the decoder. The default value is 1.
+                    - The ``input_size`` of the encoder (i.e. the embeddings size). The default value is ``300``.
+                    - The size of the ``encoder_hidden_size`` of the encoder. The default value is ``1024``.
+                    - The number of ``encoder_num_layers`` of the encoder. The default value is ``1``.
+                    - The size of the ``decoder_hidden_size`` of the decoder. The default value is ``1024``.
+                    - The number of ``decoder_num_layers`` of the decoder. The default value is ``1``.
 
                 Default is ``None``, meaning we use the default seq2seq architecture.
             layers_to_freeze (Union[str, None]): Name of the portion of the seq2seq to freeze layers. Thus, it reduces
@@ -443,7 +461,7 @@ class AddressParser:
                 Default settings for the parser name will use the training settings for the name using the
                 following pattern:
 
-                    - the pretrained architecture (fasttext or bpemb and with or without attention mechanism),
+                    - the pretrained architecture (``'fasttext'`` or ``'bpemb'`` and if an attention mechanism is use),
                     - if prediction_tags is not ``None``, the following tag: ``ModifiedPredictionTags``,
                     - if seq2seq_params is not ``None``, the following tag: ``ModifiedSeq2SeqConfiguration``, and
                     - if layers_to_freeze is not ``None``, the following tag: ``FreezedLayer{portion}``.
@@ -485,7 +503,7 @@ class AddressParser:
 
             .. code-block:: python
 
-                address_parser = AddressParser(device=0) #on gpu device 0
+                address_parser = AddressParser(device=0) # On GPU device 0
                 data_path = "path_to_a_pickle_dataset.p"
 
                 container = PickleDatasetContainer(data_path)
@@ -522,7 +540,7 @@ class AddressParser:
 
                 address_components = {"ATag":0, "AnotherTag": 1, "EOS": 2}
 
-                address_parser = AddressParser(device=0) #on gpu device 0
+                address_parser = AddressParser(device=0) # On GPU device 0
                 data_path = "path_to_a_pickle_dataset.p"
 
                 container = PickleDatasetContainer(data_path)
@@ -535,7 +553,7 @@ class AddressParser:
 
                 seq2seq_params = {"encoder_hidden_size": 512, "decoder_hidden_size": 512}
 
-                address_parser = AddressParser(device=0) #on gpu device 0
+                address_parser = AddressParser(device=0) # On GPU device 0
                 data_path = "path_to_a_pickle_dataset.p"
 
                 container = PickleDatasetContainer(data_path)
@@ -550,7 +568,7 @@ class AddressParser:
                 seq2seq_params = {"encoder_hidden_size": 512, "decoder_hidden_size": 512}
                 address_components = {"ATag":0, "AnotherTag": 1, "EOS": 2}
 
-                address_parser = AddressParser(device=0) #on gpu device 0
+                address_parser = AddressParser(device=0) # On GPU device 0
                 data_path = "path_to_a_pickle_dataset.p"
 
                 container = PickleDatasetContainer(data_path)
@@ -562,7 +580,7 @@ class AddressParser:
 
             .. code-block:: python
 
-                address_parser = AddressParser(device=0) #on gpu device 0
+                address_parser = AddressParser(device=0) # On GPU device 0
                 data_path = "path_to_a_pickle_dataset.p"
 
                 container = PickleDatasetContainer(data_path)
@@ -740,7 +758,7 @@ class AddressParser:
 
             .. code-block:: python
 
-                address_parser = AddressParser(device=0) #on gpu device 0
+                address_parser = AddressParser(device=0) # On GPU device 0
                 data_path = "path_to_a_pickle_test_dataset.p"
 
                 test_container = PickleDatasetContainer(data_path, is_training_container=False)
@@ -753,7 +771,7 @@ class AddressParser:
 
                 address_components = {"ATag":0, "AnotherTag": 1, "EOS": 2}
 
-                address_parser = AddressParser(device=0) #on gpu device 0
+                address_parser = AddressParser(device=0) # On GPU device 0
 
                 # Train phase
                 data_path = "path_to_a_pickle_train_dataset.p"
@@ -974,13 +992,6 @@ class AddressParser:
         Pipeline to process data in a data loader for prediction.
         """
         return self.data_converter(self.vectorizer(data))
-
-    def get_formatted_model_name(self) -> str:
-        """
-        Return the model type formatted name. For example, if the model type is ``"fasttext"`` the formatted name is
-        ``"FastText"``.
-        """
-        return self._model_type_formatted
 
     def _retrain(
         self,

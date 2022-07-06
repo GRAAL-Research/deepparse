@@ -32,6 +32,8 @@ class Seq2SeqTest(TestCase):
 
         cls.cache_dir = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
 
+        cls.a_model_type = "a_model_type"
+
     def test_whenInstantiateASeq2SeqModel_thenParametersAreOk(self):
         seq2seq_model = Seq2SeqModel(
             self.a_cpu_device,
@@ -126,6 +128,83 @@ class Seq2SeqTest(TestCase):
         actual = seq2seq_model.decoder.linear.out_features
         self.assertEqual(expected, actual)
 
+    @patch("os.path.isfile")
+    @patch("deepparse.network.seq2seq.torch")
+    @patch("deepparse.network.seq2seq.torch.nn.Module.load_state_dict")
+    @skipIf(not torch.cuda.is_available(), "no gpu available")
+    def test_givenSeq2seqModel_whenNoPretrainedWeights_thenDownloadIt(
+        self,
+        torch_nn_mock,
+        torch_mock,
+        isfile_mock,
+    ):
+        seq2seq_model = Seq2SeqModel(
+            self.a_cpu_device,
+            input_size=self.encoder_input_size_dim,
+            encoder_hidden_size=self.encoder_hidden_size,
+            encoder_num_layers=self.encoder_num_layers,
+            decoder_hidden_size=self.decoder_hidden_size,
+            decoder_num_layers=self.decoder_num_layers,
+            output_size=self.decoder_output_size,
+            verbose=False,
+        )
+        isfile_mock.return_value = False
+        with patch("deepparse.network.seq2seq.download_weights") as download_weights_mock:
+            seq2seq_model._load_pre_trained_weights(self.a_model_type, cache_dir=self.cache_dir)
+
+            download_weights_mock.assert_called()
+            download_weights_mock.assert_called_with(self.a_model_type, self.cache_dir, verbose=False)
+
+    @patch("os.path.isfile")
+    @patch("deepparse.network.seq2seq.torch")
+    @patch("deepparse.network.seq2seq.torch.nn.Module.load_state_dict")
+    @skipIf(not torch.cuda.is_available(), "no gpu available")
+    def test_givenSeq2seqModelVerbose_whenNoPretrainedWeights_thenWarns(
+        self,
+        torch_nn_mock,
+        torch_mock,
+        isfile_mock,
+    ):
+        seq2seq_model = Seq2SeqModel(
+            self.a_cpu_device,
+            input_size=self.encoder_input_size_dim,
+            encoder_hidden_size=self.encoder_hidden_size,
+            encoder_num_layers=self.encoder_num_layers,
+            decoder_hidden_size=self.decoder_hidden_size,
+            decoder_num_layers=self.decoder_num_layers,
+            output_size=self.decoder_output_size,
+            verbose=False,
+        )
+        isfile_mock.return_value = False
+        with patch("deepparse.network.seq2seq.download_weights"):
+            with self.assertWarns(UserWarning):
+                seq2seq_model._load_pre_trained_weights(self.a_model_type, cache_dir=self.cache_dir)
+
+    @patch("deepparse.network.seq2seq.latest_version")
+    @patch("os.path.isfile")
+    @patch("deepparse.network.seq2seq.torch")
+    @patch("deepparse.network.seq2seq.torch.nn.Module.load_state_dict")
+    @skipIf(not torch.cuda.is_available(), "no gpu available")
+    def test_givenSeq2seqModel_whenLoadPreTrainedWeightsNotRecentVersion_thenDownloadIt(
+        self, torch_nn_mock, torch_mock, isfile_mock, last_version_mock
+    ):
+        seq2seq_model = Seq2SeqModel(
+            self.a_torch_device,
+            input_size=self.encoder_input_size_dim,
+            encoder_hidden_size=self.encoder_hidden_size,
+            encoder_num_layers=self.encoder_num_layers,
+            decoder_hidden_size=self.decoder_hidden_size,
+            decoder_num_layers=self.decoder_num_layers,
+            output_size=self.decoder_output_size,
+            verbose=True,
+        )
+        isfile_mock.return_value = True
+        last_version_mock.return_value = False
+        with patch("deepparse.network.seq2seq.download_weights") as download_weights_mock:
+            seq2seq_model._load_pre_trained_weights(self.a_model_type, cache_dir=self.cache_dir)
+            download_weights_mock.assert_called()
+            download_weights_mock.assert_called_with(self.a_model_type, self.cache_dir, verbose=True)
+
     @patch("deepparse.network.seq2seq.latest_version")
     @patch("os.path.isfile")
     @patch("deepparse.network.seq2seq.torch")
@@ -148,7 +227,7 @@ class Seq2SeqTest(TestCase):
         last_version_mock.return_value = False
         with patch("deepparse.network.seq2seq.download_weights"):
             with self.assertWarns(UserWarning):
-                seq2seq_model._load_pre_trained_weights("a_model_type", cache_dir=self.cache_dir)
+                seq2seq_model._load_pre_trained_weights(self.a_model_type, cache_dir=self.cache_dir)
 
     @patch("deepparse.network.seq2seq.latest_version")
     @patch("os.path.isfile")
@@ -172,7 +251,7 @@ class Seq2SeqTest(TestCase):
         last_version_mock.return_value = False
         with patch("deepparse.network.seq2seq.download_weights"):
             with pytest.warns(None) as record:
-                seq2seq_model._load_pre_trained_weights("a_model_type", cache_dir=self.cache_dir)
+                seq2seq_model._load_pre_trained_weights(self.a_model_type, cache_dir=self.cache_dir)
             self.assertEqual(0, len(record))
 
     @patch("deepparse.network.seq2seq.latest_version")
@@ -196,7 +275,7 @@ class Seq2SeqTest(TestCase):
         last_version_mock.return_value = False
         with patch("deepparse.network.seq2seq.download_weights"):
             with self.assertWarns(UserWarning):
-                seq2seq_model._load_pre_trained_weights("a_model_type", cache_dir=self.cache_dir)
+                seq2seq_model._load_pre_trained_weights(self.a_model_type, cache_dir=self.cache_dir)
 
     @patch("deepparse.network.seq2seq.latest_version")
     @patch("os.path.isfile")
@@ -219,7 +298,7 @@ class Seq2SeqTest(TestCase):
         last_version_mock.return_value = False
         with patch("deepparse.network.seq2seq.download_weights"):
             with pytest.warns(None) as record:
-                seq2seq_model._load_pre_trained_weights("a_model_type", cache_dir=self.cache_dir)
+                seq2seq_model._load_pre_trained_weights(self.a_model_type, cache_dir=self.cache_dir)
             self.assertEqual(0, len(record))
 
     @patch("deepparse.network.seq2seq.torch")

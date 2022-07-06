@@ -275,3 +275,22 @@ class CSVDatasetContainer(DatasetContainer):
             data = [data_point[0] for data_point in pd.read_csv(**csv_reader_kwargs)[column_names].to_numpy()]
         self.data = data
         self.validate_dataset()
+
+
+class ListDatasetContainer(DatasetContainer):
+    """
+    List dataset container that loads a list dataset into a DatasetContainer class. It also validates the dataset.
+
+    Args:
+
+        data (list): The dataset in a list format. The list format (if a train or test container) is
+            identical as the :class:`~deepparse.dataset_container.PickleDatasetContainer`.
+        is_training_container (bool): Either or not, the dataset container is a training container. This will determine
+            the dataset validation test we apply to the dataset. That is, a predict dataset doesn't include tags.
+            The default value is true.
+    """
+
+    def __init__(self, data: List, is_training_container: bool = True):
+        super().__init__(is_training_container=is_training_container)
+        self.data = data
+        self.validate_dataset()

@@ -4,6 +4,7 @@ import logging
 import os
 import unittest
 from unittest import skipIf
+from unittest.mock import patch
 
 import pytest
 import torch
@@ -38,6 +39,8 @@ class TestingTests(RetrainTestCase, PretrainedWeightsBase):
         cls.fasttext_parser_formatted_name = "PreTrainedFastTextAddressParser"
         cls.bpemb_parser_formatted_name = "PreTrainedBPEmbAddressParser"
         cls.fasttext_att_parser_formatted_name = "PreTrainedFastTextAttentionAddressParser"
+
+        cls.a_cache_dir = "a_cache_dir"
 
     @skipIf(
         not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
@@ -278,6 +281,27 @@ class TestingTests(RetrainTestCase, PretrainedWeightsBase):
         # Not the same position as with fasttext due to BPEmb messages
         actual_second_message = self._caplog.records[3].message
         self.assertEqual(expected_second_message, actual_second_message)
+
+    @skipIf(
+        not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
+        "download of model too long for test in runner",
+    )
+    def test_ifCachePath_thenUseNewCachePath(self):
+        with patch("deepparse.cli.test.AddressParser") as address_parser_mock:
+            parser_params = [
+                self.a_fasttext_model_type,
+                self.a_train_pickle_dataset_path,
+                "--cache_dir",
+                self.a_cache_dir,
+                "--device",
+                self.cpu_device,
+            ]
+            test.main(parser_params)
+
+            address_parser_mock.assert_called()
+            address_parser_mock.assert_called_with(
+                device=self.cpu_device, cache_dir=self.a_cache_dir, model_type=self.a_fasttext_model_type
+            )
 
 
 if __name__ == "__main__":

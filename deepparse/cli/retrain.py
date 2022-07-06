@@ -40,7 +40,7 @@ def parse_retrained_arguments(parsed_args) -> Dict:
 def main(args=None) -> None:
     # pylint: disable=too-many-locals, too-many-branches
     """
-    CLI function to rapidly fine-tuned an addresses parser and saves it. One can retrain a base pretrained model
+    CLI function to rapidly retrain an addresses parser and saves it. One can retrain a base pretrained model
     using most of the arguments as the :meth:`~AddressParser.retrain` method. By default, all the parameters have
     the same default value as the :meth:`~AddressParser.retrain` method. The supported parameters are the following:
 
@@ -105,7 +105,7 @@ def main(args=None) -> None:
 
     if "cpu" not in device:
         device = int(device)
-    parser_args = {"device": device}
+    parser_args = {"device": device, "cache_dir": parsed_args.cache_dir}
     parser_args_update_args = attention_model_type_handling(base_parsing_model)
     parser_args.update(**parser_args_update_args)
 
@@ -252,6 +252,13 @@ def get_parser() -> argparse.ArgumentParser:
             " By default, '\t'."
         ),
         default="\t",
+    )
+
+    parser.add_argument(
+        "--cache_dir",
+        type=str,
+        default=None,
+        help="To change the default cache directory (default to None e.g. default path).",
     )
 
     return parser

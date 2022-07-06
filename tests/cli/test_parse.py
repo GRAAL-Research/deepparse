@@ -5,6 +5,7 @@ import os
 import unittest
 from tempfile import TemporaryDirectory
 from unittest import TestCase, skipIf
+from unittest.mock import patch
 
 import pytest
 import torch
@@ -44,6 +45,8 @@ class ParseTests(TestCase, PretrainedWeightsBase):
 
         self.cpu_device = "cpu"
         self.gpu_device = "0"
+
+        self.a_cache_dir = "a_cache_dir"
 
     def tearDown(self) -> None:
         self.temp_dir_obj.cleanup()
@@ -352,6 +355,30 @@ class ParseTests(TestCase, PretrainedWeightsBase):
         # Not the same position as with fasttext due to BPEmb messages
         actual_first_message = self._caplog.records[2].message
         self.assertEqual(expected_first_message, actual_first_message)
+
+    @skipIf(
+        not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
+        "download of model too long for test in runner",
+    )
+    def test_ifCachePath_thenUseNewCachePath(self):
+        create_pickle_file(self.fake_data_path_pickle, predict_container=True)
+
+        with patch("deepparse.cli.parse.AddressParser") as address_parser_mock:
+            parse.main(
+                [
+                    self.a_bpemb_model_type,
+                    self.fake_data_path_pickle,
+                    self.pickle_p_export_filename,
+                    "--device",
+                    self.cpu_device,
+                    "--cache_dir",
+                    self.a_cache_dir,
+                ]
+            )
+            address_parser_mock.assert_called()
+            address_parser_mock.assert_called_with(
+                device=self.cpu_device, cache_dir=self.a_cache_dir, model_type=self.a_bpemb_model_type
+            )
 
 
 if __name__ == "__main__":

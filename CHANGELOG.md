@@ -220,3 +220,13 @@ to `cache_dir`. `saving_dir` is now deprecated and will be remove in version 0.8
 ## 0.7.6
 
 - Re-release the version 0.7.5 into 0.7.6 due to manipulation error and change in PyPi (now delete does not delete release by yank does).
+
+## dev
+
+- Improve SEO 
+- Add cache_dir arg in all CLI functions
+- Improve handling of HTTP error in models version verification
+- Improve doc
+- Add a note for parsing data cleaning (i.e. lowercase, commas removal, and hyphen replacing).
+- Add hyphen parsing cleaning step (with a bool flag to activate or not) to improve some country address parsing (see [issue 137](https://github.com/GRAAL-Research/deepparse/issues/137)).
+- Add ListDatasetContainer for Python list dataset.

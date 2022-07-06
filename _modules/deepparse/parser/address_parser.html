@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>deepparse.parser.address_parser &mdash; deepparse 0.7.6 documentation</title>
+  <title>deepparse.parser.address_parser &mdash; deepparse 0.8 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -29,7 +29,7 @@
             <img src="../../../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.7.6
+                0.8
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -223,7 +223,7 @@
 
 <span class="sd">        .. code-block:: python</span>
 
-<span class="sd">            address_parser = AddressParser(device=0) #on gpu device 0</span>
+<span class="sd">            address_parser = AddressParser(device=0) # On GPU device 0</span>
 <span class="sd">            parse_address = address_parser(&quot;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&quot;)</span>
 
 <span class="sd">            address_parser = AddressParser(model_type=&quot;fasttext&quot;, device=&quot;cpu&quot;) # fasttext model on cpu</span>
@@ -233,7 +233,7 @@
 
 <span class="sd">        .. code-block:: python</span>
 
-<span class="sd">            # fasttext model with attention</span>
+<span class="sd">            # FasTtext model with attention mechanism</span>
 <span class="sd">            address_parser = AddressParser(model_type=&quot;fasttext&quot;, attention_mechanism=True)</span>
 <span class="sd">            parse_address = address_parser(&quot;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&quot;)</span>
 
@@ -330,13 +330,22 @@
 
     <span class="fm">__repr__</span> <span class="o">=</span> <span class="fm">__str__</span>  <span class="c1"># to call __str__ when list of address</span>
 
+<div class="viewcode-block" id="AddressParser.get_formatted_model_name"><a class="viewcode-back" href="../../../parser.html#deepparse.parser.AddressParser.get_formatted_model_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_formatted_model_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the model type formatted name. For example, if the model type is ``&quot;fasttext&quot;`` the formatted name is</span>
+<span class="sd">        ``&quot;FastText&quot;``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model_type_formatted</span></div>
+
 <div class="viewcode-block" id="AddressParser.__call__"><a class="viewcode-back" href="../../../parser.html#deepparse.parser.AddressParser.__call__">[docs]</a>    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">addresses_to_parse</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">,</span> <span class="n">DatasetContainer</span><span class="p">],</span>
         <span class="n">with_prob</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
         <span class="n">num_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">with_hyphen_split</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">FormattedParsedAddress</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">FormattedParsedAddress</span><span class="p">]]:</span>
+        <span class="c1"># pylint: disable=too-many-arguments</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Callable method to parse the components of an address or a list of address.</span>
 
@@ -359,16 +368,26 @@
 <span class="sd">            batch_size (int): The size of the batch (by default, ``32``).</span>
 <span class="sd">            num_workers (int): Number of workers to use for the data loader (default is ``0``, which means that the data</span>
 <span class="sd">                will be loaded in the main process).</span>
+<span class="sd">            with_hyphen_split (bool): Either or not, use the hyphen split whitespace replacing for countries that use</span>
+<span class="sd">                the hyphen split between the unit and the street number (e.g. Canada). For example, ``&#39;3-305&#39;`` will be</span>
+<span class="sd">                replaced as ``&#39;3 305&#39;`` for the parsing. Where ``&#39;3&#39;`` is the unit, and ``&#39;305&#39;`` is the street number.</span>
+<span class="sd">                We use a regular expression to replace alphanumerical characters separated by a hyphen at</span>
+<span class="sd">                the start of the string. We do so since some cities use hyphens in their names. Default is ``False``.</span>
 
 <span class="sd">        Return:</span>
 <span class="sd">            Either a :class:`~FormattedParsedAddress` or a list of</span>
 <span class="sd">            :class:`~FormattedParsedAddress` when given more than one address.</span>
 
+<span class="sd">        Note:</span>
+<span class="sd">            During the parsing, the addresses are lowercase and commas are removed. One can also use the</span>
+<span class="sd">            ``with_hyphen_split`` bool argument to replace hyphens (used to separate units from street numbers,</span>
+<span class="sd">            e.g. ``&#39;3-305 a street name&#39;``) by whitespace for proper cleaning.</span>
+
 <span class="sd">        Examples:</span>
 
 <span class="sd">            .. code-block:: python</span>
 
-<span class="sd">                address_parser = AddressParser(device=0)  # on gpu device 0</span>
+<span class="sd">                address_parser = AddressParser(device=0)  # On GPU device 0</span>
 <span class="sd">                parse_address = address_parser(&quot;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&quot;)</span>
 
 <span class="sd">                # It also can be a list of addresses</span>
@@ -386,7 +405,7 @@
 
 <span class="sd">            .. code-block:: python</span>
 
-<span class="sd">                address_parser = AddressParser(device=0) #on gpu device 0</span>
+<span class="sd">                address_parser = AddressParser(device=0) # On GPU device 0</span>
 <span class="sd">                parse_address = address_parser(a_large_list_dataset, batch_size=1024)</span>
 
 <span class="sd">                # You can also use more worker</span>
@@ -500,11 +519,11 @@
 <span class="sd">                to train. Note that if you change the seq2seq parameters, a new model will be trained from scratch.</span>
 <span class="sd">                Parameters that can be modified are:</span>
 
-<span class="sd">                    - The ``input_size`` of the encoder (i.e. the embeddings size). The default value is 300.</span>
-<span class="sd">                    - The size of the ``encoder_hidden_size`` of the encoder. The default value is 1024.</span>
-<span class="sd">                    - The number of ``encoder_num_layers`` of the encoder. The default value is 1.</span>
-<span class="sd">                    - The size of the ``decoder_hidden_size`` of the decoder. The default value is 1024.</span>
-<span class="sd">                    - The number of ``decoder_num_layers`` of the decoder. The default value is 1.</span>
+<span class="sd">                    - The ``input_size`` of the encoder (i.e. the embeddings size). The default value is ``300``.</span>
+<span class="sd">                    - The size of the ``encoder_hidden_size`` of the encoder. The default value is ``1024``.</span>
+<span class="sd">                    - The number of ``encoder_num_layers`` of the encoder. The default value is ``1``.</span>
+<span class="sd">                    - The size of the ``decoder_hidden_size`` of the decoder. The default value is ``1024``.</span>
+<span class="sd">                    - The number of ``decoder_num_layers`` of the decoder. The default value is ``1``.</span>
 
 <span class="sd">                Default is ``None``, meaning we use the default seq2seq architecture.</span>
 <span class="sd">            layers_to_freeze (Union[str, None]): Name of the portion of the seq2seq to freeze layers. Thus, it reduces</span>
@@ -528,7 +547,7 @@
 <span class="sd">                Default settings for the parser name will use the training settings for the name using the</span>
 <span class="sd">                following pattern:</span>
 
-<span class="sd">                    - the pretrained architecture (fasttext or bpemb and with or without attention mechanism),</span>
+<span class="sd">                    - the pretrained architecture (``&#39;fasttext&#39;`` or ``&#39;bpemb&#39;`` and if an attention mechanism is use),</span>
 <span class="sd">                    - if prediction_tags is not ``None``, the following tag: ``ModifiedPredictionTags``,</span>
 <span class="sd">                    - if seq2seq_params is not ``None``, the following tag: ``ModifiedSeq2SeqConfiguration``, and</span>
 <span class="sd">                    - if layers_to_freeze is not ``None``, the following tag: ``FreezedLayer{portion}``.</span>
@@ -570,7 +589,7 @@
 
 <span class="sd">            .. code-block:: python</span>
 
-<span class="sd">                address_parser = AddressParser(device=0) #on gpu device 0</span>
+<span class="sd">                address_parser = AddressParser(device=0) # On GPU device 0</span>
 <span class="sd">                data_path = &quot;path_to_a_pickle_dataset.p&quot;</span>
 
 <span class="sd">                container = PickleDatasetContainer(data_path)</span>
@@ -607,7 +626,7 @@
 
 <span class="sd">                address_components = {&quot;ATag&quot;:0, &quot;AnotherTag&quot;: 1, &quot;EOS&quot;: 2}</span>
 
-<span class="sd">                address_parser = AddressParser(device=0) #on gpu device 0</span>
+<span class="sd">                address_parser = AddressParser(device=0) # On GPU device 0</span>
 <span class="sd">                data_path = &quot;path_to_a_pickle_dataset.p&quot;</span>
 
 <span class="sd">                container = PickleDatasetContainer(data_path)</span>
@@ -620,7 +639,7 @@
 
 <span class="sd">                seq2seq_params = {&quot;encoder_hidden_size&quot;: 512, &quot;decoder_hidden_size&quot;: 512}</span>
 
-<span class="sd">                address_parser = AddressParser(device=0) #on gpu device 0</span>
+<span class="sd">                address_parser = AddressParser(device=0) # On GPU device 0</span>
 <span class="sd">                data_path = &quot;path_to_a_pickle_dataset.p&quot;</span>
 
 <span class="sd">                container = PickleDatasetContainer(data_path)</span>
@@ -635,7 +654,7 @@
 <span class="sd">                seq2seq_params = {&quot;encoder_hidden_size&quot;: 512, &quot;decoder_hidden_size&quot;: 512}</span>
 <span class="sd">                address_components = {&quot;ATag&quot;:0, &quot;AnotherTag&quot;: 1, &quot;EOS&quot;: 2}</span>
 
-<span class="sd">                address_parser = AddressParser(device=0) #on gpu device 0</span>
+<span class="sd">                address_parser = AddressParser(device=0) # On GPU device 0</span>
 <span class="sd">                data_path = &quot;path_to_a_pickle_dataset.p&quot;</span>
 
 <span class="sd">                container = PickleDatasetContainer(data_path)</span>
@@ -647,7 +666,7 @@
 
 <span class="sd">            .. code-block:: python</span>
 
-<span class="sd">                address_parser = AddressParser(device=0) #on gpu device 0</span>
+<span class="sd">                address_parser = AddressParser(device=0) # On GPU device 0</span>
 <span class="sd">                data_path = &quot;path_to_a_pickle_dataset.p&quot;</span>
 
 <span class="sd">                container = PickleDatasetContainer(data_path)</span>
@@ -825,7 +844,7 @@
 
 <span class="sd">            .. code-block:: python</span>
 
-<span class="sd">                address_parser = AddressParser(device=0) #on gpu device 0</span>
+<span class="sd">                address_parser = AddressParser(device=0) # On GPU device 0</span>
 <span class="sd">                data_path = &quot;path_to_a_pickle_test_dataset.p&quot;</span>
 
 <span class="sd">                test_container = PickleDatasetContainer(data_path, is_training_container=False)</span>
@@ -838,7 +857,7 @@
 
 <span class="sd">                address_components = {&quot;ATag&quot;:0, &quot;AnotherTag&quot;: 1, &quot;EOS&quot;: 2}</span>
 
-<span class="sd">                address_parser = AddressParser(device=0) #on gpu device 0</span>
+<span class="sd">                address_parser = AddressParser(device=0) # On GPU device 0</span>
 
 <span class="sd">                # Train phase</span>
 <span class="sd">                data_path = &quot;path_to_a_pickle_train_dataset.p&quot;</span>
@@ -1059,13 +1078,6 @@
 <span class="sd">        Pipeline to process data in a data loader for prediction.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_converter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vectorizer</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
-
-<div class="viewcode-block" id="AddressParser.get_formatted_model_name"><a class="viewcode-back" href="../../../parser.html#deepparse.parser.AddressParser.get_formatted_model_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_formatted_model_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return the model type formatted name. For example, if the model type is ``&quot;fasttext&quot;`` the formatted name is</span>
-<span class="sd">        ``&quot;FastText&quot;``.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model_type_formatted</span></div>
 
     <span class="k">def</span> <span class="nf">_retrain</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>

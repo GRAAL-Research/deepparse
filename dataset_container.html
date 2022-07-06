@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dataset Container &mdash; deepparse 0.7.6 documentation</title>
+  <title>Dataset Container &mdash; deepparse 0.8 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -32,7 +32,7 @@
             <img src="_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.7.6
+                0.8
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -45,7 +45,12 @@
               <p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="parser.html">Parser</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Dataset Container</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Dataset Container</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#interface">Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#implementations">Implementations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dataset-validation-steps">Dataset Validation Steps</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="comparer.html">Comparer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cli.html">CLI</a></li>
 </ul>
@@ -87,7 +92,8 @@
              
   <section id="dataset-container">
 <h1>Dataset Container<a class="headerlink" href="#dataset-container" title="Permalink to this heading"></a></h1>
-<p>To load the data, we use dataset containers that are implemented with respect to an interface.</p>
+<section id="interface">
+<h2>Interface<a class="headerlink" href="#interface" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="deepparse.dataset_container.DatasetContainer">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deepparse.dataset_container.</span></span><span class="sig-name descname"><span class="pre">DatasetContainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">is_training_container</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deepparse/dataset_container/dataset_container.html#DatasetContainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.dataset_container.DatasetContainer" title="Permalink to this definition"></a></dt>
@@ -122,6 +128,9 @@ The default value is true.</p>
 </dl>
 </dd></dl>
 
+</section>
+<section id="implementations">
+<h2>Implementations<a class="headerlink" href="#implementations" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="deepparse.dataset_container.PickleDatasetContainer">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deepparse.dataset_container.</span></span><span class="sig-name descname"><span class="pre">PickleDatasetContainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_training_container</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deepparse/dataset_container/dataset_container.html#PickleDatasetContainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.dataset_container.PickleDatasetContainer" title="Permalink to this definition"></a></dt>
@@ -210,7 +219,27 @@ format. However, this can be overridden by using this argument again.</p></li>
 </dl>
 </dd></dl>
 
-<p>We also applied data validations on our data container using the following three functions.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="deepparse.dataset_container.ListDatasetContainer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deepparse.dataset_container.</span></span><span class="sig-name descname"><span class="pre">ListDatasetContainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.List" title="(in Python v3.8)"><span class="pre">List</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_training_container</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deepparse/dataset_container/dataset_container.html#ListDatasetContainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.dataset_container.ListDatasetContainer" title="Permalink to this definition"></a></dt>
+<dd><p>List dataset container that loads a list dataset into a DatasetContainer class. It also validates the dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – The dataset in a list format. The list format (if a train or test container) is
+identical as the <a class="reference internal" href="#deepparse.dataset_container.PickleDatasetContainer" title="deepparse.dataset_container.PickleDatasetContainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">PickleDatasetContainer</span></code></a>.</p></li>
+<li><p><strong>is_training_container</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Either or not, the dataset container is a training container. This will determine
+the dataset validation test we apply to the dataset. That is, a predict dataset doesn’t include tags.
+The default value is true.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="dataset-validation-steps">
+<h2>Dataset Validation Steps<a class="headerlink" href="#dataset-validation-steps" title="Permalink to this heading"></a></h2>
+<p>We also applied data validations to all data containers using the following three functions.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="deepparse.data_validation.data_validation.validate_if_any_empty">
 <span class="sig-prename descclassname"><span class="pre">deepparse.data_validation.data_validation.</span></span><span class="sig-name descname"><span class="pre">validate_if_any_empty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string_elements</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.List" title="(in Python v3.8)"><span class="pre">List</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/deepparse/data_validation/data_validation.html#validate_if_any_empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.data_validation.data_validation.validate_if_any_empty" title="Permalink to this definition"></a></dt>
@@ -244,6 +273,7 @@ format. However, this can be overridden by using this argument again.</p></li>
 </dl>
 </dd></dl>
 
+</section>
 </section>
 
 

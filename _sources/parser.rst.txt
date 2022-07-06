@@ -13,7 +13,7 @@ This is the complete pretrained address parser model. This model allows using th
 tags of any address.
 
 We offer, for now, only two pretrained models, FastText and BPEmb. The first one relies on
-`fastText <https://fasttext.cc/>`_ French pretrained embeddings to parse the address and the second use
+`fastText <https://fasttext.cc/>`_ French pretrained embeddings to parse the address, and the second use
 the `byte-pair multilingual subword <https://nlp.h-its.org/bpemb/>`_ pretrained embeddings. In both cases,
 the architecture is similar, and performances are comparable; our results are available in this
 `article <https://arxiv.org/abs/2006.16152>`_.
@@ -22,12 +22,12 @@ Memory Usage and Time Performance
 *********************************
 
 We have conducted an experiment, and we report the results in the next two tables. In each table, we report the RAM usage,
-and in the first table, we also report the GPU memory usage. Also, for both table, we report the mean-time of execution
-that was obtained by processing ~183,000 address using different batch size (2^0, ..., 2^9)
+and in the first table, we also report the GPU memory usage. Also, for both tables, we report the mean-time of execution
+that was obtained by processing ~183,000 addresses using different batch sizes (2^0, ..., 2^9)
 (i.e. :math:`\frac{\text{Total time to process all addresses}}{~183,000} =` time per address).
-In addition, we proposed a lighter version (fastText-light) of our fastText model using
-`Magnitude embeddings mapping <https://github.com/plasticityai/magnitude>`_. Fot this lighter model, in average results
-are a little bit lower on trained country (around ~2%) but are similar on zero-shot country
+In addition, we proposed a lighter version (fasttext-light) of our fastText model using
+`Magnitude embeddings mapping <https://github.com/plasticityai/magnitude>`_. For this lighter model, on average, results
+are a little bit lower for the trained country (around ~2%) but are similar for the zero-shot country
 (see our `article <https://arxiv.org/abs/2006.16152>`_ for more details).
 
 .. list-table::
@@ -69,7 +69,7 @@ are a little bit lower on trained country (around ~2%) but are similar on zero-s
             - <1
             - ~0.00007
 
-.. [1] Note that on Windows, we use the Gensim Fasttext models that use ~10 GO with similar performance.
+.. [1] Note that on Windows, we use the Gensim FastText models with ~10 GO with similar performance.
 
 
 .. list-table::
@@ -104,12 +104,11 @@ are a little bit lower on trained country (around ~2%) but are similar on zero-s
             - <1
             - ~0.00007
 
-.. [2] Note that on Windows, we use the Gensim Fasttext models that use ~10 GO with similar performance.
+.. [2] Note that on Windows, we use the Gensim FastText models that use ~10 GO with similar performance.
 
-The two tables highlight that the batch size (number of address in the list to be parsed) influence the processing time.
-Thus, the more there is address, the faster processing each address can be. You can also improve performance by
-using more worker for the data loader created with your data within the call. But note that this performance
-improvements is not linear.
+The two tables highlight that the batch size (number of addresses in the list to be parsed) influences the processing time.
+Thus, the more address is, the faster each address can be processed. You can also improve performance by
+using more workers for the data loader created with your data within the call. But note that this performance improvement is not linear.
 
 AddressParser
 -------------

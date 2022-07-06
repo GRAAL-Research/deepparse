@@ -284,7 +284,7 @@ class AddressParser:
                 will be loaded in the main process).
             with_hyphen_split (bool): Either or not, use the hyphen split whitespace replacing for countries that use
                 the hyphen split between the unit and the street number (e.g. Canada). For example, ``'3-305'`` will be
-                replaced as ``'3 305'`` for the parsing. Where 3 is the unit, and 305 is the street number.
+                replaced as ``'3 305'`` for the parsing. Where ``'3'`` is the unit, and ``'305'`` is the street number.
                 We use a regular expression to replace alphanumerical characters separated by a hyphen at
                 the start of the string. We do so since some cities use hyphens in their names. Default is ``False``.
 
@@ -433,11 +433,11 @@ class AddressParser:
                 to train. Note that if you change the seq2seq parameters, a new model will be trained from scratch.
                 Parameters that can be modified are:
 
-                    - The ``input_size`` of the encoder (i.e. the embeddings size). The default value is 300.
-                    - The size of the ``encoder_hidden_size`` of the encoder. The default value is 1024.
-                    - The number of ``encoder_num_layers`` of the encoder. The default value is 1.
-                    - The size of the ``decoder_hidden_size`` of the decoder. The default value is 1024.
-                    - The number of ``decoder_num_layers`` of the decoder. The default value is 1.
+                    - The ``input_size`` of the encoder (i.e. the embeddings size). The default value is ``300``.
+                    - The size of the ``encoder_hidden_size`` of the encoder. The default value is ``1024``.
+                    - The number of ``encoder_num_layers`` of the encoder. The default value is ``1``.
+                    - The size of the ``decoder_hidden_size`` of the decoder. The default value is ``1024``.
+                    - The number of ``decoder_num_layers`` of the decoder. The default value is ``1``.
 
                 Default is ``None``, meaning we use the default seq2seq architecture.
             layers_to_freeze (Union[str, None]): Name of the portion of the seq2seq to freeze layers. Thus, it reduces
@@ -461,7 +461,7 @@ class AddressParser:
                 Default settings for the parser name will use the training settings for the name using the
                 following pattern:
 
-                    - the pretrained architecture (fasttext or bpemb and with or without attention mechanism),
+                    - the pretrained architecture (``'fasttext'`` or ``'bpemb'`` and if an attention mechanism is use),
                     - if prediction_tags is not ``None``, the following tag: ``ModifiedPredictionTags``,
                     - if seq2seq_params is not ``None``, the following tag: ``ModifiedSeq2SeqConfiguration``, and
                     - if layers_to_freeze is not ``None``, the following tag: ``FreezedLayer{portion}``.
@@ -503,7 +503,7 @@ class AddressParser:
 
             .. code-block:: python
 
-                address_parser = AddressParser(device=0) #on gpu device 0
+                address_parser = AddressParser(device=0) # On GPU device 0
                 data_path = "path_to_a_pickle_dataset.p"
 
                 container = PickleDatasetContainer(data_path)
@@ -540,7 +540,7 @@ class AddressParser:
 
                 address_components = {"ATag":0, "AnotherTag": 1, "EOS": 2}
 
-                address_parser = AddressParser(device=0) #on gpu device 0
+                address_parser = AddressParser(device=0) # On GPU device 0
                 data_path = "path_to_a_pickle_dataset.p"
 
                 container = PickleDatasetContainer(data_path)
@@ -553,7 +553,7 @@ class AddressParser:
 
                 seq2seq_params = {"encoder_hidden_size": 512, "decoder_hidden_size": 512}
 
-                address_parser = AddressParser(device=0) #on gpu device 0
+                address_parser = AddressParser(device=0) # On GPU device 0
                 data_path = "path_to_a_pickle_dataset.p"
 
                 container = PickleDatasetContainer(data_path)
@@ -568,7 +568,7 @@ class AddressParser:
                 seq2seq_params = {"encoder_hidden_size": 512, "decoder_hidden_size": 512}
                 address_components = {"ATag":0, "AnotherTag": 1, "EOS": 2}
 
-                address_parser = AddressParser(device=0) #on gpu device 0
+                address_parser = AddressParser(device=0) # On GPU device 0
                 data_path = "path_to_a_pickle_dataset.p"
 
                 container = PickleDatasetContainer(data_path)
@@ -580,7 +580,7 @@ class AddressParser:
 
             .. code-block:: python
 
-                address_parser = AddressParser(device=0) #on gpu device 0
+                address_parser = AddressParser(device=0) # On GPU device 0
                 data_path = "path_to_a_pickle_dataset.p"
 
                 container = PickleDatasetContainer(data_path)
@@ -758,7 +758,7 @@ class AddressParser:
 
             .. code-block:: python
 
-                address_parser = AddressParser(device=0) #on gpu device 0
+                address_parser = AddressParser(device=0) # On GPU device 0
                 data_path = "path_to_a_pickle_test_dataset.p"
 
                 test_container = PickleDatasetContainer(data_path, is_training_container=False)
@@ -771,7 +771,7 @@ class AddressParser:
 
                 address_components = {"ATag":0, "AnotherTag": 1, "EOS": 2}
 
-                address_parser = AddressParser(device=0) #on gpu device 0
+                address_parser = AddressParser(device=0) # On GPU device 0
 
                 # Train phase
                 data_path = "path_to_a_pickle_train_dataset.p"

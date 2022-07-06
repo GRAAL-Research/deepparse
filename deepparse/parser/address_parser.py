@@ -260,6 +260,7 @@ class AddressParser:
         num_workers: int = 0,
         with_hyphen_split: bool = False,
     ) -> Union[FormattedParsedAddress, List[FormattedParsedAddress]]:
+        # pylint: disable=too-many-arguments
         """
         Callable method to parse the components of an address or a list of address.
 

@@ -11,7 +11,7 @@ pip install -Ur tests/requirements.txt
 pip install -Ur requirements.txt
 
 # Run pytest from conda env
-echo "Running test in Conda - No update"
+echo "*****Running test in Conda*****"
 # --live-stream is to remove the Conda capture of the stream
 conda run -n deepparse_pytest_3_10 --live-stream pytest --cov ./deepparse --cov-report html --cov-report xml --cov-config=.coveragerc
 

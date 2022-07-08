@@ -12,7 +12,7 @@ from fasttext.FastText import _FastText
 from deepparse import (
     download_fasttext_embeddings,
     download_fasttext_magnitude_embeddings,
-    download_from_url,
+    download_from_public_repository,
     load_fasttext_embeddings,
 )
 from deepparse.fasttext_tools import _print_progress
@@ -84,7 +84,7 @@ class ToolsTests(CaptureOutputTestCase):
         with gzip.open(self.a_fasttext_light_gz_file_name_path, "wb") as f:
             f.write(self.a_fasttext_light_name_path.encode("utf-8"))
 
-        with patch("deepparse.fasttext_tools.download_from_url") as _:
+        with patch("deepparse.fasttext_tools.download_from_public_repository") as _:
             actual = download_fasttext_magnitude_embeddings(self.a_directory_path)
             expected = self.a_fasttext_light_name_path
             self.assertEqual(expected, actual)
@@ -103,7 +103,7 @@ class ToolsTests(CaptureOutputTestCase):
         with gzip.open(self.a_fasttext_light_gz_file_name_path, "wb") as f:
             f.write(self.a_fasttext_light_name_path.encode("utf-8"))
 
-        with patch("deepparse.fasttext_tools.download_from_url"):
+        with patch("deepparse.fasttext_tools.download_from_public_repository"):
             download_fasttext_magnitude_embeddings(self.a_directory_path, verbose=False)
 
             expected = ""
@@ -123,7 +123,7 @@ class ToolsTests(CaptureOutputTestCase):
         with gzip.open(self.a_fasttext_light_gz_file_name_path, "wb") as f:
             f.write(self.a_fasttext_light_name_path.encode("utf-8"))
 
-        with patch("deepparse.fasttext_tools.download_from_url"):
+        with patch("deepparse.fasttext_tools.download_from_public_repository"):
             download_fasttext_magnitude_embeddings(self.a_directory_path, verbose=True)
 
             expected = (
@@ -225,7 +225,7 @@ class ToolsTests(CaptureOutputTestCase):
         self.assertIn(expected, actual)
 
     def test_givenAFasttextEmbeddingsToLoad_whenLoad_thenLoadProperly(self):
-        download_from_url("fake_embeddings_cc.fr.300", self.a_directory_path, "bin")
+        download_from_public_repository("fake_embeddings_cc.fr.300", self.a_directory_path, "bin")
         embeddings_path = self.a_fake_embeddings_path
 
         embeddings = load_fasttext_embeddings(embeddings_path)

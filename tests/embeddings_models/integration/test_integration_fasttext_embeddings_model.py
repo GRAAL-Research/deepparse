@@ -8,7 +8,7 @@ from fasttext.FastText import _FastText
 from gensim.models.fasttext import FastTextKeyedVectors
 from torch.utils.data import DataLoader
 
-from deepparse import download_from_url
+from deepparse import download_from_public_repository
 from deepparse.embeddings_models import FastTextEmbeddingsModel
 from tests.embeddings_models.integration.tools import MockedDataTransform
 from tests.parser.integration.base_retrain import AddressParserRetrainTestCase
@@ -21,7 +21,7 @@ class FastTextEmbeddingsModelIntegrationTest(AddressParserRetrainTestCase):
         cls.file_name = "fake_embeddings_cc.fr.300"  # We download fake embeddings for the tests
         cls.temp_dir_obj = TemporaryDirectory()
         cls.fake_cache_path = os.path.join(cls.temp_dir_obj.name, "fake_cache")
-        download_from_url(cls.file_name, cls.fake_cache_path, "bin")
+        download_from_public_repository(cls.file_name, cls.fake_cache_path, "bin")
 
         cls.a_fasttext_model_path = os.path.join(cls.fake_cache_path, cls.file_name + ".bin")
 

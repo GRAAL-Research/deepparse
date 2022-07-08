@@ -8,7 +8,7 @@ from unittest import TestCase, skipIf
 
 import torch
 
-from deepparse import download_from_url
+from deepparse import download_from_public_repository
 from deepparse.network import Encoder
 
 
@@ -25,7 +25,7 @@ class EncoderCase(TestCase):
 
         cls.temp_dir_obj = TemporaryDirectory()
         cls.weights_dir = os.path.join(cls.temp_dir_obj.name, "weights")
-        download_from_url(
+        download_from_public_repository(
             file_name="to_predict_fasttext",
             saving_dir=cls.weights_dir,
             file_extension="p",

@@ -9,7 +9,7 @@ from unittest import TestCase
 
 import torch
 
-from deepparse import download_from_url
+from deepparse import download_from_public_repository
 from deepparse.dataset_container import PickleDatasetContainer, DatasetContainer
 from deepparse.parser import AddressParser, FormattedParsedAddress
 
@@ -43,7 +43,7 @@ class AddressParserPredictNewParamsBase(TestCase):
         os.makedirs(cls.a_data_saving_dir, exist_ok=True)
         file_extension = "p"
         training_dataset_name = "sample_incomplete_data"
-        download_from_url(training_dataset_name, cls.a_data_saving_dir, file_extension=file_extension)
+        download_from_public_repository(training_dataset_name, cls.a_data_saving_dir, file_extension=file_extension)
 
         cls.training_container = PickleDatasetContainer(
             os.path.join(cls.a_data_saving_dir, training_dataset_name + "." + file_extension)

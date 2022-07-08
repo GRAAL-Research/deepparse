@@ -7,7 +7,7 @@ from urllib.request import urlopen
 
 from fasttext.FastText import _FastText
 
-from .tools import download_from_url
+from .tools import download_from_public_repository
 
 
 def download_fasttext_magnitude_embeddings(cache_dir: str, verbose: bool = True, saving_dir=None) -> str:
@@ -34,7 +34,7 @@ def download_fasttext_magnitude_embeddings(cache_dir: str, verbose: bool = True,
                 "this process will take several minutes."
             )
         extension = extension + ".gz"
-        download_from_url(file_name=model, saving_dir=cache_dir, file_extension=extension)
+        download_from_public_repository(file_name=model, saving_dir=cache_dir, file_extension=extension)
         gz_file_name = file_name + ".gz"
         with gzip.open(os.path.join(cache_dir, gz_file_name), "rb") as f:
             with open(os.path.join(cache_dir, file_name), "wb") as f_out:

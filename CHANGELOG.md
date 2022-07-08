@@ -232,3 +232,5 @@ to `cache_dir`. `saving_dir` is now deprecated and will be remove in version 0.8
 - Add ListDatasetContainer for Python list dataset.
 
 ## dev
+
+- Refactored function `download_from_url` to `download_from_public_repository`.

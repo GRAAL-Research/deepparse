@@ -1,6 +1,7 @@
 import os
 import shutil
 import warnings
+from pathlib import Path
 from typing import List
 
 import poutyne
@@ -37,7 +38,7 @@ def latest_version(model: str, cache_path: str, verbose: bool) -> bool:
         tmp_cache = os.path.join(cache_path, "tmp")
         os.makedirs(tmp_cache, exist_ok=True)
 
-        download_from_url(model, tmp_cache, "version")
+        download_from_public_repository(model, tmp_cache, "version")
 
         # Reading of the server-side version
         with open(os.path.join(tmp_cache, model + ".version"), encoding="utf-8") as remote_model_hash_file:
@@ -81,16 +82,16 @@ def latest_version(model: str, cache_path: str, verbose: bool) -> bool:
     return is_latest_version
 
 
-def download_from_url(file_name: str, saving_dir: str, file_extension: str):
+def download_from_public_repository(file_name: str, saving_dir: str, file_extension: str):
     """
-    Simple function to download the content of a file from a distant repository.
+    Simple function to download the content of a file from Deepparse public repository.
     The repository URL string is  ̀`'https://graal.ift.ulaval.ca/public/deepparse/{}.{}'``
     where the first bracket is the file name and the second is the file extension.
     """
     url = BASE_URL.format(file_name, file_extension)
     r = requests.get(url, timeout=5)
     r.raise_for_status()  # Raise exception
-    os.makedirs(saving_dir, exist_ok=True)
+    Path(saving_dir).mkdir(parents=True, exist_ok=True)
     with open(os.path.join(saving_dir, f"{file_name}.{file_extension}"), "wb") as file:
         file.write(r.content)
 
@@ -105,8 +106,8 @@ def download_weights(model: str, saving_dir: str, verbose: bool = True) -> None:
     """
     if verbose:
         print(f"Downloading the weights for the network {model}.")
-    download_from_url(model, saving_dir, "ckpt")
-    download_from_url(model, saving_dir, "version")
+    download_from_public_repository(model, saving_dir, "ckpt")
+    download_from_public_repository(model, saving_dir, "version")
 
 
 def handle_poutyne_version() -> str:

@@ -11,7 +11,7 @@ from requests import HTTPError
 from urllib3.exceptions import MaxRetryError
 
 from deepparse import (
-    download_from_url,
+    download_from_public_repository,
     latest_version,
     download_weights,
     handle_poutyne_version,
@@ -72,8 +72,8 @@ class ToolsTests(CaptureOutputTestCase):
         an_http_error_msg = "An http error message"
         response_mock = MagicMock()
         response_mock.status_code = 400
-        with patch("deepparse.tools.download_from_url") as download_from_url_mock:
-            download_from_url_mock.side_effect = HTTPError(an_http_error_msg, response=response_mock)
+        with patch("deepparse.tools.download_from_public_repository") as download_from_public_repository_mock:
+            download_from_public_repository_mock.side_effect = HTTPError(an_http_error_msg, response=response_mock)
 
             self.assertTrue(latest_version("bpemb", self.fake_cache_path, verbose=False))
 
@@ -83,8 +83,8 @@ class ToolsTests(CaptureOutputTestCase):
         an_http_error_msg = "An http error message"
         response_mock = MagicMock()
         response_mock.status_code = 300
-        with patch("deepparse.tools.download_from_url") as download_from_url_mock:
-            download_from_url_mock.side_effect = HTTPError(an_http_error_msg, response=response_mock)
+        with patch("deepparse.tools.download_from_public_repository") as download_from_public_repository_mock:
+            download_from_public_repository_mock.side_effect = HTTPError(an_http_error_msg, response=response_mock)
 
             with self.assertRaises(HTTPError):
                 latest_version("bpemb", self.fake_cache_path, verbose=False)
@@ -97,8 +97,8 @@ class ToolsTests(CaptureOutputTestCase):
         an_http_error_msg = "An http error message"
         response_mock = MagicMock()
         response_mock.status_code = 400
-        with patch("deepparse.tools.download_from_url") as download_from_url_mock:
-            download_from_url_mock.side_effect = HTTPError(an_http_error_msg, response=response_mock)
+        with patch("deepparse.tools.download_from_public_repository") as download_from_public_repository_mock:
+            download_from_public_repository_mock.side_effect = HTTPError(an_http_error_msg, response=response_mock)
 
             with self.assertWarns(UserWarning):
                 latest_version("bpemb", self.fake_cache_path, verbose=True)
@@ -108,8 +108,8 @@ class ToolsTests(CaptureOutputTestCase):
     ):
         self.create_cache_version("bpemb", self.latest_fasttext_version)
 
-        with patch("deepparse.tools.download_from_url") as download_from_url_mock:
-            download_from_url_mock.side_effect = MaxRetryError(pool=MagicMock(), url=MagicMock())
+        with patch("deepparse.tools.download_from_public_repository") as download_from_public_repository_mock:
+            download_from_public_repository_mock.side_effect = MaxRetryError(pool=MagicMock(), url=MagicMock())
 
             self.assertTrue(latest_version("bpemb", self.fake_cache_path, verbose=False))
 
@@ -118,8 +118,8 @@ class ToolsTests(CaptureOutputTestCase):
     ):
         self.create_cache_version("bpemb", self.latest_fasttext_version)
 
-        with patch("deepparse.tools.download_from_url") as download_from_url_mock:
-            download_from_url_mock.side_effect = MaxRetryError(pool=MagicMock(), url=MagicMock())
+        with patch("deepparse.tools.download_from_public_repository") as download_from_public_repository_mock:
+            download_from_public_repository_mock.side_effect = MaxRetryError(pool=MagicMock(), url=MagicMock())
 
             with self.assertWarns(UserWarning):
                 latest_version("bpemb", self.fake_cache_path, verbose=True)
@@ -136,7 +136,7 @@ class ToolsTests(CaptureOutputTestCase):
     def test_givenFasttextVersion_whenDownloadOk_thenDownloadIt(self):
         file_name = "fasttext"
 
-        download_from_url(file_name, self.fake_cache_path, self.a_file_extension)
+        download_from_public_repository(file_name, self.fake_cache_path, self.a_file_extension)
 
         self.assertTrue(os.path.exists(os.path.join(self.fake_cache_path, f"{file_name}.{self.a_file_extension}")))
 
@@ -144,12 +144,12 @@ class ToolsTests(CaptureOutputTestCase):
         wrong_file_name = "wrong_fasttext"
 
         with self.assertRaises(requests.exceptions.HTTPError):
-            download_from_url(wrong_file_name, self.fake_cache_path, self.a_file_extension)
+            download_from_public_repository(wrong_file_name, self.fake_cache_path, self.a_file_extension)
 
     def test_givenBPEmbVersion_whenDownloadOk_thenDownloadIt(self):
         file_name = "bpemb"
 
-        download_from_url(file_name, self.fake_cache_path, self.a_file_extension)
+        download_from_public_repository(file_name, self.fake_cache_path, self.a_file_extension)
 
         self.assertTrue(os.path.exists(os.path.join(self.fake_cache_path, f"{file_name}.{self.a_file_extension}")))
 
@@ -157,16 +157,16 @@ class ToolsTests(CaptureOutputTestCase):
         wrong_file_name = "wrong_bpemb"
 
         with self.assertRaises(requests.exceptions.HTTPError):
-            download_from_url(wrong_file_name, self.fake_cache_path, self.a_file_extension)
+            download_from_public_repository(wrong_file_name, self.fake_cache_path, self.a_file_extension)
 
     def test_givenModelWeightsToDownload_whenDownloadOk_thenWeightsAreDownloaded(self):
-        with patch("deepparse.tools.download_from_url") as downloader:
+        with patch("deepparse.tools.download_from_public_repository") as downloader:
             download_weights(model="fasttext", saving_dir="./", verbose=self.verbose)
 
             downloader.assert_any_call("fasttext", "./", "ckpt")
             downloader.assert_any_call("fasttext", "./", "version")
 
-        with patch("deepparse.tools.download_from_url") as downloader:
+        with patch("deepparse.tools.download_from_public_repository") as downloader:
             download_weights(model="bpemb", saving_dir="./", verbose=self.verbose)
 
             downloader.assert_any_call("bpemb", "./", "ckpt")
@@ -176,7 +176,7 @@ class ToolsTests(CaptureOutputTestCase):
         self,
     ):
         self._capture_output()
-        with patch("deepparse.tools.download_from_url"):
+        with patch("deepparse.tools.download_from_public_repository"):
             download_weights(model="fasttext", saving_dir="./", verbose=True)
 
         actual = self.test_out.getvalue().strip()
@@ -186,7 +186,7 @@ class ToolsTests(CaptureOutputTestCase):
 
     def test_givenModelBPEmbWeightsToDownloadVerbose_whenDownloadOk_thenVerbose(self):
         self._capture_output()
-        with patch("deepparse.tools.download_from_url"):
+        with patch("deepparse.tools.download_from_public_repository"):
             download_weights(model="bpemb", saving_dir="./", verbose=True)
 
         actual = self.test_out.getvalue().strip()

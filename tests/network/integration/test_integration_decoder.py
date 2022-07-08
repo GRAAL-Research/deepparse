@@ -8,7 +8,7 @@ from unittest import TestCase, skipIf
 
 import torch
 
-from deepparse import download_from_url
+from deepparse import download_from_public_repository
 from deepparse.network import Decoder
 
 
@@ -18,7 +18,7 @@ class DecoderCase(TestCase):
         cls.temp_dir_obj = TemporaryDirectory()
         cls.weights_dir = os.path.join(cls.temp_dir_obj.name, "./weights")
 
-        download_from_url(file_name="decoder_hidden", saving_dir=cls.weights_dir, file_extension="p")
+        download_from_public_repository(file_name="decoder_hidden", saving_dir=cls.weights_dir, file_extension="p")
 
         cls.a_torch_device = torch.device("cuda:0")
         cls.a_cpu_device = torch.device("cpu")

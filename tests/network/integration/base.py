@@ -7,7 +7,7 @@ from unittest import TestCase
 
 import torch
 
-from deepparse import download_from_url, download_weights
+from deepparse import download_from_public_repository, download_weights
 
 
 class Seq2SeqIntegrationTestCase(TestCase):
@@ -30,13 +30,13 @@ class Seq2SeqIntegrationTestCase(TestCase):
         cls.temp_dir_obj = TemporaryDirectory()
         cls.weights_dir = os.path.join(cls.temp_dir_obj.name, "./weights")
 
-        download_from_url(file_name="to_predict_bpemb", saving_dir=cls.weights_dir, file_extension="p")
-        download_from_url(
+        download_from_public_repository(file_name="to_predict_bpemb", saving_dir=cls.weights_dir, file_extension="p")
+        download_from_public_repository(
             file_name="to_predict_fasttext",
             saving_dir=cls.weights_dir,
             file_extension="p",
         )
-        download_from_url(file_name="decoder_hidden", saving_dir=cls.weights_dir, file_extension="p")
+        download_from_public_repository(file_name="decoder_hidden", saving_dir=cls.weights_dir, file_extension="p")
 
         cls.path = os.path.join(cls.temp_dir_obj.name, ".cache", "deepparse")
         cls.retrain_file_name_format = "retrained_{}_address_parser"
@@ -50,7 +50,7 @@ class Seq2SeqIntegrationTestCase(TestCase):
 
         # We also download the "pre_trained" model
         model = cls.retrain_file_name_format.format(model_type)
-        download_from_url(file_name=model, saving_dir=cache_dir, file_extension="ckpt")
+        download_from_public_repository(file_name=model, saving_dir=cache_dir, file_extension="ckpt")
         cls.re_trained_output_dim = 3
 
     @classmethod

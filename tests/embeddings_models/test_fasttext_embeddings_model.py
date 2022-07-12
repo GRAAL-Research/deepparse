@@ -31,7 +31,7 @@ class FasttextEmbeddingsModelTest(TestCase):
 
             loader.assert_called_with(self.a_path)
 
-    @skipIf(platform.system().lower() == "Windows", "Integration test not on windows env.")
+    @skipIf(platform.system().lower() == "windows", "Integration test not on windows env.")
     def test_whenCalledToEmbed_thenShouldCallLoadedModel(self):
         with patch(
             "deepparse.embeddings_models.fasttext_embeddings_model.load_fasttext_embeddings",

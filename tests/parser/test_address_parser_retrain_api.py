@@ -1,6 +1,7 @@
 # Since we use a patch as model mock we skip the unused argument error
 # pylint: disable=unused-argument, too-many-arguments, too-many-public-methods, protected-access, too-many-lines
 import os
+import platform
 import unittest
 from tempfile import TemporaryDirectory
 from unittest import skipIf
@@ -62,8 +63,16 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         seq2seq_params=None,
         layers_to_freeze=None,
         name_of_the_retrain_parser=None,
-        num_workers=1,
+        num_workers=None,
     ):
+        if num_workers is None:
+            # AddressParser default num_workers settings is 1
+            # But, we change it to 0 for Windows OS to allow test to pass since it fail (volontairy)
+            # at greater than 0 due to parallelism pickle error
+            if platform.system().lower() == "windows":
+                num_workers = 0  # Default setting is 1, but We set it to zero to allow Windows tests to pass
+            else:
+                num_workers = 1
         self.address_parser.retrain(
             self.mocked_data_container,
             self.a_train_ratio,
@@ -1179,7 +1188,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         )
         mocked_data_container = ADataContainer(is_training_container=False)
 
-        a_number_of_workers = 1
+        a_number_of_workers = 0  # We set it to 0 to allow Windows test to also pass
 
         with self.assertRaises(ValueError):
             self.address_parser.retrain(

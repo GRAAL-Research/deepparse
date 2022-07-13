@@ -8,7 +8,7 @@
 <meta content="https://deepparse.org/_static/logos/deepparse.png" property="og:image" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Here is deepparse &mdash; deepparse 0.8 documentation</title>
+  <title>Here is Deepparse &mdash; deepparse 0.8 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -78,7 +78,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="#" class="icon icon-home"></a> &raquo;</li>
-      <li>Here is deepparse</li>
+      <li>Here is Deepparse</li>
       <li class="wy-breadcrumbs-aside">
               <!-- User defined GitHub URL -->
               <a href="https://github.com/GRAAL-Research/deepparse" class="fa fa-github"> Edit on GitHub</a>
@@ -93,7 +93,7 @@
 <a href="https://github.com/GRAAL-Research/deepparse-address-data">
     <img src="https://img.shields.io/badge/Download%20Dataset-blue?style=for-the-badge&logo=download" alt="No message"/></a>
 </center><section id="here-is-deepparse">
-<h1>Here is deepparse<a class="headerlink" href="#here-is-deepparse" title="Permalink to this heading"></a></h1>
+<h1>Here is Deepparse<a class="headerlink" href="#here-is-deepparse" title="Permalink to this heading"></a></h1>
 <p>Deepparse is a state-of-the-art library for parsing multinational street addresses using deep learning.</p>
 <p>Use deepparse to</p>
 <ul class="simple">
@@ -102,7 +102,7 @@
 <li><p>retrain our pretrained models on new data to improve parsing on specific country address patterns,</p></li>
 <li><p>retrain our pretrained models with new prediction tags easily,</p></li>
 <li><p>retrain our pretrained models with or without freezing some layers,</p></li>
-<li><p>train a new seq2seq addresses parsing models easily using a new model configuration.</p></li>
+<li><p>train a new Seq2Seq addresses parsing models easily using a new model configuration.</p></li>
 </ul>
 <p>Deepparse is compatible with the <strong>latest version of PyTorch</strong> and  <strong>Python &gt;= 3.7</strong>.</p>
 </section>
@@ -786,14 +786,14 @@ to achieve an interesting performance. Attention mechanisms improve performance 
 </ul>
 </div></blockquote>
 <section id="parse-addresses-from-the-command-line">
-<h2>Parse Addresses from the Command Line<a class="headerlink" href="#parse-addresses-from-the-command-line" title="Permalink to this heading"></a></h2>
+<h2>Parse Addresses From the Command Line<a class="headerlink" href="#parse-addresses-from-the-command-line" title="Permalink to this heading"></a></h2>
 <p>You can also use our cli to parse addresses using:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>parse &lt;parsing_model&gt; &lt;dataset_path&gt; &lt;export_file_name&gt;
 </pre></div>
 </div>
 </section>
 <section id="parse-addresses-using-your-own-retrained-model">
-<h2>Parse addresses using your own retrained model<a class="headerlink" href="#parse-addresses-using-your-own-retrained-model" title="Permalink to this heading"></a></h2>
+<h2>Parse Addresses Using Your Own Retrained Model<a class="headerlink" href="#parse-addresses-using-your-own-retrained-model" title="Permalink to this heading"></a></h2>
 <p>See <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/master/examples/retrained_model_parsing.py">here</a> for a complete example.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span>
     <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;bpemb&quot;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">path_to_retrained_model</span><span class="o">=</span><span class="s2">&quot;path/to/retrained/bpemb/model.p&quot;</span><span class="p">)</span>
@@ -811,7 +811,7 @@ for a complete example using CSV.</p>
 </pre></div>
 </div>
 <p>One can also freeze some layers to speed up the training using the <code class="docutils literal notranslate"><span class="pre">layers_to_freeze</span></code> parameter.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span><span class="o">.</span><span class="n">retrain</span><span class="p">(</span><span class="n">training_container</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">layers_to_freeze</span><span class="o">=</span><span class="s2">&quot;seq2seq2&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span><span class="o">.</span><span class="n">retrain</span><span class="p">(</span><span class="n">training_container</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">layers_to_freeze</span><span class="o">=</span><span class="s2">&quot;seq2seq&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Or you can also give a specific name to the retrained model. This name will be use as the model name (for print and
@@ -821,7 +821,7 @@ class name) when reloading it.</p>
 </div>
 </section>
 <section id="retrain-a-model-with-an-attention-mechanism">
-<h2>Retrain a Model with an attention mechanism<a class="headerlink" href="#retrain-a-model-with-an-attention-mechanism" title="Permalink to this heading"></a></h2>
+<h2>Retrain a Model With an Attention Mechanism<a class="headerlink" href="#retrain-a-model-with-an-attention-mechanism" title="Permalink to this heading"></a></h2>
 <p>See <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/master/examples/retrain_attention_model.py">here</a> for a complete example.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># We will retrain the fasttext version of our pretrained model.</span>
 <span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;fasttext&quot;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">attention_mechanism</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -839,7 +839,7 @@ class name) when reloading it.</p>
 </div>
 </section>
 <section id="retrain-a-seq2seq-model-from-scratch">
-<h2>Retrain a Seq2seq model from scratch<a class="headerlink" href="#retrain-a-seq2seq-model-from-scratch" title="Permalink to this heading"></a></h2>
+<h2>Retrain a Seq2Seq Model From Scratch<a class="headerlink" href="#retrain-a-seq2seq-model-from-scratch" title="Permalink to this heading"></a></h2>
 <p>See  <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/master/examples/retrain_with_new_seq2seq_params.py">here</a> for
 a complete example.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">seq2seq_params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;encoder_hidden_size&quot;</span><span class="p">:</span> <span class="mi">512</span><span class="p">,</span> <span class="s2">&quot;decoder_hidden_size&quot;</span><span class="p">:</span> <span class="mi">512</span><span class="p">}</span>
@@ -848,7 +848,7 @@ a complete example.</p>
 </div>
 </section>
 <section id="download-our-models">
-<h2>Download our Models<a class="headerlink" href="#download-our-models" title="Permalink to this heading"></a></h2>
+<h2>Download Our Models<a class="headerlink" href="#download-our-models" title="Permalink to this heading"></a></h2>
 <dl class="simple">
 <dt>Here are the URLs to download our pretrained models directly</dt><dd><ul class="simple">
 <li><p><a class="reference external" href="https://graal.ift.ulaval.ca/public/deepparse/fasttext.ckpt">FastText</a>,</p></li>
@@ -938,7 +938,7 @@ details on this matter.</p>
 </div>
 </section>
 <section id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this heading"></a></h1>
+<h1>Indices and Tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this heading"></a></h1>
 <ul class="simple">
 <li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
 <li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>

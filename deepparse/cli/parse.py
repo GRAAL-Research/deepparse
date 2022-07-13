@@ -194,7 +194,7 @@ def get_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--log",
         help=wrap(
-            "Either or not to log the parsing process into a `.log` file exported at the same place as the "
+            "Either or not to log the parsing process into a '.log' file exported at the same place as the "
             "parsed data using the same name as the export file. "
             "The bool value can be (not case sensitive) 'true/false', 't/f', 'yes/no', 'y/n' or '0/1'."
         ),

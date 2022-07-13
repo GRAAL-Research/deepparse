@@ -109,8 +109,8 @@ class FormattedParsedAddress:
     ) -> str:
         """
         Method to format the address components in a specific order. We also filter the empty components (None).
-        By default, the order is `'StreetNumber, Unit, StreetName, Orientation, Municipality, Province, PostalCode,
-        GeneralDelivery'` and we filter the empty components.
+        By default, the order is ``'StreetNumber, Unit, StreetName, Orientation, Municipality, Province, PostalCode,
+        GeneralDelivery'`` and we filter the empty components.
 
         Args:
             fields (Union[list, None]): Optional argument to define the fields to order the address components of
@@ -179,8 +179,8 @@ class FormattedParsedAddress:
 
         Args:
             fields (Union[list, None]): Optional argument to define the fields to extract from the address and the
-                order of it. If None, will use the default order and value `'StreetNumber, Unit, StreetName,
-                Orientation, Municipality, Province, PostalCode, GeneralDelivery'`.
+                order of it. If None, will use the default order and value ``'StreetNumber, Unit, StreetName,
+                Orientation, Municipality, Province, PostalCode, GeneralDelivery'``.
 
         Return:
             A dictionary where the keys are the selected (or default) fields and the values are the corresponding value
@@ -200,8 +200,8 @@ class FormattedParsedAddress:
 
         Args:
             fields (Union[list, None]): Optional argument to define the fields to extract from the address and its
-                order. If None, it will use the default order and value `'StreetNumber, Unit, StreetName,
-                Orientation, Municipality, Province, PostalCode, GeneralDelivery'`.
+                order. If None, it will use the default order and value ``'StreetNumber, Unit, StreetName,
+                Orientation, Municipality, Province, PostalCode, GeneralDelivery'``.
 
         Return:
             A list of tuples where the first element of the tuples are the value of the address components

@@ -16,12 +16,12 @@ class DataTransform:
     Args:
         vectorizer (~deepparse.deepparse.train_vectorizer.TrainVectorizer): Vectorizer to vectorize the data
          (i.e. transform into word embedding and tag idx).
-        model_type (str): See AddressParser for model type. Only `fasttext-light` is not supported due to
-            `pymagnitude-light` incompatibility.
+        model_type (str): See AddressParser for model type. Only ``fasttext-light`` is not supported due to
+            ``pymagnitude-light`` incompatibility.
 
         Note:
-        Since Windows uses `spawn` instead of `fork` during multiprocess (for the data loading pre-processing
-        `num_worker` > 0) we use the Gensim model, which takes more RAM (~10 GO) than the Fasttext one (~8 GO).
+        Since Windows uses ``spawn`` instead of ``fork`` during multiprocess (for the data loading pre-processing
+        ``num_worker`` > 0) we use the Gensim model, which takes more RAM (~10 GO) than the Fasttext one (~8 GO).
         It also takes a longer time to load. See here the
         `issue <https://github.com/GRAAL-Research/deepparse/issues/89>`_.
     """

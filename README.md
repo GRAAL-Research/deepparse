@@ -14,7 +14,7 @@
 [![Rate on Openbase](https://badges.openbase.com/python/rating/deepparse.svg)](https://openbase.com/python/deepparse?utm_source=embedded&utm_medium=badge&utm_campaign=rate-badge)
 </div>
 
-## Here is deepparse.
+## Here is Deepparse.
 
 Deepparse is a state-of-the-art library for parsing multinational street addresses using deep learning.
 
@@ -25,7 +25,7 @@ Use deepparse to
 - retrain our pretrained models on new data to improve parsing on specific country address patterns,
 - retrain our pretrained models with new prediction tags easily,
 - retrain our pretrained models with or without freezing some layers,
-- train a new seq2seq addresses parsing models easily using a new model configuration.
+- train a new Seq2Seq addresses parsing models easily using a new model configuration.
 
 Read the documentation at [deepparse.org](https://deepparse.org).
 
@@ -178,7 +178,7 @@ The default predictions tags are the following
 - "Orientation": for the street orientation (e.g. west, east),
 - "GeneralDelivery": for other delivery information.
 
-### Parse Addresses from the Command Line
+### Parse Addresses From the Command Line
 
 You can also use our cli to parse addresses using:
 
@@ -187,7 +187,7 @@ You can also use our cli to parse addresses using:
     parse <parsing_model> <dataset_path> <export_file_name>
 ```
 
-### Parse addresses using your own retrained model
+### Parse Addresses Using Your Own Retrained Model
 
 > See [here](https://github.com/GRAAL-Research/deepparse/blob/master/examples/retrained_model_parsing.py) for a complete example.
 
@@ -215,7 +215,7 @@ address_parser.retrain(training_container, 0.8, epochs=5, batch_size=8)
 One can also freeze some layers to speed up the training using the ``layers_to_freeze`` parameter.
 
 ```python
-address_parser.retrain(training_container, 0.8, epochs=5, batch_size=8, layers_to_freeze="seq2seq2")
+address_parser.retrain(training_container, 0.8, epochs=5, batch_size=8, layers_to_freeze="seq2seq")
 ```
 
 Or you can also give a specific name to the retrained model. This name will be use as the model name (for print and 
@@ -225,7 +225,7 @@ class name) when reloading it.
 address_parser.retrain(training_container, 0.8, epochs=5, batch_size=8, name_of_the_retrain_parser="MyNewParser")
 ```
 
-### Retrain a Model with an attention mechanism
+### Retrain a Model With an Attention Mechanism
 
 > See [here](https://github.com/GRAAL-Research/deepparse/blob/master/examples/retrain_attention_model.py) for a complete example.
 
@@ -249,7 +249,7 @@ address_parser.retrain(training_container, 0.8, epochs=1, batch_size=128,
 
 ```
 
-### Retrain a Seq2seq model from scratch
+### Retrain a Seq2Seq Model From Scratch
 
 > See [here](https://github.com/GRAAL-Research/deepparse/blob/master/examples/retrain_with_new_seq2seq_params.py) for
 > a complete example.
@@ -262,7 +262,7 @@ address_parser.retrain(training_container, 0.8, epochs=1, batch_size=128,
 
 ```
 
-### Download our Models
+### Download Our Models
 
 Here are the URLs to download our pretrained models directly
 

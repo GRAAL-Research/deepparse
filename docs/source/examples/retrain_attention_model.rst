@@ -1,7 +1,7 @@
 .. role:: hidden
     :class: hidden-section
 
-Retrain an attention mechanism model
+Retrain an Attention Mechanism Model
 ************************************
 
 .. code-block:: python

@@ -105,10 +105,10 @@ def infer_model_type(checkpoint_weights: OrderedDict, attention_mechanism: bool)
     Function to infer the model type using the weights matrix.
     We first try to use the "model_type" key added by our retrain process.
     If this fails, we infer it using our knowledge of the layers' names.
-    For example, BPEmb model uses an embedding network, thus, if `embedding_network.model.weight_ih_l0` is present,
+    For example, BPEmb model uses an embedding network, thus, if ``embedding_network.model.weight_ih_l0`` is present,
     we can say that it is such a type; otherwise, it is a FastText model.
     Finally, to handle the attention model, we use a similar approach but using the
-    `decoder.linear_attention_mechanism_encoder_outputs.weight` layer name to deduct the presence of
+    ``decoder.linear_attention_mechanism_encoder_outputs.weight`` layer name to deduct the presence of
     attention mechanism.
 
     Args:

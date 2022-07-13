@@ -44,16 +44,16 @@ def main(args=None) -> None:
     using most of the arguments as the :meth:`~AddressParser.retrain` method. By default, all the parameters have
     the same default value as the :meth:`~AddressParser.retrain` method. The supported parameters are the following:
 
-    - `train_ratio`,
-    - `batch_size`,
-    - `epochs`,
-    - `num_workers`,
-    - `learning_rate`,
-    - `seed`,
-    - `logging_path`,
-    - `disable_tensorboard`,
-    - `layers_to_freeze`, and
-    - `name_of_the_retrain_parser`.
+    - ``train_ratio``,
+    - ``batch_size``,
+    - ``epochs``,
+    - ``num_workers``,
+    - ``learning_rate``,
+    - ``seed``,
+    - ``logging_path``,
+    - ``disable_tensorboard``,
+    - ``layers_to_freeze``, and
+    - ``name_of_the_retrain_parser``.
 
 
     Examples of usage:

@@ -17,8 +17,8 @@ class FastTextEmbeddingsModel(EmbeddingsModel):
        verbose (bool): Either or not to make the loading of the embeddings verbose.
 
     Note:
-        Since Windows uses `spawn` instead of `fork` during multiprocess (for the data loading pre-processing
-        `num_worker` > 0) we use the Gensim model, which takes more RAM (~10 GO) than the Fasttext one (~8 GO).
+        Since Windows uses ``spawn`` instead of ``fork`` during multiprocess (for the data loading pre-processing
+        ``num_worker`` > 0) we use the Gensim model, which takes more RAM (~10 GO) than the Fasttext one (~8 GO).
         It also takes a longer time to load. See here the
         `issue <https://github.com/GRAAL-Research/deepparse/issues/89>`_.
     """

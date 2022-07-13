@@ -82,7 +82,15 @@ def latest_version(model: str, cache_path: str, verbose: bool) -> bool:
     return is_latest_version
 
 
-def download_from_public_repository(file_name: str, saving_dir: str, file_extension: str):
+def download_from_url(file_name: str, saving_dir: str, file_extension: str) -> None:
+    warnings.warn(
+        "download_from_url is deprecated; use download_from_public_repository to download files from "
+        "our public repository. The function will be removed in the next major release."
+    )
+    download_from_public_repository(file_name=file_name, saving_dir=saving_dir, file_extension=file_extension)
+
+
+def download_from_public_repository(file_name: str, saving_dir: str, file_extension: str) -> None:
     """
     Simple function to download the content of a file from Deepparse public repository.
     The repository URL string is  ̀`'https://graal.ift.ulaval.ca/public/deepparse/{}.{}'``
@@ -122,7 +130,7 @@ def handle_poutyne_version() -> str:
     return version
 
 
-def valid_poutyne_version(min_major: int = 1, min_minor: int = 2):
+def valid_poutyne_version(min_major: int = 1, min_minor: int = 2) -> bool:
     """
     Validate Poutyne version is greater than min_major.min_minor for using a str checkpoint. Some version before
     does not support all the features we need. By default, min_major.min_minor equal version 1.2 which is the

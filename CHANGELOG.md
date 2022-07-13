@@ -235,3 +235,5 @@ to `cache_dir`. `saving_dir` is now deprecated and will be remove in version 0.8
 
 - Refactored function `download_from_url` to `download_from_public_repository`.
 - Add error management when retrain a FastText like model on Windows with a number of workers (`num_workers`) greater than 0.
+- Improve dev tooling
+- Improve CI

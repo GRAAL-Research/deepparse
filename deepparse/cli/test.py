@@ -82,7 +82,7 @@ def main(args=None) -> None:
     batch_size = parsed_args.batch_size
     num_workers = parsed_args.num_workers
     seed = parsed_args.seed
-    parser_args = {
+    test_arguments = {
         "batch_size": batch_size,
         "num_workers": num_workers,
         "seed": seed,
@@ -98,7 +98,7 @@ def main(args=None) -> None:
         text_to_log = f"Testing results on dataset file {test_dataset_path} using the parser {str(address_parser)}."
         logging.info(text_to_log)
 
-    results = address_parser.test(test_dataset_container=testing_data, **parser_args)
+    results = address_parser.test(test_dataset_container=testing_data, **test_arguments)
 
     pd.DataFrame(results, index=[0]).to_csv(results_export_path, index=False, sep="\t")
     if parsed_args.log:

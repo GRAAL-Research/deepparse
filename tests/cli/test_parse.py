@@ -1,5 +1,8 @@
 # pylint: disable=too-many-arguments, too-many-locals
 
+# Pylint error for TemporaryDirectory ask for with statement
+# pylint: disable=consider-using-with
+
 import logging
 import os
 import unittest

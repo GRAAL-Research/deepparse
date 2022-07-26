@@ -1,5 +1,3 @@
-# pylint: disable=duplicate-code
-
 import argparse
 import logging
 import sys

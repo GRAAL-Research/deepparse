@@ -1,6 +1,9 @@
 # Bug with PyTorch source code makes torch.tensor as not callable for pylint.
 # pylint: disable=not-callable, too-many-public-methods, no-name-in-module
 
+# Pylint error for TemporaryDirectory ask for with statement
+# pylint: disable=consider-using-with
+
 import os
 from tempfile import TemporaryDirectory
 from unittest import TestCase

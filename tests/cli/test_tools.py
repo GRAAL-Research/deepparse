@@ -1,5 +1,8 @@
 # pylint: disable=no-member, too-many-public-methods
 
+# Pylint error for TemporaryDirectory ask for with statement
+# pylint: disable=consider-using-with
+
 import argparse
 import json
 import os

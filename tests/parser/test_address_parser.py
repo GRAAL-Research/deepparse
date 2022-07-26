@@ -1,6 +1,9 @@
 # Since we use a patch as model mock we skip the unused argument error
 # pylint: disable=unused-argument, no-member, too-many-public-methods, too-many-lines
 
+# Pylint error for TemporaryDirectory ask for with statement
+# pylint: disable=consider-using-with
+
 import os
 import unittest
 from tempfile import TemporaryDirectory

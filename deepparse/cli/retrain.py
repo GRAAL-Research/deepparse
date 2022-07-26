@@ -1,5 +1,3 @@
-# pylint: disable=duplicate-code
-
 import argparse
 import sys
 from typing import Dict

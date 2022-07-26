@@ -2,6 +2,9 @@
 # no-member skip is so because child define the training_container in setup
 # pylint: disable=not-callable, too-many-public-methods, no-member, too-many-arguments
 
+# Pylint error for TemporaryDirectory ask for with statement
+# pylint: disable=consider-using-with
+
 import os
 from tempfile import TemporaryDirectory
 from typing import List

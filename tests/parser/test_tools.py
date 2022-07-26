@@ -1,4 +1,8 @@
 # pylint: disable=too-many-public-methods
+
+# Pylint error for TemporaryDirectory ask for with statement
+# pylint: disable=consider-using-with
+
 import os
 import unittest
 from tempfile import TemporaryDirectory

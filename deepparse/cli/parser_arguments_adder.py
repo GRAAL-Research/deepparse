@@ -1,5 +1,3 @@
-# pylint: disable=duplicate-code
-
 from argparse import ArgumentParser
 
 from .tools import wrap, bool_parse

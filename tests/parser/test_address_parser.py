@@ -4,6 +4,16 @@
 # Pylint error for TemporaryDirectory ask for with statement
 # pylint: disable=consider-using-with
 
+# Pylint raise error for torch.tensor, torch.zeros, ... as a no-member event
+# if not the case.
+# pylint: disable=no-member
+
+# Pylint raise error for from torch import device
+# pylint: disable=no-name-in-module
+
+# Pylint raise error for the repr method mocking
+# pylint: disable=unnecessary-dunder-call
+
 import os
 import unittest
 from tempfile import TemporaryDirectory

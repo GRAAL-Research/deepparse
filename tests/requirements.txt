@@ -1,3 +1,4 @@
 pycountry
 pandas
 pytest
+pytest_cov

@@ -1,6 +1,16 @@
 # Bug with PyTorch source code makes torch.tensor as not callable for pylint.
 # pylint: disable=not-callable, too-many-public-methods, no-name-in-module
 
+# Pylint error for TemporaryDirectory ask for with statement
+# pylint: disable=consider-using-with
+
+# Pylint raise error for torch.tensor, torch.zeros, ... as a no-member event
+# if not the case.
+# pylint: disable=no-member
+
+# Pylint raise error for the call method mocking
+# pylint: disable=unnecessary-dunder-call
+
 import os
 from tempfile import TemporaryDirectory
 from unittest import TestCase
@@ -8,7 +18,7 @@ from unittest import TestCase
 import torch
 from torch import tensor
 
-from deepparse import download_from_url
+from deepparse import download_from_public_repository
 from deepparse.parser import formatted_parsed_address
 from tests.base_capture_output import CaptureOutputTestCase
 
@@ -199,13 +209,13 @@ class PretrainedWeightsBase:
         self.model_weights_temp_dir = TemporaryDirectory()
         self.fake_cache_path = os.path.join(self.model_weights_temp_dir.name, "fake_cache")
 
-        download_from_url("retrained_fasttext_address_parser", self.fake_cache_path, "ckpt")
+        download_from_public_repository("retrained_fasttext_address_parser", self.fake_cache_path, "ckpt")
         self.path_to_retrain_fasttext = os.path.join(self.fake_cache_path, "retrained_fasttext_address_parser.ckpt")
 
-        download_from_url("retrained_bpemb_address_parser", self.fake_cache_path, "ckpt")
+        download_from_public_repository("retrained_bpemb_address_parser", self.fake_cache_path, "ckpt")
         self.path_to_retrain_bpemb = os.path.join(self.fake_cache_path, "retrained_bpemb_address_parser.ckpt")
 
-        download_from_url("retrained_named_address_parser", self.fake_cache_path, "ckpt")
+        download_from_public_repository("retrained_named_address_parser", self.fake_cache_path, "ckpt")
         self.path_to_named_model = os.path.join(self.fake_cache_path, "retrained_named_address_parser.ckpt")
 
     @classmethod

@@ -1,3 +1,10 @@
+# Pylint raise error for torch.tensor, torch.zeros, ... as a no-member event
+# if not the case.
+# pylint: disable=no-member
+
+# Pylint raise error for the getitem method mocking
+# pylint: disable=unnecessary-dunder-call
+
 import unittest
 from unittest import TestCase
 from unittest.mock import patch, MagicMock, call

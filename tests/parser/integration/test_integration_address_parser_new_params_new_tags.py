@@ -2,13 +2,16 @@
 # no-member skip is so because child define the training_container in setup
 # pylint: disable=not-callable, too-many-public-methods, no-member, too-many-arguments
 
+# Pylint error for TemporaryDirectory ask for with statement
+# pylint: disable=consider-using-with
+
 import os
 from tempfile import TemporaryDirectory
 from unittest import TestCase, skipIf
 
 import torch
 
-from deepparse import download_from_url
+from deepparse import download_from_public_repository
 from deepparse.dataset_container import PickleDatasetContainer, DatasetContainer
 from deepparse.parser import (
     AddressParser,
@@ -28,7 +31,7 @@ class AddressParserPredictTest(TestCase):
         os.makedirs(cls.a_data_saving_dir, exist_ok=True)
         file_extension = "p"
         training_dataset_name = "test_sample_data_new_prediction_tags"
-        download_from_url(training_dataset_name, cls.a_data_saving_dir, file_extension=file_extension)
+        download_from_public_repository(training_dataset_name, cls.a_data_saving_dir, file_extension=file_extension)
 
         cls.training_container = PickleDatasetContainer(
             os.path.join(cls.a_data_saving_dir, training_dataset_name + "." + file_extension)

@@ -11,6 +11,7 @@ from deepparse import (
     download_fasttext_embeddings,
     download_weights,
 )
+from .parser_arguments_adder import choices
 
 
 def main(args=None) -> None:
@@ -58,13 +59,7 @@ def get_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "model_type",
-        choices=[
-            "fasttext",
-            "fasttext-attention",
-            "fasttext-light",
-            "bpemb",
-            "bpemb-attention",
-        ],
+        choices=choices,
         help="The model type to download.",
     )
     parser.add_argument(

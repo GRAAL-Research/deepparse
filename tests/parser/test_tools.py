@@ -1,4 +1,13 @@
 # pylint: disable=too-many-public-methods
+
+# Pylint error for TemporaryDirectory ask for with statement
+# pylint: disable=consider-using-with
+
+# Pylint raise error for torch.tensor, torch.zeros, ... as a no-member event
+# if not the case.
+# pylint: disable=no-member
+
+
 import os
 import unittest
 from tempfile import TemporaryDirectory

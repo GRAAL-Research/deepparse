@@ -9,7 +9,7 @@ from unittest.mock import MagicMock, call, ANY
 
 from poutyne import Callback
 
-from deepparse import download_from_url
+from deepparse import download_from_public_repository
 from deepparse.dataset_container import PickleDatasetContainer
 from deepparse.parser import AddressParser
 from tests.parser.integration.base_retrain import AddressParserRetrainTestCase
@@ -26,7 +26,7 @@ class AddressParserIntegrationTestNewTags(AddressParserRetrainTestCase):
 
         file_extension = "p"
         training_dataset_name = "test_sample_data_new_prediction_tags"
-        download_from_url(training_dataset_name, cls.a_data_saving_dir, file_extension=file_extension)
+        download_from_public_repository(training_dataset_name, cls.a_data_saving_dir, file_extension=file_extension)
 
         cls.new_prediction_data_container = PickleDatasetContainer(
             os.path.join(cls.a_data_saving_dir, training_dataset_name + "." + file_extension)

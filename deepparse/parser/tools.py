@@ -1,3 +1,7 @@
+# Pylint raise error for torch.tensor, torch.zeros, ... as a no-member event
+# if not the case.
+# pylint: disable=no-member
+
 import math
 import os
 from typing import List, Tuple, OrderedDict

@@ -1,6 +1,15 @@
 # Since we use a patch as model mock we skip the unused argument error
 # pylint: disable=unused-argument, too-many-arguments, too-many-public-methods, protected-access, too-many-lines
+
+# Pylint error for TemporaryDirectory ask for with statement
+# pylint: disable=consider-using-with
+
+# Pylint raise error for torch.tensor, torch.zeros, ... as a no-member event
+# if not the case.
+# pylint: disable=no-member
+
 import os
+import platform
 import unittest
 from tempfile import TemporaryDirectory
 from unittest import skipIf
@@ -24,7 +33,6 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         cls.a_train_ratio = 0.8
         cls.a_batch_size = BATCH_SIZE
         cls.a_epoch_number = 1
-        cls.a_number_of_workers = 1
         cls.a_learning_rate = 0.01
         cls.a_callbacks_list = []
         cls.a_seed = 42
@@ -58,14 +66,27 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         self.temp_dir_obj.cleanup()
 
     def address_parser_retrain_call(
-        self, prediction_tags=None, seq2seq_params=None, layers_to_freeze=None, name_of_the_retrain_parser=None
+        self,
+        prediction_tags=None,
+        seq2seq_params=None,
+        layers_to_freeze=None,
+        name_of_the_retrain_parser=None,
+        num_workers=None,
     ):
+        if num_workers is None:
+            # AddressParser default num_workers settings is 1
+            # But, we change it to 0 for Windows OS to allow test to pass since it fail (volontairy)
+            # at greater than 0 due to parallelism pickle error
+            if platform.system().lower() == "windows":
+                num_workers = 0  # Default setting is 1, but We set it to zero to allow Windows tests to pass
+            else:
+                num_workers = 1
         self.address_parser.retrain(
             self.mocked_data_container,
             self.a_train_ratio,
             self.a_batch_size,
             self.a_epoch_number,
-            num_workers=self.a_number_of_workers,
+            num_workers=num_workers,
             learning_rate=self.a_learning_rate,
             callbacks=self.a_callbacks_list,
             seed=self.a_seed,
@@ -369,6 +390,36 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
 
         with self.assertRaises(ValueError):
             self.address_parser_retrain_call()
+
+    @patch("deepparse.parser.address_parser.platform")
+    @patch("deepparse.parser.address_parser.DataTransform")
+    @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
+    @patch("deepparse.parser.address_parser.fasttext_data_padding")
+    @patch("deepparse.parser.address_parser.FastTextVectorizer")
+    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
+    def test_givenAFastTextLikeModelOnWindowsOS_whenRetrainWithNumWorkersGT0_thenReRaiseError(
+        self,
+        download_weights_mock,
+        embeddings_model_mock,
+        vectorizer_model_mock,
+        data_padding_mock,
+        model_mock,
+        data_transform_mock,
+        platform_mock,
+    ):
+        # OS equal Windows
+        platform_mock.system().__eq__.return_value = True
+
+        self.address_parser = AddressParser(
+            model_type=self.a_fastest_model_type,
+            device=self.a_device,
+            verbose=self.verbose,
+        )
+
+        num_workers_gt_0 = 1
+        with self.assertRaises(ValueError):
+            self.address_parser_retrain_call(num_workers=num_workers_gt_0)
 
     @patch("deepparse.parser.address_parser.torch.save")
     @patch("deepparse.parser.address_parser.DataLoader")
@@ -1144,13 +1195,16 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
             verbose=self.verbose,
         )
         mocked_data_container = ADataContainer(is_training_container=False)
+
+        a_number_of_workers = 0  # We set it to 0 to allow Windows test to also pass
+
         with self.assertRaises(ValueError):
             self.address_parser.retrain(
                 mocked_data_container,
                 self.a_train_ratio,
                 self.a_batch_size,
                 self.a_epoch_number,
-                num_workers=self.a_number_of_workers,
+                num_workers=a_number_of_workers,
                 learning_rate=self.a_learning_rate,
                 callbacks=self.a_callbacks_list,
                 seed=self.a_seed,

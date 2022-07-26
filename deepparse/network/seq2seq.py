@@ -1,4 +1,8 @@
 # pylint: disable=too-many-arguments
+
+# Pylint raise error for torch.tensor, torch.zeros, ... as a no-member event
+# if not the case.
+# pylint: disable=no-member
 import os
 import random
 import warnings
@@ -7,7 +11,7 @@ from collections import OrderedDict
 from typing import Tuple, Union
 
 import torch
-import torch.nn as nn
+from torch import nn
 
 from .decoder import Decoder
 from .encoder import Encoder

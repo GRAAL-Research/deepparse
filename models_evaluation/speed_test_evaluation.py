@@ -1,15 +1,15 @@
 import os.path
-import pickle
 from statistics import mean
 
-from deepparse import download_from_url
+from deepparse import download_from_public_repository
+from deepparse.dataset_container import PickleDatasetContainer
 from deepparse.parser import AddressParser
 from models_evaluation.timer.timer import Timer
 
-download_from_url("speed_test_dataset", "./data", "p")
+download_from_public_repository("speed_test_dataset", "./data", "p")
 
-addresses = pickle.load(open("./data/speed_test_dataset.p", "rb"))
-addresses, tags = zip(*addresses)
+address_container = PickleDatasetContainer("./data/speed_test_dataset.p")
+addresses, tags = zip(*address_container)
 
 speed_test_directory = "results/speed_test_results"
 os.makedirs(speed_test_directory, exist_ok=True)

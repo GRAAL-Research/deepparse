@@ -1,4 +1,9 @@
-# pylint: disable=too-many-arguments
+# pylint: disable=too-many-arguments, duplicate-code
+
+# Pylint raise error for torch.tensor, torch.zeros, ... as a no-member event
+# if not the case.
+# pylint: disable=no-member
+
 from typing import List, Union
 
 import torch

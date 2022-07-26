@@ -231,4 +231,13 @@ to `cache_dir`. `saving_dir` is now deprecated and will be remove in version 0.8
 - Add hyphen parsing cleaning step (with a bool flag to activate or not) to improve some country address parsing (see [issue 137](https://github.com/GRAAL-Research/deepparse/issues/137)).
 - Add ListDatasetContainer for Python list dataset.
 
+## 0.8.1
+
+- Refactored function `download_from_url` to `download_from_public_repository`.
+- Add error management when retrain a FastText like model on Windows with a number of workers (`num_workers`) greater than 0.
+- Improve dev tooling
+- Improve CI
+- Improve code coverage and pylint
+- Add codacy
+
 ## dev

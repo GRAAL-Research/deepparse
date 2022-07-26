@@ -1,5 +1,9 @@
 # pylint: disable=too-many-arguments, self-assigning-variable
 
+# Pylint raise error for torch.tensor, torch.zeros, ... as a no-member event
+# if not the case.
+# pylint: disable=no-member
+
 import pickle
 from typing import List
 

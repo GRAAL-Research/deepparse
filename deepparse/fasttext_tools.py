@@ -7,7 +7,7 @@ from urllib.request import urlopen
 
 from fasttext.FastText import _FastText
 
-from .tools import download_from_url
+from .tools import download_from_public_repository
 
 
 def download_fasttext_magnitude_embeddings(cache_dir: str, verbose: bool = True, saving_dir=None) -> str:
@@ -17,7 +17,7 @@ def download_fasttext_magnitude_embeddings(cache_dir: str, verbose: bool = True,
     if saving_dir is not None:  # pragma: no cover
         # Deprecated argument handling
         warnings.warn(
-            "Argument saving_dir is deprecated. Use cache_dir instead. The argument will be removed " "in release 0.8.",
+            "Argument saving_dir is deprecated. Use cache_dir instead. The argument will be removed in release 0.8.",
             DeprecationWarning,
         )
         cache_dir = saving_dir
@@ -34,7 +34,7 @@ def download_fasttext_magnitude_embeddings(cache_dir: str, verbose: bool = True,
                 "this process will take several minutes."
             )
         extension = extension + ".gz"
-        download_from_url(file_name=model, saving_dir=cache_dir, file_extension=extension)
+        download_from_public_repository(file_name=model, saving_dir=cache_dir, file_extension=extension)
         gz_file_name = file_name + ".gz"
         with gzip.open(os.path.join(cache_dir, gz_file_name), "rb") as f:
             with open(os.path.join(cache_dir, file_name), "wb") as f_out:
@@ -86,7 +86,7 @@ def download_fasttext_embeddings(cache_dir: str, verbose: bool = True, saving_di
     if saving_dir is not None:  # pragma: no cover
         # Deprecated argument handling
         warnings.warn(
-            "Argument saving_dir is deprecated. Use cache_dir instead. The argument will be removed " "in release 0.8.",
+            "Argument saving_dir is deprecated. Use cache_dir instead. The argument will be removed in release 0.8.",
             DeprecationWarning,
         )
         cache_dir = saving_dir
@@ -132,7 +132,8 @@ def download_gz_model(gz_file_name: str, saving_path: str, verbose: bool = True)
 def _download_file(url: str, write_file_name: str, chunk_size: int = 2**13, verbose: bool = True) -> None:
     if verbose:
         print(f"Downloading {url}")
-    response = urlopen(url)
+
+    response = urlopen(url)  # pylint: disable=consider-using-with
     if hasattr(response, "getheader"):
         file_size = int(response.getheader("Content-Length").strip())
     else:  # pragma: no cover

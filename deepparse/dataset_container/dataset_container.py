@@ -58,6 +58,9 @@ class DatasetContainer(Dataset, ABC):
             result = self.data[idx]
         return result
 
+    def is_a_train_container(self) -> bool:
+        return self.is_training_container
+
     def validate_dataset(self) -> None:
         if not self._data_is_a_list():
             raise TypeError("The dataset is not a list.")
@@ -120,9 +123,6 @@ class DatasetContainer(Dataset, ABC):
         Return true if all the data tags are the same len as the address split at each whitespace.
         """
         return all(len(data[0].split(" ")) == len(data[1]) for data in self.data)
-
-    def is_a_train_container(self) -> bool:
-        return self.is_training_container
 
     def _data_tags_not_the_same_len_diff(self) -> str:
         diff_indexes = [index for index, data in enumerate(self.data) if len(data[0].split(" ")) != len(data[1])]
@@ -241,7 +241,7 @@ class CSVDatasetContainer(DatasetContainer):
         if is_training_container:
             if isinstance(column_names, str):
                 raise ValueError(
-                    "When the dataset is a training container, the column names should be a list of" "column name."
+                    "When the dataset is a training container, the column names should be a list of column name."
                 )
             if len(column_names) != 2:
                 raise ValueError("When the dataset is a training container, two column names must be provided.")

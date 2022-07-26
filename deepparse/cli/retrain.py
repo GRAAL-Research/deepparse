@@ -2,15 +2,25 @@ import argparse
 import sys
 from typing import Dict
 
-from deepparse.cli.tools import (
+from .parser_arguments_adder import (
+    add_seed_arg,
+    add_batch_size_arg,
+    add_base_parsing_model_arg,
+    add_num_workers_arg,
+    add_device_arg,
+    add_csv_column_separator_arg,
+    add_cache_dir_arg,
+    add_csv_column_names_arg,
+)
+from .tools import (
     is_csv_path,
     is_pickle_path,
     wrap,
     bool_parse,
     attention_model_type_handling,
 )
-from deepparse.dataset_container import CSVDatasetContainer, PickleDatasetContainer
-from deepparse.parser import AddressParser
+from ..dataset_container import CSVDatasetContainer, PickleDatasetContainer
+from ..parser import AddressParser
 
 _retrain_parameters = [
     "train_ratio",
@@ -120,17 +130,8 @@ def get_parser() -> argparse.ArgumentParser:
     """Return ArgumentParser for the cli."""
 
     parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
-    parser.add_argument(
-        "base_parsing_model",
-        choices=[
-            "fasttext",
-            "fasttext-attention",
-            "fasttext-light",
-            "bpemb",
-            "bpemb-attention",
-        ],
-        help=wrap("The base parsing module to use for retraining."),
-    )
+
+    add_base_parsing_model_arg(parser)
 
     parser.add_argument(
         "train_dataset_path",
@@ -148,12 +149,7 @@ def get_parser() -> argparse.ArgumentParser:
         default=0.8,
     )
 
-    parser.add_argument(
-        "--batch_size",
-        help=wrap("The size of the batch (default is 32)."),
-        type=int,
-        default=32,
-    )
+    add_batch_size_arg(parser)
 
     parser.add_argument(
         "--epochs",
@@ -162,25 +158,13 @@ def get_parser() -> argparse.ArgumentParser:
         default=5,
     )
 
-    parser.add_argument(
-        "--num_workers",
-        help=wrap("The number of workers to use for the data loader (default is 1 worker)."),
-        type=int,
-        default=1,
-    )
+    add_num_workers_arg(parser)
 
     parser.add_argument(
         "--learning_rate",
         help=wrap("The learning rate (LR) to use for training (default 0.01)."),
         type=float,
         default=0.01,
-    )
-
-    parser.add_argument(
-        "--seed",
-        help=wrap("The seed to use (default 42)."),
-        type=int,
-        default=42,
     )
 
     parser.add_argument(
@@ -226,40 +210,15 @@ def get_parser() -> argparse.ArgumentParser:
         type=str,
     )
 
-    parser.add_argument(
-        "--device",
-        help=wrap("The device to use. It can be 'cpu' or a GPU device index such as '0' or '1'. By default, '0'."),
-        type=str,
-        default="0",
-    )
+    add_seed_arg(parser)
 
-    parser.add_argument(
-        "--csv_column_names",
-        help=wrap(
-            "The column names to extract address and tags in the CSV. Need to be specified if the provided "
-            "dataset_path leads to a CSV file. Column names have to be separated by a whitespace. For"
-            "example, --csv_column_names column1 column2. By default, None."
-        ),
-        default=None,
-        nargs=2,
-        type=str,
-    )
+    add_device_arg(parser)
 
-    parser.add_argument(
-        "--csv_column_separator",
-        help=wrap(
-            "The column separator for the dataset container will only be used if the dataset is a CSV one."
-            " By default, '\t'."
-        ),
-        default="\t",
-    )
+    add_csv_column_names_arg(parser)
 
-    parser.add_argument(
-        "--cache_dir",
-        type=str,
-        default=None,
-        help="To change the default cache directory (default to None e.g. default path).",
-    )
+    add_csv_column_separator_arg(parser)
+
+    add_cache_dir_arg(parser)
 
     return parser
 

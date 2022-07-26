@@ -1,6 +1,6 @@
 import pandas as pd
 
-from deepparse import download_from_url
+from deepparse import download_from_public_repository
 from deepparse.dataset_container import PickleDatasetContainer
 from deepparse.parser import AddressParser
 
@@ -9,7 +9,7 @@ from deepparse.parser import AddressParser
 saving_dir = "./data"
 file_extension = "p"
 test_dataset_name = "predict"
-download_from_url(test_dataset_name, saving_dir, file_extension=file_extension)
+download_from_public_repository(test_dataset_name, saving_dir, file_extension=file_extension)
 
 #  Now let's load the dataset using one of our dataset container
 addresses_to_parse = PickleDatasetContainer("./data/predict.p", is_training_container=False)

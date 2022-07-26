@@ -1,5 +1,9 @@
 # Bug with PyTorch source code makes torch.tensor as not callable for pylint.
 # pylint: disable=not-callable, too-many-public-methods
+
+# Pylint raise error for the call method mocking
+# pylint: disable=unnecessary-dunder-call
+
 import unittest
 from unittest import TestCase
 from unittest.mock import MagicMock

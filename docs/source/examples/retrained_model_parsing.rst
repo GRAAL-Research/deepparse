@@ -8,7 +8,7 @@ Use a Retrained Model to Parse Addresses
 
     import os
 
-    from deepparse import download_from_url
+    from deepparse import download_from_public_repository
     from deepparse.dataset_container import PickleDatasetContainer
     from deepparse.parser import AddressParser
 
@@ -17,10 +17,10 @@ First, let's download the train and test data from the public repository.
 
 .. code-block:: python
 
-    saving_dir = "./data"
+    data_saving_dir = "./data"
     file_extension = "p"
     test_dataset_name = "predict"
-    download_from_url(test_dataset_name, saving_dir, file_extension=file_extension)
+    download_from_public_repository(test_dataset_name, data_saving_dir, file_extension=file_extension)
 
 Now let's load the dataset using one of our dataset container.
 
@@ -33,13 +33,14 @@ Let's download a BPEmb retrained model create just for this example, but you can
 
 .. code-block:: python
 
+    model_saving_dir = "./retrained_models"
     retrained_model_name = "retrained_light_bpemb_address_parser"
     model_file_extension = "ckpt"
-    download_from_url(retrained_model_name, saving_dir, file_extension=model_file_extension)
+    download_from_public_repository(retrained_model_name, model_saving_dir, file_extension=model_file_extension)
 
     address_parser = AddressParser(
         model_type="bpemb", device=0,
-        path_to_retrained_model=os.path.join(saving_dir, retrained_model_name + "." + model_file_extension)
+        path_to_retrained_model=os.path.join(model_saving_dir, retrained_model_name + "." + model_file_extension)
     )
 
 We can now parse some addresses

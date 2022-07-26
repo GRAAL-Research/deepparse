@@ -1,7 +1,16 @@
 # pylint: disable=too-many-lines
 
+# Pylint raise error for torch.tensor, torch.zeros, ... as a no-member event
+# if not the case.
+# pylint: disable=no-member
+
+# Pylint raise error for an inconsistent-return-statements for the retrain function
+# It must be due to the complex try, except else case.
+# pylint: disable=inconsistent-return-statements
+
 import contextlib
 import os
+import platform
 import re
 import warnings
 from typing import List, Union, Dict, Tuple
@@ -392,7 +401,8 @@ class AddressParser:
         layers_to_freeze: Union[str, None] = None,
         name_of_the_retrain_parser: Union[None, str] = None,
     ) -> List[Dict]:
-        # pylint: disable=too-many-arguments, line-too-long, too-many-locals, too-many-branches, too-many-statements
+        # pylint: disable=too-many-arguments, too-many-locals, too-many-branches, too-many-statements
+
         """
         Method to retrain the address parser model using a dataset with the same tags. We train using
         `experiment <https://poutyne.org/experiment.html>`_ from `poutyne <https://poutyne.org/index.html>`_
@@ -590,17 +600,25 @@ class AddressParser:
                     name_of_the_retrain_parser="MyParserName")
 
         """
-        if name_of_the_retrain_parser is not None:
-            if len(name_of_the_retrain_parser.split(".")) > 1:
-                raise ValueError(
-                    "The name_of_the_retrain_parser should NOT include a file extension or a dot-like" "filename style."
-                )
 
         if "fasttext-light" in self.model_type:
             raise ValueError("It's not possible to retrain a fasttext-light due to pymagnitude problem.")
 
+        if platform.system().lower() == "windows" and "fasttext" in self.model_type and num_workers > 0:
+            raise ValueError(
+                "On Windows system, we cannot retrain FastText like models with parallelism workers since "
+                "FastText objects are not pickleable with the parallelism process use by Windows. "
+                "Thus, you need to set num_workers to 0 since 1 also means 'parallelism'."
+            )
+
         if not dataset_container.is_a_train_container():
             raise ValueError("The dataset container is not a train container.")
+
+        if name_of_the_retrain_parser is not None:
+            if len(name_of_the_retrain_parser.split(".")) > 1:
+                raise ValueError(
+                    "The name_of_the_retrain_parser should NOT include a file extension or a dot-like filename style."
+                )
 
         model_factory_dict = {"prediction_layer_len": 9}  # We set the default output dim size
 

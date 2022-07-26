@@ -2,6 +2,11 @@
 # Since we use patch we skip the unused argument error
 # We also skip protected-access since we test the _load_weights
 # pylint: disable=protected-access, unused-argument, not-callable
+
+# Pylint raise error for torch.tensor, torch.zeros, ... as a no-member event
+# if not the case.
+# pylint: disable=no-member
+
 import os
 import unittest
 from unittest import TestCase
@@ -304,6 +309,7 @@ class Seq2SeqTest(TestCase):
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.torch.nn.Module.load_state_dict")
     def test_givenSeq2SeqModelRetrained_whenLoadRetrainedWeights_thenLoadProperly(self, torch_nn_mock, torch_mock):
+        # pylint: disable=unnecessary-dunder-call
         all_layers_params_mock = MagicMock()
         all_layers_params_mock.__getitem__().__len__.return_value = self.decoder_output_size
         torch_mock.load.return_value = all_layers_params_mock
@@ -330,6 +336,8 @@ class Seq2SeqTest(TestCase):
     def test_givenSeq2SeqModelRetrained_whenLoadRetrainedWeightsNewTagModel_thenLoadProperDict(
         self, torch_nn_mock, torch_mock
     ):
+        # pylint: disable=unnecessary-dunder-call
+
         all_layers_params_mock = MagicMock(spec=dict)
         all_layers_params_mock.__getitem__().__len__.return_value = self.decoder_output_size
         torch_mock.load.return_value = all_layers_params_mock

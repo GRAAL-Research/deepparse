@@ -7,7 +7,7 @@ from typing import List, Union, Dict
 
 import pandas as pd
 
-from deepparse.parser import FormattedParsedAddress
+from ..parser import FormattedParsedAddress
 
 
 def is_csv_path(export_file_name: str) -> bool:

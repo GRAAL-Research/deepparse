@@ -3,7 +3,17 @@ import logging
 import sys
 from functools import partial
 
-from deepparse.cli.tools import (
+from .parser_arguments_adder import (
+    add_device_arg,
+    add_csv_column_separator_arg,
+    add_csv_column_name_arg,
+    add_log_arg,
+    add_cache_dir_arg,
+    add_batch_size_arg,
+    add_path_to_retrained_model_arg,
+    choices,
+)
+from .tools import (
     is_csv_path,
     is_pickle_path,
     to_csv,
@@ -12,12 +22,11 @@ from deepparse.cli.tools import (
     wrap,
     is_json_path,
     to_json,
-    bool_parse,
     replace_path_extension,
     attention_model_type_handling,
 )
-from deepparse.dataset_container import CSVDatasetContainer, PickleDatasetContainer
-from deepparse.parser import AddressParser
+from ..dataset_container import CSVDatasetContainer, PickleDatasetContainer
+from ..parser import AddressParser
 
 
 def main(args=None) -> None:
@@ -123,13 +132,7 @@ def get_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument(
         "parsing_model",
-        choices=[
-            "fasttext",
-            "fasttext-attention",
-            "fasttext-light",
-            "bpemb",
-            "bpemb-attention",
-        ],
+        choices=choices,
         help=wrap("The parsing module to use."),
     )
 
@@ -151,62 +154,19 @@ def get_parser() -> argparse.ArgumentParser:
         type=str,
     )
 
-    parser.add_argument(
-        "--device",
-        help=wrap("The device to use. It can be 'cpu' or a GPU device index such as '0' or '1'. By default '0'."),
-        type=str,
-        default="0",
-    )
+    add_path_to_retrained_model_arg(parser)
 
-    parser.add_argument(
-        "--batch_size",
-        help=wrap("The size of the batch (default is 32)."),
-        type=int,
-        default=32,
-    )
+    add_device_arg(parser)
 
-    parser.add_argument(
-        "--path_to_retrained_model",
-        help=wrap("A path to a retrained model to use for parsing."),
-        type=str,
-        default=None,
-    )
+    add_batch_size_arg(parser)
 
-    parser.add_argument(
-        "--csv_column_name",
-        help=wrap(
-            "The column name to extract address in the CSV. Need to be specified if the provided dataset_path "
-            "leads to a CSV file."
-        ),
-        type=str,
-        default=None,
-    )
+    add_csv_column_name_arg(parser)
 
-    parser.add_argument(
-        "--csv_column_separator",
-        help=wrap(
-            "The column separator for the dataset container will only be used if the dataset is a CSV one."
-            " By default '\t'."
-        ),
-        default="\t",
-    )
+    add_csv_column_separator_arg(parser)
 
-    parser.add_argument(
-        "--log",
-        help=wrap(
-            "Either or not to log the parsing process into a '.log' file exported at the same place as the "
-            "parsed data using the same name as the export file. "
-            "The bool value can be (not case sensitive) 'true/false', 't/f', 'yes/no', 'y/n' or '0/1'."
-        ),
-        type=bool_parse,
-        default="True",
-    )
-    parser.add_argument(
-        "--cache_dir",
-        type=str,
-        default=None,
-        help="To change the default cache directory (default to None e.g. default path).",
-    )
+    add_log_arg(parser)
+
+    add_cache_dir_arg(parser)
 
     return parser
 

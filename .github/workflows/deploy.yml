@@ -1,0 +1,34 @@
+name: Deployment
+
+on:
+  push:
+    branches:
+      - stable
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      DEEPPARSE_RELEASE_BUILD: "1"
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+      - name: Install dependencies
+        run: |
+          pip install -Ur requirements.txt
+          pip install -Ur docs/requirements.txt
+          python setup.py develop
+      - name: Building doc
+        run: |
+          cd docs
+          ./rebuild_html_doc.sh
+          cd ..
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/_build/html/

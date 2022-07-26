@@ -1,8 +1,22 @@
 # Since we use a patch as model mock we skip the unused argument error
 # pylint: disable=unused-argument, no-member, too-many-public-methods, too-many-lines
 
+# Pylint error for TemporaryDirectory ask for with statement
+# pylint: disable=consider-using-with
+
+# Pylint raise error for torch.tensor, torch.zeros, ... as a no-member event
+# if not the case.
+# pylint: disable=no-member
+
+# Pylint raise error for from torch import device
+# pylint: disable=no-name-in-module
+
+# Pylint raise error for the repr method mocking
+# pylint: disable=unnecessary-dunder-call
+
 import os
 import unittest
+from tempfile import TemporaryDirectory
 from unittest import skipIf
 from unittest.mock import patch, MagicMock
 
@@ -32,7 +46,9 @@ class AddressParserTest(AddressParserPredictTestCase):
         cls.a_gpu_torch_device = device(cls.a_gpu_device)
         cls.verbose = False
         cls.number_tags = 9
-        cls.a_cache_dir = "a_cache_dir_path"
+
+        cls.temp_dir_obj = TemporaryDirectory()
+        cls.a_cache_dir = cls.temp_dir_obj.name
 
         cls.correct_address_components = {"ATag": 0, "AnotherTag": 1, "EOS": 2}
         cls.incorrect_address_components = {"ATag": 0, "AnotherTag": 1}
@@ -59,6 +75,10 @@ class AddressParserTest(AddressParserPredictTestCase):
             "GeneralDelivery",
             "EOS",
         ]
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        cls.temp_dir_obj.cleanup()
 
     def setUp(self):
         super().setUp()

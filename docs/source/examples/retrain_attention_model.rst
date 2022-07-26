@@ -10,7 +10,7 @@ Retrain an Attention Mechanism Model
 
     import poutyne
 
-    from deepparse import download_from_url
+    from deepparse import download_from_public_repository
     from deepparse.dataset_container import PickleDatasetContainer
     from deepparse.parser import AddressParser
 
@@ -22,8 +22,8 @@ First, let's download the train and test data with "new tags" from the public re
     file_extension = "p"
     training_dataset_name = "sample_incomplete_data"
     test_dataset_name = "test_sample_data"
-    download_from_url(training_dataset_name, saving_dir, file_extension=file_extension)
-    download_from_url(test_dataset_name, saving_dir, file_extension=file_extension)
+    download_from_public_repository(training_dataset_name, saving_dir, file_extension=file_extension)
+    download_from_public_repository(test_dataset_name, saving_dir, file_extension=file_extension)
 
 Now let's create a training and test container.
 

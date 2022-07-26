@@ -50,8 +50,9 @@ def add_csv_column_names_arg(parser: ArgumentParser) -> None:
             "dataset_path leads to a CSV file. Column names have to be separated by a whitespace. For"
             "example, --csv_column_names column1 column2. By default, None."
         ),
-        type=str,
         default=None,
+        nargs=2,
+        type=str,
     )
 
 

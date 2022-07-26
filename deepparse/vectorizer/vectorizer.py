@@ -28,5 +28,3 @@ class Vectorizer(ABC):
         Return:
             The addresses elements (components) embeddings vector.
         """
-
-        pass

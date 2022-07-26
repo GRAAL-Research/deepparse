@@ -17,6 +17,10 @@ class BPEmbVectorizer(Vectorizer):
         super().__init__(embeddings_model)
 
         self.padding_value = 0
+        self._max_length = 0
+
+    def _reset_max_length(self):
+        self._max_length = 0
 
     def __call__(self, addresses: List[str]) -> List[Tuple]:
         """
@@ -30,7 +34,7 @@ class BPEmbVectorizer(Vectorizer):
         """
         validate_data_to_parse(addresses)
 
-        self._max_length = 0
+        self._reset_max_length()
         batch = [self._vectorize_sequence(address) for address in addresses]
         self._decomposed_sequence_padding(batch)
         return batch

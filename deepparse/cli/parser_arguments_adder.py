@@ -1,18 +1,22 @@
+# pylint: disable=duplicate-code
+
 from argparse import ArgumentParser
 
 from .tools import wrap, bool_parse
+
+choices = [
+    "fasttext",
+    "fasttext-attention",
+    "fasttext-light",
+    "bpemb",
+    "bpemb-attention",
+]
 
 
 def add_base_parsing_model_arg(parser: ArgumentParser) -> None:
     parser.add_argument(
         "base_parsing_model",
-        choices=[
-            "fasttext",
-            "fasttext-attention",
-            "fasttext-light",
-            "bpemb",
-            "bpemb-attention",
-        ],
+        choices=choices,
         help=wrap("The base parsing module to use for retraining."),
     )
 

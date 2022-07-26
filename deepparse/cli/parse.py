@@ -1,3 +1,5 @@
+# pylint: disable=duplicate-code
+
 import argparse
 import logging
 import sys
@@ -11,6 +13,7 @@ from .parser_arguments_adder import (
     add_cache_dir_arg,
     add_batch_size_arg,
     add_path_to_retrained_model_arg,
+    choices,
 )
 from .tools import (
     is_csv_path,
@@ -131,13 +134,7 @@ def get_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument(
         "parsing_model",
-        choices=[
-            "fasttext",
-            "fasttext-attention",
-            "fasttext-light",
-            "bpemb",
-            "bpemb-attention",
-        ],
+        choices=choices,
         help=wrap("The parsing module to use."),
     )
 

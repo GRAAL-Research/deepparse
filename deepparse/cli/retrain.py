@@ -1,3 +1,5 @@
+# pylint: disable=duplicate-code
+
 import argparse
 import sys
 from typing import Dict
@@ -6,7 +8,11 @@ from .parser_arguments_adder import (
     add_seed_arg,
     add_batch_size_arg,
     add_base_parsing_model_arg,
-    add_num_workers_arg, add_device_arg, add_csv_column_name_arg, add_csv_column_separator_arg, add_cache_dir_arg,
+    add_num_workers_arg,
+    add_device_arg,
+    add_csv_column_name_arg,
+    add_csv_column_separator_arg,
+    add_cache_dir_arg,
 )
 from .tools import (
     is_csv_path,

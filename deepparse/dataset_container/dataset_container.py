@@ -241,7 +241,7 @@ class CSVDatasetContainer(DatasetContainer):
         if is_training_container:
             if isinstance(column_names, str):
                 raise ValueError(
-                    "When the dataset is a training container, the column names should be a list of" "column name."
+                    "When the dataset is a training container, the column names should be a list of column name."
                 )
             if len(column_names) != 2:
                 raise ValueError("When the dataset is a training container, two column names must be provided.")

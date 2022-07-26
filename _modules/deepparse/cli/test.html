@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>deepparse.cli.test &mdash; deepparse 0.8 documentation</title>
+  <title>deepparse.cli.test &mdash; deepparse 0.8.1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -29,7 +29,7 @@
             <img src="../../../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.8
+                0.8.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -89,17 +89,28 @@
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="kn">from</span> <span class="nn">deepparse.cli.tools</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">.parser_arguments_adder</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">add_csv_column_separator_arg</span><span class="p">,</span>
+    <span class="n">add_log_arg</span><span class="p">,</span>
+    <span class="n">add_cache_dir_arg</span><span class="p">,</span>
+    <span class="n">add_seed_arg</span><span class="p">,</span>
+    <span class="n">add_device_arg</span><span class="p">,</span>
+    <span class="n">add_batch_size_arg</span><span class="p">,</span>
+    <span class="n">add_path_to_retrained_model_arg</span><span class="p">,</span>
+    <span class="n">add_base_parsing_model_arg</span><span class="p">,</span>
+    <span class="n">add_num_workers_arg</span><span class="p">,</span>
+    <span class="n">add_csv_column_names_arg</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.tools</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">is_csv_path</span><span class="p">,</span>
     <span class="n">is_pickle_path</span><span class="p">,</span>
     <span class="n">wrap</span><span class="p">,</span>
-    <span class="n">bool_parse</span><span class="p">,</span>
     <span class="n">attention_model_type_handling</span><span class="p">,</span>
     <span class="n">generate_export_path</span><span class="p">,</span>
     <span class="n">replace_path_extension</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">deepparse.dataset_container</span> <span class="kn">import</span> <span class="n">CSVDatasetContainer</span><span class="p">,</span> <span class="n">PickleDatasetContainer</span>
-<span class="kn">from</span> <span class="nn">deepparse.parser</span> <span class="kn">import</span> <span class="n">AddressParser</span>
+<span class="kn">from</span> <span class="nn">..dataset_container</span> <span class="kn">import</span> <span class="n">CSVDatasetContainer</span><span class="p">,</span> <span class="n">PickleDatasetContainer</span>
+<span class="kn">from</span> <span class="nn">..parser</span> <span class="kn">import</span> <span class="n">AddressParser</span>
 
 
 <div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../cli.html#deepparse.cli.test.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -167,7 +178,7 @@
     <span class="n">batch_size</span> <span class="o">=</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">batch_size</span>
     <span class="n">num_workers</span> <span class="o">=</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">num_workers</span>
     <span class="n">seed</span> <span class="o">=</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">seed</span>
-    <span class="n">parser_args</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">test_arguments</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;batch_size&quot;</span><span class="p">:</span> <span class="n">batch_size</span><span class="p">,</span>
         <span class="s2">&quot;num_workers&quot;</span><span class="p">:</span> <span class="n">num_workers</span><span class="p">,</span>
         <span class="s2">&quot;seed&quot;</span><span class="p">:</span> <span class="n">seed</span><span class="p">,</span>
@@ -183,7 +194,7 @@
         <span class="n">text_to_log</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Testing results on dataset file </span><span class="si">{</span><span class="n">test_dataset_path</span><span class="si">}</span><span class="s2"> using the parser </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">address_parser</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">text_to_log</span><span class="p">)</span>
 
-    <span class="n">results</span> <span class="o">=</span> <span class="n">address_parser</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="n">test_dataset_container</span><span class="o">=</span><span class="n">testing_data</span><span class="p">,</span> <span class="o">**</span><span class="n">parser_args</span><span class="p">)</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">address_parser</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="n">test_dataset_container</span><span class="o">=</span><span class="n">testing_data</span><span class="p">,</span> <span class="o">**</span><span class="n">test_arguments</span><span class="p">)</span>
 
     <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">results_export_path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">log</span><span class="p">:</span>
@@ -198,17 +209,8 @@
     <span class="sd">&quot;&quot;&quot;Return ArgumentParser for the cli.&quot;&quot;&quot;</span>
 
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">RawTextHelpFormatter</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;base_parsing_model&quot;</span><span class="p">,</span>
-        <span class="n">choices</span><span class="o">=</span><span class="p">[</span>
-            <span class="s2">&quot;fasttext&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;fasttext-attention&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;fasttext-light&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;bpemb&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;bpemb-attention&quot;</span><span class="p">,</span>
-        <span class="p">],</span>
-        <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span><span class="s2">&quot;The base parsing module to use for testing.&quot;</span><span class="p">),</span>
-    <span class="p">)</span>
+
+    <span class="n">add_base_parsing_model_arg</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
         <span class="s2">&quot;test_dataset_path&quot;</span><span class="p">,</span>
@@ -216,79 +218,23 @@
         <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--device&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span><span class="s2">&quot;The device to use. It can be &#39;cpu&#39; or a GPU device index such as &#39;0&#39; or &#39;1&#39;. By default &#39;0&#39;.&quot;</span><span class="p">),</span>
-        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;0&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
+    <span class="n">add_path_to_retrained_model_arg</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
 
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--path_to_retrained_model&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span><span class="s2">&quot;A path to a retrained model to use for testing.&quot;</span><span class="p">),</span>
-        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span>
+    <span class="n">add_batch_size_arg</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
 
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--batch_size&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span><span class="s2">&quot;The size of the batch (default is 32).&quot;</span><span class="p">),</span>
-        <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
-    <span class="p">)</span>
+    <span class="n">add_num_workers_arg</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
 
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--num_workers&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span><span class="s2">&quot;The number of workers to use for the data loader (default is 1 worker).&quot;</span><span class="p">),</span>
-        <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-    <span class="p">)</span>
+    <span class="n">add_seed_arg</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
 
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--seed&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span><span class="s2">&quot;The seed to use to make the sampling deterministic (default 42).&quot;</span><span class="p">),</span>
-        <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
-    <span class="p">)</span>
+    <span class="n">add_device_arg</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
 
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--csv_column_names&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span>
-            <span class="s2">&quot;The column names to extract address and tags in the CSV. Need to be specified if the provided &quot;</span>
-            <span class="s2">&quot;dataset_path leads to a CSV file. Column names have to be separated by a whitespace. For&quot;</span>
-            <span class="s2">&quot;example, --csv_column_names column1 column2. By default, None.&quot;</span>
-        <span class="p">),</span>
-        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">nargs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
-    <span class="p">)</span>
+    <span class="n">add_csv_column_names_arg</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
 
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--csv_column_separator&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span>
-            <span class="s2">&quot;The column separator for the dataset container will only be used if the dataset is a CSV one.&quot;</span>
-            <span class="s2">&quot; By default &#39;</span><span class="se">\t</span><span class="s2">&#39;.&quot;</span>
-        <span class="p">),</span>
-        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
+    <span class="n">add_csv_column_separator_arg</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
 
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--log&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span>
-            <span class="s2">&quot;Either or not to log the parsing process into a &#39;.log&#39; file exported at the same place as the &quot;</span>
-            <span class="s2">&quot;parsed data using the same name as the export file. &quot;</span>
-            <span class="s2">&quot;The bool value can be (not case sensitive) &#39;true/false&#39;, &#39;t/f&#39;, &#39;yes/no&#39;, &#39;y/n&#39; or &#39;0/1&#39;.&quot;</span>
-        <span class="p">),</span>
-        <span class="nb">type</span><span class="o">=</span><span class="n">bool_parse</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;True&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
+    <span class="n">add_log_arg</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
 
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--cache_dir&quot;</span><span class="p">,</span>
-        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;To change the default cache directory (default to None e.g. default path).&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
+    <span class="n">add_cache_dir_arg</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">parser</span>
 

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>deepparse.parser.address_parser &mdash; deepparse 0.8 documentation</title>
+  <title>deepparse.parser.address_parser &mdash; deepparse 0.8.1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -29,7 +29,7 @@
             <img src="../../../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.8
+                0.8.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -85,8 +85,17 @@
   <h1>Source code for deepparse.parser.address_parser</h1><div class="highlight"><pre>
 <span></span><span class="c1"># pylint: disable=too-many-lines</span>
 
+<span class="c1"># Pylint raise error for torch.tensor, torch.zeros, ... as a no-member event</span>
+<span class="c1"># if not the case.</span>
+<span class="c1"># pylint: disable=no-member</span>
+
+<span class="c1"># Pylint raise error for an inconsistent-return-statements for the retrain function</span>
+<span class="c1"># It must be due to the complex try, except else case.</span>
+<span class="c1"># pylint: disable=inconsistent-return-statements</span>
+
 <span class="kn">import</span> <span class="nn">contextlib</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">platform</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span>
@@ -477,7 +486,8 @@
         <span class="n">layers_to_freeze</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">name_of_the_retrain_parser</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
-        <span class="c1"># pylint: disable=too-many-arguments, line-too-long, too-many-locals, too-many-branches, too-many-statements</span>
+        <span class="c1"># pylint: disable=too-many-arguments, too-many-locals, too-many-branches, too-many-statements</span>
+
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to retrain the address parser model using a dataset with the same tags. We train using</span>
 <span class="sd">        `experiment &lt;https://poutyne.org/experiment.html&gt;`_ from `poutyne &lt;https://poutyne.org/index.html&gt;`_</span>
@@ -675,17 +685,25 @@
 <span class="sd">                    name_of_the_retrain_parser=&quot;MyParserName&quot;)</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">name_of_the_retrain_parser</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">name_of_the_retrain_parser</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s2">&quot;The name_of_the_retrain_parser should NOT include a file extension or a dot-like&quot;</span> <span class="s2">&quot;filename style.&quot;</span>
-                <span class="p">)</span>
 
         <span class="k">if</span> <span class="s2">&quot;fasttext-light&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;It&#39;s not possible to retrain a fasttext-light due to pymagnitude problem.&quot;</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;windows&quot;</span> <span class="ow">and</span> <span class="s2">&quot;fasttext&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="ow">and</span> <span class="n">num_workers</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;On Windows system, we cannot retrain FastText like models with parallelism workers since &quot;</span>
+                <span class="s2">&quot;FastText objects are not pickleable with the parallelism process use by Windows. &quot;</span>
+                <span class="s2">&quot;Thus, you need to set num_workers to 0 since 1 also means &#39;parallelism&#39;.&quot;</span>
+            <span class="p">)</span>
+
         <span class="k">if</span> <span class="ow">not</span> <span class="n">dataset_container</span><span class="o">.</span><span class="n">is_a_train_container</span><span class="p">():</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The dataset container is not a train container.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">name_of_the_retrain_parser</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">name_of_the_retrain_parser</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;The name_of_the_retrain_parser should NOT include a file extension or a dot-like filename style.&quot;</span>
+                <span class="p">)</span>
 
         <span class="n">model_factory_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;prediction_layer_len&quot;</span><span class="p">:</span> <span class="mi">9</span><span class="p">}</span>  <span class="c1"># We set the default output dim size</span>
 

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Use a Retrained Model to Parse Addresses &mdash; deepparse 0.8 documentation</title>
+  <title>Use a Retrained Model to Parse Addresses &mdash; deepparse 0.8.1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -32,7 +32,7 @@
             <img src="../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.8
+                0.8.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -89,17 +89,17 @@
 <h1>Use a Retrained Model to Parse Addresses<a class="headerlink" href="#use-a-retrained-model-to-parse-addresses" title="Permalink to this heading"></a></h1>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
 
-<span class="kn">from</span> <span class="nn">deepparse</span> <span class="kn">import</span> <span class="n">download_from_url</span>
+<span class="kn">from</span> <span class="nn">deepparse</span> <span class="kn">import</span> <span class="n">download_from_public_repository</span>
 <span class="kn">from</span> <span class="nn">deepparse.dataset_container</span> <span class="kn">import</span> <span class="n">PickleDatasetContainer</span>
 <span class="kn">from</span> <span class="nn">deepparse.parser</span> <span class="kn">import</span> <span class="n">AddressParser</span>
 </pre></div>
 </div>
 <p>Here is an example on how to parse multiple addresses using a retrained model.
 First, let’s download the train and test data from the public repository.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">saving_dir</span> <span class="o">=</span> <span class="s2">&quot;./data&quot;</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data_saving_dir</span> <span class="o">=</span> <span class="s2">&quot;./data&quot;</span>
 <span class="n">file_extension</span> <span class="o">=</span> <span class="s2">&quot;p&quot;</span>
 <span class="n">test_dataset_name</span> <span class="o">=</span> <span class="s2">&quot;predict&quot;</span>
-<span class="n">download_from_url</span><span class="p">(</span><span class="n">test_dataset_name</span><span class="p">,</span> <span class="n">saving_dir</span><span class="p">,</span> <span class="n">file_extension</span><span class="o">=</span><span class="n">file_extension</span><span class="p">)</span>
+<span class="n">download_from_public_repository</span><span class="p">(</span><span class="n">test_dataset_name</span><span class="p">,</span> <span class="n">data_saving_dir</span><span class="p">,</span> <span class="n">file_extension</span><span class="o">=</span><span class="n">file_extension</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Now let’s load the dataset using one of our dataset container.</p>
@@ -107,13 +107,14 @@ First, let’s download the train and test data from the public repository.</p>
 </pre></div>
 </div>
 <p>Let’s download a BPEmb retrained model create just for this example, but you can also use one of yours.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">retrained_model_name</span> <span class="o">=</span> <span class="s2">&quot;retrained_light_bpemb_address_parser&quot;</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model_saving_dir</span> <span class="o">=</span> <span class="s2">&quot;./retrained_models&quot;</span>
+<span class="n">retrained_model_name</span> <span class="o">=</span> <span class="s2">&quot;retrained_light_bpemb_address_parser&quot;</span>
 <span class="n">model_file_extension</span> <span class="o">=</span> <span class="s2">&quot;ckpt&quot;</span>
-<span class="n">download_from_url</span><span class="p">(</span><span class="n">retrained_model_name</span><span class="p">,</span> <span class="n">saving_dir</span><span class="p">,</span> <span class="n">file_extension</span><span class="o">=</span><span class="n">model_file_extension</span><span class="p">)</span>
+<span class="n">download_from_public_repository</span><span class="p">(</span><span class="n">retrained_model_name</span><span class="p">,</span> <span class="n">model_saving_dir</span><span class="p">,</span> <span class="n">file_extension</span><span class="o">=</span><span class="n">model_file_extension</span><span class="p">)</span>
 
 <span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span>
     <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;bpemb&quot;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-    <span class="n">path_to_retrained_model</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">saving_dir</span><span class="p">,</span> <span class="n">retrained_model_name</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="n">model_file_extension</span><span class="p">)</span>
+    <span class="n">path_to_retrained_model</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">model_saving_dir</span><span class="p">,</span> <span class="n">retrained_model_name</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="n">model_file_extension</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>

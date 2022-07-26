@@ -10,9 +10,9 @@ from .parser_arguments_adder import (
     add_base_parsing_model_arg,
     add_num_workers_arg,
     add_device_arg,
-    add_csv_column_name_arg,
     add_csv_column_separator_arg,
     add_cache_dir_arg,
+    add_csv_column_names_arg,
 )
 from .tools import (
     is_csv_path,
@@ -216,7 +216,7 @@ def get_parser() -> argparse.ArgumentParser:
 
     add_device_arg(parser)
 
-    add_csv_column_name_arg(parser)
+    add_csv_column_names_arg(parser)
 
     add_csv_column_separator_arg(parser)
 

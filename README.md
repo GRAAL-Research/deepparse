@@ -8,6 +8,7 @@
 [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](http://www.gnu.org/licenses/lgpl-3.0)
 [![Continuous Integration](https://github.com/GRAAL-Research/deepparse/workflows/Continuous%20Integration/badge.svg)](https://github.com/GRAAL-Research/deepparse/actions?query=workflow%3A%22Continuous+Integration%22+branch%3Amaster)
 [![codecov](https://codecov.io/gh/GRAAL-Research/deepparse/branch/master/graph/badge.svg)](https://codecov.io/gh/GRAAL-Research/deepparse)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/62464699ff0740d0b8064227c4274b98)](https://www.codacy.com/gh/GRAAL-Research/deepparse/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=GRAAL-Research/deepparse&amp;utm_campaign=Badge_Grade)
 
 [![Download](https://img.shields.io/badge/Download%20Dataset-blue?style=for-the-badge&logo=download)](https://github.com/GRAAL-Research/deepparse-address-data)
 

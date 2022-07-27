@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>deepparse.parser.address_parser &mdash; deepparse 0.8.1 documentation</title>
+  <title>deepparse.parser.address_parser &mdash; deepparse 0.8.2 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -29,7 +29,7 @@
             <img src="../../../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.8.1
+                0.8.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -696,6 +696,12 @@
                 <span class="s2">&quot;Thus, you need to set num_workers to 0 since 1 also means &#39;parallelism&#39;.&quot;</span>
             <span class="p">)</span>
 
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dataset_container</span><span class="p">,</span> <span class="n">DatasetContainer</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;The dataset_container has to be a DatasetContainer. &quot;</span>
+                <span class="s2">&quot;Read the docs at https://deepparse.org/ for more details.&quot;</span>
+            <span class="p">)</span>
+
         <span class="k">if</span> <span class="ow">not</span> <span class="n">dataset_container</span><span class="o">.</span><span class="n">is_a_train_container</span><span class="p">():</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The dataset container is not a train container.&quot;</span><span class="p">)</span>
 
@@ -896,6 +902,12 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;It&#39;s not possible to test a fasttext-light due to pymagnitude problem. See Retrain method&quot;</span>
                 <span class="s2">&quot;doc for more details.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">test_dataset_container</span><span class="p">,</span> <span class="n">DatasetContainer</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;The test_dataset_container has to be a DatasetContainer. &quot;</span>
+                <span class="s2">&quot;Read the docs at https://deepparse.org/ for more details.&quot;</span>
             <span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">test_dataset_container</span><span class="o">.</span><span class="n">is_a_train_container</span><span class="p">():</span>

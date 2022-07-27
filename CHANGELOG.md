@@ -249,3 +249,4 @@
 ## dev
 
 - Bug-fix retrain attention model naming parsing
+- Improve error handling when not a DatasetContainer is use in retrain and test API

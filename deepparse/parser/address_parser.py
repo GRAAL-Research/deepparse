@@ -611,6 +611,12 @@ class AddressParser:
                 "Thus, you need to set num_workers to 0 since 1 also means 'parallelism'."
             )
 
+        if not isinstance(dataset_container, DatasetContainer):
+            raise ValueError(
+                "The dataset_container has to be a DatasetContainer. "
+                "Read the docs at https://deepparse.org/ for more details."
+            )
+
         if not dataset_container.is_a_train_container():
             raise ValueError("The dataset container is not a train container.")
 
@@ -811,6 +817,12 @@ class AddressParser:
             raise ValueError(
                 "It's not possible to test a fasttext-light due to pymagnitude problem. See Retrain method"
                 "doc for more details."
+            )
+
+        if not isinstance(test_dataset_container, DatasetContainer):
+            raise ValueError(
+                "The test_dataset_container has to be a DatasetContainer. "
+                "Read the docs at https://deepparse.org/ for more details."
             )
 
         if not test_dataset_container.is_a_train_container():

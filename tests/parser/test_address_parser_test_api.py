@@ -40,9 +40,13 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
 
         cls.verbose = False
 
-    def address_parser_test_call(self):
+    def address_parser_test_call(self, dataset_container=None):
+        if dataset_container is None:
+            dataset_container = self.mocked_data_container
+            # To handle by default for most of the tests.
+
         self.address_parser.test(
-            self.mocked_data_container,
+            dataset_container,
             self.a_batch_size,
             num_workers=self.a_number_of_workers,
             callbacks=self.a_callbacks_list,
@@ -314,13 +318,31 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         )
         mocked_data_container = ADataContainer(is_training_container=False)
         with self.assertRaises(ValueError):
-            self.address_parser.test(
-                mocked_data_container,
-                self.a_batch_size,
-                num_workers=self.a_number_of_workers,
-                callbacks=self.a_callbacks_list,
-                seed=self.a_seed,
-            )
+            self.address_parser_test_call(dataset_container=mocked_data_container)
+
+    @patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel")
+    @patch("deepparse.parser.address_parser.bpemb_data_padding")
+    @patch("deepparse.parser.address_parser.BPEmbVectorizer")
+    @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
+    def test_givenNotADataContainer_thenRaiseValueError(
+        self,
+        embeddings_model_mock,
+        vectorizer_model_mock,
+        data_padding_mock,
+        model_patch,
+    ):
+        self.address_parser = AddressParser(
+            model_type=self.a_bpemb_model_type,
+            device=self.a_device,
+            verbose=self.verbose,
+        )
+        not_a_dataset_container = []
+        with self.assertRaises(ValueError):
+            self.address_parser_test_call(dataset_container=not_a_dataset_container)
+
+        not_a_dataset_container = {}
+        with self.assertRaises(ValueError):
+            self.address_parser_test_call(dataset_container=not_a_dataset_container)
 
 
 if __name__ == "__main__":

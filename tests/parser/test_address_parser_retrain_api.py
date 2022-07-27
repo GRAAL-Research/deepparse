@@ -67,6 +67,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
 
     def address_parser_retrain_call(
         self,
+        dataset_container=None,
         prediction_tags=None,
         seq2seq_params=None,
         layers_to_freeze=None,
@@ -81,8 +82,13 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
                 num_workers = 0  # Default setting is 1, but We set it to zero to allow Windows tests to pass
             else:
                 num_workers = 1
+
+        if dataset_container is None:
+            dataset_container = self.mocked_data_container
+            # To handle by default for most of the tests.
+
         self.address_parser.retrain(
-            self.mocked_data_container,
+            dataset_container,
             self.a_train_ratio,
             self.a_batch_size,
             self.a_epoch_number,
@@ -1597,6 +1603,46 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
 
         with self.assertRaises(ValueError):
             self.address_parser_retrain_call(name_of_the_retrain_parser="a_wrong_named_parser_name.ckpt")
+
+    @patch("deepparse.parser.address_parser.os.path.join")
+    @patch("deepparse.parser.address_parser.torch.save")
+    @patch("deepparse.parser.address_parser.DataLoader")
+    @patch("deepparse.parser.address_parser.Experiment")
+    @patch("deepparse.parser.address_parser.SGD")
+    @patch("deepparse.parser.address_parser.DataTransform")
+    @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
+    @patch("deepparse.parser.address_parser.fasttext_data_padding")
+    @patch("deepparse.parser.address_parser.FastTextVectorizer")
+    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
+    def test_givenNotADatasetContainer_whenRetrainCall_thenRaiseValueError(
+        self,
+        download_weights_mock,
+        embeddings_model_mock,
+        vectorizer_model_mock,
+        data_padding_mock,
+        model_mock,
+        data_transform_mock,
+        optimizer_mock,
+        experiment_mock,
+        data_loader_mock,
+        torch_save_mock,
+        os_path_join_mock,
+    ):
+
+        self.address_parser = AddressParser(
+            model_type=self.a_fasttext_model_type,
+            device=self.a_device,
+            verbose=self.verbose,
+        )
+
+        not_a_dataset_container_obj = []
+        with self.assertRaises(ValueError):
+            self.address_parser_retrain_call(dataset_container=not_a_dataset_container_obj)
+
+        not_a_dataset_container_obj = {}
+        with self.assertRaises(ValueError):
+            self.address_parser_retrain_call(dataset_container=not_a_dataset_container_obj)
 
 
 if __name__ == "__main__":

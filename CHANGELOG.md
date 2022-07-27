@@ -204,7 +204,8 @@
 ## 0.7.5
 
 - Bug-fix Poutyne version handling that causes a print error when a version is 1.11 when retraining
-- Add the option to create a named retrain parsing model using by default the architecture setting or using the user-given name
+- Add the option to create a named retrain parsing model using by default the architecture setting or using the
+  user-given name
 - Hot-fix missing raise for DataError validation of address to parse when address is tuple
 - Bug-fix handling of string column name for CSVDatasetContainer that raised ValueError
 - Improve parse CLI doc and fix error in doc stating JSON format is supported as input data
@@ -212,32 +213,40 @@
 - Add minimum version to Gensim 4.0.0.
 - Add a new CLI function, retrain, to retrain from the command line
 - Improve doc
-- Add `cache_dir` to the BPEmb embedding model and to `AddressParser` to change the embeddings cache directory and models weights cache directory
-- Change the `saving_dir` argument of `download_fastext_embeddings` and `download_fasttext_magnitude_embeddings` function
-to `cache_dir`. `saving_dir` is now deprecated and will be remove in version 0.8.
+- Add `cache_dir` to the BPEmb embedding model and to `AddressParser` to change the embeddings cache directory and
+  models weights cache directory
+- Change the `saving_dir` argument of `download_fastext_embeddings` and `download_fasttext_magnitude_embeddings`
+  function
+  to `cache_dir`. `saving_dir` is now deprecated and will be remove in version 0.8.
 - Add a new CLI function, test, to test from the command line
 
 ## 0.7.6
 
-- Re-release the version 0.7.5 into 0.7.6 due to manipulation error and change in PyPi (now delete does not delete release by yank does).
+- Re-release the version 0.7.5 into 0.7.6 due to manipulation error and change in PyPi (now delete does not delete
+  release by yank does).
 
 ## 0.8
 
-- Improve SEO 
+- Improve SEO
 - Add cache_dir arg in all CLI functions
 - Improve handling of HTTP error in models version verification
 - Improve doc
 - Add a note for parsing data cleaning (i.e. lowercase, commas removal, and hyphen replacing).
-- Add hyphen parsing cleaning step (with a bool flag to activate or not) to improve some country address parsing (see [issue 137](https://github.com/GRAAL-Research/deepparse/issues/137)).
+- Add hyphen parsing cleaning step (with a bool flag to activate or not) to improve some country address parsing (
+  see [issue 137](https://github.com/GRAAL-Research/deepparse/issues/137)).
 - Add ListDatasetContainer for Python list dataset.
 
 ## 0.8.1
 
 - Refactored function `download_from_url` to `download_from_public_repository`.
-- Add error management when retrain a FastText like model on Windows with a number of workers (`num_workers`) greater than 0.
+- Add error management when retrain a FastText like model on Windows with a number of workers (`num_workers`) greater
+  than 0.
 - Improve dev tooling
 - Improve CI
 - Improve code coverage and pylint
 - Add codacy
 
 ## dev
+
+- Bug-fix retrain attention model naming parsing
+- Improve error handling when not a DatasetContainer is use in retrain and test API

@@ -314,6 +314,27 @@ class ToolsTests(CaptureOutputTestCase, PretrainedWeightsBase):
                     expected_model_type += "_attention"
                 self.assertEqual(expected_model_type, actual_model_type)
 
+        # Retrained models no attention
+        retrain_model_type = "fasttext"
+        expected_model_type = "fasttext"
+        actual_model_type, _ = handle_model_name(retrain_model_type, attention_mechanism=False)
+        self.assertEqual(expected_model_type, actual_model_type)
+
+        retrain_model_type = "fasttext_attention"
+        expected_model_type = "fasttext_attention"
+        actual_model_type, _ = handle_model_name(retrain_model_type, attention_mechanism=True)
+        self.assertEqual(expected_model_type, actual_model_type)
+
+        retrain_model_type = "bpemb"
+        expected_model_type = "bpemb"
+        actual_model_type, _ = handle_model_name(retrain_model_type, attention_mechanism=False)
+        self.assertEqual(expected_model_type, actual_model_type)
+
+        retrain_model_type = "bpemb_attention"
+        expected_model_type = "bpemb_attention"
+        actual_model_type, _ = handle_model_name(retrain_model_type, attention_mechanism=True)
+        self.assertEqual(expected_model_type, actual_model_type)
+
     def test_givenModelTypes_whenHandleThem_then_ReturnProperFormattedModelType(self):
         # "Normal" Fasttext setup
         model_types = ["fasttext", "fastest"]

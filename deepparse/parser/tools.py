@@ -77,12 +77,18 @@ def handle_model_name(model_type: str, attention_mechanism: bool) -> Tuple[str, 
     model_type = model_type.lower()
 
     # To handle retrained model using attention mechanism.
-    if 'attention' in model_type:
+    if "attention" in model_type:
         if not attention_mechanism:
             raise ValueError(
                 f"Model-type {model_type} requires attention mechanism. Set attention_mechanism flag to True."
             )
-        model_type = model_type.replace('attention', '')
+        # To handle the presence of attention in the model name.
+        # We handle two cases: modelattention and model_attention.
+        # To do so, we first remove the attention for both case, and
+        # second we handle the trailing possible underscore for the
+        # second case.
+        model_type = model_type.replace("attention", "")
+        model_type = model_type.replace("_", "")
 
     if model_type in ("lightest", "fasttext-light"):
         model_type = "fasttext-light"  # We change name to 'fasttext-light' since lightest = fasttext-light
@@ -106,7 +112,7 @@ def handle_model_name(model_type: str, attention_mechanism: bool) -> Tuple[str, 
 
 def infer_model_type(checkpoint_weights: OrderedDict, attention_mechanism: bool) -> (str, bool):
     """
-    Function to infer the model type using the weights matrix.
+    Function to infer the model type using the weights' matrix.
     We first try to use the "model_type" key added by our retrain process.
     If this fails, we infer it using our knowledge of the layers' names.
     For example, BPEmb model uses an embedding network, thus, if ``embedding_network.model.weight_ih_l0`` is present,

@@ -152,7 +152,11 @@ class RetrainTests(RetrainTestCase):
         )
 
     def test_integration_csv(self):
-        parser_params = self.set_up_params(csv_column_names=["Address", "Tags"], csv_column_separator=",")
+        parser_params = self.set_up_params(
+            train_dataset_path=self.a_train_csv_dataset_path,
+            csv_column_names=["Address", "Tags"],
+            csv_column_separator=",",
+        )
 
         retrain.main(parser_params)
 

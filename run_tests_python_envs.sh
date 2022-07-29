@@ -98,27 +98,38 @@ conda env remove -n deepparse_pytest_3_10
 
 # All tests env print
 echo "*****The results of the tests are:"
+return_status=0
 
 if [ $python3_7_tests_res -eq 1 ]; then
   echo "Success for Python 3.7"
 else
+  return_status=1
   echo "Fail for Python 3.7"
 fi
 
 if [ $python3_8_tests_res -eq 1 ]; then
   echo "Success for Python 3.8"
 else
+  return_status=1
   echo "Fail for Python 3.8"
 fi
 
 if [ $python3_9_tests_res -eq 1 ]; then
   echo "Success for Python 3.9"
 else
+  return_status=1
   echo "Fail for Python 3.9"
 fi
 
 if [ $python3_10_tests_res -eq 1 ]; then
   echo "Success for Python 3.10"
 else
+  return_status=1
   echo "Fail for Python 3.10"
+fi
+
+if [ $return_status -eq 1]; then
+  exit 1
+else
+  exit 0
 fi

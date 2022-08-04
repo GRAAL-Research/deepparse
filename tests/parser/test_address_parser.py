@@ -1,5 +1,5 @@
 # Since we use a patch as model mock we skip the unused argument error
-# pylint: disable=unused-argument, no-member, too-many-public-methods, too-many-lines
+# pylint: disable=unused-argument, no-member, too-many-public-methods, too-many-lines, too-many-arguments
 
 # Pylint error for TemporaryDirectory ask for with statement
 # pylint: disable=consider-using-with
@@ -76,9 +76,13 @@ class AddressParserTest(AddressParserPredictTestCase):
             "EOS",
         ]
 
+        cls.export_temp_dir_obj = TemporaryDirectory()
+        cls.a_saving_dir_path = cls.export_temp_dir_obj.name
+
     @classmethod
     def tearDownClass(cls) -> None:
         cls.temp_dir_obj.cleanup()
+        cls.export_temp_dir_obj.cleanup()
 
     def setUp(self):
         super().setUp()
@@ -1616,6 +1620,33 @@ class AddressParserTest(AddressParserPredictTestCase):
                 cache_dir=self.a_cache_dir,
             )
             download_weights_mock.assert_called_with(verbose=self.verbose, cache_dir=self.a_cache_dir)
+
+    @patch("deepparse.parser.address_parser.torch.save")
+    @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
+    @patch("deepparse.parser.address_parser.fasttext_data_padding")
+    @patch("deepparse.parser.address_parser.FastTextVectorizer")
+    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
+    def test_givenAModelToExportDict_thenCallTorchSaveWithProperArgs(
+        self,
+        download_weights_mock,
+        embeddings_model_mock,
+        vectorizer_model_mock,
+        data_padding_mock,
+        model_mock,
+        torch_save_mock,
+    ):
+        address_parser = AddressParser(
+            model_type=self.a_fasttext_model_type,
+            device=self.a_cpu_device,
+            verbose=self.verbose,
+        )
+
+        a_file_path = os.path.join(self.a_saving_dir_path, "exported_model.p")
+        address_parser.save_model_weights(file_path=a_file_path)
+
+        torch_save_mock.assert_called()
+        torch_save_mock.assert_called_with(model_mock().state_dict(), a_file_path)
 
 
 if __name__ == "__main__":

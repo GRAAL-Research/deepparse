@@ -252,3 +252,5 @@
 - Improve error handling when not a DatasetContainer is use in retrain and test API
 
 ## dev
+
+- Add `save_model_weights` method to `AddressParser` to save model weights (PyTorch state dictionary)

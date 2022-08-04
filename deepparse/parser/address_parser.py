@@ -13,6 +13,7 @@ import os
 import platform
 import re
 import warnings
+from pathlib import Path
 from typing import List, Union, Dict, Tuple
 
 import torch
@@ -850,6 +851,35 @@ class AddressParser:
         test_res = exp.test(test_generator, seed=seed, callbacks=callbacks, verbose=self.verbose)
 
         return test_res
+
+    def save_model_weights(self, file_path: Union[str, Path]) -> None:
+        """
+        Method to save, in a Pickle format, the address parser model weights (PyTorch state dictionary).
+
+        file_path (Union[str, Path]): A complete file path with a pickle extension to save the model weights.
+            It can either be a string (e.g. 'path/to/save.p') or a path like path (e.g. Path('path/to/save.p').
+
+        Examples:
+
+            .. code-block:: python
+
+                address_parser = AddressParser(device=0)
+
+                a_path = Path('some/path/to/save.p')
+                address_parser.save_address_parser_weights(a_path)
+
+
+            .. code-block:: python
+
+                address_parser = AddressParser(device=0)
+
+                a_path = 'some/path/to/save.p'
+                address_parser.save_address_parser_weights(a_path)
+
+        """
+        self.model.state_dict()
+
+        torch.save(self.model.state_dict(), file_path)
 
     def _fill_tagged_addresses_components(
         self,

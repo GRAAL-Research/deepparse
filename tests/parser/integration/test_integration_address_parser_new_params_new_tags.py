@@ -22,7 +22,7 @@ from deepparse.parser import (
 
 @skipIf(not torch.cuda.is_available(), "no gpu available")
 # We skip it even if it is CPU since the downloading is too long
-class AddressParserPredictTest(TestCase):
+class AddressParserPredictNewTagsTest(TestCase):
     @classmethod
     def setUpClass(cls):
         cls.an_address_to_parse = "350 rue des lilas o"

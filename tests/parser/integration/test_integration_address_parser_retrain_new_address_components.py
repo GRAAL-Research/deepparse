@@ -19,10 +19,10 @@ from tests.parser.integration.base_retrain import AddressParserRetrainTestCase
     not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
     "download of model too long for test in runner",
 )
-class AddressParserIntegrationTestNewTags(AddressParserRetrainTestCase):
+class AddressParserIntegrationTestNewAddressComponents(AddressParserRetrainTestCase):
     @classmethod
     def setUpClass(cls):
-        super(AddressParserIntegrationTestNewTags, cls).setUpClass()
+        super(AddressParserIntegrationTestNewAddressComponents, cls).setUpClass()
 
         file_extension = "p"
         training_dataset_name = "test_sample_data_new_prediction_tags"

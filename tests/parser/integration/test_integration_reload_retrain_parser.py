@@ -14,10 +14,10 @@ from tests.parser.integration.base_retrain import AddressParserRetrainTestCase
     not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
     "download of model too long for test in runner",
 )
-class AddressParserIntegrationTestAPITest(AddressParserRetrainTestCase, PretrainedWeightsBase):
+class AddressParserIntegrationReloadRetrainAPITest(AddressParserRetrainTestCase, PretrainedWeightsBase):
     @classmethod
     def setUpClass(cls):
-        super(AddressParserIntegrationTestAPITest, cls).setUpClass()
+        super(AddressParserIntegrationReloadRetrainAPITest, cls).setUpClass()
         cls.download_pre_trained_weights(cls)
 
     def test_integration_parsing_with_retrain_fasttext(self):

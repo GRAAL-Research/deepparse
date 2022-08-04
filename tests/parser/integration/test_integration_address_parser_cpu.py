@@ -16,7 +16,7 @@ from tests.parser.integration.base_predict import (
     not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
     "download of model too long for test in runner",
 )
-class AddressParserTest(AddressParserBase):
+class AddressParserCPUTest(AddressParserBase):
     def setUp(self) -> None:
         a_config = {"model_type": "fasttext", "device": "cpu", "verbose": False}
         self.setup_model_with_config(a_config)

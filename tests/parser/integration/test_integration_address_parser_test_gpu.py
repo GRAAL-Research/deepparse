@@ -12,7 +12,7 @@ from tests.parser.integration.base_retrain import AddressParserRetrainTestCase
 
 
 @skipIf(not torch.cuda.is_available(), "no gpu available")
-class AddressParserIntegrationTestAPITest(AddressParserRetrainTestCase):
+class AddressParserIntegrationTestAPIGPUTest(AddressParserRetrainTestCase):
     def test_givenAFasttextAddressParser_whenTestWithNumWorkerAt0_thenTestOccur(self):
         address_parser = AddressParser(
             model_type=self.a_fasttext_model_type,

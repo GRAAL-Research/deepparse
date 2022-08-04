@@ -15,7 +15,7 @@ from tests.parser.integration.base_retrain import AddressParserRetrainTestCase
     not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
     "download of model too long for test in runner",
 )
-class AddressParserIntegrationTestAPITest(AddressParserRetrainTestCase):
+class AddressParserIntegrationTestAPICPUTest(AddressParserRetrainTestCase):
     def test_givenAFasttextAddressParser_whenTestWithNumWorkerAt0_thenTestOccur(self):
         address_parser = AddressParser(
             model_type=self.a_fasttext_model_type,

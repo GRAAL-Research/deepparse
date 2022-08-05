@@ -254,3 +254,4 @@
 ## dev
 
 - Add `save_model_weights` method to `AddressParser` to save model weights (PyTorch state dictionary)
+- Improve CI

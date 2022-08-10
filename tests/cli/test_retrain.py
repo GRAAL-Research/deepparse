@@ -82,8 +82,6 @@ class RetrainTests(RetrainTestCase):
         parser_params = [
             model_type,
             train_dataset_path,
-            "--val_dataset_path",
-            val_dataset_path,
             "--train_ratio",
             train_ratio,
             "--batch_size",
@@ -108,6 +106,10 @@ class RetrainTests(RetrainTestCase):
             csv_column_separator,
         ]
 
+        if val_dataset_path is not None:
+            # To handle the None case (that is using the default None of the argparser).
+            parser_params.extend(["--val_dataset_path", val_dataset_path])
+
         if cache_dir is not None:
             # To handle the None case (that is using the default None of the argparser).
             parser_params.extend(["--cache_dir", cache_dir])
@@ -117,6 +119,7 @@ class RetrainTests(RetrainTestCase):
             parser_params.extend(["--name_of_the_retrain_parser", name_of_the_retrain_parser])
 
         if csv_column_names is not None:
+            # To handle the None case (that is using the default None of the argparser).
             parser_params.extend(["--csv_column_names"])
             parser_params.extend(csv_column_names)  # Since csv_column_names is a list
 

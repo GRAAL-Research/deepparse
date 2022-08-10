@@ -95,6 +95,15 @@ def main(args=None) -> None:
         csv_column_names=parsed_args.csv_column_names,
     )
 
+    val_data = parsed_args.val_dataset_path
+    if val_data is not None:
+        val_data = data_container_factory(
+            dataset_path=parsed_args.val_dataset_path,
+            trainable_dataset=True,
+            csv_column_separator=parsed_args.csv_column_separator,
+            csv_column_names=parsed_args.csv_column_names,
+        )
+
     base_parsing_model = parsed_args.base_parsing_model
     device = parsed_args.device
 
@@ -108,7 +117,9 @@ def main(args=None) -> None:
 
     parsed_retain_arguments = parse_retrained_arguments(parsed_args)
 
-    address_parser.retrain(dataset_container=training_data, **parsed_retain_arguments)
+    address_parser.retrain(
+        train_dataset_container=training_data, val_dataset_container=val_data, **parsed_retain_arguments
+    )
 
 
 def get_parser() -> argparse.ArgumentParser:
@@ -122,6 +133,18 @@ def get_parser() -> argparse.ArgumentParser:
         "train_dataset_path",
         help=wrap("The path to the dataset file in a pickle (.p, .pickle or .pckl) or CSV format."),
         type=str,
+    )
+
+    parser.add_argument(
+        "--val_dataset_path",
+        help=wrap(
+            "The path to the validation dataset file in a pickle (.p, .pickle or .pckl) or CSV format. "
+            "If the dataset are CSV, both train and val must have the same CSV formatting "
+            "(columns names). If not provided, the train dataset will be split in a train and val "
+            "dataset (default is None)."
+        ),
+        type=str,
+        default=None,
     )
 
     parser.add_argument(

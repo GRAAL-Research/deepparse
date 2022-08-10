@@ -387,7 +387,8 @@ class AddressParser:
 
     def retrain(
         self,
-        dataset_container: DatasetContainer,
+        train_dataset_container: DatasetContainer = None,
+        val_dataset_container: Union[DatasetContainer, None] = None,
         train_ratio: float = 0.8,
         batch_size: int = 32,
         epochs: int = 5,
@@ -415,12 +416,25 @@ class AddressParser:
         prediction tags, and if new ``seq2seq_params`` were used, the new seq2seq parameters.
 
         Args:
-            dataset_container (~deepparse.dataset_container.DatasetContainer): The dataset container of the data to use
-                such as any PyTorch Dataset (:class:`~torch.utils.data.Dataset`) user define class or one of our two
-                DatasetContainer (:class:`~deepparse.dataset_container.PickleDatasetContainer` or
-                :class:`~deepparse.dataset_container.CSVDatasetContainer`)
-            train_ratio (float): The ratio to use of the dataset for the training. The rest of the data is used for the
-                validation (e.g. a train ratio of 0.8 mean a 80-20 train-valid split) (by default, ``0.8``).
+            train_dataset_container (~deepparse.dataset_container.DatasetContainer): The train dataset container of
+                the training data to use such as any PyTorch Dataset
+                (:class:`~torch.utils.data.Dataset`) user define class or one of our
+                DatasetContainer (:class:`~deepparse.dataset_container.PickleDatasetContainer`,
+                :class:`~deepparse.dataset_container.CSVDatasetContainer` or
+                :class:`~deepparse.dataset_container.ListDatasetContainer`). The train dataset is use as two ways:
+
+                    1. As is if a validating dataset is provided (``val_dataset_container``).
+                    2. Split in a training and validation dataset if ``val_dataset_container`` is set to None.
+
+                Thus, it means that if ``val_dataset_container`` is set to the None default settings, we use the
+                ``train_ratio`` argument to split the training dataset into a train and val dataset. See examples for
+                more details.
+            val_dataset_container (Union[~deepparse.dataset_container.DatasetContainer, None]): The validation dataset
+                container to use for validating the model (by default, ``None``).
+            train_ratio (float): The ratio to use of the ``train_dataset_container`` for the training procedure.
+                The rest of the data is used for the validation (e.g. a train ratio of 0.8 mean an
+                80-20 train-valid split) (by default, ``0.8``). The argument is ignored if ``val_dataset_container`` is
+                not None.
             batch_size (int): The size of the batch (by default, ``32``).
             epochs (int): The number of training epochs (by default, ``5``).
             num_workers (int): The number of workers to use for the data loader (by default, ``1`` worker).
@@ -520,6 +534,8 @@ class AddressParser:
 
                 container = PickleDatasetContainer(data_path)
 
+                # The validation dataset is created from the training dataset (container)
+                # 80% of the data is use for training and 20% as a validation dataset
                 address_parser.retrain(container, 0.8, epochs=1, batch_size=128)
 
             Using the freezing layers parameters to freeze layers during training
@@ -527,10 +543,17 @@ class AddressParser:
             .. code-block:: python
 
                 address_parser = AddressParser(device=0)
-                data_path = "path_to_a_csv_dataset.p"
 
+                data_path = "path_to_a_csv_dataset.p"
                 container = CSVDatasetContainer(data_path)
-                address_parser.retrain(container, 0.8, epochs=5, batch_size=128, layers_to_freeze="encoder")
+
+                val_data_path = "path_to_a_csv_val_dataset.p"
+                val_container = CSVDatasetContainer(val_data_path)
+
+                # We provide the train dataset (container) and the val dataset (val_container)
+                # Thus, the train_ratio argument is ignored, and we use instead the val_container
+                # as the validating dataset.
+                address_parser.retrain(container, val_container, epochs=5, batch_size=128, layers_to_freeze="encoder")
 
             Using learning rate scheduler callback.
 
@@ -601,31 +624,9 @@ class AddressParser:
                     name_of_the_retrain_parser="MyParserName")
 
         """
-
-        if "fasttext-light" in self.model_type:
-            raise ValueError("It's not possible to retrain a fasttext-light due to pymagnitude problem.")
-
-        if platform.system().lower() == "windows" and "fasttext" in self.model_type and num_workers > 0:
-            raise ValueError(
-                "On Windows system, we cannot retrain FastText like models with parallelism workers since "
-                "FastText objects are not pickleable with the parallelism process use by Windows. "
-                "Thus, you need to set num_workers to 0 since 1 also means 'parallelism'."
-            )
-
-        if not isinstance(dataset_container, DatasetContainer):
-            raise ValueError(
-                "The dataset_container has to be a DatasetContainer. "
-                "Read the docs at https://deepparse.org/ for more details."
-            )
-
-        if not dataset_container.is_a_train_container():
-            raise ValueError("The dataset container is not a train container.")
-
-        if name_of_the_retrain_parser is not None:
-            if len(name_of_the_retrain_parser.split(".")) > 1:
-                raise ValueError(
-                    "The name_of_the_retrain_parser should NOT include a file extension or a dot-like filename style."
-                )
+        self._retrain_argumentation_validations(
+            train_dataset_container, val_dataset_container, num_workers, name_of_the_retrain_parser
+        )
 
         model_factory_dict = {"prediction_layer_len": 9}  # We set the default output dim size
 
@@ -659,7 +660,7 @@ class AddressParser:
 
         callbacks = [] if callbacks is None else callbacks
         train_generator, valid_generator = self._create_training_data_generator(
-            dataset_container, train_ratio, batch_size, num_workers, seed=seed
+            train_dataset_container, val_dataset_container, train_ratio, batch_size, num_workers, seed=seed
         )
 
         if layers_to_freeze is not None and seq2seq_params is None:
@@ -950,7 +951,8 @@ class AddressParser:
 
     def _create_training_data_generator(
         self,
-        dataset_container: DatasetContainer,
+        train_dataset_container: DatasetContainer,
+        val_dataset_container: DatasetContainer,
         train_ratio: float,
         batch_size: int,
         num_workers: int,
@@ -959,11 +961,18 @@ class AddressParser:
         # pylint: disable=too-many-arguments
         data_transform = self._set_data_transformer()
 
-        train_indices, valid_indices = indices_splitting(
-            num_data=len(dataset_container), train_ratio=train_ratio, seed=seed
-        )
+        if val_dataset_container is None:
+            train_indices, valid_indices = indices_splitting(
+                num_data=len(train_dataset_container), train_ratio=train_ratio, seed=seed
+            )
 
-        train_dataset = Subset(dataset_container, train_indices)
+            train_dataset = Subset(train_dataset_container, train_indices)
+
+            valid_dataset = Subset(train_dataset_container, valid_indices)
+        else:
+            train_dataset = train_dataset_container
+            valid_dataset = val_dataset_container
+
         train_generator = DataLoader(
             train_dataset,
             collate_fn=data_transform.teacher_forcing_transform,
@@ -972,7 +981,6 @@ class AddressParser:
             shuffle=True,
         )
 
-        valid_dataset = Subset(dataset_container, valid_indices)
         valid_generator = DataLoader(
             valid_dataset,
             collate_fn=data_transform.output_transform,
@@ -1125,3 +1133,48 @@ class AddressParser:
         layers_to_freeze_str = f"FreezedLayer{layers_to_freeze.capitalize()}" if layers_to_freeze is not None else ""
         parser_name = self._model_type_formatted + prediction_tags_str + seq2seq_params_str + layers_to_freeze_str
         return parser_name
+
+    def _retrain_argumentation_validations(
+        self,
+        train_dataset_container: DatasetContainer,
+        val_dataset_container: DatasetContainer,
+        num_workers: int,
+        name_of_the_retrain_parser: Union[str, None],
+    ):
+        """
+        Arguments validation test for retrain methods.
+        """
+        if "fasttext-light" in self.model_type:
+            raise ValueError("It's not possible to retrain a fasttext-light due to pymagnitude problem.")
+
+        if platform.system().lower() == "windows" and "fasttext" in self.model_type and num_workers > 0:
+            raise ValueError(
+                "On Windows system, we cannot retrain FastText like models with parallelism workers since "
+                "FastText objects are not pickleable with the parallelism process use by Windows. "
+                "Thus, you need to set num_workers to 0 since 1 also means 'parallelism'."
+            )
+
+        if not isinstance(train_dataset_container, DatasetContainer):
+            raise ValueError(
+                "The train dataset container (train_dataset_container) has to be a DatasetContainer. "
+                "Read the docs at https://deepparse.org/ for more details."
+            )
+
+        if not train_dataset_container.is_a_train_container():
+            raise ValueError("The train dataset container (train_dataset_container) is not a trainable container.")
+
+        if val_dataset_container is not None:
+            if not isinstance(val_dataset_container, DatasetContainer):
+                raise ValueError(
+                    "The val dataset container (val_dataset_container) has to be a DatasetContainer. "
+                    "Read the docs at https://deepparse.org/ for more details."
+                )
+
+            if not val_dataset_container.is_a_train_container():
+                raise ValueError("The val dataset container (val_dataset_container) is not a trainable container.")
+
+        if name_of_the_retrain_parser is not None:
+            if len(name_of_the_retrain_parser.split(".")) > 1:
+                raise ValueError(
+                    "The name_of_the_retrain_parser should NOT include a file extension or a dot-like filename style."
+                )

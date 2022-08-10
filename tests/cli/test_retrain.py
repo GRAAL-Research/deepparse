@@ -53,6 +53,7 @@ class RetrainTests(RetrainTestCase):
         self,
         model_type=None,  # None to handle the default tests case.
         train_dataset_path=None,  # None to handle the default tests case.
+        val_dataset_path=None,
         train_ratio="0.8",
         batch_size="32",
         epochs="1",  # As opposed to default CLI function, we set the epoch value number to 1,
@@ -81,6 +82,8 @@ class RetrainTests(RetrainTestCase):
         parser_params = [
             model_type,
             train_dataset_path,
+            "--val_dataset_path",
+            val_dataset_path,
             "--train_ratio",
             train_ratio,
             "--batch_size",
@@ -263,6 +266,16 @@ class RetrainTests(RetrainTestCase):
             address_parser_mock.assert_called_with(
                 device=self.cpu_device, cache_dir=self.a_cache_dir, model_type=self.a_fasttext_model_type
             )  # Default tests case default model type is the FastText model
+
+    def test_integrationWithValDataset(self):
+        parser_params = self.set_up_params(device=self.cpu_device, val_dataset_path=self.a_train_pickle_dataset_path)
+        retrain.main(parser_params)
+
+        self.assertTrue(
+            os.path.isfile(
+                os.path.join(self.temp_checkpoints_obj.name, "checkpoints", "retrained_fasttext_address_parser.ckpt")
+            )
+        )
 
 
 if __name__ == "__main__":

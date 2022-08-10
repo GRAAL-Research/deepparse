@@ -56,8 +56,8 @@ def main(args=None) -> None:
 
     testing_data = data_container_factory(
         dataset_path=test_dataset_path,
-        csv_column_separator=parsed_args.csv_column_separator,
         trainable_dataset=True,
+        csv_column_separator=parsed_args.csv_column_separator,
         csv_column_names=parsed_args.csv_column_names,
     )
 

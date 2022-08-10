@@ -184,13 +184,13 @@ def wrap(text, **kwargs):  # pragma: no cover
 
 def data_container_factory(
     dataset_path: str,
-    csv_column_separator: str,
     trainable_dataset: bool,
+    csv_column_separator: str = None,
     csv_column_name: str = None,
     csv_column_names: List = None,
 ) -> DatasetContainer:
     """
-    Factory to create the trainable dataset container
+    Factory to create the trainable dataset container.
     """
     if is_csv_path(dataset_path):
         if trainable_dataset:

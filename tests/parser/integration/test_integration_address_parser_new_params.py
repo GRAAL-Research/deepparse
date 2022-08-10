@@ -22,8 +22,8 @@ class AddressParserPredictNewParamsTest(AddressParserPredictNewParamsBase):
         )
         self.training(
             fasttext_address_parser,
-            self.training_container,
-            self.a_number_of_workers,
+            train_data_container=self.training_container,
+            num_workers=self.a_number_of_workers,
             seq2seq_params=self.seq2seq_params,
         )
 
@@ -60,8 +60,8 @@ class AddressParserPredictNewParamsTest(AddressParserPredictNewParamsBase):
         )
         self.training(
             fasttext_address_parser,
-            self.training_container,
-            self.a_number_of_workers,
+            train_data_container=self.training_container,
+            num_workers=self.a_number_of_workers,
             seq2seq_params=self.seq2seq_params,
         )
 
@@ -73,7 +73,7 @@ class AddressParserPredictNewParamsTest(AddressParserPredictNewParamsBase):
             path_to_retrained_model=self.a_fasttext_retrain_model_path,
         )
 
-        # Since we train a smaller model, it sometime return EOS, so we manage it by adding the EOS tag
+        # Since we train a smaller model, it sometime returns EOS, so we manage it by adding the EOS tag
         formatted_parsed_address.FIELDS = [
             "StreetNumber",
             "Unit",
@@ -85,7 +85,7 @@ class AddressParserPredictNewParamsTest(AddressParserPredictNewParamsBase):
             "GeneralDelivery",
             "EOS",
         ]
-        # We validate that the new settings are loaded and we can parse
+        # We validate that the new settings are loaded, and we can parse
         parse_address = fasttext_address_parser(self.an_address_to_parse)
         self.assertIsInstance(parse_address, FormattedParsedAddress)
 
@@ -98,8 +98,8 @@ class AddressParserPredictNewParamsTest(AddressParserPredictNewParamsBase):
         )
         self.training(
             bpemb_address_parser,
-            self.training_container,
-            self.a_number_of_workers,
+            train_data_container=self.training_container,
+            num_workers=self.a_number_of_workers,
             seq2seq_params=self.seq2seq_params,
         )
 
@@ -137,8 +137,8 @@ class AddressParserPredictNewParamsTest(AddressParserPredictNewParamsBase):
         )
         self.training(
             bpemb_address_parser,
-            self.training_container,
-            self.a_number_of_workers,
+            train_data_container=self.training_container,
+            num_workers=self.a_number_of_workers,
             seq2seq_params=self.seq2seq_params,
         )
 

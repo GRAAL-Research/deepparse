@@ -387,7 +387,7 @@ class AddressParser:
 
     def retrain(
         self,
-        train_dataset_container: DatasetContainer = None,
+        train_dataset_container: DatasetContainer,
         val_dataset_container: Union[DatasetContainer, None] = None,
         train_ratio: float = 0.8,
         batch_size: int = 32,

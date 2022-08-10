@@ -28,7 +28,7 @@ class AddressParserIntegrationRetrainCPUTest(AddressParserRetrainTestCase, Captu
 
         performance_after_training = address_parser.retrain(
             self.training_container,
-            self.a_train_ratio,
+            train_ratio=self.a_train_ratio,
             epochs=self.a_single_epoch,
             batch_size=self.a_batch_size,
             num_workers=self.a_number_of_workers,
@@ -51,7 +51,7 @@ class AddressParserIntegrationRetrainCPUTest(AddressParserRetrainTestCase, Captu
 
         address_parser.retrain(
             self.training_container,
-            self.a_train_ratio,
+            train_ratio=self.a_train_ratio,
             epochs=self.a_single_epoch,
             batch_size=self.a_batch_size,
             num_workers=self.a_number_of_workers,
@@ -81,7 +81,7 @@ class AddressParserIntegrationRetrainCPUTest(AddressParserRetrainTestCase, Captu
 
         address_parser.retrain(
             self.training_container,
-            self.a_train_ratio,
+            train_ratio=self.a_train_ratio,
             epochs=self.a_single_epoch,
             batch_size=self.a_batch_size,
             num_workers=self.a_number_of_workers,
@@ -112,7 +112,7 @@ class AddressParserIntegrationRetrainCPUTest(AddressParserRetrainTestCase, Captu
 
         address_parser.retrain(
             self.training_container,
-            self.a_train_ratio,
+            train_ratio=self.a_train_ratio,
             epochs=self.a_single_epoch,
             batch_size=self.a_batch_size,
             num_workers=self.a_number_of_workers,
@@ -141,7 +141,7 @@ class AddressParserIntegrationRetrainCPUTest(AddressParserRetrainTestCase, Captu
 
         address_parser.retrain(
             self.training_container,
-            self.a_train_ratio,
+            train_ratio=self.a_train_ratio,
             epochs=self.a_single_epoch,
             batch_size=self.a_batch_size,
             num_workers=self.a_number_of_workers,
@@ -169,7 +169,7 @@ class AddressParserIntegrationRetrainCPUTest(AddressParserRetrainTestCase, Captu
 
         performance_after_training = address_parser.retrain(
             self.training_container,
-            self.a_train_ratio,
+            train_ratio=self.a_train_ratio,
             epochs=self.a_three_epoch,
             batch_size=self.a_batch_size,
             num_workers=self.a_number_of_workers,
@@ -187,7 +187,7 @@ class AddressParserIntegrationRetrainCPUTest(AddressParserRetrainTestCase, Captu
 
         performance_after_training = address_parser.retrain(
             self.training_container,
-            self.a_train_ratio,
+            train_ratio=self.a_train_ratio,
             epochs=self.a_single_epoch,
             batch_size=self.a_batch_size,
             num_workers=self.a_number_of_workers,
@@ -209,7 +209,7 @@ class AddressParserIntegrationRetrainCPUTest(AddressParserRetrainTestCase, Captu
         callback_mock = MagicMock(spec=Callback)
         performance_after_training = address_parser.retrain(
             self.training_container,
-            self.a_train_ratio,
+            train_ratio=self.a_train_ratio,
             epochs=self.a_single_epoch,
             batch_size=self.a_batch_size,
             num_workers=self.a_number_of_workers,
@@ -237,7 +237,7 @@ class AddressParserIntegrationRetrainCPUTest(AddressParserRetrainTestCase, Captu
         with self.assertRaises(ValueError):
             address_parser.retrain(
                 self.training_container,
-                self.a_train_ratio,
+                train_ratio=self.a_train_ratio,
                 epochs=self.a_single_epoch,
                 batch_size=self.a_batch_size,
                 num_workers=self.a_number_of_workers,
@@ -253,7 +253,7 @@ class AddressParserIntegrationRetrainCPUTest(AddressParserRetrainTestCase, Captu
 
         performance_after_training = address_parser.retrain(
             self.training_container,
-            self.a_train_ratio,
+            train_ratio=self.a_train_ratio,
             epochs=self.a_single_epoch,
             batch_size=self.a_batch_size,
             num_workers=self.a_number_of_workers,
@@ -273,7 +273,7 @@ class AddressParserIntegrationRetrainCPUTest(AddressParserRetrainTestCase, Captu
 
         performance_after_training = address_parser.retrain(
             self.training_container,
-            self.a_train_ratio,
+            train_ratio=self.a_train_ratio,
             epochs=self.a_three_epoch,
             batch_size=self.a_batch_size,
             num_workers=self.a_number_of_workers,
@@ -291,7 +291,7 @@ class AddressParserIntegrationRetrainCPUTest(AddressParserRetrainTestCase, Captu
 
         performance_after_training = address_parser.retrain(
             self.training_container,
-            self.a_train_ratio,
+            train_ratio=self.a_train_ratio,
             epochs=self.a_single_epoch,
             batch_size=self.a_batch_size,
             num_workers=self.a_number_of_workers,
@@ -313,7 +313,7 @@ class AddressParserIntegrationRetrainCPUTest(AddressParserRetrainTestCase, Captu
         callback_mock = MagicMock(spec=Callback)
         performance_after_training = address_parser.retrain(
             self.training_container,
-            self.a_train_ratio,
+            train_ratio=self.a_train_ratio,
             epochs=self.a_single_epoch,
             batch_size=self.a_batch_size,
             num_workers=self.a_number_of_workers,

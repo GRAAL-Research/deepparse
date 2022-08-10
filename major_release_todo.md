@@ -1,2 +1,0 @@
-- Remove deprecated `download_from_url` function
-- https://zenodo.org/account/settings/github/repository/GRAAL-Research/deepparse

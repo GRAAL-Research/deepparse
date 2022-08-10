@@ -93,14 +93,15 @@ class AddressParserPredictNewParamsBase(TestCase):
     def training(
         self,
         address_parser: AddressParser,
-        data_container: DatasetContainer,
-        num_workers: int,
+        train_data_container: DatasetContainer,
+        num_workers: int = 1,
         prediction_tags=None,
         seq2seq_params=None,
     ):
         address_parser.retrain(
-            data_container,
-            self.a_train_ratio,
+            train_data_container,
+            val_dataset_container=None,
+            train_ratio=self.a_train_ratio,
             epochs=self.a_single_epoch,
             batch_size=self.a_batch_size,
             num_workers=num_workers,

@@ -23,7 +23,26 @@ class AddressParserIntegrationRetrainGPUTest(AddressParserRetrainTestCase):
 
         performance_after_training = address_parser.retrain(
             self.training_container,
-            self.a_train_ratio,
+            train_ratio=self.a_train_ratio,
+            epochs=self.a_single_epoch,
+            batch_size=self.a_batch_size,
+            num_workers=self.a_number_of_workers,
+            logging_path=self.a_checkpoints_saving_dir,
+        )
+
+        self.assertIsNotNone(performance_after_training)
+
+    def test_givenAFasttextAddressParser_whenRetrainWithValDataset_thenTrainingOccur(self):
+        address_parser = AddressParser(
+            model_type=self.a_fasttext_model_type,
+            device=self.a_torch_device,
+            verbose=self.verbose,
+        )
+
+        performance_after_training = address_parser.retrain(
+            self.training_container,
+            val_dataset_container=self.training_container,
+            train_ratio=self.a_train_ratio,
             epochs=self.a_single_epoch,
             batch_size=self.a_batch_size,
             num_workers=self.a_number_of_workers,
@@ -43,7 +62,7 @@ class AddressParserIntegrationRetrainGPUTest(AddressParserRetrainTestCase):
 
         performance_after_training = address_parser.retrain(
             self.training_container,
-            self.a_train_ratio,
+            train_ratio=self.a_train_ratio,
             epochs=self.a_three_epoch,
             batch_size=self.a_batch_size,
             num_workers=self.a_number_of_workers,
@@ -61,7 +80,7 @@ class AddressParserIntegrationRetrainGPUTest(AddressParserRetrainTestCase):
 
         performance_after_training = address_parser.retrain(
             self.training_container,
-            self.a_train_ratio,
+            train_ratio=self.a_train_ratio,
             epochs=self.a_single_epoch,
             batch_size=self.a_batch_size,
             num_workers=self.a_number_of_workers,
@@ -83,7 +102,7 @@ class AddressParserIntegrationRetrainGPUTest(AddressParserRetrainTestCase):
         callback_mock = MagicMock(spec=Callback)
         performance_after_training = address_parser.retrain(
             self.training_container,
-            self.a_train_ratio,
+            train_ratio=self.a_train_ratio,
             epochs=self.a_single_epoch,
             batch_size=self.a_batch_size,
             num_workers=self.a_number_of_workers,
@@ -111,7 +130,7 @@ class AddressParserIntegrationRetrainGPUTest(AddressParserRetrainTestCase):
         with self.assertRaises(ValueError):
             _ = address_parser.retrain(
                 self.training_container,
-                self.a_train_ratio,
+                train_ratio=self.a_train_ratio,
                 epochs=self.a_single_epoch,
                 batch_size=self.a_batch_size,
                 num_workers=self.a_number_of_workers,
@@ -127,7 +146,7 @@ class AddressParserIntegrationRetrainGPUTest(AddressParserRetrainTestCase):
 
         performance_after_training = address_parser.retrain(
             self.training_container,
-            self.a_train_ratio,
+            train_ratio=self.a_train_ratio,
             epochs=self.a_single_epoch,
             batch_size=self.a_batch_size,
             num_workers=self.a_number_of_workers,
@@ -147,7 +166,7 @@ class AddressParserIntegrationRetrainGPUTest(AddressParserRetrainTestCase):
 
         performance_after_training = address_parser.retrain(
             self.training_container,
-            self.a_train_ratio,
+            train_ratio=self.a_train_ratio,
             epochs=self.a_three_epoch,
             batch_size=self.a_batch_size,
             num_workers=self.a_number_of_workers,
@@ -165,7 +184,7 @@ class AddressParserIntegrationRetrainGPUTest(AddressParserRetrainTestCase):
 
         performance_after_training = address_parser.retrain(
             self.training_container,
-            self.a_train_ratio,
+            train_ratio=self.a_train_ratio,
             epochs=self.a_single_epoch,
             batch_size=self.a_batch_size,
             num_workers=self.a_number_of_workers,
@@ -187,7 +206,7 @@ class AddressParserIntegrationRetrainGPUTest(AddressParserRetrainTestCase):
         callback_mock = MagicMock(spec=Callback)
         performance_after_training = address_parser.retrain(
             self.training_container,
-            self.a_train_ratio,
+            train_ratio=self.a_train_ratio,
             epochs=self.a_single_epoch,
             batch_size=self.a_batch_size,
             num_workers=self.a_number_of_workers,

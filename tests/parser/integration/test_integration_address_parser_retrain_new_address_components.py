@@ -42,7 +42,7 @@ class AddressParserIntegrationTestNewAddressComponents(AddressParserRetrainTestC
 
         performance_after_training = address_parser.retrain(
             self.new_prediction_data_container,
-            self.a_train_ratio,
+            train_ratio=self.a_train_ratio,
             epochs=self.a_single_epoch,
             batch_size=self.a_batch_size,
             num_workers=self.a_number_of_workers,
@@ -63,7 +63,7 @@ class AddressParserIntegrationTestNewAddressComponents(AddressParserRetrainTestC
 
         performance_after_training = address_parser.retrain(
             self.new_prediction_data_container,
-            self.a_train_ratio,
+            train_ratio=self.a_train_ratio,
             epochs=self.a_three_epoch,
             batch_size=self.a_batch_size,
             num_workers=self.a_number_of_workers,
@@ -84,7 +84,7 @@ class AddressParserIntegrationTestNewAddressComponents(AddressParserRetrainTestC
 
         performance_after_training = address_parser.retrain(
             self.new_prediction_data_container,
-            self.a_train_ratio,
+            train_ratio=self.a_train_ratio,
             epochs=self.a_single_epoch,
             batch_size=self.a_batch_size,
             num_workers=self.a_number_of_workers,
@@ -107,7 +107,7 @@ class AddressParserIntegrationTestNewAddressComponents(AddressParserRetrainTestC
         callback_mock = MagicMock(spec=Callback)
         performance_after_training = address_parser.retrain(
             self.new_prediction_data_container,
-            self.a_train_ratio,
+            train_ratio=self.a_train_ratio,
             epochs=self.a_single_epoch,
             batch_size=self.a_batch_size,
             num_workers=self.a_number_of_workers,
@@ -136,7 +136,7 @@ class AddressParserIntegrationTestNewAddressComponents(AddressParserRetrainTestC
         with self.assertRaises(ValueError):
             _ = address_parser.retrain(
                 self.new_prediction_data_container,
-                self.a_train_ratio,
+                train_ratio=self.a_train_ratio,
                 epochs=self.a_single_epoch,
                 batch_size=self.a_batch_size,
                 num_workers=self.a_number_of_workers,
@@ -153,7 +153,7 @@ class AddressParserIntegrationTestNewAddressComponents(AddressParserRetrainTestC
         with self.assertRaises(ValueError):
             _ = address_parser.retrain(
                 self.new_prediction_data_container,
-                self.a_train_ratio,
+                train_ratio=self.a_train_ratio,
                 epochs=self.a_single_epoch,
                 batch_size=self.a_batch_size,
                 num_workers=self.a_number_of_workers,
@@ -170,7 +170,7 @@ class AddressParserIntegrationTestNewAddressComponents(AddressParserRetrainTestC
 
         performance_after_training = address_parser.retrain(
             self.new_prediction_data_container,
-            self.a_train_ratio,
+            train_ratio=self.a_train_ratio,
             epochs=self.a_single_epoch,
             batch_size=self.a_batch_size,
             num_workers=self.a_number_of_workers,
@@ -191,7 +191,7 @@ class AddressParserIntegrationTestNewAddressComponents(AddressParserRetrainTestC
 
         performance_after_training = address_parser.retrain(
             self.new_prediction_data_container,
-            self.a_train_ratio,
+            train_ratio=self.a_train_ratio,
             epochs=self.a_three_epoch,
             batch_size=self.a_batch_size,
             num_workers=self.a_number_of_workers,
@@ -212,7 +212,7 @@ class AddressParserIntegrationTestNewAddressComponents(AddressParserRetrainTestC
 
         performance_after_training = address_parser.retrain(
             self.new_prediction_data_container,
-            self.a_train_ratio,
+            train_ratio=self.a_train_ratio,
             epochs=self.a_single_epoch,
             batch_size=self.a_batch_size,
             num_workers=self.a_number_of_workers,
@@ -235,7 +235,7 @@ class AddressParserIntegrationTestNewAddressComponents(AddressParserRetrainTestC
         callback_mock = MagicMock(spec=Callback)
         performance_after_training = address_parser.retrain(
             self.new_prediction_data_container,
-            self.a_train_ratio,
+            train_ratio=self.a_train_ratio,
             epochs=self.a_single_epoch,
             batch_size=self.a_batch_size,
             num_workers=self.a_number_of_workers,
@@ -265,7 +265,7 @@ class AddressParserIntegrationTestNewAddressComponents(AddressParserRetrainTestC
         self.training(
             address_parser,
             self.new_prediction_data_container,
-            self.a_zero_number_of_workers,
+            num_workers=self.a_zero_number_of_workers,
             prediction_tags=self.with_new_prediction_tags,
         )
 
@@ -288,7 +288,7 @@ class AddressParserIntegrationTestNewAddressComponents(AddressParserRetrainTestC
         self.training(
             address_parser,
             self.new_prediction_data_container,
-            self.a_number_of_workers,
+            num_workers=self.a_number_of_workers,
             prediction_tags=self.with_new_prediction_tags,
         )
 
@@ -312,7 +312,7 @@ class AddressParserIntegrationTestNewAddressComponents(AddressParserRetrainTestC
         self.training(
             address_parser,
             self.new_prediction_data_container,
-            self.a_number_of_workers,
+            num_workers=self.a_number_of_workers,
             prediction_tags=self.with_new_prediction_tags,
         )
 
@@ -334,7 +334,7 @@ class AddressParserIntegrationTestNewAddressComponents(AddressParserRetrainTestC
         self.training(
             address_parser,
             self.new_prediction_data_container,
-            self.a_number_of_workers,
+            num_workers=self.a_number_of_workers,
             prediction_tags=self.with_new_prediction_tags,
         )
 
@@ -358,7 +358,7 @@ class AddressParserIntegrationTestNewAddressComponents(AddressParserRetrainTestC
         self.training(
             address_parser,
             self.new_prediction_data_container,
-            self.a_number_of_workers,
+            num_workers=self.a_number_of_workers,
             prediction_tags=self.with_new_prediction_tags,
         )
 
@@ -398,7 +398,7 @@ class AddressParserIntegrationTestNewAddressComponents(AddressParserRetrainTestC
         self.training(
             address_parser,
             self.new_prediction_data_container,
-            self.a_number_of_workers,
+            num_workers=self.a_number_of_workers,
             prediction_tags=self.with_new_prediction_tags,
         )
 
@@ -420,7 +420,7 @@ class AddressParserIntegrationTestNewAddressComponents(AddressParserRetrainTestC
         self.training(
             address_parser,
             self.new_prediction_data_container,
-            self.a_number_of_workers,
+            num_workers=self.a_number_of_workers,
             prediction_tags=self.with_new_prediction_tags,
         )
 
@@ -443,7 +443,7 @@ class AddressParserIntegrationTestNewAddressComponents(AddressParserRetrainTestC
         self.training(
             address_parser,
             self.new_prediction_data_container,
-            self.a_zero_number_of_workers,
+            num_workers=self.a_zero_number_of_workers,
             prediction_tags=self.with_new_prediction_tags,
         )
 
@@ -466,7 +466,7 @@ class AddressParserIntegrationTestNewAddressComponents(AddressParserRetrainTestC
         self.training(
             address_parser,
             self.new_prediction_data_container,
-            self.a_number_of_workers,
+            num_workers=self.a_number_of_workers,
             prediction_tags=self.with_new_prediction_tags,
         )
 
@@ -490,7 +490,7 @@ class AddressParserIntegrationTestNewAddressComponents(AddressParserRetrainTestC
         self.training(
             address_parser,
             self.new_prediction_data_container,
-            self.a_number_of_workers,
+            num_workers=self.a_number_of_workers,
             prediction_tags=self.with_new_prediction_tags,
         )
 
@@ -512,7 +512,7 @@ class AddressParserIntegrationTestNewAddressComponents(AddressParserRetrainTestC
         self.training(
             address_parser,
             self.new_prediction_data_container,
-            self.a_number_of_workers,
+            num_workers=self.a_number_of_workers,
             prediction_tags=self.with_new_prediction_tags,
         )
 
@@ -536,7 +536,7 @@ class AddressParserIntegrationTestNewAddressComponents(AddressParserRetrainTestC
         self.training(
             address_parser,
             self.new_prediction_data_container,
-            self.a_number_of_workers,
+            num_workers=self.a_number_of_workers,
             prediction_tags=self.with_new_prediction_tags,
         )
 
@@ -574,7 +574,7 @@ class AddressParserIntegrationTestNewAddressComponents(AddressParserRetrainTestC
         self.training(
             address_parser,
             self.new_prediction_data_container,
-            self.a_number_of_workers,
+            num_workers=self.a_number_of_workers,
             prediction_tags=self.with_new_prediction_tags,
         )
 
@@ -596,7 +596,7 @@ class AddressParserIntegrationTestNewAddressComponents(AddressParserRetrainTestC
         self.training(
             address_parser,
             self.new_prediction_data_container,
-            self.a_number_of_workers,
+            num_workers=self.a_number_of_workers,
             prediction_tags=self.with_new_prediction_tags,
         )
 

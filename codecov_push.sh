@@ -20,3 +20,5 @@ conda run -n deepparse_pytest_3_10 --live-stream pytest --cov ./deepparse --cov-
 
 # close conda env
 conda deactivate
+
+conda env remove -n deepparse_pytest_3_10

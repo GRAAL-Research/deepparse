@@ -207,6 +207,7 @@ def data_container_factory(
                     "For a CSV dataset path, you need to specify the 'csv_column_name' argument to provide the"
                     " column name to extract address."
                 )
+            csv_column_names = csv_column_name
         data_container = CSVDatasetContainer(
             dataset_path,
             column_names=csv_column_names,

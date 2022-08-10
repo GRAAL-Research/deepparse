@@ -64,7 +64,7 @@ def main(args=None) -> None:
         dataset_path=dataset_path,
         csv_column_separator=csv_column_separator,
         trainable_dataset=False,
-        csv_column_names=parsed_args.csv_column_names,
+        csv_column_name=parsed_args.csv_column_name,
     )
 
     export_filename = parsed_args.export_filename

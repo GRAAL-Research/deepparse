@@ -85,7 +85,8 @@ def latest_version(model: str, cache_path: str, verbose: bool) -> bool:
 def download_from_url(file_name: str, saving_dir: str, file_extension: str) -> None:  # pragma: no cover
     warnings.warn(
         "download_from_url is deprecated; use download_from_public_repository to download files from "
-        "our public repository. The function will be removed in the next major release."
+        "our public repository. The function will be removed in the next major release.",
+        DeprecationWarning,
     )
     download_from_public_repository(file_name=file_name, saving_dir=saving_dir, file_extension=file_extension)
 

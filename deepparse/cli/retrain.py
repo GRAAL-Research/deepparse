@@ -13,13 +13,11 @@ from .parser_arguments_adder import (
     add_csv_column_names_arg,
 )
 from .tools import (
-    is_csv_path,
-    is_pickle_path,
     wrap,
     bool_parse,
     attention_model_type_handling,
+    data_container_factory,
 )
-from ..dataset_container import CSVDatasetContainer, PickleDatasetContainer
 from ..parser import AddressParser
 
 _retrain_parameters = [
@@ -90,25 +88,12 @@ def main(args=None) -> None:
 
     parsed_args = get_args(args)
 
-    train_dataset_path = parsed_args.train_dataset_path
-    if is_csv_path(train_dataset_path):
-        csv_column_names = parsed_args.csv_column_names
-        if csv_column_names is None:
-            raise ValueError(
-                "To use a CSV dataset to retrain on, you need to specify the 'csv_column_names' argument to provide the"
-                " column names to extract address and labels (respectively). For example, Address Tags."
-            )
-        csv_column_separator = parsed_args.csv_column_separator
-        training_data = CSVDatasetContainer(
-            train_dataset_path,
-            column_names=csv_column_names,
-            separator=csv_column_separator,
-            is_training_container=True,
-        )
-    elif is_pickle_path(train_dataset_path):
-        training_data = PickleDatasetContainer(train_dataset_path, is_training_container=True)
-    else:
-        raise ValueError("The train dataset path argument is not a CSV or a pickle file.")
+    training_data = data_container_factory(
+        dataset_path=parsed_args.train_dataset_path,
+        csv_column_separator=parsed_args.csv_column_separator,
+        trainable_dataset=True,
+        csv_column_names=parsed_args.csv_column_names,
+    )
 
     base_parsing_model = parsed_args.base_parsing_model
     device = parsed_args.device

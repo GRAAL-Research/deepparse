@@ -553,7 +553,8 @@ class AddressParser:
                 # We provide the train dataset (container) and the val dataset (val_container)
                 # Thus, the train_ratio argument is ignored, and we use instead the val_container
                 # as the validating dataset.
-                address_parser.retrain(container, val_container, epochs=5, batch_size=128, layers_to_freeze="encoder")
+                address_parser.retrain(container, val_container, epochs=5, batch_size=128,
+                                       layers_to_freeze="encoder")
 
             Using learning rate scheduler callback.
 
@@ -758,6 +759,7 @@ class AddressParser:
         num_workers: int = 1,
         callbacks: Union[List, None] = None,
         seed: int = 42,
+        verbose: Union[None, bool] = None,
     ) -> Dict:
         # pylint: disable=too-many-arguments, too-many-locals
         """
@@ -773,6 +775,9 @@ class AddressParser:
                 See Poutyne `callback <https://poutyne.org/callbacks.html#callback-class>`_ for more information.
                 By default, we set no callback.
             seed (int): Seed to use (by default, ``42``).
+            verbose (Union[None, bool]): To override the AddressParser verbosity for the test. When set to True or
+                False, it will override (but it does not change the AddressParser verbosity) the test verbosity.
+                If set to the default value None, the AddressParser verbosity is used as the test verbosity.
 
         Return:
             A dictionary with the stats (see `Experiment class
@@ -785,12 +790,13 @@ class AddressParser:
 
             .. code-block:: python
 
-                address_parser = AddressParser(device=0) # On GPU device 0
+                address_parser = AddressParser(device=0, verbose=True) # On GPU device 0
                 data_path = "path_to_a_pickle_test_dataset.p"
 
                 test_container = PickleDatasetContainer(data_path, is_training_container=False)
 
-                address_parser.test(test_container) # We test the model on the data
+                # We test the model on the data, and we override the test verbosity
+                address_parser.test(test_container, verbose=False)
 
             You can also test your fine-tuned model
 
@@ -849,7 +855,10 @@ class AddressParser:
             logging=False,
         )  # We set logging to false since we don't need it
 
-        test_res = exp.test(test_generator, seed=seed, callbacks=callbacks, verbose=self.verbose)
+        # Handle the verbose overriding param
+        if verbose is None:
+            verbose = self.verbose
+        test_res = exp.test(test_generator, seed=seed, callbacks=callbacks, verbose=verbose)
 
         return test_res
 
@@ -1062,8 +1071,8 @@ class AddressParser:
         """
         return self.data_converter(self.vectorizer(data))
 
+    @staticmethod
     def _retrain(
-        self,
         experiment: Experiment,
         train_generator: DatasetContainer,
         valid_generator: DatasetContainer,
@@ -1083,7 +1092,6 @@ class AddressParser:
                 epochs=epochs,
                 seed=seed,
                 callbacks=callbacks,
-                verbose=self.verbose,
                 disable_tensorboard=disable_tensorboard,
             )
         return train_res

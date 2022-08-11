@@ -12,6 +12,7 @@ import os
 import platform
 import unittest
 from tempfile import TemporaryDirectory
+from typing import Union
 from unittest import skipIf
 from unittest.mock import patch, call, MagicMock
 
@@ -75,6 +76,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         layers_to_freeze=None,
         name_of_the_retrain_parser=None,
         num_workers=None,
+        verbose: Union[bool, None] = True,
     ):
         if num_workers is None:
             # AddressParser default num_workers settings is 1
@@ -107,6 +109,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
             seq2seq_params=seq2seq_params,
             layers_to_freeze=layers_to_freeze,
             name_of_the_retrain_parser=name_of_the_retrain_parser,
+            verbose=verbose,
         )
 
     def assert_experiment_retrain(self, experiment_mock, model_mock, optimizer_mock, device):

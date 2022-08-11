@@ -1,7 +1,3 @@
-# Bug with PyTorch source code makes torch.tensor as not callable for pylint.
-# We also skip protected-access since we test the encoder and decoder step
-# pylint: disable=not-callable, too-many-public-methods
-
 import os
 import unittest
 from unittest import skipIf
@@ -15,7 +11,7 @@ from tests.parser.integration.base_retrain import AddressParserRetrainTestCase
     not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
     "download of model too long for test in runner",
 )
-class AddressParserIntegrationRetrainCPUTest(AddressParserRetrainTestCase, CaptureOutputTestCase):
+class AddressParserIntegrationRetrainAPITest(AddressParserRetrainTestCase, CaptureOutputTestCase):
     def test_givenAFasttextAddressParser_whenRetrainNoValDataset_thenTrainingOccur(self):
         address_parser = AddressParser(
             model_type=self.a_fasttext_model_type,

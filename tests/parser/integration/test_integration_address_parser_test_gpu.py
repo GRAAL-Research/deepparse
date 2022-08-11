@@ -19,7 +19,6 @@ class AddressParserIntegrationTestAPIGPUTest(AddressParserRetrainTestCase):
             device=self.a_torch_device,
             verbose=self.verbose,
         )
-        self.training(address_parser, self.training_container, num_workers=self.a_zero_number_of_workers)
 
         performance_after_test = address_parser.test(
             self.test_container,
@@ -37,7 +36,6 @@ class AddressParserIntegrationTestAPIGPUTest(AddressParserRetrainTestCase):
             device=self.a_torch_device,
             verbose=self.verbose,
         )
-        self.training(address_parser, self.training_container, num_workers=self.a_number_of_workers)
 
         performance_after_test = address_parser.test(
             self.test_container,
@@ -56,8 +54,6 @@ class AddressParserIntegrationTestAPIGPUTest(AddressParserRetrainTestCase):
             verbose=self.verbose,
         )
 
-        self.training(address_parser, self.training_container, num_workers=self.a_number_of_workers)
-
         performance_after_test = address_parser.test(
             self.test_container,
             batch_size=self.a_batch_size,
@@ -72,8 +68,6 @@ class AddressParserIntegrationTestAPIGPUTest(AddressParserRetrainTestCase):
             device=self.a_torch_device,
             verbose=self.verbose,
         )
-
-        self.training(address_parser, self.training_container, num_workers=self.a_number_of_workers)
 
         performance_after_test = address_parser.test(
             self.test_container,
@@ -91,8 +85,6 @@ class AddressParserIntegrationTestAPIGPUTest(AddressParserRetrainTestCase):
             device=self.a_torch_device,
             verbose=self.verbose,
         )
-
-        self.training(address_parser, self.training_container, num_workers=self.a_number_of_workers)
 
         callback_mock = MagicMock()
         performance_after_test = address_parser.test(
@@ -125,8 +117,6 @@ class AddressParserIntegrationTestAPIGPUTest(AddressParserRetrainTestCase):
             verbose=self.verbose,
         )
 
-        self.training(address_parser, self.training_container, num_workers=self.a_number_of_workers)
-
         performance_after_test = address_parser.test(
             self.test_container,
             batch_size=self.a_batch_size,
@@ -142,8 +132,6 @@ class AddressParserIntegrationTestAPIGPUTest(AddressParserRetrainTestCase):
             verbose=self.verbose,
         )
 
-        self.training(address_parser, self.training_container, num_workers=self.a_number_of_workers)
-
         performance_after_test = address_parser.test(
             self.test_container,
             batch_size=self.a_batch_size,
@@ -158,7 +146,6 @@ class AddressParserIntegrationTestAPIGPUTest(AddressParserRetrainTestCase):
             device=self.a_torch_device,
             verbose=self.verbose,
         )
-        self.training(address_parser, self.training_container, num_workers=self.a_zero_number_of_workers)
 
         performance_after_test = address_parser.test(
             self.test_container,
@@ -176,8 +163,6 @@ class AddressParserIntegrationTestAPIGPUTest(AddressParserRetrainTestCase):
             device=self.a_torch_device,
             verbose=self.verbose,
         )
-        self.training(address_parser, self.training_container, num_workers=self.a_number_of_workers)
-
         performance_after_test = address_parser.test(
             self.test_container,
             batch_size=self.a_batch_size,
@@ -195,8 +180,6 @@ class AddressParserIntegrationTestAPIGPUTest(AddressParserRetrainTestCase):
             verbose=self.verbose,
         )
 
-        self.training(address_parser, self.training_container, num_workers=self.a_number_of_workers)
-
         performance_after_test = address_parser.test(
             self.test_container,
             batch_size=self.a_batch_size,
@@ -211,8 +194,6 @@ class AddressParserIntegrationTestAPIGPUTest(AddressParserRetrainTestCase):
             device=self.a_torch_device,
             verbose=self.verbose,
         )
-
-        self.training(address_parser, self.training_container, num_workers=self.a_number_of_workers)
 
         performance_after_test = address_parser.test(
             self.test_container,
@@ -230,8 +211,6 @@ class AddressParserIntegrationTestAPIGPUTest(AddressParserRetrainTestCase):
             device=self.a_torch_device,
             verbose=self.verbose,
         )
-
-        self.training(address_parser, self.training_container, num_workers=self.a_number_of_workers)
 
         callback_mock = MagicMock()
         performance_after_test = address_parser.test(
@@ -264,8 +243,6 @@ class AddressParserIntegrationTestAPIGPUTest(AddressParserRetrainTestCase):
             verbose=self.verbose,
         )
 
-        self.training(address_parser, self.training_container, num_workers=self.a_number_of_workers)
-
         performance_after_test = address_parser.test(
             self.test_container,
             batch_size=self.a_batch_size,
@@ -280,8 +257,6 @@ class AddressParserIntegrationTestAPIGPUTest(AddressParserRetrainTestCase):
             device=self.a_torch_device,
             verbose=self.verbose,
         )
-
-        self.training(address_parser, self.training_container, num_workers=self.a_number_of_workers)
 
         performance_after_test = address_parser.test(
             self.test_container,

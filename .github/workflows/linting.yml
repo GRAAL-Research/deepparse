@@ -24,4 +24,4 @@ jobs:
       - name: PyLint
         run: |
           pylint deepparse/ tests/
-          pylint examples/ --disable=no-member # For Poutyne false error
+          pylint examples/ --disable=no-member

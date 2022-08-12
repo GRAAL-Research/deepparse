@@ -39,7 +39,7 @@ seq2seq_params = {"encoder_hidden_size": 512, "decoder_hidden_size": 512}
 
 address_parser.retrain(
     training_container,
-    0.8,
+    train_ratio=0.8,
     epochs=5,
     batch_size=8,
     num_workers=2,

@@ -54,7 +54,7 @@ an error when retraining since Poutyne will try to use the last checkpoint.
 
 .. code-block:: python
 
-    address_parser.retrain(training_container, 0.8, epochs=5, batch_size=8, num_workers=2, callbacks=[lr_scheduler])
+    address_parser.retrain(training_container, train_ratio=0.8, epochs=5, batch_size=8, num_workers=2, callbacks=[lr_scheduler])
 
 Now, let's test our fine-tuned model using the best checkpoint (default parameter).
 
@@ -74,7 +74,7 @@ Otherwise, poutyne will try to reload the previous checkpoints, and our model ha
 .. code-block:: python
 
     address_parser.retrain(training_container,
-                           0.8,
+                           train_ratio=0.8,
                            epochs=5,
                            batch_size=8,
                            num_workers=2,

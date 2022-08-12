@@ -35,7 +35,7 @@ logging_path = "./checkpoints"
 
 address_parser.retrain(
     training_container,
-    0.8,
+    train_ratio=0.8,
     epochs=5,
     batch_size=8,
     num_workers=2,
@@ -51,7 +51,7 @@ address_parser.test(test_container, batch_size=256)
 # That way, training will be faster.
 address_parser.retrain(
     training_container,
-    0.8,
+    train_ratio=0.8,
     epochs=5,
     batch_size=8,
     num_workers=2,

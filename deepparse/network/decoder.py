@@ -39,7 +39,7 @@ class Decoder(nn.Module):
             # Since layer also have attention mechanism
             self.hidden_size = hidden_size
             input_size = input_size + hidden_size
-            self.attention_mechanism_set_up()
+            self._attention_mechanism_set_up()
         self.softmax = nn.LogSoftmax(dim=1)
         self.lstm = nn.LSTM(input_size, hidden_size, num_layers=num_layers)
         self.lstm.apply(weights_init)
@@ -64,7 +64,7 @@ class Decoder(nn.Module):
 
         Return:
             A tuple (``x``, ``y``, ``z``) where ``x`` is the address components tags predictions, y is the hidden
-            states and `̀`z`` is None if no attention mechanism is setter or the attention weights.
+            states and ``z`` is None if no attention mechanism is setter or the attention weights.
 
         """
         to_predict = to_predict.float()
@@ -84,11 +84,11 @@ class Decoder(nn.Module):
             attention_weights,
         )  # attention_weights: None or the real attention weights
 
-    def linear_layer_set_up(self, output_size: int, hidden_size: int = 1024):
+    def linear_layer_set_up(self, output_size: int, hidden_size: int = 1024) -> None:
         self.linear = nn.Linear(hidden_size, output_size)
         self.linear.apply(weights_init)
 
-    def attention_mechanism_set_up(self, hidden_size: int = 1024):
+    def _attention_mechanism_set_up(self, hidden_size: int = 1024) -> None:
         self.linear_attention_mechanism_encoder_outputs = nn.Linear(hidden_size, hidden_size)
         self.linear_attention_mechanism_encoder_outputs.apply(weights_init)
 

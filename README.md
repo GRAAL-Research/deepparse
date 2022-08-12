@@ -212,21 +212,21 @@ for a complete example using CSV.
 # We will retrain the fasttext version of our pretrained model.
 address_parser = AddressParser(model_type="fasttext", device=0)
 
-address_parser.retrain(training_container, 0.8, epochs=5, batch_size=8)
+address_parser.retrain(training_container, train_ratio=0.8, epochs=5, batch_size=8)
 
 ```
 
 One can also freeze some layers to speed up the training using the ``layers_to_freeze`` parameter.
 
 ```python
-address_parser.retrain(training_container, 0.8, epochs=5, batch_size=8, layers_to_freeze="seq2seq")
+address_parser.retrain(training_container, train_ratio=0.8, epochs=5, batch_size=8, layers_to_freeze="seq2seq")
 ```
 
 Or you can also give a specific name to the retrained model. This name will be use as the model name (for print and 
 class name) when reloading it.
 
 ```python
-address_parser.retrain(training_container, 0.8, epochs=5, batch_size=8, name_of_the_retrain_parser="MyNewParser")
+address_parser.retrain(training_container, train_ratio=0.8, epochs=5, batch_size=8, name_of_the_retrain_parser="MyNewParser")
 ```
 
 ### Retrain a Model With an Attention Mechanism
@@ -237,7 +237,7 @@ address_parser.retrain(training_container, 0.8, epochs=5, batch_size=8, name_of_
 # We will retrain the fasttext version of our pretrained model.
 address_parser = AddressParser(model_type="fasttext", device=0, attention_mechanism=True)
 
-address_parser.retrain(training_container, 0.8, epochs=5, batch_size=8)
+address_parser.retrain(training_container, train_ratio=0.8, epochs=5, batch_size=8)
 
 ```
 
@@ -248,7 +248,7 @@ address_parser.retrain(training_container, 0.8, epochs=5, batch_size=8)
 ```python
 
 address_components = {"ATag": 0, "AnotherTag": 1, "EOS": 2}
-address_parser.retrain(training_container, 0.8, epochs=1, batch_size=128,
+address_parser.retrain(training_container, train_ratio=0.8, epochs=1, batch_size=128,
                        prediction_tags=address_components)
 
 ```
@@ -261,7 +261,7 @@ address_parser.retrain(training_container, 0.8, epochs=1, batch_size=128,
 ```python
 
 seq2seq_params = {"encoder_hidden_size": 512, "decoder_hidden_size": 512}
-address_parser.retrain(training_container, 0.8, epochs=1, batch_size=128,
+address_parser.retrain(training_container, train_ratio=0.8, epochs=1, batch_size=128,
                        seq2seq_params=seq2seq_params)
 
 ```

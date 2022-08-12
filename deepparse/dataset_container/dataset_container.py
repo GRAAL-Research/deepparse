@@ -50,7 +50,22 @@ class DatasetContainer(Dataset, ABC):
     def __len__(self) -> int:
         return len(self.data)
 
-    def __getitem__(self, idx: Union[int, slice]):
+    def __getitem__(
+        self, idx: Union[int, slice]
+    ) -> Union[List[str], str, List[List[tuple[str, List]]], tuple[str, List]]:
+        """
+        If the DatasetContainer is a predict one:
+
+            - it can be a list of string items (e.g. a list of address (str)), or
+            - it can be a unique string item (e.g. one address).
+
+        If the DatasetContainer is a training one:
+
+            - it can be a list of tuple (str, list) items, namely a list of parsed example (e.g. an address with
+                the tags), or
+            - it can be a tuple (str, list) item.
+
+        """
         if isinstance(idx, slice):
             start, stop, _ = idx.indices(len(self))
             result = [self.data[index] for index in range(start, stop)]
@@ -83,10 +98,10 @@ class DatasetContainer(Dataset, ABC):
         if validate_if_any_whitespace_only(string_elements=data_to_validate):
             raise DataError("Some addresses only include whitespace thus cannot be parsed.")
 
-    def _data_is_a_list(self):
+    def _data_is_a_list(self) -> bool:
         return isinstance(self.data, list)
 
-    def _training_validation(self):
+    def _training_validation(self) -> None:
         if not self._data_is_list_of_tuple():
             raise TypeError(
                 "The pickled dataset data are not in a tuple format. Data"
@@ -290,7 +305,7 @@ class ListDatasetContainer(DatasetContainer):
             The default value is true.
     """
 
-    def __init__(self, data: List, is_training_container: bool = True):
+    def __init__(self, data: List, is_training_container: bool = True) -> None:
         super().__init__(is_training_container=is_training_container)
         self.data = data
         self.validate_dataset()

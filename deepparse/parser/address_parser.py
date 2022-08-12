@@ -536,7 +536,7 @@ class AddressParser:
 
                 # The validation dataset is created from the training dataset (container)
                 # 80% of the data is use for training and 20% as a validation dataset
-                address_parser.retrain(container, 0.8, epochs=1, batch_size=128)
+                address_parser.retrain(container, train_ratio=0.8, epochs=1, batch_size=128)
 
             Using the freezing layers parameters to freeze layers during training
 
@@ -568,7 +568,7 @@ class AddressParser:
                 container = CSVDatasetContainer(data_path)
 
                 lr_scheduler = poutyne.StepLR(step_size=1, gamma=0.1) # reduce LR by a factor of 10 each epoch
-                address_parser.retrain(container, 0.8, epochs=5, batch_size=128, callbacks=[lr_scheduler])
+                address_parser.retrain(container, train_ratio=0.8, epochs=5, batch_size=128, callbacks=[lr_scheduler])
 
             Using your own prediction tags dictionary.
 
@@ -581,7 +581,8 @@ class AddressParser:
 
                 container = PickleDatasetContainer(data_path)
 
-                address_parser.retrain(container, 0.8, epochs=1, batch_size=128, prediction_tags=address_components)
+                address_parser.retrain(container, train_ratio=0.8, epochs=1, batch_size=128,
+                                       prediction_tags=address_components)
 
             Using your own seq2seq parameters.
 
@@ -594,7 +595,8 @@ class AddressParser:
 
                 container = PickleDatasetContainer(data_path)
 
-                address_parser.retrain(container, 0.8, epochs=1, batch_size=128, seq2seq_params=seq2seq_params)
+                address_parser.retrain(container, train_ratio=0.8, epochs=1, batch_size=128,
+                                       seq2seq_params=seq2seq_params)
 
 
             Using your own seq2seq parameters and prediction tags dictionary.
@@ -609,8 +611,8 @@ class AddressParser:
 
                 container = PickleDatasetContainer(data_path)
 
-                address_parser.retrain(container, 0.8, epochs=1, batch_size=128, seq2seq_params=seq2seq_params,
-                    prediction_tags=address_components)
+                address_parser.retrain(container, train_ratio=0.8, epochs=1, batch_size=128,
+                                       seq2seq_params=seq2seq_params, prediction_tags=address_components)
 
             Using a named retrain parser name.
 
@@ -621,7 +623,7 @@ class AddressParser:
 
                 container = PickleDatasetContainer(data_path)
 
-                address_parser.retrain(container, 0.8, epochs=1, batch_size=128,
+                address_parser.retrain(container, train_ratio=0.8, epochs=1, batch_size=128,
                     name_of_the_retrain_parser="MyParserName")
 
         """
@@ -811,7 +813,8 @@ class AddressParser:
 
                 train_container = PickleDatasetContainer(data_path)
 
-                address_parser.retrain(container, 0.8, epochs=1, batch_size=128, prediction_tags=address_components)
+                address_parser.retrain(container, train_ratio=0.8, epochs=1, batch_size=128,
+                                       prediction_tags=address_components)
 
                 # Test phase
                 data_path = "path_to_a_pickle_test_dataset.p"

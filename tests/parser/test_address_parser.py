@@ -1438,7 +1438,13 @@ class AddressParserTest(AddressParserPredictTestCase):
                 verbose=self.verbose,
             )
             with self.assertRaises(ValueError):
-                address_parser.retrain(MagicMock(), 0.8, 1, 1, prediction_tags=self.incorrect_address_components)
+                address_parser.retrain(
+                    MagicMock(),
+                    train_ratio=0.8,
+                    batch_size=1,
+                    epochs=1,
+                    prediction_tags=self.incorrect_address_components,
+                )
 
     @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
     @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
@@ -1452,7 +1458,13 @@ class AddressParserTest(AddressParserPredictTestCase):
                 verbose=self.verbose,
             )
             with self.assertRaises(ValueError):
-                address_parser.retrain(MagicMock(), 0.8, 1, 1, prediction_tags=self.incorrect_address_components)
+                address_parser.retrain(
+                    MagicMock(),
+                    train_ratio=0.8,
+                    batch_size=1,
+                    epochs=1,
+                    prediction_tags=self.incorrect_address_components,
+                )
 
     # we do BPEmb but can be fasttext or fasttext-light
     @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")

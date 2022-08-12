@@ -1,9 +1,6 @@
 # temporary fix for _forward_unimplemented for torch 1.6 https://github.com/pytorch/pytorch/issues/42305
 # pylint: disable=W0223, too-many-arguments, too-many-instance-attributes
 
-# Pylint raise error for torch.tensor, torch.zeros, ... as a no-member event
-# if not the case.
-# pylint: disable=no-member
 from typing import Tuple
 
 import torch

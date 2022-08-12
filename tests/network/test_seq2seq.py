@@ -3,10 +3,6 @@
 # We also skip protected-access since we test the _load_weights
 # pylint: disable=protected-access, unused-argument, not-callable
 
-# Pylint raise error for torch.tensor, torch.zeros, ... as a no-member event
-# if not the case.
-# pylint: disable=no-member
-
 import os
 import unittest
 from unittest import TestCase

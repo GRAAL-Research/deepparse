@@ -2,10 +2,6 @@
 # We also skip protected-access since we test the encoder and decoder step
 # pylint: disable=not-callable, protected-access
 
-# Pylint raise error for torch.tensor, torch.zeros, ... as a no-member event
-# if not the case.
-# pylint: disable=no-member
-
 import unittest
 from unittest import skipIf
 from unittest.mock import patch

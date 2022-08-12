@@ -1,9 +1,5 @@
 # pylint: disable=too-many-lines
 
-# Pylint raise error for torch.tensor, torch.zeros, ... as a no-member event
-# if not the case.
-# pylint: disable=no-member
-
 # Pylint raise error for an inconsistent-return-statements for the retrain function
 # It must be due to the complex try, except else case.
 # pylint: disable=inconsistent-return-statements

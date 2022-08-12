@@ -23,7 +23,7 @@ from tests.base_capture_output import CaptureOutputTestCase
 from tests.tools import create_file
 
 
-class ToolsTests(CaptureOutputTestCase):
+class FastTextToolsTests(CaptureOutputTestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.temp_dir_obj = TemporaryDirectory()

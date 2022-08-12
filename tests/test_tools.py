@@ -23,10 +23,11 @@ from deepparse import (
     DataError,
 )
 from tests.base_capture_output import CaptureOutputTestCase
+from tests.base_file_exist import FileCreationTestCase
 from tests.tools import create_file
 
 
-class ToolsTests(CaptureOutputTestCase):
+class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
     def setUp(self) -> None:
         self.temp_dir_obj = TemporaryDirectory()
         self.fake_cache_path = self.temp_dir_obj.name
@@ -141,7 +142,7 @@ class ToolsTests(CaptureOutputTestCase):
 
         download_from_public_repository(file_name, self.fake_cache_path, self.a_file_extension)
 
-        self.assertTrue(os.path.exists(os.path.join(self.fake_cache_path, f"{file_name}.{self.a_file_extension}")))
+        self.assertFileExist(os.path.join(self.fake_cache_path, f"{file_name}.{self.a_file_extension}"))
 
     def test_givenFasttextVersion_whenDownload404_thenHTTPError(self):
         wrong_file_name = "wrong_fasttext"
@@ -154,7 +155,7 @@ class ToolsTests(CaptureOutputTestCase):
 
         download_from_public_repository(file_name, self.fake_cache_path, self.a_file_extension)
 
-        self.assertTrue(os.path.exists(os.path.join(self.fake_cache_path, f"{file_name}.{self.a_file_extension}")))
+        self.assertFileExist(os.path.join(self.fake_cache_path, f"{file_name}.{self.a_file_extension}"))
 
     def test_givenBPEmbVersion_whenDownload404_thenHTTPError(self):
         wrong_file_name = "wrong_bpemb"

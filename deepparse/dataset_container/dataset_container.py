@@ -1,7 +1,7 @@
 # pylint: disable=too-many-arguments
 from abc import ABC, abstractmethod
 from pickle import load
-from typing import Union, List, Dict, Callable
+from typing import Union, List, Dict, Callable, Tuple
 
 import pandas as pd
 from torch.utils.data import Dataset
@@ -52,7 +52,7 @@ class DatasetContainer(Dataset, ABC):
 
     def __getitem__(
         self, idx: Union[int, slice]
-    ) -> Union[List[str], str, List[List[tuple[str, List]]], tuple[str, List]]:
+    ) -> Union[List[str], str, List[List[Tuple[str, List]]], Tuple[str, List]]:
         """
         If the DatasetContainer is a predict one:
 

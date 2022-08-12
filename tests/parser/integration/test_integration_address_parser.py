@@ -6,13 +6,13 @@
 
 import os
 from collections import OrderedDict
-from os.path import exists
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest import skipIf
 
 import torch
 
+from tests.base_file_exist import FileCreationTestCase
 from tests.parser.integration.base_predict import (
     AddressParserBase,
 )
@@ -22,7 +22,7 @@ from tests.parser.integration.base_predict import (
     not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
     "download of model too long for test in runner",
 )
-class AddressParserTest(AddressParserBase):
+class AddressParserTest(AddressParserBase, FileCreationTestCase):
     @classmethod
     def setUpClass(cls):
         super(AddressParserTest, cls).setUpClass()
@@ -34,10 +34,6 @@ class AddressParserTest(AddressParserBase):
     def tearDownClass(cls) -> None:
         cls.temp_dir_obj.cleanup()
 
-    def assert_file_exist(self, file_path):
-        file_exists = exists(file_path)
-        self.assertTrue(file_exists)
-
     def setUp(self) -> None:
         a_config = {"model_type": "fasttext", "device": "cpu", "verbose": False}
         self.setup_model_with_config(a_config)
@@ -47,14 +43,14 @@ class AddressParserTest(AddressParserBase):
 
         self.a_model.save_model_weights(file_path=a_file_path)
 
-        self.assert_file_exist(a_file_path)
+        self.assertFileExist(a_file_path)
 
     def test_givenAModelToExportDictPathALike_thenExportIt(self):
         a_file_path = Path(os.path.join(self.a_saving_dir_path, "exported_model.p"))
 
         self.a_model.save_model_weights(file_path=a_file_path)
 
-        self.assert_file_exist(a_file_path)
+        self.assertFileExist(a_file_path)
 
     def test_givenAnExportedModelUsingTheMethod_whenReloadIt_thenReload(self):
         a_file_path = Path(os.path.join(self.a_saving_dir_path, "exported_model.p"))

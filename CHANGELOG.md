@@ -256,3 +256,4 @@
 - Add `save_model_weights` method to `AddressParser` to save model weights (PyTorch state dictionary)
 - Improve CI
 - Added verbose flag for test to activate or deactivate the test verbosity (it override the AddressParser verbosity)
+- Add Docker image

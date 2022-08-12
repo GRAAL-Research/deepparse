@@ -24,4 +24,3 @@ jobs:
       - name: PyLint
         run: |
           pylint deepparse/ tests/
-          pylint examples/ --disable=no-member

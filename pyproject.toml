@@ -12,4 +12,4 @@ testpaths = [
 ]
 
 [tool.pylint.ini_options]
-DJANGO_SETTINGS_MODULE = "settings.py"
+DJANGO_SETTINGS_MODULE = "settings"

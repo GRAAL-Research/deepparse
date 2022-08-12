@@ -24,3 +24,4 @@ jobs:
       - name: PyLint
         run: |
           pylint deepparse/ tests/
+          DJANGO_SETTINGS_MODULE=settings pylint examples/ --disable=no-member

@@ -27,7 +27,6 @@ jobs:
       - name: Install code examples dependencies
         run: |
           pip install -U deepparse
-          pip install -e .
       - name: PyLint code examples
         run: |
           DJANGO_SETTINGS_MODULE=settings pylint examples/ --disable=no-member

@@ -6,9 +6,15 @@
 [![PyPI Status](https://badge.fury.io/py/deepparse.svg)](https://badge.fury.io/py/deepparse)
 [![PyPI Status](https://pepy.tech/badge/deepparse)](https://pepy.tech/project/deepparse)
 
-[![Continuous Integration](https://github.com/GRAAL-Research/deepparse/workflows/Continuous%20Integration/badge.svg)](https://github.com/GRAAL-Research/deepparse/actions?query=workflow%3A%22Continuous+Integration%22+branch%3Amaster)
+
+[![Formatting](https://github.com/GRAAL-Research/deepparse/actions/workflows/formatting.yml/badge.svg?branch=stable)](https://github.com/GRAAL-Research/deepparse/actions/workflows/formatting.yml)
+[![Linting](https://github.com/GRAAL-Research/deepparse/actions/workflows/linting.yml/badge.svg?branch=stable)](https://github.com/GRAAL-Research/deepparse/actions/workflows/linting.yml)
+[![Tests](https://github.com/GRAAL-Research/deepparse/actions/workflows/tests.yml/badge.svg?branch=stable)](https://github.com/GRAAL-Research/deepparse/actions/workflows/tests.yml)
+[![Docs](https://github.com/GRAAL-Research/deepparse/actions/workflows/docs.yml/badge.svg?branch=stable)](https://github.com/GRAAL-Research/deepparse/actions/workflows/docs.yml)
+
 [![codecov](https://codecov.io/gh/GRAAL-Research/deepparse/branch/master/graph/badge.svg)](https://codecov.io/gh/GRAAL-Research/deepparse)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/62464699ff0740d0b8064227c4274b98)](https://www.codacy.com/gh/GRAAL-Research/deepparse/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=GRAAL-Research/deepparse&amp;utm_campaign=Badge_Grade)
+<a href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg"></a>
 
 [![pr welcome](https://img.shields.io/badge/PR-Welcome-%23FF8300.svg?)](https://img.shields.io/badge/PR-Welcome-%23FF8300.svg?)
 [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](http://www.gnu.org/licenses/lgpl-3.0)

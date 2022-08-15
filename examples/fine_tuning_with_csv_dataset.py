@@ -17,11 +17,13 @@ download_from_public_repository(test_dataset_name, saving_dir, file_extension=fi
 # Now let's create a training and test container.
 training_container = CSVDatasetContainer(
     os.path.join(saving_dir, training_dataset_name + "." + file_extension),
-    column_names=['Address', 'Tags'],
-    separator=',',
+    column_names=["Address", "Tags"],
+    separator=",",
 )
 test_container = CSVDatasetContainer(
-    os.path.join(saving_dir, test_dataset_name + "." + file_extension), column_names=['Address', 'Tags'], separator=','
+    os.path.join(saving_dir, test_dataset_name + "." + file_extension),
+    column_names=["Address", "Tags"],
+    separator=",",
 )
 
 # We will retrain the fasttext version of our pretrained model.

@@ -257,3 +257,7 @@
 - Improve CI
 - Added verbose flag for test to activate or deactivate the test verbosity (it override the AddressParser verbosity)
 - Add Docker image
+- Add `val_dataset` to retrain API to allow the use of a specific val dataset for training
+- Remove deprecated `download_from_url` function
+- Remove deprecated `dataset_container` argument
+- Add Zenodo DOI

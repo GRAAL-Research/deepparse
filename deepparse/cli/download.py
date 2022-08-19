@@ -32,6 +32,9 @@ def main(args=None) -> None:
     parsed_args = get_args(args)
 
     model_type = parsed_args.model_type
+    if "-attention" in model_type:
+        root_model_type = model_type.split("-")[0]
+        model_type = root_model_type + "_attention"
 
     saving_cache_path = parsed_args.saving_cache_dir
 

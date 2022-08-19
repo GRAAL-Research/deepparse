@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>deepparse.cli.retrain &mdash; deepparse 0.8.2 documentation</title>
+  <title>deepparse.cli.retrain &mdash; deepparse 0.9.1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -29,7 +29,7 @@
             <img src="../../../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.8.2
+                0.9.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -56,6 +56,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_attention_model.html">Retrain an Attention Mechanism Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_with_new_seq2seq_params.html">Retrain With New Seq2Seq Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/single_country_retrain.html">Retrain an Address Parser for Single Country Uses</a></li>
 </ul>
 
         </div>
@@ -98,13 +99,11 @@
     <span class="n">add_csv_column_names_arg</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">.tools</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">is_csv_path</span><span class="p">,</span>
-    <span class="n">is_pickle_path</span><span class="p">,</span>
     <span class="n">wrap</span><span class="p">,</span>
     <span class="n">bool_parse</span><span class="p">,</span>
     <span class="n">attention_model_type_handling</span><span class="p">,</span>
+    <span class="n">data_container_factory</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">..dataset_container</span> <span class="kn">import</span> <span class="n">CSVDatasetContainer</span><span class="p">,</span> <span class="n">PickleDatasetContainer</span>
 <span class="kn">from</span> <span class="nn">..parser</span> <span class="kn">import</span> <span class="n">AddressParser</span>
 
 <span class="n">_retrain_parameters</span> <span class="o">=</span> <span class="p">[</span>
@@ -175,25 +174,21 @@
 
     <span class="n">parsed_args</span> <span class="o">=</span> <span class="n">get_args</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
 
-    <span class="n">train_dataset_path</span> <span class="o">=</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">train_dataset_path</span>
-    <span class="k">if</span> <span class="n">is_csv_path</span><span class="p">(</span><span class="n">train_dataset_path</span><span class="p">):</span>
-        <span class="n">csv_column_names</span> <span class="o">=</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">csv_column_names</span>
-        <span class="k">if</span> <span class="n">csv_column_names</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;To use a CSV dataset to retrain on, you need to specify the &#39;csv_column_names&#39; argument to provide the&quot;</span>
-                <span class="s2">&quot; column names to extract address and labels (respectively). For example, Address Tags.&quot;</span>
-            <span class="p">)</span>
-        <span class="n">csv_column_separator</span> <span class="o">=</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">csv_column_separator</span>
-        <span class="n">training_data</span> <span class="o">=</span> <span class="n">CSVDatasetContainer</span><span class="p">(</span>
-            <span class="n">train_dataset_path</span><span class="p">,</span>
-            <span class="n">column_names</span><span class="o">=</span><span class="n">csv_column_names</span><span class="p">,</span>
-            <span class="n">separator</span><span class="o">=</span><span class="n">csv_column_separator</span><span class="p">,</span>
-            <span class="n">is_training_container</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">training_data</span> <span class="o">=</span> <span class="n">data_container_factory</span><span class="p">(</span>
+        <span class="n">dataset_path</span><span class="o">=</span><span class="n">parsed_args</span><span class="o">.</span><span class="n">train_dataset_path</span><span class="p">,</span>
+        <span class="n">trainable_dataset</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">csv_column_separator</span><span class="o">=</span><span class="n">parsed_args</span><span class="o">.</span><span class="n">csv_column_separator</span><span class="p">,</span>
+        <span class="n">csv_column_names</span><span class="o">=</span><span class="n">parsed_args</span><span class="o">.</span><span class="n">csv_column_names</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">val_data</span> <span class="o">=</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">val_dataset_path</span>
+    <span class="k">if</span> <span class="n">val_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">val_data</span> <span class="o">=</span> <span class="n">data_container_factory</span><span class="p">(</span>
+            <span class="n">dataset_path</span><span class="o">=</span><span class="n">parsed_args</span><span class="o">.</span><span class="n">val_dataset_path</span><span class="p">,</span>
+            <span class="n">trainable_dataset</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">csv_column_separator</span><span class="o">=</span><span class="n">parsed_args</span><span class="o">.</span><span class="n">csv_column_separator</span><span class="p">,</span>
+            <span class="n">csv_column_names</span><span class="o">=</span><span class="n">parsed_args</span><span class="o">.</span><span class="n">csv_column_names</span><span class="p">,</span>
         <span class="p">)</span>
-    <span class="k">elif</span> <span class="n">is_pickle_path</span><span class="p">(</span><span class="n">train_dataset_path</span><span class="p">):</span>
-        <span class="n">training_data</span> <span class="o">=</span> <span class="n">PickleDatasetContainer</span><span class="p">(</span><span class="n">train_dataset_path</span><span class="p">,</span> <span class="n">is_training_container</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The train dataset path argument is not a CSV or a pickle file.&quot;</span><span class="p">)</span>
 
     <span class="n">base_parsing_model</span> <span class="o">=</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">base_parsing_model</span>
     <span class="n">device</span> <span class="o">=</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">device</span>
@@ -208,7 +203,9 @@
 
     <span class="n">parsed_retain_arguments</span> <span class="o">=</span> <span class="n">parse_retrained_arguments</span><span class="p">(</span><span class="n">parsed_args</span><span class="p">)</span>
 
-    <span class="n">address_parser</span><span class="o">.</span><span class="n">retrain</span><span class="p">(</span><span class="n">dataset_container</span><span class="o">=</span><span class="n">training_data</span><span class="p">,</span> <span class="o">**</span><span class="n">parsed_retain_arguments</span><span class="p">)</span></div>
+    <span class="n">address_parser</span><span class="o">.</span><span class="n">retrain</span><span class="p">(</span>
+        <span class="n">train_dataset_container</span><span class="o">=</span><span class="n">training_data</span><span class="p">,</span> <span class="n">val_dataset_container</span><span class="o">=</span><span class="n">val_data</span><span class="p">,</span> <span class="o">**</span><span class="n">parsed_retain_arguments</span>
+    <span class="p">)</span></div>
 
 
 <span class="k">def</span> <span class="nf">get_parser</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
@@ -222,6 +219,18 @@
         <span class="s2">&quot;train_dataset_path&quot;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span><span class="s2">&quot;The path to the dataset file in a pickle (.p, .pickle or .pckl) or CSV format.&quot;</span><span class="p">),</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--val_dataset_path&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span>
+            <span class="s2">&quot;The path to the validation dataset file in a pickle (.p, .pickle or .pckl) or CSV format. &quot;</span>
+            <span class="s2">&quot;If the dataset are CSV, both train and val must have the same CSV formatting &quot;</span>
+            <span class="s2">&quot;(columns names). If not provided, the train dataset will be split in a train and val &quot;</span>
+            <span class="s2">&quot;dataset (default is None).&quot;</span>
+        <span class="p">),</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>

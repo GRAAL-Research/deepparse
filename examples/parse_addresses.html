@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Parse Addresses &mdash; deepparse 0.8.2 documentation</title>
+  <title>Parse Addresses &mdash; deepparse 0.9.1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -32,7 +32,7 @@
             <img src="../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.8.2
+                0.9.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -59,6 +59,7 @@
 <li class="toctree-l1"><a class="reference internal" href="retrain_attention_model.html">Retrain an Attention Mechanism Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
 <li class="toctree-l1"><a class="reference internal" href="retrain_with_new_seq2seq_params.html">Retrain With New Seq2Seq Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="single_country_retrain.html">Retrain an Address Parser for Single Country Uses</a></li>
 </ul>
 
         </div>
@@ -105,7 +106,7 @@
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">addresses_to_parse</span> <span class="o">=</span> <span class="n">PickleDatasetContainer</span><span class="p">(</span><span class="s2">&quot;./data/predict.p&quot;</span><span class="p">,</span> <span class="n">is_training_container</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Let’s use the BPEmb model on a GPU.</p>
+<p>Let’s use the <code class="docutils literal notranslate"><span class="pre">BPEmb</span></code> model on a GPU.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;bpemb&quot;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -118,12 +119,12 @@
 <p>When parsing addresses, some data quality tests are applied to the dataset.
 First, it validates that no addresses to parse are empty.
 Second, it validates that no addresses are whitespace-only.
-The next two lines are rising a DataError.</p>
+The next two lines are rising a <code class="docutils literal notranslate"><span class="pre">DataError</span></code>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>  <span class="c1"># Raise an error</span>
 <span class="n">address_parser</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>  <span class="c1"># Raise an error</span>
 </pre></div>
 </div>
-<p>We can also put our parsed address into a pandas dataframe for analysis. You can choose the fields to use or use the
+<p>We can also put our parsed address into a Pandas <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> for analysis. You can choose the fields to use or use the
 default one.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;StreetNumber&#39;</span><span class="p">,</span> <span class="s1">&#39;StreetName&#39;</span><span class="p">,</span> <span class="s1">&#39;Municipality&#39;</span><span class="p">,</span> <span class="s1">&#39;Province&#39;</span><span class="p">,</span> <span class="s1">&#39;PostalCode&#39;</span><span class="p">]</span>
 <span class="n">parsed_address_data_frame</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">parsed_address</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="n">fields</span><span class="p">)</span> <span class="k">for</span> <span class="n">parsed_address</span> <span class="ow">in</span> <span class="n">parsed_addresses</span><span class="p">],</span>

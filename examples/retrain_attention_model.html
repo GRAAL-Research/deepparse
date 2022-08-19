@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Retrain an Attention Mechanism Model &mdash; deepparse 0.8.2 documentation</title>
+  <title>Retrain an Attention Mechanism Model &mdash; deepparse 0.9.1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -32,7 +32,7 @@
             <img src="../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.8.2
+                0.9.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -59,6 +59,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Retrain an Attention Mechanism Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
 <li class="toctree-l1"><a class="reference internal" href="retrain_with_new_seq2seq_params.html">Retrain With New Seq2Seq Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="single_country_retrain.html">Retrain an Address Parser for Single Country Uses</a></li>
 </ul>
 
         </div>
@@ -96,7 +97,7 @@
 <span class="kn">from</span> <span class="nn">deepparse.parser</span> <span class="kn">import</span> <span class="n">AddressParser</span>
 </pre></div>
 </div>
-<p>First, let’s download the train and test data with “new tags” from the public repository.</p>
+<p>First, let’s download the train and test data with the new tags, <code class="docutils literal notranslate"><span class="pre">&quot;new</span> <span class="pre">tags&quot;</span></code>, from the public repository.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">saving_dir</span> <span class="o">=</span> <span class="s2">&quot;./data&quot;</span>
 <span class="n">file_extension</span> <span class="o">=</span> <span class="s2">&quot;p&quot;</span>
 <span class="n">training_dataset_name</span> <span class="o">=</span> <span class="s2">&quot;sample_incomplete_data&quot;</span>
@@ -110,13 +111,13 @@
 <span class="n">test_container</span> <span class="o">=</span> <span class="n">PickleDatasetContainer</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">saving_dir</span><span class="p">,</span> <span class="n">test_dataset_name</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="n">file_extension</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>We will retrain the fasttext attention version of our pretrained model.</p>
+<p>We will retrain the <code class="docutils literal notranslate"><span class="pre">FastText</span></code> attention version of our pretrained model.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="s2">&quot;bpemb&quot;</span>
 <span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="n">model_type</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">attention_mechanism</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Now, let’s retrain for 5 epochs using a batch size of 8 since the data is really small for the example.
-Let’s start with the default learning rate of 0.01 and use a learning rate scheduler to lower the learning rate
+<p>Now, let’s retrain for <code class="docutils literal notranslate"><span class="pre">5</span></code> epochs using a batch size of <code class="docutils literal notranslate"><span class="pre">8</span></code> since the data is really small for the example.
+Let’s start with the default learning rate of <code class="docutils literal notranslate"><span class="pre">0.01</span></code> and use a learning rate scheduler to lower the learning rate
 as we progress.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">lr_scheduler</span> <span class="o">=</span> <span class="n">poutyne</span><span class="o">.</span><span class="n">StepLR</span><span class="p">(</span><span class="n">step_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>  <span class="c1"># reduce LR by a factor of 10 each epoch</span>
 
@@ -124,7 +125,7 @@ as we progress.</p>
 
 <span class="n">address_parser</span><span class="o">.</span><span class="n">retrain</span><span class="p">(</span>
     <span class="n">training_container</span><span class="p">,</span>
-    <span class="mf">0.8</span><span class="p">,</span>
+    <span class="n">train_ratio</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
     <span class="n">epochs</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
     <span class="n">batch_size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
     <span class="n">num_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>

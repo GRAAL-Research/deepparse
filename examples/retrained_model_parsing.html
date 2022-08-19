@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Use a Retrained Model to Parse Addresses &mdash; deepparse 0.8.2 documentation</title>
+  <title>Use a Retrained Model to Parse Addresses &mdash; deepparse 0.9.1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -32,7 +32,7 @@
             <img src="../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.8.2
+                0.9.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -59,6 +59,7 @@
 <li class="toctree-l1"><a class="reference internal" href="retrain_attention_model.html">Retrain an Attention Mechanism Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
 <li class="toctree-l1"><a class="reference internal" href="retrain_with_new_seq2seq_params.html">Retrain With New Seq2Seq Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="single_country_retrain.html">Retrain an Address Parser for Single Country Uses</a></li>
 </ul>
 
         </div>
@@ -106,7 +107,7 @@ First, let’s download the train and test data from the public repository.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">addresses_to_parse</span> <span class="o">=</span> <span class="n">PickleDatasetContainer</span><span class="p">(</span><span class="s2">&quot;./data/predict.p&quot;</span><span class="p">,</span> <span class="n">is_training_container</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Let’s download a BPEmb retrained model create just for this example, but you can also use one of yours.</p>
+<p>Let’s download a <code class="docutils literal notranslate"><span class="pre">BPEmb</span></code> retrained model create just for this example, but you can also use one of yours.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model_saving_dir</span> <span class="o">=</span> <span class="s2">&quot;./retrained_models&quot;</span>
 <span class="n">retrained_model_name</span> <span class="o">=</span> <span class="s2">&quot;retrained_light_bpemb_address_parser&quot;</span>
 <span class="n">model_file_extension</span> <span class="o">=</span> <span class="s2">&quot;ckpt&quot;</span>

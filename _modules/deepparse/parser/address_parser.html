@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>deepparse.parser.address_parser &mdash; deepparse 0.8.2 documentation</title>
+  <title>deepparse.parser.address_parser &mdash; deepparse 0.9.1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -29,7 +29,7 @@
             <img src="../../../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.8.2
+                0.9.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -56,6 +56,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_attention_model.html">Retrain an Attention Mechanism Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_with_new_seq2seq_params.html">Retrain With New Seq2Seq Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/single_country_retrain.html">Retrain an Address Parser for Single Country Uses</a></li>
 </ul>
 
         </div>
@@ -85,10 +86,6 @@
   <h1>Source code for deepparse.parser.address_parser</h1><div class="highlight"><pre>
 <span></span><span class="c1"># pylint: disable=too-many-lines</span>
 
-<span class="c1"># Pylint raise error for torch.tensor, torch.zeros, ... as a no-member event</span>
-<span class="c1"># if not the case.</span>
-<span class="c1"># pylint: disable=no-member</span>
-
 <span class="c1"># Pylint raise error for an inconsistent-return-statements for the retrain function</span>
 <span class="c1"># It must be due to the complex try, except else case.</span>
 <span class="c1"># pylint: disable=inconsistent-return-statements</span>
@@ -98,6 +95,7 @@
 <span class="kn">import</span> <span class="nn">platform</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="kn">import</span> <span class="nn">torch</span>
@@ -471,7 +469,8 @@
 
 <div class="viewcode-block" id="AddressParser.retrain"><a class="viewcode-back" href="../../../parser.html#deepparse.parser.AddressParser.retrain">[docs]</a>    <span class="k">def</span> <span class="nf">retrain</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">dataset_container</span><span class="p">:</span> <span class="n">DatasetContainer</span><span class="p">,</span>
+        <span class="n">train_dataset_container</span><span class="p">:</span> <span class="n">DatasetContainer</span><span class="p">,</span>
+        <span class="n">val_dataset_container</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">DatasetContainer</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">train_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.8</span><span class="p">,</span>
         <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
         <span class="n">epochs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
@@ -499,12 +498,25 @@
 <span class="sd">        prediction tags, and if new ``seq2seq_params`` were used, the new seq2seq parameters.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            dataset_container (~deepparse.dataset_container.DatasetContainer): The dataset container of the data to use</span>
-<span class="sd">                such as any PyTorch Dataset (:class:`~torch.utils.data.Dataset`) user define class or one of our two</span>
-<span class="sd">                DatasetContainer (:class:`~deepparse.dataset_container.PickleDatasetContainer` or</span>
-<span class="sd">                :class:`~deepparse.dataset_container.CSVDatasetContainer`)</span>
-<span class="sd">            train_ratio (float): The ratio to use of the dataset for the training. The rest of the data is used for the</span>
-<span class="sd">                validation (e.g. a train ratio of 0.8 mean a 80-20 train-valid split) (by default, ``0.8``).</span>
+<span class="sd">            train_dataset_container (~deepparse.dataset_container.DatasetContainer): The train dataset container of</span>
+<span class="sd">                the training data to use such as any PyTorch Dataset</span>
+<span class="sd">                (:class:`~torch.utils.data.Dataset`) user define class or one of our</span>
+<span class="sd">                DatasetContainer (:class:`~deepparse.dataset_container.PickleDatasetContainer`,</span>
+<span class="sd">                :class:`~deepparse.dataset_container.CSVDatasetContainer` or</span>
+<span class="sd">                :class:`~deepparse.dataset_container.ListDatasetContainer`). The train dataset is use as two ways:</span>
+
+<span class="sd">                    1. As is if a validating dataset is provided (``val_dataset_container``).</span>
+<span class="sd">                    2. Split in a training and validation dataset if ``val_dataset_container`` is set to None.</span>
+
+<span class="sd">                Thus, it means that if ``val_dataset_container`` is set to the None default settings, we use the</span>
+<span class="sd">                ``train_ratio`` argument to split the training dataset into a train and val dataset. See examples for</span>
+<span class="sd">                more details.</span>
+<span class="sd">            val_dataset_container (Union[~deepparse.dataset_container.DatasetContainer, None]): The validation dataset</span>
+<span class="sd">                container to use for validating the model (by default, ``None``).</span>
+<span class="sd">            train_ratio (float): The ratio to use of the ``train_dataset_container`` for the training procedure.</span>
+<span class="sd">                The rest of the data is used for the validation (e.g. a train ratio of 0.8 mean an</span>
+<span class="sd">                80-20 train-valid split) (by default, ``0.8``). The argument is ignored if ``val_dataset_container`` is</span>
+<span class="sd">                not None.</span>
 <span class="sd">            batch_size (int): The size of the batch (by default, ``32``).</span>
 <span class="sd">            epochs (int): The number of training epochs (by default, ``5``).</span>
 <span class="sd">            num_workers (int): The number of workers to use for the data loader (by default, ``1`` worker).</span>
@@ -604,17 +616,27 @@
 
 <span class="sd">                container = PickleDatasetContainer(data_path)</span>
 
-<span class="sd">                address_parser.retrain(container, 0.8, epochs=1, batch_size=128)</span>
+<span class="sd">                # The validation dataset is created from the training dataset (container)</span>
+<span class="sd">                # 80% of the data is use for training and 20% as a validation dataset</span>
+<span class="sd">                address_parser.retrain(container, train_ratio=0.8, epochs=1, batch_size=128)</span>
 
 <span class="sd">            Using the freezing layers parameters to freeze layers during training</span>
 
 <span class="sd">            .. code-block:: python</span>
 
 <span class="sd">                address_parser = AddressParser(device=0)</span>
-<span class="sd">                data_path = &quot;path_to_a_csv_dataset.p&quot;</span>
 
+<span class="sd">                data_path = &quot;path_to_a_csv_dataset.p&quot;</span>
 <span class="sd">                container = CSVDatasetContainer(data_path)</span>
-<span class="sd">                address_parser.retrain(container, 0.8, epochs=5, batch_size=128, layers_to_freeze=&quot;encoder&quot;)</span>
+
+<span class="sd">                val_data_path = &quot;path_to_a_csv_val_dataset.p&quot;</span>
+<span class="sd">                val_container = CSVDatasetContainer(val_data_path)</span>
+
+<span class="sd">                # We provide the train dataset (container) and the val dataset (val_container)</span>
+<span class="sd">                # Thus, the train_ratio argument is ignored, and we use instead the val_container</span>
+<span class="sd">                # as the validating dataset.</span>
+<span class="sd">                address_parser.retrain(container, val_container, epochs=5, batch_size=128,</span>
+<span class="sd">                                       layers_to_freeze=&quot;encoder&quot;)</span>
 
 <span class="sd">            Using learning rate scheduler callback.</span>
 
@@ -628,7 +650,7 @@
 <span class="sd">                container = CSVDatasetContainer(data_path)</span>
 
 <span class="sd">                lr_scheduler = poutyne.StepLR(step_size=1, gamma=0.1) # reduce LR by a factor of 10 each epoch</span>
-<span class="sd">                address_parser.retrain(container, 0.8, epochs=5, batch_size=128, callbacks=[lr_scheduler])</span>
+<span class="sd">                address_parser.retrain(container, train_ratio=0.8, epochs=5, batch_size=128, callbacks=[lr_scheduler])</span>
 
 <span class="sd">            Using your own prediction tags dictionary.</span>
 
@@ -641,7 +663,8 @@
 
 <span class="sd">                container = PickleDatasetContainer(data_path)</span>
 
-<span class="sd">                address_parser.retrain(container, 0.8, epochs=1, batch_size=128, prediction_tags=address_components)</span>
+<span class="sd">                address_parser.retrain(container, train_ratio=0.8, epochs=1, batch_size=128,</span>
+<span class="sd">                                       prediction_tags=address_components)</span>
 
 <span class="sd">            Using your own seq2seq parameters.</span>
 
@@ -654,7 +677,8 @@
 
 <span class="sd">                container = PickleDatasetContainer(data_path)</span>
 
-<span class="sd">                address_parser.retrain(container, 0.8, epochs=1, batch_size=128, seq2seq_params=seq2seq_params)</span>
+<span class="sd">                address_parser.retrain(container, train_ratio=0.8, epochs=1, batch_size=128,</span>
+<span class="sd">                                       seq2seq_params=seq2seq_params)</span>
 
 
 <span class="sd">            Using your own seq2seq parameters and prediction tags dictionary.</span>
@@ -669,8 +693,8 @@
 
 <span class="sd">                container = PickleDatasetContainer(data_path)</span>
 
-<span class="sd">                address_parser.retrain(container, 0.8, epochs=1, batch_size=128, seq2seq_params=seq2seq_params,</span>
-<span class="sd">                    prediction_tags=address_components)</span>
+<span class="sd">                address_parser.retrain(container, train_ratio=0.8, epochs=1, batch_size=128,</span>
+<span class="sd">                                       seq2seq_params=seq2seq_params, prediction_tags=address_components)</span>
 
 <span class="sd">            Using a named retrain parser name.</span>
 
@@ -681,35 +705,13 @@
 
 <span class="sd">                container = PickleDatasetContainer(data_path)</span>
 
-<span class="sd">                address_parser.retrain(container, 0.8, epochs=1, batch_size=128,</span>
+<span class="sd">                address_parser.retrain(container, train_ratio=0.8, epochs=1, batch_size=128,</span>
 <span class="sd">                    name_of_the_retrain_parser=&quot;MyParserName&quot;)</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">if</span> <span class="s2">&quot;fasttext-light&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;It&#39;s not possible to retrain a fasttext-light due to pymagnitude problem.&quot;</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;windows&quot;</span> <span class="ow">and</span> <span class="s2">&quot;fasttext&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="ow">and</span> <span class="n">num_workers</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;On Windows system, we cannot retrain FastText like models with parallelism workers since &quot;</span>
-                <span class="s2">&quot;FastText objects are not pickleable with the parallelism process use by Windows. &quot;</span>
-                <span class="s2">&quot;Thus, you need to set num_workers to 0 since 1 also means &#39;parallelism&#39;.&quot;</span>
-            <span class="p">)</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dataset_container</span><span class="p">,</span> <span class="n">DatasetContainer</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;The dataset_container has to be a DatasetContainer. &quot;</span>
-                <span class="s2">&quot;Read the docs at https://deepparse.org/ for more details.&quot;</span>
-            <span class="p">)</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">dataset_container</span><span class="o">.</span><span class="n">is_a_train_container</span><span class="p">():</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The dataset container is not a train container.&quot;</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">name_of_the_retrain_parser</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">name_of_the_retrain_parser</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s2">&quot;The name_of_the_retrain_parser should NOT include a file extension or a dot-like filename style.&quot;</span>
-                <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_retrain_argumentation_validations</span><span class="p">(</span>
+            <span class="n">train_dataset_container</span><span class="p">,</span> <span class="n">val_dataset_container</span><span class="p">,</span> <span class="n">num_workers</span><span class="p">,</span> <span class="n">name_of_the_retrain_parser</span>
+        <span class="p">)</span>
 
         <span class="n">model_factory_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;prediction_layer_len&quot;</span><span class="p">:</span> <span class="mi">9</span><span class="p">}</span>  <span class="c1"># We set the default output dim size</span>
 
@@ -743,7 +745,7 @@
 
         <span class="n">callbacks</span> <span class="o">=</span> <span class="p">[]</span> <span class="k">if</span> <span class="n">callbacks</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">callbacks</span>
         <span class="n">train_generator</span><span class="p">,</span> <span class="n">valid_generator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_training_data_generator</span><span class="p">(</span>
-            <span class="n">dataset_container</span><span class="p">,</span> <span class="n">train_ratio</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">num_workers</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span>
+            <span class="n">train_dataset_container</span><span class="p">,</span> <span class="n">val_dataset_container</span><span class="p">,</span> <span class="n">train_ratio</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">num_workers</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span>
         <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">layers_to_freeze</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">seq2seq_params</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -841,6 +843,7 @@
         <span class="n">num_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
         <span class="n">callbacks</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
         <span class="c1"># pylint: disable=too-many-arguments, too-many-locals</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -856,6 +859,9 @@
 <span class="sd">                See Poutyne `callback &lt;https://poutyne.org/callbacks.html#callback-class&gt;`_ for more information.</span>
 <span class="sd">                By default, we set no callback.</span>
 <span class="sd">            seed (int): Seed to use (by default, ``42``).</span>
+<span class="sd">            verbose (Union[None, bool]): To override the AddressParser verbosity for the test. When set to True or</span>
+<span class="sd">                False, it will override (but it does not change the AddressParser verbosity) the test verbosity.</span>
+<span class="sd">                If set to the default value None, the AddressParser verbosity is used as the test verbosity.</span>
 
 <span class="sd">        Return:</span>
 <span class="sd">            A dictionary with the stats (see `Experiment class</span>
@@ -868,12 +874,13 @@
 
 <span class="sd">            .. code-block:: python</span>
 
-<span class="sd">                address_parser = AddressParser(device=0) # On GPU device 0</span>
+<span class="sd">                address_parser = AddressParser(device=0, verbose=True) # On GPU device 0</span>
 <span class="sd">                data_path = &quot;path_to_a_pickle_test_dataset.p&quot;</span>
 
 <span class="sd">                test_container = PickleDatasetContainer(data_path, is_training_container=False)</span>
 
-<span class="sd">                address_parser.test(test_container) # We test the model on the data</span>
+<span class="sd">                # We test the model on the data, and we override the test verbosity</span>
+<span class="sd">                address_parser.test(test_container, verbose=False)</span>
 
 <span class="sd">            You can also test your fine-tuned model</span>
 
@@ -888,7 +895,8 @@
 
 <span class="sd">                train_container = PickleDatasetContainer(data_path)</span>
 
-<span class="sd">                address_parser.retrain(container, 0.8, epochs=1, batch_size=128, prediction_tags=address_components)</span>
+<span class="sd">                address_parser.retrain(container, train_ratio=0.8, epochs=1, batch_size=128,</span>
+<span class="sd">                                       prediction_tags=address_components)</span>
 
 <span class="sd">                # Test phase</span>
 <span class="sd">                data_path = &quot;path_to_a_pickle_test_dataset.p&quot;</span>
@@ -932,9 +940,41 @@
             <span class="n">logging</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="p">)</span>  <span class="c1"># We set logging to false since we don&#39;t need it</span>
 
-        <span class="n">test_res</span> <span class="o">=</span> <span class="n">exp</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="n">test_generator</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="n">callbacks</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
+        <span class="c1"># Handle the verbose overriding param</span>
+        <span class="k">if</span> <span class="n">verbose</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">verbose</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span>
+        <span class="n">test_res</span> <span class="o">=</span> <span class="n">exp</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="n">test_generator</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="n">callbacks</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">test_res</span></div>
+
+<div class="viewcode-block" id="AddressParser.save_model_weights"><a class="viewcode-back" href="../../../parser.html#deepparse.parser.AddressParser.save_model_weights">[docs]</a>    <span class="k">def</span> <span class="nf">save_model_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to save, in a Pickle format, the address parser model weights (PyTorch state dictionary).</span>
+
+<span class="sd">        file_path (Union[str, Path]): A complete file path with a pickle extension to save the model weights.</span>
+<span class="sd">            It can either be a string (e.g. &#39;path/to/save.p&#39;) or a path like path (e.g. Path(&#39;path/to/save.p&#39;).</span>
+
+<span class="sd">        Examples:</span>
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                address_parser = AddressParser(device=0)</span>
+
+<span class="sd">                a_path = Path(&#39;some/path/to/save.p&#39;)</span>
+<span class="sd">                address_parser.save_address_parser_weights(a_path)</span>
+
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                address_parser = AddressParser(device=0)</span>
+
+<span class="sd">                a_path = &#39;some/path/to/save.p&#39;</span>
+<span class="sd">                address_parser.save_address_parser_weights(a_path)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">()</span>
+
+        <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span> <span class="n">file_path</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_fill_tagged_addresses_components</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -1005,7 +1045,8 @@
 
     <span class="k">def</span> <span class="nf">_create_training_data_generator</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">dataset_container</span><span class="p">:</span> <span class="n">DatasetContainer</span><span class="p">,</span>
+        <span class="n">train_dataset_container</span><span class="p">:</span> <span class="n">DatasetContainer</span><span class="p">,</span>
+        <span class="n">val_dataset_container</span><span class="p">:</span> <span class="n">DatasetContainer</span><span class="p">,</span>
         <span class="n">train_ratio</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">num_workers</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -1014,11 +1055,18 @@
         <span class="c1"># pylint: disable=too-many-arguments</span>
         <span class="n">data_transform</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set_data_transformer</span><span class="p">()</span>
 
-        <span class="n">train_indices</span><span class="p">,</span> <span class="n">valid_indices</span> <span class="o">=</span> <span class="n">indices_splitting</span><span class="p">(</span>
-            <span class="n">num_data</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">dataset_container</span><span class="p">),</span> <span class="n">train_ratio</span><span class="o">=</span><span class="n">train_ratio</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span>
-        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">val_dataset_container</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">train_indices</span><span class="p">,</span> <span class="n">valid_indices</span> <span class="o">=</span> <span class="n">indices_splitting</span><span class="p">(</span>
+                <span class="n">num_data</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">train_dataset_container</span><span class="p">),</span> <span class="n">train_ratio</span><span class="o">=</span><span class="n">train_ratio</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span>
+            <span class="p">)</span>
 
-        <span class="n">train_dataset</span> <span class="o">=</span> <span class="n">Subset</span><span class="p">(</span><span class="n">dataset_container</span><span class="p">,</span> <span class="n">train_indices</span><span class="p">)</span>
+            <span class="n">train_dataset</span> <span class="o">=</span> <span class="n">Subset</span><span class="p">(</span><span class="n">train_dataset_container</span><span class="p">,</span> <span class="n">train_indices</span><span class="p">)</span>
+
+            <span class="n">valid_dataset</span> <span class="o">=</span> <span class="n">Subset</span><span class="p">(</span><span class="n">train_dataset_container</span><span class="p">,</span> <span class="n">valid_indices</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">train_dataset</span> <span class="o">=</span> <span class="n">train_dataset_container</span>
+            <span class="n">valid_dataset</span> <span class="o">=</span> <span class="n">val_dataset_container</span>
+
         <span class="n">train_generator</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span>
             <span class="n">train_dataset</span><span class="p">,</span>
             <span class="n">collate_fn</span><span class="o">=</span><span class="n">data_transform</span><span class="o">.</span><span class="n">teacher_forcing_transform</span><span class="p">,</span>
@@ -1027,7 +1075,6 @@
             <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">)</span>
 
-        <span class="n">valid_dataset</span> <span class="o">=</span> <span class="n">Subset</span><span class="p">(</span><span class="n">dataset_container</span><span class="p">,</span> <span class="n">valid_indices</span><span class="p">)</span>
         <span class="n">valid_generator</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span>
             <span class="n">valid_dataset</span><span class="p">,</span>
             <span class="n">collate_fn</span><span class="o">=</span><span class="n">data_transform</span><span class="o">.</span><span class="n">output_transform</span><span class="p">,</span>
@@ -1109,8 +1156,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_converter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vectorizer</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
 
+    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_retrain</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
         <span class="n">experiment</span><span class="p">:</span> <span class="n">Experiment</span><span class="p">,</span>
         <span class="n">train_generator</span><span class="p">:</span> <span class="n">DatasetContainer</span><span class="p">,</span>
         <span class="n">valid_generator</span><span class="p">:</span> <span class="n">DatasetContainer</span><span class="p">,</span>
@@ -1130,7 +1177,6 @@
                 <span class="n">epochs</span><span class="o">=</span><span class="n">epochs</span><span class="p">,</span>
                 <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
                 <span class="n">callbacks</span><span class="o">=</span><span class="n">callbacks</span><span class="p">,</span>
-                <span class="n">verbose</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">,</span>
                 <span class="n">disable_tensorboard</span><span class="o">=</span><span class="n">disable_tensorboard</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="k">return</span> <span class="n">train_res</span>
@@ -1179,7 +1225,52 @@
         <span class="n">seq2seq_params_str</span> <span class="o">=</span> <span class="s2">&quot;ModifiedSeq2SeqConfiguration&quot;</span> <span class="k">if</span> <span class="n">seq2seq_params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
         <span class="n">layers_to_freeze_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;FreezedLayer</span><span class="si">{</span><span class="n">layers_to_freeze</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">layers_to_freeze</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
         <span class="n">parser_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model_type_formatted</span> <span class="o">+</span> <span class="n">prediction_tags_str</span> <span class="o">+</span> <span class="n">seq2seq_params_str</span> <span class="o">+</span> <span class="n">layers_to_freeze_str</span>
-        <span class="k">return</span> <span class="n">parser_name</span></div>
+        <span class="k">return</span> <span class="n">parser_name</span>
+
+    <span class="k">def</span> <span class="nf">_retrain_argumentation_validations</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">train_dataset_container</span><span class="p">:</span> <span class="n">DatasetContainer</span><span class="p">,</span>
+        <span class="n">val_dataset_container</span><span class="p">:</span> <span class="n">DatasetContainer</span><span class="p">,</span>
+        <span class="n">num_workers</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">name_of_the_retrain_parser</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Arguments validation test for retrain methods.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;fasttext-light&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;It&#39;s not possible to retrain a fasttext-light due to pymagnitude problem.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;windows&quot;</span> <span class="ow">and</span> <span class="s2">&quot;fasttext&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="ow">and</span> <span class="n">num_workers</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;On Windows system, we cannot retrain FastText like models with parallelism workers since &quot;</span>
+                <span class="s2">&quot;FastText objects are not pickleable with the parallelism process use by Windows. &quot;</span>
+                <span class="s2">&quot;Thus, you need to set num_workers to 0 since 1 also means &#39;parallelism&#39;.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">train_dataset_container</span><span class="p">,</span> <span class="n">DatasetContainer</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;The train dataset container (train_dataset_container) has to be a DatasetContainer. &quot;</span>
+                <span class="s2">&quot;Read the docs at https://deepparse.org/ for more details.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">train_dataset_container</span><span class="o">.</span><span class="n">is_a_train_container</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The train dataset container (train_dataset_container) is not a trainable container.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">val_dataset_container</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val_dataset_container</span><span class="p">,</span> <span class="n">DatasetContainer</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;The val dataset container (val_dataset_container) has to be a DatasetContainer. &quot;</span>
+                    <span class="s2">&quot;Read the docs at https://deepparse.org/ for more details.&quot;</span>
+                <span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">val_dataset_container</span><span class="o">.</span><span class="n">is_a_train_container</span><span class="p">():</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The val dataset container (val_dataset_container) is not a trainable container.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">name_of_the_retrain_parser</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">name_of_the_retrain_parser</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;The name_of_the_retrain_parser should NOT include a file extension or a dot-like filename style.&quot;</span>
+                <span class="p">)</span></div>
 </pre></div>
 
            </div>

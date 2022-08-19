@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Parse Addresses Using Our CLI &mdash; deepparse 0.8.2 documentation</title>
+  <title>Parse Addresses Using Our CLI &mdash; deepparse 0.9.1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -32,7 +32,7 @@
             <img src="../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.8.2
+                0.9.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -59,6 +59,7 @@
 <li class="toctree-l1"><a class="reference internal" href="retrain_attention_model.html">Retrain an Attention Mechanism Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
 <li class="toctree-l1"><a class="reference internal" href="retrain_with_new_seq2seq_params.html">Retrain With New Seq2Seq Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="single_country_retrain.html">Retrain an Address Parser for Single Country Uses</a></li>
 </ul>
 
         </div>
@@ -97,7 +98,7 @@ dataset.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>parse fasttext ./dataset_path.csv parsed_address.pickle --device <span class="m">0</span>
 </pre></div>
 </div>
-<p>Or use one of your retrained models using the <cite>optional ̀</cite> path_to_retrained_model`` argument.</p>
+<p>Or use one of your retrained models using the optional <code class="docutils literal notranslate"><span class="pre">path_to_retrained_model</span></code> argument.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>parse fasttext ./dataset_path.csv parsed_address.pickle --path_to_retrained_model ./path
 </pre></div>
 </div>

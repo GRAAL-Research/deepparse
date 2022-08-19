@@ -1,9 +1,5 @@
 # pylint: disable=too-many-lines
 
-# Pylint raise error for torch.tensor, torch.zeros, ... as a no-member event
-# if not the case.
-# pylint: disable=no-member
-
 # Pylint raise error for an inconsistent-return-statements for the retrain function
 # It must be due to the complex try, except else case.
 # pylint: disable=inconsistent-return-statements
@@ -13,6 +9,7 @@ import os
 import platform
 import re
 import warnings
+from pathlib import Path
 from typing import List, Union, Dict, Tuple
 
 import torch
@@ -386,7 +383,8 @@ class AddressParser:
 
     def retrain(
         self,
-        dataset_container: DatasetContainer,
+        train_dataset_container: DatasetContainer,
+        val_dataset_container: Union[DatasetContainer, None] = None,
         train_ratio: float = 0.8,
         batch_size: int = 32,
         epochs: int = 5,
@@ -414,12 +412,25 @@ class AddressParser:
         prediction tags, and if new ``seq2seq_params`` were used, the new seq2seq parameters.
 
         Args:
-            dataset_container (~deepparse.dataset_container.DatasetContainer): The dataset container of the data to use
-                such as any PyTorch Dataset (:class:`~torch.utils.data.Dataset`) user define class or one of our two
-                DatasetContainer (:class:`~deepparse.dataset_container.PickleDatasetContainer` or
-                :class:`~deepparse.dataset_container.CSVDatasetContainer`)
-            train_ratio (float): The ratio to use of the dataset for the training. The rest of the data is used for the
-                validation (e.g. a train ratio of 0.8 mean a 80-20 train-valid split) (by default, ``0.8``).
+            train_dataset_container (~deepparse.dataset_container.DatasetContainer): The train dataset container of
+                the training data to use such as any PyTorch Dataset
+                (:class:`~torch.utils.data.Dataset`) user define class or one of our
+                DatasetContainer (:class:`~deepparse.dataset_container.PickleDatasetContainer`,
+                :class:`~deepparse.dataset_container.CSVDatasetContainer` or
+                :class:`~deepparse.dataset_container.ListDatasetContainer`). The train dataset is use as two ways:
+
+                    1. As is if a validating dataset is provided (``val_dataset_container``).
+                    2. Split in a training and validation dataset if ``val_dataset_container`` is set to None.
+
+                Thus, it means that if ``val_dataset_container`` is set to the None default settings, we use the
+                ``train_ratio`` argument to split the training dataset into a train and val dataset. See examples for
+                more details.
+            val_dataset_container (Union[~deepparse.dataset_container.DatasetContainer, None]): The validation dataset
+                container to use for validating the model (by default, ``None``).
+            train_ratio (float): The ratio to use of the ``train_dataset_container`` for the training procedure.
+                The rest of the data is used for the validation (e.g. a train ratio of 0.8 mean an
+                80-20 train-valid split) (by default, ``0.8``). The argument is ignored if ``val_dataset_container`` is
+                not None.
             batch_size (int): The size of the batch (by default, ``32``).
             epochs (int): The number of training epochs (by default, ``5``).
             num_workers (int): The number of workers to use for the data loader (by default, ``1`` worker).
@@ -519,17 +530,27 @@ class AddressParser:
 
                 container = PickleDatasetContainer(data_path)
 
-                address_parser.retrain(container, 0.8, epochs=1, batch_size=128)
+                # The validation dataset is created from the training dataset (container)
+                # 80% of the data is use for training and 20% as a validation dataset
+                address_parser.retrain(container, train_ratio=0.8, epochs=1, batch_size=128)
 
             Using the freezing layers parameters to freeze layers during training
 
             .. code-block:: python
 
                 address_parser = AddressParser(device=0)
-                data_path = "path_to_a_csv_dataset.p"
 
+                data_path = "path_to_a_csv_dataset.p"
                 container = CSVDatasetContainer(data_path)
-                address_parser.retrain(container, 0.8, epochs=5, batch_size=128, layers_to_freeze="encoder")
+
+                val_data_path = "path_to_a_csv_val_dataset.p"
+                val_container = CSVDatasetContainer(val_data_path)
+
+                # We provide the train dataset (container) and the val dataset (val_container)
+                # Thus, the train_ratio argument is ignored, and we use instead the val_container
+                # as the validating dataset.
+                address_parser.retrain(container, val_container, epochs=5, batch_size=128,
+                                       layers_to_freeze="encoder")
 
             Using learning rate scheduler callback.
 
@@ -543,7 +564,7 @@ class AddressParser:
                 container = CSVDatasetContainer(data_path)
 
                 lr_scheduler = poutyne.StepLR(step_size=1, gamma=0.1) # reduce LR by a factor of 10 each epoch
-                address_parser.retrain(container, 0.8, epochs=5, batch_size=128, callbacks=[lr_scheduler])
+                address_parser.retrain(container, train_ratio=0.8, epochs=5, batch_size=128, callbacks=[lr_scheduler])
 
             Using your own prediction tags dictionary.
 
@@ -556,7 +577,8 @@ class AddressParser:
 
                 container = PickleDatasetContainer(data_path)
 
-                address_parser.retrain(container, 0.8, epochs=1, batch_size=128, prediction_tags=address_components)
+                address_parser.retrain(container, train_ratio=0.8, epochs=1, batch_size=128,
+                                       prediction_tags=address_components)
 
             Using your own seq2seq parameters.
 
@@ -569,7 +591,8 @@ class AddressParser:
 
                 container = PickleDatasetContainer(data_path)
 
-                address_parser.retrain(container, 0.8, epochs=1, batch_size=128, seq2seq_params=seq2seq_params)
+                address_parser.retrain(container, train_ratio=0.8, epochs=1, batch_size=128,
+                                       seq2seq_params=seq2seq_params)
 
 
             Using your own seq2seq parameters and prediction tags dictionary.
@@ -584,8 +607,8 @@ class AddressParser:
 
                 container = PickleDatasetContainer(data_path)
 
-                address_parser.retrain(container, 0.8, epochs=1, batch_size=128, seq2seq_params=seq2seq_params,
-                    prediction_tags=address_components)
+                address_parser.retrain(container, train_ratio=0.8, epochs=1, batch_size=128,
+                                       seq2seq_params=seq2seq_params, prediction_tags=address_components)
 
             Using a named retrain parser name.
 
@@ -596,35 +619,13 @@ class AddressParser:
 
                 container = PickleDatasetContainer(data_path)
 
-                address_parser.retrain(container, 0.8, epochs=1, batch_size=128,
+                address_parser.retrain(container, train_ratio=0.8, epochs=1, batch_size=128,
                     name_of_the_retrain_parser="MyParserName")
 
         """
-
-        if "fasttext-light" in self.model_type:
-            raise ValueError("It's not possible to retrain a fasttext-light due to pymagnitude problem.")
-
-        if platform.system().lower() == "windows" and "fasttext" in self.model_type and num_workers > 0:
-            raise ValueError(
-                "On Windows system, we cannot retrain FastText like models with parallelism workers since "
-                "FastText objects are not pickleable with the parallelism process use by Windows. "
-                "Thus, you need to set num_workers to 0 since 1 also means 'parallelism'."
-            )
-
-        if not isinstance(dataset_container, DatasetContainer):
-            raise ValueError(
-                "The dataset_container has to be a DatasetContainer. "
-                "Read the docs at https://deepparse.org/ for more details."
-            )
-
-        if not dataset_container.is_a_train_container():
-            raise ValueError("The dataset container is not a train container.")
-
-        if name_of_the_retrain_parser is not None:
-            if len(name_of_the_retrain_parser.split(".")) > 1:
-                raise ValueError(
-                    "The name_of_the_retrain_parser should NOT include a file extension or a dot-like filename style."
-                )
+        self._retrain_argumentation_validations(
+            train_dataset_container, val_dataset_container, num_workers, name_of_the_retrain_parser
+        )
 
         model_factory_dict = {"prediction_layer_len": 9}  # We set the default output dim size
 
@@ -658,7 +659,7 @@ class AddressParser:
 
         callbacks = [] if callbacks is None else callbacks
         train_generator, valid_generator = self._create_training_data_generator(
-            dataset_container, train_ratio, batch_size, num_workers, seed=seed
+            train_dataset_container, val_dataset_container, train_ratio, batch_size, num_workers, seed=seed
         )
 
         if layers_to_freeze is not None and seq2seq_params is None:
@@ -756,6 +757,7 @@ class AddressParser:
         num_workers: int = 1,
         callbacks: Union[List, None] = None,
         seed: int = 42,
+        verbose: Union[None, bool] = None,
     ) -> Dict:
         # pylint: disable=too-many-arguments, too-many-locals
         """
@@ -771,6 +773,9 @@ class AddressParser:
                 See Poutyne `callback <https://poutyne.org/callbacks.html#callback-class>`_ for more information.
                 By default, we set no callback.
             seed (int): Seed to use (by default, ``42``).
+            verbose (Union[None, bool]): To override the AddressParser verbosity for the test. When set to True or
+                False, it will override (but it does not change the AddressParser verbosity) the test verbosity.
+                If set to the default value None, the AddressParser verbosity is used as the test verbosity.
 
         Return:
             A dictionary with the stats (see `Experiment class
@@ -783,12 +788,13 @@ class AddressParser:
 
             .. code-block:: python
 
-                address_parser = AddressParser(device=0) # On GPU device 0
+                address_parser = AddressParser(device=0, verbose=True) # On GPU device 0
                 data_path = "path_to_a_pickle_test_dataset.p"
 
                 test_container = PickleDatasetContainer(data_path, is_training_container=False)
 
-                address_parser.test(test_container) # We test the model on the data
+                # We test the model on the data, and we override the test verbosity
+                address_parser.test(test_container, verbose=False)
 
             You can also test your fine-tuned model
 
@@ -803,7 +809,8 @@ class AddressParser:
 
                 train_container = PickleDatasetContainer(data_path)
 
-                address_parser.retrain(container, 0.8, epochs=1, batch_size=128, prediction_tags=address_components)
+                address_parser.retrain(container, train_ratio=0.8, epochs=1, batch_size=128,
+                                       prediction_tags=address_components)
 
                 # Test phase
                 data_path = "path_to_a_pickle_test_dataset.p"
@@ -847,9 +854,41 @@ class AddressParser:
             logging=False,
         )  # We set logging to false since we don't need it
 
-        test_res = exp.test(test_generator, seed=seed, callbacks=callbacks, verbose=self.verbose)
+        # Handle the verbose overriding param
+        if verbose is None:
+            verbose = self.verbose
+        test_res = exp.test(test_generator, seed=seed, callbacks=callbacks, verbose=verbose)
 
         return test_res
+
+    def save_model_weights(self, file_path: Union[str, Path]) -> None:
+        """
+        Method to save, in a Pickle format, the address parser model weights (PyTorch state dictionary).
+
+        file_path (Union[str, Path]): A complete file path with a pickle extension to save the model weights.
+            It can either be a string (e.g. 'path/to/save.p') or a path like path (e.g. Path('path/to/save.p').
+
+        Examples:
+
+            .. code-block:: python
+
+                address_parser = AddressParser(device=0)
+
+                a_path = Path('some/path/to/save.p')
+                address_parser.save_address_parser_weights(a_path)
+
+
+            .. code-block:: python
+
+                address_parser = AddressParser(device=0)
+
+                a_path = 'some/path/to/save.p'
+                address_parser.save_address_parser_weights(a_path)
+
+        """
+        self.model.state_dict()
+
+        torch.save(self.model.state_dict(), file_path)
 
     def _fill_tagged_addresses_components(
         self,
@@ -920,7 +959,8 @@ class AddressParser:
 
     def _create_training_data_generator(
         self,
-        dataset_container: DatasetContainer,
+        train_dataset_container: DatasetContainer,
+        val_dataset_container: DatasetContainer,
         train_ratio: float,
         batch_size: int,
         num_workers: int,
@@ -929,11 +969,18 @@ class AddressParser:
         # pylint: disable=too-many-arguments
         data_transform = self._set_data_transformer()
 
-        train_indices, valid_indices = indices_splitting(
-            num_data=len(dataset_container), train_ratio=train_ratio, seed=seed
-        )
+        if val_dataset_container is None:
+            train_indices, valid_indices = indices_splitting(
+                num_data=len(train_dataset_container), train_ratio=train_ratio, seed=seed
+            )
 
-        train_dataset = Subset(dataset_container, train_indices)
+            train_dataset = Subset(train_dataset_container, train_indices)
+
+            valid_dataset = Subset(train_dataset_container, valid_indices)
+        else:
+            train_dataset = train_dataset_container
+            valid_dataset = val_dataset_container
+
         train_generator = DataLoader(
             train_dataset,
             collate_fn=data_transform.teacher_forcing_transform,
@@ -942,7 +989,6 @@ class AddressParser:
             shuffle=True,
         )
 
-        valid_dataset = Subset(dataset_container, valid_indices)
         valid_generator = DataLoader(
             valid_dataset,
             collate_fn=data_transform.output_transform,
@@ -1024,8 +1070,8 @@ class AddressParser:
         """
         return self.data_converter(self.vectorizer(data))
 
+    @staticmethod
     def _retrain(
-        self,
         experiment: Experiment,
         train_generator: DatasetContainer,
         valid_generator: DatasetContainer,
@@ -1045,7 +1091,6 @@ class AddressParser:
                 epochs=epochs,
                 seed=seed,
                 callbacks=callbacks,
-                verbose=self.verbose,
                 disable_tensorboard=disable_tensorboard,
             )
         return train_res
@@ -1095,3 +1140,48 @@ class AddressParser:
         layers_to_freeze_str = f"FreezedLayer{layers_to_freeze.capitalize()}" if layers_to_freeze is not None else ""
         parser_name = self._model_type_formatted + prediction_tags_str + seq2seq_params_str + layers_to_freeze_str
         return parser_name
+
+    def _retrain_argumentation_validations(
+        self,
+        train_dataset_container: DatasetContainer,
+        val_dataset_container: DatasetContainer,
+        num_workers: int,
+        name_of_the_retrain_parser: Union[str, None],
+    ):
+        """
+        Arguments validation test for retrain methods.
+        """
+        if "fasttext-light" in self.model_type:
+            raise ValueError("It's not possible to retrain a fasttext-light due to pymagnitude problem.")
+
+        if platform.system().lower() == "windows" and "fasttext" in self.model_type and num_workers > 0:
+            raise ValueError(
+                "On Windows system, we cannot retrain FastText like models with parallelism workers since "
+                "FastText objects are not pickleable with the parallelism process use by Windows. "
+                "Thus, you need to set num_workers to 0 since 1 also means 'parallelism'."
+            )
+
+        if not isinstance(train_dataset_container, DatasetContainer):
+            raise ValueError(
+                "The train dataset container (train_dataset_container) has to be a DatasetContainer. "
+                "Read the docs at https://deepparse.org/ for more details."
+            )
+
+        if not train_dataset_container.is_a_train_container():
+            raise ValueError("The train dataset container (train_dataset_container) is not a trainable container.")
+
+        if val_dataset_container is not None:
+            if not isinstance(val_dataset_container, DatasetContainer):
+                raise ValueError(
+                    "The val dataset container (val_dataset_container) has to be a DatasetContainer. "
+                    "Read the docs at https://deepparse.org/ for more details."
+                )
+
+            if not val_dataset_container.is_a_train_container():
+                raise ValueError("The val dataset container (val_dataset_container) is not a trainable container.")
+
+        if name_of_the_retrain_parser is not None:
+            if len(name_of_the_retrain_parser.split(".")) > 1:
+                raise ValueError(
+                    "The name_of_the_retrain_parser should NOT include a file extension or a dot-like filename style."
+                )

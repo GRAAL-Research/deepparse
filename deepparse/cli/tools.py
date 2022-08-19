@@ -7,6 +7,7 @@ from typing import List, Union, Dict
 
 import pandas as pd
 
+from ..dataset_container import DatasetContainer, CSVDatasetContainer, PickleDatasetContainer
 from ..parser import FormattedParsedAddress
 
 
@@ -179,3 +180,43 @@ def wrap(text, **kwargs):  # pragma: no cover
     text = text.splitlines()
     text = [textwrap.fill(line, **kwargs) for line in text]
     return '\n'.join(text)
+
+
+def data_container_factory(
+    dataset_path: str,
+    trainable_dataset: bool,
+    csv_column_separator: str = None,
+    csv_column_name: str = None,
+    csv_column_names: List = None,
+) -> DatasetContainer:
+    """
+    Factory to create the trainable dataset container.
+    """
+    if is_csv_path(dataset_path):
+        if trainable_dataset:
+            # Train or test dataset case
+            if csv_column_names is None:
+                raise ValueError(
+                    "To use a CSV dataset to retrain on, you need to specify the 'csv_column_names' argument to "
+                    "provide the column names to extract address and labels (respectively). For example, Address Tags."
+                )
+        else:
+            # Parse dataset
+            if csv_column_name is None:
+                raise ValueError(
+                    "For a CSV dataset path, you need to specify the 'csv_column_name' argument to provide the"
+                    " column name to extract address."
+                )
+            csv_column_names = csv_column_name
+        data_container = CSVDatasetContainer(
+            dataset_path,
+            column_names=csv_column_names,
+            separator=csv_column_separator,
+            is_training_container=trainable_dataset,
+        )
+    elif is_pickle_path(dataset_path):
+        data_container = PickleDatasetContainer(dataset_path, is_training_container=trainable_dataset)
+    else:
+        raise ValueError("The train dataset path argument is not a CSV or a pickle file.")
+
+    return data_container

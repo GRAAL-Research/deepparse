@@ -6,7 +6,7 @@ from deepparse import download_from_public_repository
 from deepparse.dataset_container import PickleDatasetContainer
 from deepparse.parser import AddressParser
 
-# First, let's download the train and test data with "new tags" from the public repository.
+# First, let's download the train and test data with the new tags, "new tags", from the public repository.
 saving_dir = "./data"
 file_extension = "p"
 training_dataset_name = "sample_incomplete_data"
@@ -18,7 +18,7 @@ download_from_public_repository(test_dataset_name, saving_dir, file_extension=fi
 training_container = PickleDatasetContainer(os.path.join(saving_dir, training_dataset_name + "." + file_extension))
 test_container = PickleDatasetContainer(os.path.join(saving_dir, test_dataset_name + "." + file_extension))
 
-# We will retrain the fasttext attention version of our pretrained model.
+# We will retrain the FastText attention version of our pretrained model.
 model = "bpemb"
 address_parser = AddressParser(model_type=model, device=0, attention_mechanism=True)
 
@@ -32,7 +32,7 @@ logging_path = "./checkpoints"
 
 address_parser.retrain(
     training_container,
-    0.8,
+    train_ratio=0.8,
     epochs=5,
     batch_size=8,
     num_workers=2,

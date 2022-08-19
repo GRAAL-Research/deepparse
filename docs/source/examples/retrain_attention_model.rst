@@ -14,7 +14,7 @@ Retrain an Attention Mechanism Model
     from deepparse.dataset_container import PickleDatasetContainer
     from deepparse.parser import AddressParser
 
-First, let's download the train and test data with "new tags" from the public repository.
+First, let's download the train and test data with the new tags, ``"new tags"``, from the public repository.
 
 .. code-block:: python
 
@@ -32,15 +32,15 @@ Now let's create a training and test container.
     training_container = PickleDatasetContainer(os.path.join(saving_dir, training_dataset_name + "." + file_extension))
     test_container = PickleDatasetContainer(os.path.join(saving_dir, test_dataset_name + "." + file_extension))
 
-We will retrain the fasttext attention version of our pretrained model.
+We will retrain the ``FastText`` attention version of our pretrained model.
 
 .. code-block:: python
 
     model = "bpemb"
     address_parser = AddressParser(model_type=model, device=0, attention_mechanism=True)
 
-Now, let's retrain for 5 epochs using a batch size of 8 since the data is really small for the example.
-Let's start with the default learning rate of 0.01 and use a learning rate scheduler to lower the learning rate
+Now, let's retrain for ``5`` epochs using a batch size of ``8`` since the data is really small for the example.
+Let's start with the default learning rate of ``0.01`` and use a learning rate scheduler to lower the learning rate
 as we progress.
 
 .. code-block:: python
@@ -51,7 +51,7 @@ as we progress.
 
     address_parser.retrain(
         training_container,
-        0.8,
+        train_ratio=0.8,
         epochs=5,
         batch_size=8,
         num_workers=2,

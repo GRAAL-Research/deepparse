@@ -3,10 +3,6 @@
 # Bug with PyTorch source code makes torch.tensor as not callable for pylint.
 # pylint: disable=unused-argument, protected-access, too-many-arguments, not-callable, too-many-locals
 
-# Pylint raise error for torch.tensor, torch.zeros, ... as a no-member event
-# if not the case.
-# pylint: disable=no-member
-
 # Pylint raise error for the call method mocking
 # pylint: disable=unnecessary-dunder-call
 

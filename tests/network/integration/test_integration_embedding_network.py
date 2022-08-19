@@ -1,9 +1,5 @@
 # pylint: disable=line-too-long
 
-# Pylint raise error for torch.tensor, torch.zeros, ... as a no-member event
-# if not the case.
-# pylint: disable=no-member
-
 import unittest
 from unittest import TestCase
 

@@ -13,6 +13,8 @@ from .tools import download_from_public_repository
 def download_fasttext_magnitude_embeddings(cache_dir: str, verbose: bool = True, saving_dir=None) -> str:
     """
     Function to download the magnitude pretrained fastText model.
+
+    Return the full path to the fastText embeddings.
     """
     if saving_dir is not None:  # pragma: no cover
         # Deprecated argument handling
@@ -82,6 +84,8 @@ def download_fasttext_embeddings(cache_dir: str, verbose: bool = True, saving_di
     Simpler version of the download_model function from fastText to download pretrained common-crawl
     vectors from fastText's website https://fasttext.cc/docs/en/crawl-vectors.html and save it in the
     saving directory (saving_dir).
+
+    Return the full path to the fastText embeddings.
     """
     if saving_dir is not None:  # pragma: no cover
         # Deprecated argument handling
@@ -154,7 +158,7 @@ def _download_file(url: str, write_file_name: str, chunk_size: int = 2**13, verb
 
 
 # Better print formatting for some shell that don't update properly.
-def _print_progress(downloaded_bytes, total_size):
+def _print_progress(downloaded_bytes: int, total_size: int) -> None:
     percent = float(downloaded_bytes) / total_size
     bar_size = 50
     progress_bar = int(percent * bar_size)
@@ -170,8 +174,8 @@ def _print_progress(downloaded_bytes, total_size):
 
 
 # The difference with the original code is the removal of the print warning.
-def load_fasttext_embeddings(path):
+def load_fasttext_embeddings(path: str) -> _FastText:
     """
-    Load a model given a filepath and return a model object.
+    Wrapper to load a model given a filepath and return a model object.
     """
     return _FastText(model_path=path)

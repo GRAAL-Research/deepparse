@@ -26,7 +26,7 @@ class DataTransform:
         `issue <https://github.com/GRAAL-Research/deepparse/issues/89>`_.
     """
 
-    def __init__(self, vectorizer: TrainVectorizer, model_type: str):
+    def __init__(self, vectorizer: TrainVectorizer, model_type: str) -> None:
         self.vectorizer = vectorizer
         if "fasttext" in model_type and "light" not in model_type:
             self.teacher_forcing_data_padding_fn = fasttext_data_padding_teacher_forcing

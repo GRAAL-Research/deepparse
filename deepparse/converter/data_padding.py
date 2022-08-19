@@ -1,11 +1,7 @@
 # Bug with PyTorch source code makes torch.tensor as not callable for pylint.
 # pylint: disable=not-callable
 
-# Pylint raise error for torch.tensor, torch.zeros, ... as a no-member event
-# if not the case.
-# pylint: disable=no-member
-
-from typing import List, Tuple
+from typing import List, Tuple, Iterable
 
 import numpy as np
 import torch
@@ -203,7 +199,7 @@ def bpemb_data_padding_with_target(batch: List[Tuple]) -> Tuple:
     return (padded_sequences_vectors, list(decomp_len), lengths), padded_target_vectors
 
 
-def _convert_sequence_to_tensor(batch):
+def _convert_sequence_to_tensor(batch: List) -> Iterable:
     """
     Sort and convert sequence into a tensor with target element
     """
@@ -222,7 +218,7 @@ def _convert_sequence_to_tensor(batch):
     )
 
 
-def _convert_bpemb_sequence_to_tensor(batch):
+def _convert_bpemb_sequence_to_tensor(batch: List[Tuple]) -> Iterable:
     """
     Sort and convert a BPEmb sequence into a tensor with target element
     """

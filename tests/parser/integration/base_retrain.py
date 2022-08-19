@@ -1,6 +1,5 @@
 # Bug with PyTorch source code makes torch.tensor as not callable for pylint.
-# no-member skip is so because child define the training_container in setup
-# pylint: disable=not-callable, too-many-public-methods, no-member
+# pylint: disable=not-callable, too-many-public-methods, too-many-arguments
 
 # Pylint error for TemporaryDirectory ask for with statement
 # pylint: disable=consider-using-with
@@ -91,13 +90,15 @@ class AddressParserRetrainTestCase(RetrainTestCase):
     def training(
         self,
         address_parser: AddressParser,
-        data_container: DatasetContainer,
-        num_workers: int,
+        train_data_container: DatasetContainer,
+        val_data_container: DatasetContainer = None,
+        num_workers: int = 1,
         prediction_tags=None,
     ):
         address_parser.retrain(
-            data_container,
-            self.a_train_ratio,
+            train_data_container,
+            val_data_container,
+            train_ratio=self.a_train_ratio,
             epochs=self.a_single_epoch,
             batch_size=self.a_batch_size,
             num_workers=num_workers,

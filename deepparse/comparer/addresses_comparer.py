@@ -203,5 +203,5 @@ class AddressesComparer:
         return list_of_formatted_comparisons_dict
 
     @staticmethod
-    def _check_if_with_prob(list_of_tuple):
+    def _check_if_with_prob(list_of_tuple: List[Tuple]) -> bool:
         return len(list_of_tuple[0][1]) == 2 and isinstance(list_of_tuple[0][1][1], float)

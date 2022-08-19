@@ -251,4 +251,20 @@
 - Bug-fix retrain attention model naming parsing
 - Improve error handling when not a DatasetContainer is use in retrain and test API
 
+## 0.8.3
+
+- Add Zenodo DOI
+
+## 0.9
+
+- Add `save_model_weights` method to `AddressParser` to save model weights (PyTorch state dictionary)
+- Improve CI
+- Added verbose flag for test to activate or deactivate the test verbosity (it override the AddressParser verbosity)
+- Add Docker image
+- Add `val_dataset` to retrain API to allow the use of a specific val dataset for training
+- Remove deprecated `download_from_url` function
+- Remove deprecated `dataset_container` argument
+- Fixed error and docs
+- Added the UK retrain example
+
 ## dev

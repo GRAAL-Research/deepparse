@@ -18,5 +18,5 @@ class EmbeddingsModel(ABC):
         pass
 
     @property
-    def dim(self):
+    def dim(self) -> int:
         return self.model.dim

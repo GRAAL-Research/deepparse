@@ -1,6 +1,5 @@
 # Bug with PyTorch source code makes torch.tensor as not callable for pylint.
-# no-member skip is so because child define the training_container in setup
-# pylint: disable=not-callable, too-many-public-methods, no-member, too-many-arguments
+# pylint: disable=not-callable, too-many-public-methods, too-many-arguments
 
 # Pylint error for TemporaryDirectory ask for with statement
 # pylint: disable=consider-using-with
@@ -22,7 +21,7 @@ from deepparse.parser import (
 
 @skipIf(not torch.cuda.is_available(), "no gpu available")
 # We skip it even if it is CPU since the downloading is too long
-class AddressParserPredictTest(TestCase):
+class AddressParserPredictNewTagsTest(TestCase):
     @classmethod
     def setUpClass(cls):
         cls.an_address_to_parse = "350 rue des lilas o"
@@ -83,14 +82,15 @@ class AddressParserPredictTest(TestCase):
     def training(
         self,
         address_parser: AddressParser,
-        data_container: DatasetContainer,
-        num_workers: int,
+        train_data_container: DatasetContainer,
+        num_workers: int = 1,
         prediction_tags=None,
         seq2seq_params=None,
     ):
         address_parser.retrain(
-            data_container,
-            self.a_train_ratio,
+            train_data_container,
+            val_dataset_container=None,
+            train_ratio=self.a_train_ratio,
             epochs=self.a_single_epoch,
             batch_size=self.a_batch_size,
             num_workers=num_workers,
@@ -111,7 +111,7 @@ class AddressParserPredictTest(TestCase):
         self.training(
             bpemb_address_parser,
             self.training_container,
-            self.a_number_of_workers,
+            num_workers=self.a_number_of_workers,
             seq2seq_params=self.seq2seq_params,
             prediction_tags=self.with_new_prediction_tags,
         )
@@ -143,7 +143,7 @@ class AddressParserPredictTest(TestCase):
         self.training(
             fasttext_address_parser,
             self.training_container,
-            self.a_number_of_workers,
+            num_workers=self.a_number_of_workers,
             seq2seq_params=self.seq2seq_params,
             prediction_tags=self.with_new_prediction_tags,
         )

@@ -17,7 +17,7 @@ download_from_public_repository(test_dataset_name, saving_dir, file_extension=fi
 training_container = PickleDatasetContainer(os.path.join(saving_dir, training_dataset_name + "." + file_extension))
 test_container = PickleDatasetContainer(os.path.join(saving_dir, test_dataset_name + "." + file_extension))
 
-# We will retrain the fasttext version of our pretrained model.
+# We will retrain the FastText version of our pretrained model.
 address_parser = AddressParser(model_type="fasttext", device=0)
 
 # Now, let's retrain for 5 epochs using a batch size of 8 since the data is really small for the example.
@@ -30,7 +30,7 @@ lr_scheduler = poutyne.StepLR(step_size=1, gamma=0.1)  # reduce LR by a factor o
 # an error when retraining since Poutyne will try to use the last checkpoint.
 address_parser.retrain(
     training_container,
-    0.8,
+    train_ratio=0.8,
     epochs=5,
     batch_size=8,
     num_workers=2,
@@ -40,14 +40,14 @@ address_parser.retrain(
 # Now, let's test our fine-tuned model using the best checkpoint (default parameter).
 address_parser.test(test_container, batch_size=256)
 
-# Now let's retrain the fasttext version but with an attention mechanism.
+# Now let's retrain the FastText version but with an attention mechanism.
 address_parser = AddressParser(model_type="fasttext", device=0, attention_mechanism=True)
 
 # Since the previous checkpoints were saved in the default "./checkpoints" directory, we need to use a new one.
 # Otherwise, poutyne will try to reload the previous checkpoints, and our model has changed.
 address_parser.retrain(
     training_container,
-    0.8,
+    train_ratio=0.8,
     epochs=5,
     batch_size=8,
     num_workers=2,

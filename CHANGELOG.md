@@ -261,3 +261,5 @@
 - Remove deprecated `download_from_url` function
 - Remove deprecated `dataset_container` argument
 - Add Zenodo DOI
+- Fixed error and docs
+- Added the UK retrain example

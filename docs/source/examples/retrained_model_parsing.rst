@@ -29,7 +29,7 @@ Now let's load the dataset using one of our dataset container.
     addresses_to_parse = PickleDatasetContainer("./data/predict.p", is_training_container=False)
 
 
-Let's download a BPEmb retrained model create just for this example, but you can also use one of yours.
+Let's download a ``BPEmb`` retrained model create just for this example, but you can also use one of yours.
 
 .. code-block:: python
 

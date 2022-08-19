@@ -26,7 +26,7 @@ test_container = CSVDatasetContainer(
     separator=",",
 )
 
-# We will retrain the fasttext version of our pretrained model.
+# We will retrain the FastText version of our pretrained model.
 address_parser = AddressParser(model_type="fasttext", device=0)
 
 # Now, let's retrain for 5 epochs using a batch size of 8 since the data is really small for the example.
@@ -49,7 +49,7 @@ address_parser.retrain(
 # Now, let's test our fine-tuned model using the best checkpoint (default parameter).
 address_parser.test(test_container, batch_size=256)
 
-# Now let's retrain the fasttext version but with an attention mechanism.
+# Now let's retrain the FastText version but with an attention mechanism.
 address_parser = AddressParser(model_type="fasttext", device=0, attention_mechanism=True)
 
 # Since the previous checkpoints were saved in the default "./checkpoints" directory, we need to use a new one.

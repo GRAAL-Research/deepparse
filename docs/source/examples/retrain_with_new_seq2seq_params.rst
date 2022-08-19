@@ -14,7 +14,7 @@ Retrain With New Seq2Seq Parameters
     from deepparse.dataset_container import PickleDatasetContainer
     from deepparse.parser import AddressParser
 
-First, let's download the train and test data with "new tags" from the public repository.
+First, let's download the train and test data with the new tags, ``"new tags"``, from the public repository.
 
 .. code-block:: python
 
@@ -34,15 +34,15 @@ Now, let's create a training and test container.
     test_container = PickleDatasetContainer(os.path.join(saving_dir,
                                                          test_dataset_name + "." + file_extension))
 
-We will retrain the fasttext version of our pretrained model.
+We will retrain the ``FastText`` version of our pretrained model.
 
 .. code-block:: python
 
     model = "fasttext"
     address_parser = AddressParser(model_type=model, device=0)
 
-Now, let's retrain for 5 epochs using a batch size of 8 since the data is really small for the example.
-Let's start with the default learning rate of 0.01 and use a learning rate scheduler to lower the learning rate as we progress.
+Now, let's retrain for ``5`` epochs using a batch size of ``8`` since the data is really small for the example.
+Let's start with the default learning rate of ``0.01`` and use a learning rate scheduler to lower the learning rate as we progress.
 
 .. code-block:: python
 

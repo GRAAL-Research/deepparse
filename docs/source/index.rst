@@ -782,6 +782,7 @@ API Reference
   examples/retrain_attention_model
   examples/retrain_with_new_prediction_tags
   examples/retrain_with_new_seq2seq_params
+  examples/single_country_retrain
 
 Indices and Tables
 ==================

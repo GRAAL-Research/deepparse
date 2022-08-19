@@ -267,4 +267,8 @@
 - Fixed error and docs
 - Added the UK retrain example
 
+## 0.9.1
+
+- Hotfix cli.download_model attention model bug
+
 ## dev

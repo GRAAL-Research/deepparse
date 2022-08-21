@@ -185,7 +185,7 @@ class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
             download_weights(model="fasttext", saving_dir="./", verbose=True)
 
         actual = self.test_out.getvalue().strip()
-        expected = "Downloading the  pre-trained weights for the network fasttext."
+        expected = "Downloading the pre-trained weights for the network fasttext."
 
         self.assertEqual(actual, expected)
 
@@ -195,7 +195,7 @@ class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
             download_weights(model="bpemb", saving_dir="./", verbose=True)
 
         actual = self.test_out.getvalue().strip()
-        expected = "Downloading the  pre-trained weights for the network bpemb."
+        expected = "Downloading the pre-trained weights for the network bpemb."
 
         self.assertEqual(actual, expected)
 

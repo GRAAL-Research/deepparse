@@ -275,4 +275,7 @@
 ## dev
 
 - Improve Deepparse server error handling and error output
+- Remove deprecated argument ``saving_dir`` in ``download_fasttext_magnitude_embeddings``
+  and ``download_fasttext_embeddings`` functions
+- Add offline argument to remove verification of latest version.
 

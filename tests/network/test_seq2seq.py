@@ -132,7 +132,6 @@ class Seq2SeqTest(TestCase):
     @patch("os.path.isfile")
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.torch.nn.Module.load_state_dict")
-    @skipIf(not torch.cuda.is_available(), "no gpu available")
     def test_givenSeq2seqModel_whenNoPretrainedWeights_thenDownloadIt(
         self,
         torch_nn_mock,
@@ -151,7 +150,7 @@ class Seq2SeqTest(TestCase):
         )
         isfile_mock.return_value = False
         with patch("deepparse.network.seq2seq.download_weights") as download_weights_mock:
-            seq2seq_model._load_pre_trained_weights(self.a_model_type, cache_dir=self.cache_dir)
+            seq2seq_model._load_pre_trained_weights(self.a_model_type, cache_dir=self.cache_dir, offline=False)
 
             download_weights_mock.assert_called()
             download_weights_mock.assert_called_with(self.a_model_type, self.cache_dir, verbose=False)
@@ -159,7 +158,6 @@ class Seq2SeqTest(TestCase):
     @patch("os.path.isfile")
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.torch.nn.Module.load_state_dict")
-    @skipIf(not torch.cuda.is_available(), "no gpu available")
     def test_givenSeq2seqModelVerbose_whenNoPretrainedWeights_thenWarns(
         self,
         torch_nn_mock,
@@ -179,7 +177,7 @@ class Seq2SeqTest(TestCase):
         isfile_mock.return_value = False
         with patch("deepparse.network.seq2seq.download_weights"):
             with self.assertWarns(UserWarning):
-                seq2seq_model._load_pre_trained_weights(self.a_model_type, cache_dir=self.cache_dir)
+                seq2seq_model._load_pre_trained_weights(self.a_model_type, cache_dir=self.cache_dir, offline=False)
 
     @patch("deepparse.network.seq2seq.latest_version")
     @patch("os.path.isfile")
@@ -202,7 +200,7 @@ class Seq2SeqTest(TestCase):
         isfile_mock.return_value = True
         last_version_mock.return_value = False
         with patch("deepparse.network.seq2seq.download_weights") as download_weights_mock:
-            seq2seq_model._load_pre_trained_weights(self.a_model_type, cache_dir=self.cache_dir)
+            seq2seq_model._load_pre_trained_weights(self.a_model_type, cache_dir=self.cache_dir, offline=False)
             download_weights_mock.assert_called()
             download_weights_mock.assert_called_with(self.a_model_type, self.cache_dir, verbose=True)
 
@@ -228,13 +226,12 @@ class Seq2SeqTest(TestCase):
         last_version_mock.return_value = False
         with patch("deepparse.network.seq2seq.download_weights"):
             with self.assertWarns(UserWarning):
-                seq2seq_model._load_pre_trained_weights(self.a_model_type, cache_dir=self.cache_dir)
+                seq2seq_model._load_pre_trained_weights(self.a_model_type, cache_dir=self.cache_dir, offline=False)
 
     @patch("deepparse.network.seq2seq.latest_version")
     @patch("os.path.isfile")
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.torch.nn.Module.load_state_dict")
-    @skipIf(not torch.cuda.is_available(), "no gpu available")
     def test_givenSeq2seqModel_whenLoadPreTrainedWeightsNotVerboseGPU_thenWarningsNotRaised(
         self, torch_nn_mock, torch_mock, isfile_mock, last_version_mock
     ):
@@ -252,7 +249,7 @@ class Seq2SeqTest(TestCase):
         last_version_mock.return_value = False
         with patch("deepparse.network.seq2seq.download_weights"):
             with pytest.warns(None) as record:
-                seq2seq_model._load_pre_trained_weights(self.a_model_type, cache_dir=self.cache_dir)
+                seq2seq_model._load_pre_trained_weights(self.a_model_type, cache_dir=self.cache_dir, offline=False)
             self.assertEqual(0, len(record))
 
     @patch("deepparse.network.seq2seq.latest_version")
@@ -276,7 +273,7 @@ class Seq2SeqTest(TestCase):
         last_version_mock.return_value = False
         with patch("deepparse.network.seq2seq.download_weights"):
             with self.assertWarns(UserWarning):
-                seq2seq_model._load_pre_trained_weights(self.a_model_type, cache_dir=self.cache_dir)
+                seq2seq_model._load_pre_trained_weights(self.a_model_type, cache_dir=self.cache_dir, offline=False)
 
     @patch("deepparse.network.seq2seq.latest_version")
     @patch("os.path.isfile")
@@ -299,7 +296,7 @@ class Seq2SeqTest(TestCase):
         last_version_mock.return_value = False
         with patch("deepparse.network.seq2seq.download_weights"):
             with pytest.warns(None) as record:
-                seq2seq_model._load_pre_trained_weights(self.a_model_type, cache_dir=self.cache_dir)
+                seq2seq_model._load_pre_trained_weights(self.a_model_type, cache_dir=self.cache_dir, offline=False)
             self.assertEqual(0, len(record))
 
     @patch("deepparse.network.seq2seq.torch")
@@ -351,6 +348,41 @@ class Seq2SeqTest(TestCase):
         seq2seq_model._load_weights(self.a_fake_retrain_path)
 
         all_layers_params_mock.get.assert_called()
+
+    @patch("deepparse.network.seq2seq.latest_version")
+    @patch("os.path.isfile")
+    @patch("deepparse.network.seq2seq.torch")
+    @patch("deepparse.network.seq2seq.torch.nn.Module.load_state_dict")
+    def test_givenAnOfflineSeq2SeqModel_whenInit_thenDontCallOnlineFunctions(
+        self, torch_nn_mock, torch_mock, isfile_mock, last_version_mock
+    ):
+        # Test if functions latest_version and download_weights
+        seq2seq_model = Seq2SeqModel(
+            self.a_cpu_device,
+            input_size=self.encoder_input_size_dim,
+            encoder_hidden_size=self.encoder_hidden_size,
+            encoder_num_layers=self.encoder_num_layers,
+            decoder_hidden_size=self.decoder_hidden_size,
+            decoder_num_layers=self.decoder_num_layers,
+            output_size=self.decoder_output_size,
+            verbose=False,
+        )
+
+        # Test if download_weights was not called
+        isfile_mock.return_value = False
+
+        with patch("deepparse.network.seq2seq.download_weights") as download_weights_mock:
+            seq2seq_model._load_pre_trained_weights(self.a_model_type, cache_dir=self.cache_dir, offline=True)
+
+            download_weights_mock.assert_not_called()
+
+        # Test if latest_version was not called
+        isfile_mock.return_value = True
+        last_version_mock.return_value = False
+
+        seq2seq_model._load_pre_trained_weights(self.a_model_type, cache_dir=self.cache_dir, offline=True)
+
+        last_version_mock.assert_not_called()
 
 
 if __name__ == "__main__":

@@ -111,8 +111,10 @@ def download_weights(model: str, saving_dir: str, verbose: bool = True) -> None:
     try:
         download_from_public_repository(model, saving_dir, "ckpt")
         download_from_public_repository(model, saving_dir, "version")
-    except requests.exceptions.ConnectTimeout:
-        raise ServerError("There was an error trying to connect to the Deepparse server. Please try again later.")
+    except requests.exceptions.ConnectTimeout as error:
+        raise ServerError(
+            "There was an error trying to connect to the Deepparse server. Please try again later."
+        ) from error
 
 
 def handle_poutyne_version() -> str:

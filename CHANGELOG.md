@@ -257,6 +257,7 @@
 
 ## 0.9
 - 
+
 - Add `save_model_weights` method to `AddressParser` to save model weights (PyTorch state dictionary)
 - Improve CI
 - Added verbose flag for test to activate or deactivate the test verbosity (it override the AddressParser verbosity)
@@ -272,4 +273,6 @@
 - Hotfix cli.download_model attention model bug
 
 ## dev
+
+- Improve Deepparse server error handling and error output
 

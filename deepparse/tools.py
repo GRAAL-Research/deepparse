@@ -9,12 +9,13 @@ import requests
 from requests import HTTPError
 from urllib3.exceptions import MaxRetryError
 
-from .data_error import DataError
+from deepparse.errors.data_error import DataError
 from .data_validation import (
     validate_if_any_none,
     validate_if_any_whitespace_only,
     validate_if_any_empty,
 )
+from .errors.server_error.server_Error import ServerError
 
 BASE_URL = "https://graal.ift.ulaval.ca/public/deepparse/{}.{}"
 CACHE_PATH = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
@@ -105,9 +106,13 @@ def download_weights(model: str, saving_dir: str, verbose: bool = True) -> None:
         verbose (bool): Turn on/off the verbosity of the model. The default value is True.
     """
     if verbose:
-        print(f"Downloading the weights for the network {model}.")
-    download_from_public_repository(model, saving_dir, "ckpt")
-    download_from_public_repository(model, saving_dir, "version")
+        print(f"Downloading the pre-trained weights for the network {model}.")
+
+    try:
+        download_from_public_repository(model, saving_dir, "ckpt")
+        download_from_public_repository(model, saving_dir, "version")
+    except requests.exceptions.ConnectTimeout:
+        raise ServerError("There was an error trying to connect to the Deepparse server. Please try again later.")
 
 
 def handle_poutyne_version() -> str:

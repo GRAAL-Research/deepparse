@@ -19,7 +19,7 @@ from unittest.mock import patch, MagicMock
 import torch
 from torch import device
 
-from deepparse.data_error import DataError
+from deepparse.errors.data_error import DataError
 from deepparse.parser import FormattedParsedAddress, formatted_parsed_address
 from deepparse.parser.address_parser import AddressParser
 from tests.parser.base import AddressParserPredictTestCase

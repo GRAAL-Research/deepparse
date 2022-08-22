@@ -78,6 +78,7 @@ def main():
             "pymagnitude-light",
             "poutyne",
             "pandas",
+            "urllib3",
         ],
         python_requires=">=3.7",
         description="A library for parsing multinational street addresses using deep learning.",

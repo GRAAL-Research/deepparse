@@ -9,13 +9,13 @@ import requests
 from requests import HTTPError
 from urllib3.exceptions import MaxRetryError
 
-from deepparse.errors.data_error import DataError
+from .errors.data_error import DataError
+from .errors.server_error import ServerError
 from .data_validation import (
     validate_if_any_none,
     validate_if_any_whitespace_only,
     validate_if_any_empty,
 )
-from .errors.server_error.server_Error import ServerError
 
 BASE_URL = "https://graal.ift.ulaval.ca/public/deepparse/{}.{}"
 CACHE_PATH = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")

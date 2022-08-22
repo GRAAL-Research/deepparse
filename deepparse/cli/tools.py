@@ -98,12 +98,12 @@ def bool_parse(arg: str) -> bool:
     Return:
         A Python bool.
     """
-    if arg.lower() in ('true', 't', 'yes', 'y', '1'):
+    if arg.lower() in ("true", "t", "yes", "y", "1"):
         parsed_bool = True
-    elif arg.lower() in ('false', 'f', 'no', 'n', '0'):
+    elif arg.lower() in ("false", "f", "no", "n", "0"):
         parsed_bool = False
     else:
-        raise argparse.ArgumentTypeError('Boolean value expected.')
+        raise argparse.ArgumentTypeError("Boolean value expected.")
     return parsed_bool
 
 
@@ -179,7 +179,7 @@ def wrap(text, **kwargs):  # pragma: no cover
     # apply textwrap to each line individually
     text = text.splitlines()
     text = [textwrap.fill(line, **kwargs) for line in text]
-    return '\n'.join(text)
+    return "\n".join(text)
 
 
 def data_container_factory(

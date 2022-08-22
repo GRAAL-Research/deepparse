@@ -71,15 +71,15 @@ class AddressParser:
     Address parser to parse an address or a list of addresses using one of the seq2seq pretrained
     networks either with FastText or BPEmb. The default prediction tags are the following
 
-            - 'StreetNumber': for the street number,
-            - 'StreetName': for the name of the street,
-            - 'Unit': for the unit (such as an apartment),
-            - 'Municipality': for the municipality,
-            - 'Province': for the province or local region,
-            - 'PostalCode': for the postal code,
-            - 'Orientation': for the street orientation (e.g. west, east),
-            - 'GeneralDelivery': for other delivery information,
-            - 'EOS': (End Of Sequence) since we use an EOS tag during training, sometimes the models return an EOS tag.
+            - ``"StreetNumber"``: for the street number,
+            - ``"StreetName"``: for the name of the street,
+            - ``"Unit"``: for the unit (such as an apartment),
+            - ``"Municipality"``: for the municipality,
+            - ``"Province"``: for the province or local region,
+            - ``"PostalCode"``: for the postal code,
+            - ``"Orientation"``: for the street orientation (e.g. west, east),
+            - ``"GeneralDelivery"``: for other delivery information,
+            - ``"EOS"``: (End Of Sequence) since we use an EOS during training, sometimes the models return an EOS tag.
 
     Args:
         model_type (str): The network name to use, can be either:

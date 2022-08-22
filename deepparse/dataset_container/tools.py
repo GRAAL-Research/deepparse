@@ -1,6 +1,6 @@
 from typing import List
 
-from deepparse.data_validation import validate_if_any_empty, validate_if_any_whitespace_only
+from ..data_validation import validate_if_any_empty, validate_if_any_whitespace_only
 
 
 def former_python_list(tags: str) -> List:

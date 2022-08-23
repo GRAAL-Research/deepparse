@@ -86,7 +86,7 @@ def latest_version(model: str, cache_path: str, verbose: bool) -> bool:
 def download_from_public_repository(file_name: str, saving_dir: str, file_extension: str) -> None:
     """
     Simple function to download the content of a file from Deepparse public repository.
-    The repository URL string is  `'https://graal.ift.ulaval.ca/public/deepparse/{}.{}'``
+    The repository URL string is `'https://graal.ift.ulaval.ca/public/deepparse/{}.{}'``
     where the first bracket is the file name and the second is the file extension.
     """
     url = BASE_URL.format(file_name, file_extension)

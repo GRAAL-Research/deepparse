@@ -150,38 +150,6 @@ def attention_model_type_handling(parsing_model) -> Dict:
     return parser_args_update_args
 
 
-# pylint: disable=pointless-string-statement
-"""
-The code below was copied from the pypyr project, and has been modified for the purpose of this package.
-
-COPYRIGHT
-
-All contributions from the https://github.com/pypyr/pypyr authors.
-Copyright (c) 2018 - 2022
-All rights reserved.
-
-Each contributor holds copyright over their respective contributions. The project versioning (Git)
-records all such contribution source information.
-
-LICENSE
-
-The Apache License 2.0
-
-See project for complete license.
-"""
-
-
-def wrap(text, **kwargs):  # pragma: no cover
-    """Wrap lines in argparse, so they align nicely in 2 columns.
-    Default width is 70.
-    With gratitude to paul.j3 https://bugs.python.org/issue12806
-    """
-    # apply textwrap to each line individually
-    text = text.splitlines()
-    text = [textwrap.fill(line, **kwargs) for line in text]
-    return "\n".join(text)
-
-
 def data_container_factory(
     dataset_path: str,
     trainable_dataset: bool,
@@ -220,3 +188,35 @@ def data_container_factory(
         raise ValueError("The train dataset path argument is not a CSV or a pickle file.")
 
     return data_container
+
+
+# pylint: disable=pointless-string-statement
+"""
+The code below was copied from the pypyr project, and has been modified for the purpose of this package.
+
+COPYRIGHT
+
+All contributions from the https://github.com/pypyr/pypyr authors.
+Copyright (c) 2018 - 2022
+All rights reserved.
+
+Each contributor holds copyright over their respective contributions. The project versioning (Git)
+records all such contribution source information.
+
+LICENSE
+
+The Apache License 2.0
+
+See project for complete license.
+"""
+
+
+def wrap(text, **kwargs):  # pragma: no cover
+    """Wrap lines in argparse, so they align nicely in 2 columns.
+    Default width is 70.
+    With gratitude to paul.j3 https://bugs.python.org/issue12806
+    """
+    # apply textwrap to each line individually
+    text = text.splitlines()
+    text = [textwrap.fill(line, **kwargs) for line in text]
+    return "\n".join(text)

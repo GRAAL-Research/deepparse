@@ -279,5 +279,5 @@
   and `download_fasttext_embeddings` functions
 - Add offline argument to remove verification of the latest version
 - Bug-fix cache handling in download model
-- Add `download_models`` CLI function
+- Add `download_models` CLI function
 

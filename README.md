@@ -5,6 +5,7 @@
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/deepparse)](https://pypi.org/project/deepparse)
 [![PyPI Status](https://badge.fury.io/py/deepparse.svg)](https://badge.fury.io/py/deepparse)
 [![PyPI Status](https://pepy.tech/badge/deepparse)](https://pepy.tech/project/deepparse)
+[![Downloads](https://pepy.tech/badge/deepparse/month)](https://pepy.tech/project/deepparse)
 
 [![Formatting](https://github.com/GRAAL-Research/deepparse/actions/workflows/formatting.yml/badge.svg?branch=stable)](https://github.com/GRAAL-Research/deepparse/actions/workflows/formatting.yml)
 [![Linting](https://github.com/GRAAL-Research/deepparse/actions/workflows/linting.yml/badge.svg?branch=stable)](https://github.com/GRAAL-Research/deepparse/actions/workflows/linting.yml)

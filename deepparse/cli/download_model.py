@@ -24,7 +24,7 @@ def main(args=None) -> None:
 
         download_model fasttext
 
-        download_model fasttext a_cache_dir_path
+        download_model fasttext --saving_cache_dir a_cache_dir_path
     """
     if args is None:  # pragma: no cover
         args = sys.argv[1:]
@@ -32,6 +32,9 @@ def main(args=None) -> None:
     parsed_args = get_args(args)
 
     model_type = parsed_args.model_type
+    if "-attention" in model_type:
+        root_model_type = model_type.split("-")[0]
+        model_type = root_model_type + "_attention"
 
     saving_cache_path = parsed_args.saving_cache_dir
 
@@ -43,15 +46,17 @@ def main(args=None) -> None:
     elif model_type == "fasttext-light":
         download_fasttext_magnitude_embeddings(cache_dir=saving_cache_path)
     elif "bpemb" in model_type:
-        BPEmb(lang="multi", vs=100000, dim=300)  # The class manage the download of the pretrained words embedding
+        BPEmb(
+            lang="multi", vs=100000, dim=300, cache_dir=saving_cache_path
+        )  # The class manage the download of the pretrained words embedding
 
     model_path = os.path.join(saving_cache_path, f"{model_type}.ckpt")
     version_path = os.path.join(saving_cache_path, f"{model_type}.version")
     if not os.path.isfile(model_path) or not os.path.isfile(version_path):
-        download_weights(model_type, CACHE_PATH)
+        download_weights(model_type, saving_dir=saving_cache_path)
     elif not latest_version(model_type, cache_path=saving_cache_path, verbose=True):
         print("A new version of the pretrained model is available. The newest model will be downloaded.")
-        download_weights(model_type, saving_cache_path)
+        download_weights(model_type, saving_dir=saving_cache_path)
 
 
 def get_parser() -> argparse.ArgumentParser:

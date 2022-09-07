@@ -1,4 +1,4 @@
-# pylint: disable=no-member, too-many-public-methods
+# pylint: disable=too-many-public-methods
 
 # Pylint error for TemporaryDirectory ask for with statement
 # pylint: disable=consider-using-with
@@ -9,6 +9,7 @@ import os
 import pickle
 from tempfile import TemporaryDirectory
 from unittest import TestCase
+from unittest.mock import patch
 
 import pandas as pd
 
@@ -23,6 +24,7 @@ from deepparse.cli import (
     replace_path_extension,
     attention_model_type_handling,
     bool_parse,
+    data_container_factory,
 )
 from deepparse.parser import FormattedParsedAddress
 
@@ -320,3 +322,97 @@ class ToolsTest(TestCase):
         for wrong_value in wrong_values:
             with self.assertRaises(argparse.ArgumentTypeError):
                 bool_parse(wrong_value)
+
+    @patch("deepparse.cli.tools.PickleDatasetContainer")
+    def test_givenAParseSettingsPickle_whenDataContainerFactory_thenReturnDataContainer(self, dataset_container_mock):
+        a_pickle_path = "a/pickle/path.p"
+
+        data_container_factory(dataset_path=a_pickle_path, trainable_dataset=False)
+
+        dataset_container_mock.assert_called()
+        dataset_container_mock.assert_called_with(a_pickle_path, is_training_container=False)
+
+    @patch("deepparse.cli.tools.CSVDatasetContainer")
+    def test_givenAParseSettingsCSV_whenDataContainerFactory_thenReturnProperlySetDataContainer(
+        self, dataset_container_mock
+    ):
+        a_csv_path = "a/pickle/path.csv"
+        a_csv_column_name = "a_column_name"
+
+        data_container_factory(dataset_path=a_csv_path, trainable_dataset=False, csv_column_name=a_csv_column_name)
+
+        dataset_container_mock.assert_called()
+        dataset_container_mock.assert_called_with(
+            a_csv_path, column_names=a_csv_column_name, separator=None, is_training_container=False
+        )
+
+        a_separator = "\t"
+
+        data_container_factory(
+            dataset_path=a_csv_path,
+            trainable_dataset=False,
+            csv_column_name=a_csv_column_name,
+            csv_column_separator=a_separator,
+        )
+
+        dataset_container_mock.assert_called()
+        dataset_container_mock.assert_called_with(
+            a_csv_path, column_names=a_csv_column_name, separator=a_separator, is_training_container=False
+        )
+
+    def test_givenAParseOrTrainWrongExtension_thenRaiseError(self):
+        wrong_file_extension = "a/wrong/file/extension.txt"
+        with self.assertRaises(ValueError):
+            data_container_factory(dataset_path=wrong_file_extension, trainable_dataset=False)
+
+        wrong_file_extension = "a/wrong/file/extension.txt"
+        with self.assertRaises(ValueError):
+            data_container_factory(dataset_path=wrong_file_extension, trainable_dataset=True)
+
+    def test_givenAParseOrTrainCSVFileWithWrongSettings_thenRaiseError(self):
+        a_csv_path = "a/pickle/path.csv"
+
+        # No CSV columns names
+        with self.assertRaises(ValueError):
+            data_container_factory(dataset_path=a_csv_path, trainable_dataset=False)
+
+        with self.assertRaises(ValueError):
+            data_container_factory(dataset_path=a_csv_path, trainable_dataset=True)
+
+    @patch("deepparse.cli.tools.PickleDatasetContainer")
+    def test_givenATrainSettingsPickle_whenDataContainerFactory_thenReturnDataContainer(self, dataset_container_mock):
+        a_pickle_path = "a/pickle/path.p"
+
+        data_container_factory(dataset_path=a_pickle_path, trainable_dataset=True)
+
+        dataset_container_mock.assert_called()
+        dataset_container_mock.assert_called_with(a_pickle_path, is_training_container=True)
+
+    @patch("deepparse.cli.tools.CSVDatasetContainer")
+    def test_givenATrainSettingsCSV_whenDataContainerFactory_thenReturnProperlySetDataContainer(
+        self, dataset_container_mock
+    ):
+        # Good for train, test and val type data
+        a_csv_path = "a/pickle/path.csv"
+        a_csv_column_names = ["a_column_name", "a_column_name"]
+
+        data_container_factory(dataset_path=a_csv_path, trainable_dataset=True, csv_column_names=a_csv_column_names)
+
+        dataset_container_mock.assert_called()
+        dataset_container_mock.assert_called_with(
+            a_csv_path, column_names=a_csv_column_names, separator=None, is_training_container=True
+        )
+
+        a_separator = "\t"
+
+        data_container_factory(
+            dataset_path=a_csv_path,
+            trainable_dataset=True,
+            csv_column_names=a_csv_column_names,
+            csv_column_separator=a_separator,
+        )
+
+        dataset_container_mock.assert_called()
+        dataset_container_mock.assert_called_with(
+            a_csv_path, column_names=a_csv_column_names, separator=a_separator, is_training_container=True
+        )

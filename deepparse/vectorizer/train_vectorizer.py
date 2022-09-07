@@ -1,15 +1,18 @@
-from typing import List
+from typing import List, Iterable
+
+from ..converter import TagsConverter
+from ..vectorizer import Vectorizer
 
 
 class TrainVectorizer:
-    def __init__(self, embedding_vectorizer, tags_vectorizer):
+    def __init__(self, embedding_vectorizer: Vectorizer, tags_converter: TagsConverter) -> None:
         """
         Vectorizer use during training to convert an address into word embeddings and to provide the target.
         """
         self.embedding_vectorizer = embedding_vectorizer
-        self.tags_vectorizer = tags_vectorizer
+        self.tags_converter = tags_converter
 
-    def __call__(self, addresses: List[str]):
+    def __call__(self, addresses: List[str]) -> Iterable:
         """
         Method to vectorizer addresses for training.
 
@@ -28,7 +31,7 @@ class TrainVectorizer:
 
         # Otherwise, the padding for byte-pair encoding will be broken
         for address in addresses:
-            target_tmp = [self.tags_vectorizer(target) for target in address[1]]
-            target_tmp.append(self.tags_vectorizer("EOS"))  # to append the End Of Sequence token
+            target_tmp = [self.tags_converter(target) for target in address[1]]
+            target_tmp.append(self.tags_converter("EOS"))  # to append the End Of Sequence token
             target_sequence.append(target_tmp)
         return zip(input_sequence, target_sequence)

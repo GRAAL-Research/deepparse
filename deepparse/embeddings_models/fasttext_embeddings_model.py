@@ -44,5 +44,5 @@ class FastTextEmbeddingsModel(EmbeddingsModel):
         return self.model[word]
 
     @property
-    def dim(self):
+    def dim(self) -> int:
         return self.model.get_dimension()

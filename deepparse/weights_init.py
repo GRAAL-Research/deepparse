@@ -2,9 +2,10 @@ from torch import nn
 from torch.nn import init
 
 
-def weights_init(m):
+def weights_init(m: nn.Module) -> None:
     """
-    Function to initialize the weights of our layers.
+    Function to initialize the weights of a model layers.
+
     Usage:
         network = Model()
         network.apply(weight_init)

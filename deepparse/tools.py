@@ -9,7 +9,8 @@ import requests
 from requests import HTTPError
 from urllib3.exceptions import MaxRetryError
 
-from .data_error import DataError
+from .errors.data_error import DataError
+from .errors.server_error import ServerError
 from .data_validation import (
     validate_if_any_none,
     validate_if_any_whitespace_only,
@@ -82,18 +83,10 @@ def latest_version(model: str, cache_path: str, verbose: bool) -> bool:
     return is_latest_version
 
 
-def download_from_url(file_name: str, saving_dir: str, file_extension: str) -> None:  # pragma: no cover
-    warnings.warn(
-        "download_from_url is deprecated; use download_from_public_repository to download files from "
-        "our public repository. The function will be removed in the next major release."
-    )
-    download_from_public_repository(file_name=file_name, saving_dir=saving_dir, file_extension=file_extension)
-
-
 def download_from_public_repository(file_name: str, saving_dir: str, file_extension: str) -> None:
     """
     Simple function to download the content of a file from Deepparse public repository.
-    The repository URL string is  ̀`'https://graal.ift.ulaval.ca/public/deepparse/{}.{}'``
+    The repository URL string is `'https://graal.ift.ulaval.ca/public/deepparse/{}.{}'``
     where the first bracket is the file name and the second is the file extension.
     """
     url = BASE_URL.format(file_name, file_extension)
@@ -113,9 +106,15 @@ def download_weights(model: str, saving_dir: str, verbose: bool = True) -> None:
         verbose (bool): Turn on/off the verbosity of the model. The default value is True.
     """
     if verbose:
-        print(f"Downloading the weights for the network {model}.")
-    download_from_public_repository(model, saving_dir, "ckpt")
-    download_from_public_repository(model, saving_dir, "version")
+        print(f"Downloading the pre-trained weights for the network {model}.")
+
+    try:
+        download_from_public_repository(model, saving_dir, "ckpt")
+        download_from_public_repository(model, saving_dir, "version")
+    except requests.exceptions.ConnectTimeout as error:
+        raise ServerError(
+            "There was an error trying to connect to the Deepparse server. Please try again later."
+        ) from error
 
 
 def handle_poutyne_version() -> str:

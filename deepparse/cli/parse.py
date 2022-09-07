@@ -24,8 +24,8 @@ from .tools import (
     to_json,
     replace_path_extension,
     attention_model_type_handling,
+    data_container_factory,
 )
-from ..dataset_container import CSVDatasetContainer, PickleDatasetContainer
 from ..parser import AddressParser
 
 
@@ -59,21 +59,13 @@ def main(args=None) -> None:
     parsed_args = get_args(args)
 
     dataset_path = parsed_args.dataset_path
-    if is_csv_path(dataset_path):
-        csv_column_name = parsed_args.csv_column_name
-        if csv_column_name is None:
-            raise ValueError(
-                "For a CSV dataset path, you need to specify the 'csv_column_name' argument to provide the"
-                " column name to extract address."
-            )
-        csv_column_separator = parsed_args.csv_column_separator
-        addresses_to_parse = CSVDatasetContainer(
-            dataset_path, column_names=csv_column_name, separator=csv_column_separator, is_training_container=False
-        )
-    elif is_pickle_path(dataset_path):
-        addresses_to_parse = PickleDatasetContainer(dataset_path, is_training_container=False)
-    else:
-        raise ValueError("The dataset path argument is not a CSV or a pickle file.")
+    csv_column_separator = parsed_args.csv_column_separator
+    addresses_to_parse = data_container_factory(
+        dataset_path=dataset_path,
+        trainable_dataset=False,
+        csv_column_separator=csv_column_separator,
+        csv_column_name=parsed_args.csv_column_name,
+    )
 
     export_filename = parsed_args.export_filename
     export_path = generate_export_path(dataset_path, export_filename)

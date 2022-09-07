@@ -1,4 +1,4 @@
-# pylint: disable=no-member, too-many-public-methods
+# pylint: disable=too-many-public-methods
 
 # Pylint raise error for the repr method mocking
 # pylint: disable=unnecessary-dunder-call

@@ -2,16 +2,14 @@
 # We also skip protected-access since we test the encoder and decoder step
 # pylint: disable=not-callable, protected-access
 
-# Pylint raise error for torch.tensor, torch.zeros, ... as a no-member event
-# if not the case.
-# pylint: disable=no-member
-
 import os
 import unittest
 from unittest import skipIf
+from unittest.mock import patch
 
 import torch
 
+from deepparse import CACHE_PATH
 from deepparse.network import BPEmbSeq2SeqModel
 from ..integration.base import Seq2SeqIntegrationTestCase
 
@@ -95,6 +93,16 @@ class BPEmbSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
         )
 
         self.assert_output_is_valid_dim(predictions, output_dim=self.re_trained_output_dim)
+
+    @patch("deepparse.network.seq2seq.download_weights")
+    def test_givenAnOfflineSeq2SeqModel_whenInit_thenDontCallDownloadWeights(self, download_weights_mock):
+        # Test if functions latest_version and download_weights
+
+        default_cache = CACHE_PATH
+
+        self.seq2seq_model = BPEmbSeq2SeqModel(default_cache, self.a_cpu_device, verbose=self.verbose, offline=True)
+
+        download_weights_mock.assert_not_called()
 
 
 if __name__ == "__main__":

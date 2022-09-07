@@ -23,5 +23,5 @@ class TagsConverter:
         return self.idx_to_tags[key]
 
     @property
-    def dim(self):
+    def dim(self) -> int:
         return len(self.tags_to_idx)

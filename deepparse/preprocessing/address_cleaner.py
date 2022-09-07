@@ -8,7 +8,7 @@ hyphen_splitted_unit_and_street_number_regex = r"^([0-9]*[a-z]?)-([0-9]*[a-z]?) 
 
 
 class AddressCleaner:
-    def __init__(self, with_hyphen_split: bool = False):
+    def __init__(self, with_hyphen_split: bool = False) -> None:
         self.with_hyphen_split = with_hyphen_split
 
     def clean(self, addresses: List[str]) -> List[str]:

@@ -32,7 +32,7 @@ class AddressParserIntegrationTestFreezeLayers(AddressParserRetrainTestCase):
         )
         address_parser.retrain(
             self.training_container,
-            self.a_train_ratio,
+            train_ratio=self.a_train_ratio,
             epochs=self.a_single_epoch,
             batch_size=self.a_batch_size,
             num_workers=self.a_number_of_workers,
@@ -52,7 +52,7 @@ class AddressParserIntegrationTestFreezeLayers(AddressParserRetrainTestCase):
         )
         address_parser.retrain(
             self.training_container,
-            self.a_train_ratio,
+            train_ratio=self.a_train_ratio,
             epochs=self.a_single_epoch,
             batch_size=self.a_batch_size,
             num_workers=self.a_number_of_workers,
@@ -72,7 +72,7 @@ class AddressParserIntegrationTestFreezeLayers(AddressParserRetrainTestCase):
         )
         address_parser.retrain(
             self.training_container,
-            self.a_train_ratio,
+            train_ratio=self.a_train_ratio,
             epochs=self.a_single_epoch,
             batch_size=self.a_batch_size,
             num_workers=self.a_number_of_workers,
@@ -90,7 +90,7 @@ class AddressParserIntegrationTestFreezeLayers(AddressParserRetrainTestCase):
         )
         address_parser.retrain(
             self.training_container,
-            self.a_train_ratio,
+            train_ratio=self.a_train_ratio,
             epochs=self.a_single_epoch,
             batch_size=self.a_batch_size,
             num_workers=self.a_number_of_workers,
@@ -110,7 +110,7 @@ class AddressParserIntegrationTestFreezeLayers(AddressParserRetrainTestCase):
         )
         address_parser.retrain(
             self.training_container,
-            self.a_train_ratio,
+            train_ratio=self.a_train_ratio,
             epochs=self.a_single_epoch,
             batch_size=self.a_batch_size,
             num_workers=self.a_number_of_workers,
@@ -128,7 +128,7 @@ class AddressParserIntegrationTestFreezeLayers(AddressParserRetrainTestCase):
         )
         address_parser.retrain(
             self.training_container,
-            self.a_train_ratio,
+            train_ratio=self.a_train_ratio,
             epochs=self.a_single_epoch,
             batch_size=self.a_batch_size,
             num_workers=self.a_number_of_workers,

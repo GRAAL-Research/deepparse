@@ -4,10 +4,6 @@
 # Pylint error for TemporaryDirectory ask for with statement
 # pylint: disable=consider-using-with
 
-# Pylint raise error for torch.tensor, torch.zeros, ... as a no-member event
-# if not the case.
-# pylint: disable=no-member
-
 import os
 import platform
 import unittest
@@ -67,7 +63,9 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
 
     def address_parser_retrain_call(
         self,
-        dataset_container=None,
+        train_dataset_container=None,
+        val_dataset_container=None,
+        train_ratio=None,  # None to handle default test case
         prediction_tags=None,
         seq2seq_params=None,
         layers_to_freeze=None,
@@ -83,13 +81,17 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
             else:
                 num_workers = 1
 
-        if dataset_container is None:
-            dataset_container = self.mocked_data_container
+        if train_dataset_container is None:
+            train_dataset_container = self.mocked_data_container
             # To handle by default for most of the tests.
 
+        if train_ratio is None:
+            train_ratio = self.a_train_ratio
+
         self.address_parser.retrain(
-            dataset_container,
-            self.a_train_ratio,
+            train_dataset_container,
+            val_dataset_container,
+            train_ratio,
             self.a_batch_size,
             self.a_epoch_number,
             num_workers=num_workers,
@@ -1207,9 +1209,9 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         with self.assertRaises(ValueError):
             self.address_parser.retrain(
                 mocked_data_container,
-                self.a_train_ratio,
-                self.a_batch_size,
-                self.a_epoch_number,
+                train_ratio=self.a_train_ratio,
+                batch_size=self.a_batch_size,
+                epochs=self.a_epoch_number,
                 num_workers=a_number_of_workers,
                 learning_rate=self.a_learning_rate,
                 callbacks=self.a_callbacks_list,
@@ -1638,11 +1640,56 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
 
         not_a_dataset_container_obj = []
         with self.assertRaises(ValueError):
-            self.address_parser_retrain_call(dataset_container=not_a_dataset_container_obj)
+            self.address_parser_retrain_call(train_dataset_container=not_a_dataset_container_obj)
 
         not_a_dataset_container_obj = {}
         with self.assertRaises(ValueError):
-            self.address_parser_retrain_call(dataset_container=not_a_dataset_container_obj)
+            self.address_parser_retrain_call(train_dataset_container=not_a_dataset_container_obj)
+
+        # For val dataset
+        not_a_dataset_container_obj = []
+        with self.assertRaises(ValueError):
+            self.address_parser_retrain_call(val_dataset_container=not_a_dataset_container_obj)
+
+        not_a_dataset_container_obj = {}
+        with self.assertRaises(ValueError):
+            self.address_parser_retrain_call(val_dataset_container=not_a_dataset_container_obj)
+
+    @patch("deepparse.parser.address_parser.os.path.join")
+    @patch("deepparse.parser.address_parser.torch.save")
+    @patch("deepparse.parser.address_parser.DataLoader")
+    @patch("deepparse.parser.address_parser.Experiment")
+    @patch("deepparse.parser.address_parser.SGD")
+    @patch("deepparse.parser.address_parser.DataTransform")
+    @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
+    @patch("deepparse.parser.address_parser.fasttext_data_padding")
+    @patch("deepparse.parser.address_parser.FastTextVectorizer")
+    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
+    def test_givenNotADatasetContainer_whenRetrainCallWithValDataset_thenDontUseTrainRatio(
+        self,
+        download_weights_mock,
+        embeddings_model_mock,
+        vectorizer_model_mock,
+        data_padding_mock,
+        model_mock,
+        data_transform_mock,
+        optimizer_mock,
+        experiment_mock,
+        data_loader_mock,
+        torch_save_mock,
+        os_path_join_mock,
+    ):
+        self.address_parser = AddressParser(
+            model_type=self.a_fasttext_model_type,
+            device=self.a_device,
+            verbose=self.verbose,
+        )
+
+        train_ratio_mock = MagicMock()
+        self.address_parser_retrain_call(val_dataset_container=self.mocked_data_container, train_ratio=train_ratio_mock)
+
+        train_ratio_mock.assert_not_called()
 
 
 if __name__ == "__main__":

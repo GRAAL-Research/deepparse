@@ -19,7 +19,7 @@ class BPEmbVectorizer(Vectorizer):
         self.padding_value = 0
         self._max_length = 0
 
-    def _reset_max_length(self):
+    def _reset_max_length(self) -> None:
         self._max_length = 0
 
     def __call__(self, addresses: List[str]) -> List[Tuple]:

@@ -4,10 +4,6 @@
 # temporary fix for _forward_unimplemented for PyTorch 1.6 https://github.com/pytorch/pytorch/issues/42305
 # pylint: disable=W0223
 
-# Pylint raise error for torch.tensor, torch.zeros, ... as a no-member event
-# if not the case.
-# pylint: disable=no-member
-
 from typing import Tuple, List
 
 import torch

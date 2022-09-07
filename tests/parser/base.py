@@ -4,10 +4,6 @@
 # Pylint error for TemporaryDirectory ask for with statement
 # pylint: disable=consider-using-with
 
-# Pylint raise error for torch.tensor, torch.zeros, ... as a no-member event
-# if not the case.
-# pylint: disable=no-member
-
 # Pylint raise error for the call method mocking
 # pylint: disable=unnecessary-dunder-call
 
@@ -220,5 +216,4 @@ class PretrainedWeightsBase:
 
     @classmethod
     def tearDownClass(cls) -> None:
-        # pylint: disable=no-member
         cls.model_weights_temp_dir.cleanup()

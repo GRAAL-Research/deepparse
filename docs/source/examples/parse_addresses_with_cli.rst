@@ -19,7 +19,7 @@ You can also specify a device using the optional ``device`` argument.
 
     parse fasttext ./dataset_path.csv parsed_address.pickle --device 0
 
-Or use one of your retrained models using the `optional ̀` path_to_retrained_model`` argument.
+Or use one of your retrained models using the optional ``path_to_retrained_model`` argument.
 
 .. code-block:: bash
 

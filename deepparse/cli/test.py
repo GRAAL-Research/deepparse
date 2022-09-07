@@ -17,14 +17,12 @@ from .parser_arguments_adder import (
     add_csv_column_names_arg,
 )
 from .tools import (
-    is_csv_path,
-    is_pickle_path,
     wrap,
     attention_model_type_handling,
     generate_export_path,
     replace_path_extension,
+    data_container_factory,
 )
-from ..dataset_container import CSVDatasetContainer, PickleDatasetContainer
 from ..parser import AddressParser
 
 
@@ -55,24 +53,13 @@ def main(args=None) -> None:
     parsed_args = get_args(args)
 
     test_dataset_path = parsed_args.test_dataset_path
-    if is_csv_path(test_dataset_path):
-        csv_column_names = parsed_args.csv_column_names
-        if csv_column_names is None:
-            raise ValueError(
-                "To use a CSV dataset to test on, you need to specify the 'csv_column_names' argument to provide the"
-                " column name to extract address."
-            )
-        csv_column_separator = parsed_args.csv_column_separator
-        testing_data = CSVDatasetContainer(
-            test_dataset_path,
-            column_names=csv_column_names,
-            separator=csv_column_separator,
-            is_training_container=True,
-        )
-    elif is_pickle_path(test_dataset_path):
-        testing_data = PickleDatasetContainer(test_dataset_path, is_training_container=True)
-    else:
-        raise ValueError("The test dataset path argument is not a CSV or a pickle file.")
+
+    testing_data = data_container_factory(
+        dataset_path=test_dataset_path,
+        trainable_dataset=True,
+        csv_column_separator=parsed_args.csv_column_separator,
+        csv_column_names=parsed_args.csv_column_names,
+    )
 
     device = parsed_args.device
 

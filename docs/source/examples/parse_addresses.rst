@@ -27,7 +27,7 @@ Now let's load the dataset using one of our dataset container
 
     addresses_to_parse = PickleDatasetContainer("./data/predict.p", is_training_container=False)
 
-Let's use the BPEmb model on a GPU.
+Let's use the ``BPEmb`` model on a GPU.
 
 .. code-block:: python
 
@@ -44,14 +44,14 @@ Let's use the BPEmb model on a GPU.
 When parsing addresses, some data quality tests are applied to the dataset.
 First, it validates that no addresses to parse are empty.
 Second, it validates that no addresses are whitespace-only.
-The next two lines are rising a DataError.
+The next two lines are rising a ``DataError``.
 
 .. code-block:: python
 
     address_parser("")  # Raise an error
     address_parser(" ")  # Raise an error
 
-We can also put our parsed address into a pandas dataframe for analysis. You can choose the fields to use or use the
+We can also put our parsed address into a Pandas ``DataFrame`` for analysis. You can choose the fields to use or use the
 default one.
 
 .. code-block:: python

@@ -1,9 +1,10 @@
+import torch
 from torch.nn import NLLLoss
 
 criterion = NLLLoss()
 
 
-def nll_loss(pred, ground_truth):
+def nll_loss(pred: torch.Tensor, ground_truth: torch.Tensor) -> float:
     """
     NLL loss compute per tag.
     """

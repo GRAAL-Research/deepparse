@@ -251,4 +251,33 @@
 - Bug-fix retrain attention model naming parsing
 - Improve error handling when not a DatasetContainer is use in retrain and test API
 
+## 0.8.3
+
+- Add Zenodo DOI
+
+## 0.9
+- 
+
+- Add `save_model_weights` method to `AddressParser` to save model weights (PyTorch state dictionary)
+- Improve CI
+- Added verbose flag for test to activate or deactivate the test verbosity (it override the AddressParser verbosity)
+- Add Docker image
+- Add `val_dataset` to retrain API to allow the use of a specific val dataset for training
+- Remove deprecated `download_from_url` function
+- Remove deprecated `dataset_container` argument
+- Fixed error and docs
+- Added the UK retrain example
+
+## 0.9.1
+
+- Hotfix cli.download_model attention model bug
+
 ## dev
+
+- Improve Deepparse server error handling and error output
+- Remove deprecated argument `saving_dir` in `download_fasttext_magnitude_embeddings`
+  and `download_fasttext_embeddings` functions
+- Add offline argument to remove verification of the latest version
+- Bug-fix cache handling in download model
+- Add `download_models` CLI function
+

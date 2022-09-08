@@ -11,7 +11,8 @@ class ModelFactory:
         verbose=True,
         path_to_retrained_model=None,
         attention_mechanism=False,
-        **seq2seq_kwargs,
+        offline=False,
+        **seq2seq_kwargs
     ):
 
         if model_type == "fasttext":
@@ -22,6 +23,7 @@ class ModelFactory:
                 verbose=verbose,
                 path_to_retrained_model=path_to_retrained_model,
                 attention_mechanism=attention_mechanism,
+                offline=offline,
                 **seq2seq_kwargs,
             )
 
@@ -33,6 +35,7 @@ class ModelFactory:
                 verbose=verbose,
                 path_to_retrained_model=path_to_retrained_model,
                 attention_mechanism=attention_mechanism,
+                offline=offline,
                 **seq2seq_kwargs,
             )
         else:

@@ -20,9 +20,11 @@ class VectorizerFactory:
             vectorizer = MagnitudeVectorizer(embeddings_model)
 
         else:
-            raise NotImplementedError(f"""
+            raise NotImplementedError(
+                f"""
             There's no vectorizer corresponding to the {embedding_model_type} embedding model type.
             Supported embedding models are: bpemb, fasttext and fasttext_magnitude.
-            """)
+            """
+            )
 
         return vectorizer

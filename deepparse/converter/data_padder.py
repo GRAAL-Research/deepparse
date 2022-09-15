@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 import torch
 from torch.nn.utils.rnn import pad_sequence
 
+
 class DataPadder(ABC):
     def __init__(self, padding_value) -> None:
         self.padding_value = padding_value

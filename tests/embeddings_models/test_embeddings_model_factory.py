@@ -26,7 +26,9 @@ class EmbeddingsModelFactoryTest(TestCase):
         self.embeddings_model_factory = EmbeddingsModelFactory()
 
     @patch("deepparse.embeddings_models.bpemb_embeddings_model.BPEmb")
-    def test_givenABpembEmbeddingsModelType_whenCreatingEmbeddingsModel_thenShouldReturnCorrectEmbeddingsModel(self, bpemb_mock):
+    def test_givenABpembEmbeddingsModelType_whenCreatingEmbeddingsModel_thenShouldReturnCorrectEmbeddingsModel(
+        self, bpemb_mock
+    ):
         embeddings_model = self.embeddings_model_factory.create(self.a_bpemb_embeddings_model_type, self.a_cache_dir)
 
         self.assertIsInstance(embeddings_model, BPEmbEmbeddingsModel)

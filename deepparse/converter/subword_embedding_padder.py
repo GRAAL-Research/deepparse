@@ -8,15 +8,15 @@ from . import DataPadder
 class SubwordEmbeddingPadder(DataPadder):
     def pad_sequences(self, sequence_batch):
         sequences_vectors, decomp_len, lengths = zip(
-        *[
-            (
-                torch.tensor(np.array(vectors)),
-                word_decomposition_len,
-                len(vectors),
-            )
-            for vectors, word_decomposition_len in sequence_batch
-        ]
-    )
+            *[
+                (
+                    torch.tensor(np.array(vectors)),
+                    word_decomposition_len,
+                    len(vectors),
+                )
+                for vectors, word_decomposition_len in sequence_batch
+            ]
+        )
 
         padded_sequences_vectors = pad_sequence(sequences_vectors, batch_first=True, padding_value=self.padding_value)
 

@@ -12,7 +12,7 @@ class ModelFactory:
         path_to_retrained_model=None,
         attention_mechanism=False,
         offline=False,
-        **seq2seq_kwargs
+        **seq2seq_kwargs,
     ):
 
         if model_type == "fasttext":

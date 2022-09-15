@@ -3,7 +3,7 @@ from unittest import TestCase
 
 import torch
 
-from deepparse.converter.word_embedding_padder import WordEmbeddingPadder
+from deepparse.converter import WordEmbeddingPadder
 
 
 class WordEmbeddingPadderTest(TestCase):

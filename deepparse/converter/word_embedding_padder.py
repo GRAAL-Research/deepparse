@@ -1,3 +1,5 @@
+from typing import Tuple, List
+
 import numpy as np
 import torch
 from torch.nn.utils.rnn import pad_sequence
@@ -6,7 +8,7 @@ from . import DataPadder
 
 
 class WordEmbeddingPadder(DataPadder):
-    def pad_sequences(self, sequence_batch):
+    def pad_sequences(self, sequence_batch: Tuple[List, ...]) -> Tuple[torch.Tensor, torch.Tensor]:
         sequences_vectors, lengths = zip(
             *[
                 (
@@ -23,7 +25,7 @@ class WordEmbeddingPadder(DataPadder):
 
         return padded_sequences_vectors, lengths
 
-    def _extract_sequences_and_target(self, batch):
+    def _extract_sequences_and_target(self, batch: List[Tuple]) -> Tuple[Tuple[List, ...], Tuple[List, ...]]:
         sorted_batch = sorted(batch, key=lambda x: len(x[0]), reverse=True)
 
         sequence_batch, target_batch = zip(*sorted_batch)

@@ -1,20 +1,46 @@
-from . import FastTextSeq2SeqModel, BPEmbSeq2SeqModel
+from typing import Dict, Union
+
+import torch
+
+from . import FastTextSeq2SeqModel, BPEmbSeq2SeqModel, Seq2SeqModel
 
 
 class ModelFactory:
+    """
+    A factory for the creation of neural network models that predict the tags from addresses
+    """
+
     def create(
         self,
-        model_type,
-        cache_dir,
-        device,
-        output_size=9,
-        verbose=True,
-        path_to_retrained_model=None,
-        attention_mechanism=False,
-        offline=False,
-        **seq2seq_kwargs,
-    ):
+        model_type: str,
+        cache_dir: str,
+        device: torch.device,
+        output_size: int = 9,
+        attention_mechanism: bool = False,
+        path_to_retrained_model: Union[str, None] = None,
+        offline: bool = False,
+        verbose: bool = True,
+        **seq2seq_kwargs: Dict,
+    ) -> Seq2SeqModel:
+        """
+        Model creation method.
 
+        Args:
+            model_type (str): the type of the model to create. Valid options:
+                - fasttext
+                - bpemb
+            cache_dir (str): The path to the cached directory to use for downloading (and loading) the
+                model weights.
+            device (~torch.device): The device tu use for the prediction.
+            output_size (int): The size of the prediction layers (i.e. the number of tag to predict).
+            attention_mechanism (bool): Either or not to use attention mechanism. The default value is False.
+            path_to_retrained_model (Union[str, None]): The path to the retrained model to use for the seq2seq.
+            offline (bool): Wether or not the model is an offline or an online.
+            verbose (bool): Turn on/off the verbosity of the model. The default value is True.
+
+        Return:
+            A :class:`~Seq2SeqModel`.
+        """
         if model_type == "fasttext":
             model = FastTextSeq2SeqModel(
                 cache_dir=cache_dir,
@@ -38,6 +64,7 @@ class ModelFactory:
                 offline=offline,
                 **seq2seq_kwargs,
             )
+
         else:
             raise NotImplementedError(
                 f"""

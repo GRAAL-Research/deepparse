@@ -1,13 +1,36 @@
-from ..embeddings_models import BPEmbEmbeddingsModel, FastTextEmbeddingsModel, MagnitudeEmbeddingsModel
-from . import BPEmbVectorizer, FastTextVectorizer, MagnitudeVectorizer
+from ..embeddings_models import (
+    BPEmbEmbeddingsModel,
+    FastTextEmbeddingsModel,
+    MagnitudeEmbeddingsModel,
+    EmbeddingsModelFactory,
+)
+from . import BPEmbVectorizer, FastTextVectorizer, MagnitudeVectorizer, Vectorizer
 
 
 class VectorizerFactory:
-    def __init__(self, embeddings_model_factory) -> None:
+    """
+    A factory for the creation of vectorizers associated with specific embeddings models.
+    Args:
+        embeddings_model_factory (:class: `~EmbeddingsModelFactory`): the embeddings models factory.
+    """
+
+    def __init__(self, embeddings_model_factory: EmbeddingsModelFactory) -> None:
         self.embeddings_model_factory = embeddings_model_factory
 
-    def create(self, embedding_model_type, cache_dir, verbose=True):
-        embeddings_model = self.embeddings_model_factory.create(embedding_model_type, cache_dir, verbose)
+    def create(self, embeddings_model_type: str, cache_dir: str, verbose: bool = True) -> Vectorizer:
+        """
+        Vectorizer creation method.
+        Args:
+            embeddings_model_type (str): the type of the embeddings model to create. Valid options:
+                - bpemb
+                - fasttext
+                - fasttext_magnitude
+            cache_dir (str): Path to the cache directory where the embeddings model exists or is to be downloaded.
+            verbose (bool): Wether or not to make the loading of the embeddings verbose.
+        Return:
+            A :class:`~Vectorizer`
+        """
+        embeddings_model = self.embeddings_model_factory.create(embeddings_model_type, cache_dir, verbose)
 
         vectorizer = None
         if isinstance(embeddings_model, BPEmbEmbeddingsModel):
@@ -22,7 +45,7 @@ class VectorizerFactory:
         else:
             raise NotImplementedError(
                 f"""
-            There's no vectorizer corresponding to the {embedding_model_type} embedding model type.
+            There's no vectorizer corresponding to the {embeddings_model_type} embedding model type.
             Supported embedding models are: bpemb, fasttext and fasttext_magnitude.
             """
             )

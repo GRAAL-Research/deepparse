@@ -113,7 +113,7 @@ class AddressParser:
             be set to True.
         cache_dir (Union[str, None]): The path to the cached directory to use for downloading (and loading) the
             embeddings model and the model pretrained weights.
-        offline (bool): Either or not the model is an offline one, meaning you have already downloaded the pre-trained
+        offline (bool): Wether or not the model is an offline one, meaning you have already downloaded the pre-trained
             weights and embeddings weights in either the default Deepparse cache directory (~./cache/deepparse) or
             the ``cache_dir`` directory. When offline, we will not verify if the model is the latest. You can use our
             ``download_models`` CLI function to download all the requirements for a model. The default value is False

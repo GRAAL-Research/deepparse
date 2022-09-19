@@ -93,7 +93,7 @@ class Seq2SeqModel(ABC, nn.Module):
             model_type (str): The network pretrained weights to load.
             cache_dir (str): The path to the cached directory to use for downloading (and loading) the
                 model weights.
-            offline (bool): Either or not the model is an offline or an online.
+            offline (bool): Wether or not the model is an offline or an online.
         """
         model_path = os.path.join(cache_dir, f"{model_type}.ckpt")
 

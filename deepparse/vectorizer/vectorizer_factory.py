@@ -2,7 +2,7 @@ from ..embeddings_models import (
     BPEmbEmbeddingsModel,
     FastTextEmbeddingsModel,
     MagnitudeEmbeddingsModel,
-    EmbeddingsModelFactory,
+    EmbeddingsModel,
 )
 from . import BPEmbVectorizer, FastTextVectorizer, MagnitudeVectorizer, Vectorizer
 
@@ -10,14 +10,9 @@ from . import BPEmbVectorizer, FastTextVectorizer, MagnitudeVectorizer, Vectoriz
 class VectorizerFactory:
     """
     A factory for the creation of vectorizers associated with specific embeddings models.
-    Args:
-        embeddings_model_factory (:class: `~EmbeddingsModelFactory`): the embeddings models factory.
     """
 
-    def __init__(self, embeddings_model_factory: EmbeddingsModelFactory) -> None:
-        self.embeddings_model_factory = embeddings_model_factory
-
-    def create(self, embeddings_model_type: str, cache_dir: str, verbose: bool = True) -> Vectorizer:
+    def create(self, embeddings_model: EmbeddingsModel) -> Vectorizer:
         """
         Vectorizer creation method.
         Args:
@@ -30,9 +25,6 @@ class VectorizerFactory:
         Return:
             A :class:`~Vectorizer`
         """
-        embeddings_model = self.embeddings_model_factory.create(embeddings_model_type, cache_dir, verbose)
-
-        vectorizer = None
         if isinstance(embeddings_model, BPEmbEmbeddingsModel):
             vectorizer = BPEmbVectorizer(embeddings_model)
 
@@ -45,8 +37,8 @@ class VectorizerFactory:
         else:
             raise NotImplementedError(
                 f"""
-            There's no vectorizer corresponding to the {embeddings_model_type} embedding model type.
-            Supported embedding models are: bpemb, fasttext and fasttext_magnitude.
+            There's no vectorizer corresponding to the embeddings model type provided.
+            Supported embedding models are: BPEmbEmbeddingsModel, FastTextEmbeddingsModel and MagnitudeEmbeddingsModel.
             """
             )
 

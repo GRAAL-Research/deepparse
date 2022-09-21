@@ -1,11 +1,12 @@
 from typing import List, Iterable
 
-from ..converter import TagsConverter
+# TODO: fix cyclic import
+# from ..converter import TagsConverter
 from ..vectorizer import Vectorizer
 
 
 class TrainVectorizer:
-    def __init__(self, embedding_vectorizer: Vectorizer, tags_converter: TagsConverter) -> None:
+    def __init__(self, embedding_vectorizer: Vectorizer, tags_converter) -> None:
         """
         Vectorizer use during training to convert an address into word embeddings and to provide the target.
         """

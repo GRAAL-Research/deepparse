@@ -16,12 +16,7 @@ class VectorizerFactory:
         """
         Vectorizer creation method.
         Args:
-            embeddings_model_type (str): the type of the embeddings model to create. Valid options:
-                - bpemb
-                - fasttext
-                - fasttext_magnitude
-            cache_dir (str): Path to the cache directory where the embeddings model exists or is to be downloaded.
-            verbose (bool): Wether or not to make the loading of the embeddings verbose.
+            embeddings_model (:class:`~EmbeddingsModel`): The embeddings model for which a vectorizer is to be created
         Return:
             A :class:`~Vectorizer`
         """

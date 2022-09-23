@@ -272,7 +272,7 @@
 
 - Hotfix cli.download_model attention model bug
 
-## dev
+## 0.9.2
 
 - Improve Deepparse server error handling and error output
 - Remove deprecated argument `saving_dir` in `download_fasttext_magnitude_embeddings`
@@ -280,3 +280,6 @@
 - Add offline argument to remove verification of the latest version
 - Bug-fix cache handling in download model
 - Add `download_models` CLI function
+- [Temporary hot-fix BPEmb SSL certificate error](https://github.com/GRAAL-Research/deepparse/issues/156)
+
+## dev

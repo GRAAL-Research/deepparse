@@ -795,7 +795,7 @@ to achieve an interesting performance. Attention mechanisms improve performance 
 </section>
 <section id="parse-addresses-using-your-own-retrained-model">
 <h2>Parse Addresses Using Your Own Retrained Model<a class="headerlink" href="#parse-addresses-using-your-own-retrained-model" title="Permalink to this heading"></a></h2>
-<p>See <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/master/examples/retrained_model_parsing.py">here</a> for a complete example.</p>
+<p>See <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/main/examples/retrained_model_parsing.py">here</a> for a complete example.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span>
     <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;bpemb&quot;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">path_to_retrained_model</span><span class="o">=</span><span class="s2">&quot;path/to/retrained/bpemb/model.p&quot;</span><span class="p">)</span>
 
@@ -805,8 +805,8 @@ to achieve an interesting performance. Attention mechanisms improve performance 
 </section>
 <section id="retrain-a-model">
 <h2>Retrain a Model<a class="headerlink" href="#retrain-a-model" title="Permalink to this heading"></a></h2>
-<p>See <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py">here</a> for a complete example
-using Pickle and <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning_with_csv_dataset.py">here</a>
+<p>See <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/main/examples/fine_tuning.py">here</a> for a complete example
+using Pickle and <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/main/examples/fine_tuning_with_csv_dataset.py">here</a>
 for a complete example using CSV.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span><span class="o">.</span><span class="n">retrain</span><span class="p">(</span><span class="n">training_container</span><span class="p">,</span> <span class="n">train_ratio</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
 </pre></div>
@@ -823,7 +823,7 @@ class name) when reloading it.</p>
 </section>
 <section id="retrain-a-model-with-an-attention-mechanism">
 <h2>Retrain a Model With an Attention Mechanism<a class="headerlink" href="#retrain-a-model-with-an-attention-mechanism" title="Permalink to this heading"></a></h2>
-<p>See <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/master/examples/retrain_attention_model.py">here</a> for a complete example.</p>
+<p>See <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/main/examples/retrain_attention_model.py">here</a> for a complete example.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># We will retrain the fasttext version of our pretrained model.</span>
 <span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;fasttext&quot;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">attention_mechanism</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
@@ -833,7 +833,7 @@ class name) when reloading it.</p>
 </section>
 <section id="retrain-a-model-with-new-tags">
 <h2>Retrain a Model With New Tags<a class="headerlink" href="#retrain-a-model-with-new-tags" title="Permalink to this heading"></a></h2>
-<p>See <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/master/examples/retrain_with_new_prediction_tags.py">here</a> for a complete example.</p>
+<p>See <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/main/examples/retrain_with_new_prediction_tags.py">here</a> for a complete example.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_components</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ATag&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;AnotherTag&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;EOS&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
 <span class="n">address_parser</span><span class="o">.</span><span class="n">retrain</span><span class="p">(</span><span class="n">training_container</span><span class="p">,</span> <span class="n">train_ratio</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">prediction_tags</span><span class="o">=</span><span class="n">address_components</span><span class="p">)</span>
 </pre></div>
@@ -841,7 +841,7 @@ class name) when reloading it.</p>
 </section>
 <section id="retrain-a-seq2seq-model-from-scratch">
 <h2>Retrain a Seq2Seq Model From Scratch<a class="headerlink" href="#retrain-a-seq2seq-model-from-scratch" title="Permalink to this heading"></a></h2>
-<p>See  <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/master/examples/retrain_with_new_seq2seq_params.py">here</a> for
+<p>See  <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/main/examples/retrain_with_new_seq2seq_params.py">here</a> for
 a complete example.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">seq2seq_params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;encoder_hidden_size&quot;</span><span class="p">:</span> <span class="mi">512</span><span class="p">,</span> <span class="s2">&quot;decoder_hidden_size&quot;</span><span class="p">:</span> <span class="mi">512</span><span class="p">}</span>
 <span class="n">address_parser</span><span class="o">.</span><span class="n">retrain</span><span class="p">(</span><span class="n">training_container</span><span class="p">,</span> <span class="n">train_ratio</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">seq2seq_params</span><span class="o">=</span><span class="n">seq2seq_params</span><span class="p">)</span>
@@ -906,12 +906,12 @@ a complete example.</p>
 <section id="contributing-to-deepparse">
 <h1>Contributing to Deepparse<a class="headerlink" href="#contributing-to-deepparse" title="Permalink to this heading"></a></h1>
 <p>We welcome user input, whether it is regarding bugs found in the library or feature propositions ! Make sure to have a
-look at our <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/master/.github/CONTRIBUTING.md">contributing guidelines</a> for more
+look at our <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/main/.github/CONTRIBUTING.md">contributing guidelines</a> for more
 details on this matter.</p>
 </section>
 <section id="license">
 <h1>License<a class="headerlink" href="#license" title="Permalink to this heading"></a></h1>
-<p>Deepparse is LGPLv3 licensed, as found in the <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/master/LICENSE">LICENSE file</a>.</p>
+<p>Deepparse is LGPLv3 licensed, as found in the <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/main/LICENSE">LICENSE file</a>.</p>
 </section>
 <section id="api-reference">
 <h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this heading"></a></h1>

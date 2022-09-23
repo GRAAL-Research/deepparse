@@ -81,5 +81,5 @@ def no_ssl_verification():
         for adapter in opened_adapters:
             try:
                 adapter.close()
-            except BaseException:  # pylint: disable=W0702
+            except BaseException:  # pylint: disable=W0702, W703
                 pass

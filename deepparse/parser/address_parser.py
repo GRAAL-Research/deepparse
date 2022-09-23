@@ -10,44 +10,40 @@ import platform
 import re
 import warnings
 from pathlib import Path
-from typing import List, Union, Dict, Tuple
+from typing import Dict, List, Tuple, Union
 
 import torch
 from poutyne.framework import Experiment
 from torch.optim import SGD
 from torch.utils.data import DataLoader, Subset
 
-from . import formatted_parsed_address
-from .capturing import Capturing
-from .formatted_parsed_address import FormattedParsedAddress
-from .tools import (
-    validate_if_new_seq2seq_params,
-    validate_if_new_prediction_tags,
-    load_tuple_to_device,
-    pretrained_parser_in_directory,
-    get_files_in_directory,
-    get_address_parser_in_directory,
-    indices_splitting,
-    handle_model_name,
-    infer_model_type,
-)
 from .. import validate_data_to_parse
-from ..converter import TagsConverter
-from ..converter import fasttext_data_padding, bpemb_data_padding, DataTransform
+from ..converter import DataTransform, TagsConverter, bpemb_data_padding, fasttext_data_padding
 from ..dataset_container import DatasetContainer
-from ..embeddings_models import BPEmbEmbeddingsModel
-from ..embeddings_models import FastTextEmbeddingsModel
-from ..embeddings_models import MagnitudeEmbeddingsModel
-from ..fasttext_tools import download_fasttext_embeddings
-from ..fasttext_tools import download_fasttext_magnitude_embeddings
-from ..metrics import nll_loss, accuracy
+from ..embeddings_models import BPEmbEmbeddingsModel, FastTextEmbeddingsModel, MagnitudeEmbeddingsModel
+from ..fasttext_tools import download_fasttext_embeddings, download_fasttext_magnitude_embeddings
+from ..metrics import accuracy, nll_loss
 from ..network.bpemb_seq2seq import BPEmbSeq2SeqModel
 from ..network.fasttext_seq2seq import FastTextSeq2SeqModel
 from ..preprocessing import AddressCleaner
 from ..tools import CACHE_PATH, valid_poutyne_version
-from ..vectorizer import FastTextVectorizer, BPEmbVectorizer
-from ..vectorizer import TrainVectorizer
+from ..vectorizer import BPEmbVectorizer, FastTextVectorizer, TrainVectorizer
 from ..vectorizer.magnitude_vectorizer import MagnitudeVectorizer
+from . import formatted_parsed_address
+from .capturing import Capturing
+from .formatted_parsed_address import FormattedParsedAddress
+from .tools import (
+    get_address_parser_in_directory,
+    get_files_in_directory,
+    handle_model_name,
+    indices_splitting,
+    infer_model_type,
+    load_tuple_to_device,
+    no_ssl_verification,
+    pretrained_parser_in_directory,
+    validate_if_new_prediction_tags,
+    validate_if_new_seq2seq_params,
+)
 
 _pre_trained_tags_to_idx = {
     "StreetNumber": 0,
@@ -1064,21 +1060,24 @@ class AddressParser:
             )
 
         elif "bpemb" in self.model_type:
-            embeddings_model = BPEmbEmbeddingsModel(verbose=verbose, cache_dir=cache_dir)
-            self.vectorizer = BPEmbVectorizer(embeddings_model=embeddings_model)
+            # hotfix until https://github.com/bheinzerling/bpemb/issues/63
+            # is resolved.
+            with no_ssl_verification():
+                embeddings_model = BPEmbEmbeddingsModel(verbose=verbose, cache_dir=cache_dir)
+                self.vectorizer = BPEmbVectorizer(embeddings_model=embeddings_model)
 
-            self.data_converter = bpemb_data_padding
+                self.data_converter = bpemb_data_padding
 
-            self.model = BPEmbSeq2SeqModel(
-                cache_dir=cache_dir,
-                device=self.device,
-                output_size=prediction_layer_len,
-                verbose=verbose,
-                path_to_retrained_model=path_to_retrained_model,
-                attention_mechanism=attention_mechanism,
-                offline=offline,
-                **seq2seq_kwargs,
-            )
+                self.model = BPEmbSeq2SeqModel(
+                    cache_dir=cache_dir,
+                    device=self.device,
+                    output_size=prediction_layer_len,
+                    verbose=verbose,
+                    path_to_retrained_model=path_to_retrained_model,
+                    attention_mechanism=attention_mechanism,
+                    offline=offline,
+                    **seq2seq_kwargs,
+                )
         else:
             raise NotImplementedError(
                 f"There is no {self.model_type} network implemented. Value should be: "

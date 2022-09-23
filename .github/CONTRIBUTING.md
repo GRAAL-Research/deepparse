@@ -25,7 +25,7 @@ In short, when you submit code changes, your submissions are understood to be un
 
 ## Write bug reports with detail, background, and sample code
 
-We use GitHub issues to track public bugs. Report a bug by [opening a new issue](https://github.com/GRAAL-Research/deepparse/issues). You should use one of our [proposed templates](https://github.com/GRAAL-Research/deepparse/tree/master/.github/ISSUE_TEMPLATE) when appropriate; they are integrated with GitHub and do most of the formatting for you. It's that easy!
+We use GitHub issues to track public bugs. Report a bug by [opening a new issue](https://github.com/GRAAL-Research/deepparse/issues). You should use one of our [proposed templates](https://github.com/GRAAL-Research/deepparse/tree/main/.github/ISSUE_TEMPLATE) when appropriate; they are integrated with GitHub and do most of the formatting for you. It's that easy!
 
 **Great Bug Reports** tend to have:
 
@@ -77,15 +77,15 @@ python setup.py develop
 
 ## Use a Consistent Coding Style
 
-All of the code is formatted using [black](https://black.readthedocs.io) with the associated [config file](https://github.com/GRAAL-Research/deepparse/blob/master/pyproject.toml). In order to format the code of your submission, simply run
-> See the [styling requirements](https://github.com/GRAAL-Research/deepparse/blob/master/styling_requirements.txt) for the proper black version to use.
+All of the code is formatted using [black](https://black.readthedocs.io) with the associated [config file](https://github.com/GRAAL-Research/deepparse/blob/main/pyproject.toml). In order to format the code of your submission, simply run
+> See the [styling requirements](https://github.com/GRAAL-Research/deepparse/blob/main/styling_requirements.txt) for the proper black version to use.
 
 ``` shell
 black .
 ```
 
-We also have our own `pylint` [config file](https://github.com/GRAAL-Research/deepparse/blob/master/.pylintrc). Try not to introduce code incoherences detected by the linting. You can run the linting procedure with
-> See the [styling requirements](https://github.com/GRAAL-Research/deepparse/blob/master/styling_requirements.txt) for the proper pylint version to use.
+We also have our own `pylint` [config file](https://github.com/GRAAL-Research/deepparse/blob/main/.pylintrc). Try not to introduce code incoherences detected by the linting. You can run the linting procedure with
+> See the [styling requirements](https://github.com/GRAAL-Research/deepparse/blob/main/styling_requirements.txt) for the proper pylint version to use.
 
 ``` shell
 pylint deepparse

@@ -1,5 +1,5 @@
 <div align="center">
-<img src="https://raw.githubusercontent.com/GRAAL-Research/deepparse/master/docs/source/_static/logos/deepparse.png" width="220" height="91"/>
+<img src="https://raw.githubusercontent.com/GRAAL-Research/deepparse/main/docs/source/_static/logos/deepparse.png" width="220" height="91"/>
 
 
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/deepparse)](https://pypi.org/project/deepparse)
@@ -12,7 +12,7 @@
 [![Tests](https://github.com/GRAAL-Research/deepparse/actions/workflows/tests.yml/badge.svg?branch=stable)](https://github.com/GRAAL-Research/deepparse/actions/workflows/tests.yml)
 [![Docs](https://github.com/GRAAL-Research/deepparse/actions/workflows/docs.yml/badge.svg?branch=stable)](https://github.com/GRAAL-Research/deepparse/actions/workflows/docs.yml)
 
-[![codecov](https://codecov.io/gh/GRAAL-Research/deepparse/branch/master/graph/badge.svg)](https://codecov.io/gh/GRAAL-Research/deepparse)
+[![codecov](https://codecov.io/gh/GRAAL-Research/deepparse/branch/main/graph/badge.svg)](https://codecov.io/gh/GRAAL-Research/deepparse)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/62464699ff0740d0b8064227c4274b98)](https://www.codacy.com/gh/GRAAL-Research/deepparse/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=GRAAL-Research/deepparse&amp;utm_campaign=Badge_Grade)
 <a href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg"></a>
 
@@ -210,7 +210,7 @@ parse <parsing_model> <dataset_path> <export_file_name>
 
 ### Parse Addresses Using Your Own Retrained Model
 
-> See [here](https://github.com/GRAAL-Research/deepparse/blob/master/examples/retrained_model_parsing.py) for a complete
+> See [here](https://github.com/GRAAL-Research/deepparse/blob/main/examples/retrained_model_parsing.py) for a complete
 > example.
 
 ```python
@@ -225,9 +225,9 @@ address_parser("350 rue des Lilas Ouest Québec Québec G1L 1B6")
 
 ### Retrain a Model
 
-> See [here](https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py) for a complete example
+> See [here](https://github.com/GRAAL-Research/deepparse/blob/main/examples/fine_tuning.py) for a complete example
 > using Pickle
-> and [here](https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning_with_csv_dataset.py)
+> and [here](https://github.com/GRAAL-Research/deepparse/blob/main/examples/fine_tuning_with_csv_dataset.py)
 > for a complete example using CSV.
 
 ```python
@@ -264,7 +264,7 @@ address_parser.retrain(
 
 ### Retrain a Model With an Attention Mechanism
 
-> See [here](https://github.com/GRAAL-Research/deepparse/blob/master/examples/retrain_attention_model.py) for a complete
+> See [here](https://github.com/GRAAL-Research/deepparse/blob/main/examples/retrain_attention_model.py) for a complete
 > example.
 
 ```python
@@ -278,7 +278,7 @@ address_parser.retrain(training_container, train_ratio=0.8, epochs=5, batch_size
 
 ### Retrain a Model With New Tags
 
-> See [here](https://github.com/GRAAL-Research/deepparse/blob/master/examples/retrain_with_new_prediction_tags.py) for a
+> See [here](https://github.com/GRAAL-Research/deepparse/blob/main/examples/retrain_with_new_prediction_tags.py) for a
 > complete example.
 
 ```python
@@ -294,7 +294,7 @@ address_parser.retrain(
 
 ### Retrain a Seq2Seq Model From Scratch
 
-> See [here](https://github.com/GRAAL-Research/deepparse/blob/master/examples/retrain_with_new_seq2seq_params.py) for
+> See [here](https://github.com/GRAAL-Research/deepparse/blob/main/examples/retrain_with_new_seq2seq_params.py) for
 > a complete example.
 
 ```python
@@ -375,12 +375,12 @@ and this one for the package;
 ## Contributing to Deepparse
 
 We welcome user input, whether it is regarding bugs found in the library or feature propositions ! Make sure to have a
-look at our [contributing guidelines](https://github.com/GRAAL-Research/deepparse/blob/master/.github/CONTRIBUTING.md)
+look at our [contributing guidelines](https://github.com/GRAAL-Research/deepparse/blob/main/.github/CONTRIBUTING.md)
 for more details on this matter.
 
 ## License
 
 Deepparse is LGPLv3 licensed, as found in
-the [LICENSE file](https://github.com/GRAAL-Research/deepparse/blob/master/LICENSE).
+the [LICENSE file](https://github.com/GRAAL-Research/deepparse/blob/main/LICENSE).
 
 ------------------

@@ -618,7 +618,7 @@ You can also use our cli to parse addresses using:
 Parse Addresses Using Your Own Retrained Model
 **********************************************
 
-See `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/retrained_model_parsing.py>`_ for a complete example.
+See `here <https://github.com/GRAAL-Research/deepparse/blob/main/examples/retrained_model_parsing.py>`_ for a complete example.
 
 .. code-block:: python
 
@@ -629,8 +629,8 @@ See `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/retr
 
 Retrain a Model
 ***************
-See `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py>`_ for a complete example
-using Pickle and `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning_with_csv_dataset.py>`_
+See `here <https://github.com/GRAAL-Research/deepparse/blob/main/examples/fine_tuning.py>`_ for a complete example
+using Pickle and `here <https://github.com/GRAAL-Research/deepparse/blob/main/examples/fine_tuning_with_csv_dataset.py>`_
 for a complete example using CSV.
 
 .. code-block:: python
@@ -654,7 +654,7 @@ class name) when reloading it.
 
 Retrain a Model With an Attention Mechanism
 *******************************************
-See `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/retrain_attention_model.py>`_ for a complete example.
+See `here <https://github.com/GRAAL-Research/deepparse/blob/main/examples/retrain_attention_model.py>`_ for a complete example.
 
 .. code-block:: python
 
@@ -666,7 +666,7 @@ See `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/retr
 
 Retrain a Model With New Tags
 *****************************
-See `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/retrain_with_new_prediction_tags.py>`_ for a complete example.
+See `here <https://github.com/GRAAL-Research/deepparse/blob/main/examples/retrain_with_new_prediction_tags.py>`_ for a complete example.
 
 .. code-block:: python
 
@@ -677,7 +677,7 @@ See `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/retr
 Retrain a Seq2Seq Model From Scratch
 ************************************
 
-See  `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/retrain_with_new_seq2seq_params.py>`_ for
+See  `here <https://github.com/GRAAL-Research/deepparse/blob/main/examples/retrain_with_new_seq2seq_params.py>`_ for
 a complete example.
 
 .. code-block:: python
@@ -749,12 +749,12 @@ Contributing to Deepparse
 =========================
 
 We welcome user input, whether it is regarding bugs found in the library or feature propositions ! Make sure to have a
-look at our `contributing guidelines <https://github.com/GRAAL-Research/deepparse/blob/master/.github/CONTRIBUTING.md>`_ for more
+look at our `contributing guidelines <https://github.com/GRAAL-Research/deepparse/blob/main/.github/CONTRIBUTING.md>`_ for more
 details on this matter.
 
 License
 =======
-Deepparse is LGPLv3 licensed, as found in the `LICENSE file <https://github.com/GRAAL-Research/deepparse/blob/master/LICENSE>`_.
+Deepparse is LGPLv3 licensed, as found in the `LICENSE file <https://github.com/GRAAL-Research/deepparse/blob/main/LICENSE>`_.
 
 
 API Reference

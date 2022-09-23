@@ -128,7 +128,7 @@ else
   echo "Fail for Python 3.10"
 fi
 
-if [ $return_status -eq 1]; then
+if [ $return_status -eq 1 ]; then
   exit 1
 else
   exit 0

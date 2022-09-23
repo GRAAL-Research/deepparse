@@ -19,7 +19,7 @@ from unittest.mock import patch, MagicMock
 import torch
 from torch import device
 
-from deepparse.data_error import DataError
+from deepparse.errors.data_error import DataError
 from deepparse.parser import FormattedParsedAddress, formatted_parsed_address
 from deepparse.parser.address_parser import AddressParser
 from tests.parser.base import AddressParserPredictTestCase
@@ -224,7 +224,9 @@ class AddressParserTest(AddressParserPredictTestCase):
                 verbose=self.verbose,
             )
 
-            downloader_mock.assert_called_with(cache_dir=self.fasttext_download_path, verbose=self.verbose)
+            downloader_mock.assert_called_with(
+                cache_dir=self.fasttext_download_path, verbose=self.verbose, offline=False
+            )
 
         with patch("deepparse.parser.address_parser.download_fasttext_embeddings") as downloader_mock:
             AddressParser(
@@ -233,7 +235,9 @@ class AddressParserTest(AddressParserPredictTestCase):
                 verbose=self.verbose,
             )
 
-            downloader_mock.assert_called_with(cache_dir=self.fasttext_download_path, verbose=self.verbose)
+            downloader_mock.assert_called_with(
+                cache_dir=self.fasttext_download_path, verbose=self.verbose, offline=False
+            )
 
     @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
     @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
@@ -248,7 +252,9 @@ class AddressParserTest(AddressParserPredictTestCase):
                 attention_mechanism=True,
             )
 
-            downloader_mock.assert_called_with(cache_dir=self.fasttext_download_path, verbose=self.verbose)
+            downloader_mock.assert_called_with(
+                cache_dir=self.fasttext_download_path, verbose=self.verbose, offline=False
+            )
 
     @patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel")
     def test_givenABestModelType_whenInstantiatingParser_thenInstantiateBPEmbEmbeddingsModelWithCorrectParameters(
@@ -328,6 +334,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                 verbose=self.verbose,
                 path_to_retrained_model=None,
                 attention_mechanism=False,
+                offline=False,
             )
 
     @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
@@ -350,6 +357,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                 verbose=self.verbose,
                 path_to_retrained_model=self.a_model_path,
                 attention_mechanism=False,
+                offline=False,
             )
 
     @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
@@ -374,6 +382,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                 attention_mechanism=False,
                 encoder_hidden_size=512,
                 decoder_hidden_size=512,
+                offline=False,
             )
 
     @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
@@ -397,6 +406,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                 verbose=self.verbose,
                 path_to_retrained_model=self.a_model_path,
                 attention_mechanism=False,
+                offline=False,
             )
 
     @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
@@ -422,6 +432,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                 attention_mechanism=False,
                 encoder_hidden_size=512,
                 decoder_hidden_size=512,
+                offline=False,
             )
 
     @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
@@ -442,6 +453,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                 verbose=self.verbose,
                 path_to_retrained_model=None,
                 attention_mechanism=False,
+                offline=False,
             )
 
     @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
@@ -456,7 +468,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                 verbose=self.verbose,
             )
 
-            downloader.assert_called_with(cache_dir=self.fasttext_download_path, verbose=self.verbose)
+            downloader.assert_called_with(cache_dir=self.fasttext_download_path, verbose=self.verbose, offline=False)
 
     @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
     @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
@@ -470,7 +482,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                 verbose=self.verbose,
             )
 
-            downloader.assert_called_with(cache_dir=self.fasttext_download_path, verbose=self.verbose)
+            downloader.assert_called_with(cache_dir=self.fasttext_download_path, verbose=self.verbose, offline=False)
 
     @patch("deepparse.parser.address_parser.MagnitudeEmbeddingsModel")
     @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
@@ -484,7 +496,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                 verbose=self.verbose,
             )
 
-            downloader.assert_called_with(cache_dir=self.fasttext_download_path, verbose=self.verbose)
+            downloader.assert_called_with(cache_dir=self.fasttext_download_path, verbose=self.verbose, offline=False)
 
     @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
     def test_givenAFastestModelType_whenInstantiatingParser_thenInstantiateModelWithCorrectPath(self, model_mock):
@@ -624,6 +636,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                 verbose=self.verbose,
                 path_to_retrained_model=None,
                 attention_mechanism=False,
+                offline=False,
             )
 
     @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
@@ -645,6 +658,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                 verbose=self.verbose,
                 path_to_retrained_model=None,
                 attention_mechanism=False,
+                offline=False,
             )
 
     @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
@@ -1627,7 +1641,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                 verbose=self.verbose,
                 cache_dir=self.a_cache_dir,
             )
-            download_weights_mock.assert_called_with(verbose=self.verbose, cache_dir=self.a_cache_dir)
+            download_weights_mock.assert_called_with(verbose=self.verbose, cache_dir=self.a_cache_dir, offline=False)
 
     @patch("deepparse.parser.address_parser.torch.save")
     @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")

@@ -2,7 +2,7 @@ import torch
 from poutyne.framework.metrics import acc
 
 
-def accuracy(pred: torch.Tensor, ground_truth: torch.Tensor):
+def accuracy(pred: torch.Tensor, ground_truth: torch.Tensor) -> float:
     """
     Accuracy per tag.
     """

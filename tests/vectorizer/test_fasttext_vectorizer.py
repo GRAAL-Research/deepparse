@@ -2,7 +2,7 @@ import unittest
 from unittest import TestCase
 from unittest.mock import MagicMock
 
-from deepparse.data_error import DataError
+from deepparse.errors.data_error import DataError
 from deepparse.embeddings_models import EmbeddingsModel
 from deepparse.vectorizer import FastTextVectorizer
 

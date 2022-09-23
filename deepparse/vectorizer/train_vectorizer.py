@@ -1,7 +1,7 @@
 from typing import List, Iterable
 
-from deepparse.converter import TagsConverter
-from deepparse.vectorizer import Vectorizer
+from ..converter import TagsConverter
+from ..vectorizer import Vectorizer
 
 
 class TrainVectorizer:

@@ -7,7 +7,7 @@ import pandas as pd
 from torch.utils.data import Dataset
 
 from .tools import former_python_list, validate_column_names
-from ..data_error import DataError
+from ..errors.data_error import DataError
 from ..data_validation import validate_if_any_empty, validate_if_any_whitespace_only, validate_if_any_none
 
 

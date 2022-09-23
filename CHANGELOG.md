@@ -256,6 +256,7 @@
 - Add Zenodo DOI
 
 ## 0.9
+- 
 
 - Add `save_model_weights` method to `AddressParser` to save model weights (PyTorch state dictionary)
 - Improve CI
@@ -270,5 +271,15 @@
 ## 0.9.1
 
 - Hotfix cli.download_model attention model bug
+
+## 0.9.2
+
+- Improve Deepparse server error handling and error output
+- Remove deprecated argument `saving_dir` in `download_fasttext_magnitude_embeddings`
+  and `download_fasttext_embeddings` functions
+- Add offline argument to remove verification of the latest version
+- Bug-fix cache handling in download model
+- Add `download_models` CLI function
+- [Temporary hot-fix BPEmb SSL certificate error](https://github.com/GRAAL-Research/deepparse/issues/156)
 
 ## dev

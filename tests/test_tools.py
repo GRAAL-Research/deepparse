@@ -21,6 +21,7 @@ from deepparse import (
     valid_poutyne_version,
     validate_data_to_parse,
     DataError,
+    ServerError,
 )
 from tests.base_capture_output import CaptureOutputTestCase
 from tests.base_file_exist import FileCreationTestCase
@@ -184,7 +185,7 @@ class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
             download_weights(model="fasttext", saving_dir="./", verbose=True)
 
         actual = self.test_out.getvalue().strip()
-        expected = "Downloading the weights for the network fasttext."
+        expected = "Downloading the pre-trained weights for the network fasttext."
 
         self.assertEqual(actual, expected)
 
@@ -194,9 +195,18 @@ class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
             download_weights(model="bpemb", saving_dir="./", verbose=True)
 
         actual = self.test_out.getvalue().strip()
-        expected = "Downloading the weights for the network bpemb."
+        expected = "Downloading the pre-trained weights for the network bpemb."
 
         self.assertEqual(actual, expected)
+
+    def test_givenModelWeightsToDownload_whenDownloadHTTPTimeOut_thenRaiseError(self):
+        response_mock = MagicMock()
+
+        with patch("deepparse.tools.download_from_public_repository") as downloader:
+            downloader.side_effect = requests.exceptions.ConnectTimeout("An error message", response=response_mock)
+
+            with self.assertRaises(ServerError):
+                download_weights(model="fasttext", saving_dir="./", verbose=self.verbose)
 
     @patch("deepparse.tools.poutyne")
     def test_givenPoutyneVersion1_1_1_givenHandlePoutyneVersion_thenReturnVersion1_1(self, poutyne_mock):

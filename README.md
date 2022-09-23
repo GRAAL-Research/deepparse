@@ -7,7 +7,6 @@
 [![PyPI Status](https://pepy.tech/badge/deepparse)](https://pepy.tech/project/deepparse)
 [![Downloads](https://pepy.tech/badge/deepparse/month)](https://pepy.tech/project/deepparse)
 
-
 [![Formatting](https://github.com/GRAAL-Research/deepparse/actions/workflows/formatting.yml/badge.svg?branch=stable)](https://github.com/GRAAL-Research/deepparse/actions/workflows/formatting.yml)
 [![Linting](https://github.com/GRAAL-Research/deepparse/actions/workflows/linting.yml/badge.svg?branch=stable)](https://github.com/GRAAL-Research/deepparse/actions/workflows/linting.yml)
 [![Tests](https://github.com/GRAAL-Research/deepparse/actions/workflows/tests.yml/badge.svg?branch=stable)](https://github.com/GRAAL-Research/deepparse/actions/workflows/tests.yml)
@@ -192,27 +191,27 @@ address_parser(addresses_to_parse)
 
 The default predictions tags are the following
 
-- "StreetNumber": for the street number,
-- "StreetName": for the name of the street,
-- "Unit": for the unit (such as apartment),
-- "Municipality": for the municipality,
-- "Province": for the province or local region,
-- "PostalCode": for the postal code,
-- "Orientation": for the street orientation (e.g. west, east),
-- "GeneralDelivery": for other delivery information.
+- `"StreetNumber"`: for the street number,
+- `"StreetName"`: for the name of the street,
+- `"Unit"`: for the unit (such as apartment),
+- `"Municipality"`: for the municipality,
+- `"Province"`: for the province or local region,
+- `"PostalCode"`: for the postal code,
+- `"Orientation"`: for the street orientation (e.g. west, east),
+- `"GeneralDelivery"`: for other delivery information.
 
 ### Parse Addresses From the Command Line
 
 You can also use our cli to parse addresses using:
 
 ```sh
-
-    parse <parsing_model> <dataset_path> <export_file_name>
+parse <parsing_model> <dataset_path> <export_file_name>
 ```
 
 ### Parse Addresses Using Your Own Retrained Model
 
-> See [here](https://github.com/GRAAL-Research/deepparse/blob/master/examples/retrained_model_parsing.py) for a complete example.
+> See [here](https://github.com/GRAAL-Research/deepparse/blob/master/examples/retrained_model_parsing.py) for a complete
+> example.
 
 ```python
 address_parser = AddressParser(
@@ -227,8 +226,9 @@ address_parser("350 rue des Lilas Ouest Québec Québec G1L 1B6")
 ### Retrain a Model
 
 > See [here](https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning.py) for a complete example
-using Pickle and [here](https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning_with_csv_dataset.py)
-for a complete example using CSV.
+> using Pickle
+> and [here](https://github.com/GRAAL-Research/deepparse/blob/master/examples/fine_tuning_with_csv_dataset.py)
+> for a complete example using CSV.
 
 ```python
 # We will retrain the fasttext version of our pretrained model.
@@ -249,7 +249,7 @@ address_parser.retrain(
 )
 ```
 
-Or you can also give a specific name to the retrained model. This name will be use as the model name (for print and 
+Or you can also give a specific name to the retrained model. This name will be use as the model name (for print and
 class name) when reloading it.
 
 ```python
@@ -264,7 +264,8 @@ address_parser.retrain(
 
 ### Retrain a Model With an Attention Mechanism
 
-> See [here](https://github.com/GRAAL-Research/deepparse/blob/master/examples/retrain_attention_model.py) for a complete example.
+> See [here](https://github.com/GRAAL-Research/deepparse/blob/master/examples/retrain_attention_model.py) for a complete
+> example.
 
 ```python
 # We will retrain the fasttext version of our pretrained model.
@@ -277,7 +278,8 @@ address_parser.retrain(training_container, train_ratio=0.8, epochs=5, batch_size
 
 ### Retrain a Model With New Tags
 
-> See [here](https://github.com/GRAAL-Research/deepparse/blob/master/examples/retrain_with_new_prediction_tags.py) for a complete example.
+> See [here](https://github.com/GRAAL-Research/deepparse/blob/master/examples/retrain_with_new_prediction_tags.py) for a
+> complete example.
 
 ```python
 address_components = {"ATag": 0, "AnotherTag": 1, "EOS": 2}
@@ -320,7 +322,7 @@ Here are the URLs to download our pretrained models directly
 Or you can use our cli to download our pretrained models directly using:
 
 ```sh
-    download_model <model_name>
+download_model <model_name>
 ```
 
 ------------------

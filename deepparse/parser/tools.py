@@ -1,6 +1,6 @@
 import math
 import os
-from typing import List, Tuple, OrderedDict
+from typing import List, OrderedDict, Tuple
 
 import numpy as np
 import torch
@@ -35,7 +35,7 @@ def get_address_parser_in_directory(files_in_directory: List[str]) -> List:
     ]
 
 
-def load_tuple_to_device(padded_address: Tuple, device: torch.device):
+def load_tuple_to_device(padded_address: Tuple, device: torch.device) -> Tuple:
     # pylint: disable=consider-using-generator
     """
     Function to load the torch components of a tuple to a device. Since tuples are immutable, we return a new tuple with
@@ -44,7 +44,7 @@ def load_tuple_to_device(padded_address: Tuple, device: torch.device):
     return tuple([element.to(device) if isinstance(element, torch.Tensor) else element for element in padded_address])
 
 
-def indices_splitting(num_data: int, train_ratio: float, seed: int = 42):
+def indices_splitting(num_data: int, train_ratio: float, seed: int = 42) -> Tuple[List, List]:
     """
     Split indices into train and valid
     """
@@ -106,7 +106,7 @@ def handle_model_name(model_type: str, attention_mechanism: bool) -> Tuple[str, 
     return model_type, formatted_name
 
 
-def infer_model_type(checkpoint_weights: OrderedDict, attention_mechanism: bool) -> (str, bool):
+def infer_model_type(checkpoint_weights: OrderedDict, attention_mechanism: bool) -> Tuple[str, bool]:
     """
     Function to infer the model type using the weights' matrix.
     We first try to use the "model_type" key added by our retrain process.

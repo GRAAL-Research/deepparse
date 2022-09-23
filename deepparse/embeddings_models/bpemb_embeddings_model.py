@@ -1,8 +1,12 @@
+import contextlib
 import warnings
 from pathlib import Path
 
+import requests
 from bpemb import BPEmb
+
 from numpy.core.multiarray import ndarray
+from urllib3.exceptions import InsecureRequestWarning
 
 from .embeddings_model import EmbeddingsModel
 
@@ -24,7 +28,10 @@ class BPEmbEmbeddingsModel(EmbeddingsModel):
             # annoying scipy.sparcetools private module warnings removal
             # annoying boto warnings
             warnings.filterwarnings("ignore")
-            model = BPEmb(lang="multi", vs=100000, dim=300, cache_dir=Path(cache_dir))  # defaults parameters
+            # hotfix until https://github.com/bheinzerling/bpemb/issues/63
+            # is resolved.
+            with no_ssl_verification():
+                model = BPEmb(lang="multi", vs=100000, dim=300, cache_dir=Path(cache_dir))  # defaults parameters
         self.model = model
 
     def __call__(self, word: str) -> ndarray:
@@ -38,3 +45,41 @@ class BPEmbEmbeddingsModel(EmbeddingsModel):
             The BP embedding for a word.
         """
         return self.model.embed(word)
+
+
+@contextlib.contextmanager
+def no_ssl_verification():
+    """Context Manager to disable SSL verification when using ``requests`` library.
+
+    Reference: https://gist.github.com/ChenTanyi/0c47652bd916b61dc196968bca7dad1d.
+
+    Will be removed when https://github.com/bheinzerling/bpemb/issues/63 is resolved.
+    """
+    opened_adapters = set()
+    old_merge_environment_settings = requests.Session.merge_environment_settings
+
+    def merge_environment_settings(self, url, proxies, stream, verify, cert):  # pylint: disable=R0913
+        # Verification happens only once per connection, so we need to close
+        # all the opened adapters once we're done. Otherwise, the effects of
+        # verify=False persist beyond the end of this context manager.
+        opened_adapters.add(self.get_adapter(url))
+
+        settings = old_merge_environment_settings(self, url, proxies, stream, verify, cert)
+        settings["verify"] = False
+
+        return settings
+
+    requests.Session.merge_environment_settings = merge_environment_settings
+
+    try:
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", InsecureRequestWarning)
+            yield
+    finally:
+        requests.Session.merge_environment_settings = old_merge_environment_settings
+
+        for adapter in opened_adapters:
+            try:
+                adapter.close()
+            except BaseException as err:  # pylint: disable=W0702
+                pass

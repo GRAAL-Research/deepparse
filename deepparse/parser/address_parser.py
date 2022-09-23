@@ -17,6 +17,20 @@ from poutyne.framework import Experiment
 from torch.optim import SGD
 from torch.utils.data import DataLoader, Subset
 
+from . import formatted_parsed_address
+from .capturing import Capturing
+from .formatted_parsed_address import FormattedParsedAddress
+from .tools import (
+    get_address_parser_in_directory,
+    get_files_in_directory,
+    handle_model_name,
+    indices_splitting,
+    infer_model_type,
+    load_tuple_to_device,
+    pretrained_parser_in_directory,
+    validate_if_new_prediction_tags,
+    validate_if_new_seq2seq_params,
+)
 from .. import validate_data_to_parse
 from ..converter import DataTransform, TagsConverter, bpemb_data_padding, fasttext_data_padding
 from ..dataset_container import DatasetContainer
@@ -29,21 +43,6 @@ from ..preprocessing import AddressCleaner
 from ..tools import CACHE_PATH, valid_poutyne_version
 from ..vectorizer import BPEmbVectorizer, FastTextVectorizer, TrainVectorizer
 from ..vectorizer.magnitude_vectorizer import MagnitudeVectorizer
-from . import formatted_parsed_address
-from .capturing import Capturing
-from .formatted_parsed_address import FormattedParsedAddress
-from .tools import (
-    get_address_parser_in_directory,
-    get_files_in_directory,
-    handle_model_name,
-    indices_splitting,
-    infer_model_type,
-    load_tuple_to_device,
-    no_ssl_verification,
-    pretrained_parser_in_directory,
-    validate_if_new_prediction_tags,
-    validate_if_new_seq2seq_params,
-)
 
 _pre_trained_tags_to_idx = {
     "StreetNumber": 0,
@@ -1060,24 +1059,21 @@ class AddressParser:
             )
 
         elif "bpemb" in self.model_type:
-            # hotfix until https://github.com/bheinzerling/bpemb/issues/63
-            # is resolved.
-            with no_ssl_verification():
-                embeddings_model = BPEmbEmbeddingsModel(verbose=verbose, cache_dir=cache_dir)
-                self.vectorizer = BPEmbVectorizer(embeddings_model=embeddings_model)
+            embeddings_model = BPEmbEmbeddingsModel(verbose=verbose, cache_dir=cache_dir)
+            self.vectorizer = BPEmbVectorizer(embeddings_model=embeddings_model)
 
-                self.data_converter = bpemb_data_padding
+            self.data_converter = bpemb_data_padding
 
-                self.model = BPEmbSeq2SeqModel(
-                    cache_dir=cache_dir,
-                    device=self.device,
-                    output_size=prediction_layer_len,
-                    verbose=verbose,
-                    path_to_retrained_model=path_to_retrained_model,
-                    attention_mechanism=attention_mechanism,
-                    offline=offline,
-                    **seq2seq_kwargs,
-                )
+            self.model = BPEmbSeq2SeqModel(
+                cache_dir=cache_dir,
+                device=self.device,
+                output_size=prediction_layer_len,
+                verbose=verbose,
+                path_to_retrained_model=path_to_retrained_model,
+                attention_mechanism=attention_mechanism,
+                offline=offline,
+                **seq2seq_kwargs,
+            )
         else:
             raise NotImplementedError(
                 f"There is no {self.model_type} network implemented. Value should be: "

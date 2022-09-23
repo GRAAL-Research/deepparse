@@ -49,7 +49,7 @@ class FormattedParsedAddress:
         ``address_parsed_components`` attribute.
     """
 
-    def __init__(self, address: Dict):
+    def __init__(self, address: Dict) -> None:
         for key in FIELDS:
             setattr(self, key, None)
 
@@ -259,7 +259,7 @@ class FormattedParsedAddress:
                 # we merge the previous components with the new element
                 setattr(self, tag, " ".join([getattr(self, tag), address_component]))
 
-    def _get_attr_repr(self, name):
+    def _get_attr_repr(self, name: str) -> str:
         value = getattr(self, name)
         if value is not None:
             return name + "=" + repr(getattr(self, name))

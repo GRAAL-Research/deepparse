@@ -256,6 +256,7 @@
 - Add Zenodo DOI
 
 ## 0.9
+- 
 
 - Add `save_model_weights` method to `AddressParser` to save model weights (PyTorch state dictionary)
 - Improve CI
@@ -272,3 +273,10 @@
 - Hotfix cli.download_model attention model bug
 
 ## dev
+
+- Improve Deepparse server error handling and error output
+- Remove deprecated argument `saving_dir` in `download_fasttext_magnitude_embeddings`
+  and `download_fasttext_embeddings` functions
+- Add offline argument to remove verification of the latest version
+- Bug-fix cache handling in download model
+- Add `download_models` CLI function

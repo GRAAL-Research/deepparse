@@ -7,7 +7,7 @@ on:
     types: [ created ]
   schedule:
     # Run the tests at 00:00 each week on sunday
-    - cron: '0 0 * * 0'
+    - cron: "0 0 * * 0"
 
 jobs:
   build:

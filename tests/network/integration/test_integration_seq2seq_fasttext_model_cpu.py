@@ -5,9 +5,11 @@
 import os
 import unittest
 from unittest import skipIf
+from unittest.mock import patch
 
 import torch
 
+from deepparse import CACHE_PATH
 from deepparse.network import FastTextSeq2SeqModel
 from ..integration.base import Seq2SeqIntegrationTestCase
 
@@ -77,6 +79,16 @@ class FastTextSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
         predictions = self.seq2seq_model.forward(self.to_predict_tensor, self.a_lengths_tensor, self.a_target_vector)
 
         self.assert_output_is_valid_dim(predictions, output_dim=self.re_trained_output_dim)
+
+    @patch("deepparse.network.seq2seq.download_weights")
+    def test_givenAnOfflineSeq2SeqModel_whenInit_thenDontCallDownloadWeights(self, download_weights_mock):
+        # Test if functions latest_version and download_weights
+
+        default_cache = CACHE_PATH
+
+        self.seq2seq_model = FastTextSeq2SeqModel(default_cache, self.a_cpu_device, verbose=self.verbose, offline=True)
+
+        download_weights_mock.assert_not_called()
 
 
 if __name__ == "__main__":

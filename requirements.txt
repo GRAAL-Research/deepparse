@@ -4,7 +4,8 @@ numpy
 requests
 pymagnitude-light
 colorama>=0.4.3
-Poutyne
+poutyne
 gensim>=4.2.0
 fasttext
 pandas
+urllib3

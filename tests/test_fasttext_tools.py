@@ -1,5 +1,5 @@
 # Since we use a patch as model mock we skip the unused argument error
-# pylint: disable=unused-argument
+# pylint: disable=unused-argument, too-many-public-methods
 
 # Pylint error for TemporaryDirectory ask for with statement
 # pylint: disable=consider-using-with
@@ -48,9 +48,51 @@ class FastTextToolsTests(CaptureOutputTestCase):
 
     @patch("os.path.isfile")
     def test_givenAFasttextEmbeddingsLocal_whenDownloadFasttextEmbeddings_thenReturnFilePath(self, isfile_mock):
+        isfile_mock.return_value = True
+
         expected = self.a_fasttext_file_name_path
         actual = download_fasttext_embeddings(self.a_directory_path)
         self.assertEqual(expected, actual)
+
+    @patch("os.path.isfile")
+    def test_givenAFasttextEmbeddingsLocal_whenDownloadFasttextEmbeddingsOffline_thenReturnFilePath(self, isfile_mock):
+        isfile_mock.return_value = True
+
+        expected = self.a_fasttext_file_name_path
+
+        actual = download_fasttext_embeddings(self.a_directory_path, offline=True)
+        self.assertEqual(expected, actual)
+
+    @patch("os.path.isfile")
+    def test_givenAFasttextEmbeddingsLocal_whenDownloadFasttextEmbeddingsOffline_thenDontCallDownloadGZModel(
+        self, isfile_mock
+    ):
+        isfile_mock.return_value = True
+
+        with patch("deepparse.fasttext_tools.download_gz_model") as download_gz_model_mock:
+            download_fasttext_embeddings(self.a_directory_path, offline=True)
+            download_gz_model_mock.assert_not_called()
+
+    @patch("os.path.isfile")
+    def test_givenAFasttextEmbeddingsNotLocal_whenDownloadFasttextEmbeddingsOffline_thenReturnFilePath(
+        self, isfile_mock
+    ):
+        isfile_mock.return_value = False
+
+        expected = self.a_fasttext_file_name_path
+
+        actual = download_fasttext_embeddings(self.a_directory_path, offline=True)
+        self.assertEqual(expected, actual)
+
+    @patch("os.path.isfile")
+    def test_givenAFasttextEmbeddingsNotLocal_whenDownloadFasttextEmbeddingsOffline_thenDontCallDownloadGZModel(
+        self, isfile_mock
+    ):
+        isfile_mock.return_value = False
+
+        with patch("deepparse.fasttext_tools.download_gz_model") as download_gz_model_mock:
+            download_fasttext_embeddings(self.a_directory_path, offline=True)
+            download_gz_model_mock.assert_not_called()
 
     @patch("os.path.isfile")
     def test_givenAFasttextEmbeddingsNotLocal_whenDownloadFasttextEmbeddings_thenDownloadIt(self, isfile_mock):
@@ -71,9 +113,52 @@ class FastTextToolsTests(CaptureOutputTestCase):
     def test_givenAFasttextLightEmbeddingsLocal_whenDownloadFasttextLightEmbeddings_thenReturnFilePath(
         self, isfile_mock
     ):
+        isfile_mock.return_value = True
         expected = self.a_fasttext_light_name_path
         actual = download_fasttext_magnitude_embeddings(self.a_directory_path)
         self.assertEqual(expected, actual)
+
+    @patch("os.path.isfile")
+    def test_givenAFasttextLightEmbeddingsLocal_whenDownloadFasttextEmbeddingsOffline_thenReturnFilePath(
+        self, isfile_mock
+    ):
+        isfile_mock.return_value = True
+
+        expected = self.a_fasttext_light_name_path
+
+        actual = download_fasttext_magnitude_embeddings(self.a_directory_path, offline=True)
+        self.assertEqual(expected, actual)
+
+    @patch("os.path.isfile")
+    def test_givenAFasttextLightEmbeddingsLocal_whenDownloadFasttextEmbeddingsOffline_thenDontCallDownloadGZModel(
+        self, isfile_mock
+    ):
+        isfile_mock.return_value = True
+
+        with patch("deepparse.fasttext_tools.download_from_public_repository") as download_model_mock:
+            download_fasttext_magnitude_embeddings(self.a_directory_path, offline=True)
+            download_model_mock.assert_not_called()
+
+    @patch("os.path.isfile")
+    def test_givenAFasttextLightEmbeddingsNotLocal_whenDownloadFasttextEmbeddingsOffline_thenReturnFilePath(
+        self, isfile_mock
+    ):
+        isfile_mock.return_value = False
+
+        expected = self.a_fasttext_light_name_path
+
+        actual = download_fasttext_magnitude_embeddings(self.a_directory_path, offline=True)
+        self.assertEqual(expected, actual)
+
+    @patch("os.path.isfile")
+    def test_givenAFasttextLightEmbeddingsNotLocal_whenDownloadFasttextEmbeddingsOffline_thenDontCallDownloadGZModel(
+        self, isfile_mock
+    ):
+        isfile_mock.return_value = False
+
+        with patch("deepparse.fasttext_tools.download_gz_model") as download_gz_model_mock:
+            download_fasttext_magnitude_embeddings(self.a_directory_path, offline=True)
+            download_gz_model_mock.assert_not_called()
 
     @patch("os.path.isfile")
     def test_givenAFasttextLightEmbeddingsNotLocal_whenDownloadFasttextLightEmbeddings_thenDownloadIt(

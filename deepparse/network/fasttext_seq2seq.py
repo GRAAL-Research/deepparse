@@ -41,6 +41,7 @@ class FastTextSeq2SeqModel(Seq2SeqModel):
         verbose: bool = True,
         path_to_retrained_model: Union[str, None] = None,
         pre_trained_weights: bool = True,
+        offline: bool = False,
     ) -> None:
         super().__init__(
             device,
@@ -61,7 +62,7 @@ class FastTextSeq2SeqModel(Seq2SeqModel):
             model_weights_name = "fasttext"
             if attention_mechanism:
                 model_weights_name += "_attention"
-            self._load_pre_trained_weights(model_weights_name, cache_dir=cache_dir)
+            self._load_pre_trained_weights(model_weights_name, cache_dir=cache_dir, offline=offline)
 
     def forward(
         self,

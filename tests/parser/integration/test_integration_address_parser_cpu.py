@@ -4,7 +4,7 @@
 import os
 from unittest import skipIf
 
-from deepparse.data_error import DataError
+from deepparse.errors.data_error import DataError
 from deepparse.parser import formatted_parsed_address
 from tests.parser.integration.base_predict import (
     AddressParserPredictBase,

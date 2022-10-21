@@ -710,7 +710,7 @@ class AddressParser:
             )
         except RuntimeError as error:
             list_of_file_path = os.listdir(path=".")
-            if len(list_of_file_path) > 0:
+            if list_of_file_path:
                 if pretrained_parser_in_directory(logging_path):
                     # Mean we might already have checkpoint in the training directory
                     files_in_directory = get_files_in_directory(logging_path)
@@ -1114,7 +1114,7 @@ class AddressParser:
 
     def _freeze_model_params(self, layers_to_freeze: Union[str]) -> None:
         layers_to_freeze = layers_to_freeze.lower()
-        if layers_to_freeze not in ["encoder", "decoder", "prediction_layer", "seq2seq"]:
+        if layers_to_freeze not in ("encoder", "decoder", "prediction_layer", "seq2seq"):
             raise ValueError(
                 f"{layers_to_freeze} freezing setting is not supported. Value can be 'encoder', 'decoder', "
                 f"'prediction_layer' and 'seq2seq'. See doc for more details."

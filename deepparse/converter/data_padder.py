@@ -16,7 +16,7 @@ class DataPadder:
         self.padding_value = padding_value
 
     def pad_word_embeddings_batch(
-        self, batch: List[Tuple[List, List]], teacher_forcing=False
+        self, batch: List[Tuple[List, List]], teacher_forcing: bool = False
     ) -> Union[
         Tuple[Tuple[torch.Tensor, torch.Tensor], torch.Tensor],
         Tuple[Tuple[torch.Tensor, torch.Tensor, torch.Tensor], torch.Tensor],
@@ -74,7 +74,7 @@ class DataPadder:
         return padded_sequences_vectors, lengths
 
     def pad_subword_embeddings_batch(
-        self, batch: List[Tuple[Tuple[List, List], List]], teacher_forcing=False
+        self, batch: List[Tuple[Tuple[List, List], List]], teacher_forcing: bool = False
     ) -> Union[
         Tuple[Tuple[torch.Tensor, List, torch.Tensor], torch.Tensor],
         Tuple[Tuple[torch.Tensor, List, torch.Tensor, torch.Tensor], torch.Tensor],

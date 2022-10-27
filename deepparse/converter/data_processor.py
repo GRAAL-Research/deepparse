@@ -20,8 +20,7 @@ class DataProcessor:
     def process_for_inference(self, addresses: List[str]):
         return self.sequences_padding_callback(self.vectorizer(addresses))
 
-    def process_for_training(self, addresses_and_targets: List[Tuple[str, List[str]]]):
-        # TODO: add teacher forcing
+    def process_for_training(self, addresses_and_targets: List[Tuple[str, List[str]]], teacher_forcing: bool = False):
         input_sequence = []
         target_sequence = []
 
@@ -34,4 +33,4 @@ class DataProcessor:
             target_tmp.append(self.tags_converter("EOS"))  # to append the End Of Sequence token
             target_sequence.append(target_tmp)
 
-        return self.batch_padding_callback(list(zip(input_sequence, target_sequence)))
+        return self.batch_padding_callback(list(zip(input_sequence, target_sequence)), teacher_forcing)

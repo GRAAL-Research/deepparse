@@ -1,6 +1,6 @@
 import unittest
 from unittest import TestCase
-from unittest.mock import MagicMock, Mock, call
+from unittest.mock import ANY, MagicMock, Mock, call
 
 import torch
 
@@ -62,21 +62,48 @@ class DataProcessorTest(TestCase):
             )
         )
 
-        self.fasttext_batch_padding_callback_mock = Mock(
-            return_value=(
+        self.fasttext_batch_padding_callback_mock = Mock()
+        self.fasttext_batch_padding_callback_mock.side_effect = (
+            lambda *params: (
                 (
                     self.a_padded_word_embedding_sequence,
                     self.a_sequence_lengths_list,
                 ),
                 self.a_padded_tag_targets,
             )
+            if params[1] == False
+            else (
+                (self.a_padded_word_embedding_sequence, self.a_sequence_lengths_list, self.a_padded_tag_targets),
+                self.a_padded_tag_targets,
+            )
         )
+
         self.bpemb_batch_padding_callback_mock = Mock(
             return_value=(
                 (
                     self.a_padded_subword_embedding_sequence,
                     self.a_word_decomposition_lengths_list,
                     self.a_sequence_lengths_list,
+                ),
+                self.a_padded_tag_targets,
+            )
+        )
+        self.bpemb_batch_padding_callback_mock.side_effect = (
+            lambda *params: (
+                (
+                    self.a_padded_subword_embedding_sequence,
+                    self.a_word_decomposition_lengths_list,
+                    self.a_sequence_lengths_list,
+                ),
+                self.a_padded_tag_targets,
+            )
+            if params[1] == False
+            else (
+                (
+                    self.a_padded_subword_embedding_sequence,
+                    self.a_word_decomposition_lengths_list,
+                    self.a_sequence_lengths_list,
+                    self.a_padded_tag_targets,
                 ),
                 self.a_padded_tag_targets,
             )
@@ -181,7 +208,7 @@ class DataProcessorTest(TestCase):
         processor.process_for_training(self.a_address_and_tags_list)
 
         self.fasttext_batch_padding_callback_mock.assert_called_once_with(
-            list(zip(self.a_word_embedding_sequence, self.a_tag_targets_list))
+            list(zip(self.a_word_embedding_sequence, self.a_tag_targets_list)), ANY
         )
 
     def test_givenAFasttextEmbeddingContext_whenProcessingForTraining_thenShouldReturnCorrectPaddedEmbeddingSequencesAndTargets(
@@ -213,7 +240,7 @@ class DataProcessorTest(TestCase):
         processor.process_for_training(self.a_address_and_tags_list)
 
         self.bpemb_batch_padding_callback_mock.assert_called_once_with(
-            list(zip(self.a_subword_vectorized_sequence, self.a_tag_targets_list))
+            list(zip(self.a_subword_vectorized_sequence, self.a_tag_targets_list)), ANY
         )
 
     def test_givenABpembEmbeddingContext_whenProcessingForTraining_thenShouldReturnCorrectPaddedEmbeddingSequencesAndTargets(
@@ -247,6 +274,45 @@ class DataProcessorTest(TestCase):
 
         tags_converter_calls = [call(tag) for tags in self.a_tag_list for tag in tags + ["EOS"]]
         self.tags_converter_mock.assert_has_calls(tags_converter_calls)
+
+    def test_givenAFasttextEmbeddingContext_whenProcessingForTrainingWithTeacherForcing_thenShouldReturnCorrectPaddedEmbeddingSequencesAndTargets(
+        self,
+    ):
+        processor = DataProcessor(
+            self.fasttext_vectorizer_mock,
+            self.fasttext_sequences_padding_callback_mock,
+            self.fasttext_batch_padding_callback_mock,
+            self.tags_converter_mock,
+        )
+
+        (sequences, lengths, targets_input), targets = processor.process_for_training(
+            self.a_address_and_tags_list, teacher_forcing=True
+        )
+
+        self.assertTrue(torch.all(sequences.eq(self.a_padded_word_embedding_sequence)))
+        self.assertTrue(torch.all(lengths.eq(self.a_sequence_lengths_list)))
+        self.assertTrue(torch.all(targets_input.eq(self.a_padded_tag_targets)))
+        self.assertTrue(torch.all(targets.eq(self.a_padded_tag_targets)))
+
+    def test_givenABpembEmbeddingContext_whenProcessingForTrainingWithTeacherForcing_thenShouldReturnCorrectPaddedEmbeddingSequencesAndTargets(
+        self,
+    ):
+        processor = DataProcessor(
+            self.bpemb_vectorizer_mock,
+            self.bpemb_sequences_padding_callback_mock,
+            self.bpemb_batch_padding_callback_mock,
+            self.tags_converter_mock,
+        )
+
+        (sequences, word_decomposition_lengths, lengths, targets_input), targets = processor.process_for_training(
+            self.a_address_and_tags_list, teacher_forcing=True
+        )
+
+        self.assertTrue(torch.all(sequences.eq(self.a_padded_subword_embedding_sequence)))
+        self.assertEqual(word_decomposition_lengths, self.a_word_decomposition_lengths_list)
+        self.assertTrue(torch.all(lengths.eq(self.a_sequence_lengths_list)))
+        self.assertTrue(torch.all(targets_input.eq(self.a_padded_tag_targets)))
+        self.assertTrue(torch.all(targets.eq(self.a_padded_tag_targets)))
 
 
 if __name__ == "__main__":

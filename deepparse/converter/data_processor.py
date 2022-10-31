@@ -1,4 +1,6 @@
-from typing import Callable, List, Tuple
+from typing import Callable, List, Tuple, Union
+
+import torch
 
 from . import TagsConverter
 from ..vectorizer import Vectorizer
@@ -17,10 +19,42 @@ class DataProcessor:
         self.batch_padding_callback = batch_padding_callback
         self.tags_converter = tags_converter
 
-    def process_for_inference(self, addresses: List[str]):
+    def process_for_inference(
+        self, addresses: List[str]
+    ) -> Union[Tuple[torch.Tensor, torch.Tensor], Tuple[torch.Tensor, List, torch.Tensor]]:
+        """
+        Method to vectorize addresses for inference.
+        Args:
+            addresses (List[str]): a list of addresses
+        Return:
+            Either a tuple of vectorized addresses and their respective original lengths before padding
+            or a tuple of vectorized addresses their subword decomposition lengths and their respective original lengths before padding,
+            depending on the vectorizing and padding methods.
+        """
         return self.sequences_padding_callback(self.vectorizer(addresses))
 
-    def process_for_training(self, addresses_and_targets: List[Tuple[str, List[str]]], teacher_forcing: bool = False):
+    def process_for_training(
+        self, addresses_and_targets: List[Tuple[str, List[str]]], teacher_forcing: bool = False
+    ) -> Union[
+        Union[
+            Tuple[Tuple[torch.Tensor, torch.Tensor], torch.Tensor],
+            Tuple[Tuple[torch.Tensor, torch.Tensor, torch.Tensor], torch.Tensor],
+        ],
+        Union[
+            Tuple[Tuple[torch.Tensor, List, torch.Tensor], torch.Tensor],
+            Tuple[Tuple[torch.Tensor, List, torch.Tensor, torch.Tensor], torch.Tensor],
+        ],
+    ]:
+        """
+        Method to vectorize addresses and tags for training.
+        Args:
+            addresses_and_targets (List[Tuple[str, List[str]]]): a list of tuples where the first element is an address and the second is a list of tags.
+            teacher_forcing (bool): if True, the padded target vectors are returned twice,
+                once with the sequences and their lengths, and once on their own. This enables
+                the use of teacher forcing during the training of sequence to sequence models.
+        Return:
+            A padded batch. Check out  :meth:`~DataPadder.pad_word_embeddings_batch` and :meth:`~DataPadder.pad_subword_embeddings_batch` for more details.
+        """
         input_sequence = []
         target_sequence = []
 

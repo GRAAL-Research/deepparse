@@ -635,6 +635,14 @@ class AddressParser:
                     name_of_the_retrain_parser="MyParserName")
 
         """
+        if isinstance(val_dataset_container, int):
+            raise ValueError(
+                "The value of the second argument, val_dataset_container, is an int type, which is not an expected "
+                "type. Do you want to specify the train_ratio (e.g. 0.8)? Please note that we have changed the "
+                "interface and have added a new argument **before** the train_ratio argument. Specified the argument "
+                "using the train_ratio=0.8 to fix the error."
+            )
+
         self._retrain_argumentation_validations(
             train_dataset_container, val_dataset_container, num_workers, name_of_the_retrain_parser
         )

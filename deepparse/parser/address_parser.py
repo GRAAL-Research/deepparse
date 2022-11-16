@@ -35,6 +35,7 @@ from .. import validate_data_to_parse
 from ..converter import DataTransform, TagsConverter, bpemb_data_padding, fasttext_data_padding
 from ..dataset_container import DatasetContainer
 from ..embeddings_models import BPEmbEmbeddingsModel, FastTextEmbeddingsModel, MagnitudeEmbeddingsModel
+from ..errors.model_error import FastTextModelError
 from ..fasttext_tools import download_fasttext_embeddings, download_fasttext_magnitude_embeddings
 from ..metrics import accuracy, nll_loss
 from ..network.bpemb_seq2seq import BPEmbSeq2SeqModel
@@ -353,6 +354,8 @@ class AddressParser:
                                                          is_training_container=False)
                 address_parser(addresses_to_parse)
         """
+        self._model_os_validation(num_workers=num_workers)
+
         if isinstance(addresses_to_parse, str):
             addresses_to_parse = [addresses_to_parse]
 
@@ -840,10 +843,12 @@ class AddressParser:
                 address_parser.test(test_container) # Test the retrained model
 
         """
+        self._model_os_validation(num_workers=num_workers)
+
         if "fasttext-light" in self.model_type:
-            raise ValueError(
-                "It's not possible to test a fasttext-light due to pymagnitude problem. See Retrain method"
-                "doc for more details."
+            raise FastTextModelError(
+                "It's not possible to test a fasttext-light due to pymagnitude problem. "
+                "See the Retrain method doc for more details."
             )
 
         if not isinstance(test_dataset_container, DatasetContainer):
@@ -1176,14 +1181,12 @@ class AddressParser:
         """
         Arguments validation test for retrain methods.
         """
-        if "fasttext-light" in self.model_type:
-            raise ValueError("It's not possible to retrain a fasttext-light due to pymagnitude problem.")
+        self._model_os_validation(num_workers=num_workers)
 
-        if platform.system().lower() == "windows" and "fasttext" in self.model_type and num_workers > 0:
-            raise ValueError(
-                "On Windows system, we cannot retrain FastText like models with parallelism workers since "
-                "FastText objects are not pickleable with the parallelism process use by Windows. "
-                "Thus, you need to set num_workers to 0 since 1 also means 'parallelism'."
+        if "fasttext-light" in self.model_type:
+            raise FastTextModelError(
+                "It's not possible to retrain a fasttext-light due to pymagnitude problem. "
+                "See the Retrain method doc for more details."
             )
 
         if not isinstance(train_dataset_container, DatasetContainer):
@@ -1210,3 +1213,18 @@ class AddressParser:
                 raise ValueError(
                     "The name_of_the_retrain_parser should NOT include a file extension or a dot-like filename style."
                 )
+
+    def _model_os_validation(self, num_workers):
+        if platform.system().lower() == "windows" and "fasttext" in self.model_type and num_workers > 0:
+            raise FastTextModelError(
+                "On Windows system, we cannot use FastText-like models with parallelism workers since "
+                "FastText objects are not pickleable with the parallelism process use by Windows. "
+                "Thus, you need to set num_workers to 0 since 1 also means 'parallelism'."
+            )
+
+        if platform.system().lower() == "darwin" and "fasttext" in self.model_type and num_workers > 0:
+            raise FastTextModelError(
+                "On MacOS system, we cannot use FastText-like models with parallelism out-of-the-box since "
+                "FastText objects are not pickleable with the parallelism process used by default by MacOS. "
+                "Thus, you need to set torch.multiprocessing.set_start_method('fork') to allow torch parallelism."
+            )

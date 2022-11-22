@@ -14,6 +14,7 @@ from unittest.mock import patch, call, MagicMock
 import torch
 
 from deepparse.converter import TagsConverter
+from deepparse.errors import FastTextModelError
 from deepparse.metrics import nll_loss, accuracy
 from deepparse.parser import AddressParser
 from tests.parser.base import AddressParserPredictTestCase
@@ -396,7 +397,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
             verbose=self.verbose,
         )
 
-        with self.assertRaises(ValueError):
+        with self.assertRaises(FastTextModelError):
             self.address_parser_retrain_call()
 
     @patch("deepparse.parser.address_parser.platform")

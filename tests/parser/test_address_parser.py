@@ -1437,45 +1437,6 @@ class AddressParserTest(AddressParserPredictTestCase):
 
             self.assertEqual(self.a_fasttext_att_light_name, self.test_out.getvalue().strip())
 
-    @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
-    def test_givenABPEmbModelType_whenRetrainWithIncorrectPredictionTags_thenRaiseValueError(
-        self, embeddings_model_mock
-    ):
-        with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel"):
-            address_parser = AddressParser(
-                model_type=self.a_bpemb_model_type,
-                device=self.a_cpu_device,
-                verbose=self.verbose,
-            )
-            with self.assertRaises(ValueError):
-                address_parser.retrain(
-                    MagicMock(),
-                    train_ratio=0.8,
-                    batch_size=1,
-                    epochs=1,
-                    prediction_tags=self.incorrect_address_components,
-                )
-
-    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
-    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
-    def test_givenAFasttextModelType_whenInstantiatingParserWithUserComponent_thenRaiseValueError(
-        self, download_weights_mock, embeddings_model_mock
-    ):
-        with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel"):
-            address_parser = AddressParser(
-                model_type=self.a_fasttext_model_type,
-                device=self.a_cpu_device,
-                verbose=self.verbose,
-            )
-            with self.assertRaises(ValueError):
-                address_parser.retrain(
-                    MagicMock(),
-                    train_ratio=0.8,
-                    batch_size=1,
-                    epochs=1,
-                    prediction_tags=self.incorrect_address_components,
-                )
-
     # we do BPEmb but can be fasttext or fasttext-light
     @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
     @patch("deepparse.parser.address_parser.BPEmbVectorizer")

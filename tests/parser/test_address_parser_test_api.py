@@ -1,12 +1,13 @@
 # Since we use a patch as model mock we skip the unused argument error
 # pylint: disable=unused-argument, too-many-arguments
-
+import platform
 import unittest
 from unittest import skipIf
 from unittest.mock import patch, call
 
 import torch
 
+from deepparse.errors import FastTextModelError
 from deepparse.metrics import accuracy, nll_loss
 from deepparse.parser import AddressParser
 from tests.parser.base import AddressParserPredictTestCase
@@ -23,7 +24,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         cls.a_train_ratio = 0.8
         cls.a_batch_size = BATCH_SIZE
         cls.a_epoch_number = 1
-        cls.a_number_of_workers = 1
+        cls.a_number_of_workers = 0
         cls.a_learning_rate = 0.01
         cls.a_callbacks_list = []
         cls.a_seed = 42
@@ -36,15 +37,18 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
 
         cls.verbose = False
 
-    def address_parser_test_call(self, dataset_container=None):
+    def address_parser_test_call(self, dataset_container=None, num_workers=None):
         if dataset_container is None:
             dataset_container = self.mocked_data_container
             # To handle by default for most of the tests.
 
+        if num_workers is None:
+            num_workers = self.a_number_of_workers
+
         self.address_parser.test(
             dataset_container,
             self.a_batch_size,
-            num_workers=self.a_number_of_workers,
+            num_workers=num_workers,
             callbacks=self.a_callbacks_list,
             seed=self.a_seed,
         )
@@ -185,6 +189,36 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         self.address_parser_test_call()
 
         self.assert_experiment_test_method_is_call(data_loader_mock, experiment_mock, verbose=verbose)
+
+    @skipIf(platform.system() != "Windows", "Integration test on Windows env.")
+    @patch("deepparse.parser.address_parser.DataLoader")
+    @patch("deepparse.parser.address_parser.Experiment")
+    @patch("deepparse.parser.address_parser.SGD")
+    @patch("deepparse.parser.address_parser.DataTransform")
+    @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
+    @patch("deepparse.parser.address_parser.fasttext_data_padding")
+    @patch("deepparse.parser.address_parser.FastTextVectorizer")
+    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
+    def test_givenAFasttextModelOnWindows_whenTestVerboseWithNumWorkerGT0_thenRaiseError(
+        self,
+        download_weights_mock,
+        embeddings_model_mock,
+        vectorizer_model_mock,
+        data_padding_mock,
+        model_mock,
+        data_transform_mock,
+        optimizer_mock,
+        experiment_mock,
+        data_loader_mock,
+    ):
+        verbose = True
+        self.address_parser = AddressParser(
+            model_type=self.a_fasttext_model_type, device=self.a_device, verbose=verbose
+        )
+        a_num_worker_gt_0 = 1
+        with self.assertRaises(FastTextModelError):
+            self.address_parser_test_call(num_workers=a_num_worker_gt_0)
 
     @patch("deepparse.parser.address_parser.DataLoader")
     @patch("deepparse.parser.address_parser.Experiment")

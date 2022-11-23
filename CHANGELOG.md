@@ -283,3 +283,6 @@
 - [Temporary hot-fix BPEmb SSL certificate error](https://github.com/GRAAL-Research/deepparse/issues/156)
 
 ## dev
+
+ - Improve error handling.
+ - Bug-fix FastText error not handled in test API.

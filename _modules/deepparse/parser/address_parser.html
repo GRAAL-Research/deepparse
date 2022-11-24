@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>deepparse.parser.address_parser &mdash; deepparse 0.9.2 documentation</title>
+  <title>deepparse.parser.address_parser &mdash; deepparse 0.9.3 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -15,6 +15,7 @@
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -29,7 +30,7 @@
             <img src="../../../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.9.2
+                0.9.3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -72,9 +73,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>deepparse.parser.address_parser</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">deepparse.parser.address_parser</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -121,6 +122,7 @@
 <span class="kn">from</span> <span class="nn">..converter</span> <span class="kn">import</span> <span class="n">DataTransform</span><span class="p">,</span> <span class="n">TagsConverter</span><span class="p">,</span> <span class="n">bpemb_data_padding</span><span class="p">,</span> <span class="n">fasttext_data_padding</span>
 <span class="kn">from</span> <span class="nn">..dataset_container</span> <span class="kn">import</span> <span class="n">DatasetContainer</span>
 <span class="kn">from</span> <span class="nn">..embeddings_models</span> <span class="kn">import</span> <span class="n">BPEmbEmbeddingsModel</span><span class="p">,</span> <span class="n">FastTextEmbeddingsModel</span><span class="p">,</span> <span class="n">MagnitudeEmbeddingsModel</span>
+<span class="kn">from</span> <span class="nn">..errors.model_error</span> <span class="kn">import</span> <span class="n">FastTextModelError</span>
 <span class="kn">from</span> <span class="nn">..fasttext_tools</span> <span class="kn">import</span> <span class="n">download_fasttext_embeddings</span><span class="p">,</span> <span class="n">download_fasttext_magnitude_embeddings</span>
 <span class="kn">from</span> <span class="nn">..metrics</span> <span class="kn">import</span> <span class="n">accuracy</span><span class="p">,</span> <span class="n">nll_loss</span>
 <span class="kn">from</span> <span class="nn">..network.bpemb_seq2seq</span> <span class="kn">import</span> <span class="n">BPEmbSeq2SeqModel</span>
@@ -439,6 +441,8 @@
 <span class="sd">                                                         is_training_container=False)</span>
 <span class="sd">                address_parser(addresses_to_parse)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model_os_validation</span><span class="p">(</span><span class="n">num_workers</span><span class="o">=</span><span class="n">num_workers</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">addresses_to_parse</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">addresses_to_parse</span> <span class="o">=</span> <span class="p">[</span><span class="n">addresses_to_parse</span><span class="p">]</span>
 
@@ -721,6 +725,14 @@
 <span class="sd">                    name_of_the_retrain_parser=&quot;MyParserName&quot;)</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val_dataset_container</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;The value of the second argument, val_dataset_container, is an int type, which is not an expected &quot;</span>
+                <span class="s2">&quot;type. Do you want to specify the train_ratio (e.g. 0.8)? Please note that we have changed the &quot;</span>
+                <span class="s2">&quot;interface and have added a new argument **before** the train_ratio argument. Specified the argument &quot;</span>
+                <span class="s2">&quot;using the train_ratio=0.8 to fix the error.&quot;</span>
+            <span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">_retrain_argumentation_validations</span><span class="p">(</span>
             <span class="n">train_dataset_container</span><span class="p">,</span> <span class="n">val_dataset_container</span><span class="p">,</span> <span class="n">num_workers</span><span class="p">,</span> <span class="n">name_of_the_retrain_parser</span>
         <span class="p">)</span>
@@ -796,7 +808,7 @@
             <span class="p">)</span>
         <span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
             <span class="n">list_of_file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">list_of_file_path</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">list_of_file_path</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">pretrained_parser_in_directory</span><span class="p">(</span><span class="n">logging_path</span><span class="p">):</span>
                     <span class="c1"># Mean we might already have checkpoint in the training directory</span>
                     <span class="n">files_in_directory</span> <span class="o">=</span> <span class="n">get_files_in_directory</span><span class="p">(</span><span class="n">logging_path</span><span class="p">)</span>
@@ -918,10 +930,12 @@
 <span class="sd">                address_parser.test(test_container) # Test the retrained model</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model_os_validation</span><span class="p">(</span><span class="n">num_workers</span><span class="o">=</span><span class="n">num_workers</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="s2">&quot;fasttext-light&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;It&#39;s not possible to test a fasttext-light due to pymagnitude problem. See Retrain method&quot;</span>
-                <span class="s2">&quot;doc for more details.&quot;</span>
+            <span class="k">raise</span> <span class="n">FastTextModelError</span><span class="p">(</span>
+                <span class="s2">&quot;It&#39;s not possible to test a fasttext-light due to pymagnitude problem. &quot;</span>
+                <span class="s2">&quot;See the Retrain method doc for more details.&quot;</span>
             <span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">test_dataset_container</span><span class="p">,</span> <span class="n">DatasetContainer</span><span class="p">):</span>
@@ -1200,7 +1214,7 @@
 
     <span class="k">def</span> <span class="nf">_freeze_model_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layers_to_freeze</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">layers_to_freeze</span> <span class="o">=</span> <span class="n">layers_to_freeze</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">layers_to_freeze</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;encoder&quot;</span><span class="p">,</span> <span class="s2">&quot;decoder&quot;</span><span class="p">,</span> <span class="s2">&quot;prediction_layer&quot;</span><span class="p">,</span> <span class="s2">&quot;seq2seq&quot;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">layers_to_freeze</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;encoder&quot;</span><span class="p">,</span> <span class="s2">&quot;decoder&quot;</span><span class="p">,</span> <span class="s2">&quot;prediction_layer&quot;</span><span class="p">,</span> <span class="s2">&quot;seq2seq&quot;</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">layers_to_freeze</span><span class="si">}</span><span class="s2"> freezing setting is not supported. Value can be &#39;encoder&#39;, &#39;decoder&#39;, &quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;&#39;prediction_layer&#39; and &#39;seq2seq&#39;. See doc for more details.&quot;</span>
@@ -1254,14 +1268,12 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Arguments validation test for retrain methods.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="s2">&quot;fasttext-light&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;It&#39;s not possible to retrain a fasttext-light due to pymagnitude problem.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model_os_validation</span><span class="p">(</span><span class="n">num_workers</span><span class="o">=</span><span class="n">num_workers</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;windows&quot;</span> <span class="ow">and</span> <span class="s2">&quot;fasttext&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="ow">and</span> <span class="n">num_workers</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;On Windows system, we cannot retrain FastText like models with parallelism workers since &quot;</span>
-                <span class="s2">&quot;FastText objects are not pickleable with the parallelism process use by Windows. &quot;</span>
-                <span class="s2">&quot;Thus, you need to set num_workers to 0 since 1 also means &#39;parallelism&#39;.&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;fasttext-light&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">FastTextModelError</span><span class="p">(</span>
+                <span class="s2">&quot;It&#39;s not possible to retrain a fasttext-light due to pymagnitude problem. &quot;</span>
+                <span class="s2">&quot;See the Retrain method doc for more details.&quot;</span>
             <span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">train_dataset_container</span><span class="p">,</span> <span class="n">DatasetContainer</span><span class="p">):</span>
@@ -1287,7 +1299,22 @@
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">name_of_the_retrain_parser</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                     <span class="s2">&quot;The name_of_the_retrain_parser should NOT include a file extension or a dot-like filename style.&quot;</span>
-                <span class="p">)</span></div>
+                <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_model_os_validation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_workers</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;windows&quot;</span> <span class="ow">and</span> <span class="s2">&quot;fasttext&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="ow">and</span> <span class="n">num_workers</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">FastTextModelError</span><span class="p">(</span>
+                <span class="s2">&quot;On Windows system, we cannot use FastText-like models with parallelism workers since &quot;</span>
+                <span class="s2">&quot;FastText objects are not pickleable with the parallelism process use by Windows. &quot;</span>
+                <span class="s2">&quot;Thus, you need to set num_workers to 0 since 1 also means &#39;parallelism&#39;.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;darwin&quot;</span> <span class="ow">and</span> <span class="s2">&quot;fasttext&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="ow">and</span> <span class="n">num_workers</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">FastTextModelError</span><span class="p">(</span>
+                <span class="s2">&quot;On MacOS system, we cannot use FastText-like models with parallelism out-of-the-box since &quot;</span>
+                <span class="s2">&quot;FastText objects are not pickleable with the parallelism process used by default by MacOS. &quot;</span>
+                <span class="s2">&quot;Thus, you need to set torch.multiprocessing.set_start_method(&#39;fork&#39;) to allow torch parallelism.&quot;</span>
+            <span class="p">)</span></div>
 </pre></div>
 
            </div>

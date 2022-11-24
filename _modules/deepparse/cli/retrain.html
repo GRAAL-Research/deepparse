@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>deepparse.cli.retrain &mdash; deepparse 0.9.2 documentation</title>
+  <title>deepparse.cli.retrain &mdash; deepparse 0.9.3 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -15,6 +15,7 @@
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -29,7 +30,7 @@
             <img src="../../../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.9.2
+                0.9.3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -72,9 +73,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>deepparse.cli.retrain</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">deepparse.cli.retrain</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -85,6 +86,7 @@
              
   <h1>Source code for deepparse.cli.retrain</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span>
 
@@ -129,6 +131,21 @@
         <span class="n">parsed_retain_arguments</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">retrain_parameter</span><span class="p">:</span> <span class="n">value</span><span class="p">})</span>
 
     <span class="k">return</span> <span class="n">parsed_retain_arguments</span>
+
+
+<span class="k">def</span> <span class="nf">handle_prediction_tags</span><span class="p">(</span><span class="n">parsed_args</span><span class="p">):</span>
+    <span class="n">dict_parsed_args</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="n">parsed_args</span><span class="p">)</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">dict_parsed_args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;prediction_tags&quot;</span><span class="p">)</span>
+
+    <span class="n">tags_dict_arguments</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;prediction_tags&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>  <span class="c1"># Default case</span>
+
+    <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">prediction_tags</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;EOS&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">prediction_tags</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The prediction tags dictionary is missing the EOS tag.&quot;</span><span class="p">)</span>
+            <span class="n">tags_dict_arguments</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;prediction_tags&quot;</span><span class="p">:</span> <span class="n">prediction_tags</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">tags_dict_arguments</span>
 
 
 <div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../cli.html#deepparse.cli.retrain.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -200,6 +217,9 @@
     <span class="n">parser_args</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">parser_args_update_args</span><span class="p">)</span>
 
     <span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="o">**</span><span class="n">parser_args</span><span class="p">)</span>
+
+    <span class="n">new_tags_parser_args_update_args</span> <span class="o">=</span> <span class="n">handle_prediction_tags</span><span class="p">(</span><span class="n">parsed_args</span><span class="p">)</span>
+    <span class="n">parser_args</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">new_tags_parser_args_update_args</span><span class="p">)</span>
 
     <span class="n">parsed_retain_arguments</span> <span class="o">=</span> <span class="n">parse_retrained_arguments</span><span class="p">(</span><span class="n">parsed_args</span><span class="p">)</span>
 
@@ -299,6 +319,16 @@
             <span class="s2">&quot;Name to give to the retrained parser that will be used when reloaded as the printed name, &quot;</span>
             <span class="s2">&quot;and to the saving file name. By default, None, thus, the default name. See the complete parser retrain &quot;</span>
             <span class="s2">&quot;method for more details.&quot;</span>
+        <span class="p">),</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--prediction_tags&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span>
+            <span class="s2">&quot;Path to a JSON file of prediction tags to use to retrain. Tags are in a key-value style, where &quot;</span>
+            <span class="s2">&quot;the key is the tag name, and the value is the index one.&quot;</span>
+            <span class="s2">&quot;The last element has to be an EOS tag. Read the doc for more detail about EOS tag.&quot;</span>
         <span class="p">),</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>

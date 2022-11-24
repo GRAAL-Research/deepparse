@@ -98,10 +98,11 @@ One can use the command ``parse --help`` to output the same description in your 
     - ``--csv_column_names``: The column names to extract address in the CSV. Need to be specified if the provided dataset_path leads to a CSV file. Column names have to be separated by whitespace. For example, ``--csv_column_names column1 column2``.
     - ``--csv_column_separator``: The column separator for the dataset container will only be used if the dataset is a CSV one. By default, ``'\t'``.
     - ``--cache_dir``: To change the default cache directory (default to ``None``, e.g. default path).
+    - ``prediction_tags``: To change the prediction tags. The ``prediction_tags`` is a path leading to a JSON file of the new tags in a key-value style. For example, the path can be ``"a_path/file.json"`` and the content can be ``{"new_tag": 0, "other_tag": 1, "EOS": 2}``
 
 .. autofunction:: deepparse.cli.retrain.main
 
-We do not handle the ``seq2seq_params`` and ``prediction_tags`` fine-tuning argument for now.
+We do not handle the ``seq2seq_params`` fine-tuning argument for now.
 
 Test
 ****

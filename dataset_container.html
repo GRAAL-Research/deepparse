@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dataset Container &mdash; deepparse 0.9.2 documentation</title>
+  <title>Dataset Container &mdash; deepparse 0.9.3 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -16,6 +16,7 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -32,7 +33,7 @@
             <img src="_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.9.2
+                0.9.3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -46,9 +47,22 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="parser.html">Parser</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Dataset Container</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#interface">Interface</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#implementations">Implementations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#dataset-validation-steps">Dataset Validation Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#interface">Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#deepparse.dataset_container.DatasetContainer"><code class="docutils literal notranslate"><span class="pre">DatasetContainer</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#implementations">Implementations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#deepparse.dataset_container.PickleDatasetContainer"><code class="docutils literal notranslate"><span class="pre">PickleDatasetContainer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#deepparse.dataset_container.CSVDatasetContainer"><code class="docutils literal notranslate"><span class="pre">CSVDatasetContainer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#deepparse.dataset_container.ListDatasetContainer"><code class="docutils literal notranslate"><span class="pre">ListDatasetContainer</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dataset-validation-steps">Dataset Validation Steps</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#deepparse.data_validation.data_validation.validate_if_any_empty"><code class="docutils literal notranslate"><span class="pre">validate_if_any_empty()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#deepparse.data_validation.data_validation.validate_if_any_whitespace_only"><code class="docutils literal notranslate"><span class="pre">validate_if_any_whitespace_only()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#deepparse.data_validation.data_validation.validate_if_any_none"><code class="docutils literal notranslate"><span class="pre">validate_if_any_none()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="comparer.html">Comparer</a></li>
@@ -80,8 +94,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Dataset Container</li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Dataset Container</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/dataset_container.rst.txt" rel="nofollow"> View page source</a>
       </li>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Comparer &mdash; deepparse 0.9.2 documentation</title>
+  <title>Comparer &mdash; deepparse 0.9.3 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -16,6 +16,7 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -32,7 +33,7 @@
             <img src="_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.9.2
+                0.9.3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -47,10 +48,32 @@
 <li class="toctree-l1"><a class="reference internal" href="parser.html">Parser</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dataset_container.html">Dataset Container</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Comparer</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#addressescomparer">AddressesComparer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#formatted-compared-addresses">Formatted Compared Addresses</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#formatted-compared-addresses-raw">Formatted Compared Addresses Raw</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#formatted-compared-addresses-tags">Formatted Compared Addresses Tags</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#addressescomparer">AddressesComparer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#deepparse.comparer.AddressesComparer"><code class="docutils literal notranslate"><span class="pre">AddressesComparer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#deepparse.comparer.AddressesComparer.compare_tags"><code class="docutils literal notranslate"><span class="pre">AddressesComparer.compare_tags()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#deepparse.comparer.AddressesComparer.compare_raw"><code class="docutils literal notranslate"><span class="pre">AddressesComparer.compare_raw()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#formatted-compared-addresses">Formatted Compared Addresses</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#deepparse.comparer.FormattedComparedAddresses"><code class="docutils literal notranslate"><span class="pre">FormattedComparedAddresses</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#deepparse.comparer.FormattedComparedAddresses.list_of_bool"><code class="docutils literal notranslate"><span class="pre">FormattedComparedAddresses.list_of_bool</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#deepparse.comparer.FormattedComparedAddresses.equivalent"><code class="docutils literal notranslate"><span class="pre">FormattedComparedAddresses.equivalent</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#deepparse.comparer.FormattedComparedAddresses.identical"><code class="docutils literal notranslate"><span class="pre">FormattedComparedAddresses.identical</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#deepparse.comparer.FormattedComparedAddresses.comparison_report"><code class="docutils literal notranslate"><span class="pre">FormattedComparedAddresses.comparison_report()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#formatted-compared-addresses-raw">Formatted Compared Addresses Raw</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#deepparse.comparer.FormattedComparedAddressesRaw"><code class="docutils literal notranslate"><span class="pre">FormattedComparedAddressesRaw</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#formatted-compared-addresses-tags">Formatted Compared Addresses Tags</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#deepparse.comparer.FormattedComparedAddressesTags"><code class="docutils literal notranslate"><span class="pre">FormattedComparedAddressesTags</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="cli.html">CLI</a></li>
@@ -81,8 +104,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Comparer</li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Comparer</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/comparer.rst.txt" rel="nofollow"> View page source</a>
       </li>

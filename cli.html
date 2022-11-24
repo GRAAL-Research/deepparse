@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CLI &mdash; deepparse 0.9.2 documentation</title>
+  <title>CLI &mdash; deepparse 0.9.3 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -16,6 +16,7 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -32,7 +33,7 @@
             <img src="_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.9.2
+                0.9.3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -49,12 +50,19 @@
 <li class="toctree-l1"><a class="reference internal" href="comparer.html">Comparer</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">CLI</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#parse">Parse</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#deepparse.cli.parse.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dataset-format">Dataset Format</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#exporting-format">Exporting Format</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#retrain">Retrain</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#test">Test</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#retrain">Retrain</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#deepparse.cli.retrain.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#test">Test</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#deepparse.cli.test.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#download">Download</a></li>
 </ul>
 </li>
@@ -85,8 +93,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>CLI</li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">CLI</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/cli.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -222,6 +230,7 @@ One can use the command <code class="docutils literal notranslate"><span class="
 <li><p><code class="docutils literal notranslate"><span class="pre">--csv_column_names</span></code>: The column names to extract address in the CSV. Need to be specified if the provided dataset_path leads to a CSV file. Column names have to be separated by whitespace. For example, <code class="docutils literal notranslate"><span class="pre">--csv_column_names</span> <span class="pre">column1</span> <span class="pre">column2</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--csv_column_separator</span></code>: The column separator for the dataset container will only be used if the dataset is a CSV one. By default, <code class="docutils literal notranslate"><span class="pre">'\t'</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--cache_dir</span></code>: To change the default cache directory (default to <code class="docutils literal notranslate"><span class="pre">None</span></code>, e.g. default path).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">prediction_tags</span></code>: To change the prediction tags. The <code class="docutils literal notranslate"><span class="pre">prediction_tags</span></code> is a path leading to a JSON file of the new tags in a key-value style. For example, the path can be <code class="docutils literal notranslate"><span class="pre">&quot;a_path/file.json&quot;</span></code> and the content can be <code class="docutils literal notranslate"><span class="pre">{&quot;new_tag&quot;:</span> <span class="pre">0,</span> <span class="pre">&quot;other_tag&quot;:</span> <span class="pre">1,</span> <span class="pre">&quot;EOS&quot;:</span> <span class="pre">2}</span></code></p></li>
 </ul>
 </div></blockquote>
 <dl class="py function">
@@ -256,7 +265,7 @@ the same default value as the <code class="xref py py-meth docutils literal notr
 </div>
 </dd></dl>
 
-<p>We do not handle the <code class="docutils literal notranslate"><span class="pre">seq2seq_params</span></code> and <code class="docutils literal notranslate"><span class="pre">prediction_tags</span></code> fine-tuning argument for now.</p>
+<p>We do not handle the <code class="docutils literal notranslate"><span class="pre">seq2seq_params</span></code> fine-tuning argument for now.</p>
 </section>
 <section id="test">
 <h2>Test<a class="headerlink" href="#test" title="Permalink to this heading"></a></h2>

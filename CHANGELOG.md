@@ -282,7 +282,10 @@
 - Add `download_models` CLI function
 - [Temporary hot-fix BPEmb SSL certificate error](https://github.com/GRAAL-Research/deepparse/issues/156)
 
-## dev
+## 0.9.3
 
  - Improve error handling.
  - Bug-fix FastText error not handled in test API.
+ - Add feature to allow new_prediction_tags to retrain CLI.
+
+## dev

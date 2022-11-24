@@ -8,6 +8,7 @@ from unittest.mock import MagicMock, call
 import torch
 from poutyne import Callback
 
+from deepparse.errors import FastTextModelError
 from deepparse.parser import AddressParser
 from tests.parser.integration.base_retrain import AddressParserRetrainTestCase
 
@@ -127,7 +128,7 @@ class AddressParserIntegrationRetrainGPUTest(AddressParserRetrainTestCase):
             device=self.a_torch_device,
             verbose=self.verbose,
         )
-        with self.assertRaises(ValueError):
+        with self.assertRaises(FastTextModelError):
             _ = address_parser.retrain(
                 self.training_container,
                 train_ratio=self.a_train_ratio,

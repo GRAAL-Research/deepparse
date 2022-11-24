@@ -86,14 +86,14 @@ def main(args=None) -> None:
         "seed": seed,
     }
 
-    results_export_path = generate_export_path(test_dataset_path, f"{str(address_parser)}_testing.tsv")
+    results_export_path = generate_export_path(test_dataset_path, f"{address_parser}_testing.tsv")
     if parsed_args.log:
         logging_export_path = replace_path_extension(results_export_path, ".log")
         logging.basicConfig(
             filename=logging_export_path, format="%(asctime)s : %(levelname)s : %(message)s", level=logging.INFO
         )
 
-        text_to_log = f"Testing results on dataset file {test_dataset_path} using the parser {str(address_parser)}."
+        text_to_log = f"Testing results on dataset file {test_dataset_path} using the parser {address_parser}."
         logging.info(text_to_log)
 
     results = address_parser.test(test_dataset_container=testing_data, **test_arguments)

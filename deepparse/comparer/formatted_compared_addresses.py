@@ -195,10 +195,10 @@ class FormattedComparedAddresses(ABC):
 
         for address_component_name in address_component_names:
             list_of_list_tag = []
-            for parsed_address in [
+            for parsed_address in (
                 self.first_address.to_list_of_tuples(),
                 self.second_address.to_list_of_tuples(),
-            ]:
+            ):
                 list_of_list_tag.append(
                     " ".join(
                         [

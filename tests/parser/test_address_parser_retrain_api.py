@@ -14,6 +14,7 @@ from unittest.mock import patch, call, MagicMock
 import torch
 
 from deepparse.converter import TagsConverter
+from deepparse.errors import FastTextModelError
 from deepparse.metrics import nll_loss, accuracy
 from deepparse.parser import AddressParser
 from tests.parser.base import AddressParserPredictTestCase
@@ -41,6 +42,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         cls.verbose = False
 
         cls.address_components = {"ATag": 0, "AnotherTag": 1, "EOS": 2}
+        cls.incorrect_address_components = {"ATag": 0, "AnotherTag": 1}
 
         cls.seq2seq_params = {"encoder_hidden_size": 512, "decoder_hidden_size": 512}
 
@@ -396,7 +398,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
             verbose=self.verbose,
         )
 
-        with self.assertRaises(ValueError):
+        with self.assertRaises(FastTextModelError):
             self.address_parser_retrain_call()
 
     @patch("deepparse.parser.address_parser.platform")
@@ -1690,6 +1692,65 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         self.address_parser_retrain_call(val_dataset_container=self.mocked_data_container, train_ratio=train_ratio_mock)
 
         train_ratio_mock.assert_not_called()
+
+    @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
+    def test_givenABPEmbModelType_whenRetrainWithIncorrectPredictionTags_thenRaiseValueError(
+        self, embeddings_model_mock
+    ):
+        with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel"):
+            address_parser = AddressParser(
+                model_type=self.a_bpemb_model_type,
+                device=self.a_device,
+                verbose=self.verbose,
+            )
+            with self.assertRaises(ValueError):
+                address_parser.retrain(
+                    MagicMock(),
+                    train_ratio=0.8,
+                    batch_size=1,
+                    epochs=1,
+                    prediction_tags=self.incorrect_address_components,
+                    num_workers=0,
+                )
+
+    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
+    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
+    def test_givenAFasttextModelType_whenInstantiatingParserWithUserComponent_thenRaiseValueError(
+        self, download_weights_mock, embeddings_model_mock
+    ):
+        with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel"):
+            address_parser = AddressParser(
+                model_type=self.a_fasttext_model_type,
+                device=self.a_device,
+                verbose=self.verbose,
+            )
+            with self.assertRaises(ValueError):
+                address_parser.retrain(
+                    MagicMock(),
+                    train_ratio=0.8,
+                    batch_size=1,
+                    epochs=1,
+                    prediction_tags=self.incorrect_address_components,
+                    num_workers=0,
+                )
+
+    @skipIf(platform.system() != "Windows", "Integration test on Windows env.")
+    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
+    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
+    def test_givenAFasttextModelTypeOnWindows_whenInstantiatingParserWithNumWorkerGT0_thenRaiseError(
+        self, download_weights_mock, embeddings_model_mock
+    ):
+        num_workers_gt_0 = 1
+        with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel"):
+            address_parser = AddressParser(
+                model_type=self.a_fasttext_model_type,
+                device=self.a_device,
+                verbose=self.verbose,
+            )
+            with self.assertRaises(FastTextModelError):
+                address_parser.retrain(
+                    MagicMock(), train_ratio=0.8, batch_size=1, epochs=1, num_workers=num_workers_gt_0
+                )
 
 
 if __name__ == "__main__":

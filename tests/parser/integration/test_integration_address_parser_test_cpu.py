@@ -7,6 +7,7 @@ import unittest
 from unittest import skipIf
 from unittest.mock import MagicMock, call, ANY
 
+from deepparse.errors import FastTextModelError
 from deepparse.parser import AddressParser
 from tests.parser.integration.base_retrain import AddressParserRetrainTestCase
 
@@ -269,6 +270,38 @@ class AddressParserIntegrationTestAPICPUTest(AddressParserRetrainTestCase):
         )
 
         self.assertIsNotNone(performance_after_test)
+
+    def test_givenAFasttextLightAddressParser_whenTest_thenTestDoesNotOccur(
+        self,
+    ):
+        address_parser = AddressParser(
+            model_type=self.a_fasttext_light_model_type,
+            device=self.a_cpu_device,
+            verbose=self.verbose,
+        )
+        with self.assertRaises(FastTextModelError):
+            address_parser.test(
+                self.test_container,
+                batch_size=self.a_batch_size,
+                num_workers=self.a_number_of_workers,
+            )
+
+    def test_givenAFasttextAddressParser_whenTestWithNumWorkerGT0_thenTestDoesNotOccur(
+        self,
+    ):
+        address_parser = AddressParser(
+            model_type=self.a_fasttext_light_model_type,
+            device=self.a_cpu_device,
+            verbose=self.verbose,
+        )
+
+        num_worker_gt_0 = 1
+        with self.assertRaises(FastTextModelError):
+            address_parser.test(
+                self.test_container,
+                batch_size=self.a_batch_size,
+                num_workers=num_worker_gt_0,
+            )
 
 
 if __name__ == "__main__":

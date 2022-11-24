@@ -11,6 +11,7 @@ from poutyne import Callback
 
 from deepparse import download_from_public_repository
 from deepparse.dataset_container import PickleDatasetContainer
+from deepparse.errors import FastTextModelError
 from deepparse.parser import AddressParser
 from tests.parser.integration.base_retrain import AddressParserRetrainTestCase
 
@@ -133,7 +134,7 @@ class AddressParserIntegrationTestNewAddressComponents(AddressParserRetrainTestC
             device=self.a_cpu_device,
             verbose=self.verbose,
         )
-        with self.assertRaises(ValueError):
+        with self.assertRaises(FastTextModelError):
             _ = address_parser.retrain(
                 self.new_prediction_data_container,
                 train_ratio=self.a_train_ratio,
@@ -150,7 +151,7 @@ class AddressParserIntegrationTestNewAddressComponents(AddressParserRetrainTestC
             device=self.a_cpu_device,
             verbose=self.verbose,
         )
-        with self.assertRaises(ValueError):
+        with self.assertRaises(FastTextModelError):
             _ = address_parser.retrain(
                 self.new_prediction_data_container,
                 train_ratio=self.a_train_ratio,

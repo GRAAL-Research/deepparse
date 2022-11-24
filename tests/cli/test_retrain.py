@@ -1,8 +1,5 @@
 # pylint: disable=too-many-arguments, too-many-locals
-
-# Pylint error for TemporaryDirectory ask for with statement
-# pylint: disable=consider-using-with
-
+import json
 import os
 import unittest
 from tempfile import TemporaryDirectory
@@ -13,6 +10,27 @@ from unittest.mock import patch
 from deepparse.cli import retrain
 from deepparse.cli.retrain import get_args, parse_retrained_arguments
 from tests.parser.integration.base_retrain import RetrainTestCase
+
+# Pylint error for TemporaryDirectory ask for with statement
+# pylint: disable=consider-using-with
+
+_new_tag_set = {
+    "primary": 0,
+    "pre": 1,
+    "street": 2,
+    "suffix": 3,
+    "post": 4,
+    "secdes": 5,
+    "secnum": 6,
+    "extsecdes": 7,
+    "extsecnum": 8,
+    "pmbdes": 9,
+    "pmbnum": 10,
+    "city": 11,
+    "state": 12,
+    "zipcode": 13,
+    "EOS": 14,
+}
 
 
 @skipIf(
@@ -46,6 +64,11 @@ class RetrainTests(RetrainTestCase):
         # temp directory
         self.logging_path = os.path.join(self.temp_checkpoints_obj.name, "checkpoints")
 
+        self.path_to_new_tags_set = os.path.join(self.temp_checkpoints_obj.name, "a_new_tag_set.json")
+
+        with open(self.path_to_new_tags_set, "w", encoding="UTF-8") as file:
+            json.dump(_new_tag_set, file, ensure_ascii=False)
+
     def tearDown(self) -> None:
         self.temp_checkpoints_obj.cleanup()
 
@@ -68,6 +91,7 @@ class RetrainTests(RetrainTestCase):
         device="cpu",  # By default, we set it to cpu instead of gpu device 0 as the CLI function.
         csv_column_names: List = None,
         csv_column_separator="\t",
+        prediction_tags=None,  # By default, we do not set a new tags set
     ) -> List:
         if model_type is None:
             # The default case for the test is a FastText model
@@ -122,6 +146,10 @@ class RetrainTests(RetrainTestCase):
             # To handle the None case (that is using the default None of the argparser).
             parser_params.extend(["--csv_column_names"])
             parser_params.extend(csv_column_names)  # Since csv_column_names is a list
+
+        if prediction_tags is not None:
+            # To handle the None case (that is using the default None of the argparser).
+            parser_params.extend(["--prediction_tags", prediction_tags])
 
         return parser_params
 
@@ -272,6 +300,17 @@ class RetrainTests(RetrainTestCase):
 
     def test_integrationWithValDataset(self):
         parser_params = self.set_up_params(device=self.cpu_device, val_dataset_path=self.a_train_pickle_dataset_path)
+        retrain.main(parser_params)
+
+        self.assertTrue(
+            os.path.isfile(
+                os.path.join(self.temp_checkpoints_obj.name, "checkpoints", "retrained_fasttext_address_parser.ckpt")
+            )
+        )
+
+    def test_integrationWithNewTagsSet(self):
+        parser_params = self.set_up_params(prediction_tags=self.path_to_new_tags_set)
+
         retrain.main(parser_params)
 
         self.assertTrue(

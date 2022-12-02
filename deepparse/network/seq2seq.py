@@ -48,20 +48,20 @@ class Seq2SeqModel(ABC, nn.Module):
         self.verbose = verbose
         self.attention_mechanism = attention_mechanism
 
-        self.encoder = Encoder(
+        self.encoder = torch.compile(Encoder(
             input_size=input_size,
             hidden_size=encoder_hidden_size,
             num_layers=encoder_num_layers,
-        )
+        ))
         self.encoder.to(self.device)
 
-        self.decoder = Decoder(
+        self.decoder = torch.compile(Decoder(
             input_size=encoder_num_layers,
             hidden_size=decoder_hidden_size,
             num_layers=decoder_num_layers,
             output_size=output_size,
             attention_mechanism=self.attention_mechanism,
-        )
+        ))
 
         self.decoder.to(self.device)
 

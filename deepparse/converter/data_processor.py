@@ -7,6 +7,18 @@ from ..vectorizer import Vectorizer
 
 
 class DataProcessor:
+    """
+    Class that processes addresses into padded batches ready for training or inference
+    Args:
+        vectorizer (:class:`~Vectorizer`): a callable vectorizer capable of vectorizing a list of addresses
+        sequences_padding_callback (Callable): a callback to pad a sequence of vectorized addresses to the
+            longuest, while returning the original unpadded lengths, see :class:`~deepparse.converter.Datapadder`
+        batch_padding_callback (Callable): a callback to pad a a sequence of vectorized addresses and their lablesto the
+            longuest, while returning the original unpadded lengths, see :class:`~deepparse.converter.Datapadder`
+        tags_converter (:class:`~TagsConverter`): a callable converter to transform address labels into indices for training
+
+    """
+
     def __init__(
         self,
         vectorizer: Vectorizer,
@@ -53,7 +65,8 @@ class DataProcessor:
                 once with the sequences and their lengths, and once on their own. This enables
                 the use of teacher forcing during the training of sequence to sequence models.
         Return:
-            A padded batch. Check out  :meth:`~DataPadder.pad_word_embeddings_batch` and :meth:`~DataPadder.pad_subword_embeddings_batch` for more details.
+            A padded batch. Check out :meth:`~deepparse.converter.DataPadder.pad_word_embeddings_batch` and :meth:`~DataPadder.pad_subword_embeddings_batch`
+                for more details.
         """
         input_sequence = []
         target_sequence = []

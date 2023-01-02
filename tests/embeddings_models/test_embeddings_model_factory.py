@@ -16,7 +16,7 @@ class EmbeddingsModelFactoryTest(TestCase):
     def setUpClass(cls):
         cls.a_bpemb_embeddings_model_type = "bpemb"
         cls.a_fasttext_embeddings_model_type = "fasttext"
-        cls.a_fasttext_magnitude_embeddings_model_type = "fasttext_magnitude"
+        cls.a_fasttext_magnitude_embeddings_model_type = "fasttext-light"
 
         cls.an_invalid_embeddings_model_type = "invalid"
 

@@ -20,18 +20,18 @@ class EmbeddingsModelFactory:
         Return:
             An :class:`~EmbeddingsModel`
         """
-        if embedding_model_type == "bpemb":
+        if "bpemb" in embedding_model_type:
             embeddings_model = BPEmbEmbeddingsModel(verbose=verbose, cache_dir=cache_dir)
 
-        elif embedding_model_type == "fasttext":
-            file_name = download_fasttext_embeddings(cache_dir=cache_dir, verbose=verbose)
+        elif "fasttext" in embedding_model_type:
+            if "fasttext-light" in embedding_model_type:
+                file_name = download_fasttext_magnitude_embeddings(cache_dir=cache_dir, verbose=verbose)
 
-            embeddings_model = FastTextEmbeddingsModel(file_name, verbose=verbose)
+                embeddings_model = MagnitudeEmbeddingsModel(file_name, verbose=verbose)
+            else:
+                file_name = download_fasttext_embeddings(cache_dir=cache_dir, verbose=verbose)
 
-        elif embedding_model_type == "fasttext_magnitude":
-            file_name = download_fasttext_magnitude_embeddings(cache_dir=cache_dir, verbose=verbose)
-
-            embeddings_model = MagnitudeEmbeddingsModel(file_name, verbose=verbose)
+                embeddings_model = FastTextEmbeddingsModel(file_name, verbose=verbose)
 
         else:
             raise NotImplementedError(

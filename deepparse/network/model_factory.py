@@ -41,7 +41,7 @@ class ModelFactory:
         Return:
             A :class:`~Seq2SeqModel`.
         """
-        if model_type == "fasttext":
+        if "fasttext" in model_type or "fasttext-light" in model_type:
             model = FastTextSeq2SeqModel(
                 cache_dir=cache_dir,
                 device=device,
@@ -53,7 +53,7 @@ class ModelFactory:
                 **seq2seq_kwargs,
             )
 
-        elif model_type == "bpemb":
+        elif "bpemb" in model_type:
             model = BPEmbSeq2SeqModel(
                 cache_dir=cache_dir,
                 device=device,

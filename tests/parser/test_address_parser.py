@@ -191,143 +191,117 @@ class AddressParserTest(AddressParserPredictTestCase):
         self.assertEqual(actual, expected)
 
     @patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel")
-    def test_givenACapitalizeBPEmbModelType_whenInstantiatingParser_thenInstantiateModelWithCorrectParameters(
-        self, model_mock
+    @patch("deepparse.parser.address_parser.VectorizerFactory")
+    def test_givenACapitalizeBPEmbModelType_whenInstantiatingParser_thenCallEmbeddingsModelFactoryWithCorrectParameters(
+        self, model_mock, vectorizer_factory_mock
     ):
-        with patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel") as embeddings_model_mock:
+        with patch("deepparse.parser.address_parser.EmbeddingsModelFactory") as embeddings_model_factory_mock:
             AddressParser(
                 model_type=self.a_best_model_type.capitalize(),
                 device=self.a_cpu_device,
                 verbose=self.verbose,
             )
 
-            embeddings_model_mock.assert_called_with(verbose=self.verbose, cache_dir=self.cache_dir)
-
-        with patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel") as embeddings_model_mock:
-            AddressParser(
-                model_type=self.a_bpemb_model_type.capitalize(),
-                device=self.a_cpu_device,
-                verbose=self.verbose,
+            embeddings_model_factory_mock().create.assert_called_with(
+                embedding_model_type=self.a_bpemb_model_type, verbose=self.verbose, cache_dir=self.cache_dir
             )
-
-            embeddings_model_mock.assert_called_with(verbose=self.verbose, cache_dir=self.cache_dir)
 
     @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
     @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
-    def test_givenACapitalizeFastTextModelType_whenInstantiatingParser_thenInstantiateModelWithCorrectParameters(
-        self, embeddings_model_mock, model_mock
+    @patch("deepparse.parser.address_parser.VectorizerFactory")
+    def test_givenACapitalizeFastTextModelType_whenInstantiatingParser_thenCallEmbeddingsModelFactoryWithCorrectParameters(
+        self, embeddings_model_mock, model_mock, vectorizer_factory_mock
     ):
-        with patch("deepparse.parser.address_parser.download_fasttext_embeddings") as downloader_mock:
+        with patch("deepparse.parser.address_parser.EmbeddingsModelFactory") as embeddings_model_factory_mock:
             AddressParser(
                 model_type=self.a_fastest_model_type.capitalize(),
                 device=self.a_cpu_device,
                 verbose=self.verbose,
             )
 
-            downloader_mock.assert_called_with(
-                cache_dir=self.fasttext_download_path, verbose=self.verbose, offline=False
-            )
-
-        with patch("deepparse.parser.address_parser.download_fasttext_embeddings") as downloader_mock:
-            AddressParser(
-                model_type=self.a_fasttext_model_type.capitalize(),
-                device=self.a_cpu_device,
-                verbose=self.verbose,
-            )
-
-            downloader_mock.assert_called_with(
-                cache_dir=self.fasttext_download_path, verbose=self.verbose, offline=False
-            )
-
-    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
-    @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
-    def test_givenAFastTextAttModelType_whenInstantiatingParser_thenInstantiateModelWithCorrectParameters(
-        self, embeddings_model_mock, model_mock
-    ):
-        with patch("deepparse.parser.address_parser.download_fasttext_embeddings") as downloader_mock:
-            AddressParser(
-                model_type=self.a_fastest_model_type,
-                device=self.a_cpu_device,
-                verbose=self.verbose,
-                attention_mechanism=True,
-            )
-
-            downloader_mock.assert_called_with(
-                cache_dir=self.fasttext_download_path, verbose=self.verbose, offline=False
+            embeddings_model_factory_mock().create.assert_called_with(
+                embedding_model_type=self.a_fasttext_model_type, verbose=self.verbose, cache_dir=self.cache_dir
             )
 
     @patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel")
-    def test_givenABestModelType_whenInstantiatingParser_thenInstantiateBPEmbEmbeddingsModelWithCorrectParameters(
-        self, model_mock
+    @patch("deepparse.parser.address_parser.VectorizerFactory")
+    def test_givenABestModelType_whenInstantiatingParser_thenCallEmbeddingsModelFactoryWithCorrectParameters(
+        self, model_mock, vectorizer_factory_mock
     ):
-        with patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel") as embeddings_model_mock:
+        with patch("deepparse.parser.address_parser.EmbeddingsModelFactory") as embeddings_model_factory_mock:
             AddressParser(
                 model_type=self.a_best_model_type,
                 device=self.a_cpu_device,
                 verbose=self.verbose,
             )
 
-            embeddings_model_mock.assert_called_with(verbose=self.verbose, cache_dir=self.cache_dir)
+            embeddings_model_factory_mock().create.assert_called_with(
+                embedding_model_type=self.a_bpemb_model_type, verbose=self.verbose, cache_dir=self.cache_dir
+            )
 
     @patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel")
-    def test_givenABPEmbModelType_whenInstantiatingParser_thenInstantiateBPEmbEmbeddingsModelWithCorrectParameters(
-        self, model_mock
+    @patch("deepparse.parser.address_parser.VectorizerFactory")
+    def test_givenABPEmbModelType_whenInstantiatingParser_thenCallEmbeddingsModelFactoryWithCorrectParameters(
+        self, model_mock, vectorizer_factory_mock
     ):
-        with patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel") as embeddings_model_mock:
+        with patch("deepparse.parser.address_parser.EmbeddingsModelFactory") as embeddings_model_factory_mock:
             AddressParser(
                 model_type=self.a_bpemb_model_type,
                 device=self.a_cpu_device,
                 verbose=self.verbose,
             )
 
-            embeddings_model_mock.assert_called_with(verbose=self.verbose, cache_dir=self.cache_dir)
+            embeddings_model_factory_mock().create.assert_called_with(
+                embedding_model_type=self.a_bpemb_model_type, verbose=self.verbose, cache_dir=self.cache_dir
+            )
 
     @patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel")
-    def test_givenABestModelType_whenInstantiatingParser_thenInstantiateBPEmbVectorizerWithCorrectParameters(
+    def test_givenABestModelType_whenInstantiatingParser_thenCallVectorizerFactoryWithCorrectParameters(
         self, model_mock
     ):
         with patch(
-            "deepparse.parser.address_parser.BPEmbEmbeddingsModel",
-            return_value=self.embeddings_model_mock,
-        ):
-            with patch("deepparse.parser.address_parser.BPEmbVectorizer") as vectorizer_mock:
+            "deepparse.parser.address_parser.EmbeddingsModelFactory",
+        ) as embeddings_factory_mock:
+            embeddings_factory_mock().create.return_value = self.embeddings_model_mock
+            with patch("deepparse.parser.address_parser.VectorizerFactory") as vectorizer_factory_mock:
                 AddressParser(
                     model_type=self.a_best_model_type,
                     device=self.a_cpu_device,
                     verbose=self.verbose,
                 )
 
-                vectorizer_mock.assert_called_with(embeddings_model=self.embeddings_model_mock)
+                vectorizer_factory_mock().create.assert_called_with(self.embeddings_model_mock)
 
     @patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel")
-    def test_givenABPEmbModelType_whenInstantiatingParser_thenInstantiateBPEmbVectorizerWithCorrectParameters(
+    def test_givenABPEmbModelType_whenInstantiatingParser_thenCallVectorizerFactoryWithCorrectParameters(
         self, model_mock
     ):
         with patch(
-            "deepparse.parser.address_parser.BPEmbEmbeddingsModel",
-            return_value=self.embeddings_model_mock,
-        ):
-            with patch("deepparse.parser.address_parser.BPEmbVectorizer") as vectorizer_mock:
+            "deepparse.parser.address_parser.EmbeddingsModelFactory",
+        ) as embeddings_factory_mock:
+            embeddings_factory_mock().create.return_value = self.embeddings_model_mock
+            with patch("deepparse.parser.address_parser.VectorizerFactory") as vectorizer_factory_mock:
                 AddressParser(
                     model_type=self.a_bpemb_model_type,
                     device=self.a_cpu_device,
                     verbose=self.verbose,
                 )
 
-                vectorizer_mock.assert_called_with(embeddings_model=self.embeddings_model_mock)
+                vectorizer_factory_mock().create.assert_called_with(self.embeddings_model_mock)
 
     @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
-    def test_givenABestModelType_whenInstantiatingParser_thenInstantiateModelWithCorrectParameters(
+    def test_givenABestModelType_whenInstantiatingParser_thenCallModelFactoryWithCorrectParameters(
         self, embeddings_model_mock
     ):
-        with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel") as model_mock:
+        with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
             AddressParser(
                 model_type=self.a_best_model_type,
                 device=self.a_cpu_device,
                 verbose=self.verbose,
             )
 
-            model_mock.assert_called_with(
+            model_factory_mock().create.assert_called_with(
+                model_type=self.a_bpemb_model_type,
                 cache_dir=self.cache_dir,
                 device=self.a_cpu_torch_device,
                 output_size=self.number_tags,
@@ -447,14 +421,15 @@ class AddressParserTest(AddressParserPredictTestCase):
     def test_givenABPEmbModelType_whenInstantiatingParser_thenInstantiateModelWithCorrectParameters(
         self, embeddings_model_mock
     ):
-        with patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel") as model_mock:
+        with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
             AddressParser(
                 model_type=self.a_bpemb_model_type,
                 device=self.a_cpu_device,
                 verbose=self.verbose,
             )
 
-            model_mock.assert_called_with(
+            model_factory_mock().create.assert_called_with(
+                model_type=self.a_bpemb_model_type,
                 cache_dir=self.cache_dir,
                 device=self.a_cpu_torch_device,
                 output_size=self.number_tags,
@@ -464,147 +439,42 @@ class AddressParserTest(AddressParserPredictTestCase):
                 offline=False,
             )
 
-    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
     @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
-    def test_givenAFastestModelType_whenInstantiatingParser_thenDownloadFasttextModelWithCorrectPath(
-        self, embeddings_model_mock, model_mock
+    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
+    def test_givenAFastestModelType_whenInstantiatingParser_thenVectorizerFactoryWithCorrectParameters(
+        self, model_mock, downloader_mock
     ):
-        with patch("deepparse.parser.address_parser.download_fasttext_embeddings") as downloader:
-            AddressParser(
-                model_type=self.a_fastest_model_type,
-                device=self.a_cpu_device,
-                verbose=self.verbose,
-            )
-
-            downloader.assert_called_with(cache_dir=self.fasttext_download_path, verbose=self.verbose, offline=False)
-
-    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
-    @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
-    def test_givenAFasttextModelType_whenInstantiatingParser_thenDownloadFasttextModelWithCorrectPath(
-        self, embeddings_model_mock, model_mock
-    ):
-        with patch("deepparse.parser.address_parser.download_fasttext_embeddings") as downloader:
-            AddressParser(
-                model_type=self.a_fasttext_model_type,
-                device=self.a_cpu_device,
-                verbose=self.verbose,
-            )
-
-            downloader.assert_called_with(cache_dir=self.fasttext_download_path, verbose=self.verbose, offline=False)
-
-    @patch("deepparse.parser.address_parser.MagnitudeEmbeddingsModel")
-    @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
-    def test_givenAFasttextLightModelType_whenInstantiatingParser_thenDownloadFasttextMagnitudeModelWithCorrectPath(
-        self, embeddings_model_mock, model_mock
-    ):
-        with patch("deepparse.parser.address_parser.download_fasttext_magnitude_embeddings") as downloader:
-            AddressParser(
-                model_type=self.a_fasttext_light_model_type,
-                device=self.a_cpu_device,
-                verbose=self.verbose,
-            )
-
-            downloader.assert_called_with(cache_dir=self.fasttext_download_path, verbose=self.verbose, offline=False)
-
-    @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
-    def test_givenAFastestModelType_whenInstantiatingParser_thenInstantiateModelWithCorrectPath(self, model_mock):
         with patch(
-            "deepparse.parser.address_parser.download_fasttext_embeddings",
-            return_value=self.a_embeddings_path,
-        ):
-            with patch("deepparse.parser.address_parser.FastTextEmbeddingsModel") as embeddings_model_mock:
+            "deepparse.parser.address_parser.EmbeddingsModelFactory",
+        ) as embeddings_factory_mock:
+            embeddings_factory_mock().create.return_value = self.embeddings_model_mock
+            with patch("deepparse.parser.address_parser.VectorizerFactory") as vectorizer_factory_mock:
                 AddressParser(
                     model_type=self.a_fastest_model_type,
                     device=self.a_cpu_device,
                     verbose=self.verbose,
                 )
 
-                embeddings_model_mock.assert_called_with(self.a_embeddings_path, verbose=self.verbose)
-
-    @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
-    def test_givenAFasttextModelType_whenInstantiatingParser_thenInstantiateModelWithCorrectPath(self, model_mock):
-        with patch(
-            "deepparse.parser.address_parser.download_fasttext_embeddings",
-            return_value=self.a_embeddings_path,
-        ):
-            with patch("deepparse.parser.address_parser.FastTextEmbeddingsModel") as embeddings_model_mock:
-                AddressParser(
-                    model_type=self.a_fasttext_model_type,
-                    device=self.a_cpu_device,
-                    verbose=self.verbose,
-                )
-
-                embeddings_model_mock.assert_called_with(self.a_embeddings_path, verbose=self.verbose)
-
-    @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
-    def test_givenAFasttextLightModelType_whenInstanciatingParser_thenInstanciateModelWithCorrectPath(self, model_mock):
-        with patch(
-            "deepparse.parser.address_parser.download_fasttext_magnitude_embeddings",
-            return_value=self.a_embeddings_path,
-        ):
-            with patch("deepparse.parser.address_parser.MagnitudeEmbeddingsModel") as embeddings_model_mock:
-                AddressParser(
-                    model_type=self.a_fasttext_light_model_type,
-                    device=self.a_cpu_device,
-                    verbose=self.verbose,
-                )
-
-                embeddings_model_mock.assert_called_with(self.a_embeddings_path, verbose=self.verbose)
-
-    @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
-    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
-    def test_givenAFastestModelType_whenInstantiatingParser_thenInstantiateFasttextVectorizerWithCorrectParameters(
-        self, model_mock, downloader_mock
-    ):
-        with patch(
-            "deepparse.parser.address_parser.FastTextEmbeddingsModel",
-            return_value=self.embeddings_model_mock,
-        ):
-            with patch("deepparse.parser.address_parser.FastTextVectorizer") as vectorizer_mock:
-                AddressParser(
-                    model_type=self.a_fastest_model_type,
-                    device=self.a_cpu_device,
-                    verbose=self.verbose,
-                )
-
-                vectorizer_mock.assert_called_with(embeddings_model=self.embeddings_model_mock)
-
-    @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
-    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
-    def test_givenAFasttextModelType_whenInstantiatingParser_thenInstantiateFasttextVectorizerWithCorrectParameters(
-        self, model_mock, downloader_mock
-    ):
-        with patch(
-            "deepparse.parser.address_parser.FastTextEmbeddingsModel",
-            return_value=self.embeddings_model_mock,
-        ):
-            with patch("deepparse.parser.address_parser.FastTextVectorizer") as vectorizer_mock:
-                AddressParser(
-                    model_type=self.a_fasttext_model_type,
-                    device=self.a_cpu_device,
-                    verbose=self.verbose,
-                )
-
-                vectorizer_mock.assert_called_with(embeddings_model=self.embeddings_model_mock)
+                vectorizer_factory_mock().create.assert_called_with(self.embeddings_model_mock)
 
     @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
     @patch("deepparse.parser.address_parser.download_fasttext_magnitude_embeddings")
     # pylint: disable=C0301
-    def test_givenAFasttextLightModelType_whenInstanciatingParser_thenInstanciateMagnitudeVectorizerWithCorrectParameters(
+    def test_givenAFasttextLightModelType_whenInstanciatingParser_thenCallVectorizerFactoryWithCorrectParameters(
         self, model_mock, downloader_mock
     ):
         with patch(
-            "deepparse.parser.address_parser.MagnitudeEmbeddingsModel",
-            return_value=self.embeddings_model_mock,
-        ):
-            with patch("deepparse.parser.address_parser.MagnitudeVectorizer") as vectorizer_mock:
+            "deepparse.parser.address_parser.EmbeddingsModelFactory",
+        ) as embeddings_factory_mock:
+            embeddings_factory_mock().create.return_value = self.embeddings_model_mock
+            with patch("deepparse.parser.address_parser.VectorizerFactory") as vectorizer_factory_mock:
                 AddressParser(
                     model_type=self.a_fasttext_light_model_type,
                     device=self.a_cpu_device,
                     verbose=self.verbose,
                 )
 
-                vectorizer_mock.assert_called_with(embeddings_model=self.embeddings_model_mock)
+                vectorizer_factory_mock().create.assert_called_with(self.embeddings_model_mock)
 
     @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
     @patch("deepparse.parser.address_parser.download_fasttext_magnitude_embeddings")
@@ -613,31 +483,32 @@ class AddressParserTest(AddressParserPredictTestCase):
         self, model_mock, downloader_mock
     ):
         with patch(
-            "deepparse.parser.address_parser.MagnitudeEmbeddingsModel",
-            return_value=self.embeddings_model_mock,
-        ):
-            with patch("deepparse.parser.address_parser.MagnitudeVectorizer") as vectorizer_mock:
+            "deepparse.parser.address_parser.EmbeddingsModelFactory",
+        ) as embeddings_factory_mock:
+            embeddings_factory_mock().create.return_value = self.embeddings_model_mock
+            with patch("deepparse.parser.address_parser.VectorizerFactory") as vectorizer_factory_mock:
                 AddressParser(
                     model_type=self.a_fasttext_lightest_model_type,
                     device=self.a_cpu_device,
                     verbose=self.verbose,
                 )
 
-                vectorizer_mock.assert_called_with(embeddings_model=self.embeddings_model_mock)
+                vectorizer_factory_mock().create.assert_called_with(self.embeddings_model_mock)
 
     @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
     @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
     def test_givenAFastestModelType_whenInstantiatingParser_thenInstantiateModelWithCorrectParameters(
         self, download_weights_mock, embeddings_model_mock
     ):
-        with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel") as model_mock:
+        with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
             AddressParser(
                 model_type=self.a_fastest_model_type,
                 device=self.a_cpu_device,
                 verbose=self.verbose,
             )
 
-            model_mock.assert_called_with(
+            model_factory_mock().create.assert_called_with(
+                model_type=self.a_fasttext_model_type,
                 cache_dir=self.cache_dir,
                 device=self.a_cpu_torch_device,
                 output_size=self.number_tags,
@@ -649,17 +520,18 @@ class AddressParserTest(AddressParserPredictTestCase):
 
     @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
     @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
-    def test_givenAFasttextModelType_whenInstantiatingParser_thenInstantiateModelWithCorrectParameters(
+    def test_givenAFasttextModelType_whenInstantiatingParser_thenCallModelFactoryWithCorrectParameters(
         self, download_weights_mock, embeddings_model_mock
     ):
-        with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel") as model_mock:
+        with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
             AddressParser(
                 model_type=self.a_fasttext_model_type,
                 device=self.a_cpu_device,
                 verbose=self.verbose,
             )
 
-            model_mock.assert_called_with(
+            model_factory_mock().create.assert_called_with(
+                model_type=self.a_fasttext_model_type,
                 cache_dir=self.cache_dir,
                 device=self.a_cpu_torch_device,
                 output_size=self.number_tags,
@@ -1633,26 +1505,32 @@ class AddressParserTest(AddressParserPredictTestCase):
 
     @patch("deepparse.parser.address_parser.BPEmbVectorizer")
     @patch("deepparse.parser.address_parser.bpemb_data_padding")
-    def test_givenANewCacheDirBPEmb_thenInitWeightsInNewCacheDir(self, vectorizer_model_mock, data_padding_mock):
-        with patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel") as embeddings_model_mock:
+    @patch("deepparse.parser.address_parser.VectorizerFactory")
+    def test_givenANewCacheDirBPEmb_thenInitWeightsInNewCacheDir(
+        self, vectorizer_model_mock, data_padding_mock, vectorizer_factory_mock
+    ):
+        with patch("deepparse.parser.address_parser.EmbeddingsModelFactory") as embeddings_model_factory_mock:
             AddressParser(
                 model_type=self.a_bpemb_model_type,
                 device=self.a_cpu_device,
                 verbose=self.verbose,
                 cache_dir=self.a_cache_dir,
             )
-            embeddings_model_mock.assert_called_with(verbose=self.verbose, cache_dir=self.a_cache_dir)
+            embeddings_model_factory_mock().create.assert_called_with(
+                embedding_model_type=self.a_bpemb_model_type, verbose=self.verbose, cache_dir=self.a_cache_dir
+            )
 
     @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
-    def test_givenANewCacheDirFastText_thenInitWeightsInNewCacheDir(self, embeddings_model_mock):
-        with patch("deepparse.parser.address_parser.download_fasttext_embeddings") as download_weights_mock:
+    @patch("deepparse.parser.address_parser.VectorizerFactory")
+    def test_givenANewCacheDirFastText_thenInitWeightsInNewCacheDir(self, embeddings_model_mock, vectorizer_factory_mock):
+        with patch("deepparse.parser.address_parser.EmbeddingsModelFactory") as embeddings_model_factory_mock:
             AddressParser(
                 model_type=self.a_fastest_model_type,
                 device=self.a_cpu_device,
                 verbose=self.verbose,
                 cache_dir=self.a_cache_dir,
             )
-            download_weights_mock.assert_called_with(verbose=self.verbose, cache_dir=self.a_cache_dir, offline=False)
+            embeddings_model_factory_mock().create.assert_called_with(embedding_model_type=self.a_fasttext_model_type, verbose=self.verbose, cache_dir=self.a_cache_dir)
 
     @patch("deepparse.parser.address_parser.torch.save")
     @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
@@ -1669,17 +1547,21 @@ class AddressParserTest(AddressParserPredictTestCase):
         model_mock,
         torch_save_mock,
     ):
-        address_parser = AddressParser(
-            model_type=self.a_fasttext_model_type,
-            device=self.a_cpu_device,
-            verbose=self.verbose,
-        )
+        with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
+            model_mock = MagicMock()
+            model_factory_mock().create.return_value = model_mock
 
-        a_file_path = os.path.join(self.a_saving_dir_path, "exported_model.p")
-        address_parser.save_model_weights(file_path=a_file_path)
+            address_parser = AddressParser(
+                model_type=self.a_fasttext_model_type,
+                device=self.a_cpu_device,
+                verbose=self.verbose,
+            )
 
-        torch_save_mock.assert_called()
-        torch_save_mock.assert_called_with(model_mock().state_dict(), a_file_path)
+            a_file_path = os.path.join(self.a_saving_dir_path, "exported_model.p")
+            address_parser.save_model_weights(file_path=a_file_path)
+
+            torch_save_mock.assert_called()
+            torch_save_mock.assert_called_with(model_mock.state_dict(), a_file_path)
 
 
 if __name__ == "__main__":

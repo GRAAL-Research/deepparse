@@ -1,3 +1,4 @@
+# pylint: disable=line-too-long
 import unittest
 from unittest import TestCase
 from unittest.mock import ANY, MagicMock, Mock, call
@@ -71,7 +72,7 @@ class DataProcessorTest(TestCase):
                 ),
                 self.a_padded_tag_targets,
             )
-            if params[1] == False
+            if params[1] is False
             else (
                 (self.a_padded_word_embedding_sequence, self.a_sequence_lengths_list, self.a_padded_tag_targets),
                 self.a_padded_tag_targets,
@@ -97,7 +98,7 @@ class DataProcessorTest(TestCase):
                 ),
                 self.a_padded_tag_targets,
             )
-            if params[1] == False
+            if params[1] is False
             else (
                 (
                     self.a_padded_subword_embedding_sequence,

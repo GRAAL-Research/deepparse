@@ -1,3 +1,4 @@
+# pylint: disable=line-too-long, too-many-public-methods
 import unittest
 from unittest import TestCase
 

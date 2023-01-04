@@ -1,6 +1,5 @@
 from typing import List, Iterable
 
-# TODO: fix cyclic import
 # from ..converter import TagsConverter
 from ..vectorizer import Vectorizer
 

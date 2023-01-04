@@ -13,9 +13,11 @@ class DataProcessor:
         vectorizer (:class:`~Vectorizer`): a callable vectorizer capable of vectorizing a list of addresses
         sequences_padding_callback (Callable): a callback to pad a sequence of vectorized addresses to the
             longuest, while returning the original unpadded lengths, see :class:`~deepparse.converter.Datapadder`
-        batch_padding_callback (Callable): a callback to pad a a sequence of vectorized addresses and their lablesto the
-            longuest, while returning the original unpadded lengths, see :class:`~deepparse.converter.Datapadder`
-        tags_converter (:class:`~TagsConverter`): a callable converter to transform address labels into indices for training
+        batch_padding_callback (Callable): a callback to pad a a sequence of vectorized addresses and their labels
+            to the longuest, while returning the original unpadded lengths,
+            see :class:`~deepparse.converter.Datapadder`
+        tags_converter (:class:`~TagsConverter`): a callable converter to transform address labels into
+            indices for training
 
     """
 
@@ -40,8 +42,8 @@ class DataProcessor:
             addresses (List[str]): a list of addresses
         Return:
             Either a tuple of vectorized addresses and their respective original lengths before padding
-            or a tuple of vectorized addresses their subword decomposition lengths and their respective original lengths before padding,
-            depending on the vectorizing and padding methods.
+            or a tuple of vectorized addresses their subword decomposition lengths and their respective
+            original lengths before padding, depending on the vectorizing and padding methods.
         """
         return self.sequences_padding_callback(self.vectorizer(addresses))
 
@@ -60,13 +62,14 @@ class DataProcessor:
         """
         Method to vectorize addresses and tags for training.
         Args:
-            addresses_and_targets (List[Tuple[str, List[str]]]): a list of tuples where the first element is an address and the second is a list of tags.
+            addresses_and_targets (List[Tuple[str, List[str]]]): a list of tuples where the first element is an
+                address and the second is a list of tags.
             teacher_forcing (bool): if True, the padded target vectors are returned twice,
                 once with the sequences and their lengths, and once on their own. This enables
                 the use of teacher forcing during the training of sequence to sequence models.
         Return:
-            A padded batch. Check out :meth:`~deepparse.converter.DataPadder.pad_word_embeddings_batch` and :meth:`~DataPadder.pad_subword_embeddings_batch`
-                for more details.
+            A padded batch. Check out :meth:`~deepparse.converter.DataPadder.pad_word_embeddings_batch`
+                and :meth:`~DataPadder.pad_subword_embeddings_batch` for more details.
         """
         input_sequence = []
         target_sequence = []

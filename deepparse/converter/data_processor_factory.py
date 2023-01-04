@@ -13,7 +13,8 @@ class DataProcessorFactory:
         Args:
             vectorizer (:class:`~Vectorizer`): a callable vectorizer capable of vectorizing a list of addresses
             padder (:class:`~DataPadder`): a data padder with methods to pad address sequences and batches
-            tags_converter (:class:`~TagsConverter`): a callable converter to transform address labels into indices for training
+            tags_converter (:class:`~TagsConverter`): a callable converter to transform address
+            labels into indices for training
         Return:
             A :class:`~DataProcessor`
         """

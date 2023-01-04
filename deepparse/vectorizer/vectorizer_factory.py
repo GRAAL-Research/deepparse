@@ -31,7 +31,7 @@ class VectorizerFactory:
 
         else:
             raise NotImplementedError(
-                f"""
+                """
             There's no vectorizer corresponding to the embeddings model type provided.
             Supported embedding models are: BPEmbEmbeddingsModel, FastTextEmbeddingsModel and MagnitudeEmbeddingsModel.
             """

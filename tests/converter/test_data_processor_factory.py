@@ -46,3 +46,6 @@ class DataProcessorFactoryTest(TestCase):
         self.assertTrue(
             processor.batch_padding_callback.__qualname__ == DataPadder.pad_word_embeddings_batch.__qualname__
         )
+
+if __name__ == "__main__":
+    unittest.main()

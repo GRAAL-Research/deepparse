@@ -1034,7 +1034,9 @@ class AddressParser:
             **seq2seq_kwargs,
         )
 
-        embeddings_model = EmbeddingsModelFactory().create(embedding_model_type=self.model_type, cache_dir=cache_dir, verbose=verbose)
+        embeddings_model = EmbeddingsModelFactory().create(
+            embedding_model_type=self.model_type, cache_dir=cache_dir, verbose=verbose
+        )
         vectorizer = VectorizerFactory().create(embeddings_model)
 
         padder = DataPadder()

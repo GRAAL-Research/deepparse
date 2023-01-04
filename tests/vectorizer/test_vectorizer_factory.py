@@ -1,4 +1,4 @@
-# pylint: disable=unused-argument, arguments-differ
+# pylint: disable=unused-argument
 import unittest
 from unittest import TestCase
 from unittest.mock import patch
@@ -15,8 +15,9 @@ class VectorizerFactoryTest(TestCase):
     @classmethod
     @patch("deepparse.embeddings_models.bpemb_embeddings_model.BPEmb")
     @patch("deepparse.embeddings_models.fasttext_embeddings_model.load_fasttext_embeddings")
+    @patch("deepparse.embeddings_models.fasttext_embeddings_model.load_facebook_vectors")
     @patch("deepparse.embeddings_models.magnitude_embeddings_model.Magnitude")
-    def setUpClass(cls, bpemb_mock, fasttext_load_mock, magnitude_mock):
+    def setUpClass(cls):
         a_cache_dir = "~/.cache/deepparse"
         cls.a_bpemb_embeddings_model = BPEmbEmbeddingsModel(a_cache_dir)
 

@@ -1,4 +1,3 @@
-from regex import F
 from . import DataPadder, TagsConverter, DataProcessor
 from ..vectorizer import Vectorizer, BPEmbVectorizer
 

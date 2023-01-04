@@ -9,6 +9,7 @@ from unittest.mock import MagicMock, call, patch
 
 from poutyne import Callback
 
+from deepparse.errors import FastTextModelError
 from deepparse.parser import AddressParser
 from tests.base_capture_output import CaptureOutputTestCase
 from tests.parser.integration.base_retrain import AddressParserRetrainTestCase
@@ -234,7 +235,7 @@ class AddressParserIntegrationRetrainCPUTest(AddressParserRetrainTestCase, Captu
             device=self.a_cpu_device,
             verbose=self.verbose,
         )
-        with self.assertRaises(ValueError):
+        with self.assertRaises(FastTextModelError):
             address_parser.retrain(
                 self.training_container,
                 train_ratio=self.a_train_ratio,

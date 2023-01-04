@@ -11,7 +11,7 @@ import platform
 import re
 import warnings
 from pathlib import Path
-from typing import List, Union, Dict, Tuple
+from typing import Dict, List, Tuple, Union
 
 import torch
 from poutyne.framework import Experiment
@@ -22,15 +22,15 @@ from . import formatted_parsed_address
 from .capturing import Capturing
 from .formatted_parsed_address import FormattedParsedAddress
 from .tools import (
-    validate_if_new_seq2seq_params,
-    validate_if_new_prediction_tags,
+    get_address_parser_in_directory,
+    get_files_in_directory,
+    handle_model_name,
+    indices_splitting,
+    infer_model_type,
     load_tuple_to_device,
     pretrained_parser_in_directory,
-    get_files_in_directory,
-    get_address_parser_in_directory,
-    indices_splitting,
-    handle_model_name,
-    infer_model_type,
+    validate_if_new_prediction_tags,
+    validate_if_new_seq2seq_params,
 )
 from .. import validate_data_to_parse
 from ..converter import TagsConverter, DataProcessorFactory, DataPadder
@@ -41,6 +41,7 @@ from ..network import ModelFactory
 from ..preprocessing import AddressCleaner
 from ..tools import CACHE_PATH, valid_poutyne_version
 from ..vectorizer import VectorizerFactory
+from ..errors import FastTextModelError
 
 
 _pre_trained_tags_to_idx = {
@@ -107,7 +108,7 @@ class AddressParser:
             be set to True.
         cache_dir (Union[str, None]): The path to the cached directory to use for downloading (and loading) the
             embeddings model and the model pretrained weights.
-        offline (bool): Wether or not the model is an offline one, meaning you have already downloaded the pre-trained
+        offline (bool): Whether or not the model is an offline one, meaning you have already downloaded the pre-trained
             weights and embeddings weights in either the default Deepparse cache directory (~./cache/deepparse) or
             the ``cache_dir`` directory. When offline, we will not verify if the model is the latest. You can use our
             ``download_models`` CLI function to download all the requirements for a model. The default value is False
@@ -352,6 +353,8 @@ class AddressParser:
                                                          is_training_container=False)
                 address_parser(addresses_to_parse)
         """
+        self._model_os_validation(num_workers=num_workers)
+
         if isinstance(addresses_to_parse, str):
             addresses_to_parse = [addresses_to_parse]
 
@@ -634,6 +637,14 @@ class AddressParser:
                     name_of_the_retrain_parser="MyParserName")
 
         """
+        if isinstance(val_dataset_container, int):
+            raise ValueError(
+                "The value of the second argument, val_dataset_container, is an int type, which is not an expected "
+                "type. Do you want to specify the train_ratio (e.g. 0.8)? Please note that we have changed the "
+                "interface and have added a new argument **before** the train_ratio argument. Specified the argument "
+                "using the train_ratio=0.8 to fix the error."
+            )
+
         self._retrain_argumentation_validations(
             train_dataset_container, val_dataset_container, num_workers, name_of_the_retrain_parser
         )
@@ -709,7 +720,7 @@ class AddressParser:
             )
         except RuntimeError as error:
             list_of_file_path = os.listdir(path=".")
-            if len(list_of_file_path) > 0:
+            if list_of_file_path:
                 if pretrained_parser_in_directory(logging_path):
                     # Mean we might already have checkpoint in the training directory
                     files_in_directory = get_files_in_directory(logging_path)
@@ -831,10 +842,12 @@ class AddressParser:
                 address_parser.test(test_container) # Test the retrained model
 
         """
+        self._model_os_validation(num_workers=num_workers)
+
         if "fasttext-light" in self.model_type:
-            raise ValueError(
-                "It's not possible to test a fasttext-light due to pymagnitude problem. See Retrain method"
-                "doc for more details."
+            raise FastTextModelError(
+                "It's not possible to test a fasttext-light due to pymagnitude problem. "
+                "See the Retrain method doc for more details."
             )
 
         if not isinstance(test_dataset_container, DatasetContainer):
@@ -1076,7 +1089,7 @@ class AddressParser:
 
     def _freeze_model_params(self, layers_to_freeze: Union[str]) -> None:
         layers_to_freeze = layers_to_freeze.lower()
-        if layers_to_freeze not in ["encoder", "decoder", "prediction_layer", "seq2seq"]:
+        if layers_to_freeze not in ("encoder", "decoder", "prediction_layer", "seq2seq"):
             raise ValueError(
                 f"{layers_to_freeze} freezing setting is not supported. Value can be 'encoder', 'decoder', "
                 f"'prediction_layer' and 'seq2seq'. See doc for more details."
@@ -1130,14 +1143,12 @@ class AddressParser:
         """
         Arguments validation test for retrain methods.
         """
-        if "fasttext-light" in self.model_type:
-            raise ValueError("It's not possible to retrain a fasttext-light due to pymagnitude problem.")
+        self._model_os_validation(num_workers=num_workers)
 
-        if platform.system().lower() == "windows" and "fasttext" in self.model_type and num_workers > 0:
-            raise ValueError(
-                "On Windows system, we cannot retrain FastText like models with parallelism workers since "
-                "FastText objects are not pickleable with the parallelism process use by Windows. "
-                "Thus, you need to set num_workers to 0 since 1 also means 'parallelism'."
+        if "fasttext-light" in self.model_type:
+            raise FastTextModelError(
+                "It's not possible to retrain a fasttext-light due to pymagnitude problem. "
+                "See the Retrain method doc for more details."
             )
 
         if not isinstance(train_dataset_container, DatasetContainer):
@@ -1164,3 +1175,18 @@ class AddressParser:
                 raise ValueError(
                     "The name_of_the_retrain_parser should NOT include a file extension or a dot-like filename style."
                 )
+
+    def _model_os_validation(self, num_workers):
+        if platform.system().lower() == "windows" and "fasttext" in self.model_type and num_workers > 0:
+            raise FastTextModelError(
+                "On Windows system, we cannot use FastText-like models with parallelism workers since "
+                "FastText objects are not pickleable with the parallelism process use by Windows. "
+                "Thus, you need to set num_workers to 0 since 1 also means 'parallelism'."
+            )
+
+        if platform.system().lower() == "darwin" and "fasttext" in self.model_type and num_workers > 0:
+            raise FastTextModelError(
+                "On MacOS system, we cannot use FastText-like models with parallelism out-of-the-box since "
+                "FastText objects are not pickleable with the parallelism process used by default by MacOS. "
+                "Thus, you need to set torch.multiprocessing.set_start_method('fork') to allow torch parallelism."
+            )

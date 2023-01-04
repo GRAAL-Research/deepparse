@@ -1,6 +1,6 @@
 import math
 import os
-from typing import List, Tuple, OrderedDict
+from typing import List, OrderedDict, Tuple
 
 import numpy as np
 import torch

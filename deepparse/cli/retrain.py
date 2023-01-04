@@ -1,4 +1,5 @@
 import argparse
+import json
 import sys
 from typing import Dict
 
@@ -43,6 +44,21 @@ def parse_retrained_arguments(parsed_args) -> Dict:
         parsed_retain_arguments.update({retrain_parameter: value})
 
     return parsed_retain_arguments
+
+
+def handle_prediction_tags(parsed_args):
+    dict_parsed_args = vars(parsed_args)
+    path = dict_parsed_args.get("prediction_tags")
+
+    tags_dict_arguments = {"prediction_tags": None}  # Default case
+
+    if path is not None:
+        with open(path, "r", encoding="UTF-8") as file:
+            prediction_tags = json.load(file)
+            if "EOS" not in prediction_tags.keys():
+                raise ValueError("The prediction tags dictionary is missing the EOS tag.")
+            tags_dict_arguments.update({"prediction_tags": prediction_tags})
+    return tags_dict_arguments
 
 
 def main(args=None) -> None:
@@ -114,6 +130,9 @@ def main(args=None) -> None:
     parser_args.update(**parser_args_update_args)
 
     address_parser = AddressParser(**parser_args)
+
+    new_tags_parser_args_update_args = handle_prediction_tags(parsed_args)
+    parser_args.update(**new_tags_parser_args_update_args)
 
     parsed_retain_arguments = parse_retrained_arguments(parsed_args)
 
@@ -213,6 +232,16 @@ def get_parser() -> argparse.ArgumentParser:
             "Name to give to the retrained parser that will be used when reloaded as the printed name, "
             "and to the saving file name. By default, None, thus, the default name. See the complete parser retrain "
             "method for more details."
+        ),
+        default=None,
+        type=str,
+    )
+    parser.add_argument(
+        "--prediction_tags",
+        help=wrap(
+            "Path to a JSON file of prediction tags to use to retrain. Tags are in a key-value style, where "
+            "the key is the tag name, and the value is the index one."
+            "The last element has to be an EOS tag. Read the doc for more detail about EOS tag."
         ),
         default=None,
         type=str,

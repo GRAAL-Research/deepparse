@@ -289,10 +289,3 @@
  - Add feature to allow new_prediction_tags to retrain CLI.
 
 ## dev
-
-- Improve Deepparse server error handling and error output
-- Remove deprecated argument `saving_dir` in `download_fasttext_magnitude_embeddings`
-  and `download_fasttext_embeddings` functions
-- Add offline argument to remove verification of the latest version
-- Bug-fix cache handling in download model
-- Add `download_models` CLI function

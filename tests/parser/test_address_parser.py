@@ -20,7 +20,6 @@ import torch
 from torch import device
 
 from deepparse.errors.data_error import DataError
-from deepparse.errors.model_error import FastTextModelError
 from deepparse.parser import FormattedParsedAddress, formatted_parsed_address
 from deepparse.parser.address_parser import AddressParser
 from tests.parser.base import AddressParserPredictTestCase

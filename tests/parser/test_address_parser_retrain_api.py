@@ -1624,7 +1624,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         self, vectorizer_factory_mock, embeddings_model_factory_mock
     ):
         num_workers_gt_0 = 1
-        with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel"):
+        with patch("deepparse.parser.address_parser.ModelFactory"):
             address_parser = AddressParser(
                 model_type=self.a_fasttext_model_type,
                 device=self.a_device,

@@ -1618,10 +1618,10 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
                 )
 
     @skipIf(platform.system() != "Windows", "Integration test on Windows env.")
-    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
-    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.EmbeddingsModelFactory")
+    @patch("deepparse.parser.address_parser.VectorizerFactory")
     def test_givenAFasttextModelTypeOnWindows_whenInstantiatingParserWithNumWorkerGT0_thenRaiseError(
-        self, download_weights_mock, embeddings_model_mock
+        self, vectorizer_factory_mock, embeddings_model_factory_mock
     ):
         num_workers_gt_0 = 1
         with patch("deepparse.parser.address_parser.FastTextSeq2SeqModel"):

@@ -1034,8 +1034,7 @@ class AddressParser:
             # Set to default cache_path value
             cache_dir = CACHE_PATH
 
-        model_factory = ModelFactory()
-        self.model = model_factory.create(
+        self.model = ModelFactory().create(
             model_type=self.model_type,
             cache_dir=cache_dir,
             device=self.device,

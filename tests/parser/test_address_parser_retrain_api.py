@@ -599,7 +599,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
             verbose=self.verbose,
         )
         model_factory_mock = MagicMock()
-        self.address_parser._model_factory = model_factory_mock
+        self.address_parser._setup_model = model_factory_mock
         self.address_parser_retrain_call(seq2seq_params=self.seq2seq_params)
 
         model_factory_mock.assert_called()

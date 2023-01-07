@@ -18,6 +18,8 @@ class DataProcessorFactoryTest(TestCase):
 
         self.processor_factory = DataProcessorFactory()
 
+        self.invalid_vectorizer = "invalid vectorizer"
+
     def test_givenABpembVectorizer_whenCreatingProcessor_thenShouldAssignCorrectSequencesPaddingCallbacks(self):
         processor = self.processor_factory.create(self.bpemb_vectorizer, self.padder, self.tags_converter_mock)
 
@@ -46,6 +48,10 @@ class DataProcessorFactoryTest(TestCase):
         self.assertTrue(
             processor.batch_padding_callback.__qualname__ == DataPadder.pad_word_embeddings_batch.__qualname__
         )
+
+    def test_givenAnInvalidVectorizer_whenCreatingProcessor_thenShouldRaiseError(self):
+        with self.assertRaises(NotImplementedError):
+            self.processor_factory.create(self.invalid_vectorizer, self.padder, self.tags_converter_mock)
 
 
 if __name__ == "__main__":

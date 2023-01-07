@@ -1,5 +1,5 @@
 from . import DataPadder, TagsConverter, DataProcessor
-from ..vectorizer import Vectorizer, BPEmbVectorizer
+from ..vectorizer import Vectorizer, BPEmbVectorizer, FastTextVectorizer, MagnitudeVectorizer
 
 
 class DataProcessorFactory:
@@ -23,9 +23,16 @@ class DataProcessorFactory:
                 vectorizer, padder.pad_subword_embeddings_sequences, padder.pad_subword_embeddings_batch, tags_converter
             )
 
-        else:
+        elif isinstance(vectorizer, FastTextVectorizer) or isinstance(vectorizer, MagnitudeVectorizer):
             processor = DataProcessor(
                 vectorizer, padder.pad_word_embeddings_sequences, padder.pad_word_embeddings_batch, tags_converter
+            )
+        else:
+            raise NotImplementedError(
+                """
+            There's no data processor corresponding to the  provided vectorizer.
+            Supported vectorizers are BPEmbVectorizer, FastTextVectorizerand MagnitudeVectorizer
+            """
             )
 
         return processor

@@ -245,7 +245,7 @@ class AddressParser:
         self.named_parser = named_parser
 
         self.model_type, self._model_type_formatted = handle_model_name(model_type, attention_mechanism)
-        self._model_factory(
+        self._setup_model(
             verbose=self.verbose,
             path_to_retrained_model=path_to_retrained_model,
             prediction_layer_len=self.tags_converter.dim,
@@ -677,7 +677,7 @@ class AddressParser:
 
             model_factory_dict.update({"seq2seq_kwargs": seq2seq_params})
             # We set verbose to false since model is reloaded
-            self._model_factory(verbose=False, path_to_retrained_model=None, **model_factory_dict)
+            self._setup_model(verbose=False, path_to_retrained_model=None, **model_factory_dict)
 
         callbacks = [] if callbacks is None else callbacks
         train_generator, valid_generator = self._create_training_data_generator(
@@ -1013,7 +1013,7 @@ class AddressParser:
 
         return train_generator, valid_generator
 
-    def _model_factory(
+    def _setup_model(
         self,
         verbose: bool,
         path_to_retrained_model: Union[str, None] = None,

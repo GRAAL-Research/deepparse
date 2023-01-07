@@ -19,7 +19,7 @@ class BPEmbEmbeddingsModel(EmbeddingsModel):
 
     Params:
         cache_dir (str): Path to the cache directory to the embeddings' bin vector and the model.
-        verbose (bool): Either or not to make the loading of the embeddings verbose.
+        verbose (bool): Wether or not to make the loading of the embeddings verbose.
     """
 
     def __init__(self, cache_dir: str, verbose: bool = True) -> None:

@@ -5,6 +5,7 @@
 # pylint: disable=inconsistent-return-statements
 
 import contextlib
+from functools import partial
 import os
 import platform
 import re
@@ -32,18 +33,16 @@ from .tools import (
     validate_if_new_seq2seq_params,
 )
 from .. import validate_data_to_parse
-from ..converter import DataTransform, TagsConverter, bpemb_data_padding, fasttext_data_padding
+from ..converter import TagsConverter, DataProcessorFactory, DataPadder
 from ..dataset_container import DatasetContainer
-from ..embeddings_models import BPEmbEmbeddingsModel, FastTextEmbeddingsModel, MagnitudeEmbeddingsModel
-from ..errors.model_error import FastTextModelError
-from ..fasttext_tools import download_fasttext_embeddings, download_fasttext_magnitude_embeddings
-from ..metrics import accuracy, nll_loss
-from ..network.bpemb_seq2seq import BPEmbSeq2SeqModel
-from ..network.fasttext_seq2seq import FastTextSeq2SeqModel
+from ..embeddings_models import EmbeddingsModelFactory
+from ..metrics import nll_loss, accuracy
+from ..network import ModelFactory
 from ..preprocessing import AddressCleaner
 from ..tools import CACHE_PATH, valid_poutyne_version
-from ..vectorizer import BPEmbVectorizer, FastTextVectorizer, TrainVectorizer
-from ..vectorizer.magnitude_vectorizer import MagnitudeVectorizer
+from ..vectorizer import VectorizerFactory
+from ..errors import FastTextModelError
+
 
 _pre_trained_tags_to_idx = {
     "StreetNumber": 0,
@@ -109,7 +108,7 @@ class AddressParser:
             be set to True.
         cache_dir (Union[str, None]): The path to the cached directory to use for downloading (and loading) the
             embeddings model and the model pretrained weights.
-        offline (bool): Either or not the model is an offline one, meaning you have already downloaded the pre-trained
+        offline (bool): Whether or not the model is an offline one, meaning you have already downloaded the pre-trained
             weights and embeddings weights in either the default Deepparse cache directory (~./cache/deepparse) or
             the ``cache_dir`` directory. When offline, we will not verify if the model is the latest. You can use our
             ``download_models`` CLI function to download all the requirements for a model. The default value is False
@@ -246,7 +245,7 @@ class AddressParser:
         self.named_parser = named_parser
 
         self.model_type, self._model_type_formatted = handle_model_name(model_type, attention_mechanism)
-        self._model_factory(
+        self._setup_model(
             verbose=self.verbose,
             path_to_retrained_model=path_to_retrained_model,
             prediction_layer_len=self.tags_converter.dim,
@@ -678,7 +677,7 @@ class AddressParser:
 
             model_factory_dict.update({"seq2seq_kwargs": seq2seq_params})
             # We set verbose to false since model is reloaded
-            self._model_factory(verbose=False, path_to_retrained_model=None, **model_factory_dict)
+            self._setup_model(verbose=False, path_to_retrained_model=None, **model_factory_dict)
 
         callbacks = [] if callbacks is None else callbacks
         train_generator, valid_generator = self._create_training_data_generator(
@@ -861,11 +860,10 @@ class AddressParser:
             raise ValueError("The dataset container is not a train container.")
 
         callbacks = [] if callbacks is None else callbacks
-        data_transform = self._set_data_transformer()
 
         test_generator = DataLoader(
             test_dataset_container,
-            collate_fn=data_transform.output_transform,
+            collate_fn=partial(self.processor.process_for_training, teacher_forcing=False),
             batch_size=batch_size,
             num_workers=num_workers,
         )
@@ -975,13 +973,6 @@ class AddressParser:
                 warnings.warn("No CUDA device detected, device will be set to 'CPU'.")
                 self.device = torch.device("cpu")
 
-    def _set_data_transformer(self) -> DataTransform:
-        train_vectorizer = TrainVectorizer(self.vectorizer, self.tags_converter)  # Vectorize to provide also the target
-        data_transform = DataTransform(
-            train_vectorizer, self.model_type
-        )  # Use for transforming the data prior to training
-        return data_transform
-
     def _create_training_data_generator(
         self,
         train_dataset_container: DatasetContainer,
@@ -992,7 +983,6 @@ class AddressParser:
         seed: int,
     ) -> Tuple:
         # pylint: disable=too-many-arguments
-        data_transform = self._set_data_transformer()
 
         if val_dataset_container is None:
             train_indices, valid_indices = indices_splitting(
@@ -1008,7 +998,7 @@ class AddressParser:
 
         train_generator = DataLoader(
             train_dataset,
-            collate_fn=data_transform.teacher_forcing_transform,
+            collate_fn=partial(self.processor.process_for_training, teacher_forcing=True),
             batch_size=batch_size,
             num_workers=num_workers,
             shuffle=True,
@@ -1016,14 +1006,14 @@ class AddressParser:
 
         valid_generator = DataLoader(
             valid_dataset,
-            collate_fn=data_transform.output_transform,
+            collate_fn=partial(self.processor.process_for_training, teacher_forcing=False),
             batch_size=batch_size,
             num_workers=num_workers,
         )
 
         return train_generator, valid_generator
 
-    def _model_factory(
+    def _setup_model(
         self,
         verbose: bool,
         path_to_retrained_model: Union[str, None] = None,
@@ -1044,61 +1034,32 @@ class AddressParser:
             # Set to default cache_path value
             cache_dir = CACHE_PATH
 
-        if "fasttext" in self.model_type:
-            if "fasttext-light" in self.model_type:
-                file_name = download_fasttext_magnitude_embeddings(
-                    cache_dir=cache_dir, verbose=verbose, offline=offline
-                )
+        self.model = ModelFactory().create(
+            model_type=self.model_type,
+            cache_dir=cache_dir,
+            device=self.device,
+            output_size=prediction_layer_len,
+            attention_mechanism=attention_mechanism,
+            path_to_retrained_model=path_to_retrained_model,
+            offline=offline,
+            verbose=verbose,
+            **seq2seq_kwargs,
+        )
 
-                embeddings_model = MagnitudeEmbeddingsModel(file_name, verbose=verbose)
-                self.vectorizer = MagnitudeVectorizer(embeddings_model=embeddings_model)
-            else:
-                file_name = download_fasttext_embeddings(cache_dir=cache_dir, verbose=verbose, offline=offline)
+        embeddings_model = EmbeddingsModelFactory().create(
+            embedding_model_type=self.model_type, cache_dir=cache_dir, verbose=verbose
+        )
+        vectorizer = VectorizerFactory().create(embeddings_model)
 
-                embeddings_model = FastTextEmbeddingsModel(file_name, verbose=verbose)
-                self.vectorizer = FastTextVectorizer(embeddings_model=embeddings_model)
+        padder = DataPadder()
 
-            self.data_converter = fasttext_data_padding
-
-            self.model = FastTextSeq2SeqModel(
-                cache_dir=cache_dir,
-                device=self.device,
-                output_size=prediction_layer_len,
-                verbose=verbose,
-                path_to_retrained_model=path_to_retrained_model,
-                attention_mechanism=attention_mechanism,
-                offline=offline,
-                **seq2seq_kwargs,
-            )
-
-        elif "bpemb" in self.model_type:
-            embeddings_model = BPEmbEmbeddingsModel(verbose=verbose, cache_dir=cache_dir)
-            self.vectorizer = BPEmbVectorizer(embeddings_model=embeddings_model)
-
-            self.data_converter = bpemb_data_padding
-
-            self.model = BPEmbSeq2SeqModel(
-                cache_dir=cache_dir,
-                device=self.device,
-                output_size=prediction_layer_len,
-                verbose=verbose,
-                path_to_retrained_model=path_to_retrained_model,
-                attention_mechanism=attention_mechanism,
-                offline=offline,
-                **seq2seq_kwargs,
-            )
-        else:
-            raise NotImplementedError(
-                f"There is no {self.model_type} network implemented. Value should be: "
-                f"fasttext, bpemb, lightest (fasttext-light), fastest (fasttext) "
-                f"or best (bpemb)."
-            )
+        self.processor = DataProcessorFactory().create(vectorizer, padder, self.tags_converter)
 
     def _predict_pipeline(self, data: List) -> Tuple:
         """
         Pipeline to process data in a data loader for prediction.
         """
-        return self.data_converter(self.vectorizer(data))
+        return self.processor.process_for_inference(data)
 
     @staticmethod
     def _retrain(

@@ -149,7 +149,7 @@ class AddressParserPredictTestCase(CaptureOutputTestCase):
     def mock_predictions_vectors(self, model):
         returned_prediction_vectors = self.a_prediction_vector_for_a_complete_address
         returned_value = returned_prediction_vectors
-        model.__call__().return_value = returned_value
+        model.return_value = returned_value
 
     def mock_multiple_predictions_vectors(self, model):
         returned_prediction_vectors = torch.cat(
@@ -160,7 +160,7 @@ class AddressParserPredictTestCase(CaptureOutputTestCase):
             1,
         )
         returned_value = returned_prediction_vectors
-        model.__call__().return_value = returned_value
+        model.return_value = returned_value
 
     def setup_retrain_new_tags_model(self, address_components, model_type):
         data_dict = {

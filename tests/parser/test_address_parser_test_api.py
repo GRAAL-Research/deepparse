@@ -3,7 +3,7 @@
 import platform
 import unittest
 from unittest import skipIf
-from unittest.mock import patch, call
+from unittest.mock import MagicMock, patch, call
 
 import torch
 
@@ -37,6 +37,9 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
 
         cls.verbose = False
 
+    def setUp(self):
+        self.model_mock = MagicMock()
+
     def address_parser_test_call(self, dataset_container=None, num_workers=None):
         if dataset_container is None:
             dataset_container = self.mocked_data_container
@@ -56,7 +59,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
     def assert_experiment_test(self, experiment_mock, model_mock, device):
         experiment_mock.assert_called_with(
             "./checkpoint",  # We always use this as default logging dir.
-            model_mock(),
+            model_mock,
             device=device,
             # For a reason I don't understand if I use self.nll_loss and set it in the
             # class setup, it return a bound method for the nll_loss but it work for
@@ -73,24 +76,23 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
     @patch("deepparse.parser.address_parser.DataLoader")
     @patch("deepparse.parser.address_parser.Experiment")
     @patch("deepparse.parser.address_parser.SGD")
-    @patch("deepparse.parser.address_parser.DataTransform")
-    @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
-    @patch("deepparse.parser.address_parser.fasttext_data_padding")
-    @patch("deepparse.parser.address_parser.FastTextVectorizer")
-    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
-    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
+    @patch("deepparse.parser.address_parser.ModelFactory")
+    @patch("deepparse.parser.address_parser.EmbeddingsModelFactory")
+    @patch("deepparse.parser.address_parser.VectorizerFactory")
+    @patch("deepparse.parser.address_parser.DataProcessorFactory")
+    @patch("deepparse.parser.address_parser.DataPadder")
     def test_givenAFasttextModel_whenTestCPU_thenInstantiateExperimentProperly(
         self,
-        download_weights_mock,
-        embeddings_model_mock,
-        vectorizer_model_mock,
-        data_padding_mock,
-        model_mock,
-        data_transform_mock,
+        data_padder_mock,
+        data_processor_factory_mock,
+        vectorizer_factory_mock,
+        embeddings_model_factory_mock,
+        model_factory_mock,
         optimizer_mock,
         experiment_mock,
         data_loader_mock,
     ):
+        model_factory_mock().create.return_value = self.model_mock
         self.address_parser = AddressParser(
             model_type=self.a_fasttext_model_type,
             device=self.a_device,
@@ -98,30 +100,29 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         )
         self.address_parser_test_call()
 
-        self.assert_experiment_test(experiment_mock, model_mock, device=self.a_device)
+        self.assert_experiment_test(experiment_mock, self.model_mock, device=self.a_device)
 
     @patch("deepparse.parser.address_parser.DataLoader")
     @patch("deepparse.parser.address_parser.Experiment")
     @patch("deepparse.parser.address_parser.SGD")
-    @patch("deepparse.parser.address_parser.DataTransform")
-    @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
-    @patch("deepparse.parser.address_parser.fasttext_data_padding")
-    @patch("deepparse.parser.address_parser.FastTextVectorizer")
-    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
-    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
+    @patch("deepparse.parser.address_parser.ModelFactory")
+    @patch("deepparse.parser.address_parser.EmbeddingsModelFactory")
+    @patch("deepparse.parser.address_parser.VectorizerFactory")
+    @patch("deepparse.parser.address_parser.DataProcessorFactory")
+    @patch("deepparse.parser.address_parser.DataPadder")
     @skipIf(not torch.cuda.is_available(), "no gpu available")
     def test_givenAFasttextModel_whenTestGPU_thenInstantiateExperimentProperly(
         self,
-        download_weights_mock,
-        embeddings_model_mock,
-        vectorizer_model_mock,
-        data_padding_mock,
-        model_mock,
-        data_transform_mock,
+        data_padder_mock,
+        data_processor_factory_mock,
+        vectorizer_factory_mock,
+        embeddings_model_factory_mock,
+        model_factory_mock,
         optimizer_mock,
         experiment_mock,
         data_loader_mock,
     ):
+        model_factory_mock().create.return_value = self.model_mock
         self.address_parser = AddressParser(
             model_type=self.a_fasttext_model_type,
             device=self.a_torch_device,
@@ -129,25 +130,23 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         )
         self.address_parser_test_call()
 
-        self.assert_experiment_test(experiment_mock, model_mock, device=self.a_torch_device)
+        self.assert_experiment_test(experiment_mock, self.model_mock, device=self.a_torch_device)
 
     @patch("deepparse.parser.address_parser.DataLoader")
     @patch("deepparse.parser.address_parser.Experiment")
     @patch("deepparse.parser.address_parser.SGD")
-    @patch("deepparse.parser.address_parser.DataTransform")
-    @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
-    @patch("deepparse.parser.address_parser.fasttext_data_padding")
-    @patch("deepparse.parser.address_parser.FastTextVectorizer")
-    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
-    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
+    @patch("deepparse.parser.address_parser.ModelFactory")
+    @patch("deepparse.parser.address_parser.EmbeddingsModelFactory")
+    @patch("deepparse.parser.address_parser.VectorizerFactory")
+    @patch("deepparse.parser.address_parser.DataProcessorFactory")
+    @patch("deepparse.parser.address_parser.DataPadder")
     def test_givenAFasttextModel_whenTest_thenInstantiateDataLoaderAndTestProperly(
         self,
-        download_weights_mock,
-        embeddings_model_mock,
-        vectorizer_model_mock,
-        data_padding_mock,
-        model_mock,
-        data_transform_mock,
+        data_padder_mock,
+        data_processor_factory_mock,
+        vectorizer_factory_mock,
+        embeddings_model_factory_mock,
+        model_factory_mock,
         optimizer_mock,
         experiment_mock,
         data_loader_mock,
@@ -164,20 +163,18 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
     @patch("deepparse.parser.address_parser.DataLoader")
     @patch("deepparse.parser.address_parser.Experiment")
     @patch("deepparse.parser.address_parser.SGD")
-    @patch("deepparse.parser.address_parser.DataTransform")
-    @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
-    @patch("deepparse.parser.address_parser.fasttext_data_padding")
-    @patch("deepparse.parser.address_parser.FastTextVectorizer")
-    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
-    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
+    @patch("deepparse.parser.address_parser.ModelFactory")
+    @patch("deepparse.parser.address_parser.EmbeddingsModelFactory")
+    @patch("deepparse.parser.address_parser.VectorizerFactory")
+    @patch("deepparse.parser.address_parser.DataProcessorFactory")
+    @patch("deepparse.parser.address_parser.DataPadder")
     def test_givenAFasttextModel_whenTestVerbose_thenInstantiateWithVerbose(
         self,
-        download_weights_mock,
-        embeddings_model_mock,
-        vectorizer_model_mock,
-        data_padding_mock,
-        model_mock,
-        data_transform_mock,
+        data_padder_mock,
+        data_processor_factory_mock,
+        vectorizer_factory_mock,
+        embeddings_model_factory_mock,
+        model_factory_mock,
         optimizer_mock,
         experiment_mock,
         data_loader_mock,
@@ -194,20 +191,18 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
     @patch("deepparse.parser.address_parser.DataLoader")
     @patch("deepparse.parser.address_parser.Experiment")
     @patch("deepparse.parser.address_parser.SGD")
-    @patch("deepparse.parser.address_parser.DataTransform")
-    @patch("deepparse.parser.address_parser.FastTextSeq2SeqModel")
-    @patch("deepparse.parser.address_parser.fasttext_data_padding")
-    @patch("deepparse.parser.address_parser.FastTextVectorizer")
-    @patch("deepparse.parser.address_parser.FastTextEmbeddingsModel")
-    @patch("deepparse.parser.address_parser.download_fasttext_embeddings")
+    @patch("deepparse.parser.address_parser.ModelFactory")
+    @patch("deepparse.parser.address_parser.EmbeddingsModelFactory")
+    @patch("deepparse.parser.address_parser.VectorizerFactory")
+    @patch("deepparse.parser.address_parser.DataProcessorFactory")
+    @patch("deepparse.parser.address_parser.DataPadder")
     def test_givenAFasttextModelOnWindows_whenTestVerboseWithNumWorkerGT0_thenRaiseError(
         self,
-        download_weights_mock,
-        embeddings_model_mock,
-        vectorizer_model_mock,
-        data_padding_mock,
-        model_mock,
-        data_transform_mock,
+        data_padder_mock,
+        data_processor_factory_mock,
+        vectorizer_factory_mock,
+        embeddings_model_factory_mock,
+        model_factory_mock,
         optimizer_mock,
         experiment_mock,
         data_loader_mock,
@@ -223,22 +218,23 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
     @patch("deepparse.parser.address_parser.DataLoader")
     @patch("deepparse.parser.address_parser.Experiment")
     @patch("deepparse.parser.address_parser.SGD")
-    @patch("deepparse.parser.address_parser.DataTransform")
-    @patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel")
-    @patch("deepparse.parser.address_parser.bpemb_data_padding")
-    @patch("deepparse.parser.address_parser.BPEmbVectorizer")
-    @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.ModelFactory")
+    @patch("deepparse.parser.address_parser.EmbeddingsModelFactory")
+    @patch("deepparse.parser.address_parser.VectorizerFactory")
+    @patch("deepparse.parser.address_parser.DataProcessorFactory")
+    @patch("deepparse.parser.address_parser.DataPadder")
     def test_givenABPEmbModel_whenTestCPU_thenInstantiateExperimentProperly(
         self,
-        embeddings_model_mock,
-        vectorizer_model_mock,
-        data_padding_mock,
-        model_mock,
-        data_transform_mock,
+        data_padder_mock,
+        data_processor_factory_mock,
+        vectorizer_factory_mock,
+        embeddings_model_factory_mock,
+        model_factory_mock,
         optimizer_mock,
         experiment_mock,
         data_loader_mock,
     ):
+        model_factory_mock().create.return_value = self.model_mock
         self.address_parser = AddressParser(
             model_type=self.a_bpemb_model_type,
             device=self.a_device,
@@ -246,28 +242,29 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         )
         self.address_parser_test_call()
 
-        self.assert_experiment_test(experiment_mock, model_mock, device=self.a_device)
+        self.assert_experiment_test(experiment_mock, self.model_mock, device=self.a_device)
 
     @patch("deepparse.parser.address_parser.DataLoader")
     @patch("deepparse.parser.address_parser.Experiment")
     @patch("deepparse.parser.address_parser.SGD")
-    @patch("deepparse.parser.address_parser.DataTransform")
-    @patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel")
-    @patch("deepparse.parser.address_parser.bpemb_data_padding")
-    @patch("deepparse.parser.address_parser.BPEmbVectorizer")
-    @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.ModelFactory")
+    @patch("deepparse.parser.address_parser.EmbeddingsModelFactory")
+    @patch("deepparse.parser.address_parser.VectorizerFactory")
+    @patch("deepparse.parser.address_parser.DataProcessorFactory")
+    @patch("deepparse.parser.address_parser.DataPadder")
     @skipIf(not torch.cuda.is_available(), "no gpu available")
     def test_givenABPEmbModel_whenTestGPU_thenInstantiateExperimentProperly(
         self,
-        embeddings_model_mock,
-        vectorizer_model_mock,
-        data_padding_mock,
-        model_mock,
-        data_transform_mock,
+        data_padder_mock,
+        data_processor_factory_mock,
+        vectorizer_factory_mock,
+        embeddings_model_factory_mock,
+        model_factory_mock,
         optimizer_mock,
         experiment_mock,
         data_loader_mock,
     ):
+        model_factory_mock().create.retturn_value = self.model_mock
         self.address_parser = AddressParser(
             model_type=self.a_bpemb_model_type,
             device=self.a_torch_device,
@@ -275,23 +272,23 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         )
         self.address_parser_test_call()
 
-        self.assert_experiment_test(experiment_mock, model_mock, device=self.a_torch_device)
+        self.assert_experiment_test(experiment_mock, self.model_mock, device=self.a_torch_device)
 
     @patch("deepparse.parser.address_parser.DataLoader")
     @patch("deepparse.parser.address_parser.Experiment")
     @patch("deepparse.parser.address_parser.SGD")
-    @patch("deepparse.parser.address_parser.DataTransform")
-    @patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel")
-    @patch("deepparse.parser.address_parser.bpemb_data_padding")
-    @patch("deepparse.parser.address_parser.BPEmbVectorizer")
-    @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.ModelFactory")
+    @patch("deepparse.parser.address_parser.EmbeddingsModelFactory")
+    @patch("deepparse.parser.address_parser.VectorizerFactory")
+    @patch("deepparse.parser.address_parser.DataProcessorFactory")
+    @patch("deepparse.parser.address_parser.DataPadder")
     def test_givenABPEmbModel_whenTest_thenInstantiateDataLoaderAndTestProperly(
         self,
-        embeddings_model_mock,
-        vectorizer_model_mock,
-        data_padding_mock,
-        model_mock,
-        data_transform_mock,
+        data_padder_mock,
+        data_processor_factory_mock,
+        vectorizer_factory_mock,
+        embeddings_model_factory_mock,
+        model_factory_mock,
         optimizer_mock,
         experiment_mock,
         data_loader_mock,
@@ -308,18 +305,18 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
     @patch("deepparse.parser.address_parser.DataLoader")
     @patch("deepparse.parser.address_parser.Experiment")
     @patch("deepparse.parser.address_parser.SGD")
-    @patch("deepparse.parser.address_parser.DataTransform")
-    @patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel")
-    @patch("deepparse.parser.address_parser.bpemb_data_padding")
-    @patch("deepparse.parser.address_parser.BPEmbVectorizer")
-    @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.ModelFactory")
+    @patch("deepparse.parser.address_parser.EmbeddingsModelFactory")
+    @patch("deepparse.parser.address_parser.VectorizerFactory")
+    @patch("deepparse.parser.address_parser.DataProcessorFactory")
+    @patch("deepparse.parser.address_parser.DataPadder")
     def test_givenABPEmbModel_whenTestVerboseTrue_thenInstantiateWithVerbose(
         self,
-        embeddings_model_mock,
-        vectorizer_model_mock,
-        data_padding_mock,
-        model_mock,
-        data_transform_mock,
+        data_padder_mock,
+        data_processor_factory_mock,
+        vectorizer_factory_mock,
+        embeddings_model_factory_mock,
+        model_factory_mock,
         optimizer_mock,
         experiment_mock,
         data_loader_mock,
@@ -330,16 +327,18 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
 
         self.assert_experiment_test_method_is_call(data_loader_mock, experiment_mock, verbose=verbose)
 
-    @patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel")
-    @patch("deepparse.parser.address_parser.bpemb_data_padding")
-    @patch("deepparse.parser.address_parser.BPEmbVectorizer")
-    @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.ModelFactory")
+    @patch("deepparse.parser.address_parser.EmbeddingsModelFactory")
+    @patch("deepparse.parser.address_parser.VectorizerFactory")
+    @patch("deepparse.parser.address_parser.DataProcessorFactory")
+    @patch("deepparse.parser.address_parser.DataPadder")
     def test_givenNotTrainingDataContainer_thenRaiseValueError(
         self,
-        embeddings_model_mock,
-        vectorizer_model_mock,
-        data_padding_mock,
-        model_patch,
+        data_padder_mock,
+        data_processor_factory_mock,
+        vectorizer_factory_mock,
+        embeddings_model_factory_mock,
+        model_factory_mock,
     ):
         self.address_parser = AddressParser(
             model_type=self.a_bpemb_model_type,
@@ -350,16 +349,18 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         with self.assertRaises(ValueError):
             self.address_parser_test_call(dataset_container=mocked_data_container)
 
-    @patch("deepparse.parser.address_parser.BPEmbSeq2SeqModel")
-    @patch("deepparse.parser.address_parser.bpemb_data_padding")
-    @patch("deepparse.parser.address_parser.BPEmbVectorizer")
-    @patch("deepparse.parser.address_parser.BPEmbEmbeddingsModel")
+    @patch("deepparse.parser.address_parser.ModelFactory")
+    @patch("deepparse.parser.address_parser.EmbeddingsModelFactory")
+    @patch("deepparse.parser.address_parser.VectorizerFactory")
+    @patch("deepparse.parser.address_parser.DataProcessorFactory")
+    @patch("deepparse.parser.address_parser.DataPadder")
     def test_givenNotADataContainer_thenRaiseValueError(
         self,
-        embeddings_model_mock,
-        vectorizer_model_mock,
-        data_padding_mock,
-        model_patch,
+        data_padder_mock,
+        data_processor_factory_mock,
+        vectorizer_factory_mock,
+        embeddings_model_factory_mock,
+        model_factory_mock,
     ):
         self.address_parser = AddressParser(
             model_type=self.a_bpemb_model_type,

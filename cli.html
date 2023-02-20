@@ -1,96 +1,50 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>CLI &mdash; deepparse 0.9.3 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>CLI &mdash; deepparse 0.9.4 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
-    
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-
-    
+    <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Parse Addresses" href="examples/parse_addresses.html" />
     <link rel="prev" title="Comparer" href="comparer.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
 
           
-            <a href="index.html" class="icon icon-home"> deepparse
           
-
-          
+          <a href="index.html">
+            
+              <img src="_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
-
-          
-            
-            
               <div class="version">
-                0.9.3
+                0.9.4
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="parser.html">Parser</a></li>
@@ -128,77 +82,36 @@
 <li class="toctree-l1"><a class="reference internal" href="examples/single_country_retrain.html">Retrain an Address Parser for Single Country Uses</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">deepparse</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-        
-      <li>CLI</li>
-    
-    
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">CLI</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="_sources/cli.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   <section id="cli">
-<h1>CLI<a class="headerlink" href="#cli" title="Permalink to this heading">¶</a></h1>
+<h1>CLI<a class="headerlink" href="#cli" title="Permalink to this heading"></a></h1>
 <p>You can use our CLI to parse addresses directly from the command line, retrain a parsing model or download a
 pretrained model.</p>
 <section id="parse">
-<h2>Parse<a class="headerlink" href="#parse" title="Permalink to this heading">¶</a></h2>
+<h2>Parse<a class="headerlink" href="#parse" title="Permalink to this heading"></a></h2>
 <p>The parsing of the addresses to parse <code class="docutils literal notranslate"><span class="pre">dataset_path</span></code> is done using the selected <code class="docutils literal notranslate"><span class="pre">parsing_model</span></code>.
 The exported parsed addresses are to be exported in the same directory as the addresses to parse but
 given the <code class="docutils literal notranslate"><span class="pre">export_file_name</span></code> using the encoding format of the address dataset file. For example,
@@ -222,7 +135,7 @@ One can use the command <code class="docutils literal notranslate"><span class="
 </div></blockquote>
 <dl class="py function">
 <dt class="sig sig-object py" id="deepparse.cli.parse.main">
-<span class="sig-prename descclassname"><span class="pre">deepparse.cli.parse.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/deepparse/cli/parse.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.cli.parse.main" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">deepparse.cli.parse.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/deepparse/cli/parse.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.cli.parse.main" title="Permalink to this definition"></a></dt>
 <dd><p>CLI function to rapidly parse an addresses dataset and output it in another file.</p>
 <p>Examples of usage:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>parse<span class="w"> </span>fasttext<span class="w"> </span>./dataset_path.csv<span class="w"> </span>parsed_address.pickle
@@ -239,11 +152,11 @@ One can use the command <code class="docutils literal notranslate"><span class="
 </dd></dl>
 
 <section id="dataset-format">
-<h3>Dataset Format<a class="headerlink" href="#dataset-format" title="Permalink to this heading">¶</a></h3>
+<h3>Dataset Format<a class="headerlink" href="#dataset-format" title="Permalink to this heading"></a></h3>
 <p>For the dataset format see our <a class="reference internal" href="dataset_container.html#deepparse.dataset_container.DatasetContainer" title="deepparse.dataset_container.DatasetContainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DatasetContainer</span></code></a>.</p>
 </section>
 <section id="exporting-format">
-<h3>Exporting Format<a class="headerlink" href="#exporting-format" title="Permalink to this heading">¶</a></h3>
+<h3>Exporting Format<a class="headerlink" href="#exporting-format" title="Permalink to this heading"></a></h3>
 <p>We support three types of export formats: CSV, Pickle and JSON.</p>
 <p>The first export uses the following pattern column pattern:
 <code class="docutils literal notranslate"><span class="pre">&quot;Address&quot;,</span> <span class="pre">&quot;First</span> <span class="pre">address</span> <span class="pre">components</span> <span class="pre">class&quot;,</span> <span class="pre">&quot;Second</span> <span class="pre">class&quot;,</span> <span class="pre">...</span></code>.
@@ -282,7 +195,7 @@ same example will return the following dict <code class="docutils literal notran
 </section>
 </section>
 <section id="retrain">
-<h2>Retrain<a class="headerlink" href="#retrain" title="Permalink to this heading">¶</a></h2>
+<h2>Retrain<a class="headerlink" href="#retrain" title="Permalink to this heading"></a></h2>
 <p>This command allows a user to retrain the <code class="docutils literal notranslate"><span class="pre">base_parsing_model</span></code> on the <code class="docutils literal notranslate"><span class="pre">train_dataset_path</span></code> dataset.
 For the training, the CSV or Pickle dataset is loader in a specific dataloader (see
 <a class="reference internal" href="dataset_container.html#deepparse.dataset_container.DatasetContainer" title="deepparse.dataset_container.DatasetContainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DatasetContainer</span></code></a> for more details). We use Poutyne’s automatic logging
@@ -308,12 +221,12 @@ One can use the command <code class="docutils literal notranslate"><span class="
 <li><p><code class="docutils literal notranslate"><span class="pre">--csv_column_names</span></code>: The column names to extract address in the CSV. Need to be specified if the provided dataset_path leads to a CSV file. Column names have to be separated by whitespace. For example, <code class="docutils literal notranslate"><span class="pre">--csv_column_names</span> <span class="pre">column1</span> <span class="pre">column2</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--csv_column_separator</span></code>: The column separator for the dataset container will only be used if the dataset is a CSV one. By default, <code class="docutils literal notranslate"><span class="pre">'\t'</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--cache_dir</span></code>: To change the default cache directory (default to <code class="docutils literal notranslate"><span class="pre">None</span></code>, e.g. default path).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">prediction_tags</span></code>: To change the prediction tags. The <code class="docutils literal notranslate"><span class="pre">prediction_tags</span></code> is a path leading to a JSON file of the new tags in a key-value style. For example, the path can be <code class="docutils literal notranslate"><span class="pre">&quot;a_path/file.json&quot;</span></code> and the content can be <code class="docutils literal notranslate"><span class="pre">{&quot;new_tag&quot;:</span> <span class="pre">0,</span> <span class="pre">&quot;other_tag&quot;:</span> <span class="pre">1,</span> <span class="pre">&quot;EOS&quot;:</span> <span class="pre">2}</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">prediction_tags</span></code>: To change the prediction tags. The <code class="docutils literal notranslate"><span class="pre">prediction_tags</span></code> is a path leading to a JSON file of the new tags in a key-value style. For example, the path can be <code class="docutils literal notranslate"><span class="pre">&quot;a_path/file.json&quot;</span></code> and the content can be <code class="docutils literal notranslate"><span class="pre">{&quot;new_tag&quot;:</span> <span class="pre">0,</span> <span class="pre">&quot;other_tag&quot;:</span> <span class="pre">1,</span> <span class="pre">&quot;EOS&quot;:</span> <span class="pre">2}</span></code>.</p></li>
 </ul>
 </div></blockquote>
 <dl class="py function">
 <dt class="sig sig-object py" id="deepparse.cli.retrain.main">
-<span class="sig-prename descclassname"><span class="pre">deepparse.cli.retrain.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/deepparse/cli/retrain.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.cli.retrain.main" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">deepparse.cli.retrain.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/deepparse/cli/retrain.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.cli.retrain.main" title="Permalink to this definition"></a></dt>
 <dd><p>CLI function to rapidly retrain an addresses parser and saves it. One can retrain a base pretrained model
 using most of the arguments as the <code class="xref py py-meth docutils literal notranslate"><span class="pre">retrain()</span></code> method. By default, all the parameters have
 the same default value as the <code class="xref py py-meth docutils literal notranslate"><span class="pre">retrain()</span></code> method. The supported parameters are the following:</p>
@@ -346,7 +259,7 @@ the same default value as the <code class="xref py py-meth docutils literal notr
 <p>We do not handle the <code class="docutils literal notranslate"><span class="pre">seq2seq_params</span></code> fine-tuning argument for now.</p>
 </section>
 <section id="test">
-<h2>Test<a class="headerlink" href="#test" title="Permalink to this heading">¶</a></h2>
+<h2>Test<a class="headerlink" href="#test" title="Permalink to this heading"></a></h2>
 <p>This command allows a user to test the <code class="docutils literal notranslate"><span class="pre">base_parsing_model</span></code> (or the retrained one using the
 <code class="docutils literal notranslate"><span class="pre">--path_to_retrained_model</span></code>) on the <code class="docutils literal notranslate"><span class="pre">train_dataset_path</span></code> dataset.
 For the testing, the CSV or Pickle dataset is loader in a specific dataloader (see
@@ -372,7 +285,7 @@ One can use the command <code class="docutils literal notranslate"><span class="
 </div></blockquote>
 <dl class="py function">
 <dt class="sig sig-object py" id="deepparse.cli.test.main">
-<span class="sig-prename descclassname"><span class="pre">deepparse.cli.test.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/deepparse/cli/test.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.cli.test.main" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">deepparse.cli.test.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/deepparse/cli/test.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.cli.test.main" title="Permalink to this definition"></a></dt>
 <dd><p>CLI function to rapidly test an address parser on test data using the same argument as the
 <code class="xref py py-meth docutils literal notranslate"><span class="pre">test()</span></code> method (with the same default values) except for the callbacks.
 The results will be logged in a CSV file next to the test dataset.</p>
@@ -388,7 +301,7 @@ The results will be logged in a CSV file next to the test dataset.</p>
 
 </section>
 <section id="download">
-<h2>Download<a class="headerlink" href="#download" title="Permalink to this heading">¶</a></h2>
+<h2>Download<a class="headerlink" href="#download" title="Permalink to this heading"></a></h2>
 <p>Command to pre-download model weights and requirements. Here is the list of arguments. One can use the command <code class="docutils literal notranslate"><span class="pre">parse</span> <span class="pre">--help</span></code> to output the same description in your command line.</p>
 <blockquote>
 <div><ul class="simple">
@@ -401,50 +314,33 @@ The results will be logged in a CSV file next to the test dataset.</p>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="examples/parse_addresses.html" class="btn btn-neutral float-right" title="Parse Addresses" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="comparer.html" class="btn btn-neutral float-left" title="Comparer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="examples/parse_addresses.html" class="btn btn-neutral float-right" title="Parse Addresses" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2020-2023, Marouane Yassine &amp; David Beauchemin.
-
-    </p>
+    <p>&#169; Copyright 2020-2023, Marouane Yassine &amp; David Beauchemin.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

@@ -1,93 +1,47 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>deepparse.parser.address_parser &mdash; deepparse 0.9.3 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>deepparse.parser.address_parser &mdash; deepparse 0.9.4 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
-    
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-
-    
+    <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
 
           
-            <a href="../../../index.html" class="icon icon-home"> deepparse
           
-
-          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
-
-          
-            
-            
               <div class="version">
-                0.9.3
+                0.9.4
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../parser.html">Parser</a></li>
@@ -108,69 +62,30 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/single_country_retrain.html">Retrain an Address Parser for Single Country Uses</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">deepparse</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-        
-      <li>deepparse.parser.address_parser</li>
-    
-    
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">deepparse.parser.address_parser</li>
       <li class="wy-breadcrumbs-aside">
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   <h1>Source code for deepparse.parser.address_parser</h1><div class="highlight"><pre>
 <span></span><span class="c1"># pylint: disable=too-many-lines</span>
 
@@ -179,6 +94,7 @@
 <span class="c1"># pylint: disable=inconsistent-return-statements</span>
 
 <span class="kn">import</span> <span class="nn">contextlib</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">platform</span>
 <span class="kn">import</span> <span class="nn">re</span>
@@ -206,18 +122,16 @@
     <span class="n">validate_if_new_seq2seq_params</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">validate_data_to_parse</span>
-<span class="kn">from</span> <span class="nn">..converter</span> <span class="kn">import</span> <span class="n">DataTransform</span><span class="p">,</span> <span class="n">TagsConverter</span><span class="p">,</span> <span class="n">bpemb_data_padding</span><span class="p">,</span> <span class="n">fasttext_data_padding</span>
+<span class="kn">from</span> <span class="nn">..converter</span> <span class="kn">import</span> <span class="n">TagsConverter</span><span class="p">,</span> <span class="n">DataProcessorFactory</span><span class="p">,</span> <span class="n">DataPadder</span>
 <span class="kn">from</span> <span class="nn">..dataset_container</span> <span class="kn">import</span> <span class="n">DatasetContainer</span>
-<span class="kn">from</span> <span class="nn">..embeddings_models</span> <span class="kn">import</span> <span class="n">BPEmbEmbeddingsModel</span><span class="p">,</span> <span class="n">FastTextEmbeddingsModel</span><span class="p">,</span> <span class="n">MagnitudeEmbeddingsModel</span>
-<span class="kn">from</span> <span class="nn">..errors.model_error</span> <span class="kn">import</span> <span class="n">FastTextModelError</span>
-<span class="kn">from</span> <span class="nn">..fasttext_tools</span> <span class="kn">import</span> <span class="n">download_fasttext_embeddings</span><span class="p">,</span> <span class="n">download_fasttext_magnitude_embeddings</span>
-<span class="kn">from</span> <span class="nn">..metrics</span> <span class="kn">import</span> <span class="n">accuracy</span><span class="p">,</span> <span class="n">nll_loss</span>
-<span class="kn">from</span> <span class="nn">..network.bpemb_seq2seq</span> <span class="kn">import</span> <span class="n">BPEmbSeq2SeqModel</span>
-<span class="kn">from</span> <span class="nn">..network.fasttext_seq2seq</span> <span class="kn">import</span> <span class="n">FastTextSeq2SeqModel</span>
+<span class="kn">from</span> <span class="nn">..embeddings_models</span> <span class="kn">import</span> <span class="n">EmbeddingsModelFactory</span>
+<span class="kn">from</span> <span class="nn">..metrics</span> <span class="kn">import</span> <span class="n">nll_loss</span><span class="p">,</span> <span class="n">accuracy</span>
+<span class="kn">from</span> <span class="nn">..network</span> <span class="kn">import</span> <span class="n">ModelFactory</span>
 <span class="kn">from</span> <span class="nn">..preprocessing</span> <span class="kn">import</span> <span class="n">AddressCleaner</span>
 <span class="kn">from</span> <span class="nn">..tools</span> <span class="kn">import</span> <span class="n">CACHE_PATH</span><span class="p">,</span> <span class="n">valid_poutyne_version</span>
-<span class="kn">from</span> <span class="nn">..vectorizer</span> <span class="kn">import</span> <span class="n">BPEmbVectorizer</span><span class="p">,</span> <span class="n">FastTextVectorizer</span><span class="p">,</span> <span class="n">TrainVectorizer</span>
-<span class="kn">from</span> <span class="nn">..vectorizer.magnitude_vectorizer</span> <span class="kn">import</span> <span class="n">MagnitudeVectorizer</span>
+<span class="kn">from</span> <span class="nn">..vectorizer</span> <span class="kn">import</span> <span class="n">VectorizerFactory</span>
+<span class="kn">from</span> <span class="nn">..errors</span> <span class="kn">import</span> <span class="n">FastTextModelError</span>
+
 
 <span class="n">_pre_trained_tags_to_idx</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;StreetNumber&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
@@ -283,7 +197,7 @@
 <span class="sd">            be set to True.</span>
 <span class="sd">        cache_dir (Union[str, None]): The path to the cached directory to use for downloading (and loading) the</span>
 <span class="sd">            embeddings model and the model pretrained weights.</span>
-<span class="sd">        offline (bool): Either or not the model is an offline one, meaning you have already downloaded the pre-trained</span>
+<span class="sd">        offline (bool): Whether or not the model is an offline one, meaning you have already downloaded the pre-trained</span>
 <span class="sd">            weights and embeddings weights in either the default Deepparse cache directory (~./cache/deepparse) or</span>
 <span class="sd">            the ``cache_dir`` directory. When offline, we will not verify if the model is the latest. You can use our</span>
 <span class="sd">            ``download_models`` CLI function to download all the requirements for a model. The default value is False</span>
@@ -420,7 +334,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">named_parser</span> <span class="o">=</span> <span class="n">named_parser</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model_type_formatted</span> <span class="o">=</span> <span class="n">handle_model_name</span><span class="p">(</span><span class="n">model_type</span><span class="p">,</span> <span class="n">attention_mechanism</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_model_factory</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_setup_model</span><span class="p">(</span>
             <span class="n">verbose</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">,</span>
             <span class="n">path_to_retrained_model</span><span class="o">=</span><span class="n">path_to_retrained_model</span><span class="p">,</span>
             <span class="n">prediction_layer_len</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tags_converter</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span>
@@ -852,7 +766,7 @@
 
             <span class="n">model_factory_dict</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;seq2seq_kwargs&quot;</span><span class="p">:</span> <span class="n">seq2seq_params</span><span class="p">})</span>
             <span class="c1"># We set verbose to false since model is reloaded</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_model_factory</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">path_to_retrained_model</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">model_factory_dict</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_setup_model</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">path_to_retrained_model</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">model_factory_dict</span><span class="p">)</span>
 
         <span class="n">callbacks</span> <span class="o">=</span> <span class="p">[]</span> <span class="k">if</span> <span class="n">callbacks</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">callbacks</span>
         <span class="n">train_generator</span><span class="p">,</span> <span class="n">valid_generator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_training_data_generator</span><span class="p">(</span>
@@ -1035,11 +949,10 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The dataset container is not a train container.&quot;</span><span class="p">)</span>
 
         <span class="n">callbacks</span> <span class="o">=</span> <span class="p">[]</span> <span class="k">if</span> <span class="n">callbacks</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">callbacks</span>
-        <span class="n">data_transform</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set_data_transformer</span><span class="p">()</span>
 
         <span class="n">test_generator</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span>
             <span class="n">test_dataset_container</span><span class="p">,</span>
-            <span class="n">collate_fn</span><span class="o">=</span><span class="n">data_transform</span><span class="o">.</span><span class="n">output_transform</span><span class="p">,</span>
+            <span class="n">collate_fn</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">process_for_training</span><span class="p">,</span> <span class="n">teacher_forcing</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
             <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
             <span class="n">num_workers</span><span class="o">=</span><span class="n">num_workers</span><span class="p">,</span>
         <span class="p">)</span>
@@ -1149,13 +1062,6 @@
                 <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;No CUDA device detected, device will be set to &#39;CPU&#39;.&quot;</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_set_data_transformer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataTransform</span><span class="p">:</span>
-        <span class="n">train_vectorizer</span> <span class="o">=</span> <span class="n">TrainVectorizer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vectorizer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tags_converter</span><span class="p">)</span>  <span class="c1"># Vectorize to provide also the target</span>
-        <span class="n">data_transform</span> <span class="o">=</span> <span class="n">DataTransform</span><span class="p">(</span>
-            <span class="n">train_vectorizer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span>
-        <span class="p">)</span>  <span class="c1"># Use for transforming the data prior to training</span>
-        <span class="k">return</span> <span class="n">data_transform</span>
-
     <span class="k">def</span> <span class="nf">_create_training_data_generator</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">train_dataset_container</span><span class="p">:</span> <span class="n">DatasetContainer</span><span class="p">,</span>
@@ -1166,7 +1072,6 @@
         <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">:</span>
         <span class="c1"># pylint: disable=too-many-arguments</span>
-        <span class="n">data_transform</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set_data_transformer</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">val_dataset_container</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">train_indices</span><span class="p">,</span> <span class="n">valid_indices</span> <span class="o">=</span> <span class="n">indices_splitting</span><span class="p">(</span>
@@ -1182,7 +1087,7 @@
 
         <span class="n">train_generator</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span>
             <span class="n">train_dataset</span><span class="p">,</span>
-            <span class="n">collate_fn</span><span class="o">=</span><span class="n">data_transform</span><span class="o">.</span><span class="n">teacher_forcing_transform</span><span class="p">,</span>
+            <span class="n">collate_fn</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">process_for_training</span><span class="p">,</span> <span class="n">teacher_forcing</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
             <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
             <span class="n">num_workers</span><span class="o">=</span><span class="n">num_workers</span><span class="p">,</span>
             <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -1190,14 +1095,14 @@
 
         <span class="n">valid_generator</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span>
             <span class="n">valid_dataset</span><span class="p">,</span>
-            <span class="n">collate_fn</span><span class="o">=</span><span class="n">data_transform</span><span class="o">.</span><span class="n">output_transform</span><span class="p">,</span>
+            <span class="n">collate_fn</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">process_for_training</span><span class="p">,</span> <span class="n">teacher_forcing</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
             <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
             <span class="n">num_workers</span><span class="o">=</span><span class="n">num_workers</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">train_generator</span><span class="p">,</span> <span class="n">valid_generator</span>
 
-    <span class="k">def</span> <span class="nf">_model_factory</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">_setup_model</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
         <span class="n">path_to_retrained_model</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -1218,61 +1123,32 @@
             <span class="c1"># Set to default cache_path value</span>
             <span class="n">cache_dir</span> <span class="o">=</span> <span class="n">CACHE_PATH</span>
 
-        <span class="k">if</span> <span class="s2">&quot;fasttext&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="p">:</span>
-            <span class="k">if</span> <span class="s2">&quot;fasttext-light&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="p">:</span>
-                <span class="n">file_name</span> <span class="o">=</span> <span class="n">download_fasttext_magnitude_embeddings</span><span class="p">(</span>
-                    <span class="n">cache_dir</span><span class="o">=</span><span class="n">cache_dir</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">offline</span><span class="o">=</span><span class="n">offline</span>
-                <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">ModelFactory</span><span class="p">()</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">model_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="p">,</span>
+            <span class="n">cache_dir</span><span class="o">=</span><span class="n">cache_dir</span><span class="p">,</span>
+            <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
+            <span class="n">output_size</span><span class="o">=</span><span class="n">prediction_layer_len</span><span class="p">,</span>
+            <span class="n">attention_mechanism</span><span class="o">=</span><span class="n">attention_mechanism</span><span class="p">,</span>
+            <span class="n">path_to_retrained_model</span><span class="o">=</span><span class="n">path_to_retrained_model</span><span class="p">,</span>
+            <span class="n">offline</span><span class="o">=</span><span class="n">offline</span><span class="p">,</span>
+            <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">seq2seq_kwargs</span><span class="p">,</span>
+        <span class="p">)</span>
 
-                <span class="n">embeddings_model</span> <span class="o">=</span> <span class="n">MagnitudeEmbeddingsModel</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">vectorizer</span> <span class="o">=</span> <span class="n">MagnitudeVectorizer</span><span class="p">(</span><span class="n">embeddings_model</span><span class="o">=</span><span class="n">embeddings_model</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">file_name</span> <span class="o">=</span> <span class="n">download_fasttext_embeddings</span><span class="p">(</span><span class="n">cache_dir</span><span class="o">=</span><span class="n">cache_dir</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">offline</span><span class="o">=</span><span class="n">offline</span><span class="p">)</span>
+        <span class="n">embeddings_model</span> <span class="o">=</span> <span class="n">EmbeddingsModelFactory</span><span class="p">()</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">embedding_model_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="p">,</span> <span class="n">cache_dir</span><span class="o">=</span><span class="n">cache_dir</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span>
+        <span class="p">)</span>
+        <span class="n">vectorizer</span> <span class="o">=</span> <span class="n">VectorizerFactory</span><span class="p">()</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">embeddings_model</span><span class="p">)</span>
 
-                <span class="n">embeddings_model</span> <span class="o">=</span> <span class="n">FastTextEmbeddingsModel</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">vectorizer</span> <span class="o">=</span> <span class="n">FastTextVectorizer</span><span class="p">(</span><span class="n">embeddings_model</span><span class="o">=</span><span class="n">embeddings_model</span><span class="p">)</span>
+        <span class="n">padder</span> <span class="o">=</span> <span class="n">DataPadder</span><span class="p">()</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">data_converter</span> <span class="o">=</span> <span class="n">fasttext_data_padding</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">FastTextSeq2SeqModel</span><span class="p">(</span>
-                <span class="n">cache_dir</span><span class="o">=</span><span class="n">cache_dir</span><span class="p">,</span>
-                <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
-                <span class="n">output_size</span><span class="o">=</span><span class="n">prediction_layer_len</span><span class="p">,</span>
-                <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
-                <span class="n">path_to_retrained_model</span><span class="o">=</span><span class="n">path_to_retrained_model</span><span class="p">,</span>
-                <span class="n">attention_mechanism</span><span class="o">=</span><span class="n">attention_mechanism</span><span class="p">,</span>
-                <span class="n">offline</span><span class="o">=</span><span class="n">offline</span><span class="p">,</span>
-                <span class="o">**</span><span class="n">seq2seq_kwargs</span><span class="p">,</span>
-            <span class="p">)</span>
-
-        <span class="k">elif</span> <span class="s2">&quot;bpemb&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="p">:</span>
-            <span class="n">embeddings_model</span> <span class="o">=</span> <span class="n">BPEmbEmbeddingsModel</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">cache_dir</span><span class="o">=</span><span class="n">cache_dir</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">vectorizer</span> <span class="o">=</span> <span class="n">BPEmbVectorizer</span><span class="p">(</span><span class="n">embeddings_model</span><span class="o">=</span><span class="n">embeddings_model</span><span class="p">)</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">data_converter</span> <span class="o">=</span> <span class="n">bpemb_data_padding</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">BPEmbSeq2SeqModel</span><span class="p">(</span>
-                <span class="n">cache_dir</span><span class="o">=</span><span class="n">cache_dir</span><span class="p">,</span>
-                <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
-                <span class="n">output_size</span><span class="o">=</span><span class="n">prediction_layer_len</span><span class="p">,</span>
-                <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
-                <span class="n">path_to_retrained_model</span><span class="o">=</span><span class="n">path_to_retrained_model</span><span class="p">,</span>
-                <span class="n">attention_mechanism</span><span class="o">=</span><span class="n">attention_mechanism</span><span class="p">,</span>
-                <span class="n">offline</span><span class="o">=</span><span class="n">offline</span><span class="p">,</span>
-                <span class="o">**</span><span class="n">seq2seq_kwargs</span><span class="p">,</span>
-            <span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;There is no </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="si">}</span><span class="s2"> network implemented. Value should be: &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;fasttext, bpemb, lightest (fasttext-light), fastest (fasttext) &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;or best (bpemb).&quot;</span>
-            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">processor</span> <span class="o">=</span> <span class="n">DataProcessorFactory</span><span class="p">()</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">vectorizer</span><span class="p">,</span> <span class="n">padder</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tags_converter</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_predict_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">List</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Pipeline to process data in a data loader for prediction.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_converter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vectorizer</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">process_for_inference</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_retrain</span><span class="p">(</span>
@@ -1405,46 +1281,30 @@
 </pre></div>
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2020-2023, Marouane Yassine &amp; David Beauchemin.
-
-    </p>
+    <p>&#169; Copyright 2020-2023, Marouane Yassine &amp; David Beauchemin.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

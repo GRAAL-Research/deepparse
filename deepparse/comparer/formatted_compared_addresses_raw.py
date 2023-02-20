@@ -68,16 +68,13 @@ class FormattedComparedAddressesRaw(FormattedComparedAddresses):
         str_formatted += "Parsed address: " + repr(self.first_address) + "\n"
         str_formatted += str(probs[0]) + "\n"
         if not self.identical:
-
             str_formatted += "\nParsed address: " + repr(self.second_address) + "\n"
             str_formatted += str(probs[1]) + "\n"
 
             if self.equivalent:
-
                 str_formatted += "\n\nRaw differences between the two addresses: \n"
                 str_formatted += self._get_raw_diff_color()
             else:
-
                 str_formatted += "\n\nAddresses tags differences between the two addresses: \n"
                 str_formatted += self._get_tags_diff_color()
 

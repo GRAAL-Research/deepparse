@@ -1597,7 +1597,6 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         torch_save_mock,
         os_path_join_mock,
     ):
-
         self.address_parser = AddressParser(
             model_type=self.a_fasttext_model_type,
             device=self.a_device,

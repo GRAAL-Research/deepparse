@@ -39,7 +39,6 @@ class EmbeddingsModelFactoryTest(TestCase):
     def test_givenAFasttextEmbeddingsModelType_whenCreatingEmbeddingsModel_thenShouldReturnCorrectEmbeddingsModel(
         self, facebook_vectors_load_mock, fasttext_load_mock, download_mock
     ):
-
         embeddings_model = self.embeddings_model_factory.create(self.a_fasttext_embeddings_model_type, self.a_cache_dir)
 
         self.assertIsInstance(embeddings_model, FastTextEmbeddingsModel)

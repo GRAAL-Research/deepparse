@@ -287,6 +287,8 @@
  - Bug-fix FastText error not handled in test API.
  - Add feature to allow new_prediction_tags to retrain CLI.
 
-## dev
+## 0.9.4
 
   - Improve codebase.
+
+## dev

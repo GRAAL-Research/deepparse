@@ -264,7 +264,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         experiment_mock,
         data_loader_mock,
     ):
-        model_factory_mock().create.retturn_value = self.model_mock
+        model_factory_mock().create.return_value = self.model_mock
         self.address_parser = AddressParser(
             model_type=self.a_bpemb_model_type,
             device=self.a_torch_device,

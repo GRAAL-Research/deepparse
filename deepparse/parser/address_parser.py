@@ -5,11 +5,11 @@
 # pylint: disable=inconsistent-return-statements
 
 import contextlib
-from functools import partial
 import os
 import platform
 import re
 import warnings
+from functools import partial
 from pathlib import Path
 from typing import Dict, List, Tuple, Union
 
@@ -36,13 +36,12 @@ from .. import validate_data_to_parse
 from ..converter import TagsConverter, DataProcessorFactory, DataPadder
 from ..dataset_container import DatasetContainer
 from ..embeddings_models import EmbeddingsModelFactory
+from ..errors import FastTextModelError
 from ..metrics import nll_loss, accuracy
 from ..network import ModelFactory
 from ..preprocessing import AddressCleaner
 from ..tools import CACHE_PATH, valid_poutyne_version
 from ..vectorizer import VectorizerFactory
-from ..errors import FastTextModelError
-
 
 _pre_trained_tags_to_idx = {
     "StreetNumber": 0,
@@ -660,6 +659,7 @@ class AddressParser:
             formatted_parsed_address.FIELDS = fields
 
             self.tags_converter = TagsConverter(prediction_tags)
+            self.processor.tags_converter = self.tags_converter
 
             if not self.model.same_output_dim(self.tags_converter.dim):
                 # Since we have change the output layer dim, we need to handle the prediction layer dim

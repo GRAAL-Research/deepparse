@@ -7,7 +7,7 @@ class DataProcessorFactory:
     A factory for data processors
     """
 
-    def create(self, vectorizer: Vectorizer, padder: DataPadder, tags_converter: TagsConverter):
+    def create(self, vectorizer: Vectorizer, padder: DataPadder, tags_converter: TagsConverter) -> DataProcessor:
         """
         A factory method to create a data processor
         Args:

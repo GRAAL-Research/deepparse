@@ -291,4 +291,8 @@
 
   - Improve codebase.
 
+## 0.9.5
+
+  - Fixed tags converter bug with data processor.
+
 ## dev

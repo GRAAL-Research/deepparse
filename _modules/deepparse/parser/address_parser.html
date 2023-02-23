@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>deepparse.parser.address_parser &mdash; deepparse 0.9.4 documentation</title>
+  <title>deepparse.parser.address_parser &mdash; deepparse 0.9.5 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -32,7 +32,7 @@
               <img src="../../../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.9.4
+                0.9.5
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -94,11 +94,11 @@
 <span class="c1"># pylint: disable=inconsistent-return-statements</span>
 
 <span class="kn">import</span> <span class="nn">contextlib</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">platform</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
@@ -125,13 +125,12 @@
 <span class="kn">from</span> <span class="nn">..converter</span> <span class="kn">import</span> <span class="n">TagsConverter</span><span class="p">,</span> <span class="n">DataProcessorFactory</span><span class="p">,</span> <span class="n">DataPadder</span>
 <span class="kn">from</span> <span class="nn">..dataset_container</span> <span class="kn">import</span> <span class="n">DatasetContainer</span>
 <span class="kn">from</span> <span class="nn">..embeddings_models</span> <span class="kn">import</span> <span class="n">EmbeddingsModelFactory</span>
+<span class="kn">from</span> <span class="nn">..errors</span> <span class="kn">import</span> <span class="n">FastTextModelError</span>
 <span class="kn">from</span> <span class="nn">..metrics</span> <span class="kn">import</span> <span class="n">nll_loss</span><span class="p">,</span> <span class="n">accuracy</span>
 <span class="kn">from</span> <span class="nn">..network</span> <span class="kn">import</span> <span class="n">ModelFactory</span>
 <span class="kn">from</span> <span class="nn">..preprocessing</span> <span class="kn">import</span> <span class="n">AddressCleaner</span>
 <span class="kn">from</span> <span class="nn">..tools</span> <span class="kn">import</span> <span class="n">CACHE_PATH</span><span class="p">,</span> <span class="n">valid_poutyne_version</span>
 <span class="kn">from</span> <span class="nn">..vectorizer</span> <span class="kn">import</span> <span class="n">VectorizerFactory</span>
-<span class="kn">from</span> <span class="nn">..errors</span> <span class="kn">import</span> <span class="n">FastTextModelError</span>
-
 
 <span class="n">_pre_trained_tags_to_idx</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;StreetNumber&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
@@ -749,6 +748,7 @@
             <span class="n">formatted_parsed_address</span><span class="o">.</span><span class="n">FIELDS</span> <span class="o">=</span> <span class="n">fields</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">tags_converter</span> <span class="o">=</span> <span class="n">TagsConverter</span><span class="p">(</span><span class="n">prediction_tags</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">tags_converter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tags_converter</span>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">same_output_dim</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tags_converter</span><span class="o">.</span><span class="n">dim</span><span class="p">):</span>
                 <span class="c1"># Since we have change the output layer dim, we need to handle the prediction layer dim</span>

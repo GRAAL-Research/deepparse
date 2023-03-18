@@ -1,4 +1,6 @@
 #!/bin/sh
+# To run using ZSH: zsh -i ./codecov_push.sh
+# To run using bash: bash -i ./codecov_push.sh
 
 # We do test on Python 3.11 (latest Python version)
 

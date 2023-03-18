@@ -296,3 +296,5 @@
   - Fixed tags converter bug with data processor.
 
 ## dev
+
+ - Add Python 3.11

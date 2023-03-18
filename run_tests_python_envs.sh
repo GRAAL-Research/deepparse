@@ -1,4 +1,6 @@
 #!/bin/sh
+# To run using ZSH: zsh -i ./codecov_push.sh
+# To run using bash: bash -i ./codecov_push.sh
 
 # We test on Deepparse supported Python versions, namely, 3.7, 3.8, 3.9, 3.10 and 3.11
 echo "*****Starting of testing Deepparse on Python version 3.7, 3.8, 3.9, 3.10, 3.11*****"

@@ -256,7 +256,6 @@
 - Add Zenodo DOI
 
 ## 0.9
-- 
 
 - Add `save_model_weights` method to `AddressParser` to save model weights (PyTorch state dictionary)
 - Improve CI
@@ -287,5 +286,13 @@
  - Improve error handling.
  - Bug-fix FastText error not handled in test API.
  - Add feature to allow new_prediction_tags to retrain CLI.
+
+## 0.9.4
+
+  - Improve codebase.
+
+## 0.9.5
+
+  - Fixed tags converter bug with data processor.
 
 ## dev

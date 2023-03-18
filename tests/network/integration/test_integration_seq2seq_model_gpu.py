@@ -38,7 +38,11 @@ class Seq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
     def test_whenEncoderStep_thenEncoderStepIsOk(self):
         # encoding for two address: "["15 major st london ontario n5z1e1", "15 major st london ontario n5z1e1"]"
 
-        (decoder_input, decoder_hidden, encoder_outputs,) = self.pre_trained_seq2seq_model._encoder_step(
+        (
+            decoder_input,
+            decoder_hidden,
+            encoder_outputs,
+        ) = self.pre_trained_seq2seq_model._encoder_step(
             self.to_predict_tensor, self.a_lengths_tensor, self.a_batch_size
         )
 

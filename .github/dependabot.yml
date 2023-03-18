@@ -4,12 +4,18 @@ updates:
     directory: "/"
     schedule:
       interval: "monthly"
+    target-branch: "develop"
+    labels:
+      - "Github actions dependencies"
 
   - package-ecosystem: "pip"
     directory: "/"
     schedule:
       interval: "monthly"
     open-pull-requests-limit: 10
+    target-branch: "develop"
+    labels:
+      - "pip dependencies"
     allow:
       - dependency-type: direct
       - dependency-type: indirect

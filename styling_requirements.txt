@@ -1,3 +1,3 @@
-black==22.10.0
-pylint==2.15.5
+black==23.1.0
+pylint==2.16.2
 pylint-django[with_django]

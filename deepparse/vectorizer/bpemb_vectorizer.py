@@ -57,7 +57,7 @@ class BPEmbVectorizer(Vectorizer):
             word_decomposition_lengths.append(len(bpe_decomposition))
             input_sequence.append(list(bpe_decomposition))
 
-        self._max_length = max(self._max_length, max(word_decomposition_lengths))
+        self._max_length = max(self._max_length, *word_decomposition_lengths)
 
         return input_sequence, word_decomposition_lengths
 

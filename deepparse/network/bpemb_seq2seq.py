@@ -7,6 +7,12 @@ import torch
 from .embedding_network import EmbeddingNetwork
 from .seq2seq import Seq2SeqModel
 
+major_pytorch_version = torch.__version__.split(".")[0]
+if int(major_pytorch_version) > 2:
+    can_use_torch_compile = True
+else:
+    can_use_torch_compile = False
+
 
 class BPEmbSeq2SeqModel(Seq2SeqModel):
     """
@@ -14,7 +20,7 @@ class BPEmbSeq2SeqModel(Seq2SeqModel):
 
      Args:
         cache_dir (str): The path to the cached directory to use for downloading (and loading) the
-            model weights.
+            model weights.1
         device (~torch.device): The device tu use for the prediction.
         input_size (int): The input size of the encoder (i.e. the embeddings size). It will also be used to initialize
             the internal embeddings network input size, hidden size and output dim. The default value is 300.
@@ -60,6 +66,9 @@ class BPEmbSeq2SeqModel(Seq2SeqModel):
             input_size=input_size, hidden_size=input_size, projection_size=input_size
         )
         self.embedding_network.to(self.device)
+
+        if can_use_torch_compile:
+            self.embedding_network = torch.compile(self.embedding_network)
 
         if path_to_retrained_model is not None:
             self._load_weights(path_to_retrained_model)

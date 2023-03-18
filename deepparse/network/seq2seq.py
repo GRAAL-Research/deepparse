@@ -14,6 +14,12 @@ from .decoder import Decoder
 from .encoder import Encoder
 from ..tools import download_weights, latest_version
 
+major_pytorch_version = torch.__version__.split(".")[0]
+if int(major_pytorch_version) > 2:
+    can_use_torch_compile = True
+else:
+    can_use_torch_compile = False
+
 
 class Seq2SeqModel(ABC, nn.Module):
     """
@@ -48,22 +54,26 @@ class Seq2SeqModel(ABC, nn.Module):
         self.verbose = verbose
         self.attention_mechanism = attention_mechanism
 
-        self.encoder = torch.compile(Encoder(
+        self.encoder = Encoder(
             input_size=input_size,
             hidden_size=encoder_hidden_size,
             num_layers=encoder_num_layers,
-        ))
+        )
         self.encoder.to(self.device)
 
-        self.decoder = torch.compile(Decoder(
+        self.decoder = Decoder(
             input_size=encoder_num_layers,
             hidden_size=decoder_hidden_size,
             num_layers=decoder_num_layers,
             output_size=output_size,
             attention_mechanism=self.attention_mechanism,
-        ))
+        )
 
         self.decoder.to(self.device)
+
+        if can_use_torch_compile:
+            self.encoder = torch.compile(self.encoder)
+            self.decoder = torch.compile(self.decoder)
 
         self.output_size = output_size
 

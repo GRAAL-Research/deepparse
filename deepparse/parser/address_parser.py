@@ -368,11 +368,17 @@ class AddressParser:
         if self.verbose and len(addresses_to_parse) > PREDICTION_TIME_PERFORMANCE_THRESHOLD:
             print("Vectorizing the address")
 
+        if self.device == torch.device("cpu"):
+            pin_memory = False
+        else:
+            pin_memory = True
+
         predict_data_loader = DataLoader(
             clean_addresses,
             collate_fn=self._predict_pipeline,
             batch_size=batch_size,
             num_workers=num_workers,
+            pin_memory=pin_memory,
         )
 
         tags_predictions = []

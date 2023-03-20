@@ -153,7 +153,7 @@ class Seq2SeqModel(ABC, nn.Module):
         encoder_outputs, decoder_hidden = self.encoder(to_predict, lengths_tensor)
 
         # -1 for BOS token
-        decoder_input = torch.zeros(1, batch_size, 1).to(self.device).new_full((1, batch_size, 1), -1)
+        decoder_input = torch.zeros(1, batch_size, 1, device=self.device).new_full((1, batch_size, 1), -1)
 
         return decoder_input, decoder_hidden, encoder_outputs
 

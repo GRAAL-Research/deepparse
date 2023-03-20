@@ -72,8 +72,8 @@ class Seq2SeqModel(ABC, nn.Module):
         self.decoder.to(self.device)
 
         if can_use_torch_compile:
-            self.encoder = torch.compile(self.encoder)
-            self.decoder = torch.compile(self.decoder)
+            self.encoder = torch.compile(self.encoder, mode="reduce-overhead")
+            self.decoder = torch.compile(self.decoder, mode="reduce-overhead")
 
         self.output_size = output_size
 

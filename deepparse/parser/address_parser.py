@@ -381,22 +381,23 @@ class AddressParser:
             pin_memory=pin_memory,
         )
 
-        tags_predictions = []
-        tags_predictions_prob = []
-        for x in predict_data_loader:
-            tensor_prediction = self.model(*load_tuple_to_device(x, self.device))
-            tags_predictions.extend(tensor_prediction.max(2)[1].transpose(0, 1).cpu().numpy().tolist())
-            tags_predictions_prob.extend(
-                torch.exp(tensor_prediction.max(2)[0]).transpose(0, 1).detach().cpu().numpy().tolist()
-            )
+        with torch.no_grad():
+            tags_predictions = []
+            tags_predictions_prob = []
+            for x in predict_data_loader:
+                tensor_prediction = self.model(*load_tuple_to_device(x, self.device))
+                tags_predictions.extend(tensor_prediction.max(2)[1].transpose(0, 1).cpu().numpy().tolist())
+                tags_predictions_prob.extend(
+                    torch.exp(tensor_prediction.max(2)[0]).transpose(0, 1).detach().cpu().numpy().tolist()
+                )
 
-        tagged_addresses_components = self._fill_tagged_addresses_components(
-            tags_predictions,
-            tags_predictions_prob,
-            addresses_to_parse,
-            clean_addresses,
-            with_prob,
-        )
+            tagged_addresses_components = self._fill_tagged_addresses_components(
+                tags_predictions,
+                tags_predictions_prob,
+                addresses_to_parse,
+                clean_addresses,
+                with_prob,
+            )
 
         return tagged_addresses_components
 
@@ -696,6 +697,7 @@ class AddressParser:
 
         optimizer = SGD(self.model.parameters(), learning_rate)
 
+        # Poutyne handle model.train()
         exp = Experiment(
             logging_path,
             self.model,
@@ -886,6 +888,8 @@ class AddressParser:
         # Handle the verbose overriding param
         if verbose is None:
             verbose = self.verbose
+
+        # Poutyne handle the no_grad context
         test_res = exp.test(test_generator, seed=seed, callbacks=callbacks, verbose=verbose)
 
         return test_res

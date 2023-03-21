@@ -52,8 +52,8 @@ are a little bit lower for the trained country (around ~2%) but are similar for 
         *   - fastText-light
             - ~1
             - ~1
-            - ~0.0028
-            - ~0.0037
+            - ~0.0019
+            - ~0.0004
         *   - BPEmb
             - ~1
             - ~1

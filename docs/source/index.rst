@@ -765,6 +765,7 @@ API Reference
   :caption: API
 
   parser
+  pre_processor
   dataset_container
   comparer
   cli

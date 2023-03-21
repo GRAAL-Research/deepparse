@@ -11,7 +11,7 @@ import re
 import warnings
 from functools import partial
 from pathlib import Path
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List, Tuple, Union, Callable
 
 import torch
 from poutyne.framework import Experiment
@@ -39,7 +39,7 @@ from ..embeddings_models import EmbeddingsModelFactory
 from ..errors import FastTextModelError
 from ..metrics import nll_loss, accuracy
 from ..network import ModelFactory
-from ..preprocessing import AddressCleaner
+from ..preprocessing import coma_cleaning, lower_cleaning, hyphen_cleaning
 from ..tools import CACHE_PATH, valid_poutyne_version
 from ..vectorizer import VectorizerFactory
 
@@ -276,6 +276,7 @@ class AddressParser:
         batch_size: int = 32,
         num_workers: int = 0,
         with_hyphen_split: bool = False,
+        pre_processors: Union[None, List[Callable]] = None,
     ) -> Union[FormattedParsedAddress, List[FormattedParsedAddress]]:
         # pylint: disable=too-many-arguments
         """
@@ -304,16 +305,22 @@ class AddressParser:
                 the hyphen split between the unit and the street number (e.g. Canada). For example, ``'3-305'`` will be
                 replaced as ``'3 305'`` for the parsing. Where ``'3'`` is the unit, and ``'305'`` is the street number.
                 We use a regular expression to replace alphanumerical characters separated by a hyphen at
-                the start of the string. We do so since some cities use hyphens in their names. Default is ``False``.
+                the start of the string. We do so since some cities use hyphens in their names. The default
+                is ``False``. If True, it adds the :func:`~deepparse.preprocessing.pre_processor.hyphen_cleaning`
+                pre-processor **at the end** of the pre-processor list to apply.
+            pre_processors (Union[None, List[Callable]]): A list of functions (callable) to apply pre-processing on
+                all the addresses to parse before parsing. See :ref:`pre_processor_label` for examples of
+                pre-processors. Since models were trained on lowercase data, during the parsing, we always apply a
+                lowercase pre-processor. If you pass a list of pre-processor, a lowercase pre-processor is
+                added **at the end** of the pre-processor list to apply. By default, None,
+                meaning we use the default setup, which is the coma removal pre-processor and lowercase.
 
         Return:
             Either a :class:`~FormattedParsedAddress` or a list of
             :class:`~FormattedParsedAddress` when given more than one address.
 
         Note:
-            During the parsing, the addresses are lowercase, and commas are removed. One can also use the
-            ``with_hyphen_split`` bool argument for replacing hyphens (used to separate units from street numbers,
-            e.g. ``'3-305 a street name'``) by whitespace for proper cleaning.
+            Since model was trained on lowercase data, during the parsing, we always apply a lowercase pre-processor.
 
         Examples:
 
@@ -351,6 +358,16 @@ class AddressParser:
                 addresses_to_parse = CSVDatasetContainer("./a_path.csv", column_names=["address_column_name"],
                                                          is_training_container=False)
                 address_parser(addresses_to_parse)
+
+            Using a user-define pre-processor
+
+            .. code-block:: python
+
+                def strip_parenthesis(address):
+                    return address.strip("(").strip(")")
+
+                address_parser(addresses_to_parse, pre_processors=[strip_parenthesis])
+                # It will also use the default lower case pre-processor.
         """
         self._model_os_validation(num_workers=num_workers)
 
@@ -363,7 +380,18 @@ class AddressParser:
         if isinstance(addresses_to_parse, DatasetContainer):
             addresses_to_parse = addresses_to_parse.data
 
-        clean_addresses = AddressCleaner(with_hyphen_split=with_hyphen_split).clean(addresses_to_parse)
+        if pre_processors is None:
+            # Default pre_processing setup.
+            pre_processors = [coma_cleaning, lower_cleaning]
+        else:
+            # We add, at the end, a lower casing cleaning pre-processor.
+            pre_processors.append(lower_cleaning)
+
+        if with_hyphen_split:
+            pre_processors.append(hyphen_cleaning)
+
+        self.pre_processors = pre_processors
+        clean_addresses = self._apply_pre_processors(addresses_to_parse)
 
         if self.verbose and len(addresses_to_parse) > PREDICTION_TIME_PERFORMANCE_THRESHOLD:
             print("Vectorizing the address")
@@ -411,6 +439,7 @@ class AddressParser:
         seq2seq_params: Union[Dict, None] = None,
         layers_to_freeze: Union[str, None] = None,
         name_of_the_retrain_parser: Union[None, str] = None,
+        pre_processors: Union[None, List[Callable]] = None,
     ) -> List[Dict]:
         # pylint: disable=too-many-arguments, too-many-locals, too-many-branches, too-many-statements
 
@@ -1189,3 +1218,12 @@ class AddressParser:
                 "FastText objects are not pickleable with the parallelism process used by default by MacOS. "
                 "Thus, you need to set torch.multiprocessing.set_start_method('fork') to allow torch parallelism."
             )
+
+    def _apply_pre_processors(self, addresses: List[str]) -> List[str]:
+        res = []
+
+        for address in addresses:
+            for pre_processor in self.pre_processors:
+                processed_address = pre_processor(address)
+                res.append(" ".join(processed_address.split()))
+        return res

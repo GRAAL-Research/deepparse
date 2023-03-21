@@ -363,7 +363,7 @@ class AddressParser:
         if isinstance(addresses_to_parse, DatasetContainer):
             addresses_to_parse = addresses_to_parse.data
 
-        clean_addresses = AddressCleaner().clean(addresses_to_parse)
+        clean_addresses = AddressCleaner(with_hyphen_split=with_hyphen_split).clean(addresses_to_parse)
 
         if self.verbose and len(addresses_to_parse) > PREDICTION_TIME_PERFORMANCE_THRESHOLD:
             print("Vectorizing the address")

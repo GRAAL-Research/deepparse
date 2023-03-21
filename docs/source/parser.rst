@@ -21,7 +21,7 @@ the architecture is similar, and performances are comparable; our results are av
 Memory Usage and Time Performance
 *********************************
 
-To assess memory usage and inference time performance, we have conducted an experiment using Python 3.11, Torch 2.0
+To assess memory usage and inference time performance, we have conducted an experiment using Python 3.10, Torch 2.0
 and CUDA 11.7 (done March 21, 2023). The next two tables report the results. In each table, we report the RAM usage,
 and in the first table, we also report the GPU memory usage. Also, for both tables, we report the mean-time of execution
 that was obtained by processing ~183,000 addresses using different batch sizes (2^0, ..., 2^9)
@@ -113,6 +113,10 @@ workers for the data loader created with your data within the call. But note tha
 Furthermore, as of version `0.9.6`, we now use Torch 2.0 compile feature and many other tricks to improve
 processing performance. Here a few: if the parser uses a GPU, it will pin the memory in the Dataloader and it use
 `torch.compile` if Torch 2.0 is installed.
+
+.. note::
+
+    Note that as of March 21, 2023, `torch.compile` is not supported on Python 3.11.
 
 
 AddressParser

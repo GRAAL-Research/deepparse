@@ -2,6 +2,7 @@ import os
 import shutil
 import warnings
 from pathlib import Path
+from platform import python_version
 from typing import List
 
 import poutyne
@@ -151,12 +152,17 @@ def valid_poutyne_version(min_major: int = 1, min_minor: int = 2) -> bool:
 
 def validate_torch_version() -> bool:
     """
-    Function to validate if torch major version is greater than 2.0. Torch.compile was officially
-    introduce in Torch 2.0.
+    Function to validate if torch major version is greater than 2.0 and Python version is lower than 3.11, since for
+    now `torch.compile` is not supported on Python 3.11. `torch.compile was officially introduce in Torch 2.0.
     """
     version_components = extract_package_version(package=torch).split(".")
     major_pytorch_version = version_components[0]
-    return int(major_pytorch_version) >= 2
+    major_python_version = python_version().split(".")[1]
+    if int(major_python_version) == 11:
+        warnings.warn(
+            "As of March 21, 2023, torch.compile is not supported on Python 3.11, and you are using" "Python 3.11."
+        )
+    return int(major_pytorch_version) >= 2 and int(major_python_version) < 11
 
 
 def validate_data_to_parse(addresses_to_parse: List) -> None:

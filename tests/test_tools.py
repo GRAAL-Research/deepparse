@@ -312,16 +312,31 @@ class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
         actual = valid_poutyne_version(min_major=3, min_minor=0)
         self.assertFalse(actual)
 
+    @patch("deepparse.tools.python_version")
     @patch("deepparse.tools.torch")
-    def test_givenPTorchVersion2_givenValidTorch_thenReturnTrue(self, torch_mock):
+    def test_givenPyTorchVersion2AndPython39_givenValidTorch_thenReturnTrue(self, torch_mock, python_version_mock):
         torch_mock.version.__version__ = "2.0"
+        python_version_mock.return_value = "3.9"
 
         actual = validate_torch_version()
         self.assertTrue(actual)
 
+    @patch("deepparse.tools.python_version")
     @patch("deepparse.tools.torch")
-    def test_givenPTorchVersionLessThan2_givenValidTorch_thenReturnFalse(self, torch_mock):
+    def test_givenPyTorchVersion2AndPython311_givenValidTorch_thenReturnFalse(self, torch_mock, python_version_mock):
+        torch_mock.version.__version__ = "2.0"
+        python_version_mock.return_value = "3.11"
+
+        actual = validate_torch_version()
+        self.assertFalse(actual)
+
+    @patch("deepparse.tools.python_version")
+    @patch("deepparse.tools.torch")
+    def test_givenPTorchVersionLessThan2AndPython39_givenValidTorch_thenReturnFalse(
+        self, torch_mock, python_version_mock
+    ):
         torch_mock.version.__version__ = "1.9"
+        python_version_mock.return_value = "3.9"
 
         actual = validate_torch_version()
         self.assertFalse(actual)

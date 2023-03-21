@@ -265,7 +265,7 @@ class FasttextSeq2SeqGPUTest(Seq2SeqTestCase):
         # we don't use the one of the setUp_decoder_mocks since we do the full loop
         decoder_input_mock = MagicMock()
         to_mock = MagicMock()
-        torch_mock.zeros().to().new_full.return_value = to_mock
+        torch_mock.zeros().new_full.return_value = to_mock
 
         # We mock the return of the decoder output
         encoder_mock.__call__().return_value = (decoder_input_mock, decoder_hidden_mock)
@@ -316,7 +316,7 @@ class FasttextSeq2SeqGPUTest(Seq2SeqTestCase):
         # we don't use the one of the setUp_decoder_mocks since we do the full loop
         decoder_input_mock = MagicMock()
         to_mock = MagicMock()
-        torch_mock.zeros().to().new_full.return_value = to_mock
+        torch_mock.zeros().new_full.return_value = to_mock
 
         # We mock the return of the decoder output
         encoder_mock.__call__().return_value = (decoder_input_mock, decoder_hidden_mock)
@@ -372,7 +372,7 @@ class FasttextSeq2SeqGPUTest(Seq2SeqTestCase):
         # we don't use the one of the setUp_decoder_mocks since we do the full loop
         decoder_input_mock = MagicMock()
         to_mock = MagicMock()
-        torch_mock.zeros().to().new_full.return_value = to_mock
+        torch_mock.zeros().new_full.return_value = to_mock
 
         # We mock the return of the decoder output
         encoder_mock.__call__().return_value = (decoder_input_mock, decoder_hidden_mock)

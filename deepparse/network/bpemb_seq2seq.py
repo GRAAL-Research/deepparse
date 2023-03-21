@@ -6,12 +6,9 @@ import torch
 
 from .embedding_network import EmbeddingNetwork
 from .seq2seq import Seq2SeqModel
+from .. import validate_torch_version
 
-major_pytorch_version = torch.__version__.split(".")[0]
-if int(major_pytorch_version) > 2:
-    can_use_torch_compile = True
-else:
-    can_use_torch_compile = False
+can_use_torch_compile = validate_torch_version()
 
 
 class BPEmbSeq2SeqModel(Seq2SeqModel):

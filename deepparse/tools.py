@@ -6,6 +6,7 @@ from typing import List
 
 import poutyne
 import requests
+import torch
 from requests import HTTPError
 from urllib3.exceptions import MaxRetryError
 
@@ -117,11 +118,11 @@ def download_weights(model: str, saving_dir: str, verbose: bool = True) -> None:
         ) from error
 
 
-def handle_poutyne_version() -> str:
+def extract_package_version(package) -> str:
     """
-    Handle the retrieval of the major and minor part of the Poutyne version
+    Handle the retrieval of the major and minor version part of a Python package.
     """
-    full_version = poutyne.version.__version__
+    full_version = package.version.__version__
     components_parts = full_version.split(".")
     major = components_parts[0]
     minor = components_parts[1]
@@ -135,7 +136,7 @@ def valid_poutyne_version(min_major: int = 1, min_minor: int = 2) -> bool:
     does not support all the features we need. By default, min_major.min_minor equal version 1.2 which is the
     lowest version we can use.
     """
-    version_components = handle_poutyne_version().split(".")
+    version_components = extract_package_version(package=poutyne).split(".")
 
     major = int(version_components[0])
     minor = int(version_components[1])
@@ -146,6 +147,16 @@ def valid_poutyne_version(min_major: int = 1, min_minor: int = 2) -> bool:
         is_valid_poutyne_version = major >= min_major and minor >= min_minor
 
     return is_valid_poutyne_version
+
+
+def validate_torch_version() -> bool:
+    """
+    Function to validate if torch major version is greater than 2.0. Torch.compile was officially
+    introduce in Torch 2.0.
+    """
+    version_components = extract_package_version(package=torch).split(".")
+    major_pytorch_version = version_components[0]
+    return int(major_pytorch_version) >= 2
 
 
 def validate_data_to_parse(addresses_to_parse: List) -> None:

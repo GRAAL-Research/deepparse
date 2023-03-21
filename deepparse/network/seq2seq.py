@@ -12,13 +12,9 @@ from torch import nn
 
 from .decoder import Decoder
 from .encoder import Encoder
-from ..tools import download_weights, latest_version
+from ..tools import download_weights, latest_version, validate_torch_version
 
-major_pytorch_version = torch.__version__.split(".")[0]
-if int(major_pytorch_version) > 2:
-    can_use_torch_compile = True
-else:
-    can_use_torch_compile = False
+can_use_torch_compile = validate_torch_version()
 
 
 class Seq2SeqModel(ABC, nn.Module):

@@ -17,11 +17,12 @@ from deepparse import (
     download_from_public_repository,
     latest_version,
     download_weights,
-    handle_poutyne_version,
+    extract_package_version,
     valid_poutyne_version,
     validate_data_to_parse,
     DataError,
     ServerError,
+    validate_torch_version,
 )
 from tests.base_capture_output import CaptureOutputTestCase
 from tests.base_file_exist import FileCreationTestCase
@@ -212,7 +213,7 @@ class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
     def test_givenPoutyneVersion1_1_1_givenHandlePoutyneVersion_thenReturnVersion1_1(self, poutyne_mock):
         poutyne_mock.version.__version__ = "1.1.1"
 
-        actual = handle_poutyne_version()
+        actual = extract_package_version(package=poutyne_mock)
         expected = "1.1"
         self.assertEqual(expected, actual)
 
@@ -220,7 +221,7 @@ class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
     def test_givenPoutyneVersion1_1_1_1_givenHandlePoutyneVersion_thenReturnVersion1_1(self, poutyne_mock):
         poutyne_mock.version.__version__ = "1.1.1.1"
 
-        actual = handle_poutyne_version()
+        actual = extract_package_version(package=poutyne_mock)
         expected = "1.1"
         self.assertEqual(expected, actual)
 
@@ -228,7 +229,7 @@ class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
     def test_givenPoutyneVersion1_1_dev_givenHandlePoutyneVersion_thenReturnVersion1_1(self, poutyne_mock):
         poutyne_mock.version.__version__ = "1.1.dev1+81b3c7b"
 
-        actual = handle_poutyne_version()
+        actual = extract_package_version(package=poutyne_mock)
         expected = "1.1"
         self.assertEqual(expected, actual)
 
@@ -236,7 +237,7 @@ class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
     def test_givenPoutyneVersion1_1_1_dev_givenHandlePoutyneVersion_thenReturnVersion1_1(self, poutyne_mock):
         poutyne_mock.version.__version__ = "1.1.dev1+81b3c7b"
 
-        actual = handle_poutyne_version()
+        actual = extract_package_version(package=poutyne_mock)
         expected = "1.1"
         self.assertEqual(expected, actual)
 
@@ -244,7 +245,7 @@ class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
     def test_givenPoutyneVersion1_2_givenHandlePoutyneVersion_thenReturnVersion1_2(self, poutyne_mock):
         poutyne_mock.version.__version__ = "1.2"
 
-        actual = handle_poutyne_version()
+        actual = extract_package_version(package=poutyne_mock)
         expected = "1.2"
         self.assertEqual(expected, actual)
 
@@ -309,6 +310,20 @@ class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
         poutyne_mock.version.__version__ = "2.0"
 
         actual = valid_poutyne_version(min_major=3, min_minor=0)
+        self.assertFalse(actual)
+
+    @patch("deepparse.tools.torch")
+    def test_givenPTorchVersion2_givenValidTorch_thenReturnTrue(self, torch_mock):
+        torch_mock.version.__version__ = "2.0"
+
+        actual = validate_torch_version()
+        self.assertTrue(actual)
+
+    @patch("deepparse.tools.torch")
+    def test_givenPTorchVersionLessThan2_givenValidTorch_thenReturnFalse(self, torch_mock):
+        torch_mock.version.__version__ = "1.9"
+
+        actual = validate_torch_version()
         self.assertFalse(actual)
 
     def test_integrationValidateDataToParse(self):

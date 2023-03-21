@@ -39,7 +39,8 @@ from ..embeddings_models import EmbeddingsModelFactory
 from ..errors import FastTextModelError
 from ..metrics import nll_loss, accuracy
 from ..network import ModelFactory
-from ..preprocessing import coma_cleaning, lower_cleaning, hyphen_cleaning
+from ..pre_processing import trailing_whitespace_cleaning, double_whitespaces_cleaning
+from ..pre_processing import coma_cleaning, lower_cleaning, hyphen_cleaning
 from ..tools import CACHE_PATH, valid_poutyne_version
 from ..vectorizer import VectorizerFactory
 
@@ -306,14 +307,15 @@ class AddressParser:
                 replaced as ``'3 305'`` for the parsing. Where ``'3'`` is the unit, and ``'305'`` is the street number.
                 We use a regular expression to replace alphanumerical characters separated by a hyphen at
                 the start of the string. We do so since some cities use hyphens in their names. The default
-                is ``False``. If True, it adds the :func:`~deepparse.preprocessing.pre_processor.hyphen_cleaning`
+                is ``False``. If True, it adds the :func:`~deepparse.pre_processing.pre_processor.hyphen_cleaning`
                 pre-processor **at the end** of the pre-processor list to apply.
             pre_processors (Union[None, List[Callable]]): A list of functions (callable) to apply pre-processing on
                 all the addresses to parse before parsing. See :ref:`pre_processor_label` for examples of
                 pre-processors. Since models were trained on lowercase data, during the parsing, we always apply a
                 lowercase pre-processor. If you pass a list of pre-processor, a lowercase pre-processor is
                 added **at the end** of the pre-processor list to apply. By default, None,
-                meaning we use the default setup, which is the coma removal pre-processor and lowercase.
+                meaning we use the default setup, which is (in order) the coma removal pre-processor, lowercase,
+                double whitespace cleaning and trailing whitespace removal.
 
         Return:
             Either a :class:`~FormattedParsedAddress` or a list of
@@ -382,7 +384,7 @@ class AddressParser:
 
         if pre_processors is None:
             # Default pre_processing setup.
-            pre_processors = [coma_cleaning, lower_cleaning]
+            pre_processors = [coma_cleaning, lower_cleaning, trailing_whitespace_cleaning, double_whitespaces_cleaning]
         else:
             # We add, at the end, a lower casing cleaning pre-processor.
             pre_processors.append(lower_cleaning)
@@ -439,7 +441,6 @@ class AddressParser:
         seq2seq_params: Union[Dict, None] = None,
         layers_to_freeze: Union[str, None] = None,
         name_of_the_retrain_parser: Union[None, str] = None,
-        pre_processors: Union[None, List[Callable]] = None,
     ) -> List[Dict]:
         # pylint: disable=too-many-arguments, too-many-locals, too-many-branches, too-many-statements
 

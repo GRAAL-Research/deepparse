@@ -273,28 +273,37 @@
 
 ## 0.9.2
 
-- Improve Deepparse server error handling and error output
-- Remove deprecated argument `saving_dir` in `download_fasttext_magnitude_embeddings`
-  and `download_fasttext_embeddings` functions
-- Add offline argument to remove verification of the latest version
-- Bug-fix cache handling in download model
-- Add `download_models` CLI function
-- [Temporary hot-fix BPEmb SSL certificate error](https://github.com/GRAAL-Research/deepparse/issues/156)
+- Improve Deepparse server error handling and error output.
+- Remove deprecated argument `saving_dir` in `download_fasttext_magnitude_embeddings`.
+  and `download_fasttext_embeddings` functions.
+- Add offline argument to remove verification of the latest version.
+- Bug-fix cache handling in download model.
+- Add `download_models` CLI function.
+- [Temporary hot-fix BPEmb SSL certificate error](https://github.com/GRAAL-Research/deepparse/issues/156).
 
 ## 0.9.3
 
- - Improve error handling.
- - Bug-fix FastText error not handled in test API.
- - Add feature to allow new_prediction_tags to retrain CLI.
+- Improve error handling.
+- Bug-fix FastText error not handled in test API.
+- Add feature to allow new_prediction_tags to retrain CLI.
 
 ## 0.9.4
 
-  - Improve codebase.
+- Improve codebase.
 
 ## 0.9.5
 
-  - Fixed tags converter bug with data processor.
+- Fixed tags converter bug with data processor.
 
-## dev
+## dev (0.9.6)
 
- - Add Python 3.11
+- Add Python 3.11.
+- Drop Python 3.7 support since newer Python versions are faster
+  and [Torch 2.0 does not support Python 3.7](https://dev-discuss.pytorch.org/t/dropping-support-for-cuda-11-6-and-python-3-7-from-pytorch-2-0-release/1021).
+- Add `torch.compile` integration to improve performance (Torch 1.x still supported) with `mode="reduce-overhead"` as
+  suggested in the [documentation](https://pytorch.org/tutorials//intermediate/torch_compile_tutorial.html). It
+  increases the performance by about 1/100.
+- Add `pin_memory=True` when using a CUDA device to increase performance as suggested
+  by [Torch documentation](https://pytorch.org/tutorials/recipes/recipes/tuning_guide.html).
+- Add `torch.no_grad()` context manager in `__call__()` to increase performance.
+- Reduce memory swap between CPU and GPU by instantiating Tensor directly on the GPU device.

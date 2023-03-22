@@ -106,7 +106,7 @@ class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
         with patch("deepparse.tools.download_from_public_repository") as download_from_public_repository_mock:
             download_from_public_repository_mock.side_effect = HTTPError(an_http_error_msg, response=response_mock)
 
-            with self.assertWarns(UserWarning):
+            with self.assertWarns(RuntimeWarning):
                 latest_version("bpemb", self.fake_cache_path, verbose=True)
 
     def test_givenANoInternetError_whenLatestVersionCall_thenReturnTrue(
@@ -127,7 +127,7 @@ class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
         with patch("deepparse.tools.download_from_public_repository") as download_from_public_repository_mock:
             download_from_public_repository_mock.side_effect = MaxRetryError(pool=MagicMock(), url=MagicMock())
 
-            with self.assertWarns(UserWarning):
+            with self.assertWarns(RuntimeWarning):
                 latest_version("bpemb", self.fake_cache_path, verbose=True)
 
     @patch("deepparse.tools.os.path.exists", return_value=True)

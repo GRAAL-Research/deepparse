@@ -1007,7 +1007,7 @@ class AddressParser:
                 else:
                     raise ValueError("Device should be a string, an int or a torch device.")
             else:
-                warnings.warn("No CUDA device detected, device will be set to 'CPU'.")
+                warnings.warn("No CUDA device detected, device will be set to 'CPU'.", category=UserWarning)
                 self.device = torch.device("cpu")
                 self.pin_memory = False
 

@@ -64,9 +64,6 @@ class BPEmbSeq2SeqModel(Seq2SeqModel):
         )
         self.embedding_network.to(self.device)
 
-        if can_use_torch_compile:
-            self.embedding_network = torch.compile(self.embedding_network)
-
         if path_to_retrained_model is not None:
             self._load_weights(path_to_retrained_model)
         elif pre_trained_weights:
@@ -75,6 +72,8 @@ class BPEmbSeq2SeqModel(Seq2SeqModel):
             if attention_mechanism:
                 model_weights_name += "_attention"
             self._load_pre_trained_weights(model_weights_name, cache_dir=cache_dir, offline=offline)
+
+        self._torch_compile_loading()
 
     def forward(
         self,
@@ -111,3 +110,11 @@ class BPEmbSeq2SeqModel(Seq2SeqModel):
             batch_size,
         )
         return prediction_sequence
+
+    def _torch_compile_loading(self):
+        """
+        Compile, if possible, the embedding network
+        """
+        super()._torch_compile_loading()
+        if can_use_torch_compile:
+            self.embedding_network = torch.compile(self.embedding_network)

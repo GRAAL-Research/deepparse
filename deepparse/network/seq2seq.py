@@ -67,10 +67,6 @@ class Seq2SeqModel(ABC, nn.Module):
 
         self.decoder.to(self.device)
 
-        if can_use_torch_compile:
-            self.encoder = torch.compile(self.encoder, mode="reduce-overhead")
-            self.decoder = torch.compile(self.decoder, mode="reduce-overhead")
-
         self.output_size = output_size
 
     def same_output_dim(self, size: int) -> bool:
@@ -226,3 +222,11 @@ class Seq2SeqModel(ABC, nn.Module):
                 _, decoder_input = decoder_output.topk(1)
 
         return prediction_sequence
+
+    def _torch_compile_loading(self) -> None:
+        """
+        Private method to assert if we can use torch compile to improve performance and compile the model.
+        """
+        if can_use_torch_compile:
+            self.encoder = torch.compile(self.encoder, mode="reduce-overhead")
+            self.decoder = torch.compile(self.decoder, mode="reduce-overhead")

@@ -152,7 +152,7 @@ def valid_poutyne_version(min_major: int = 1, min_minor: int = 2) -> bool:
     return is_valid_poutyne_version
 
 
-def validate_torch_compile_compability() -> bool:
+def validate_torch_compile_compatibility() -> bool:
     """
     Function to validate if torch major version is greater than 2.0 and Python version is lower than 3.11, since for
     now `torch.compile` is not supported on Python 3.11. `torch.compile was officially introduce in Torch 2.0.

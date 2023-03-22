@@ -6,9 +6,9 @@ import torch
 
 from .embedding_network import EmbeddingNetwork
 from .seq2seq import Seq2SeqModel
-from .. import validate_torch_compile_compability
+from .. import validate_torch_compile_compatibility
 
-can_use_torch_compile = validate_torch_compile_compability()
+can_use_torch_compile = validate_torch_compile_compatibility()
 
 
 class BPEmbSeq2SeqModel(Seq2SeqModel):

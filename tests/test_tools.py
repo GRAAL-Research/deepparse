@@ -22,7 +22,7 @@ from deepparse import (
     validate_data_to_parse,
     DataError,
     ServerError,
-    validate_torch_compile_compability,
+    validate_torch_compile_compatibility,
 )
 from tests.base_capture_output import CaptureOutputTestCase
 from tests.base_file_exist import FileCreationTestCase
@@ -322,7 +322,7 @@ class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
         python_version_mock.return_value = "3.9"
         system_mock.return_value = "Linux"
 
-        actual = validate_torch_compile_compability()
+        actual = validate_torch_compile_compatibility()
         self.assertTrue(actual)
 
     @patch("deepparse.tools.system")
@@ -335,7 +335,7 @@ class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
         python_version_mock.return_value = "3.11"
         system_mock.return_value = "Linux"
 
-        actual = validate_torch_compile_compability()
+        actual = validate_torch_compile_compatibility()
         self.assertFalse(actual)
 
     @patch("deepparse.tools.system")
@@ -348,7 +348,7 @@ class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
         python_version_mock.return_value = "3.9"
         system_mock.return_value = "Linux"
 
-        actual = validate_torch_compile_compability()
+        actual = validate_torch_compile_compatibility()
         self.assertFalse(actual)
 
     @patch("deepparse.tools.system")
@@ -362,7 +362,7 @@ class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
         system_mock.return_value = "Linux"
 
         with self.assertWarns(UserWarning):
-            validate_torch_compile_compability()
+            validate_torch_compile_compatibility()
 
     @patch("deepparse.tools.system")
     @patch("deepparse.tools.python_version")
@@ -374,7 +374,7 @@ class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
         python_version_mock.return_value = "3.9"
         system_mock.return_value = "Windows"
 
-        actual = validate_torch_compile_compability()
+        actual = validate_torch_compile_compatibility()
         self.assertFalse(actual)
 
     @patch("deepparse.tools.system")
@@ -388,7 +388,7 @@ class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
         system_mock.return_value = "Windows"
 
         with self.assertWarns(UserWarning):
-            validate_torch_compile_compability()
+            validate_torch_compile_compatibility()
 
     def test_integrationValidateDataToParse(self):
         valid_data = ["An address", "another address"]

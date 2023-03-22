@@ -19,6 +19,7 @@ class AddressParserIntegrationTestAPIGPUTest(AddressParserRetrainTestCase):
             model_type=self.a_fasttext_model_type,
             device=self.a_torch_device,
             verbose=self.verbose,
+            use_torch_compile=False,
         )
 
         performance_after_test = address_parser.test(
@@ -36,6 +37,7 @@ class AddressParserIntegrationTestAPIGPUTest(AddressParserRetrainTestCase):
             model_type=self.a_fasttext_model_type,
             device=self.a_torch_device,
             verbose=self.verbose,
+            use_torch_compile=False,
         )
 
         performance_after_test = address_parser.test(
@@ -53,6 +55,7 @@ class AddressParserIntegrationTestAPIGPUTest(AddressParserRetrainTestCase):
             model_type=self.a_fasttext_model_type,
             device=self.a_torch_device,
             verbose=self.verbose,
+            use_torch_compile=False,
         )
 
         performance_after_test = address_parser.test(
@@ -68,6 +71,7 @@ class AddressParserIntegrationTestAPIGPUTest(AddressParserRetrainTestCase):
             model_type=self.a_fasttext_model_type,
             device=self.a_torch_device,
             verbose=self.verbose,
+            use_torch_compile=False,
         )
 
         performance_after_test = address_parser.test(
@@ -85,6 +89,7 @@ class AddressParserIntegrationTestAPIGPUTest(AddressParserRetrainTestCase):
             model_type=self.a_fasttext_model_type,
             device=self.a_torch_device,
             verbose=self.verbose,
+            use_torch_compile=False,
         )
 
         callback_mock = MagicMock()

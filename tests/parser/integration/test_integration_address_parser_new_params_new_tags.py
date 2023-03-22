@@ -104,9 +104,7 @@ class AddressParserPredictNewTagsTest(TestCase):
     ):
         # Training setup
         bpemb_address_parser = AddressParser(
-            model_type=self.a_bpemb_model_type,
-            device=self.a_cpu_device,
-            verbose=self.verbose,
+            model_type=self.a_bpemb_model_type, device=self.a_cpu_device, verbose=self.verbose, use_torch_compile=False
         )
         self.training(
             bpemb_address_parser,
@@ -122,6 +120,7 @@ class AddressParserPredictNewTagsTest(TestCase):
             device=self.a_cpu_device,
             verbose=self.verbose,
             path_to_retrained_model=self.a_bpemb_retrain_model_path,
+            use_torch_compile=False,
         )
 
         # Since we train a smaller model, it sometime return EOS, so we manage it by adding the EOS tag
@@ -139,6 +138,7 @@ class AddressParserPredictNewTagsTest(TestCase):
             model_type=self.a_fasttext_model_type,
             device=self.a_cpu_device,
             verbose=self.verbose,
+            use_torch_compile=False,
         )
         self.training(
             fasttext_address_parser,
@@ -154,6 +154,7 @@ class AddressParserPredictNewTagsTest(TestCase):
             device=self.a_cpu_device,
             verbose=self.verbose,
             path_to_retrained_model=self.a_fasttext_retrain_model_path,
+            use_torch_compile=False,
         )
 
         # Since we train a smaller model, it sometime return EOS, so we manage it by adding the EOS tag

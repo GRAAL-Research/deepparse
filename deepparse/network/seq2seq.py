@@ -14,8 +14,6 @@ from .decoder import Decoder
 from .encoder import Encoder
 from ..tools import download_weights, latest_version, validate_torch_compile_compatibility
 
-can_use_torch_compile = validate_torch_compile_compatibility()
-
 
 class Seq2SeqModel(ABC, nn.Module):
     """
@@ -44,6 +42,7 @@ class Seq2SeqModel(ABC, nn.Module):
         output_size: int,
         attention_mechanism: bool = False,
         verbose: bool = True,
+        use_torch_compile: bool = True,
     ) -> None:
         super().__init__()
         self.device = device
@@ -68,6 +67,8 @@ class Seq2SeqModel(ABC, nn.Module):
         self.decoder.to(self.device)
 
         self.output_size = output_size
+
+        self.use_torch_compile = use_torch_compile
 
     def same_output_dim(self, size: int) -> bool:
         """
@@ -227,6 +228,14 @@ class Seq2SeqModel(ABC, nn.Module):
         """
         Private method to assert if we can use torch compile to improve performance and compile the model.
         """
-        if can_use_torch_compile:
-            self.encoder = torch.compile(self.encoder, mode="reduce-overhead")
-            self.decoder = torch.compile(self.decoder, mode="reduce-overhead")
+        can_use_torch_compile = validate_torch_compile_compatibility()
+        if self.use_torch_compile:
+            if can_use_torch_compile:
+                warnings.warn(
+                    "torch.compile is use to increase addresses parsing performance. "
+                    "Note that the first time it take more time to init the model."
+                )
+                self.encoder = torch.compile(self.encoder, mode="reduce-overhead")
+                self.decoder = torch.compile(self.decoder, mode="reduce-overhead")
+            else:
+                warnings.warn("Cannot use torch.compile, see other warnings for details.", category=UserWarnings)

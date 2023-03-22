@@ -25,6 +25,7 @@ class FastTextSeq2SeqModel(Seq2SeqModel):
         attention_mechanism (bool): Either or not to use attention mechanism. The default value is False.
         verbose (bool): Turn on/off the verbosity of the model. The default value is True.
         path_to_retrained_model (Union[str, None]): The path to the retrained model to use for the seq2seq.
+        use_torch_compile (bool): Either or not to use torch.compile if conditions are met.
     """
 
     def __init__(
@@ -42,6 +43,7 @@ class FastTextSeq2SeqModel(Seq2SeqModel):
         path_to_retrained_model: Union[str, None] = None,
         pre_trained_weights: bool = True,
         offline: bool = False,
+        use_torch_compile: bool = True,
     ) -> None:
         super().__init__(
             device,
@@ -53,6 +55,7 @@ class FastTextSeq2SeqModel(Seq2SeqModel):
             output_size=output_size,
             attention_mechanism=attention_mechanism,
             verbose=verbose,
+            use_torch_compile=use_torch_compile,
         )
 
         if path_to_retrained_model is not None:

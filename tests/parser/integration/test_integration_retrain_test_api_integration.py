@@ -12,9 +12,7 @@ from tests.parser.integration.base_retrain import AddressParserRetrainTestCase
 class AddressParserIntegrationTestAPITest(AddressParserRetrainTestCase):
     def test_givenARetrainAnTestLoop_whenRunBoth_thenWork(self):
         address_parser = AddressParser(
-            model_type=self.a_bpemb_model_type,
-            device=self.a_cpu_device,
-            verbose=self.verbose,
+            model_type=self.a_bpemb_model_type, device=self.a_cpu_device, verbose=self.verbose, use_torch_compile=False
         )
 
         self.training(address_parser, self.training_container, num_workers=self.a_number_of_workers)

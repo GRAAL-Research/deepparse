@@ -24,21 +24,27 @@ class AddressParserIntegrationReloadRetrainAPITest(AddressParserRetrainTestCase,
         model_type = "fasttext"
         path_to_retrained_model = self.path_to_retrain_fasttext
 
-        address_parser = AddressParser(model_type=model_type, path_to_retrained_model=path_to_retrained_model)
+        address_parser = AddressParser(
+            model_type=model_type, path_to_retrained_model=path_to_retrained_model, use_torch_compile=False
+        )
         self.assertEqual(model_type, address_parser.model_type)
 
     def test_integration_parsing_with_retrain_bpemb(self):
         model_type = "bpemb"
         path_to_retrained_model = self.path_to_retrain_bpemb
 
-        address_parser = AddressParser(model_type=model_type, path_to_retrained_model=path_to_retrained_model)
+        address_parser = AddressParser(
+            model_type=model_type, path_to_retrained_model=path_to_retrained_model, use_torch_compile=False
+        )
         self.assertEqual(model_type, address_parser.model_type)
 
     def test_integration_parsing_with_retrain_named_model(self):
         model_type = "fasttext"  # Base architecture of the named model is a FastText
         path_to_retrained_model = self.path_to_named_model
 
-        address_parser = AddressParser(model_type=model_type, path_to_retrained_model=path_to_retrained_model)
+        address_parser = AddressParser(
+            model_type=model_type, path_to_retrained_model=path_to_retrained_model, use_torch_compile=False
+        )
         self.assertEqual(model_type, address_parser.model_type)
 
         expected_name = "MyModelNewName"

@@ -25,6 +25,7 @@ class AddressParserIntegrationRetrainCPUTest(AddressParserRetrainTestCase, Captu
             model_type=self.a_fasttext_model_type,
             device=self.a_cpu_device,
             verbose=self.verbose,
+            use_torch_compile=False,
         )
 
         performance_after_training = address_parser.retrain(
@@ -48,6 +49,7 @@ class AddressParserIntegrationRetrainCPUTest(AddressParserRetrainTestCase, Captu
             model_type=self.a_fasttext_model_type,
             device=self.a_cpu_device,
             verbose=self.verbose,
+            use_torch_compile=False,
         )
 
         address_parser.retrain(
@@ -78,6 +80,7 @@ class AddressParserIntegrationRetrainCPUTest(AddressParserRetrainTestCase, Captu
             model_type=self.a_fasttext_model_type,
             device=self.a_cpu_device,
             verbose=self.verbose,
+            use_torch_compile=False,
         )
 
         address_parser.retrain(
@@ -109,6 +112,7 @@ class AddressParserIntegrationRetrainCPUTest(AddressParserRetrainTestCase, Captu
             model_type=self.a_fasttext_model_type,
             device=self.a_cpu_device,
             verbose=self.verbose,
+            use_torch_compile=False,
         )
 
         address_parser.retrain(
@@ -138,6 +142,7 @@ class AddressParserIntegrationRetrainCPUTest(AddressParserRetrainTestCase, Captu
             model_type=self.a_fasttext_model_type,
             device=self.a_cpu_device,
             verbose=self.verbose,
+            use_torch_compile=False,
         )
 
         address_parser.retrain(
@@ -166,6 +171,7 @@ class AddressParserIntegrationRetrainCPUTest(AddressParserRetrainTestCase, Captu
             model_type=self.a_fasttext_model_type,
             device=self.a_cpu_device,
             verbose=self.verbose,
+            use_torch_compile=False,
         )
 
         performance_after_training = address_parser.retrain(
@@ -184,6 +190,7 @@ class AddressParserIntegrationRetrainCPUTest(AddressParserRetrainTestCase, Captu
             model_type=self.a_fasttext_model_type,
             device=self.a_cpu_device,
             verbose=self.verbose,
+            use_torch_compile=False,
         )
 
         performance_after_training = address_parser.retrain(
@@ -205,6 +212,7 @@ class AddressParserIntegrationRetrainCPUTest(AddressParserRetrainTestCase, Captu
             model_type=self.a_fasttext_model_type,
             device=self.a_cpu_device,
             verbose=self.verbose,
+            use_torch_compile=False,
         )
 
         callback_mock = MagicMock(spec=Callback)
@@ -234,6 +242,7 @@ class AddressParserIntegrationRetrainCPUTest(AddressParserRetrainTestCase, Captu
             model_type=self.a_fasttext_light_model_type,
             device=self.a_cpu_device,
             verbose=self.verbose,
+            use_torch_compile=False,
         )
         with self.assertRaises(FastTextModelError):
             address_parser.retrain(
@@ -247,9 +256,7 @@ class AddressParserIntegrationRetrainCPUTest(AddressParserRetrainTestCase, Captu
 
     def test_givenABPEmbAddressParser_whenRetrain_thenTrainingOccur(self):
         address_parser = AddressParser(
-            model_type=self.a_bpemb_model_type,
-            device=self.a_cpu_device,
-            verbose=self.verbose,
+            model_type=self.a_bpemb_model_type, device=self.a_cpu_device, verbose=self.verbose, use_torch_compile=False
         )
 
         performance_after_training = address_parser.retrain(
@@ -267,9 +274,7 @@ class AddressParserIntegrationRetrainCPUTest(AddressParserRetrainTestCase, Captu
         self,
     ):
         address_parser = AddressParser(
-            model_type=self.a_bpemb_model_type,
-            device=self.a_cpu_device,
-            verbose=self.verbose,
+            model_type=self.a_bpemb_model_type, device=self.a_cpu_device, verbose=self.verbose, use_torch_compile=False
         )
 
         performance_after_training = address_parser.retrain(
@@ -285,9 +290,7 @@ class AddressParserIntegrationRetrainCPUTest(AddressParserRetrainTestCase, Captu
 
     def test_givenABPEmbAddressParser_whenRetrainWithConfig_thenTrainingOccur(self):
         address_parser = AddressParser(
-            model_type=self.a_bpemb_model_type,
-            device=self.a_cpu_device,
-            verbose=self.verbose,
+            model_type=self.a_bpemb_model_type, device=self.a_cpu_device, verbose=self.verbose, use_torch_compile=False
         )
 
         performance_after_training = address_parser.retrain(
@@ -306,9 +309,7 @@ class AddressParserIntegrationRetrainCPUTest(AddressParserRetrainTestCase, Captu
         self,
     ):
         address_parser = AddressParser(
-            model_type=self.a_bpemb_model_type,
-            device=self.a_cpu_device,
-            verbose=self.verbose,
+            model_type=self.a_bpemb_model_type, device=self.a_cpu_device, verbose=self.verbose, use_torch_compile=False
         )
 
         callback_mock = MagicMock(spec=Callback)

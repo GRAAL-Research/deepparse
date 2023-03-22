@@ -22,6 +22,7 @@ class AddressParserIntegrationTestAPICPUTest(AddressParserRetrainTestCase):
             model_type=self.a_fasttext_model_type,
             device=self.a_cpu_device,
             verbose=self.verbose,
+            use_torch_compile=False,
         )
 
         performance_after_test = address_parser.test(
@@ -39,6 +40,7 @@ class AddressParserIntegrationTestAPICPUTest(AddressParserRetrainTestCase):
             model_type=self.a_fasttext_model_type,
             device=self.a_cpu_device,
             verbose=self.verbose,
+            use_torch_compile=False,
         )
 
         performance_after_test = address_parser.test(
@@ -56,6 +58,7 @@ class AddressParserIntegrationTestAPICPUTest(AddressParserRetrainTestCase):
             model_type=self.a_fasttext_model_type,
             device=self.a_cpu_device,
             verbose=self.verbose,
+            use_torch_compile=False,
         )
 
         performance_after_test = address_parser.test(
@@ -71,6 +74,7 @@ class AddressParserIntegrationTestAPICPUTest(AddressParserRetrainTestCase):
             model_type=self.a_fasttext_model_type,
             device=self.a_cpu_device,
             verbose=self.verbose,
+            use_torch_compile=False,
         )
 
         performance_after_test = address_parser.test(
@@ -88,6 +92,7 @@ class AddressParserIntegrationTestAPICPUTest(AddressParserRetrainTestCase):
             model_type=self.a_fasttext_model_type,
             device=self.a_cpu_device,
             verbose=self.verbose,
+            use_torch_compile=False,
         )
 
         callback_mock = MagicMock()
@@ -119,6 +124,7 @@ class AddressParserIntegrationTestAPICPUTest(AddressParserRetrainTestCase):
             model_type=self.a_fasttext_model_type,
             device=self.a_cpu_device,
             verbose=self.verbose,
+            use_torch_compile=False,
         )
 
         performance_after_test = address_parser.test(
@@ -134,6 +140,7 @@ class AddressParserIntegrationTestAPICPUTest(AddressParserRetrainTestCase):
             model_type=self.a_fasttext_model_type,
             device=self.a_cpu_device,
             verbose=self.verbose,
+            use_torch_compile=False,
         )
 
         performance_after_test = address_parser.test(
@@ -146,9 +153,7 @@ class AddressParserIntegrationTestAPICPUTest(AddressParserRetrainTestCase):
 
     def test_givenABPEmbAddressParser_whenTestWithNumberWorkersAt0_thenTestOccur(self):
         address_parser = AddressParser(
-            model_type=self.a_bpemb_model_type,
-            device=self.a_cpu_device,
-            verbose=self.verbose,
+            model_type=self.a_bpemb_model_type, device=self.a_cpu_device, verbose=self.verbose, use_torch_compile=False
         )
 
         performance_after_test = address_parser.test(
@@ -163,9 +168,7 @@ class AddressParserIntegrationTestAPICPUTest(AddressParserRetrainTestCase):
         self,
     ):
         address_parser = AddressParser(
-            model_type=self.a_bpemb_model_type,
-            device=self.a_cpu_device,
-            verbose=self.verbose,
+            model_type=self.a_bpemb_model_type, device=self.a_cpu_device, verbose=self.verbose, use_torch_compile=False
         )
 
         performance_after_test = address_parser.test(
@@ -180,9 +183,7 @@ class AddressParserIntegrationTestAPICPUTest(AddressParserRetrainTestCase):
         self,
     ):
         address_parser = AddressParser(
-            model_type=self.a_bpemb_model_type,
-            device=self.a_cpu_device,
-            verbose=self.verbose,
+            model_type=self.a_bpemb_model_type, device=self.a_cpu_device, verbose=self.verbose, use_torch_compile=False
         )
 
         performance_after_test = address_parser.test(
@@ -195,9 +196,7 @@ class AddressParserIntegrationTestAPICPUTest(AddressParserRetrainTestCase):
 
     def test_givenABPEmbAddressParser_whenTestWithConfig_thenTestOccur(self):
         address_parser = AddressParser(
-            model_type=self.a_bpemb_model_type,
-            device=self.a_cpu_device,
-            verbose=self.verbose,
+            model_type=self.a_bpemb_model_type, device=self.a_cpu_device, verbose=self.verbose, use_torch_compile=False
         )
 
         performance_after_test = address_parser.test(
@@ -212,9 +211,7 @@ class AddressParserIntegrationTestAPICPUTest(AddressParserRetrainTestCase):
         self,
     ):
         address_parser = AddressParser(
-            model_type=self.a_bpemb_model_type,
-            device=self.a_cpu_device,
-            verbose=self.verbose,
+            model_type=self.a_bpemb_model_type, device=self.a_cpu_device, verbose=self.verbose, use_torch_compile=False
         )
 
         callback_mock = MagicMock()
@@ -243,9 +240,7 @@ class AddressParserIntegrationTestAPICPUTest(AddressParserRetrainTestCase):
 
     def test_givenABPEmbAddressParser_whenTestWithBPEmbCkpt_thenTestOccur(self):
         address_parser = AddressParser(
-            model_type=self.a_bpemb_model_type,
-            device=self.a_cpu_device,
-            verbose=self.verbose,
+            model_type=self.a_bpemb_model_type, device=self.a_cpu_device, verbose=self.verbose, use_torch_compile=False
         )
 
         performance_after_test = address_parser.test(
@@ -258,9 +253,7 @@ class AddressParserIntegrationTestAPICPUTest(AddressParserRetrainTestCase):
 
     def test_givenABPEmbAddressParser_whenTestWithStrCkpt_thenTestOccur(self):
         address_parser = AddressParser(
-            model_type=self.a_bpemb_model_type,
-            device=self.a_cpu_device,
-            verbose=self.verbose,
+            model_type=self.a_bpemb_model_type, device=self.a_cpu_device, verbose=self.verbose, use_torch_compile=False
         )
 
         performance_after_test = address_parser.test(

@@ -113,6 +113,8 @@ class AddressParser:
             the ``cache_dir`` directory. When offline, we will not verify if the model is the latest. You can use our
             ``download_models`` CLI function to download all the requirements for a model. The default value is False
             (not an offline parsing model).
+        use_torch_compile (bool): Either or not to use torch.compile if conditions are met. Conditions are (os March 21,
+            2023): Pytorch 2.0, not a Windows OS, Python 3.8, 3.9 or 3.10.
 
     Note:
         For both networks, we will download the pretrained weights and embeddings in the ``.cache`` directory
@@ -205,6 +207,7 @@ class AddressParser:
         path_to_retrained_model: Union[str, None] = None,
         cache_dir: Union[str, None] = None,
         offline: bool = False,
+        use_torch_compile: bool = True,
     ) -> None:
         # pylint: disable=too-many-arguments
         self._process_device(device)
@@ -253,6 +256,7 @@ class AddressParser:
             seq2seq_kwargs=seq2seq_kwargs,
             cache_dir=cache_dir,
             offline=offline,
+            use_torch_compile=use_torch_compile,
         )
         self.model.eval()
 
@@ -1060,6 +1064,7 @@ class AddressParser:
         seq2seq_kwargs: Union[dict, None] = None,
         cache_dir: Union[dict, None] = None,
         offline: bool = False,
+        use_torch_compile: bool = True,
     ) -> None:
         # pylint: disable=too-many-arguments
         """
@@ -1081,6 +1086,7 @@ class AddressParser:
             path_to_retrained_model=path_to_retrained_model,
             offline=offline,
             verbose=verbose,
+            use_torch_compile=use_torch_compile,
             **seq2seq_kwargs,
         )
 

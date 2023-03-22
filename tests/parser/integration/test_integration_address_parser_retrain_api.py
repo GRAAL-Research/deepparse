@@ -17,6 +17,7 @@ class AddressParserIntegrationRetrainAPITest(AddressParserRetrainTestCase, Captu
             model_type=self.a_fasttext_model_type,
             device=self.a_cpu_device,
             verbose=self.verbose,
+            use_torch_compile=False,
         )
 
         performance_after_training = address_parser.retrain(
@@ -36,6 +37,7 @@ class AddressParserIntegrationRetrainAPITest(AddressParserRetrainTestCase, Captu
             model_type=self.a_fasttext_model_type,
             device=self.a_cpu_device,
             verbose=self.verbose,
+            use_torch_compile=False,
         )
 
         performance_after_training = address_parser.retrain(

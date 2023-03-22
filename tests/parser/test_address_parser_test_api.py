@@ -94,9 +94,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
     ):
         model_factory_mock().create.return_value = self.model_mock
         self.address_parser = AddressParser(
-            model_type=self.a_fasttext_model_type,
-            device=self.a_device,
-            verbose=self.verbose,
+            model_type=self.a_fasttext_model_type, device=self.a_device, verbose=self.verbose, use_torch_compile=False
         )
         self.address_parser_test_call()
 
@@ -127,6 +125,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
             model_type=self.a_fasttext_model_type,
             device=self.a_torch_device,
             verbose=self.verbose,
+            use_torch_compile=False,
         )
         self.address_parser_test_call()
 
@@ -152,9 +151,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         data_loader_mock,
     ):
         self.address_parser = AddressParser(
-            model_type=self.a_fasttext_model_type,
-            device=self.a_device,
-            verbose=self.verbose,
+            model_type=self.a_fasttext_model_type, device=self.a_device, verbose=self.verbose, use_torch_compile=False
         )
         self.address_parser_test_call()
 

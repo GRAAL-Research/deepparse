@@ -158,9 +158,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         model_factory_mock().create.return_value = self.model_mock
 
         self.address_parser = AddressParser(
-            model_type=self.a_fasttext_model_type,
-            device=self.a_device,
-            verbose=self.verbose,
+            model_type=self.a_fasttext_model_type, device=self.a_device, verbose=self.verbose, use_torch_compile=False
         )
         self.address_parser_retrain_call()
 
@@ -190,9 +188,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         poutyne_mock.version.__version__ = "1.7"
         self._capture_output()
         self.address_parser = AddressParser(
-            model_type=self.a_fasttext_model_type,
-            device=self.a_device,
-            verbose=self.verbose,
+            model_type=self.a_fasttext_model_type, device=self.a_device, verbose=self.verbose, use_torch_compile=False
         )
         self.address_parser_retrain_call()
 
@@ -228,9 +224,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         poutyne_mock.version.__version__ = "1.8"
         self._capture_output()
         self.address_parser = AddressParser(
-            model_type=self.a_fasttext_model_type,
-            device=self.a_device,
-            verbose=self.verbose,
+            model_type=self.a_fasttext_model_type, device=self.a_device, verbose=self.verbose, use_torch_compile=False
         )
         self.address_parser_retrain_call()
 
@@ -271,9 +265,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
     ):
         self.populate_directory()
         self.address_parser = AddressParser(
-            model_type=self.a_fasttext_model_type,
-            device=self.a_device,
-            verbose=self.verbose,
+            model_type=self.a_fasttext_model_type, device=self.a_device, verbose=self.verbose, use_torch_compile=False
         )
         with self.assertRaises(ValueError):
             self.address_parser_retrain_call()
@@ -311,9 +303,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
     ):
         self.populate_directory()
         self.address_parser = AddressParser(
-            model_type=self.a_best_model_type,
-            device=self.a_device,
-            verbose=self.verbose,
+            model_type=self.a_best_model_type, device=self.a_device, verbose=self.verbose, use_torch_compile=False
         )
 
         with self.assertRaises(ValueError):
@@ -355,9 +345,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
     ):
         # os_mock.listdir.return_value = []
         self.address_parser = AddressParser(
-            model_type=self.a_best_model_type,
-            device=self.a_device,
-            verbose=self.verbose,
+            model_type=self.a_best_model_type, device=self.a_device, verbose=self.verbose, use_torch_compile=False
         )
 
         with self.assertRaises(RuntimeError):
@@ -388,6 +376,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
             model_type=self.a_fasttext_light_model_type,
             device=self.a_device,
             verbose=self.verbose,
+            use_torch_compile=False,
         )
 
         with self.assertRaises(FastTextModelError):
@@ -412,9 +401,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         system_mock.return_value = "Windows"
 
         self.address_parser = AddressParser(
-            model_type=self.a_fastest_model_type,
-            device=self.a_device,
-            verbose=self.verbose,
+            model_type=self.a_fastest_model_type, device=self.a_device, verbose=self.verbose, use_torch_compile=False
         )
 
         num_workers_gt_0 = 1
@@ -443,9 +430,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         torch_save_mock,
     ):
         self.address_parser = AddressParser(
-            model_type=self.a_fasttext_model_type,
-            device=self.a_device,
-            verbose=self.verbose,
+            model_type=self.a_fasttext_model_type, device=self.a_device, verbose=self.verbose, use_torch_compile=False
         )
         self.address_parser_retrain_call()
         expected_named_parser_name = "FastText"

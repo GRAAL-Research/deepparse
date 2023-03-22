@@ -17,9 +17,7 @@ class AddressParserIntegrationTestAPITest(AddressParserRetrainTestCase, CaptureO
         self._capture_output()
 
         address_parser = AddressParser(
-            model_type=self.a_fasttext_model_type,
-            device=self.a_cpu_device,
-            verbose=True,
+            model_type=self.a_fasttext_model_type, device=self.a_cpu_device, verbose=True, use_torch_compile=False
         )
 
         performance_after_test = address_parser.test(
@@ -41,9 +39,7 @@ class AddressParserIntegrationTestAPITest(AddressParserRetrainTestCase, CaptureO
         self._capture_output()
 
         address_parser = AddressParser(
-            model_type=self.a_fasttext_model_type,
-            device=self.a_cpu_device,
-            verbose=True,
+            model_type=self.a_fasttext_model_type, device=self.a_cpu_device, verbose=True, use_torch_compile=False
         )
 
         performance_after_test = address_parser.test(

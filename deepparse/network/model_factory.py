@@ -21,6 +21,7 @@ class ModelFactory:
         path_to_retrained_model: Union[str, None] = None,
         offline: bool = False,
         verbose: bool = True,
+        use_torch_compile: bool = True,
         **seq2seq_kwargs: Dict,
     ) -> Seq2SeqModel:
         """
@@ -38,6 +39,7 @@ class ModelFactory:
             path_to_retrained_model (Union[str, None]): The path to the retrained model to use for the seq2seq.
             offline (bool): Wether or not the model is an offline or an online.
             verbose (bool): Turn on/off the verbosity of the model. The default value is True.
+            use_torch_compile (bool): Either or not to use torch.compile if conditions are met.
 
         Return:
             A :class:`~Seq2SeqModel`.
@@ -51,6 +53,7 @@ class ModelFactory:
                 path_to_retrained_model=path_to_retrained_model,
                 attention_mechanism=attention_mechanism,
                 offline=offline,
+                use_torch_compile=use_torch_compile,
                 **seq2seq_kwargs,
             )
 
@@ -63,6 +66,7 @@ class ModelFactory:
                 path_to_retrained_model=path_to_retrained_model,
                 attention_mechanism=attention_mechanism,
                 offline=offline,
+                use_torch_compile=use_torch_compile,
                 **seq2seq_kwargs,
             )
 

@@ -20,6 +20,7 @@ class AddressParserIntegrationRetrainGPUTest(AddressParserRetrainTestCase):
             model_type=self.a_fasttext_model_type,
             device=self.a_torch_device,
             verbose=self.verbose,
+            use_torch_compile=False,
         )
 
         performance_after_training = address_parser.retrain(
@@ -38,6 +39,7 @@ class AddressParserIntegrationRetrainGPUTest(AddressParserRetrainTestCase):
             model_type=self.a_fasttext_model_type,
             device=self.a_torch_device,
             verbose=self.verbose,
+            use_torch_compile=False,
         )
 
         performance_after_training = address_parser.retrain(
@@ -59,6 +61,7 @@ class AddressParserIntegrationRetrainGPUTest(AddressParserRetrainTestCase):
             model_type=self.a_fasttext_model_type,
             device=self.a_torch_device,
             verbose=self.verbose,
+            use_torch_compile=False,
         )
 
         performance_after_training = address_parser.retrain(
@@ -77,6 +80,7 @@ class AddressParserIntegrationRetrainGPUTest(AddressParserRetrainTestCase):
             model_type=self.a_fasttext_model_type,
             device=self.a_torch_device,
             verbose=self.verbose,
+            use_torch_compile=False,
         )
 
         performance_after_training = address_parser.retrain(
@@ -98,6 +102,7 @@ class AddressParserIntegrationRetrainGPUTest(AddressParserRetrainTestCase):
             model_type=self.a_fasttext_model_type,
             device=self.a_torch_device,
             verbose=self.verbose,
+            use_torch_compile=False,
         )
 
         callback_mock = MagicMock(spec=Callback)
@@ -127,6 +132,7 @@ class AddressParserIntegrationRetrainGPUTest(AddressParserRetrainTestCase):
             model_type=self.a_fasttext_light_model_type,
             device=self.a_torch_device,
             verbose=self.verbose,
+            use_torch_compile=False,
         )
         with self.assertRaises(FastTextModelError):
             _ = address_parser.retrain(
@@ -143,6 +149,7 @@ class AddressParserIntegrationRetrainGPUTest(AddressParserRetrainTestCase):
             model_type=self.a_bpemb_model_type,
             device=self.a_torch_device,
             verbose=self.verbose,
+            use_torch_compile=False,
         )
 
         performance_after_training = address_parser.retrain(
@@ -163,6 +170,7 @@ class AddressParserIntegrationRetrainGPUTest(AddressParserRetrainTestCase):
             model_type=self.a_bpemb_model_type,
             device=self.a_torch_device,
             verbose=self.verbose,
+            use_torch_compile=False,
         )
 
         performance_after_training = address_parser.retrain(
@@ -181,6 +189,7 @@ class AddressParserIntegrationRetrainGPUTest(AddressParserRetrainTestCase):
             model_type=self.a_bpemb_model_type,
             device=self.a_torch_device,
             verbose=self.verbose,
+            use_torch_compile=False,
         )
 
         performance_after_training = address_parser.retrain(
@@ -202,6 +211,7 @@ class AddressParserIntegrationRetrainGPUTest(AddressParserRetrainTestCase):
             model_type=self.a_bpemb_model_type,
             device=self.a_torch_device,
             verbose=self.verbose,
+            use_torch_compile=False,
         )
 
         callback_mock = MagicMock(spec=Callback)

@@ -29,6 +29,7 @@ class AddressParserIntegrationTestFreezeLayers(AddressParserRetrainTestCase):
             model_type=self.a_fasttext_model_type,
             device=self.a_cpu_device,
             verbose=self.verbose,
+            use_torch_compile=False,
         )
         address_parser.retrain(
             self.training_container,
@@ -49,6 +50,7 @@ class AddressParserIntegrationTestFreezeLayers(AddressParserRetrainTestCase):
             model_type=self.a_fasttext_model_type,
             device=self.a_cpu_device,
             verbose=self.verbose,
+            use_torch_compile=False,
         )
         address_parser.retrain(
             self.training_container,
@@ -66,9 +68,7 @@ class AddressParserIntegrationTestFreezeLayers(AddressParserRetrainTestCase):
 
     def test_givenDecoderBPEmbToFreeze_thenFreezeEmbeddingsLayer(self):
         address_parser = AddressParser(
-            model_type=self.a_bpemb_model_type,
-            device=self.a_cpu_device,
-            verbose=self.verbose,
+            model_type=self.a_bpemb_model_type, device=self.a_cpu_device, verbose=self.verbose, use_torch_compile=False
         )
         address_parser.retrain(
             self.training_container,
@@ -87,6 +87,7 @@ class AddressParserIntegrationTestFreezeLayers(AddressParserRetrainTestCase):
             model_type=self.a_fasttext_model_type,
             device=self.a_cpu_device,
             verbose=self.verbose,
+            use_torch_compile=False,
         )
         address_parser.retrain(
             self.training_container,
@@ -104,9 +105,7 @@ class AddressParserIntegrationTestFreezeLayers(AddressParserRetrainTestCase):
 
     def test_givenSeq2SeqBPEmbToFreeze_thenFreezeEmbeddingsLayer(self):
         address_parser = AddressParser(
-            model_type=self.a_bpemb_model_type,
-            device=self.a_cpu_device,
-            verbose=self.verbose,
+            model_type=self.a_bpemb_model_type, device=self.a_cpu_device, verbose=self.verbose, use_torch_compile=False
         )
         address_parser.retrain(
             self.training_container,
@@ -125,6 +124,7 @@ class AddressParserIntegrationTestFreezeLayers(AddressParserRetrainTestCase):
             model_type=self.a_fasttext_model_type,
             device=self.a_cpu_device,
             verbose=self.verbose,
+            use_torch_compile=False,
         )
         address_parser.retrain(
             self.training_container,

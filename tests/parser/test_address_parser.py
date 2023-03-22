@@ -94,7 +94,9 @@ class AddressParserTest(AddressParserPredictTestCase):
             self.assertIn(expected, actual)
 
     def test_givenAModel_whenInit_thenProperFieldsSet(self):
-        address_parser = AddressParser(model_type=self.a_bpemb_model_type, device=self.a_cpu_device, verbose=True)
+        address_parser = AddressParser(
+            model_type=self.a_bpemb_model_type, device=self.a_cpu_device, verbose=True, use_torch_compile=False
+        )
         expected_fields = self.expected_fields
 
         actual_tags = list(address_parser.tags_converter.tags_to_idx.keys())
@@ -109,6 +111,7 @@ class AddressParserTest(AddressParserPredictTestCase):
             model_type=self.a_best_model_type.capitalize(),
             # we use BPEmb for simplicity
             device=self.a_cpu_device,
+            use_torch_compile=False,
         )
         actual = address_parser.device
         expected = self.a_cpu_torch_device
@@ -123,6 +126,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                 model_type=self.a_best_model_type.capitalize(),
                 # we use BPEmb for simplicity
                 device=self.a_gpu_device,
+                use_torch_compile=False,
             )
         actual = address_parser.device
         expected = self.a_cpu_torch_device
@@ -134,6 +138,7 @@ class AddressParserTest(AddressParserPredictTestCase):
             model_type=self.a_best_model_type.capitalize(),
             # we use BPEmb for simplicity
             device=self.a_gpu_device,
+            use_torch_compile=False,
         )
         actual = address_parser.device
         expected = self.a_gpu_torch_device
@@ -145,6 +150,7 @@ class AddressParserTest(AddressParserPredictTestCase):
             model_type=self.a_best_model_type.capitalize(),
             # we use BPEmb for simplicity
             device="cuda:0",
+            use_torch_compile=False,
         )
         actual = address_parser.device
         expected = self.a_gpu_torch_device
@@ -156,6 +162,7 @@ class AddressParserTest(AddressParserPredictTestCase):
             model_type=self.a_best_model_type.capitalize(),
             # we use BPEmb for simplicity
             device=0,
+            use_torch_compile=False,
         )
         actual = address_parser.device
         expected = self.a_gpu_torch_device
@@ -167,6 +174,7 @@ class AddressParserTest(AddressParserPredictTestCase):
             model_type=self.a_best_model_type.capitalize(),
             # we use BPEmb for simplicity
             device=self.a_gpu_torch_device,
+            use_torch_compile=False,
         )
         actual = address_parser.device
         expected = self.a_gpu_torch_device
@@ -182,6 +190,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                 model_type=self.a_best_model_type.capitalize(),
                 device=self.a_cpu_device,
                 verbose=self.verbose,
+                use_torch_compile=False,
             )
 
             embeddings_model_factory_mock().create.assert_called_with(
@@ -198,6 +207,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                 model_type=self.a_fastest_model_type.capitalize(),
                 device=self.a_cpu_device,
                 verbose=self.verbose,
+                use_torch_compile=False,
             )
 
             embeddings_model_factory_mock().create.assert_called_with(
@@ -214,6 +224,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                 model_type=self.a_best_model_type,
                 device=self.a_cpu_device,
                 verbose=self.verbose,
+                use_torch_compile=False,
             )
 
             embeddings_model_factory_mock().create.assert_called_with(

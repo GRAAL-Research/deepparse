@@ -28,7 +28,9 @@ class FastTextSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
         self.a_target_vector = torch.tensor([[0, 1, 1, 4, 5, 8], [1, 0, 3, 8, 0, 0]], device=self.a_torch_device)
 
     def test_whenForwardStep_thenStepIsOk(self):
-        self.seq2seq_model = FastTextSeq2SeqModel(self.cache_dir, self.a_torch_device, output_size=self.number_of_tags)
+        self.seq2seq_model = FastTextSeq2SeqModel(
+            self.cache_dir, self.a_torch_device, output_size=self.number_of_tags, use_torch_compile=False
+        )
         # forward pass for two address: "["15 major st london ontario n5z1e1", "15 major st london ontario n5z1e1"]"
         self.decoder_input_setUp()
 
@@ -37,7 +39,9 @@ class FastTextSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
         self.assert_output_is_valid_dim(predictions, output_dim=self.number_of_tags)
 
     def test_whenForwardStepWithTarget_thenStepIsOk(self):
-        self.seq2seq_model = FastTextSeq2SeqModel(self.cache_dir, self.a_torch_device, output_size=self.number_of_tags)
+        self.seq2seq_model = FastTextSeq2SeqModel(
+            self.cache_dir, self.a_torch_device, output_size=self.number_of_tags, use_torch_compile=False
+        )
         # forward pass for two address: "["15 major st london ontario n5z1e1", "15 major st london ontario n5z1e1"]"
         self.decoder_input_setUp()
 

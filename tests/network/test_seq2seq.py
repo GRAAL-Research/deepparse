@@ -44,6 +44,7 @@ class Seq2SeqTest(TestCase):
             decoder_hidden_size=self.decoder_hidden_size,
             decoder_num_layers=self.decoder_num_layers,
             output_size=self.decoder_output_size,
+            use_torch_compile=False,
         )
 
         self.assertEqual(self.a_cpu_device, seq2seq_model.device)
@@ -69,6 +70,7 @@ class Seq2SeqTest(TestCase):
             decoder_hidden_size=self.decoder_hidden_size,
             decoder_num_layers=self.decoder_num_layers,
             output_size=self.decoder_output_size,
+            use_torch_compile=False,
         )
 
         self.assertEqual(self.a_torch_device, seq2seq_model.device)
@@ -93,6 +95,7 @@ class Seq2SeqTest(TestCase):
             decoder_hidden_size=self.decoder_hidden_size,
             decoder_num_layers=self.decoder_num_layers,
             output_size=self.decoder_output_size,
+            use_torch_compile=False,
         )
         self.assertTrue(seq2seq_model.same_output_dim(self.decoder_output_size))
 
@@ -105,6 +108,7 @@ class Seq2SeqTest(TestCase):
             decoder_hidden_size=self.decoder_hidden_size,
             decoder_num_layers=self.decoder_num_layers,
             output_size=self.decoder_output_size,
+            use_torch_compile=False,
         )
         self.assertFalse(seq2seq_model.same_output_dim(self.decoder_output_size - 1))
 
@@ -117,6 +121,7 @@ class Seq2SeqTest(TestCase):
             decoder_hidden_size=self.decoder_hidden_size,
             decoder_num_layers=self.decoder_num_layers,
             output_size=self.decoder_output_size,
+            use_torch_compile=False,
         )
 
         a_new_dim = 1
@@ -147,6 +152,7 @@ class Seq2SeqTest(TestCase):
             decoder_num_layers=self.decoder_num_layers,
             output_size=self.decoder_output_size,
             verbose=False,
+            use_torch_compile=False,
         )
         isfile_mock.return_value = False
         with patch("deepparse.network.seq2seq.download_weights") as download_weights_mock:
@@ -173,6 +179,7 @@ class Seq2SeqTest(TestCase):
             decoder_num_layers=self.decoder_num_layers,
             output_size=self.decoder_output_size,
             verbose=False,
+            use_torch_compile=False,
         )
         isfile_mock.return_value = False
         with patch("deepparse.network.seq2seq.download_weights"):
@@ -196,6 +203,7 @@ class Seq2SeqTest(TestCase):
             decoder_num_layers=self.decoder_num_layers,
             output_size=self.decoder_output_size,
             verbose=True,
+            use_torch_compile=False,
         )
         isfile_mock.return_value = True
         last_version_mock.return_value = False
@@ -221,6 +229,7 @@ class Seq2SeqTest(TestCase):
             decoder_num_layers=self.decoder_num_layers,
             output_size=self.decoder_output_size,
             verbose=True,
+            use_torch_compile=False,
         )
         isfile_mock.return_value = True
         last_version_mock.return_value = False
@@ -244,6 +253,7 @@ class Seq2SeqTest(TestCase):
             decoder_num_layers=self.decoder_num_layers,
             output_size=self.decoder_output_size,
             verbose=False,
+            use_torch_compile=False,
         )
         isfile_mock.return_value = True
         last_version_mock.return_value = False
@@ -268,6 +278,7 @@ class Seq2SeqTest(TestCase):
             decoder_num_layers=self.decoder_num_layers,
             output_size=self.decoder_output_size,
             verbose=True,
+            use_torch_compile=False,
         )
         isfile_mock.return_value = True
         last_version_mock.return_value = False
@@ -291,6 +302,7 @@ class Seq2SeqTest(TestCase):
             decoder_num_layers=self.decoder_num_layers,
             output_size=self.decoder_output_size,
             verbose=False,
+            use_torch_compile=False,
         )
         isfile_mock.return_value = True
         last_version_mock.return_value = False
@@ -316,6 +328,7 @@ class Seq2SeqTest(TestCase):
             decoder_num_layers=self.decoder_num_layers,
             output_size=self.decoder_output_size,
             verbose=True,
+            use_torch_compile=False,
         )
         seq2seq_model._load_weights(self.a_fake_retrain_path)
 
@@ -344,6 +357,7 @@ class Seq2SeqTest(TestCase):
             decoder_num_layers=self.decoder_num_layers,
             output_size=self.decoder_output_size,
             verbose=True,
+            use_torch_compile=False,
         )
         seq2seq_model._load_weights(self.a_fake_retrain_path)
 
@@ -366,6 +380,7 @@ class Seq2SeqTest(TestCase):
             decoder_num_layers=self.decoder_num_layers,
             output_size=self.decoder_output_size,
             verbose=False,
+            use_torch_compile=False,
         )
 
         # Test if download_weights was not called

@@ -33,7 +33,13 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
     ):
         isfile_mock.return_value = False
         with patch("deepparse.network.seq2seq.download_weights") as download_weights_mock:
-            FastTextSeq2SeqModel(self.cache_dir, self.a_cpu_device, output_size=self.output_size, verbose=self.verbose)
+            FastTextSeq2SeqModel(
+                self.cache_dir,
+                self.a_cpu_device,
+                output_size=self.output_size,
+                verbose=self.verbose,
+                use_torch_compile=False,
+            )
             download_weights_mock.assert_called_with(self.model_type, self.a_root_path, verbose=self.verbose)
 
     @patch("deepparse.network.seq2seq.latest_version")
@@ -46,7 +52,13 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
         isfile_mock.return_value = True
         last_version_mock.return_value = False
         with patch("deepparse.network.seq2seq.download_weights") as download_weights_mock:
-            FastTextSeq2SeqModel(self.cache_dir, self.a_cpu_device, output_size=self.output_size, verbose=self.verbose)
+            FastTextSeq2SeqModel(
+                self.cache_dir,
+                self.a_cpu_device,
+                output_size=self.output_size,
+                verbose=self.verbose,
+                use_torch_compile=False,
+            )
             download_weights_mock.assert_called_with(self.model_type, self.a_root_path, verbose=self.verbose)
 
     @patch("deepparse.network.seq2seq.torch")
@@ -85,7 +97,9 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
         download_weights_mock,
         encoder_mock,
     ):
-        seq2seq_model = FastTextSeq2SeqModel(self.cache_dir, self.a_cpu_device, self.output_size, self.verbose)
+        seq2seq_model = FastTextSeq2SeqModel(
+            self.cache_dir, self.a_cpu_device, self.output_size, self.verbose, use_torch_compile=False
+        )
 
         to_predict_mock, lengths_list_mock = self.setup_encoder_mocks()
         encoder_mock.__call__().return_value = (MagicMock(), MagicMock())
@@ -126,7 +140,7 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
 
         lengths_list_mock = MagicMock()
         max_length = 4  # a sequence of 4 tokens
-        lengths_tensor_mock.max().item.return_value = max_length
+        lengths_list_mock.__len__().return_value = max_length
         encoder_outputs = MagicMock()
         seq2seq_model._decoder_step(
             decoder_input_mock,
@@ -171,7 +185,7 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
 
         lengths_list_mock = MagicMock()
         max_length = 4  # a sequence of 4 tokens
-        lengths_tensor_mock.max().item.return_value = max_length
+        lengths_list_mock.__len__().return_value = max_length
         encoder_outputs = MagicMock()
         seq2seq_model._decoder_step(
             decoder_input_mock,
@@ -213,14 +227,14 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
 
         lengths_list_mock = MagicMock()
         max_length = 4  # a sequence of 4 tokens
-        lengths_tensor_mock.max().item.return_value = max_length
+        lengths_list_mock.__len__().return_value = max_length
         encoder_outputs = MagicMock()
         seq2seq_model._decoder_step(
             decoder_input_mock,
             decoder_hidden_mock,
             encoder_outputs,
             self.a_none_target,
-            lengths_list,
+            lengths_list_mock,
             self.a_batch_size,
         )
 
@@ -265,12 +279,14 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
         # We mock the return of the decoder output
         encoder_mock.__call__().return_value = (decoder_input_mock, decoder_hidden_mock)
 
-        seq2seq_model = FastTextSeq2SeqModel(self.cache_dir, self.a_cpu_device, self.output_size, self.verbose)
+        seq2seq_model = FastTextSeq2SeqModel(
+            self.cache_dir, self.a_cpu_device, self.output_size, self.verbose, use_torch_compile=False
+        )
 
         seq2seq_model.forward(to_predict=to_predict_mock, lengths=lengths_list, target=None)
 
         encoder_mock.assert_has_calls([call()(to_predict_mock, lengths_list)])
-        lengths_list.assert_has_calls([call.max().item()])
+        lengths_list.assert_has_calls([call.__len__()])
         decoder_mock.assert_has_calls(
             [
                 call()(
@@ -316,7 +332,9 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
         # We mock the return of the decoder output
         encoder_mock.__call__().return_value = (decoder_input_mock, decoder_hidden_mock)
 
-        seq2seq_model = FastTextSeq2SeqModel(self.cache_dir, self.a_cpu_device, self.output_size, self.verbose)
+        seq2seq_model = FastTextSeq2SeqModel(
+            self.cache_dir, self.a_cpu_device, self.output_size, self.verbose, use_torch_compile=False
+        )
 
         seq2seq_model.forward(
             to_predict=to_predict_mock,
@@ -325,7 +343,7 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
         )
 
         encoder_mock.assert_has_calls([call()(to_predict_mock, lengths_list)])
-        lengths_list.assert_has_calls([call.max().item()])
+        lengths_list.assert_has_calls([call.__len__()])
         decoder_mock.assert_has_calls(
             [
                 call()(
@@ -382,7 +400,7 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
         )
 
         encoder_mock.assert_has_calls([call()(to_predict_mock, lengths_list)])
-        lengths_list.assert_has_calls([call.max().item()])
+        lengths_list.assert_has_calls([call.__len__()])
         decoder_mock.assert_has_calls(
             [
                 call()(

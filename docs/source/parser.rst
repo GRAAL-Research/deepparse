@@ -21,8 +21,8 @@ the architecture is similar, and performances are comparable; our results are av
 Memory Usage and Time Performance
 *********************************
 
-To assess memory usage and inference time performance, we have conducted an experiment using Python 3.10, Torch 2.0
-and CUDA 11.7 (done March 21, 2023). The next two tables report the results. In each table, we report the RAM usage,
+To assess memory usage and inference time performance, we have conducted an experiment using Linux OS, Python 3.10,
+Torch 2.0 and CUDA 11.7 (done March 21, 2023). The next two tables report the results. In each table, we report the RAM usage,
 and in the first table, we also report the GPU memory usage. Also, for both tables, we report the mean-time of execution
 that was obtained by processing ~183,000 addresses using different batch sizes (2^0, ..., 2^9)
 (i.e. :math:`\frac{\text{Total time to process all addresses}}{~183,000} =` time per address).

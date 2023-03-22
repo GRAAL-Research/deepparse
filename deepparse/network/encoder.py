@@ -26,7 +26,7 @@ class Encoder(nn.Module):
         self.lstm = nn.LSTM(input_size, hidden_size, num_layers=num_layers, batch_first=True)
         self.lstm.apply(weights_init)
 
-    def forward(self, to_predict: torch.Tensor, lengths_tensor: torch.Tensor) -> Tuple:
+    def forward(self, to_predict: torch.Tensor, lengths_tensor: torch.LongTensor) -> Tuple:
         """
         Callable method to encode the components of an address.
 

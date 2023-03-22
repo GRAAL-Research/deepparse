@@ -69,7 +69,7 @@ class FastTextSeq2SeqModel(Seq2SeqModel):
     def forward(
         self,
         to_predict: torch.Tensor,
-        lengths_tensor: torch.Tensor,
+        lengths_tensor: torch.LongTensor,
         target: Union[torch.Tensor, None] = None,
     ) -> torch.Tensor:
         """
@@ -79,7 +79,7 @@ class FastTextSeq2SeqModel(Seq2SeqModel):
         Args:
             to_predict (~torch.Tensor): The elements to predict the tags.
             lengths_tensor (~torch.Tensor) : The lengths of the batch elements (since packed).
-            target (~torch.Tensor) : The target of the batch element, use only when we retrain the model since we do
+            target (~torch.LongTensor) : The target of the batch element, use only when we retrain the model since we do
                 `teacher forcing <https://machinelearningmastery.com/teacher-forcing-for-recurrent-neural-networks/>`_.
                 Default value is None since we mostly don't have the target except for retrain.
 

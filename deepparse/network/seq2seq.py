@@ -157,7 +157,7 @@ class Seq2SeqModel(ABC, nn.Module):
         decoder_hidden: tuple,
         encoder_outputs: torch.Tensor,
         target: Union[torch.Tensor, None],
-        lengths_tensor: torch.Tensor,
+        lengths_tensor: torch.LongTensor,
         batch_size: int,
     ) -> torch.Tensor:
         """
@@ -169,7 +169,7 @@ class Seq2SeqModel(ABC, nn.Module):
             encoder_outputs (~torch.Tensor): The encoder outputs for the attention mechanism weighs if needed.
             target (~torch.Tensor) : The target of the batch element, use only when we retrain the model since we do
                 `teacher forcing <https://machinelearningmastery.com/teacher-forcing-for-recurrent-neural-networks/>`_.
-            lengths_tensor (~torch.Tensor): The lengths of the batch elements (since packed).
+            lengths_tensor (~torch.LongTensor): The lengths of the batch elements (since packed).
             batch_size (int): Number of element in the batch.
 
         Return:

@@ -35,8 +35,8 @@ class Seq2SeqTestCase(TestCase):
 
     def setup_encoder_mocks(self):
         to_predict_mock = MagicMock()
-        lengths_tensor_mock = MagicMock()
-        return to_predict_mock, lengths_tensor_mock
+        lengths_list_mock = MagicMock()
+        return to_predict_mock, lengths_list_mock
 
     def setUp_decoder_mocks(self, decoder_mock, attention_mechanism):
         decoder_input_mock = MagicMock()

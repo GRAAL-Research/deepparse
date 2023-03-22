@@ -116,11 +116,11 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
     ):
         seq2seq_model = BPEmbSeq2SeqModel(self.cache_dir, self.a_torch_device, self.output_size, self.verbose)
 
-        to_predict_mock, lengths_tensor_mock = self.setup_encoder_mocks()
+        to_predict_mock, lengths_list_mock = self.setup_encoder_mocks()
         encoder_mock.__call__().return_value = (MagicMock(), MagicMock())
-        seq2seq_model._encoder_step(to_predict_mock, lengths_tensor_mock, self.a_batch_size)
+        seq2seq_model._encoder_step(to_predict_mock, lengths_list_mock, self.a_batch_size)
 
-        encoder_call = [call()(to_predict_mock, lengths_tensor_mock)]
+        encoder_call = [call()(to_predict_mock, lengths_list_mock)]
 
         encoder_mock.assert_has_calls(encoder_call)
 
@@ -148,7 +148,7 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
         view_mock = MagicMock()
         decoder_input_mock.view.return_value = view_mock
 
-        lengths_tensor_mock = MagicMock()
+        lengths_list_mock = MagicMock()
         max_length = 4  # a sequence of 4 tokens
         lengths_tensor_mock.max().item.return_value = max_length
         encoder_outputs = MagicMock()
@@ -157,11 +157,11 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
             decoder_hidden_mock,
             encoder_outputs,
             self.a_none_target,
-            lengths_tensor_mock,
+            lengths_list_mock,
             self.a_batch_size,
         )
 
-        decoder_call = [call()(view_mock, decoder_hidden_mock, encoder_outputs, lengths_tensor_mock)] * max_length
+        decoder_call = [call()(view_mock, decoder_hidden_mock, encoder_outputs, lengths_list_mock)] * max_length
 
         decoder_mock.assert_has_calls(decoder_call)
 
@@ -193,7 +193,7 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
         view_mock = MagicMock()
         decoder_input_mock.view.return_value = view_mock
 
-        lengths_tensor_mock = MagicMock()
+        lengths_list_mock = MagicMock()
         max_length = 4  # a sequence of 4 tokens
         lengths_tensor_mock.max().item.return_value = max_length
         encoder_outputs = MagicMock()
@@ -202,11 +202,11 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
             decoder_hidden_mock,
             encoder_outputs,
             self.a_none_target,
-            lengths_tensor_mock,
+            lengths_list_mock,
             self.a_batch_size,
         )
 
-        decoder_call = [call()(view_mock, decoder_hidden_mock, encoder_outputs, lengths_tensor_mock)] * max_length
+        decoder_call = [call()(view_mock, decoder_hidden_mock, encoder_outputs, lengths_list_mock)] * max_length
 
         decoder_mock.assert_has_calls(decoder_call)
 
@@ -235,7 +235,7 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
 
         decoder_input_mock, decoder_hidden_mock = self.setUp_decoder_mocks(decoder_mock, attention_mechanism=False)
 
-        lengths_tensor_mock = MagicMock()
+        lengths_list_mock = MagicMock()
         max_length = 4  # a sequence of 4 tokens
         lengths_tensor_mock.max().item.return_value = max_length
         encoder_outputs = MagicMock()
@@ -244,7 +244,7 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
             decoder_hidden_mock,
             encoder_outputs,
             self.a_none_target,
-            lengths_tensor_mock,
+            lengths_list,
             self.a_batch_size,
         )
 
@@ -277,7 +277,7 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
         decoder_mock,
         encoder_mock,
     ):
-        to_predict_mock, lengths_tensor_mock = self.setup_encoder_mocks()
+        to_predict_mock, lengths_list = self.setup_encoder_mocks()
 
         _, decoder_hidden_mock = self.setUp_decoder_mocks(decoder_mock, attention_mechanism=False)
         decomposition_lengths_mock = MagicMock()
@@ -299,20 +299,20 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
             seq2seq_model.forward(
                 to_predict=to_predict_mock,
                 decomposition_lengths=decomposition_lengths_mock,
-                lengths_tensor=lengths_tensor_mock,
+                lengths=lengths_list,
                 target=None,
             )
 
             embedding_network_patch.assert_has_calls([call()(to_predict_mock, decomposition_lengths_mock)])
-            encoder_mock.assert_has_calls([call()(embedded_output_mock, lengths_tensor_mock)])
-            lengths_tensor_mock.assert_has_calls([call.max().item()])
+            encoder_mock.assert_has_calls([call()(embedded_output_mock, lengths_list)])
+            lengths_list.assert_has_calls([call.max().item()])
             decoder_mock.assert_has_calls(
                 [
                     call()(
                         to_mock,
                         decoder_hidden_mock,
                         decoder_input_mock,
-                        lengths_tensor_mock,
+                        lengths_list,
                     )
                 ]
             )
@@ -339,7 +339,7 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
         random_mock.return_value = self.a_value_lower_than_threshold
 
         target_mock = MagicMock()
-        to_predict_mock, lengths_tensor_mock = self.setup_encoder_mocks()
+        to_predict_mock, lengths_list = self.setup_encoder_mocks()
 
         # 1) We reset it later
         _, decoder_hidden_mock = self.setUp_decoder_mocks(decoder_mock, attention_mechanism=False)
@@ -362,20 +362,20 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
             seq2seq_model.forward(
                 to_predict=to_predict_mock,
                 decomposition_lengths=decomposition_lengths_mock,
-                lengths_tensor=lengths_tensor_mock,
+                lengths=lengths_list,
                 target=target_mock,
             )
 
             embedding_network_patch.assert_has_calls([call()(to_predict_mock, decomposition_lengths_mock)])
-            encoder_mock.assert_has_calls([call()(embedded_output_mock, lengths_tensor_mock)])
-            lengths_tensor_mock.assert_has_calls([call.max().item()])
+            encoder_mock.assert_has_calls([call()(embedded_output_mock, lengths_list)])
+            lengths_list.assert_has_calls([call.max().item()])
             decoder_mock.assert_has_calls(
                 [
                     call()(
                         to_mock,
                         decoder_hidden_mock,
                         decoder_input_mock,
-                        lengths_tensor_mock,
+                        lengths_list,
                     )
                 ]
             )
@@ -403,7 +403,7 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
         random_mock.return_value = self.a_value_lower_than_threshold
 
         target_mock = MagicMock()
-        to_predict_mock, lengths_tensor_mock = self.setup_encoder_mocks()
+        to_predict_mock, lengths_list = self.setup_encoder_mocks()
 
         _, decoder_hidden_mock = self.setUp_decoder_mocks(decoder_mock, attention_mechanism=True)
         decomposition_lengths_mock = MagicMock()
@@ -431,20 +431,20 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
             seq2seq_model.forward(
                 to_predict=to_predict_mock,
                 decomposition_lengths=decomposition_lengths_mock,
-                lengths_tensor=lengths_tensor_mock,
+                lengths=lengths_list,
                 target=target_mock,
             )
 
             embedding_network_patch.assert_has_calls([call()(to_predict_mock, decomposition_lengths_mock)])
-            encoder_mock.assert_has_calls([call()(embedded_output_mock, lengths_tensor_mock)])
-            lengths_tensor_mock.assert_has_calls([call.max().item()])
+            encoder_mock.assert_has_calls([call()(embedded_output_mock, lengths_list)])
+            lengths_list.assert_has_calls([call.max().item()])
             decoder_mock.assert_has_calls(
                 [
                     call()(
                         to_mock,
                         decoder_hidden_mock,
                         decoder_input_mock,
-                        lengths_tensor_mock,
+                        lengths_list,
                     )
                 ]
             )

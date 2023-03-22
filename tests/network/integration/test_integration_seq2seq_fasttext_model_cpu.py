@@ -37,7 +37,7 @@ class FastTextSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
         # forward pass for two address: "["15 major st london ontario n5z1e1", "15 major st london ontario n5z1e1"]"
         self.decoder_input_setUp()
 
-        predictions = self.seq2seq_model.forward(self.to_predict_tensor, self.a_lengths_tensor)
+        predictions = self.seq2seq_model.forward(self.to_predict_tensor, self.a_lengths_list)
 
         self.assert_output_is_valid_dim(predictions, output_dim=self.number_of_tags)
 
@@ -46,7 +46,7 @@ class FastTextSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
         # forward pass for two address: "["15 major st london ontario n5z1e1", "15 major st london ontario n5z1e1"]"
         self.decoder_input_setUp()
 
-        predictions = self.seq2seq_model.forward(self.to_predict_tensor, self.a_lengths_tensor, self.a_target_vector)
+        predictions = self.seq2seq_model.forward(self.to_predict_tensor, self.a_lengths_list, self.a_target_vector)
 
         self.assert_output_is_valid_dim(predictions, output_dim=self.number_of_tags)
 
@@ -61,7 +61,7 @@ class FastTextSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
         # forward pass for two address: "["15 major st london ontario n5z1e1", "15 major st london ontario n5z1e1"]"
         self.decoder_input_setUp()
 
-        predictions = self.seq2seq_model.forward(self.to_predict_tensor, self.a_lengths_tensor)
+        predictions = self.seq2seq_model.forward(self.to_predict_tensor, self.a_lengths_list)
 
         self.assert_output_is_valid_dim(predictions, output_dim=self.re_trained_output_dim)
 
@@ -76,7 +76,7 @@ class FastTextSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
         # forward pass for two address: "["15 major st london ontario n5z1e1", "15 major st london ontario n5z1e1"]"
         self.decoder_input_setUp()
 
-        predictions = self.seq2seq_model.forward(self.to_predict_tensor, self.a_lengths_tensor, self.a_target_vector)
+        predictions = self.seq2seq_model.forward(self.to_predict_tensor, self.a_lengths_list, self.a_target_vector)
 
         self.assert_output_is_valid_dim(predictions, output_dim=self.re_trained_output_dim)
 

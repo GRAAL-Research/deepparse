@@ -31,14 +31,14 @@ class EncoderTest(TestCase):
 
                     encoder = Encoder(self.input_size_dim, self.hidden_size, self.num_layers)
                     to_predict_mock = MagicMock()
-                    lengths_tensor_mock = MagicMock()
-                    encoder.forward(to_predict_mock, lengths_tensor_mock)
+                    lengths_list_mock = MagicMock()
+                    encoder.forward(to_predict_mock, lengths_list_mock)
 
                     pack_padded_sequence_mock.assert_has_calls(
                         [
                             call(
                                 to_predict_mock,
-                                lengths_tensor_mock.cpu(),
+                                lengths_list_mock,
                                 batch_first=True,
                                 enforce_sorted=False,
                             )

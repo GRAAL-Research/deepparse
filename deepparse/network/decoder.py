@@ -116,7 +116,7 @@ class Decoder(nn.Module):
             unweighted_alignments.transpose(1, 2),
         )
 
-        max_length = lengths.max().item()
+        max_length = max(lengths)
         mask = torch.arange(max_length)[None, :] < lengths[:, None].to(
             "cpu"
         )  # We switch the lengths to cpu for the comparison

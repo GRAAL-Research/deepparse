@@ -49,7 +49,7 @@ class DataPadder:
 
         return (padded_sequences, lengths), padded_target_vectors
 
-    def pad_word_embeddings_sequences(self, sequences_batch: Tuple[List, ...]) -> Tuple[torch.Tensor, torch.LongTensor]:
+    def pad_word_embeddings_sequences(self, sequences_batch: Tuple[List, ...]) -> Tuple[torch.Tensor, List]:
         """
         Method to pad a batch of word embeddings sequences.
         Args:
@@ -57,7 +57,7 @@ class DataPadder:
         Return:
             A tuple of two elements:
                 - a :class:`~torch.Tensor` containing the padded sequences.
-                - a :class:`~torch.LongTensor` containing the respective original lengths of the padded sequences.
+                - a list containing the respective original lengths of the padded sequences.
         """
         sequences_vectors, lengths = zip(
             *[
@@ -68,8 +68,6 @@ class DataPadder:
                 for seq_vectors in sequences_batch
             ]
         )
-
-        lengths = torch.LongTensor(lengths)
 
         padded_sequences_vectors = self._pad_tensors(sequences_vectors)
 
@@ -93,10 +91,12 @@ class DataPadder:
                 the use of teacher forcing during the training of sequence to sequence models.
         Return:
             A tuple of two elements:
-                - A tuple (``x``, ``y`` , ``z``). The element ``x`` is a :class:`~torch.Tensor` of
+                - Either a tuple (``x``, ``y``, ``z``) or (``x``, ``y``, ``z``, ``w``).
+                    The element ``x`` is a :class:`~torch.Tensor` of
                     padded subword vectors,``y`` is a list of padded decomposition lengths,
                     and ``z`` is a :class:`~torch.Tensor` of the original lengths of the sequences
-                    before padding. If teacher_forcing is True, a fourth element is added which
+                    before padding.
+                    If teacher_forcing is True, a fourth element is added, ``w``, which
                     corresponds to a :class:`~torch.Tensor` of the padded targets. For details
                     on the padding of sequences, check out :meth:`~DataPadder.pad_subword_embeddings_sequences` below.
                     The returned sequences are sorted in decreasing order.
@@ -121,7 +121,7 @@ class DataPadder:
 
     def pad_subword_embeddings_sequences(
         self, sequences_batch: Tuple[Tuple[List, List], ...]
-    ) -> Tuple[torch.Tensor, List, torch.LongTensor]:
+    ) -> Tuple[torch.Tensor, List, List]:
         """
         Method to pad a batch of subword embeddings sequences.
         Args:
@@ -134,7 +134,7 @@ class DataPadder:
                 - a list containing the padded decomposition lengths of each word. When a word is
                     added as padding to elongate a sequence, we consider that the decomposition
                     length of the added word is 1.
-                - a :class:`~torch.LongTensor` containing the respective original lengths (number of words)
+                - a list containing the respective original lengths (number of words)
                     of the padded sequences.
         """
         sequences_vectors, decomp_len, lengths = zip(
@@ -150,8 +150,7 @@ class DataPadder:
 
         padded_sequences_vectors = self._pad_tensors(sequences_vectors)
 
-        lengths = torch.LongTensor(lengths)
-        max_sequence_length = lengths.max().item()
+        max_sequence_length = max(lengths)
         for decomposition_length in decomp_len:
             if len(decomposition_length) < max_sequence_length:
                 decomposition_length.extend([1] * (max_sequence_length - len(decomposition_length)))

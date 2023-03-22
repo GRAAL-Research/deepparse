@@ -47,9 +47,9 @@ class EncoderCase(TestCase):
             self.to_predict_tensor = pickle.load(file)
         self.to_predict_tensor = self.to_predict_tensor.to(device)
 
-        self.a_lengths_tensor = torch.tensor([6, 6], device=device)
+        self.a_lengths_list = [6, 6]
 
-        self.max_length = self.a_lengths_tensor[0].item()
+        self.max_length = self.a_lengths_list[0].item()
 
     def assert_output_is_valid_dim(self, actual_predictions):
         self.assertEqual(self.a_batch_size, len(actual_predictions))
@@ -62,7 +62,7 @@ class EncoderCase(TestCase):
 class EncoderGPUTest(EncoderCase):
     def test_whenForwardStepGPU_thenStepIsOk(self):
         self.setUp_encoder(self.a_torch_device)
-        predictions, _ = self.encoder.forward(self.to_predict_tensor, self.a_lengths_tensor)
+        predictions, _ = self.encoder.forward(self.to_predict_tensor, self.a_lengths_list)
 
         self.assert_output_is_valid_dim(predictions)
 
@@ -71,7 +71,7 @@ class EncoderCPUTest(EncoderCase):
     def test_whenForwardStepCPU_thenStepIsOk(self):
         self.setUp_encoder(self.a_cpu_device)
 
-        predictions, _ = self.encoder.forward(self.to_predict_tensor, self.a_lengths_tensor)
+        predictions, _ = self.encoder.forward(self.to_predict_tensor, self.a_lengths_list)
 
         self.assert_output_is_valid_dim(predictions)
 

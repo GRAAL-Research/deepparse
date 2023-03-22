@@ -160,7 +160,7 @@ def validate_torch_version() -> bool:
     major_python_version = python_version().split(".")[1]
     if int(major_python_version) == 11:
         warnings.warn(
-            "As of March 21, 2023, torch.compile is not supported on Python 3.11, and you are using" "Python 3.11."
+            "As of March 21, 2023, torch.compile is not supported on Python 3.11, and you are using Python 3.11."
         )
     return int(major_pytorch_version) >= 2 and int(major_python_version) < 11
 

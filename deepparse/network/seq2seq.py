@@ -12,9 +12,9 @@ from torch import nn
 
 from .decoder import Decoder
 from .encoder import Encoder
-from ..tools import download_weights, latest_version, validate_torch_version
+from ..tools import download_weights, latest_version, validate_torch_compile_compability
 
-can_use_torch_compile = validate_torch_version()
+can_use_torch_compile = validate_torch_compile_compability()
 
 
 class Seq2SeqModel(ABC, nn.Module):

@@ -1214,7 +1214,7 @@ class AddressParser:
                 )
 
     def _model_os_validation(self, num_workers):
-        if platform.system().lower() == "windows" and "fasttext" in self.model_type and num_workers > 0:
+        if platform.system() == "Windows" and "fasttext" in self.model_type and num_workers > 0:
             raise FastTextModelError(
                 "On Windows system, we cannot use FastText-like models with parallelism workers since "
                 "FastText objects are not pickleable with the parallelism process use by Windows. "

@@ -2,7 +2,7 @@ import os
 import shutil
 import warnings
 from pathlib import Path
-from platform import python_version
+from platform import system, python_version
 from typing import List
 
 import poutyne
@@ -11,13 +11,13 @@ import torch
 from requests import HTTPError
 from urllib3.exceptions import MaxRetryError
 
-from .errors.data_error import DataError
-from .errors.server_error import ServerError
 from .data_validation import (
     validate_if_any_none,
     validate_if_any_whitespace_only,
     validate_if_any_empty,
 )
+from .errors.data_error import DataError
+from .errors.server_error import ServerError
 
 BASE_URL = "https://graal.ift.ulaval.ca/public/deepparse/{}.{}"
 CACHE_PATH = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
@@ -150,7 +150,7 @@ def valid_poutyne_version(min_major: int = 1, min_minor: int = 2) -> bool:
     return is_valid_poutyne_version
 
 
-def validate_torch_version() -> bool:
+def validate_torch_compile_compability() -> bool:
     """
     Function to validate if torch major version is greater than 2.0 and Python version is lower than 3.11, since for
     now `torch.compile` is not supported on Python 3.11. `torch.compile was officially introduce in Torch 2.0.
@@ -160,9 +160,20 @@ def validate_torch_version() -> bool:
     major_python_version = python_version().split(".")[1]
     if int(major_python_version) == 11:
         warnings.warn(
-            "As of March 21, 2023, torch.compile is not supported on Python 3.11, and you are using Python 3.11."
+            "As of March 21, 2023, torch.compile is not supported on Python 3.11, and you are using Python 3.11. "
+            "Thus, we will disable torch.compile in Deepparse AddressParser.",
+            category=UserWarning,
         )
-    return int(major_pytorch_version) >= 2 and int(major_python_version) < 11
+    windows_os = system() == "Windows"
+
+    if windows_os:
+        warnings.warn(
+            "As of March 21, 2023, torch.compile is not supported on Windows OS. Thus we will disable torch.compile in"
+            "Deepparse AddressParser.",
+            category=UserWarning,
+        )
+
+    return int(major_pytorch_version) >= 2 and int(major_python_version) < 11 and not windows_os
 
 
 def validate_data_to_parse(addresses_to_parse: List) -> None:

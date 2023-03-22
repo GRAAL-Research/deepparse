@@ -116,7 +116,8 @@ processing performance. Here a few: if the parser uses a GPU, it will pin the me
 
 .. note::
 
-    Note that as of March 21, 2023, `torch.compile` is not supported on Python 3.11.
+    Note that as of March 21, 2023, `torch.compile` is not supported on Python 3.11 and is not supported on Windows OS.
+    In those two cases, we disable `torch.compile` in Deepparse.
 
 
 AddressParser

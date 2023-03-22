@@ -22,7 +22,7 @@ from deepparse import (
     validate_data_to_parse,
     DataError,
     ServerError,
-    validate_torch_version,
+    validate_torch_compile_compability,
 )
 from tests.base_capture_output import CaptureOutputTestCase
 from tests.base_file_exist import FileCreationTestCase
@@ -312,34 +312,83 @@ class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
         actual = valid_poutyne_version(min_major=3, min_minor=0)
         self.assertFalse(actual)
 
+    @patch("deepparse.tools.system")
     @patch("deepparse.tools.python_version")
     @patch("deepparse.tools.torch")
-    def test_givenPyTorchVersion2AndPython39_givenValidTorch_thenReturnTrue(self, torch_mock, python_version_mock):
+    def test_givenPyTorchVersion2AndPython39NotWindowsOS_givenValidTorch_thenReturnTrue(
+        self, torch_mock, python_version_mock, system_mock
+    ):
         torch_mock.version.__version__ = "2.0"
         python_version_mock.return_value = "3.9"
+        system_mock.return_value = "Linux"
 
-        actual = validate_torch_version()
+        actual = validate_torch_compile_compability()
         self.assertTrue(actual)
 
+    @patch("deepparse.tools.system")
     @patch("deepparse.tools.python_version")
     @patch("deepparse.tools.torch")
-    def test_givenPyTorchVersion2AndPython311_givenValidTorch_thenReturnFalse(self, torch_mock, python_version_mock):
+    def test_givenPyTorchVersion2AndPython311NotWindowsOS_givenValidTorch_thenReturnFalse(
+        self, torch_mock, python_version_mock, system_mock
+    ):
         torch_mock.version.__version__ = "2.0"
         python_version_mock.return_value = "3.11"
+        system_mock.return_value = "Linux"
 
-        actual = validate_torch_version()
+        actual = validate_torch_compile_compability()
         self.assertFalse(actual)
 
+    @patch("deepparse.tools.system")
     @patch("deepparse.tools.python_version")
     @patch("deepparse.tools.torch")
-    def test_givenPTorchVersionLessThan2AndPython39_givenValidTorch_thenReturnFalse(
-        self, torch_mock, python_version_mock
+    def test_givenPTorchVersionLessThan2AndPython39NotWindowsOS_givenValidTorch_thenReturnFalse(
+        self, torch_mock, python_version_mock, system_mock
     ):
         torch_mock.version.__version__ = "1.9"
         python_version_mock.return_value = "3.9"
+        system_mock.return_value = "Linux"
 
-        actual = validate_torch_version()
+        actual = validate_torch_compile_compability()
         self.assertFalse(actual)
+
+    @patch("deepparse.tools.system")
+    @patch("deepparse.tools.python_version")
+    @patch("deepparse.tools.torch")
+    def test_givenPTorchVersion2AndPython311NotWindowsOS_givenValidTorch_thenRaiseWarning(
+        self, torch_mock, python_version_mock, system_mock
+    ):
+        torch_mock.version.__version__ = "2.0"
+        python_version_mock.return_value = "3.11"
+        system_mock.return_value = "Linux"
+
+        with self.assertWarns(UserWarning):
+            validate_torch_compile_compability()
+
+    @patch("deepparse.tools.system")
+    @patch("deepparse.tools.python_version")
+    @patch("deepparse.tools.torch")
+    def test_givenPTorchVersion2AndPython39OnWindowsOS_givenValidTorch_thenReturnFalse(
+        self, torch_mock, python_version_mock, system_mock
+    ):
+        torch_mock.version.__version__ = "2.0"
+        python_version_mock.return_value = "3.9"
+        system_mock.return_value = "Windows"
+
+        actual = validate_torch_compile_compability()
+        self.assertFalse(actual)
+
+    @patch("deepparse.tools.system")
+    @patch("deepparse.tools.python_version")
+    @patch("deepparse.tools.torch")
+    def test_givenPTorchVersion2AndPython39WindowsOS_givenValidTorch_thenRaiseWarning(
+        self, torch_mock, python_version_mock, system_mock
+    ):
+        torch_mock.version.__version__ = "2.0"
+        python_version_mock.return_value = "3.9"
+        system_mock.return_value = "Windows"
+
+        with self.assertWarns(UserWarning):
+            validate_torch_compile_compability()
 
     def test_integrationValidateDataToParse(self):
         valid_data = ["An address", "another address"]

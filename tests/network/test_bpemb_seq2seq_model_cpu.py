@@ -224,7 +224,7 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
 
         lengths_list_mock = MagicMock()
         max_length = 4  # a sequence of 4 tokens
-        lengths_list_mock__len__().return_value = max_length
+        lengths_list_mock.__len__().return_value = max_length
         encoder_outputs = MagicMock()
         seq2seq_model._decoder_step(
             decoder_input_mock,

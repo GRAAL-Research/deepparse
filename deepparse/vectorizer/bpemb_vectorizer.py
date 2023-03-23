@@ -17,10 +17,10 @@ class BPEmbVectorizer(Vectorizer):
         super().__init__(embeddings_model)
 
         self.padding_value = 0
-        self._max_length = 0
+        self._longest_sequence_length = 0
 
-    def _reset_max_length(self) -> None:
-        self._max_length = 0
+    def _reset_longest_sequence_length(self) -> None:
+        self._longest_sequence_length = 0
 
     def __call__(self, addresses: List[str]) -> List[Tuple]:
         """
@@ -34,7 +34,7 @@ class BPEmbVectorizer(Vectorizer):
         """
         validate_data_to_parse(addresses)
 
-        self._reset_max_length()
+        self._reset_longest_sequence_length()
         batch = [self._vectorize_sequence(address) for address in addresses]
         self._decomposed_sequence_padding(batch)
         return batch
@@ -57,7 +57,7 @@ class BPEmbVectorizer(Vectorizer):
             word_decomposition_lengths.append(len(bpe_decomposition))
             input_sequence.append(list(bpe_decomposition))
 
-        self._max_length = max(self._max_length, *word_decomposition_lengths)
+        self._longest_sequence_length = max(self._longest_sequence_length, *word_decomposition_lengths)
 
         return input_sequence, word_decomposition_lengths
 
@@ -67,8 +67,8 @@ class BPEmbVectorizer(Vectorizer):
         """
         for decomposed_sequence, _ in batch:
             for decomposition in decomposed_sequence:
-                if len(decomposition) != self._max_length:
+                if len(decomposition) != self._longest_sequence_length:
                     decomposition.extend(
                         [np.ones(self.embeddings_model.dim) * [self.padding_value]]
-                        * (self._max_length - len(decomposition))
+                        * (self._longest_sequence_length - len(decomposition))
                     )

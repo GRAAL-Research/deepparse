@@ -16,6 +16,8 @@ class DecoderTest(TestCase):
         self.hidden_size = 1024
         self.num_layers = 1
         self.output_size = 9
+        # A batch of 3 sequence of length (respectively): 2, 4 and 3. Thus, the longest one is 4.
+        self.lengths_list = [1, 4, 3]
 
     def test_whenInstantiateASeq2SeqModel_thenParametersAreOk(self):
         decoder = Decoder(
@@ -97,12 +99,11 @@ class DecoderTest(TestCase):
                                 to_predict_mock = MagicMock()
                                 hidden_mock = MagicMock()
                                 encoder_mock = MagicMock()
-                                lengths_mock = torch.ones(1, 2)
                                 _, _, attention_weights = decoder.forward(
                                     to_predict_mock,
                                     hidden_mock,
                                     encoder_mock,
-                                    lengths_mock,
+                                    self.lengths_list,
                                 )
                                 self.assertIsNotNone(attention_weights)
 

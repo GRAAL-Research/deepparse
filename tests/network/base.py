@@ -33,10 +33,16 @@ class Seq2SeqTestCase(TestCase):
 
         cls.cache_dir = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
 
+        # A batch of 3 sequence of length (respectively): 2, 4 and 3. Thus, the longest one is 4.
+        cls.lengths_list = [1, 4, 3]
+        cls.longest_sequence_length = 4
+
     def setup_encoder_mocks(self):
         to_predict_mock = MagicMock()
-        lengths_list_mock = MagicMock()
-        return to_predict_mock, lengths_list_mock
+
+        lengths_list = self.lengths_list
+
+        return to_predict_mock, lengths_list
 
     def setUp_decoder_mocks(self, decoder_mock, attention_mechanism):
         decoder_input_mock = MagicMock()

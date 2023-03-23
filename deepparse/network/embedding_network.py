@@ -79,7 +79,7 @@ class EmbeddingNetwork(nn.Module):
 
             packed_sequence = pack_padded_sequence(
                 to_predict[i],
-                torch.tensor(lengths).cpu(),
+                lengths,
                 batch_first=True,
                 enforce_sorted=False,
             )

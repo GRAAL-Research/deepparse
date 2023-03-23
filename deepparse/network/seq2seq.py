@@ -176,11 +176,11 @@ class Seq2SeqModel(ABC, nn.Module):
         Return:
             A Tensor of the predicted sequence.
         """
-        max_length = max(lengths)
+        longest_sequence_length = max(lengths)
 
         # The empty prediction sequence
         # +1 for the EOS
-        prediction_sequence = torch.zeros(max_length + 1, batch_size, self.output_size).to(self.device)
+        prediction_sequence = torch.zeros(longest_sequence_length + 1, batch_size, self.output_size).to(self.device)
 
         # We decode the first token
         decoder_output, decoder_hidden, attention_weights = self.decoder(
@@ -189,7 +189,7 @@ class Seq2SeqModel(ABC, nn.Module):
 
         if attention_weights is not None:
             # We fill the attention
-            attention_output = torch.ones(max_length + 1, batch_size, 1, max_length)
+            attention_output = torch.ones(longest_sequence_length + 1, batch_size, 1, longest_sequence_length)
             attention_output[0] = attention_weights
 
         # We fill the first token prediction
@@ -202,7 +202,7 @@ class Seq2SeqModel(ABC, nn.Module):
         if target is not None and random.random() < 0.5:
             # force the real target value instead of the predicted one to help learning
             target = target.transpose(0, 1)
-            for idx in range(max_length):
+            for idx in range(longest_sequence_length):
                 decoder_input = target[idx].view(1, batch_size, 1)
                 decoder_output, decoder_hidden, attention_weights = self.decoder(
                     decoder_input, decoder_hidden, encoder_outputs, lengths
@@ -210,7 +210,7 @@ class Seq2SeqModel(ABC, nn.Module):
                 prediction_sequence[idx + 1] = decoder_output
 
         else:
-            for idx in range(max_length):
+            for idx in range(longest_sequence_length):
                 decoder_output, decoder_hidden, attention_weights = self.decoder(
                     decoder_input.view(1, batch_size, 1),
                     decoder_hidden,

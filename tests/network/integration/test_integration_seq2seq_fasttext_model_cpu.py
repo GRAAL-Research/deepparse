@@ -61,6 +61,7 @@ class FastTextSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
             output_size=self.re_trained_output_dim,
             verbose=self.verbose,
             path_to_retrained_model=self.a_retrain_model_path,
+            use_torch_compile=False,
         )
         # forward pass for two address: "["15 major st london ontario n5z1e1", "15 major st london ontario n5z1e1"]"
         self.decoder_input_setUp()
@@ -76,6 +77,7 @@ class FastTextSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
             output_size=self.re_trained_output_dim,
             verbose=self.verbose,
             path_to_retrained_model=self.a_retrain_model_path,
+            use_torch_compile=False,
         )
         # forward pass for two address: "["15 major st london ontario n5z1e1", "15 major st london ontario n5z1e1"]"
         self.decoder_input_setUp()

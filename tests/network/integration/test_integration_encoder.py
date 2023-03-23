@@ -49,7 +49,7 @@ class EncoderCase(TestCase):
 
         self.a_lengths_list = [6, 6]
 
-        self.longest_sequence_length = self.a_lengths_list[0].item()
+        self.longest_sequence_length = self.a_lengths_list[0]
 
     def assert_output_is_valid_dim(self, actual_predictions):
         self.assertEqual(self.a_batch_size, len(actual_predictions))

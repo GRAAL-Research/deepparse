@@ -80,7 +80,7 @@ class Seq2SeqIntegrationTestCase(TestCase):
         self.encoder_hidden = torch.rand((self.a_batch_size, self.a_target_vector.shape[1], self.encoder_hidden_size))
 
     def decoder_input_setUp(self):
-        self.longest_sequence_length = self.a_lengths_list[0].item()
+        self.longest_sequence_length = self.a_lengths_list[0]
 
     def assert_output_is_valid_dim(self, actual_prediction, output_dim):
         self.assertEqual(

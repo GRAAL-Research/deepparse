@@ -25,6 +25,7 @@ class Seq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
             decoder_hidden_size=self.decoder_hidden_size,
             decoder_num_layers=self.num_layers,
             output_size=self.output_size,
+            use_torch_compile=False,
         )
 
         self.encoder_input_setUp(

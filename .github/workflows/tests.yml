@@ -43,4 +43,4 @@ jobs:
           python setup.py develop
       - name: Test with pytest
         run: |
-          pytest
+          pytest -n auto

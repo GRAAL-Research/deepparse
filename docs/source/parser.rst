@@ -21,7 +21,7 @@ the architecture is similar, and performances are comparable; our results are av
 Memory Usage and Time Performance
 *********************************
 
-To assess memory usage and inference time performance, we have conducted an experiment using Linux OS, Python 3.10,
+To assess memory usage and inference time performance, we have conducted an experiment using Linux OS, Python 3.11,
 Torch 2.0 and CUDA 11.7 (done March 21, 2023). The next two tables report the results. In each table,
 we report the RAM usage, and in the first table, we also report the GPU memory usage.
 Also, for both tables, we report the mean-time of execution

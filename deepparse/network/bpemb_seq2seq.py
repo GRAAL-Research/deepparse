@@ -120,5 +120,8 @@ class BPEmbSeq2SeqModel(Seq2SeqModel):
         Compile, if possible, the embedding network
         """
         super()._torch_compile_loading()
-        if can_use_torch_compile:
-            self.embedding_network = torch.compile(self.embedding_network)
+        if self.use_torch_compile:
+            if can_use_torch_compile:
+                self.embedding_network = torch.compile(self.embedding_network)
+            else:
+                warnings.warn("Cannot use torch.compile, see other warnings for details.", category=UserWarnings)

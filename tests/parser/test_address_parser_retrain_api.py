@@ -78,9 +78,9 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
     ):
         if num_workers is None:
             # AddressParser default num_workers settings is 1
-            # But, we change it to 0 for Windows OS to allow test to pass since it fail (volontairy)
+            # But, we change it to 0 for Windows OS to allow test to pass since it fail (voluntary)
             # at greater than 0 due to parallelism pickle error
-            if platform.system().lower() == "windows":
+            if platform.system() == "Windows":
                 num_workers = 0  # Default setting is 1, but We set it to zero to allow Windows tests to pass
             else:
                 num_workers = 1
@@ -393,7 +393,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         with self.assertRaises(FastTextModelError):
             self.address_parser_retrain_call()
 
-    @patch("deepparse.parser.address_parser.platform")
+    @patch("deepparse.parser.address_parser.system")
     @patch("deepparse.parser.address_parser.ModelFactory")
     @patch("deepparse.parser.address_parser.EmbeddingsModelFactory")
     @patch("deepparse.parser.address_parser.VectorizerFactory")
@@ -406,10 +406,9 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         vectorizer_factory_mock,
         embeddings_factory_mock,
         model_factory_mock,
-        platform_mock,
+        system_mock,
     ):
-        # OS equal Windows
-        platform_mock.system().__eq__.return_value = True
+        system_mock.return_value = "Windows"
 
         self.address_parser = AddressParser(
             model_type=self.a_fastest_model_type,
@@ -418,7 +417,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         )
 
         num_workers_gt_0 = 1
-        with self.assertRaises(ValueError):
+        with self.assertRaises(FastTextModelError):
             self.address_parser_retrain_call(num_workers=num_workers_gt_0)
 
     @patch("deepparse.parser.address_parser.torch.save")

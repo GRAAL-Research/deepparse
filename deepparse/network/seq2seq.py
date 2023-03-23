@@ -101,13 +101,15 @@ class Seq2SeqModel(ABC, nn.Module):
             if not os.path.isfile(model_path):
                 warnings.warn(
                     f"No pre-trained model where found in the cache directory {cache_dir}. Thus, we will"
-                    f"automatically download the pre-trained model."
+                    "automatically download the pre-trained model.",
+                    category=UserWarning,
                 )
                 download_weights(model_type, cache_dir, verbose=self.verbose)
             elif not latest_version(model_type, cache_path=cache_dir, verbose=self.verbose):
                 if self.verbose:
                     warnings.warn(
-                        "A new version of the pretrained model is available. The newest model will be downloaded."
+                        "A new version of the pretrained model is available. The newest model will be downloaded.",
+                        category=UserWarning,
                     )
                 download_weights(model_type, cache_dir, verbose=self.verbose)
 
@@ -152,7 +154,7 @@ class Seq2SeqModel(ABC, nn.Module):
         decoder_input: torch.Tensor,
         decoder_hidden: tuple,
         encoder_outputs: torch.Tensor,
-        target: Union[torch.Tensor, None],
+        target: Union[torch.LongTensor, None],
         lengths_tensor: torch.Tensor,
         batch_size: int,
     ) -> torch.Tensor:
@@ -163,7 +165,7 @@ class Seq2SeqModel(ABC, nn.Module):
             decoder_input (~torch.Tensor): The decoder input (so the encode output).
             decoder_hidden (~torch.Tensor): The encoder hidden state (so the encode hidden state).
             encoder_outputs (~torch.Tensor): The encoder outputs for the attention mechanism weighs if needed.
-            target (~torch.Tensor) : The target of the batch element, use only when we retrain the model since we do
+            target (~torch.LongTensor) : The target of the batch element, use only when we retrain the model since we do
                 `teacher forcing <https://machinelearningmastery.com/teacher-forcing-for-recurrent-neural-networks/>`_.
             lengths_tensor (~torch.Tensor): The lengths of the batch elements (since packed).
             batch_size (int): Number of element in the batch.

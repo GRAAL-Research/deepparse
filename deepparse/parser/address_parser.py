@@ -6,11 +6,11 @@
 
 import contextlib
 import os
-import platform
 import re
 import warnings
 from functools import partial
 from pathlib import Path
+from platform import system
 from typing import Dict, List, Tuple, Union, Callable
 
 import torch
@@ -39,8 +39,8 @@ from ..embeddings_models import EmbeddingsModelFactory
 from ..errors import FastTextModelError
 from ..metrics import nll_loss, accuracy
 from ..network import ModelFactory
-from ..pre_processing import trailing_whitespace_cleaning, double_whitespaces_cleaning
 from ..pre_processing import coma_cleaning, lower_cleaning, hyphen_cleaning
+from ..pre_processing import trailing_whitespace_cleaning, double_whitespaces_cleaning
 from ..tools import CACHE_PATH, valid_poutyne_version
 from ..vectorizer import VectorizerFactory
 
@@ -79,12 +79,12 @@ class AddressParser:
     Args:
         model_type (str): The network name to use, can be either:
 
-            - fasttext (need ~9 GO of RAM to be used),
-            - fasttext-light (need ~2 GO of RAM to be used, but slower than fasttext version),
-            - bpemb (need ~2 GO of RAM to be used),
-            - fastest (quicker to process one address) (equivalent to fasttext),
-            - lightest (the one using the less RAM and GPU usage) (equivalent to fasttext-light),
-            - best (the best accuracy performance) (equivalent to bpemb).
+            - ``"fasttext"`` (need ~9 GO of RAM to be used),
+            - ``"fasttext-light"`` (need ~2 GO of RAM to be used, but slower than fasttext version),
+            - ``"bpemb"`` (need ~2 GO of RAM to be used),
+            - ``"fastest"`` (quicker to process one address) (equivalent to ``"fasttext"``),
+            - ``"lightest"`` (the one using the less RAM and GPU usage) (equivalent to ``"fasttext-light"``),
+            - ``"best"`` (the best accuracy performance) (equivalent to ``"bpemb"``).
 
             The default value is ``"best"`` for the most accurate model. Ignored if ``path_to_retrained_model`` is not
             ``None``. To further improve performance, consider using the models (fasttext or BPEmb) with their
@@ -109,7 +109,7 @@ class AddressParser:
         cache_dir (Union[str, None]): The path to the cached directory to use for downloading (and loading) the
             embeddings model and the model pretrained weights.
         offline (bool): Whether or not the model is an offline one, meaning you have already downloaded the pre-trained
-            weights and embeddings weights in either the default Deepparse cache directory (~./cache/deepparse) or
+            weights and embeddings weights in either the default Deepparse cache directory (``"~./cache/deepparse"``) or
             the ``cache_dir`` directory. When offline, we will not verify if the model is the latest. You can use our
             ``download_models`` CLI function to download all the requirements for a model. The default value is False
             (not an offline parsing model).
@@ -124,8 +124,8 @@ class AddressParser:
 
         Here are the URLs to download our pretrained models directly
 
-            - `FastText <https://graal.ift.ulaval.ca/public/deepparse/fasttext.ckpt>`_
-            - `BPEmb <https://graal.ift.ulaval.ca/public/deepparse/bpemb.ckpt>`_
+            - `FastText <https://graal.ift.ulaval.ca/public/deepparse/fasttext.ckpt>`_,
+            - `BPEmb <https://graal.ift.ulaval.ca/public/deepparse/bpemb.ckpt>`_,
             - `FastText Light <https://graal.ift.ulaval.ca/public/deepparse/fasttext.magnitude.gz>`_.
 
     Note:
@@ -294,7 +294,7 @@ class AddressParser:
                     - no addresses are whitespace-only strings.
 
                 The addresses are processed in batches when using a list of addresses, allowing a faster process.
-                For example, using the FastText model, a single address takes around 0.003 seconds to be parsed using a
+                For example, using the FastText model, a single address takes around 0.0023 seconds to be parsed using a
                 batch of 1 (1 element at the time is processed). This time can be reduced to 0.00035 seconds per
                 address when using a batch of 128 (128 elements at the time are processed).
             with_prob (bool): If true, return the probability of all the tags with the specified
@@ -403,24 +403,26 @@ class AddressParser:
             collate_fn=self._predict_pipeline,
             batch_size=batch_size,
             num_workers=num_workers,
+            pin_memory=self.pin_memory,
         )
 
-        tags_predictions = []
-        tags_predictions_prob = []
-        for x in predict_data_loader:
-            tensor_prediction = self.model(*load_tuple_to_device(x, self.device))
-            tags_predictions.extend(tensor_prediction.max(2)[1].transpose(0, 1).cpu().numpy().tolist())
-            tags_predictions_prob.extend(
-                torch.exp(tensor_prediction.max(2)[0]).transpose(0, 1).detach().cpu().numpy().tolist()
+        with torch.no_grad():
+            tags_predictions = []
+            tags_predictions_prob = []
+            for x in predict_data_loader:
+                tensor_prediction = self.model(*load_tuple_to_device(x, self.device))
+                tags_predictions.extend(tensor_prediction.max(2)[1].transpose(0, 1).cpu().numpy().tolist())
+                tags_predictions_prob.extend(
+                    torch.exp(tensor_prediction.max(2)[0]).transpose(0, 1).detach().cpu().numpy().tolist()
+                )
+
+            tagged_addresses_components = self._fill_tagged_addresses_components(
+                tags_predictions,
+                tags_predictions_prob,
+                addresses_to_parse,
+                clean_addresses,
+                with_prob,
             )
-
-        tagged_addresses_components = self._fill_tagged_addresses_components(
-            tags_predictions,
-            tags_predictions_prob,
-            addresses_to_parse,
-            clean_addresses,
-            with_prob,
-        )
 
         return tagged_addresses_components
 
@@ -720,6 +722,7 @@ class AddressParser:
 
         optimizer = SGD(self.model.parameters(), learning_rate)
 
+        # Poutyne handle model.train()
         exp = Experiment(
             logging_path,
             self.model,
@@ -910,6 +913,8 @@ class AddressParser:
         # Handle the verbose overriding param
         if verbose is None:
             verbose = self.verbose
+
+        # Poutyne handle the no_grad context
         test_res = exp.test(test_generator, seed=seed, callbacks=callbacks, verbose=verbose)
 
         return test_res
@@ -983,8 +988,10 @@ class AddressParser:
         """
         if device == "cpu":
             self.device = torch.device("cpu")
+            self.pin_memory = False
         else:
             if torch.cuda.is_available():
+                self.pin_memory = True
                 if isinstance(device, torch.device):
                     self.device = device
                 elif isinstance(device, str):
@@ -1000,8 +1007,9 @@ class AddressParser:
                 else:
                     raise ValueError("Device should be a string, an int or a torch device.")
             else:
-                warnings.warn("No CUDA device detected, device will be set to 'CPU'.")
+                warnings.warn("No CUDA device detected, device will be set to 'CPU'.", category=UserWarning)
                 self.device = torch.device("cpu")
+                self.pin_memory = False
 
     def _create_training_data_generator(
         self,
@@ -1206,18 +1214,21 @@ class AddressParser:
                 )
 
     def _model_os_validation(self, num_workers):
-        if platform.system().lower() == "windows" and "fasttext" in self.model_type and num_workers > 0:
+        if system() == "Windows" and "fasttext" in self.model_type and num_workers > 0:
             raise FastTextModelError(
                 "On Windows system, we cannot use FastText-like models with parallelism workers since "
                 "FastText objects are not pickleable with the parallelism process use by Windows. "
                 "Thus, you need to set num_workers to 0 since 1 also means 'parallelism'."
             )
 
-        if platform.system().lower() == "darwin" and "fasttext" in self.model_type and num_workers > 0:
-            raise FastTextModelError(
+        if system() == "Darwin" and "fasttext" in self.model_type and num_workers > 0:
+            torch.multiprocessing.set_start_method('fork')
+            warnings.warn(
                 "On MacOS system, we cannot use FastText-like models with parallelism out-of-the-box since "
                 "FastText objects are not pickleable with the parallelism process used by default by MacOS. "
-                "Thus, you need to set torch.multiprocessing.set_start_method('fork') to allow torch parallelism."
+                "Thus, we have set it to the 'fork' (i.e. torch.multiprocessing.set_start_method('fork'))"
+                " to allow torch parallelism.",
+                category=UserWarning,
             )
 
     def _apply_pre_processors(self, addresses: List[str]) -> List[str]:

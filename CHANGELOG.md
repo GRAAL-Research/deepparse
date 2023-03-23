@@ -304,5 +304,5 @@
 - Add `torch.no_grad()` context manager in `__call__()` to increase performance.
 - Reduce memory swap between CPU and GPU by instantiating Tensor directly on the GPU device.
 - Improve some Warnings clarity (i.e. category and message).
-- Bug-fix MacOS multiprocessing. It was not possible to use in multiprocess, since we were not testing if torch
+- Bug-fix MacOS multiprocessing. It was impossible to use in multiprocess since we were not testing whether torch
   multiprocess was set properly. Now, we set it properly and raise a warning instead of an error.

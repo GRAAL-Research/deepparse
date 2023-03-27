@@ -162,7 +162,7 @@ class DataPadder:
         """
         Method to pad a batch of target indices to the longest one.
         Args:
-            target_batch (Tuple[List, ...]): a tuple comtaining lists of target indices.
+            target_batch (Tuple[List, ...]): a tuple containing lists of target indices.
         Return:
             A :class:`~torch.Tensor` of padded targets.
         """

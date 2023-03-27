@@ -1,5 +1,5 @@
 # pylint: disable=too-many-arguments, duplicate-code
-
+import warnings
 from typing import List, Union
 
 import torch
@@ -84,7 +84,7 @@ class BPEmbSeq2SeqModel(Seq2SeqModel):
         to_predict: torch.Tensor,
         decomposition_lengths: List,
         lengths: List,
-        target: Union[torch.Tensor, None] = None,
+        target: Union[torch.LongTensor, None] = None,
     ) -> torch.Tensor:
         """
         Callable method as per PyTorch forward method to get tags prediction over the components of
@@ -93,7 +93,7 @@ class BPEmbSeq2SeqModel(Seq2SeqModel):
             to_predict (~torch.Tensor): The elements to predict the tags.
             decomposition_lengths (list) : The lengths of the decomposed words of the batch elements (since packed).
             lengths (list) : The lengths of the batch elements (since packed).
-            target (~torch.Tensor) : The target of the batch element, use only when we retrain the model since we do
+            target (~torch.LongTensor) : The target of the batch element, use only when we retrain the model since we do
                 `teacher forcing <https://machinelearningmastery.com/teacher-forcing-for-recurrent-neural-networks/>`_.
                 Default value is None since we mostly don't have the target except for retrain.
         Return:
@@ -124,4 +124,4 @@ class BPEmbSeq2SeqModel(Seq2SeqModel):
             if can_use_torch_compile:
                 self.embedding_network = torch.compile(self.embedding_network)
             else:
-                warnings.warn("Cannot use torch.compile, see other warnings for details.", category=UserWarnings)
+                warnings.warn("Cannot use torch.compile, see other warnings for details.", category=UserWarning)

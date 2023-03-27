@@ -78,7 +78,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
     ):
         if num_workers is None:
             # AddressParser default num_workers settings is 1
-            # But, we change it to 0 for Windows OS to allow test to pass since it fail (volontairy)
+            # But, we change it to 0 for Windows OS to allow test to pass since it fail (voluntary)
             # at greater than 0 due to parallelism pickle error
             if platform.system() == "Windows":
                 num_workers = 0  # Default setting is 1, but We set it to zero to allow Windows tests to pass
@@ -397,7 +397,6 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         model_factory_mock,
         system_mock,
     ):
-        # OS equal Windows
         system_mock.return_value = "Windows"
 
         self.address_parser = AddressParser(

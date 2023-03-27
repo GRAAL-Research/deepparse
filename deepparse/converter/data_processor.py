@@ -12,7 +12,7 @@ class DataProcessor:
     Args:
         vectorizer (:class:`~Vectorizer`): a callable vectorizer capable of vectorizing a list of addresses
         sequences_padding_callback (Callable): a callback to pad a sequence of vectorized addresses to the
-            longuest, while returning the original unpadded lengths, see :class:`~deepparse.converter.Datapadder`
+            longest, while returning the original unpadded lengths, see :class:`~deepparse.converter.Datapadder`
         batch_padding_callback (Callable): a callback to pad a sequence of vectorized addresses and their labels
             to the longest, while returning the original unpadded lengths,
             see :class:`~deepparse.converter.Datapadder`

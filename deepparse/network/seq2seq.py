@@ -104,7 +104,7 @@ class Seq2SeqModel(ABC, nn.Module):
             if not os.path.isfile(model_path):
                 warnings.warn(
                     f"No pre-trained model where found in the cache directory {cache_dir}. Thus, we will"
-                    f"automatically download the pre-trained model.",
+                    "automatically download the pre-trained model.",
                     category=UserWarning,
                 )
                 download_weights(model_type, cache_dir, verbose=self.verbose)
@@ -168,7 +168,7 @@ class Seq2SeqModel(ABC, nn.Module):
             decoder_input (~torch.Tensor): The decoder input (so the encode output).
             decoder_hidden (~torch.Tensor): The encoder hidden state (so the encode hidden state).
             encoder_outputs (~torch.Tensor): The encoder outputs for the attention mechanism weighs if needed.
-            target (~torch.Tensor) : The target of the batch element, use only when we retrain the model since we do
+            target (~torch.LongTensor) : The target of the batch element, use only when we retrain the model since we do
                 `teacher forcing <https://machinelearningmastery.com/teacher-forcing-for-recurrent-neural-networks/>`_.
             lengths (list): The lengths of the batch elements (since packed).
             batch_size (int): Number of element in the batch.
@@ -238,4 +238,4 @@ class Seq2SeqModel(ABC, nn.Module):
                 self.encoder = torch.compile(self.encoder, mode="reduce-overhead")
                 self.decoder = torch.compile(self.decoder, mode="reduce-overhead")
             else:
-                warnings.warn("Cannot use torch.compile, see other warnings for details.", category=UserWarnings)
+                warnings.warn("Cannot use torch.compile, see other warnings for details.", category=UserWarning)

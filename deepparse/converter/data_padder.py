@@ -7,7 +7,7 @@ import numpy as np
 
 class DataPadder:
     """
-    Class that handles the padding of vectorized sequences to the length of the longuest sequence.
+    Class that handles the padding of vectorized sequences to the length of the longest sequence.
     Args:
         padding_value (int): the value to use as padding to extend the shorter sequences. Default: -100.
     """

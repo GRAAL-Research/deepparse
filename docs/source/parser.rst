@@ -21,10 +21,11 @@ the architecture is similar, and performances are comparable; our results are av
 Memory Usage and Time Performance
 *********************************
 
-To assess memory usage and inference time performance, we have conducted an experiment using Linux OS, Python 3.10,
-Torch 2.0 and CUDA 11.7 (done March 21, 2023). The next two tables report the results. In each table, we report the RAM usage,
-and in the first table, we also report the GPU memory usage. Also, for both tables, we report the mean-time of execution
-that was obtained by processing ~183,000 addresses using different batch sizes (2^0, ..., 2^9)
+To assess memory usage and inference time performance, we have conducted an experiment using Linux OS, Python 3.11,
+Torch 2.0 and CUDA 11.7 (done March 21, 2023). The next two tables report the results. In each table,
+we report the RAM usage, and in the first table, we also report the GPU memory usage.
+Also, for both tables, we report the mean-time of execution that was obtained by processing ~183,000
+addresses using different batch sizes (2^0, ..., 2^9)
 (i.e. :math:`\frac{\text{Total time to process all addresses}}{~183,000} =` time per address).
 In addition, we proposed a lighter version (fasttext-light) of our fastText model using
 `Magnitude embeddings mapping <https://github.com/plasticityai/magnitude>`_. For this lighter model, on average, results
@@ -110,15 +111,13 @@ are a little bit lower for the trained country (around ~2%) but are similar for 
 The two tables highlight that the batch size (number of addresses in the list to be parsed) influences the processing time.
 Thus, the more address is, the faster each address can be processed. You can also improve performance by using more
 workers for the data loader created with your data within the call. But note that this performance improvement is not linear.
-Furthermore, as of version `0.9.6`, we now use Torch 2.0 compile feature and many other tricks to improve
-processing performance. Here a few: if the parser uses a GPU, it will pin the memory in the Dataloader and it use
-`torch.compile` if Torch 2.0 is installed.
+Furthermore, as of version `0.9.6`, we now use Torch 2.0, `torch.compile` and many other tricks to improve
+processing performance (pin the memory in the Dataloader and reduce some operations (e.g. useless `.to(device)`)).
 
 .. note::
 
     Note that as of March 21, 2023, `torch.compile` is not supported on Python 3.11 and is not supported on Windows OS.
     In those two cases, we disable `torch.compile` in Deepparse.
-
 
 AddressParser
 -------------

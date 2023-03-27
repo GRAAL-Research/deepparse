@@ -1227,7 +1227,7 @@ class AddressParser:
                 "Thus, you need to set num_workers to 0 since 1 also means 'parallelism'."
             )
 
-        if system() == "darwin" and "fasttext" in self.model_type and num_workers > 0:
+        if system() == "Darwin" and "fasttext" in self.model_type and num_workers > 0:
             torch.multiprocessing.set_start_method('fork')
             warnings.warn(
                 "On MacOS system, we cannot use FastText-like models with parallelism out-of-the-box since "

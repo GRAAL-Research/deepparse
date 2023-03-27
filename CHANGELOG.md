@@ -274,7 +274,11 @@
 ## 0.9.2
 
 - Improve Deepparse server error handling and error output.
+<<<<<<< HEAD
 - Remove deprecated argument `saving_dir` in `download_fasttext_magnitude_embeddings`.
+=======
+- Remove deprecated argument `saving_dir` in `download_fasttext_magnitude_embeddings`
+>>>>>>> dev
   and `download_fasttext_embeddings` functions.
 - Add offline argument to remove verification of the latest version.
 - Bug-fix cache handling in download model.
@@ -299,15 +303,15 @@
 
 - Add Python 3.11.
 - Add pre-processor when parsing addresses.
-- Drop Python 3.7 support since newer Python versions are faster
-  and [Torch 2.0 does not support Python 3.7](https://dev-discuss.pytorch.org/t/dropping-support-for-cuda-11-6-and-python-3-7-from-pytorch-2-0-release/1021).
-- Add `torch.compile` integration to improve performance (Torch 1.x still supported) with `mode="reduce-overhead"` as
-  suggested in the [documentation](https://pytorch.org/tutorials//intermediate/torch_compile_tutorial.html). It
-  increases the performance by about 1/100.
 - Add `pin_memory=True` when using a CUDA device to increase performance as suggested
   by [Torch documentation](https://pytorch.org/tutorials/recipes/recipes/tuning_guide.html).
 - Add `torch.no_grad()` context manager in `__call__()` to increase performance.
 - Reduce memory swap between CPU and GPU by instantiating Tensor directly on the GPU device.
 - Improve some Warnings clarity (i.e. category and message).
-- Bug-fix MacOS multiprocessing. It was not possible to use in multiprocess, since we were not testing if torch
+- Bug-fix MacOS multiprocessing. It was impossible to use in multiprocess since we were not testing whether torch
   multiprocess was set properly. Now, we set it properly and raise a warning instead of an error.
+- Drop Python 3.7 support since newer Python versions are faster
+  and [Torch 2.0 does not support Python 3.7](https://dev-discuss.pytorch.org/t/dropping-support-for-cuda-11-6-and-python-3-7-from-pytorch-2-0-release/1021).
+- Add `torch.compile` integration to improve performance (Torch 1.x still supported) with `mode="reduce-overhead"` as
+  suggested in the [documentation](https://pytorch.org/tutorials//intermediate/torch_compile_tutorial.html). It
+  increases the performance by about 1/100.

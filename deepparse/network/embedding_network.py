@@ -65,10 +65,8 @@ class EmbeddingNetwork(nn.Module):
         batch_size = to_predict.size(0)
 
         embeddings = torch.zeros(
-            to_predict.size(1),
-            to_predict.size(0),
-            int(to_predict.size(3) / self.maxpool_kernel_size),
-        ).to(device)
+            to_predict.size(1), to_predict.size(0), int(to_predict.size(3) / self.maxpool_kernel_size), device=device
+        )
 
         to_predict = to_predict.transpose(0, 1).float()
 
@@ -92,7 +90,7 @@ class EmbeddingNetwork(nn.Module):
             padded_output, padded_output_lengths = pad_packed_sequence(packed_output, batch_first=True)
 
             # filling the embedding by idx
-            word_context = torch.zeros(padded_output.size(0), padded_output.size(2)).to(device)
+            word_context = torch.zeros(padded_output.size(0), padded_output.size(2), device=device)
             for j in range(batch_size):
                 word_context[j] = padded_output[j, padded_output_lengths[j] - 1, :]
 

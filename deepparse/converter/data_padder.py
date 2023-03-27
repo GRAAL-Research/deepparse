@@ -7,7 +7,7 @@ import numpy as np
 
 class DataPadder:
     """
-    Class that handles the padding of vectorized sequences to the length of the longuest sequence.
+    Class that handles the padding of vectorized sequences to the length of the longest sequence.
     Args:
         padding_value (int): the value to use as padding to extend the shorter sequences. Default: -100.
     """
@@ -32,7 +32,7 @@ class DataPadder:
         Return:
             A tuple of two elements:
                 - a tuple containing either two :class:`~torch.Tensor` (the padded sequences and their
-                    repective original lengths),or three :class:`~torch.Tensor` (the padded sequences
+                    respective original lengths),or three :class:`~torch.Tensor` (the padded sequences
                     and their lengths, as well as the padded targets) if `teacher_forcing` is true.
                     For details on the padding of sequences,
                     check out :meth:`~DataPadder.pad_word_embeddings_sequences` below.
@@ -53,10 +53,10 @@ class DataPadder:
         """
         Method to pad a batch of word embeddings sequences.
         Args:
-            seuqnces_batch (Tuple[List, ...]): a tuple containing lists of word embeddings (the sequences)
+            sequences_batch (Tuple[List, ...]): a tuple containing lists of word embeddings (the sequences)
         Return:
             A tuple of two elements:
-                - a :class:`~torch.Tensor` containing the padded sequcences.
+                - a :class:`~torch.Tensor` containing the padded sequences.
                 - a :class:`~torch.Tensor` containing the respective original lengths of the padded sequences.
         """
         sequences_vectors, lengths = zip(
@@ -130,7 +130,7 @@ class DataPadder:
                 - a list of the number of subword embeddings that each word is decomposed into.
         Return:
             A tuple of three elements:
-                - a :class:`~torch.Tensor` containing the padded sequcences.
+                - a :class:`~torch.Tensor` containing the padded sequences.
                 - a list containing the padded decomposition lengths of each word. When a word is
                     added as padding to elongate a sequence, we consider that the decomposition
                     length of the added word is 1.
@@ -160,7 +160,7 @@ class DataPadder:
 
     def pad_targets(self, target_batch: Tuple[List, ...]) -> torch.Tensor:
         """
-        Method to pad a batch of target indices to the longuest one.
+        Method to pad a batch of target indices to the longest one.
         Args:
             target_batch (Tuple[List, ...]): a tuple comtaining lists of target indices.
         Return:

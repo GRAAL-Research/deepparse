@@ -9,13 +9,13 @@ import requests
 from requests import HTTPError
 from urllib3.exceptions import MaxRetryError
 
-from .errors.data_error import DataError
-from .errors.server_error import ServerError
 from .data_validation import (
     validate_if_any_none,
     validate_if_any_whitespace_only,
     validate_if_any_empty,
 )
+from .errors.data_error import DataError
+from .errors.server_error import ServerError
 
 BASE_URL = "https://graal.ift.ulaval.ca/public/deepparse/{}.{}"
 CACHE_PATH = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
@@ -54,7 +54,8 @@ def latest_version(model: str, cache_path: str, verbose: bool) -> bool:
                 warnings.warn(
                     f"We where not able to verify the cached model in the cache directory {cache_path}. It seems like"
                     f"Deepparse server is not available at the moment. We recommend to attempt to verify "
-                    f"the model version another time using our download CLI function."
+                    f"the model version another time using our download CLI function.",
+                    category=RuntimeWarning,
                 )
             # The is_lastest_version is set to True even if we were not able to validate the version. We do so not to
             # block the rest of the process.
@@ -70,7 +71,8 @@ def latest_version(model: str, cache_path: str, verbose: bool) -> bool:
             warnings.warn(
                 f"We where not able to verify the cached model in the cache directory {cache_path}. It seems like"
                 f"you are not connected to the Internet. We recommend to verify if you have the latest using our "
-                f"download CLI function."
+                f"download CLI function.",
+                category=RuntimeWarning,
             )
         # The is_lastest_version is set to True even if we were not able to validate the version. We do so not to
         # block the rest of the process.
@@ -117,11 +119,11 @@ def download_weights(model: str, saving_dir: str, verbose: bool = True) -> None:
         ) from error
 
 
-def handle_poutyne_version() -> str:
+def extract_package_version(package) -> str:
     """
-    Handle the retrieval of the major and minor part of the Poutyne version
+    Handle the retrieval of the major and minor version part of a Python package.
     """
-    full_version = poutyne.version.__version__
+    full_version = package.version.__version__
     components_parts = full_version.split(".")
     major = components_parts[0]
     minor = components_parts[1]
@@ -135,7 +137,7 @@ def valid_poutyne_version(min_major: int = 1, min_minor: int = 2) -> bool:
     does not support all the features we need. By default, min_major.min_minor equal version 1.2 which is the
     lowest version we can use.
     """
-    version_components = handle_poutyne_version().split(".")
+    version_components = extract_package_version(package=poutyne).split(".")
 
     major = int(version_components[0])
     minor = int(version_components[1])

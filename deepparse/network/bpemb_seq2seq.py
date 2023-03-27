@@ -17,7 +17,7 @@ class BPEmbSeq2SeqModel(Seq2SeqModel):
 
      Args:
         cache_dir (str): The path to the cached directory to use for downloading (and loading) the
-            model weights.1
+            model weights.
         device (~torch.device): The device tu use for the prediction.
         input_size (int): The input size of the encoder (i.e. the embeddings size). It will also be used to initialize
             the internal embeddings network input size, hidden size and output dim. The default value is 300.

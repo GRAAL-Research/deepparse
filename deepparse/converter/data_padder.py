@@ -22,7 +22,7 @@ class DataPadder:
         Tuple[Tuple[torch.Tensor, torch.Tensor, torch.Tensor], torch.Tensor],
     ]:
         """
-        Method to pad a batch of word embeddings sequences and their targets to the length of the longuest one.
+        Method to pad a batch of word embeddings sequences and their targets to the length of the longest one.
         Args:
             batch (List[Tuple[List, List]]): a list of tuples where the first element is a list
                 of word embeddings (the sequence) and the second is a list of targets.
@@ -82,7 +82,7 @@ class DataPadder:
         Tuple[Tuple[torch.Tensor, List, torch.Tensor, torch.Tensor], torch.Tensor],
     ]:
         """
-        Method to pad a batch of subword embeddings sequences and their targets to the length of the longuest one.
+        Method to pad a batch of subword embeddings sequences and their targets to the length of the longest one.
         Args:
             batch (List[Tuple[Tuple[List, List], List]]): a list of tuples containing the two following elements:
                 - a tuple where the first element is a list of words represented as subword embeddings and the

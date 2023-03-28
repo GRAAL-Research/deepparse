@@ -1716,6 +1716,20 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
                     MagicMock(), train_ratio=0.8, batch_size=1, epochs=1, num_workers=num_workers_gt_0
                 )
 
+    def test_givenAnyModelWith_whenPathToTrainLeadToWrongCheckpoint_thenRaiseError(self):
+        # The dictionary does not include the minimal metadata of the name of the retrain address parser.
+        content_of_the_checkpoint = {"some_weights": [1, 2], "other_weights": [3, 4]}
+        a_path_to_retrained_model_with_missing_metadata = os.path.join(self.a_logging_path, "a_checkpoint.ckpt")
+        with open(a_path_to_retrained_model_with_missing_metadata, "wb") as file:
+            torch.save(content_of_the_checkpoint, file)
+
+        with self.assertRaises(RuntimeError):
+            AddressParser(
+                model_type=self.a_fasttext_model_type,
+                device=self.a_device,
+                path_to_retrained_model=a_path_to_retrained_model_with_missing_metadata,
+            )
+
 
 if __name__ == "__main__":
     unittest.main()

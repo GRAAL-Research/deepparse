@@ -223,6 +223,16 @@ class AddressParser:
 
         if path_to_retrained_model is not None:
             checkpoint_weights = torch.load(path_to_retrained_model, map_location="cpu")
+            if checkpoint_weights.get("named_parser") is None:
+                # Validate if we have the proper metadata, it has at least the parser name
+                # if no other thing have been modified.
+                raise RuntimeError(
+                    "You are not using the proper retrained checkpoint."
+                    "When we retrain an AddressParser, by default, we create a "
+                    "checkpoint name 'retrained_modeltype_address_parser.ckpt'. Be sure to use that"
+                    "checkpoint since it includes some metadata for the reloading."
+                    "See AddressParser.retrain for more details."
+                )
             if validate_if_new_seq2seq_params(checkpoint_weights):
                 seq2seq_kwargs = checkpoint_weights.get("seq2seq_params")
             if validate_if_new_prediction_tags(checkpoint_weights):
@@ -764,20 +774,22 @@ class AddressParser:
                         path_to_retrained_model=os.path.join(logging_path, retrained_address_parser_in_directory)
                     )
                     if self.is_same_model_type(logging_dir_checkpoint_model):
-                        raise ValueError(
+                        value_error_message = (
                             f"You are currently retraining a different {self.model_type} AddressParser configuration "
                             "from in the same directory as a previous retrained model."
                             "The configurations must be different (number of tag, seq2seq dimensions, etc.). "
                             "The easiest thing to do is to change the saving directory to avoid colliding checkpoint."
-                        ) from error
+                        )
                     else:
-                        raise ValueError(
+                        value_error_message = (
                             f"You are currently training a {self.model_type} in the directory "
                             f"{logging_path} where a different retrained "
                             f"{logging_dir_checkpoint_model.model_type} model is currently his."
                             f" Thus, the loading of the model checkpoint is failing. Change the logging path "
                             f'"{logging_path}" to something else to retrain the {self.model_type} model.'
-                        ) from error
+                        )
+
+                    raise ValueError(value_error_message) from error
             else:
                 raise RuntimeError(error.args[0]) from error
         else:

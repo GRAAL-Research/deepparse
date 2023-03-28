@@ -308,3 +308,4 @@
   multiprocess was set properly. Now, we set it properly and raise a warning instead of an error.
 - Drop Python 3.7 support since newer Python versions are faster
   and [Torch 2.0 does not support Python 3.7](https://dev-discuss.pytorch.org/t/dropping-support-for-cuda-11-6-and-python-3-7-from-pytorch-2-0-release/1021).
+- Improve error handling with wrong checkpoint loading in AddressParser retrain_path use.

@@ -99,7 +99,6 @@ class DecoderTest(TestCase):
                                 to_predict_mock = MagicMock()
                                 hidden_mock = MagicMock()
                                 encoder_mock = MagicMock()
-                                self.a_lengths_list = torch.ones(1, 2)
                                 _, _, attention_weights = decoder.forward(
                                     to_predict_mock,
                                     hidden_mock,

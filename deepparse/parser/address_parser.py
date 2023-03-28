@@ -783,7 +783,8 @@ class AddressParser:
                             f"{logging_path} where a different retrained "
                             f"{retrained_address_parser_in_directory} model is currently his. "
                             f"Thus, the loading of the model checkpoint is failing. Change the logging path "
-                            f'"{logging_path}" to something else to retrain the {self.get_formatted_model_name()} model.'
+                            f'"{logging_path}" to something else to retrain the {self.get_formatted_model_name()} '
+                            f'model.'
                         )
 
                     raise ValueError(value_error_message) from error

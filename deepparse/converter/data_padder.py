@@ -119,12 +119,12 @@ class DataPadder:
         return (padded_sequences, decomposition_lengths, sequence_lengths), padded_target_vectors
 
     def pad_subword_embeddings_sequences(
-        self, sequences_batch: List[Tuple[List, List], ...]
+        self, sequences_batch: List[Tuple[List, List]]
     ) -> Tuple[torch.Tensor, List, torch.Tensor]:
         """
         Method to pad a batch of subword embeddings sequences.
         Args:
-            sequences_batch (list[Tuple[list, list], ...]): a list of tuple containing tuples of two elements:
+            sequences_batch (list[Tuple[list, list]]): a list of tuple containing tuples of two elements:
                 - a list of lists representing words as lists of subword embeddings.
                 - a list of the number of subword embeddings that each word is decomposed into.
         Return:

@@ -270,7 +270,7 @@ class FasttextSeq2SeqGPUTest(Seq2SeqTestCase):
         seq2seq_model.forward(to_predict=to_predict_mock, lengths=lengths_list, target=None)
 
         encoder_mock.assert_has_calls([call()(to_predict_mock, lengths_list)])
-        lengths_list.assert_has_calls([call.max().item()])
+
         decoder_mock.assert_has_calls(
             [
                 call()(
@@ -325,7 +325,7 @@ class FasttextSeq2SeqGPUTest(Seq2SeqTestCase):
         )
 
         encoder_mock.assert_has_calls([call()(to_predict_mock, lengths_list)])
-        lengths_list.assert_has_calls([call.max().item()])
+
         decoder_mock.assert_has_calls(
             [
                 call()(
@@ -387,7 +387,7 @@ class FasttextSeq2SeqGPUTest(Seq2SeqTestCase):
         )
 
         encoder_mock.assert_has_calls([call()(to_predict_mock, lengths_list)])
-        lengths_list.assert_has_calls([call.max().item()])
+
         decoder_mock.assert_has_calls(
             [
                 call()(

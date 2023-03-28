@@ -770,23 +770,20 @@ class AddressParser:
                     retrained_address_parser_in_directory = get_address_parser_in_directory(files_in_directory)[
                         0
                     ].split("_")[1]
-                    logging_dir_checkpoint_model = AddressParser(
-                        path_to_retrained_model=os.path.join(logging_path, retrained_address_parser_in_directory)
-                    )
-                    if self.is_same_model_type(logging_dir_checkpoint_model):
+                    if self.model_type == retrained_address_parser_in_directory:
                         value_error_message = (
-                            f"You are currently retraining a different {self.model_type} AddressParser configuration "
-                            "from in the same directory as a previous retrained model."
+                            f"You are currently retraining a different {self.get_formatted_model_name()} AddressParser "
+                            f"configuration in the same directory as a previous retrained model. "
                             "The configurations must be different (number of tag, seq2seq dimensions, etc.). "
                             "The easiest thing to do is to change the saving directory to avoid colliding checkpoint."
                         )
                     else:
                         value_error_message = (
-                            f"You are currently training a {self.model_type} in the directory "
+                            f"You are currently training a {self.get_formatted_model_name()} in the directory "
                             f"{logging_path} where a different retrained "
-                            f"{logging_dir_checkpoint_model.model_type} model is currently his."
-                            f" Thus, the loading of the model checkpoint is failing. Change the logging path "
-                            f'"{logging_path}" to something else to retrain the {self.model_type} model.'
+                            f"{retrained_address_parser_in_directory} model is currently his. "
+                            f"Thus, the loading of the model checkpoint is failing. Change the logging path "
+                            f'"{logging_path}" to something else to retrain the {self.get_formatted_model_name()} model.'
                         )
 
                     raise ValueError(value_error_message) from error

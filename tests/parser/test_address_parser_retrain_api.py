@@ -279,8 +279,10 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
             self.address_parser_retrain_call()
 
         expect_error_message = (
-            f"You are currently training a different fasttext version from the one in"
-            f" the {self.a_logging_path}. Verify version."
+            "You are currently retraining a different FastText AddressParser configuration "
+            "in the same directory as a previous retrained model. "
+            "The configurations must be different (number of tag, seq2seq dimensions, etc.). "
+            "The easiest thing to do is to change the saving directory to avoid colliding checkpoint."
         )
         try:
             self.address_parser_retrain_call()
@@ -320,9 +322,11 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
             self.address_parser_retrain_call()
 
         expect_error_message = (
-            f"You are currently training a bpemb in the directory {self.a_logging_path} where a "
-            f"different retrained fasttext is currently his. Thus, the loading of the model is "
-            f"failing. Change directory to retrain the bpemb."
+            "You are currently training a BPEmb in the directory "
+            f"{self.a_logging_path} where a different retrained "
+            f"fasttext model is currently his."
+            f" Thus, the loading of the model checkpoint is failing. Change the logging path "
+            f'"{self.a_logging_path}" to something else to retrain the BPEmb model.'
         )
         try:
             self.address_parser_retrain_call()

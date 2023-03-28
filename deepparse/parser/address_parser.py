@@ -760,18 +760,23 @@ class AddressParser:
                     retrained_address_parser_in_directory = get_address_parser_in_directory(files_in_directory)[
                         0
                     ].split("_")[1]
-                    if self.model_type != retrained_address_parser_in_directory:
+                    logging_dir_checkpoint_model = AddressParser(
+                        path_to_retrained_model=os.path.join(logging_path, retrained_address_parser_in_directory)
+                    )
+                    if self.is_same_model_type(logging_dir_checkpoint_model):
+                        raise ValueError(
+                            f"You are currently retraining a different {self.model_type} AddressParser configuration "
+                            "from in the same directory as a previous retrained model."
+                            "The configurations must be different (number of tag, seq2seq dimensions, etc.). "
+                            "The easiest thing to do is to change the saving directory to avoid colliding checkpoint."
+                        ) from error
+                    else:
                         raise ValueError(
                             f"You are currently training a {self.model_type} in the directory "
                             f"{logging_path} where a different retrained "
-                            f"{retrained_address_parser_in_directory} is currently his."
-                            f" Thus, the loading of the model is failing. Change directory to retrain the"
-                            f" {self.model_type}."
-                        ) from error
-                    if self.model_type == retrained_address_parser_in_directory:
-                        raise ValueError(
-                            f"You are currently training a different {self.model_type} version from"
-                            f" the one in the {logging_path}. Verify version."
+                            f"{logging_dir_checkpoint_model.model_type} model is currently his."
+                            f" Thus, the loading of the model checkpoint is failing. Change the logging path "
+                            f'"{logging_path}" to something else to retrain the {self.model_type} model.'
                         ) from error
             else:
                 raise RuntimeError(error.args[0]) from error
@@ -1239,3 +1244,6 @@ class AddressParser:
                 processed_address = pre_processor(address)
                 res.append(" ".join(processed_address.split()))
         return res
+
+    def is_same_model_type(self, other) -> bool:
+        return self.model_type == other.model_type

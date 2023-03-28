@@ -192,7 +192,7 @@ class DataPadder:
 
         return sequence_batch, target_batch
 
-    def _pad_tensors(self, sequences_batch: Tuple[torch.Tensor, ...]) -> torch.Tensor:
+    def _pad_tensors(self, sequences_batch: Tuple[torch.Tensor]) -> torch.Tensor:
         """
         A method to pad and collate multiple :class:``torch.Tensor` representing sequences
             into a single :class:``torch.Tensor`using :attr:`DataPadder.padding_value`.

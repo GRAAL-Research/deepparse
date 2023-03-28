@@ -18,7 +18,7 @@ from deepparse.errors import FastTextModelError
 from deepparse.metrics import nll_loss, accuracy
 from deepparse.parser import AddressParser
 from tests.parser.base import AddressParserPredictTestCase
-from tests.tools import BATCH_SIZE, ADataContainer, create_file
+from tests.tools import BATCH_SIZE, ADataContainer, create_file, create_fake_checkpoint
 
 
 class AddressParserRetrainTest(AddressParserPredictTestCase):
@@ -1717,11 +1717,8 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
                 )
 
     def test_givenAnyModelWith_whenPathToTrainLeadToWrongCheckpoint_thenRaiseError(self):
-        # The dictionary does not include the minimal metadata of the name of the retrain address parser.
-        content_of_the_checkpoint = {"some_weights": [1, 2], "other_weights": [3, 4]}
         a_path_to_retrained_model_with_missing_metadata = os.path.join(self.a_logging_path, "a_checkpoint.ckpt")
-        with open(a_path_to_retrained_model_with_missing_metadata, "wb") as file:
-            torch.save(content_of_the_checkpoint, file)
+        create_fake_checkpoint(path=a_path_to_retrained_model_with_missing_metadata, with_metadata=False)
 
         with self.assertRaises(RuntimeError):
             AddressParser(

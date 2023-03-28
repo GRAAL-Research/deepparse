@@ -7,7 +7,7 @@ import logging
 import os
 import unittest
 from tempfile import TemporaryDirectory
-from unittest import TestCase, skipIf
+from unittest import skipIf
 from unittest.mock import patch
 
 import pytest
@@ -18,10 +18,10 @@ from tests.parser.base import PretrainedWeightsBase
 from tests.tools import create_pickle_file, create_csv_file
 
 
-class ParseTests(TestCase, PretrainedWeightsBase):
+class ParseTests(PretrainedWeightsBase):
     @classmethod
     def setUpClass(cls):
-        cls.download_pre_trained_weights(cls)
+        cls.prepare_pre_trained_weights()
 
     @pytest.fixture(autouse=True)
     def inject_fixtures(self, caplog):
@@ -284,8 +284,6 @@ class ParseTests(TestCase, PretrainedWeightsBase):
     )
     def test_ifPathToFakeRetrainModel_thenUseFakeRetrainModel(self):
         with self._caplog.at_level(logging.INFO):
-            # We use the default path to fasttext model as a "retrain model path"
-            path_to_retrained_model = os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "fasttext.ckpt")
             create_pickle_file(self.fake_data_path_pickle, predict_container=True)
 
             parse.main(
@@ -296,7 +294,7 @@ class ParseTests(TestCase, PretrainedWeightsBase):
                     "--device",
                     self.cpu_device,
                     "--path_to_retrained_model",
-                    path_to_retrained_model,
+                    self.path_to_retrain_fasttext,
                 ]
             )
 

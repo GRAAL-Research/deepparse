@@ -223,11 +223,11 @@ class AddressParser:
 
         if path_to_retrained_model is not None:
             checkpoint_weights = torch.load(path_to_retrained_model, map_location="cpu")
-            if checkpoint_weights.get("named_parser") is None:
-                # Validate if we have the proper metadata, it has at least the parser name
+            if checkpoint_weights.get("model_type") is None:
+                # Validate if we have the proper metadata, it has at least the parser model type
                 # if no other thing have been modified.
                 raise RuntimeError(
-                    "You are not using the proper retrained checkpoint."
+                    "You are not using the proper retrained checkpoint. "
                     "When we retrain an AddressParser, by default, we create a "
                     "checkpoint name 'retrained_modeltype_address_parser.ckpt'. Be sure to use that"
                     "checkpoint since it includes some metadata for the reloading."

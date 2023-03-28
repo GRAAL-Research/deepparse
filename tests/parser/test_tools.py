@@ -22,15 +22,14 @@ from deepparse.parser.tools import (
     handle_model_name,
     infer_model_type,
 )
-from tests.base_capture_output import CaptureOutputTestCase
 from tests.parser.base import PretrainedWeightsBase
 from tests.tools import create_file
 
 
-class ToolsTests(CaptureOutputTestCase, PretrainedWeightsBase):
+class ToolsTests(PretrainedWeightsBase):
     @classmethod
     def setUpClass(cls):
-        cls.download_pre_trained_weights(cls)
+        cls.prepare_pre_trained_weights()
 
     def setUp(self) -> None:
         self.a_seed = 42

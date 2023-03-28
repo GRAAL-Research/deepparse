@@ -14,12 +14,54 @@ from unittest import TestCase
 import torch
 from torch import tensor
 
-from deepparse import download_from_public_repository
 from deepparse.parser import formatted_parsed_address
 from tests.base_capture_output import CaptureOutputTestCase
 
 
-class AddressParserPredictTestCase(CaptureOutputTestCase):
+class PretrainedWeightsBase(CaptureOutputTestCase):
+    @classmethod
+    def prepare_pre_trained_weights(cls):
+        cls.model_weights_temp_dir = TemporaryDirectory()
+        cls.fake_cache_path = os.path.join(cls.model_weights_temp_dir.name, "fake_cache")
+
+        path_to_default_model = os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "fasttext.ckpt")
+        default_checkpoint_weights = torch.load(path_to_default_model, map_location="cpu")
+        checkpoint_weights = {
+            "address_tagger_model": default_checkpoint_weights,
+            "model_type": "fasttext",
+            "named_parser": "PreTrainedFastTextAddressParser",
+        }
+
+        cls.path_to_retrain_fasttext = os.path.join(
+            cls.model_weights_temp_dir.name, "retrained_fasttext_address_parser.ckpt"
+        )
+        with open(cls.path_to_retrain_fasttext, "wb") as file:
+            torch.save(checkpoint_weights, file)
+
+        path_to_default_model = os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "bpemb.ckpt")
+        default_checkpoint_weights = torch.load(path_to_default_model, map_location="cpu")
+        checkpoint_weights = {
+            "address_tagger_model": default_checkpoint_weights,
+            "model_type": "bpemb",
+            "named_parser": "PreTrainedBPEmbAddressParser",
+        }
+
+        cls.path_to_retrain_bpemb = os.path.join(cls.model_weights_temp_dir.name, "retrained_bpemb_address_parser.ckpt")
+        with open(cls.path_to_retrain_bpemb, "wb") as file:
+            torch.save(checkpoint_weights, file)
+
+        checkpoint_weights.update({"named_parser": "MyModelNewName"})
+
+        cls.path_to_named_model = os.path.join(cls.model_weights_temp_dir.name, "retrained_named_address_parser.ckpt")
+        with open(cls.path_to_named_model, "wb") as file:
+            torch.save(checkpoint_weights, file)
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        cls.model_weights_temp_dir.cleanup()
+
+
+class AddressParserPredictTestCase(PretrainedWeightsBase):
     @classmethod
     def setUpClass(cls):
         cls.a_best_model_type = "best"
@@ -38,6 +80,8 @@ class AddressParserPredictTestCase(CaptureOutputTestCase):
         cls.a_street_number = "15"
 
         cls.a_logging_path = "data"
+
+        cls.prepare_pre_trained_weights()
 
     def setUp(self):
         # a prediction vector with real values
@@ -144,7 +188,7 @@ class AddressParserPredictTestCase(CaptureOutputTestCase):
         # to create the dir for the model and dump the prediction_tags.p if needed
         self.a_model_root_path = "model"
         os.makedirs(self.a_model_root_path, exist_ok=True)
-        self.a_model_path = os.path.join(self.a_model_root_path, "model.p")
+        self.a_model_path = self.path_to_retrain_fasttext
 
     def mock_predictions_vectors(self, model):
         returned_prediction_vectors = self.a_prediction_vector_for_a_complete_address
@@ -198,22 +242,3 @@ class FormattedParsedAddressBase(TestCase):
     @staticmethod
     def set_fields(fields_value):
         formatted_parsed_address.FIELDS = fields_value
-
-
-class PretrainedWeightsBase:
-    def download_pre_trained_weights(self):
-        self.model_weights_temp_dir = TemporaryDirectory()
-        self.fake_cache_path = os.path.join(self.model_weights_temp_dir.name, "fake_cache")
-
-        download_from_public_repository("retrained_fasttext_address_parser", self.fake_cache_path, "ckpt")
-        self.path_to_retrain_fasttext = os.path.join(self.fake_cache_path, "retrained_fasttext_address_parser.ckpt")
-
-        download_from_public_repository("retrained_bpemb_address_parser", self.fake_cache_path, "ckpt")
-        self.path_to_retrain_bpemb = os.path.join(self.fake_cache_path, "retrained_bpemb_address_parser.ckpt")
-
-        download_from_public_repository("retrained_named_address_parser", self.fake_cache_path, "ckpt")
-        self.path_to_named_model = os.path.join(self.fake_cache_path, "retrained_named_address_parser.ckpt")
-
-    @classmethod
-    def tearDownClass(cls) -> None:
-        cls.model_weights_temp_dir.cleanup()

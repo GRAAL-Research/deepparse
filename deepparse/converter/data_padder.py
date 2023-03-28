@@ -72,13 +72,13 @@ class DataPadder:
 
         padded_sequences_vectors = self._pad_tensors(sequences_vectors)
 
-        return padded_sequences_vectors, lengths
+        return padded_sequences_vectors, list(lengths)
 
     def pad_subword_embeddings_batch(
         self, batch: List[Tuple[Tuple[List, List], List]], teacher_forcing: bool = False
     ) -> Union[
-        Tuple[Tuple[torch.Tensor, List, torch.Tensor], torch.Tensor],
-        Tuple[Tuple[torch.Tensor, List, torch.Tensor, torch.Tensor], torch.Tensor],
+        Tuple[Tuple[torch.Tensor, List, List], torch.Tensor],
+        Tuple[Tuple[torch.Tensor, List, List, torch.Tensor], torch.Tensor],
     ]:
         """
         Method to pad a batch of subword embeddings sequences and their targets to the length of the longest one.
@@ -94,7 +94,7 @@ class DataPadder:
             A tuple of two elements:
                 - A tuple (``x``, ``y`` , ``z``). The element ``x`` is a :class:`~torch.Tensor` of
                     padded subword vectors,``y`` is a list of padded decomposition lengths,
-                    and ``z`` is a :class:`~torch.Tensor` of the original lengths of the sequences
+                    and ``z`` is a list of the original lengths of the sequences
                     before padding. If teacher_forcing is True, a fourth element is added which
                     corresponds to a :class:`~torch.Tensor` of the padded targets. For details
                     on the padding of sequences, check out :meth:`~DataPadder.pad_subword_embeddings_sequences` below.
@@ -120,7 +120,7 @@ class DataPadder:
 
     def pad_subword_embeddings_sequences(
         self, sequences_batch: List[Tuple[List, List]]
-    ) -> Tuple[torch.Tensor, List, torch.Tensor]:
+    ) -> Tuple[torch.Tensor, List, List]:
         """
         Method to pad a batch of subword embeddings sequences.
         Args:
@@ -149,12 +149,12 @@ class DataPadder:
 
         padded_sequences_vectors = self._pad_tensors(sequences_vectors)
 
-        max_sequence_length = lengths.max().item()
+        longest_sequence_length = max(lengths)
         for decomposition_length in decomp_len:
-            if len(decomposition_length) < max_sequence_length:
-                decomposition_length.extend([1] * (max_sequence_length - len(decomposition_length)))
+            if len(decomposition_length) < longest_sequence_length:
+                decomposition_length.extend([1] * (longest_sequence_length - len(decomposition_length)))
 
-        return padded_sequences_vectors, list(decomp_len), lengths
+        return padded_sequences_vectors, list(decomp_len), list(lengths)
 
     def pad_targets(self, target_batch: List) -> torch.Tensor:
         """

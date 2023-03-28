@@ -50,7 +50,7 @@ class DecoderCase(TestCase):
 
     def decoder_input_setUp(self, device: torch.device):
         self.decoder_input = torch.tensor([[[-1], [-1]]], device=device)
-        self.a_lengths_tensor = torch.tensor(([self.sequence_len, self.sequence_len]), device="cpu")
+        self.a_lengths_list = [self.sequence_len, self.sequence_len + 1]
 
         with open(os.path.join(self.weights_dir, "decoder_hidden.p"), "rb") as file:
             self.decoder_hidden_tensor = pickle.load(file)
@@ -80,7 +80,7 @@ class DecoderGPUTest(DecoderCase):
             self.decoder_input,
             self.decoder_hidden_tensor,
             self.decoder_output,
-            self.a_lengths_tensor,
+            self.a_lengths_list,
         )
 
         self.assert_predictions_is_valid_dim(predictions, output_size)
@@ -94,7 +94,7 @@ class DecoderGPUTest(DecoderCase):
             self.decoder_input,
             self.decoder_hidden_tensor,
             self.decoder_output,
-            self.a_lengths_tensor,
+            self.a_lengths_list,
         )
 
         self.assert_predictions_is_valid_dim(predictions, output_size)
@@ -108,7 +108,7 @@ class DecoderGPUTest(DecoderCase):
             self.decoder_input,
             self.decoder_hidden_tensor,
             self.decoder_output,
-            self.a_lengths_tensor,
+            self.a_lengths_list,
         )
 
         self.assert_predictions_is_valid_dim(predictions, output_size)
@@ -124,7 +124,7 @@ class DecoderCPUTest(DecoderCase):
             self.decoder_input,
             self.decoder_hidden_tensor,
             self.decoder_output,
-            self.a_lengths_tensor,
+            self.a_lengths_list,
         )
 
         self.assert_predictions_is_valid_dim(predictions, output_size)
@@ -138,7 +138,7 @@ class DecoderCPUTest(DecoderCase):
             self.decoder_input,
             self.decoder_hidden_tensor,
             self.decoder_output,
-            self.a_lengths_tensor,
+            self.a_lengths_list,
         )
 
         self.assert_predictions_is_valid_dim(predictions, output_size)
@@ -152,7 +152,7 @@ class DecoderCPUTest(DecoderCase):
             self.decoder_input,
             self.decoder_hidden_tensor,
             self.decoder_output,
-            self.a_lengths_tensor,
+            self.a_lengths_list,
         )
 
         self.assert_predictions_is_valid_dim(predictions, output_size)

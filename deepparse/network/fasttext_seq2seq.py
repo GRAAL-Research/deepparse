@@ -1,6 +1,6 @@
 # pylint: disable=too-many-arguments, duplicate-code
 
-from typing import Union
+from typing import Union, List
 
 import torch
 
@@ -67,7 +67,7 @@ class FastTextSeq2SeqModel(Seq2SeqModel):
     def forward(
         self,
         to_predict: torch.Tensor,
-        lengths_tensor: torch.Tensor,
+        lengths: List,
         target: Union[torch.LongTensor, None] = None,
     ) -> torch.Tensor:
         """
@@ -76,7 +76,7 @@ class FastTextSeq2SeqModel(Seq2SeqModel):
 
         Args:
             to_predict (~torch.Tensor): The elements to predict the tags.
-            lengths_tensor (~torch.Tensor) : The lengths of the batch elements (since packed).
+            lengths (list) : The lengths of the batch elements (since packed).
             target (~torch.LongTensor) : The target of the batch element, use only when we retrain the model since we do
                 `teacher forcing <https://machinelearningmastery.com/teacher-forcing-for-recurrent-neural-networks/>`_.
                 Default value is None since we mostly don't have the target except for retrain.
@@ -86,14 +86,14 @@ class FastTextSeq2SeqModel(Seq2SeqModel):
         """
         batch_size = to_predict.size(0)
 
-        decoder_input, decoder_hidden, encoder_outputs = self._encoder_step(to_predict, lengths_tensor, batch_size)
+        decoder_input, decoder_hidden, encoder_outputs = self._encoder_step(to_predict, lengths, batch_size)
 
         prediction_sequence = self._decoder_step(
             decoder_input,
             decoder_hidden,
             encoder_outputs,
             target,
-            lengths_tensor,
+            lengths,
             batch_size,
         )
 

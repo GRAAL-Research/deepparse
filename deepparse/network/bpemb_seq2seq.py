@@ -74,7 +74,7 @@ class BPEmbSeq2SeqModel(Seq2SeqModel):
         self,
         to_predict: torch.Tensor,
         decomposition_lengths: List,
-        lengths_tensor: torch.Tensor,
+        lengths: List,
         target: Union[torch.LongTensor, None] = None,
     ) -> torch.Tensor:
         """
@@ -83,7 +83,7 @@ class BPEmbSeq2SeqModel(Seq2SeqModel):
         Args:
             to_predict (~torch.Tensor): The elements to predict the tags.
             decomposition_lengths (list) : The lengths of the decomposed words of the batch elements (since packed).
-            lengths_tensor (~torch.Tensor) : The lengths of the batch elements (since packed).
+            lengths (list) : The lengths of the batch elements (since packed).
             target (~torch.LongTensor) : The target of the batch element, use only when we retrain the model since we do
                 `teacher forcing <https://machinelearningmastery.com/teacher-forcing-for-recurrent-neural-networks/>`_.
                 Default value is None since we mostly don't have the target except for retrain.
@@ -94,14 +94,14 @@ class BPEmbSeq2SeqModel(Seq2SeqModel):
 
         embedded_output = self.embedding_network(to_predict, decomposition_lengths)
 
-        decoder_input, decoder_hidden, encoder_outputs = self._encoder_step(embedded_output, lengths_tensor, batch_size)
+        decoder_input, decoder_hidden, encoder_outputs = self._encoder_step(embedded_output, lengths, batch_size)
 
         prediction_sequence = self._decoder_step(
             decoder_input,
             decoder_hidden,
             encoder_outputs,
             target,
-            lengths_tensor,
+            lengths,
             batch_size,
         )
         return prediction_sequence

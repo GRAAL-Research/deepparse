@@ -25,6 +25,8 @@ from tests.tools import create_pickle_file, create_csv_file
 class ParseTests(PretrainedWeightsBase):
     @classmethod
     def setUpClass(cls):
+        super(ParseTests, cls).setUpClass()
+
         cls.prepare_pre_trained_weights()
 
     @pytest.fixture(autouse=True)

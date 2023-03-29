@@ -20,8 +20,11 @@ from tests.base_capture_output import CaptureOutputTestCase
 
 class PretrainedWeightsBase(CaptureOutputTestCase):
     @classmethod
-    def prepare_pre_trained_weights(cls):
+    def setUpClass(cls) -> None:
         cls.model_weights_temp_dir = TemporaryDirectory()
+
+    @classmethod
+    def prepare_pre_trained_weights(cls):
         cls.fake_cache_path = os.path.join(cls.model_weights_temp_dir.name, "fake_cache")
 
         path_to_default_model = os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "fasttext.ckpt")

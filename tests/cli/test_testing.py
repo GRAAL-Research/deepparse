@@ -25,7 +25,13 @@ class TestingTests(RetrainTestCase, PretrainedWeightsBase):
 
     @classmethod
     def setUpClass(cls):
-        super(TestingTests, cls).setUpClass()
+        # Calling super does not seem to properly call each parent class setUpClass, thus
+        # the second setUpClass (PretrainedWeightsBase) is not call and make child setUpClass fail
+        # due to missing attribute.
+        # super(TestingTests, cls).setUpClass()
+        # This approach make it work by calling each setUpClass manually.
+        RetrainTestCase.setUpClass()
+        PretrainedWeightsBase.setUpClass()
 
         cls.prepare_pre_trained_weights()
 

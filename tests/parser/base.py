@@ -61,7 +61,7 @@ class PretrainedWeightsBase(CaptureOutputTestCase):
         cls.model_weights_temp_dir.cleanup()
 
 
-class AddressParserPredictTestCase(PretrainedWeightsBase):
+class AddressParserPredictTestCase(CaptureOutputTestCase):
     @classmethod
     def setUpClass(cls):
         cls.a_best_model_type = "best"
@@ -80,8 +80,6 @@ class AddressParserPredictTestCase(PretrainedWeightsBase):
         cls.a_street_number = "15"
 
         cls.a_logging_path = "data"
-
-        cls.prepare_pre_trained_weights()
 
     def setUp(self):
         # a prediction vector with real values
@@ -188,7 +186,6 @@ class AddressParserPredictTestCase(PretrainedWeightsBase):
         # to create the dir for the model and dump the prediction_tags.p if needed
         self.a_model_root_path = "model"
         os.makedirs(self.a_model_root_path, exist_ok=True)
-        self.a_model_path = self.path_to_retrain_fasttext
 
     def mock_predictions_vectors(self, model):
         returned_prediction_vectors = self.a_prediction_vector_for_a_complete_address

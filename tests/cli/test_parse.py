@@ -26,7 +26,6 @@ class ParseTests(PretrainedWeightsBase):
     @classmethod
     def setUpClass(cls):
         super(ParseTests, cls).setUpClass()
-
         cls.prepare_pre_trained_weights()
 
     @pytest.fixture(autouse=True)

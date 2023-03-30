@@ -66,7 +66,7 @@ class Seq2SeqIntegrationTestCase(TestCase):
             self.to_predict_tensor = pickle.load(file)
         self.to_predict_tensor = self.to_predict_tensor.to(device)
 
-        self.a_lengths_tensor = torch.tensor([6, 6], device=device)
+        self.a_lengths_list = [6, 6]
         self.a_batch_size = 2
 
     def encoder_output_setUp(self, device: torch.device):
@@ -80,9 +80,11 @@ class Seq2SeqIntegrationTestCase(TestCase):
         self.encoder_hidden = torch.rand((self.a_batch_size, self.a_target_vector.shape[1], self.encoder_hidden_size))
 
     def decoder_input_setUp(self):
-        self.max_length = self.a_lengths_tensor[0].item()
+        self.a_longest_sequence_length = self.a_lengths_list[0]
 
     def assert_output_is_valid_dim(self, actual_prediction, output_dim):
-        self.assertEqual(self.max_length + 1, actual_prediction.shape[0])  # + 1 since end-of-sequence (EOS)
+        self.assertEqual(
+            self.a_longest_sequence_length + 1, actual_prediction.shape[0]
+        )  # + 1 since end-of-sequence (EOS)
         self.assertEqual(self.a_batch_size, actual_prediction.shape[1])
         self.assertEqual(output_dim, actual_prediction.shape[2])

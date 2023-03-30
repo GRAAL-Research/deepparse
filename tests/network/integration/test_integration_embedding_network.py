@@ -32,7 +32,7 @@ class EmbeddingNetworkTest(TestCase):
 
         cls.a_decomposition_lengths_tuple = ([3, 1, 2], [1, 3, 2])
 
-        cls.a_max_sequence_length = 3
+        cls.a_longest_sequence_length = 3
         cls.a_batch_size = 2
         cls.a_embedding_dimension = 4
         cls.a_post_maxpool_embedding_dimension = 2
@@ -45,7 +45,7 @@ class EmbeddingNetworkTest(TestCase):
         result = self.embedding_network(self.a_subword_embeddings_tensor, self.a_decomposition_lengths_tuple)
 
         self.assertEqual(result.size(0), self.a_batch_size)
-        self.assertEqual(result.size(1), self.a_max_sequence_length)
+        self.assertEqual(result.size(1), self.a_longest_sequence_length)
         self.assertEqual(result.size(2), self.a_embedding_dimension)
 
     def test_givenASubwordEmbeddingsTensorAndMaxPool_whenCallingEmbeddingNetwork_thenShouldReturnTensorWithCorrectDimension(
@@ -62,7 +62,7 @@ class EmbeddingNetworkTest(TestCase):
         result = self.embedding_network(self.a_subword_embeddings_tensor, self.a_decomposition_lengths_tuple)
 
         self.assertEqual(result.size(0), self.a_batch_size)
-        self.assertEqual(result.size(1), self.a_max_sequence_length)
+        self.assertEqual(result.size(1), self.a_longest_sequence_length)
         self.assertEqual(result.size(2), self.a_post_maxpool_embedding_dimension)
 
 

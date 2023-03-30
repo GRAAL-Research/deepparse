@@ -43,7 +43,7 @@ are a little bit lower for the trained country (around ~2%) but are similar for 
         *   - fastText [1]_
             - ~1
             - ~8
-            - ~0.00233
+            - ~0.0023
             - ~0.0004
         *   - fastTextAttention
             - ~1.1

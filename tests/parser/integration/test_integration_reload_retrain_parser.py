@@ -18,7 +18,7 @@ class AddressParserIntegrationReloadRetrainAPITest(AddressParserRetrainTestCase,
     @classmethod
     def setUpClass(cls):
         super(AddressParserIntegrationReloadRetrainAPITest, cls).setUpClass()
-        cls.download_pre_trained_weights(cls)
+        cls.prepare_pre_trained_weights()
 
     def test_integration_parsing_with_retrain_fasttext(self):
         model_type = "fasttext"
@@ -39,7 +39,7 @@ class AddressParserIntegrationReloadRetrainAPITest(AddressParserRetrainTestCase,
         self.assertEqual(model_type, address_parser.model_type)
 
     def test_integration_parsing_with_retrain_named_model(self):
-        model_type = "fasttext"  # Base architecture of the named model is a FastText
+        model_type = "bpemb"  # A model, could be fasttext if we update the model content in the model path
         path_to_retrained_model = self.path_to_named_model
 
         address_parser = AddressParser(

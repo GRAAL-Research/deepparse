@@ -75,6 +75,21 @@ class AddressParserTest(AddressParserPredictTestCase):
         cls.export_temp_dir_obj = TemporaryDirectory()
         cls.a_saving_dir_path = cls.export_temp_dir_obj.name
 
+        cls.a_model_path = os.path.join(cls.temp_dir_obj.name, "retrained_fasttext_address_parser.ckpt")
+
+        cls.create_fake_address_parser_checkpoint()
+
+    @classmethod
+    def create_fake_address_parser_checkpoint(cls):
+        checkpoint_weights = {
+            "address_tagger_model": [0, 0],
+            "model_type": "fasttext",
+            "named_parser": "PreTrainedFastTextAddressParser",
+        }
+
+        with open(cls.a_model_path, "wb") as file:
+            torch.save(checkpoint_weights, file)
+
     @classmethod
     def tearDownClass(cls) -> None:
         cls.temp_dir_obj.cleanup()

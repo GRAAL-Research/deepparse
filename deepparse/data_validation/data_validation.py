@@ -6,7 +6,7 @@ def validate_if_any_empty(string_elements: List) -> bool:
     Return true if one of the string element is an empty one.
 
     Args:
-        string_elements (List): A list of string to validate.
+        string_elements (list): A list of string to validate.
     """
     return any(is_empty(string_element) for string_element in string_elements)
 
@@ -16,7 +16,7 @@ def validate_if_any_whitespace_only(string_elements: List) -> bool:
     Return true if one of the string element is only whitespace.
 
     Args:
-        string_elements (List): A list of string to validate.
+        string_elements (list): A list of string to validate.
     """
     return any(is_whitespace_only(string_element) for string_element in string_elements)
 
@@ -26,7 +26,7 @@ def validate_if_any_none(string_elements: List) -> bool:
     Return true if one of the string element is a None value.
 
     Args:
-        string_elements (List): A list of string to validate.
+        string_elements (list): A list of string to validate.
     """
     return any(is_none(string_element) for string_element in string_elements)
 

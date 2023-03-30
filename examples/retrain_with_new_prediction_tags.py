@@ -60,3 +60,10 @@ address_parser.retrain(
     logging_path=logging_path,
     layers_to_freeze="seq2seq",
 )
+
+# Now let's see how we can reload our new AddressParser.
+# When you retrain a model, at the end, we create a retrained checkpoint using the best checkpoint
+# and also include some metadata for the reloading (the tags, the dimension, etc.).
+# By defaults, the checkpoint is named "retrain_modeltype_parser.ckpt".
+retrain_model_path = os.path.join("checkpoints", "retrained_fasttext_address_parser.ckpt")
+address_parser = AddressParser(path_to_retrained_model=retrain_model_path)

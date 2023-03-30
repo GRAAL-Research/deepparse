@@ -51,6 +51,15 @@ def create_pickle_file(path: str, number_of_data_points: int = 4, predict_contai
         pickle.dump(pickle_file_content, f)
 
 
+def create_fake_checkpoint(path: str, with_metadata: bool = True) -> None:
+    content_of_the_checkpoint = {"some_weights": [1, 2], "other_weights": [3, 4]}
+    if with_metadata:
+        content_of_the_checkpoint.update({"named_parser": "a_name"})
+
+    with open(path, "wb") as file:
+        torch.save(content_of_the_checkpoint, file)
+
+
 def create_csv_file(
     path: str,
     predict_container: bool = False,

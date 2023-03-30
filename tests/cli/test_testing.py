@@ -25,9 +25,15 @@ class TestingTests(RetrainTestCase, PretrainedWeightsBase):
 
     @classmethod
     def setUpClass(cls):
-        super(TestingTests, cls).setUpClass()
+        # Calling super does not seem to properly call each parent class setUpClass, thus
+        # the second setUpClass (PretrainedWeightsBase) is not call and make child setUpClass fail
+        # due to missing attribute.
+        # super(TestingTests, cls).setUpClass()
+        # This approach make it work by calling each setUpClass manually.
+        RetrainTestCase.setUpClass()
+        PretrainedWeightsBase.setUpClass()
 
-        cls.download_pre_trained_weights(cls)
+        cls.prepare_pre_trained_weights()
 
         cls.a_fasttext_model_type = "fasttext"
         cls.a_fasttext_att_model_type = "fasttext-attention"
@@ -187,14 +193,11 @@ class TestingTests(RetrainTestCase, PretrainedWeightsBase):
 
     def test_ifPathToFakeRetrainModel_thenUseFakeRetrainModel(self):
         with self._caplog.at_level(logging.INFO):
-            # We use the default path to fasttext model as a "retrain model path"
-            path_to_retrained_model = os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "fasttext.ckpt")
-
             parser_params = [
                 self.a_fasttext_model_type,
                 self.a_train_pickle_dataset_path,
                 "--path_to_retrained_model",
-                path_to_retrained_model,
+                self.path_to_retrain_fasttext,
                 "--device",
                 self.cpu_device,
             ]

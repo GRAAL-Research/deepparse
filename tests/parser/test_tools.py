@@ -22,16 +22,11 @@ from deepparse.parser.tools import (
     handle_model_name,
     infer_model_type,
 )
-from tests.base_capture_output import CaptureOutputTestCase
 from tests.parser.base import PretrainedWeightsBase
 from tests.tools import create_file
 
 
-class ToolsTests(CaptureOutputTestCase, PretrainedWeightsBase):
-    @classmethod
-    def setUpClass(cls):
-        cls.download_pre_trained_weights(cls)
-
+class ToolsTests(PretrainedWeightsBase):
     def setUp(self) -> None:
         self.a_seed = 42
         self.temp_dir_obj = TemporaryDirectory()
@@ -489,6 +484,8 @@ class ToolsTests(CaptureOutputTestCase, PretrainedWeightsBase):
         "download of model too long for test in runner",
     )
     def test_givenAModelTypeToInfer_whenRealRetrainFastText_thenReturnFastText(self):
+        self.prepare_pre_trained_weights()
+
         path_to_retrained_model = self.path_to_retrain_fasttext
         checkpoint_weights = torch.load(path_to_retrained_model, map_location="cpu")
         attention_mechanism = False
@@ -504,6 +501,8 @@ class ToolsTests(CaptureOutputTestCase, PretrainedWeightsBase):
         "download of model too long for test in runner",
     )
     def test_givenAModelTypeToInfer_whenRealRetrainBPEmb_thenReturnBPEmb(self):
+        self.prepare_pre_trained_weights()
+
         path_to_retrained_model = self.path_to_retrain_bpemb
         checkpoint_weights = torch.load(path_to_retrained_model, map_location="cpu")
         attention_mechanism = False

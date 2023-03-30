@@ -47,14 +47,14 @@ class EncoderCase(TestCase):
             self.to_predict_tensor = pickle.load(file)
         self.to_predict_tensor = self.to_predict_tensor.to(device)
 
-        self.a_lengths_list = [6, 6]
+        self.a_lengths_list = [6, 4]
 
-        self.longest_sequence_length = self.a_lengths_list[0]
+        self.a_longest_sequence_length = self.a_lengths_list[0]
 
     def assert_output_is_valid_dim(self, actual_predictions):
         self.assertEqual(self.a_batch_size, len(actual_predictions))
         for actual_prediction in actual_predictions:
-            self.assertEqual(self.longest_sequence_length, actual_prediction.shape[0])
+            self.assertEqual(self.a_longest_sequence_length, actual_prediction.shape[0])
             self.assertEqual(self.hidden_size, actual_prediction.shape[1])
 
 

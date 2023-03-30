@@ -5,8 +5,6 @@ import unittest
 from unittest import TestCase
 from unittest.mock import patch, MagicMock, call
 
-import torch
-
 from deepparse.network import Decoder
 
 
@@ -17,7 +15,7 @@ class DecoderTest(TestCase):
         self.num_layers = 1
         self.output_size = 9
         # A batch of 3 sequence of length (respectively): 2, 4 and 3. Thus, the longest one is 4.
-        self.lengths_list = [1, 4, 3]
+        self.a_lengths_list = [1, 4, 3]
 
     def test_whenInstantiateASeq2SeqModel_thenParametersAreOk(self):
         decoder = Decoder(
@@ -67,8 +65,8 @@ class DecoderTest(TestCase):
                     to_predict_mock = MagicMock()
                     hidden_mock = MagicMock()
                     encoder_mock = MagicMock()
-                    lengths_mock = MagicMock()
-                    decoder.forward(to_predict_mock, hidden_mock, encoder_mock, lengths_mock)
+
+                    decoder.forward(to_predict_mock, hidden_mock, encoder_mock, self.a_lengths_list)
 
                     lstm_mock.assert_has_calls([call()(to_predict_mock.float(), hidden_mock)])
                     linear_mock.assert_has_calls([call()(output_mock.__getitem__())])
@@ -103,7 +101,7 @@ class DecoderTest(TestCase):
                                     to_predict_mock,
                                     hidden_mock,
                                     encoder_mock,
-                                    self.lengths_list,
+                                    self.a_lengths_list,
                                 )
                                 self.assertIsNotNone(attention_weights)
 
@@ -127,8 +125,10 @@ class DecoderTest(TestCase):
                     to_predict_mock = MagicMock()
                     hidden_mock = MagicMock()
                     encoder_mock = MagicMock()
-                    lengths_mock = MagicMock()
-                    _, _, attention_weights = decoder.forward(to_predict_mock, hidden_mock, encoder_mock, lengths_mock)
+
+                    _, _, attention_weights = decoder.forward(
+                        to_predict_mock, hidden_mock, encoder_mock, self.a_lengths_list
+                    )
                     self.assertIsNone(attention_weights)
 
 

@@ -13,7 +13,7 @@ class DataPadderTest(TestCase):
         cls.a_padding_value = -100
 
     def setUp(self):
-        self.a_non_padded_word_embedding_batch_length_list = torch.tensor([3, 2, 1])
+        self.a_non_padded_word_embedding_batch_length_list = [3, 2, 1]
         self.a_non_padded_word_embedding_sequences_batch = [
             [[1, 1], [1, 1], [1, 1]],
             [[1, 1], [1, 1]],
@@ -33,7 +33,7 @@ class DataPadderTest(TestCase):
             ([[1, 1]], [8]),
         ]
 
-        self.a_non_padded_subword_embedding_batch_length_list = torch.tensor([3, 2, 1])
+        self.a_non_padded_subword_embedding_batch_length_list = [3, 2, 1]
         self.a_non_padded_subword_embedding_sequences_batch = [
             (
                 [
@@ -98,7 +98,7 @@ class DataPadderTest(TestCase):
     def test_givenASequencesBatch_whenPaddingWordEmbeddings_thenShouldReturnCorrectLengths(self):
         _, lengths = self.padder.pad_word_embeddings_sequences(self.a_non_padded_word_embedding_sequences_batch)
 
-        self.assertTrue(torch.all(lengths.eq(self.a_non_padded_word_embedding_batch_length_list)))
+        self.assertEqual(lengths, self.a_non_padded_word_embedding_batch_length_list)
 
     def test_givenASequencesBatch_whenPaddingWordEmbeddings_thenShouldReturnBatchAsTensor(self):
         padded_sequences, _ = self.padder.pad_word_embeddings_sequences(
@@ -117,7 +117,7 @@ class DataPadderTest(TestCase):
     def test_givenATrainingBatch_whenPaddingWordEmbeddings_thenShouldReturnCorrectLengths(self):
         (_, lengths), _ = self.padder.pad_word_embeddings_batch(self.a_training_non_padded_word_embedding_batch)
 
-        self.assertTrue(torch.all(lengths.eq(self.a_non_padded_word_embedding_batch_length_list)))
+        self.assertEqual(lengths, self.a_non_padded_word_embedding_batch_length_list)
 
     def test_givenATrainingBatch_whenPaddingWordEmbeddings_thenShouldReturnBatchAsTensor(self):
         (padded_sequences, _), _ = self.padder.pad_word_embeddings_batch(
@@ -148,7 +148,7 @@ class DataPadderTest(TestCase):
             self.a_training_non_padded_word_embedding_batch, teacher_forcing=True
         )
 
-        self.assertTrue(torch.all(lengths.eq(self.a_non_padded_word_embedding_batch_length_list)))
+        self.assertEqual(lengths, self.a_non_padded_word_embedding_batch_length_list)
 
     def test_givenATrainingBatch_whenPaddingWordEmbeddingsWithTeacherForcing_thenShouldReturnBatchAsTensor(self):
         (padded_sequences, _, _), _ = self.padder.pad_word_embeddings_batch(
@@ -194,7 +194,7 @@ class DataPadderTest(TestCase):
             self.a_non_padded_subword_embedding_sequences_batch
         )
 
-        self.assertTrue(torch.all(lengths.eq(self.a_non_padded_subword_embedding_batch_length_list)))
+        self.assertEqual(lengths, self.a_non_padded_subword_embedding_batch_length_list)
 
     def test_givenASequencesBatch_whenPaddingSubwordEmbeddings_thenShouldReturnCorrectDecompositionLengths(self):
         _, decomposition_lengths, _ = self.padder.pad_subword_embeddings_sequences(
@@ -222,7 +222,7 @@ class DataPadderTest(TestCase):
             self.a_training_non_padded_subword_embedding_batch
         )
 
-        self.assertTrue(torch.all(lengths.eq(self.a_non_padded_subword_embedding_batch_length_list)))
+        self.assertEqual(lengths, self.a_non_padded_subword_embedding_batch_length_list)
 
     def test_givenATrainingsBatch_whenPaddingSubwordEmbeddings_thenShouldReturnCorrectDecompositionLengths(self):
         (_, decomposition_lengths, _), _ = self.padder.pad_subword_embeddings_batch(
@@ -264,7 +264,7 @@ class DataPadderTest(TestCase):
             self.a_training_non_padded_subword_embedding_batch, teacher_forcing=True
         )
 
-        self.assertTrue(torch.all(lengths.eq(self.a_non_padded_subword_embedding_batch_length_list)))
+        self.assertEqual(lengths, self.a_non_padded_subword_embedding_batch_length_list)
 
     def test_givenATrainingsBatch_whenPaddingSubwordEmbeddingsWithTeacherForcing_thenShouldReturnCorrectDecompositionLengths(
         self,

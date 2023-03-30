@@ -182,13 +182,13 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
             decoder_hidden_mock,
             encoder_outputs,
             self.a_none_target,
-            self.lengths_list,
+            self.a_lengths_list,
             self.a_batch_size,
         )
 
         decoder_call = [
-            call()(view_mock, decoder_hidden_mock, encoder_outputs, self.lengths_list)
-        ] * self.longest_sequence_length
+            call()(view_mock, decoder_hidden_mock, encoder_outputs, self.a_lengths_list)
+        ] * self.a_longest_sequence_length
 
         decoder_mock.assert_has_calls(decoder_call)
 
@@ -227,13 +227,13 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
             decoder_hidden_mock,
             encoder_outputs,
             self.a_none_target,
-            self.lengths_list,
+            self.a_lengths_list,
             self.a_batch_size,
         )
 
         decoder_call = [
-            call()(view_mock, decoder_hidden_mock, encoder_outputs, self.lengths_list)
-        ] * self.longest_sequence_length
+            call()(view_mock, decoder_hidden_mock, encoder_outputs, self.a_lengths_list)
+        ] * self.a_longest_sequence_length
 
         decoder_mock.assert_has_calls(decoder_call)
 
@@ -272,13 +272,13 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
             decoder_hidden_mock,
             encoder_outputs,
             self.a_none_target,
-            self.lengths_list,
+            self.a_lengths_list,
             self.a_batch_size,
         )
 
         decoder_call = []
 
-        for idx in range(self.longest_sequence_length):
+        for idx in range(self.a_longest_sequence_length):
             decoder_call.append(
                 call()(
                     self.a_transpose_target_vector[idx].view(1, self.a_batch_size, 1),

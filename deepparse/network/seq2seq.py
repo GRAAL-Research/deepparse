@@ -157,7 +157,7 @@ class Seq2SeqModel(ABC, nn.Module):
         decoder_input: torch.Tensor,
         decoder_hidden: tuple,
         encoder_outputs: torch.Tensor,
-        target: Union[torch.Tensor, None],
+        target: Union[torch.LongTensor, None],
         lengths: List,
         batch_size: int,
     ) -> torch.Tensor:
@@ -180,7 +180,7 @@ class Seq2SeqModel(ABC, nn.Module):
 
         # The empty prediction sequence
         # +1 for the EOS
-        prediction_sequence = torch.zeros(longest_sequence_length + 1, batch_size, self.output_size).to(self.device)
+        prediction_sequence = torch.zeros(longest_sequence_length + 1, batch_size, self.output_size, device=self.device)
 
         # We decode the first token
         decoder_output, decoder_hidden, attention_weights = self.decoder(

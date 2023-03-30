@@ -20,6 +20,9 @@ class BPEmbVectorizer(Vectorizer):
         self._longest_sequence_length = 0
 
     def _reset_longest_sequence_length(self) -> None:
+        """
+        The length of the longest sequence in the batch.
+        """
         self._longest_sequence_length = 0
 
     def __call__(self, addresses: List[str]) -> List[Tuple]:

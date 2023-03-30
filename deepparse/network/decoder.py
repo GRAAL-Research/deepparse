@@ -57,7 +57,7 @@ class Decoder(nn.Module):
             to_predict (~torch.Tensor): The elements to predict the tags.
             hidden (~torch.Tensor): The hidden state of the decoder.
             encoder_outputs (~torch.Tensor): The encoder outputs for the attention mechanism weighs if needed.
-            lengths (List) : The lengths of the batch elements (since packed).
+            lengths (list) : The lengths of the batch elements (since packed).
 
         Return:
             A tuple (``x``, ``y``, ``z``) where ``x`` is the address components tags predictions, y is the hidden
@@ -116,7 +116,6 @@ class Decoder(nn.Module):
             unweighted_alignments.transpose(1, 2),
         )
 
-        # TODO validate if still the same
         longest_sequence_length = max(lengths)
         mask = torch.arange(longest_sequence_length)[None, :] < torch.tensor(lengths, device="cpu")[:, None]
         mask = mask.unsqueeze(1)

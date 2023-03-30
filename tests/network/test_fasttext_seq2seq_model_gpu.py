@@ -147,13 +147,13 @@ class FasttextSeq2SeqGPUTest(Seq2SeqTestCase):
             decoder_hidden_mock,
             encoder_outputs,
             self.a_none_target,
-            self.lengths_list,
+            self.a_lengths_list,
             self.a_batch_size,
         )
 
         decoder_call = [
-            call()(view_mock, decoder_hidden_mock, encoder_outputs, self.lengths_list)
-        ] * self.longest_sequence_length
+            call()(view_mock, decoder_hidden_mock, encoder_outputs, self.a_lengths_list)
+        ] * self.a_longest_sequence_length
 
         decoder_mock.assert_has_calls(decoder_call)
 
@@ -192,13 +192,13 @@ class FasttextSeq2SeqGPUTest(Seq2SeqTestCase):
             decoder_hidden_mock,
             encoder_outputs,
             self.a_none_target,
-            self.lengths_list,
+            self.a_lengths_list,
             self.a_batch_size,
         )
 
         decoder_call = [
-            call()(view_mock, decoder_hidden_mock, encoder_outputs, self.lengths_list)
-        ] * self.longest_sequence_length
+            call()(view_mock, decoder_hidden_mock, encoder_outputs, self.a_lengths_list)
+        ] * self.a_longest_sequence_length
 
         decoder_mock.assert_has_calls(decoder_call)
 
@@ -237,13 +237,13 @@ class FasttextSeq2SeqGPUTest(Seq2SeqTestCase):
             decoder_hidden_mock,
             encoder_outputs,
             self.a_none_target,
-            self.lengths_list,
+            self.a_lengths_list,
             self.a_batch_size,
         )
 
         decoder_call = []
 
-        for idx in range(self.longest_sequence_length):
+        for idx in range(self.a_longest_sequence_length):
             decoder_call.append(
                 call()(
                     self.a_transpose_target_vector[idx].view(1, self.a_batch_size, 1),
@@ -286,16 +286,17 @@ class FasttextSeq2SeqGPUTest(Seq2SeqTestCase):
             self.cache_dir, self.a_torch_device, self.output_size, self.verbose, use_torch_compile=False
         )
 
-        seq2seq_model.forward(to_predict=to_predict_mock, lengths=self.lengths_list, target=None)
+        seq2seq_model.forward(to_predict=to_predict_mock, lengths=lengths_list, target=None)
 
-        encoder_mock.assert_has_calls([call()(to_predict_mock, self.lengths_list)])
+        encoder_mock.assert_has_calls([call()(to_predict_mock, lengths_list)])
+
         decoder_mock.assert_has_calls(
             [
                 call()(
                     to_mock,
                     decoder_hidden_mock,
                     decoder_input_mock,
-                    self.lengths_list,
+                    lengths_list,
                 )
             ]
         )
@@ -340,18 +341,19 @@ class FasttextSeq2SeqGPUTest(Seq2SeqTestCase):
 
         seq2seq_model.forward(
             to_predict=to_predict_mock,
-            lengths=self.lengths_list,
+            lengths=lengths_list,
             target=target_mock,
         )
 
-        encoder_mock.assert_has_calls([call()(to_predict_mock, self.lengths_list)])
+        encoder_mock.assert_has_calls([call()(to_predict_mock, lengths_list)])
+
         decoder_mock.assert_has_calls(
             [
                 call()(
                     to_mock,
                     decoder_hidden_mock,
                     decoder_input_mock,
-                    self.lengths_list,
+                    lengths_list,
                 )
             ]
         )
@@ -402,18 +404,19 @@ class FasttextSeq2SeqGPUTest(Seq2SeqTestCase):
 
         seq2seq_model.forward(
             to_predict=to_predict_mock,
-            lengths=self.lengths_list,
+            lengths=lengths_list,
             target=target_mock,
         )
 
-        encoder_mock.assert_has_calls([call()(to_predict_mock, self.lengths_list)])
+        encoder_mock.assert_has_calls([call()(to_predict_mock, lengths_list)])
+
         decoder_mock.assert_has_calls(
             [
                 call()(
                     to_mock,
                     decoder_hidden_mock,
                     decoder_input_mock,
-                    self.lengths_list,
+                    lengths_list,
                 )
             ]
         )

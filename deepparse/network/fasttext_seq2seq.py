@@ -1,4 +1,4 @@
-# pylint: disable=too-many-arguments, duplicate-code
+# pylint: disable=too-many-arguments, duplicate-code, too-many-locals
 
 from typing import Union, List
 

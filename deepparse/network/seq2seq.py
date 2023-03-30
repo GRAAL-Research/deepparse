@@ -135,7 +135,7 @@ class Seq2SeqModel(ABC, nn.Module):
 
         Args:
             to_predict (~torch.Tensor): The elements to predict the tags.
-            lengths (List): The lengths of the batch elements (since packed).
+            lengths (list): The lengths of the batch elements (since packed).
             batch_size (int): The number of element in the batch.
 
         Return:
@@ -167,7 +167,7 @@ class Seq2SeqModel(ABC, nn.Module):
             encoder_outputs (~torch.Tensor): The encoder outputs for the attention mechanism weighs if needed.
             target (~torch.LongTensor) : The target of the batch element, use only when we retrain the model since we do
                 `teacher forcing <https://machinelearningmastery.com/teacher-forcing-for-recurrent-neural-networks/>`_.
-            lengths (List): The lengths of the batch elements (since packed).
+            lengths (list): The lengths of the batch elements (since packed).
             batch_size (int): Number of element in the batch.
 
         Return:

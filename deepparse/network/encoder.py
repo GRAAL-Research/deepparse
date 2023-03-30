@@ -32,7 +32,7 @@ class Encoder(nn.Module):
 
         Args:
             to_predict (~torch.Tensor): The elements to predict the tags.
-            lengths (List): The lengths of the batch elements (since packed).
+            lengths (list): The lengths of the batch elements (since packed).
 
         Return:
             A tuple of the address components encoding.

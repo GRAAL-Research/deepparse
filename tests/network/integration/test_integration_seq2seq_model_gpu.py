@@ -42,9 +42,7 @@ class Seq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
             decoder_input,
             decoder_hidden,
             encoder_outputs,
-        ) = self.pre_trained_seq2seq_model._encoder_step(
-            self.to_predict_tensor, self.a_lengths_tensor, self.a_batch_size
-        )
+        ) = self.pre_trained_seq2seq_model._encoder_step(self.to_predict_tensor, self.a_lengths_list, self.a_batch_size)
 
         self.assertEqual(decoder_input.shape[1], self.a_batch_size)
         self.assertTrue(decoder_input[0][0] == self.begin_of_sequence_idx)
@@ -70,7 +68,7 @@ class Seq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
             self.decoder_hidden_tensor,
             self.encoder_hidden,
             self.none_target,
-            self.a_lengths_tensor,
+            self.a_lengths_list,
             self.a_batch_size,
         )
 
@@ -86,7 +84,7 @@ class Seq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
             self.decoder_hidden_tensor,
             self.encoder_hidden,
             self.a_target_vector,
-            self.a_lengths_tensor,
+            self.a_lengths_list,
             self.a_batch_size,
         )
 
@@ -105,7 +103,7 @@ class Seq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
             self.decoder_hidden_tensor,
             self.encoder_hidden,
             self.a_target_vector,
-            self.a_lengths_tensor,
+            self.a_lengths_list,
             self.a_batch_size,
         )
 
@@ -124,7 +122,7 @@ class Seq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
             self.decoder_hidden_tensor,
             self.encoder_hidden,
             self.none_target,
-            self.a_lengths_tensor,
+            self.a_lengths_list,
             self.a_batch_size,
         )
 

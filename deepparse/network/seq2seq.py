@@ -5,7 +5,7 @@ import random
 import warnings
 from abc import ABC
 from collections import OrderedDict
-from typing import Tuple, Union
+from typing import Tuple, Union, List
 
 import torch
 from torch import nn
@@ -101,13 +101,15 @@ class Seq2SeqModel(ABC, nn.Module):
             if not os.path.isfile(model_path):
                 warnings.warn(
                     f"No pre-trained model where found in the cache directory {cache_dir}. Thus, we will"
-                    f"automatically download the pre-trained model."
+                    "automatically download the pre-trained model.",
+                    category=UserWarning,
                 )
                 download_weights(model_type, cache_dir, verbose=self.verbose)
             elif not latest_version(model_type, cache_path=cache_dir, verbose=self.verbose):
                 if self.verbose:
                     warnings.warn(
-                        "A new version of the pretrained model is available. The newest model will be downloaded."
+                        "A new version of the pretrained model is available. The newest model will be downloaded.",
+                        category=UserWarning,
                     )
                 download_weights(model_type, cache_dir, verbose=self.verbose)
 
@@ -127,23 +129,23 @@ class Seq2SeqModel(ABC, nn.Module):
             all_layers_params = all_layers_params.get("address_tagger_model")
         self.load_state_dict(all_layers_params)
 
-    def _encoder_step(self, to_predict: torch.Tensor, lengths_tensor: torch.Tensor, batch_size: int) -> Tuple:
+    def _encoder_step(self, to_predict: torch.Tensor, lengths: List, batch_size: int) -> Tuple:
         """
         Step of the encoder.
 
         Args:
             to_predict (~torch.Tensor): The elements to predict the tags.
-            lengths_tensor (~torch.Tensor): The lengths of the batch elements (since packed).
+            lengths (list): The lengths of the batch elements (since packed).
             batch_size (int): The number of element in the batch.
 
         Return:
             A tuple (``x``, ``y``, ``z``) where ``x`` is the decoder input (a zeros tensor), ``y`` is the decoder
             hidden states and ``z`` is the encoder outputs for the attention weighs if needed.
         """
-        encoder_outputs, decoder_hidden = self.encoder(to_predict, lengths_tensor)
+        encoder_outputs, decoder_hidden = self.encoder(to_predict, lengths)
 
         # -1 for BOS token
-        decoder_input = torch.zeros(1, batch_size, 1).to(self.device).new_full((1, batch_size, 1), -1)
+        decoder_input = torch.zeros(1, batch_size, 1, device=self.device).new_full((1, batch_size, 1), -1)
 
         return decoder_input, decoder_hidden, encoder_outputs
 
@@ -152,8 +154,8 @@ class Seq2SeqModel(ABC, nn.Module):
         decoder_input: torch.Tensor,
         decoder_hidden: tuple,
         encoder_outputs: torch.Tensor,
-        target: Union[torch.Tensor, None],
-        lengths_tensor: torch.Tensor,
+        target: Union[torch.LongTensor, None],
+        lengths: List,
         batch_size: int,
     ) -> torch.Tensor:
         """
@@ -163,28 +165,28 @@ class Seq2SeqModel(ABC, nn.Module):
             decoder_input (~torch.Tensor): The decoder input (so the encode output).
             decoder_hidden (~torch.Tensor): The encoder hidden state (so the encode hidden state).
             encoder_outputs (~torch.Tensor): The encoder outputs for the attention mechanism weighs if needed.
-            target (~torch.Tensor) : The target of the batch element, use only when we retrain the model since we do
+            target (~torch.LongTensor) : The target of the batch element, use only when we retrain the model since we do
                 `teacher forcing <https://machinelearningmastery.com/teacher-forcing-for-recurrent-neural-networks/>`_.
-            lengths_tensor (~torch.Tensor): The lengths of the batch elements (since packed).
+            lengths (list): The lengths of the batch elements (since packed).
             batch_size (int): Number of element in the batch.
 
         Return:
             A Tensor of the predicted sequence.
         """
-        max_length = lengths_tensor.max().item()
+        longest_sequence_length = max(lengths)
 
         # The empty prediction sequence
         # +1 for the EOS
-        prediction_sequence = torch.zeros(max_length + 1, batch_size, self.output_size).to(self.device)
+        prediction_sequence = torch.zeros(longest_sequence_length + 1, batch_size, self.output_size, device=self.device)
 
         # We decode the first token
         decoder_output, decoder_hidden, attention_weights = self.decoder(
-            decoder_input, decoder_hidden, encoder_outputs, lengths_tensor
+            decoder_input, decoder_hidden, encoder_outputs, lengths
         )
 
         if attention_weights is not None:
             # We fill the attention
-            attention_output = torch.ones(max_length + 1, batch_size, 1, max_length)
+            attention_output = torch.ones(longest_sequence_length + 1, batch_size, 1, longest_sequence_length)
             attention_output[0] = attention_weights
 
         # We fill the first token prediction
@@ -197,20 +199,20 @@ class Seq2SeqModel(ABC, nn.Module):
         if target is not None and random.random() < 0.5:
             # force the real target value instead of the predicted one to help learning
             target = target.transpose(0, 1)
-            for idx in range(max_length):
+            for idx in range(longest_sequence_length):
                 decoder_input = target[idx].view(1, batch_size, 1)
                 decoder_output, decoder_hidden, attention_weights = self.decoder(
-                    decoder_input, decoder_hidden, encoder_outputs, lengths_tensor
+                    decoder_input, decoder_hidden, encoder_outputs, lengths
                 )
                 prediction_sequence[idx + 1] = decoder_output
 
         else:
-            for idx in range(max_length):
+            for idx in range(longest_sequence_length):
                 decoder_output, decoder_hidden, attention_weights = self.decoder(
                     decoder_input.view(1, batch_size, 1),
                     decoder_hidden,
                     encoder_outputs,
-                    lengths_tensor,
+                    lengths,
                 )
 
                 prediction_sequence[idx + 1] = decoder_output

@@ -6,12 +6,12 @@
 
 import contextlib
 import os
-import platform
 import re
 import warnings
 from functools import partial
 from pathlib import Path
-from typing import Dict, List, Tuple, Union
+from platform import system
+from typing import Dict, List, Tuple, Union, Callable
 
 import torch
 from poutyne.framework import Experiment
@@ -39,7 +39,8 @@ from ..embeddings_models import EmbeddingsModelFactory
 from ..errors import FastTextModelError
 from ..metrics import nll_loss, accuracy
 from ..network import ModelFactory
-from ..preprocessing import AddressCleaner
+from ..pre_processing import coma_cleaning, lower_cleaning, hyphen_cleaning
+from ..pre_processing import trailing_whitespace_cleaning, double_whitespaces_cleaning
 from ..tools import CACHE_PATH, valid_poutyne_version
 from ..vectorizer import VectorizerFactory
 
@@ -78,12 +79,12 @@ class AddressParser:
     Args:
         model_type (str): The network name to use, can be either:
 
-            - fasttext (need ~9 GO of RAM to be used),
-            - fasttext-light (need ~2 GO of RAM to be used, but slower than fasttext version),
-            - bpemb (need ~2 GO of RAM to be used),
-            - fastest (quicker to process one address) (equivalent to fasttext),
-            - lightest (the one using the less RAM and GPU usage) (equivalent to fasttext-light),
-            - best (the best accuracy performance) (equivalent to bpemb).
+            - ``"fasttext"`` (need ~9 GO of RAM to be used),
+            - ``"fasttext-light"`` (need ~2 GO of RAM to be used, but slower than fasttext version),
+            - ``"bpemb"`` (need ~2 GO of RAM to be used),
+            - ``"fastest"`` (quicker to process one address) (equivalent to ``"fasttext"``),
+            - ``"lightest"`` (the one using the less RAM and GPU usage) (equivalent to ``"fasttext-light"``),
+            - ``"best"`` (the best accuracy performance) (equivalent to ``"bpemb"``).
 
             The default value is ``"best"`` for the most accurate model. Ignored if ``path_to_retrained_model`` is not
             ``None``. To further improve performance, consider using the models (fasttext or BPEmb) with their
@@ -108,7 +109,7 @@ class AddressParser:
         cache_dir (Union[str, None]): The path to the cached directory to use for downloading (and loading) the
             embeddings model and the model pretrained weights.
         offline (bool): Whether or not the model is an offline one, meaning you have already downloaded the pre-trained
-            weights and embeddings weights in either the default Deepparse cache directory (~./cache/deepparse) or
+            weights and embeddings weights in either the default Deepparse cache directory (``"~./cache/deepparse"``) or
             the ``cache_dir`` directory. When offline, we will not verify if the model is the latest. You can use our
             ``download_models`` CLI function to download all the requirements for a model. The default value is False
             (not an offline parsing model).
@@ -123,8 +124,8 @@ class AddressParser:
 
         Here are the URLs to download our pretrained models directly
 
-            - `FastText <https://graal.ift.ulaval.ca/public/deepparse/fasttext.ckpt>`_
-            - `BPEmb <https://graal.ift.ulaval.ca/public/deepparse/bpemb.ckpt>`_
+            - `FastText <https://graal.ift.ulaval.ca/public/deepparse/fasttext.ckpt>`_,
+            - `BPEmb <https://graal.ift.ulaval.ca/public/deepparse/bpemb.ckpt>`_,
             - `FastText Light <https://graal.ift.ulaval.ca/public/deepparse/fasttext.magnitude.gz>`_.
 
     Note:
@@ -222,6 +223,16 @@ class AddressParser:
 
         if path_to_retrained_model is not None:
             checkpoint_weights = torch.load(path_to_retrained_model, map_location="cpu")
+            if checkpoint_weights.get("model_type") is None:
+                # Validate if we have the proper metadata, it has at least the parser model type
+                # if no other thing have been modified.
+                raise RuntimeError(
+                    "You are not using the proper retrained checkpoint. "
+                    "When we retrain an AddressParser, by default, we create a "
+                    "checkpoint name 'retrained_modeltype_address_parser.ckpt'. Be sure to use that"
+                    "checkpoint since it includes some metadata for the reloading."
+                    "See AddressParser.retrain for more details."
+                )
             if validate_if_new_seq2seq_params(checkpoint_weights):
                 seq2seq_kwargs = checkpoint_weights.get("seq2seq_params")
             if validate_if_new_prediction_tags(checkpoint_weights):
@@ -276,6 +287,7 @@ class AddressParser:
         batch_size: int = 32,
         num_workers: int = 0,
         with_hyphen_split: bool = False,
+        pre_processors: Union[None, List[Callable]] = None,
     ) -> Union[FormattedParsedAddress, List[FormattedParsedAddress]]:
         # pylint: disable=too-many-arguments
         """
@@ -292,7 +304,7 @@ class AddressParser:
                     - no addresses are whitespace-only strings.
 
                 The addresses are processed in batches when using a list of addresses, allowing a faster process.
-                For example, using the FastText model, a single address takes around 0.003 seconds to be parsed using a
+                For example, using the FastText model, a single address takes around 0.0023 seconds to be parsed using a
                 batch of 1 (1 element at the time is processed). This time can be reduced to 0.00035 seconds per
                 address when using a batch of 128 (128 elements at the time are processed).
             with_prob (bool): If true, return the probability of all the tags with the specified
@@ -304,16 +316,23 @@ class AddressParser:
                 the hyphen split between the unit and the street number (e.g. Canada). For example, ``'3-305'`` will be
                 replaced as ``'3 305'`` for the parsing. Where ``'3'`` is the unit, and ``'305'`` is the street number.
                 We use a regular expression to replace alphanumerical characters separated by a hyphen at
-                the start of the string. We do so since some cities use hyphens in their names. Default is ``False``.
+                the start of the string. We do so since some cities use hyphens in their names. The default
+                is ``False``. If True, it adds the :func:`~deepparse.pre_processing.pre_processor.hyphen_cleaning`
+                pre-processor **at the end** of the pre-processor list to apply.
+            pre_processors (Union[None, List[Callable]]): A list of functions (callable) to apply pre-processing on
+                all the addresses to parse before parsing. See :ref:`pre_processor_label` for examples of
+                pre-processors. Since models were trained on lowercase data, during the parsing, we always apply a
+                lowercase pre-processor. If you pass a list of pre-processor, a lowercase pre-processor is
+                added **at the end** of the pre-processor list to apply. By default, None,
+                meaning we use the default setup, which is (in order) the coma removal pre-processor, lowercase,
+                double whitespace cleaning and trailing whitespace removal.
 
         Return:
             Either a :class:`~FormattedParsedAddress` or a list of
             :class:`~FormattedParsedAddress` when given more than one address.
 
         Note:
-            During the parsing, the addresses are lowercase, and commas are removed. One can also use the
-            ``with_hyphen_split`` bool argument for replacing hyphens (used to separate units from street numbers,
-            e.g. ``'3-305 a street name'``) by whitespace for proper cleaning.
+            Since model was trained on lowercase data, during the parsing, we always apply a lowercase pre-processor.
 
         Examples:
 
@@ -351,6 +370,16 @@ class AddressParser:
                 addresses_to_parse = CSVDatasetContainer("./a_path.csv", column_names=["address_column_name"],
                                                          is_training_container=False)
                 address_parser(addresses_to_parse)
+
+            Using a user-define pre-processor
+
+            .. code-block:: python
+
+                def strip_parenthesis(address):
+                    return address.strip("(").strip(")")
+
+                address_parser(addresses_to_parse, pre_processors=[strip_parenthesis])
+                # It will also use the default lower case pre-processor.
         """
         self._model_os_validation(num_workers=num_workers)
 
@@ -363,7 +392,18 @@ class AddressParser:
         if isinstance(addresses_to_parse, DatasetContainer):
             addresses_to_parse = addresses_to_parse.data
 
-        clean_addresses = AddressCleaner().clean(addresses_to_parse)
+        if pre_processors is None:
+            # Default pre_processing setup.
+            pre_processors = [coma_cleaning, lower_cleaning, trailing_whitespace_cleaning, double_whitespaces_cleaning]
+        else:
+            # We add, at the end, a lower casing cleaning pre-processor.
+            pre_processors.append(lower_cleaning)
+
+        if with_hyphen_split:
+            pre_processors.append(hyphen_cleaning)
+
+        self.pre_processors = pre_processors
+        clean_addresses = self._apply_pre_processors(addresses_to_parse)
 
         if self.verbose and len(addresses_to_parse) > PREDICTION_TIME_PERFORMANCE_THRESHOLD:
             print("Vectorizing the address")
@@ -373,24 +413,26 @@ class AddressParser:
             collate_fn=self._predict_pipeline,
             batch_size=batch_size,
             num_workers=num_workers,
+            pin_memory=self.pin_memory,
         )
 
-        tags_predictions = []
-        tags_predictions_prob = []
-        for x in predict_data_loader:
-            tensor_prediction = self.model(*load_tuple_to_device(x, self.device))
-            tags_predictions.extend(tensor_prediction.max(2)[1].transpose(0, 1).cpu().numpy().tolist())
-            tags_predictions_prob.extend(
-                torch.exp(tensor_prediction.max(2)[0]).transpose(0, 1).detach().cpu().numpy().tolist()
+        with torch.no_grad():
+            tags_predictions = []
+            tags_predictions_prob = []
+            for x in predict_data_loader:
+                tensor_prediction = self.model(*load_tuple_to_device(x, self.device))
+                tags_predictions.extend(tensor_prediction.max(2)[1].transpose(0, 1).cpu().numpy().tolist())
+                tags_predictions_prob.extend(
+                    torch.exp(tensor_prediction.max(2)[0]).transpose(0, 1).detach().cpu().numpy().tolist()
+                )
+
+            tagged_addresses_components = self._fill_tagged_addresses_components(
+                tags_predictions,
+                tags_predictions_prob,
+                addresses_to_parse,
+                clean_addresses,
+                with_prob,
             )
-
-        tagged_addresses_components = self._fill_tagged_addresses_components(
-            tags_predictions,
-            tags_predictions_prob,
-            addresses_to_parse,
-            clean_addresses,
-            with_prob,
-        )
 
         return tagged_addresses_components
 
@@ -690,6 +732,7 @@ class AddressParser:
 
         optimizer = SGD(self.model.parameters(), learning_rate)
 
+        # Poutyne handle model.train()
         exp = Experiment(
             logging_path,
             self.model,
@@ -727,19 +770,24 @@ class AddressParser:
                     retrained_address_parser_in_directory = get_address_parser_in_directory(files_in_directory)[
                         0
                     ].split("_")[1]
-                    if self.model_type != retrained_address_parser_in_directory:
-                        raise ValueError(
-                            f"You are currently training a {self.model_type} in the directory "
-                            f"{logging_path} where a different retrained "
-                            f"{retrained_address_parser_in_directory} is currently his."
-                            f" Thus, the loading of the model is failing. Change directory to retrain the"
-                            f" {self.model_type}."
-                        ) from error
                     if self.model_type == retrained_address_parser_in_directory:
-                        raise ValueError(
-                            f"You are currently training a different {self.model_type} version from"
-                            f" the one in the {logging_path}. Verify version."
-                        ) from error
+                        value_error_message = (
+                            f"You are currently retraining a different {self.get_formatted_model_name()} AddressParser "
+                            f"configuration in the same directory as a previous retrained model. "
+                            "The configurations must be different (number of tag, seq2seq dimensions, etc.). "
+                            "The easiest thing to do is to change the saving directory to avoid colliding checkpoint."
+                        )
+                    else:
+                        value_error_message = (
+                            f"You are currently training a {self.get_formatted_model_name()} in the directory "
+                            f"{logging_path} where a different retrained "
+                            f"{retrained_address_parser_in_directory} model is currently his. "
+                            f"Thus, the loading of the model checkpoint is failing. Change the logging path "
+                            f'"{logging_path}" to something else to retrain the {self.get_formatted_model_name()} '
+                            f'model.'
+                        )
+
+                    raise ValueError(value_error_message) from error
             else:
                 raise RuntimeError(error.args[0]) from error
         else:
@@ -880,6 +928,8 @@ class AddressParser:
         # Handle the verbose overriding param
         if verbose is None:
             verbose = self.verbose
+
+        # Poutyne handle the no_grad context
         test_res = exp.test(test_generator, seed=seed, callbacks=callbacks, verbose=verbose)
 
         return test_res
@@ -953,8 +1003,10 @@ class AddressParser:
         """
         if device == "cpu":
             self.device = torch.device("cpu")
+            self.pin_memory = False
         else:
             if torch.cuda.is_available():
+                self.pin_memory = True
                 if isinstance(device, torch.device):
                     self.device = device
                 elif isinstance(device, str):
@@ -970,8 +1022,9 @@ class AddressParser:
                 else:
                     raise ValueError("Device should be a string, an int or a torch device.")
             else:
-                warnings.warn("No CUDA device detected, device will be set to 'CPU'.")
+                warnings.warn("No CUDA device detected, device will be set to 'CPU'.", category=UserWarning)
                 self.device = torch.device("cpu")
+                self.pin_memory = False
 
     def _create_training_data_generator(
         self,
@@ -1176,16 +1229,31 @@ class AddressParser:
                 )
 
     def _model_os_validation(self, num_workers):
-        if platform.system().lower() == "windows" and "fasttext" in self.model_type and num_workers > 0:
+        if system() == "Windows" and "fasttext" in self.model_type and num_workers > 0:
             raise FastTextModelError(
                 "On Windows system, we cannot use FastText-like models with parallelism workers since "
                 "FastText objects are not pickleable with the parallelism process use by Windows. "
                 "Thus, you need to set num_workers to 0 since 1 also means 'parallelism'."
             )
 
-        if platform.system().lower() == "darwin" and "fasttext" in self.model_type and num_workers > 0:
-            raise FastTextModelError(
+        if system() == "Darwin" and "fasttext" in self.model_type and num_workers > 0:
+            torch.multiprocessing.set_start_method('fork')
+            warnings.warn(
                 "On MacOS system, we cannot use FastText-like models with parallelism out-of-the-box since "
                 "FastText objects are not pickleable with the parallelism process used by default by MacOS. "
-                "Thus, you need to set torch.multiprocessing.set_start_method('fork') to allow torch parallelism."
+                "Thus, we have set it to the 'fork' (i.e. torch.multiprocessing.set_start_method('fork'))"
+                " to allow torch parallelism.",
+                category=UserWarning,
             )
+
+    def _apply_pre_processors(self, addresses: List[str]) -> List[str]:
+        res = []
+
+        for address in addresses:
+            for pre_processor in self.pre_processors:
+                processed_address = pre_processor(address)
+                res.append(" ".join(processed_address.split()))
+        return res
+
+    def is_same_model_type(self, other) -> bool:
+        return self.model_type == other.model_type

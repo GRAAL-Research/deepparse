@@ -45,9 +45,9 @@ from ..tools import CACHE_PATH, valid_poutyne_version
 from ..vectorizer import VectorizerFactory
 
 try:
-    from s3path import PureS3Path
+    from cloudpathlib import CloudPath
 except ImportError:
-    PureS3Path = None
+    CloudPath = None
 
 _pre_trained_tags_to_idx = {
     "StreetNumber": 0,
@@ -110,8 +110,9 @@ class AddressParser:
         path_to_retrained_model (Union[str, None]): The path to the retrained model to use for prediction. We will
             infer the ``model_type`` of the retrained model. The default value is ``None``, meaning we use our
             pretrained model. If the retrained model uses an attention mechanism, ``attention_mechanism`` needs to
-            be set to True. The path_to_retrain_model can also be an AWS S3 bucket URI
-            (e.g. ``"s3://path/to/aws/s3/bucket.ckpt"``). The default value is None.
+            be set to True. The path_to_retrain_model can also be a S3-like (Azure, AWS, Google) bucket URI (e.g.
+            ``"s3://path/to/aws/s3/bucket.ckpt"``). See `cloudpathlib <https://cloudpathlib.drivendata.org/stable/>`
+            for detail on supported S3 buckets provider. The default value is None.
         cache_dir (Union[str, None]): The path to the cached directory to use for downloading (and loading) the
             embeddings model and the model pretrained weights.
         offline (bool): Whether or not the model is an offline one, meaning you have already downloaded the pre-trained
@@ -199,7 +200,7 @@ class AddressParser:
                                            offline=True)
             parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
 
-         Using a retrained model in an AWS S3 bucket.
+         Using a retrained model in an S3-like bucket.
 
         .. code-block:: python
 
@@ -237,25 +238,37 @@ class AddressParser:
 
         if path_to_retrained_model is not None:
             if "s3://" in path_to_retrained_model:
-                if PureS3Path is None:
-                    raise ImportError("s3path needs to be installed to use a AWS S3 URI as path_to_retrained_model.")
-                path_to_retrained_model = PureS3Path.from_uri(path_to_retrained_model)
-            try:
-                checkpoint_weights = torch.load(path_to_retrained_model, map_location="cpu")
-            except FileNotFoundError as e:
-                if "s3" in path_to_retrained_model or "//" in path_to_retrained_model or ":" in path_to_retrained_model:
-                    raise FileNotFoundError(
-                        f"{e}. Are You trying to use a AWS S3 URI? If so path need to start with" f"s3://."
+                if CloudPath is None:
+                    raise ImportError(
+                        "cloudpathlib needs to be installed to use a S3-like " "URI as path_to_retrained_model."
                     )
-                else:
-                    raise e
+                path_to_retrained_model = CloudPath(path_to_retrained_model)
+                try:
+                    with path_to_retrained_model.open("rb") as file:
+                        checkpoint_weights = torch.load(file, map_location="cpu")
+                except FileNotFoundError as e:
+                    raise FileNotFoundError(f"The file in the S3 bucket was not found. Original error: {e}.")
+            else:
+                try:
+                    checkpoint_weights = torch.load(path_to_retrained_model, map_location="cpu")
+                except FileNotFoundError as e:
+                    if (
+                        "s3" in path_to_retrained_model
+                        or "//" in path_to_retrained_model
+                        or ":" in path_to_retrained_model
+                    ):
+                        raise FileNotFoundError(
+                            f"{e}. Are You trying to use a AWS S3 URI? If so path need to start with" f"s3://."
+                        )
+                    else:
+                        raise e
             if checkpoint_weights.get("model_type") is None:
                 # Validate if we have the proper metadata, it has at least the parser model type
                 # if no other thing have been modified.
                 raise RuntimeError(
                     "You are not using the proper retrained checkpoint. "
                     "When we retrain an AddressParser, by default, we create a "
-                    "checkpoint name 'retrained_modeltype_address_parser.ckpt'. Be sure to use that"
+                    "checkpoint name 'retrained_modeltype_address_parser.ckpt'. Be sure to use that "
                     "checkpoint since it includes some metadata for the reloading."
                     "See AddressParser.retrain for more details."
                 )

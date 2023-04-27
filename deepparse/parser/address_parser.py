@@ -123,7 +123,7 @@ class AddressParser:
     Note:
         For both networks, we will download the pretrained weights and embeddings in the ``.cache`` directory
         for the root user. The pretrained weights take at most 44 MB. The fastText embeddings take 6.8 GO,
-        the fastText-light embeddings take 3.3 GO and bpemb take 116 MB (in .cache/bpemb).
+        the fastText-light embeddings take 3.3 GO and bpemb take 116 MB (in ``".cache/bpemb"``).
 
         Also, one can download all the dependencies of our pretrained model using our CLI
         (e.g. download_model fasttext) before sending it to a node without access to Internet.
@@ -170,7 +170,7 @@ class AddressParser:
         .. code-block:: python
 
             address_parser = AddressParser(model_type="fasttext",
-                                           path_to_retrained_model="/path_to_a_retrain_fasttext_model")
+                                           path_to_retrained_model="/path_to_a_retrain_fasttext_model.ckpt")
             parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
 
         Using a retrained model trained on different tags
@@ -178,7 +178,7 @@ class AddressParser:
         .. code-block:: python
 
             # We don't give the model_type since it's ignored when using path_to_retrained_model
-            address_parser = AddressParser(path_to_retrained_model="/path_to_a_retrain_fasttext_model")
+            address_parser = AddressParser(path_to_retrained_model="/path_to_a_retrain_fasttext_model.ckpt")
             parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
 
         Using a retrained model with attention
@@ -186,7 +186,7 @@ class AddressParser:
         .. code-block:: python
 
             address_parser = AddressParser(model_type="fasttext",
-                                           path_to_retrained_model="/path_to_a_retrain_fasttext_attention_model",
+                                           path_to_retrained_model="/path_to_a_retrain_fasttext_attention_model.ckpt",
                                            attention_mechanism=True)
             parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
 

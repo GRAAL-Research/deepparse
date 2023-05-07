@@ -45,7 +45,7 @@ from ..tools import CACHE_PATH, valid_poutyne_version
 from ..vectorizer import VectorizerFactory
 
 try:
-    from cloudpathlib import CloudPath
+    from cloudpathlib import CloudPath, S3Path
 except ImportError:
     CloudPath = None
 
@@ -107,12 +107,13 @@ class AddressParser:
             The default value is GPU with the index ``0`` if it exists. Otherwise, the value is ``CPU``.
         rounding (int): The rounding to use when asking the probability of the tags. The default value is four digits.
         verbose (bool): Turn on/off the verbosity of the model weights download and loading. The default value is True.
-        path_to_retrained_model (Union[str, None]): The path to the retrained model to use for prediction. We will
-            infer the ``model_type`` of the retrained model. The default value is ``None``, meaning we use our
+        path_to_retrained_model (Union[S3Path, str, None]): The path to the retrained model to use for prediction.
+            We will infer the ``model_type`` of the retrained model. The default value is ``None``, meaning we use our
             pretrained model. If the retrained model uses an attention mechanism, ``attention_mechanism`` needs to
-            be set to True. The path_to_retrain_model can also be a S3-like (Azure, AWS, Google) bucket URI (e.g.
-            ``"s3://path/to/aws/s3/bucket.ckpt"``). See `cloudpathlib <https://cloudpathlib.drivendata.org/stable/>`
-            for detail on supported S3 buckets provider. The default value is None.
+            be set to True. The path_to_retrain_model can also be a S3-like (Azure, AWS, Google) bucket URI string path
+            (e.g. ``"s3://path/to/aws/s3/bucket.ckpt"``). Or it can be a ``S3Path`` S3-like URI using `cloudpathlib`
+            to handle S3-like bucket. See `cloudpathlib <https://cloudpathlib.drivendata.org/stable/>`
+            for detail on supported S3 buckets provider and URI condition. The default value is None.
         cache_dir (Union[str, None]): The path to the cached directory to use for downloading (and loading) the
             embeddings model and the model pretrained weights.
         offline (bool): Whether or not the model is an offline one, meaning you have already downloaded the pre-trained
@@ -208,6 +209,13 @@ class AddressParser:
                                            path_to_retrained_model="s3://path/to/bucket.ckpt")
             parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
 
+         Using a retrained model in an S3-like bucket using CloudPathLib.
+
+        .. code-block:: python
+
+            address_parser = AddressParser(model_type="fasttext",
+                                           path_to_retrained_model=CloudPath("s3://path/to/bucket.ckpt"))
+            parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
     """
 
     def __init__(
@@ -217,7 +225,7 @@ class AddressParser:
         device: Union[int, str, torch.device] = 0,
         rounding: int = 4,
         verbose: bool = True,
-        path_to_retrained_model: Union[str, None] = None,
+        path_to_retrained_model: Union[S3Path, str, None] = None,
         cache_dir: Union[str, None] = None,
         offline: bool = False,
     ) -> None:
@@ -237,7 +245,15 @@ class AddressParser:
         seq2seq_kwargs = {}  # Empty for default settings
 
         if path_to_retrained_model is not None:
-            if "s3://" in path_to_retrained_model:
+            if isinstance(path_to_retrained_model, S3Path):
+                # To handle CloudPath path_to_retrained_model
+                try:
+                    with path_to_retrained_model.open("rb") as file:
+                        checkpoint_weights = torch.load(file, map_location="cpu")
+                except FileNotFoundError as e:
+                    raise FileNotFoundError(f"The file in the S3 bucket was not found. Original error: {e}.")
+            elif "s3://" in path_to_retrained_model:
+                # To handle str S3-like URI.
                 if CloudPath is None:
                     raise ImportError(
                         "cloudpathlib needs to be installed to use a S3-like " "URI as path_to_retrained_model."
@@ -836,6 +852,7 @@ class AddressParser:
                 else f"retrained_{self.model_type}_address_parser.ckpt"
             )
             file_path = os.path.join(logging_path, file_name)
+
             torch_save = {
                 "address_tagger_model": exp.model.network.state_dict(),
                 "model_type": self.model_type,
@@ -856,7 +873,25 @@ class AddressParser:
                 }
             )
 
-            torch.save(torch_save, file_path)
+            if "s3://" in file_path:
+                if CloudPath is None:
+                    raise ImportError("cloudpathlib needs to be installed to use a S3-like URI as export path.")
+                path_to_retrained_model = CloudPath(file_path)
+                try:
+                    with path_to_retrained_model.open("rb") as file:
+                        torch.save(torch_save, file)
+                except FileNotFoundError as e:
+                    raise FileNotFoundError(f"The file in the S3 bucket was not found. Original error: {e}.")
+            else:
+                try:
+                    torch.save(torch_save, file_path)
+                except FileNotFoundError as e:
+                    if "s3" in file_path or "//" in file_path or ":" in file_path:
+                        raise FileNotFoundError(
+                            f"{e}. Are You trying to use a AWS S3 URI? If so path need to start with" f"s3://."
+                        )
+                    else:
+                        raise e
             return train_res
 
     def test(

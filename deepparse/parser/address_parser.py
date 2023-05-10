@@ -227,10 +227,13 @@ class AddressParser:
                 # Validate if we have the proper metadata, it has at least the parser model type
                 # if no other thing have been modified.
                 raise RuntimeError(
-                    "You are not using the proper retrained checkpoint. "
+                    "You are not using the proper retrained checkpoint for Deepparse, since we also export other"
+                    "informations along with the model weights. "
                     "When we retrain an AddressParser, by default, we create a "
-                    "checkpoint name 'retrained_modeltype_address_parser.ckpt'. Be sure to use that"
-                    "checkpoint since it includes some metadata for the reloading."
+                    "checkpoint name 'retrained_modeltype_address_parser.ckpt'. "
+                    "Where 'modeltype' is the AddressParser model type (e.g. 'fasttext', 'bpemb'). "
+                    "The checkpoint name can also change if you give the retrained model a name. "
+                    "Be sure to use that checkpoint since it includes some metadata for the reloading. "
                     "See AddressParser.retrain for more details."
                 )
             if validate_if_new_seq2seq_params(checkpoint_weights):

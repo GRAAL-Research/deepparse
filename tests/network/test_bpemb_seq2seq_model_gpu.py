@@ -87,7 +87,7 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
         torch_mock.load.return_value = all_layers_params
         BPEmbSeq2SeqModel(
             self.cache_dir,
-            self.a_cpu_device,
+            self.a_torch_device,
             output_size=self.output_size,
             verbose=self.verbose,
             path_to_retrained_model=self.a_path_to_retrained_model,

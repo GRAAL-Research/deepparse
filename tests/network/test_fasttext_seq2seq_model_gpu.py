@@ -69,7 +69,7 @@ class FasttextSeq2SeqGPUTest(Seq2SeqTestCase):
             path_to_retrained_model=self.a_path_to_retrained_model,
         )
 
-        torch_load_call = [call.load(self.a_path_to_retrained_model, map_location=self.a_cpu_device)]
+        torch_load_call = [call.load(self.a_path_to_retrained_model, map_location=self.a_torch_device)]
         torch_mock.assert_has_calls(torch_load_call)
 
         load_state_dict_mock.assert_called()

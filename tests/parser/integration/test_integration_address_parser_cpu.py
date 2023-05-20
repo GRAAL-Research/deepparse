@@ -144,14 +144,14 @@ class AddressParserPredictCPUMultiProcessTest(AddressParserPredictBase):
         config = {"model_type": "fasttext", "device": self.device, "verbose": False}
         self.setup_model_with_config(config)
 
-        parse_address = self.a_model([self.an_address_to_parse, self.an_address_to_parse], num_workers=1)
+        parse_address = self.a_model([self.an_address_to_parse, self.another_address_to_parse], num_workers=1)
         self.assert_properly_parse(parse_address, multiple_address=True)
 
     def test_givenAListOfAddress_whenParseBPEmbNumWorkers1_thenParseAllAddress(self):
         config = {"model_type": "bpemb", "device": self.device, "verbose": False}
         self.setup_model_with_config(config)
 
-        parse_address = self.a_model([self.an_address_to_parse, self.an_address_to_parse], num_workers=1)
+        parse_address = self.a_model([self.an_address_to_parse, self.another_address_to_parse], num_workers=1)
         self.assert_properly_parse(parse_address, multiple_address=True)
 
     def test_givenAAddress_whenParseFastTextNumWorkers2_thenParseAddress(self):
@@ -172,14 +172,14 @@ class AddressParserPredictCPUMultiProcessTest(AddressParserPredictBase):
         config = {"model_type": "fasttext", "device": self.device, "verbose": False}
         self.setup_model_with_config(config)
 
-        parse_address = self.a_model([self.an_address_to_parse, self.an_address_to_parse], num_workers=2)
+        parse_address = self.a_model([self.an_address_to_parse, self.another_address_to_parse], num_workers=2)
         self.assert_properly_parse(parse_address, multiple_address=True)
 
     def test_givenAListOfAddress_whenParseBPEmbNumWorkers2_thenParseAllAddress(self):
         config = {"model_type": "bpemb", "device": self.device, "verbose": False}
         self.setup_model_with_config(config)
 
-        parse_address = self.a_model([self.an_address_to_parse, self.an_address_to_parse], num_workers=2)
+        parse_address = self.a_model([self.an_address_to_parse, self.another_address_to_parse], num_workers=2)
         self.assert_properly_parse(parse_address, multiple_address=True)
 
     def test_givenAAttentionModel_whenParseFastTextNumWorkers2_thenProperlyParseAddress(

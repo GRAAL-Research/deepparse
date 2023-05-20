@@ -69,7 +69,7 @@ def main(args=None) -> None:
 
     path_to_retrained_model = parsed_args.path_to_retrained_model
     if path_to_retrained_model is not None:
-        parser_args.update({"path_to_model_weights": path_to_retrained_model})
+        parser_args.update({"path_to_retrained_model": path_to_retrained_model})
 
     base_parsing_model = parsed_args.base_parsing_model
     parser_args_update_args = attention_model_type_handling(base_parsing_model)

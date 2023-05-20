@@ -50,7 +50,7 @@ def main(args=None) -> None:
 
     .. code-block:: sh
 
-        parse fasttext ./dataset.csv parsed_address.pckl --path_to_retrained_model ./path
+        parse fasttext ./dataset.csv parsed_address.pckl --path_to_model_weights ./path
 
     """
     if args is None:  # pragma: no cover

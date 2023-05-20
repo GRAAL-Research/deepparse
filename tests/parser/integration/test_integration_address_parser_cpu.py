@@ -104,14 +104,14 @@ class AddressParserPredictCPUTest(AddressParserPredictBase):
         config = {"model_type": "fasttext", "device": self.device, "verbose": False}
         self.setup_model_with_config(config)
 
-        parse_address = self.a_model([self.an_address_to_parse, self.an_address_to_parse])
+        parse_address = self.a_model([self.an_address_to_parse, self.another_address_to_parse])
         self.assert_properly_parse(parse_address, multiple_address=True)
 
     def test_givenAListOfAddress_whenParseBPEmb_thenParseAllAddress(self):
         config = {"model_type": "bpemb", "device": self.device, "verbose": False}
         self.setup_model_with_config(config)
 
-        parse_address = self.a_model([self.an_address_to_parse, self.an_address_to_parse])
+        parse_address = self.a_model([self.an_address_to_parse, self.another_address_to_parse])
         self.assert_properly_parse(parse_address, multiple_address=True)
 
 

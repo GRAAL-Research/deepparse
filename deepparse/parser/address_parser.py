@@ -14,6 +14,7 @@ from platform import system
 from typing import Dict, List, Tuple, Union, Callable
 
 import torch
+from cloudpathlib import CloudPath, S3Path
 from poutyne.framework import Experiment
 from torch.optim import SGD
 from torch.utils.data import DataLoader, Subset
@@ -43,6 +44,7 @@ from ..pre_processing import coma_cleaning, lower_cleaning, hyphen_cleaning
 from ..pre_processing import trailing_whitespace_cleaning, double_whitespaces_cleaning
 from ..tools import CACHE_PATH, valid_poutyne_version
 from ..vectorizer import VectorizerFactory
+from ..weights_tools import handle_weights_upload
 
 _pre_trained_tags_to_idx = {
     "StreetNumber": 0,
@@ -86,7 +88,7 @@ class AddressParser:
             - ``"lightest"`` (the one using the less RAM and GPU usage) (equivalent to ``"fasttext-light"``),
             - ``"best"`` (the best accuracy performance) (equivalent to ``"bpemb"``).
 
-            The default value is ``"best"`` for the most accurate model. Ignored if ``path_to_retrained_model`` is not
+            The default value is ``"best"`` for the most accurate model. Ignored if ``path_to_model_weights`` is not
             ``None``. To further improve performance, consider using the models (fasttext or BPEmb) with their
             counterparts using an attention mechanism with the ``attention_mechanism`` flag.
         attention_mechanism (bool): Whether to use the model with an attention mechanism. The model will use an
@@ -102,10 +104,13 @@ class AddressParser:
             The default value is GPU with the index ``0`` if it exists. Otherwise, the value is ``CPU``.
         rounding (int): The rounding to use when asking the probability of the tags. The default value is four digits.
         verbose (bool): Turn on/off the verbosity of the model weights download and loading. The default value is True.
-        path_to_retrained_model (Union[str, None]): The path to the retrained model to use for prediction. We will
-            infer the ``model_type`` of the retrained model. The default value is ``None``, meaning we use our
+        path_to_retrained_model (Union[S3Path, str, None]): The path to the retrained model to use for prediction.
+            We will infer the ``model_type`` of the retrained model. The default value is ``None``, meaning we use our
             pretrained model. If the retrained model uses an attention mechanism, ``attention_mechanism`` needs to
-            be set to True.
+            be set to True. The path_to_retrain_model can also be a S3-like (Azure, AWS, Google) bucket URI string path
+            (e.g. ``"s3://path/to/aws/s3/bucket.ckpt"``). Or it can be a ``S3Path`` S3-like URI using `cloudpathlib`
+            to handle S3-like bucket. See `cloudpathlib <https://cloudpathlib.drivendata.org/stable/>`
+            for detail on supported S3 buckets provider and URI condition. The default value is None.
         cache_dir (Union[str, None]): The path to the cached directory to use for downloading (and loading) the
             embeddings model and the model pretrained weights.
         offline (bool): Whether or not the model is an offline one, meaning you have already downloaded the pre-trained
@@ -164,15 +169,15 @@ class AddressParser:
         .. code-block:: python
 
             address_parser = AddressParser(model_type="fasttext",
-                                           path_to_retrained_model="/path_to_a_retrain_fasttext_model.ckpt")
+                                           path_to_model_weights="/path_to_a_retrain_fasttext_model.ckpt")
             parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
 
         Using a retrained model trained on different tags
 
         .. code-block:: python
 
-            # We don't give the model_type since it's ignored when using path_to_retrained_model
-            address_parser = AddressParser(path_to_retrained_model="/path_to_a_retrain_fasttext_model.ckpt")
+            # We don't give the model_type since it's ignored when using path_to_model_weights
+            address_parser = AddressParser(path_to_model_weights="/path_to_a_retrain_fasttext_model.ckpt")
             parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
 
         Using a retrained model with attention
@@ -180,7 +185,7 @@ class AddressParser:
         .. code-block:: python
 
             address_parser = AddressParser(model_type="fasttext",
-                                           path_to_retrained_model="/path_to_a_retrain_fasttext_attention_model.ckpt",
+                                           path_to_model_weights="/path_to_a_retrain_fasttext_attention_model.ckpt",
                                            attention_mechanism=True)
             parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
 
@@ -193,6 +198,21 @@ class AddressParser:
                                            offline=True)
             parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
 
+         Using a retrained model in an S3-like bucket.
+
+        .. code-block:: python
+
+            address_parser = AddressParser(model_type="fasttext",
+                                           path_to_model_weights="s3://path/to/bucket.ckpt")
+            parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
+
+         Using a retrained model in an S3-like bucket using CloudPathLib.
+
+        .. code-block:: python
+
+            address_parser = AddressParser(model_type="fasttext",
+                                           path_to_model_weights=CloudPath("s3://path/to/bucket.ckpt"))
+            parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
     """
 
     def __init__(
@@ -202,7 +222,7 @@ class AddressParser:
         device: Union[int, str, torch.device] = 0,
         rounding: int = 4,
         verbose: bool = True,
-        path_to_retrained_model: Union[str, None] = None,
+        path_to_retrained_model: Union[S3Path, str, None] = None,
         cache_dir: Union[str, None] = None,
         offline: bool = False,
     ) -> None:
@@ -222,7 +242,7 @@ class AddressParser:
         seq2seq_kwargs = {}  # Empty for default settings
 
         if path_to_retrained_model is not None:
-            checkpoint_weights = torch.load(path_to_retrained_model, map_location="cpu")
+            checkpoint_weights = handle_weights_upload(path_to_model_to_upload=path_to_retrained_model)
             if checkpoint_weights.get("model_type") is None:
                 # Validate if we have the proper metadata, it has at least the parser model type
                 # if no other thing have been modified.
@@ -237,6 +257,7 @@ class AddressParser:
                     "See AddressParser.retrain for more details."
                 )
                 raise RuntimeError(error_text)
+
             if validate_if_new_seq2seq_params(checkpoint_weights):
                 seq2seq_kwargs = checkpoint_weights.get("seq2seq_params")
             if validate_if_new_prediction_tags(checkpoint_weights):
@@ -501,6 +522,12 @@ class AddressParser:
             logging_path (str): The logging path for the checkpoints. Poutyne will use the best one and reload the
                 state if any checkpoints are there. Thus, an error will be raised if you change the model type.
                 For example,  you retrain a FastText model and then retrain a BPEmb in the same logging path directory.
+                The logging_path can also be a S3-like (Azure, AWS, Google) bucket URI string path
+                (e.g. ``"s3://path/to/aws/s3/bucket.ckpt"``). Or it can be a ``S3Path`` S3-like URI using `cloudpathlib`
+                to handle S3-like bucket. See `cloudpathlib <https://cloudpathlib.drivendata.org/stable/>`
+                for detail on supported S3 buckets provider and URI condition.
+                If the logging_path is a S3 bucket, we will only save the best checkpoint to the S3 Bucket at the end
+                of training.
                 By default, the path is ``./checkpoints``.
             disable_tensorboard (bool): To disable Poutyne automatic Tensorboard monitoring. By default, we disable them
                 (true).
@@ -801,6 +828,7 @@ class AddressParser:
                 else f"retrained_{self.model_type}_address_parser.ckpt"
             )
             file_path = os.path.join(logging_path, file_name)
+
             torch_save = {
                 "address_tagger_model": exp.model.network.state_dict(),
                 "model_type": self.model_type,
@@ -821,7 +849,29 @@ class AddressParser:
                 }
             )
 
-            torch.save(torch_save, file_path)
+            if isinstance(file_path, S3Path):
+                # To handle CloudPath path_to_model_weights
+                try:
+                    with file_path.open("wb") as file:
+                        torch.save(torch_save, file)
+                except FileNotFoundError as error:
+                    raise FileNotFoundError("The file in the S3 bucket was not found.") from error
+
+            elif "s3://" in file_path:
+                file_path = CloudPath(file_path)
+                try:
+                    with file_path.open("wb") as file:
+                        torch.save(torch_save, file)
+                except FileNotFoundError as error:
+                    raise FileNotFoundError("The file in the S3 bucket was not found.") from error
+            else:
+                try:
+                    torch.save(torch_save, file_path)
+                except FileNotFoundError as error:
+                    if "s3" in file_path or "//" in file_path or ":" in file_path:
+                        raise FileNotFoundError(
+                            "Are You trying to use a AWS S3 URI? If so path need to start with s3://."
+                        ) from error
             return train_res
 
     def test(
@@ -1254,9 +1304,12 @@ class AddressParser:
         res = []
 
         for address in addresses:
+            processed_address = address
+
             for pre_processor in self.pre_processors:
                 processed_address = pre_processor(address)
-                res.append(" ".join(processed_address.split()))
+
+            res.append(" ".join(processed_address.split()))
         return res
 
     def is_same_model_type(self, other) -> bool:

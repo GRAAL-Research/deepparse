@@ -1254,9 +1254,12 @@ class AddressParser:
         res = []
 
         for address in addresses:
+            processed_address = address
+
             for pre_processor in self.pre_processors:
                 processed_address = pre_processor(address)
-                res.append(" ".join(processed_address.split()))
+
+            res.append(" ".join(processed_address.split()))
         return res
 
     def is_same_model_type(self, other) -> bool:

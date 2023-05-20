@@ -226,7 +226,7 @@ class AddressParser:
             if checkpoint_weights.get("model_type") is None:
                 # Validate if we have the proper metadata, it has at least the parser model type
                 # if no other thing have been modified.
-                raise RuntimeError(
+                error_text = (
                     "You are not using the proper retrained checkpoint for Deepparse, since we also export other"
                     "informations along with the model weights. "
                     "When we retrain an AddressParser, by default, we create a "
@@ -236,6 +236,7 @@ class AddressParser:
                     "Be sure to use that checkpoint since it includes some metadata for the reloading. "
                     "See AddressParser.retrain for more details."
                 )
+                raise RuntimeError(error_text)
             if validate_if_new_seq2seq_params(checkpoint_weights):
                 seq2seq_kwargs = checkpoint_weights.get("seq2seq_params")
             if validate_if_new_prediction_tags(checkpoint_weights):

@@ -314,3 +314,9 @@
   increases the performance by about 1/100.
 
 ## dev
+
+- New models release with more meta-data
+- Add feature to use an AddressParser from a URI
+- Add feature to upload trained model to a URI
+- Add example on how to use URI for parsing from and to upload to
+- Improve error handling of `path_to_retrain_model`

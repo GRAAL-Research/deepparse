@@ -33,8 +33,8 @@ class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
         self.temp_dir_obj = TemporaryDirectory()
         self.fake_cache_path = self.temp_dir_obj.name
         self.a_file_extension = "version"
-        self.latest_fasttext_version = "b4f098bb8909b1c8a8d24eea07df3435"
-        self.latest_bpemb_version = "ac0dc019748b6853dca412add7234203"
+        self.latest_fasttext_version = "f67a0517c70a314bdde0b8440f21139d"
+        self.latest_bpemb_version = "aa32fa918494b461202157c57734c374"
         self.a_seed = 42
         self.verbose = False
 

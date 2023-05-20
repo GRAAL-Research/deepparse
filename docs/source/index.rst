@@ -776,9 +776,11 @@ API Reference
   :caption: Examples
 
   examples/parse_addresses
+  examples/parse_addresses_uri
   examples/parse_addresses_with_cli
   examples/retrained_model_parsing
   examples/fine_tuning
+  examples/fine_tuning_uri
   examples/fine_tuning_with_csv_dataset
   examples/retrain_attention_model
   examples/retrain_with_new_prediction_tags

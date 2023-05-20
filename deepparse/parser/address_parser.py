@@ -522,8 +522,13 @@ class AddressParser:
             logging_path (str): The logging path for the checkpoints. Poutyne will use the best one and reload the
                 state if any checkpoints are there. Thus, an error will be raised if you change the model type.
                 For example,  you retrain a FastText model and then retrain a BPEmb in the same logging path directory.
+                The logging_path can also be a S3-like (Azure, AWS, Google) bucket URI string path
+                (e.g. ``"s3://path/to/aws/s3/bucket.ckpt"``). Or it can be a ``S3Path`` S3-like URI using `cloudpathlib`
+                to handle S3-like bucket. See `cloudpathlib <https://cloudpathlib.drivendata.org/stable/>`
+                for detail on supported S3 buckets provider and URI condition.
+                If the logging_path is a S3 bucket, we will only save the best checkpoint to the S3 Bucket at the end
+                of training.
                 By default, the path is ``./checkpoints``.
-                # TODO: add can be S3Path
             disable_tensorboard (bool): To disable Poutyne automatic Tensorboard monitoring. By default, we disable them
                 (true).
             prediction_tags (Union[dict, None]): A dictionary where the keys are the address components
@@ -844,7 +849,6 @@ class AddressParser:
                 }
             )
 
-            # TODO: validate if work and tests
             if isinstance(file_path, S3Path):
                 # To handle CloudPath path_to_model_weights
                 try:

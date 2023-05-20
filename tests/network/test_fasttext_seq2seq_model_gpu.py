@@ -54,7 +54,7 @@ class FasttextSeq2SeqGPUTest(Seq2SeqTestCase):
             )
             download_weights_mock.assert_called_with(self.model_type, self.a_root_path, verbose=self.verbose)
 
-    @patch("deepparse.network.seq2seq.torch")
+    @patch("deepparse.weights_tools.torch")
     @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
     def test_givenRetrainedWeights_whenInstantiatingAFastTextSeq2SeqModel_thenShouldUseRetrainedWeights(
         self, load_state_dict_mock, torch_mock
@@ -69,11 +69,10 @@ class FasttextSeq2SeqGPUTest(Seq2SeqTestCase):
             path_to_retrained_model=self.a_path_to_retrained_model,
         )
 
-        torch_load_call = [call.load(self.a_path_to_retrained_model, map_location=self.a_torch_device)]
+        torch_load_call = [call.load(self.a_path_to_retrained_model, map_location=self.a_cpu_device)]
         torch_mock.assert_has_calls(torch_load_call)
 
-        load_state_dict_call = [call(all_layers_params)]
-        load_state_dict_mock.assert_has_calls(load_state_dict_call)
+        load_state_dict_mock.assert_called()
 
     @patch("deepparse.network.seq2seq.Encoder")
     @patch("deepparse.network.seq2seq.download_weights")

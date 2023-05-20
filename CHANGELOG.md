@@ -321,3 +321,4 @@
 - Add an example of how to use URI for parsing from and uploading to
 - Improve error handling of `path_to_retrain_model`
 - Bug-fix pre-processor error
+- Add verbose override and improve verbosity handling in retrain

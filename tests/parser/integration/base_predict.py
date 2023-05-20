@@ -30,8 +30,8 @@ class AddressParserPredictBase(AddressParserBase):
     def assert_properly_parse(self, parsed_address, multiple_address=False):
         if multiple_address:
             self.assertIsInstance(parsed_address, List)
-            parsed_address = parsed_address[0]
             self.assertNotEqual(parsed_address[0], parsed_address[1])
+            parsed_address = parsed_address[0]
         self.assertIsInstance(parsed_address, FormattedParsedAddress)
 
     def tearDown(self) -> None:

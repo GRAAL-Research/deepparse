@@ -111,8 +111,8 @@ class AddressParserPredictCPUTest(AddressParserPredictBase):
         config = {"model_type": "bpemb", "device": self.device, "verbose": False}
         self.setup_model_with_config(config)
 
-        parse_address = self.a_model([self.an_address_to_parse, self.another_address_to_parse])
-        self.assert_properly_parse(parse_address, multiple_address=True)
+        parse_addresses = self.a_model([self.an_address_to_parse, self.another_address_to_parse])
+        self.assert_properly_parse(parse_addresses, multiple_address=True)
 
 
 # test if num_workers > 0 is correct for the data loader

@@ -30,7 +30,7 @@ class PretrainedWeightsBase(CaptureOutputTestCase):
         path_to_default_model = os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "fasttext.ckpt")
         default_checkpoint_weights = torch.load(path_to_default_model, map_location="cpu")
         checkpoint_weights = {
-            "address_tagger_model": default_checkpoint_weights,
+            "address_tagger_model": default_checkpoint_weights.get("address_tagger_model"),
             "model_type": "fasttext",
             "named_parser": "PreTrainedFastTextAddressParser",
         }

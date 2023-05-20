@@ -258,13 +258,13 @@ class ParseTests(PretrainedWeightsBase):
                     self.pickle_p_export_filename,
                     "--device",
                     self.cpu_device,
-                    "--path_to_model_weights",
+                    "--path_to_retrained_model",
                     self.path_to_retrain_fasttext,
                 ]
             )
 
         expected_first_message = (
-            f"Parsing dataset file {self.fake_data_path_pickle} using the parser " f"PreTrainedFastTextAddressParser"
+            f"Parsing dataset file {self.fake_data_path_pickle} using the parser PreTrainedFastTextAddressParser"
         )
         actual_first_message = self._caplog.records[0].message
         self.assertEqual(expected_first_message, actual_first_message)
@@ -281,7 +281,7 @@ class ParseTests(PretrainedWeightsBase):
                     self.pickle_p_export_filename,
                     "--device",
                     self.cpu_device,
-                    "--path_to_model_weights",
+                    "--path_to_retrained_model",
                     path_to_retrained_model,
                 ]
             )

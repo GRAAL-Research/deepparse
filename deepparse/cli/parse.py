@@ -91,7 +91,7 @@ def main(args=None) -> None:
     parser_args.update(**parser_args_update_args)
 
     if path_to_retrained_model is not None:
-        parser_args.update({"path_to_model_weights": path_to_retrained_model})
+        parser_args.update({"path_to_retrained_model": path_to_retrained_model})
 
     address_parser = AddressParser(**parser_args)
 

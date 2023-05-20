@@ -1,9 +1,10 @@
 import math
 import os
-from typing import List, OrderedDict, Tuple
+from typing import List, OrderedDict, Tuple, Union
 
 import numpy as np
 import torch
+from cloudpathlib import CloudPath, S3Path
 
 
 def validate_if_new_prediction_tags(checkpoint_weights: dict) -> bool:
@@ -138,3 +139,35 @@ def infer_model_type(checkpoint_weights: OrderedDict, attention_mechanism: bool)
         attention_mechanism = True
 
     return model_type, attention_mechanism
+
+
+def handle_weights_upload(path_to_retrained_model: Union[str, S3Path]) -> OrderedDict:
+    if isinstance(path_to_retrained_model, S3Path):
+        # To handle CloudPath path_to_retrained_model
+        try:
+            with path_to_retrained_model.open("rb") as file:
+                checkpoint_weights = torch.load(file, map_location="cpu")
+        except FileNotFoundError as e:
+            raise FileNotFoundError(f"The file in the S3 bucket was not found. Original error: {e}.")
+    elif "s3://" in path_to_retrained_model:
+        # To handle str S3-like URI.
+        if CloudPath is None:
+            raise ImportError("cloudpathlib needs to be installed to use a S3-like URI as path_to_retrained_model.")
+        path_to_retrained_model = CloudPath(path_to_retrained_model)
+        try:
+            with path_to_retrained_model.open("rb") as file:
+                checkpoint_weights = torch.load(file, map_location="cpu")
+        except FileNotFoundError as e:
+            raise FileNotFoundError(f"The file in the S3 bucket was not found. Original error: {e}.")
+    else:
+        # Path is a local one (or a wrongly written S3 URI).
+        try:
+            checkpoint_weights = torch.load(path_to_retrained_model, map_location="cpu")
+        except FileNotFoundError as e:
+            if "s3" in path_to_retrained_model or "//" in path_to_retrained_model or ":" in path_to_retrained_model:
+                raise FileNotFoundError(
+                    f"{e}. Are You trying to use a AWS S3 URI? If so path need to start with" f"s3://."
+                )
+            else:
+                raise e
+    return checkpoint_weights

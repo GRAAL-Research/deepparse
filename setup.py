@@ -84,7 +84,7 @@ def main():
         description="A library for parsing multinational street addresses using deep learning.",
         long_description=readme,
         long_description_content_type="text/markdown",
-        extras_require={"colorama": "colorama>=0.4.3", "cloudpathlib": "cloudpathlib>=0.13.0"},
+        extras_require={"colorama": "colorama>=0.4.3"},
     )
 
 

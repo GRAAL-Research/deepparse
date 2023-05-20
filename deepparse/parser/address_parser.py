@@ -31,6 +31,7 @@ from .tools import (
     pretrained_parser_in_directory,
     validate_if_new_prediction_tags,
     validate_if_new_seq2seq_params,
+    handle_weights_upload,
 )
 from .. import validate_data_to_parse
 from ..converter import TagsConverter, DataProcessorFactory, DataPadder
@@ -44,10 +45,8 @@ from ..pre_processing import trailing_whitespace_cleaning, double_whitespaces_cl
 from ..tools import CACHE_PATH, valid_poutyne_version
 from ..vectorizer import VectorizerFactory
 
-try:
-    from cloudpathlib import CloudPath, S3Path
-except ImportError:
-    CloudPath = None
+from cloudpathlib import CloudPath, S3Path
+
 
 _pre_trained_tags_to_idx = {
     "StreetNumber": 0,
@@ -245,39 +244,7 @@ class AddressParser:
         seq2seq_kwargs = {}  # Empty for default settings
 
         if path_to_retrained_model is not None:
-            if isinstance(path_to_retrained_model, S3Path):
-                # To handle CloudPath path_to_retrained_model
-                try:
-                    with path_to_retrained_model.open("rb") as file:
-                        checkpoint_weights = torch.load(file, map_location="cpu")
-                except FileNotFoundError as e:
-                    raise FileNotFoundError(f"The file in the S3 bucket was not found. Original error: {e}.")
-            elif "s3://" in path_to_retrained_model:
-                # To handle str S3-like URI.
-                if CloudPath is None:
-                    raise ImportError(
-                        "cloudpathlib needs to be installed to use a S3-like " "URI as path_to_retrained_model."
-                    )
-                path_to_retrained_model = CloudPath(path_to_retrained_model)
-                try:
-                    with path_to_retrained_model.open("rb") as file:
-                        checkpoint_weights = torch.load(file, map_location="cpu")
-                except FileNotFoundError as e:
-                    raise FileNotFoundError(f"The file in the S3 bucket was not found. Original error: {e}.")
-            else:
-                try:
-                    checkpoint_weights = torch.load(path_to_retrained_model, map_location="cpu")
-                except FileNotFoundError as e:
-                    if (
-                        "s3" in path_to_retrained_model
-                        or "//" in path_to_retrained_model
-                        or ":" in path_to_retrained_model
-                    ):
-                        raise FileNotFoundError(
-                            f"{e}. Are You trying to use a AWS S3 URI? If so path need to start with" f"s3://."
-                        )
-                    else:
-                        raise e
+            checkpoint_weights = handle_weights_upload(path_to_retrained_model=path_to_retrained_model)
             if checkpoint_weights.get("model_type") is None:
                 # Validate if we have the proper metadata, it has at least the parser model type
                 # if no other thing have been modified.
@@ -292,6 +259,7 @@ class AddressParser:
                     "See AddressParser.retrain for more details."
                 )
                 raise RuntimeError(error_text)
+
             if validate_if_new_seq2seq_params(checkpoint_weights):
                 seq2seq_kwargs = checkpoint_weights.get("seq2seq_params")
             if validate_if_new_prediction_tags(checkpoint_weights):

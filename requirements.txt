@@ -9,3 +9,4 @@ gensim>=4.2.0
 fasttext
 pandas
 urllib3
+cloudpathlib[s3, gs, azure]

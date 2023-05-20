@@ -478,6 +478,7 @@ class AddressParser:
         seq2seq_params: Union[Dict, None] = None,
         layers_to_freeze: Union[str, None] = None,
         name_of_the_retrain_parser: Union[None, str] = None,
+        verbose: Union[None, bool] = None,
     ) -> List[Dict]:
         # pylint: disable=too-many-arguments, too-many-locals, too-many-branches, too-many-statements
 
@@ -573,6 +574,9 @@ class AddressParser:
                     - if prediction_tags is not ``None``, the following tag: ``ModifiedPredictionTags``,
                     - if seq2seq_params is not ``None``, the following tag: ``ModifiedSeq2SeqConfiguration``, and
                     - if layers_to_freeze is not ``None``, the following tag: ``FreezedLayer{portion}``.
+            verbose (Union[None, bool]): To override the AddressParser verbosity for the test. When set to True or
+                False, it will override (but it does not change the AddressParser verbosity) the test verbosity.
+                If set to the default value None, the AddressParser verbosity is used as the test verbosity.
 
 
         Return:
@@ -773,6 +777,10 @@ class AddressParser:
             batch_metrics=[accuracy],
         )
 
+        # Handle the verbose overriding param
+        if verbose is None:
+            verbose = self.verbose
+
         try:
             with_capturing_context = False
             if not valid_poutyne_version(min_major=1, min_minor=8):
@@ -791,6 +799,7 @@ class AddressParser:
                 callbacks=callbacks,
                 disable_tensorboard=disable_tensorboard,
                 capturing_context=with_capturing_context,
+                verbose=verbose,
             )
         except RuntimeError as error:
             list_of_file_path = os.listdir(path=".")
@@ -1168,8 +1177,8 @@ class AddressParser:
         """
         return self.processor.process_for_inference(data)
 
-    @staticmethod
     def _retrain(
+        self,
         experiment: Experiment,
         train_generator: DatasetContainer,
         valid_generator: DatasetContainer,
@@ -1178,6 +1187,7 @@ class AddressParser:
         callbacks: List,
         disable_tensorboard: bool,
         capturing_context: bool,
+        verbose: Union[None, bool],
     ) -> List[Dict]:
         # pylint: disable=too-many-arguments
         # If Poutyne 1.7 and before, we capture poutyne print since it print some exception.
@@ -1190,6 +1200,7 @@ class AddressParser:
                 seed=seed,
                 callbacks=callbacks,
                 disable_tensorboard=disable_tensorboard,
+                verbose=verbose,
             )
         return train_res
 

@@ -4,7 +4,6 @@ import os
 import random
 import warnings
 from abc import ABC
-from collections import OrderedDict
 from typing import Tuple, Union, List
 
 import torch
@@ -12,6 +11,7 @@ from torch import nn
 
 from .decoder import Decoder
 from .encoder import Encoder
+from .. import handle_weights_upload
 from ..tools import download_weights, latest_version
 
 
@@ -113,20 +113,21 @@ class Seq2SeqModel(ABC, nn.Module):
                     )
                 download_weights(model_type, cache_dir, verbose=self.verbose)
 
-        all_layers_params = torch.load(model_path, map_location=self.device)
-        self.load_state_dict(all_layers_params)
+        self._load_weights(path_to_model_torch_archive=model_path)
 
-    def _load_weights(self, path_to_retrained_model: str) -> None:
+    def _load_weights(self, path_to_model_torch_archive: str) -> None:
         """
         Method to load (into the network) the weights.
 
         Args:
-            path_to_retrained_model (str): The path to the fine-tuned model.
+            path_to_model_torch_archive (str): The path to the fine-tuned model Torch archive.
         """
-        all_layers_params = torch.load(path_to_retrained_model, map_location=self.device)
-        if isinstance(all_layers_params, dict) and not isinstance(all_layers_params, OrderedDict):
-            # Case where we have a retrained model with a different tagging space
-            all_layers_params = all_layers_params.get("address_tagger_model")
+        all_layers_params = handle_weights_upload(
+            path_to_model_to_upload=path_to_model_torch_archive, device=self.device
+        )
+
+        # All the time, our torch archive include meta-data along with the model weights
+        all_layers_params = all_layers_params.get("address_tagger_model")
         self.load_state_dict(all_layers_params)
 
     def _encoder_step(self, to_predict: torch.Tensor, lengths: List, batch_size: int) -> Tuple:

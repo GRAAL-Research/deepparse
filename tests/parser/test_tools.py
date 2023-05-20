@@ -8,10 +8,8 @@ import os
 import unittest
 from tempfile import TemporaryDirectory
 from unittest import skipIf
-from unittest.mock import MagicMock, patch, call
 
 import torch
-from cloudpathlib import S3Path
 
 from deepparse.parser.tools import (
     indices_splitting,
@@ -23,7 +21,6 @@ from deepparse.parser.tools import (
     pretrained_parser_in_directory,
     handle_model_name,
     infer_model_type,
-    handle_weights_upload,
 )
 from tests.parser.base import PretrainedWeightsBase
 from tests.tools import create_file
@@ -515,55 +512,6 @@ class ToolsTests(PretrainedWeightsBase):
         actual_inferred_model_type, _ = infer_model_type(checkpoint_weights, attention_mechanism)
 
         self.assertEqual(expected_inferred_model_type, actual_inferred_model_type)
-
-    @patch("deepparse.parser.tools.torch")
-    def test_givenAS3Path_whenHandleWeights_upload_thenReturnProperWeights(self, torch_mock):
-        s3_path = MagicMock(spec=S3Path)
-
-        weights_mock = MagicMock()
-        torch_mock.load().return_value = weights_mock
-
-        handle_weights_upload(path_to_retrained_model=s3_path)
-
-        torch_mock.has_calls([call.load()])
-
-    @patch("deepparse.parser.tools.CloudPath")
-    @patch("deepparse.parser.tools.torch")
-    def test_givenAStringS3Path_whenHandleWeights_upload_thenReturnProperWeights(self, torch_mock, cloud_path_mock):
-        s3_path = "s3://a_path"
-
-        weights_mock = MagicMock()
-        torch_mock.load().return_value = weights_mock
-
-        handle_weights_upload(path_to_retrained_model=s3_path)
-
-        torch_mock.has_calls([call.load()])
-        cloud_path_mock.assert_called()
-
-    @patch("deepparse.parser.tools.CloudPath")
-    @patch("deepparse.parser.tools.torch")
-    def test_givenAStringPath_whenHandleWeights_upload_thenReturnProperWeights(self, torch_mock, cloud_path_mock):
-        s3_path = "a_normal_path.ckpt"
-
-        weights_mock = MagicMock()
-        torch_mock.load().return_value = weights_mock
-
-        handle_weights_upload(path_to_retrained_model=s3_path)
-
-        torch_mock.has_calls([call.load()])
-
-        cloud_path_mock.assert_not_called()
-
-    def test_givenAWrongfullyStringS3Path_whenHandleWeights_upload_thenRaiseError(self):
-        s3_path = "s3/model.ckpt"
-
-        with self.assertRaises(FileNotFoundError):
-            handle_weights_upload(path_to_retrained_model=s3_path)
-
-        s3_path = "s3//model.ckpt"
-
-        with self.assertRaises(FileNotFoundError):
-            handle_weights_upload(path_to_retrained_model=s3_path)
 
 
 if __name__ == "__main__":

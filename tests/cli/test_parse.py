@@ -258,7 +258,7 @@ class ParseTests(PretrainedWeightsBase):
                     self.pickle_p_export_filename,
                     "--device",
                     self.cpu_device,
-                    "--path_to_retrained_model",
+                    "--path_to_model_weights",
                     self.path_to_retrain_fasttext,
                 ]
             )
@@ -281,7 +281,7 @@ class ParseTests(PretrainedWeightsBase):
                     self.pickle_p_export_filename,
                     "--device",
                     self.cpu_device,
-                    "--path_to_retrained_model",
+                    "--path_to_model_weights",
                     path_to_retrained_model,
                 ]
             )

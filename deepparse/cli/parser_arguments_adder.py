@@ -107,7 +107,7 @@ def add_batch_size_arg(parser: ArgumentParser) -> None:
 
 def add_path_to_retrained_model_arg(parser: ArgumentParser) -> None:
     parser.add_argument(
-        "--path_to_retrained_model",
+        "--path_to_model_weights",
         help=wrap("A path to a retrained model to use for testing."),
         type=str,
         default=None,

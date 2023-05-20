@@ -14,6 +14,7 @@ from platform import system
 from typing import Dict, List, Tuple, Union, Callable
 
 import torch
+from cloudpathlib import CloudPath, S3Path
 from poutyne.framework import Experiment
 from torch.optim import SGD
 from torch.utils.data import DataLoader, Subset
@@ -31,7 +32,6 @@ from .tools import (
     pretrained_parser_in_directory,
     validate_if_new_prediction_tags,
     validate_if_new_seq2seq_params,
-    handle_weights_upload,
 )
 from .. import validate_data_to_parse
 from ..converter import TagsConverter, DataProcessorFactory, DataPadder
@@ -44,9 +44,7 @@ from ..pre_processing import coma_cleaning, lower_cleaning, hyphen_cleaning
 from ..pre_processing import trailing_whitespace_cleaning, double_whitespaces_cleaning
 from ..tools import CACHE_PATH, valid_poutyne_version
 from ..vectorizer import VectorizerFactory
-
-from cloudpathlib import CloudPath, S3Path
-
+from ..weights_tools import handle_weights_upload
 
 _pre_trained_tags_to_idx = {
     "StreetNumber": 0,
@@ -90,7 +88,7 @@ class AddressParser:
             - ``"lightest"`` (the one using the less RAM and GPU usage) (equivalent to ``"fasttext-light"``),
             - ``"best"`` (the best accuracy performance) (equivalent to ``"bpemb"``).
 
-            The default value is ``"best"`` for the most accurate model. Ignored if ``path_to_retrained_model`` is not
+            The default value is ``"best"`` for the most accurate model. Ignored if ``path_to_model_weights`` is not
             ``None``. To further improve performance, consider using the models (fasttext or BPEmb) with their
             counterparts using an attention mechanism with the ``attention_mechanism`` flag.
         attention_mechanism (bool): Whether to use the model with an attention mechanism. The model will use an
@@ -171,15 +169,15 @@ class AddressParser:
         .. code-block:: python
 
             address_parser = AddressParser(model_type="fasttext",
-                                           path_to_retrained_model="/path_to_a_retrain_fasttext_model.ckpt")
+                                           path_to_model_weights="/path_to_a_retrain_fasttext_model.ckpt")
             parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
 
         Using a retrained model trained on different tags
 
         .. code-block:: python
 
-            # We don't give the model_type since it's ignored when using path_to_retrained_model
-            address_parser = AddressParser(path_to_retrained_model="/path_to_a_retrain_fasttext_model.ckpt")
+            # We don't give the model_type since it's ignored when using path_to_model_weights
+            address_parser = AddressParser(path_to_model_weights="/path_to_a_retrain_fasttext_model.ckpt")
             parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
 
         Using a retrained model with attention
@@ -187,7 +185,7 @@ class AddressParser:
         .. code-block:: python
 
             address_parser = AddressParser(model_type="fasttext",
-                                           path_to_retrained_model="/path_to_a_retrain_fasttext_attention_model.ckpt",
+                                           path_to_model_weights="/path_to_a_retrain_fasttext_attention_model.ckpt",
                                            attention_mechanism=True)
             parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
 
@@ -205,7 +203,7 @@ class AddressParser:
         .. code-block:: python
 
             address_parser = AddressParser(model_type="fasttext",
-                                           path_to_retrained_model="s3://path/to/bucket.ckpt")
+                                           path_to_model_weights="s3://path/to/bucket.ckpt")
             parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
 
          Using a retrained model in an S3-like bucket using CloudPathLib.
@@ -213,7 +211,7 @@ class AddressParser:
         .. code-block:: python
 
             address_parser = AddressParser(model_type="fasttext",
-                                           path_to_retrained_model=CloudPath("s3://path/to/bucket.ckpt"))
+                                           path_to_model_weights=CloudPath("s3://path/to/bucket.ckpt"))
             parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
     """
 
@@ -244,7 +242,7 @@ class AddressParser:
         seq2seq_kwargs = {}  # Empty for default settings
 
         if path_to_retrained_model is not None:
-            checkpoint_weights = handle_weights_upload(path_to_retrained_model=path_to_retrained_model)
+            checkpoint_weights = handle_weights_upload(path_to_model_to_upload=path_to_retrained_model)
             if checkpoint_weights.get("model_type") is None:
                 # Validate if we have the proper metadata, it has at least the parser model type
                 # if no other thing have been modified.
@@ -525,6 +523,7 @@ class AddressParser:
                 state if any checkpoints are there. Thus, an error will be raised if you change the model type.
                 For example,  you retrain a FastText model and then retrain a BPEmb in the same logging path directory.
                 By default, the path is ``./checkpoints``.
+                # TODO: add can be S3Path
             disable_tensorboard (bool): To disable Poutyne automatic Tensorboard monitoring. By default, we disable them
                 (true).
             prediction_tags (Union[dict, None]): A dictionary where the keys are the address components
@@ -845,25 +844,30 @@ class AddressParser:
                 }
             )
 
-            if "s3://" in file_path:
-                if CloudPath is None:
-                    raise ImportError("cloudpathlib needs to be installed to use a S3-like URI as export path.")
-                path_to_retrained_model = CloudPath(file_path)
+            # TODO: validate if work and tests
+            if isinstance(file_path, S3Path):
+                # To handle CloudPath path_to_model_weights
                 try:
-                    with path_to_retrained_model.open("rb") as file:
+                    with file_path.open("wb") as file:
                         torch.save(torch_save, file)
-                except FileNotFoundError as e:
-                    raise FileNotFoundError(f"The file in the S3 bucket was not found. Original error: {e}.")
+                except FileNotFoundError as error:
+                    raise FileNotFoundError("The file in the S3 bucket was not found.") from error
+
+            elif "s3://" in file_path:
+                file_path = CloudPath(file_path)
+                try:
+                    with file_path.open("wb") as file:
+                        torch.save(torch_save, file)
+                except FileNotFoundError as error:
+                    raise FileNotFoundError("The file in the S3 bucket was not found.") from error
             else:
                 try:
                     torch.save(torch_save, file_path)
-                except FileNotFoundError as e:
+                except FileNotFoundError as error:
                     if "s3" in file_path or "//" in file_path or ":" in file_path:
                         raise FileNotFoundError(
-                            f"{e}. Are You trying to use a AWS S3 URI? If so path need to start with" f"s3://."
-                        )
-                    else:
-                        raise e
+                            "Are You trying to use a AWS S3 URI? If so path need to start with s3://."
+                        ) from error
             return train_res
 
     def test(

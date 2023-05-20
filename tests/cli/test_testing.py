@@ -196,7 +196,7 @@ class TestingTests(RetrainTestCase, PretrainedWeightsBase):
             parser_params = [
                 self.a_fasttext_model_type,
                 self.a_train_pickle_dataset_path,
-                "--path_to_retrained_model",
+                "--path_to_model_weights",
                 self.path_to_retrain_fasttext,
                 "--device",
                 self.cpu_device,

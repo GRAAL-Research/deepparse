@@ -322,3 +322,6 @@
 - Improve error handling of `path_to_retrain_model`
 - Bug-fix pre-processor error
 - Add verbose override and improve verbosity handling in retrain
+- Bug-fix the broken FastText installation using `fasttext-wheel` instead of `fasttext` (
+  see [here](https://github.com/facebookresearch/fastText/issues/512#issuecomment-1534519551)
+  and [here](https://github.com/facebookresearch/fastText/pull/1292)).

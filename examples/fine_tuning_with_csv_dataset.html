@@ -4,14 +4,13 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Retrain a Pretrained Model Using a CSV Dataset &mdash; deepparse 0.9.5 documentation</title>
+  <title>Retrain a Pretrained Model Using a CSV Dataset &mdash; deepparse 0.9.7 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
@@ -19,7 +18,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Retrain an Attention Mechanism Model" href="retrain_attention_model.html" />
-    <link rel="prev" title="Retrain a Pretrained Model" href="fine_tuning.html" /> 
+    <link rel="prev" title="Retrain a Pretrained Model" href="fine_tuning_uri.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -35,7 +34,7 @@
               <img src="../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.9.5
+                0.9.7
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -48,6 +47,7 @@
               <p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../parser.html">Parser</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pre_processor.html">Pre-Processors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../dataset_container.html">Dataset Container</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../comparer.html">Comparer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cli.html">CLI</a></li>
@@ -55,9 +55,11 @@
 <p class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="parse_addresses.html">Parse Addresses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parse_addresses_uri.html">Parse Addresses</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parse_addresses_with_cli.html">Parse Addresses Using Our CLI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="retrained_model_parsing.html">Use a Retrained Model to Parse Addresses</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fine_tuning.html">Retrain a Pretrained Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fine_tuning_uri.html">Retrain a Pretrained Model</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Retrain a Pretrained Model Using a CSV Dataset</a></li>
 <li class="toctree-l1"><a class="reference internal" href="retrain_attention_model.html">Retrain an Attention Mechanism Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
@@ -159,7 +161,7 @@ Otherwise, poutyne will try to reload the previous checkpoints, and our model ha
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="fine_tuning.html" class="btn btn-neutral float-left" title="Retrain a Pretrained Model" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="fine_tuning_uri.html" class="btn btn-neutral float-left" title="Retrain a Pretrained Model" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="retrain_attention_model.html" class="btn btn-neutral float-right" title="Retrain an Attention Mechanism Model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

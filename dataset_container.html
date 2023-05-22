@@ -4,14 +4,13 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dataset Container &mdash; deepparse 0.9.5 documentation</title>
+  <title>Dataset Container &mdash; deepparse 0.9.7 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
@@ -19,7 +18,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Comparer" href="comparer.html" />
-    <link rel="prev" title="Parser" href="parser.html" /> 
+    <link rel="prev" title="Pre-Processors" href="pre_processor.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -35,7 +34,7 @@
               <img src="_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.9.5
+                0.9.7
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -48,6 +47,7 @@
               <p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="parser.html">Parser</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pre_processor.html">Pre-Processors</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Dataset Container</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#interface">Interface</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#deepparse.dataset_container.DatasetContainer"><code class="docutils literal notranslate"><span class="pre">DatasetContainer</span></code></a></li>
@@ -73,9 +73,11 @@
 <p class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="examples/parse_addresses.html">Parse Addresses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/parse_addresses_uri.html">Parse Addresses</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/parse_addresses_with_cli.html">Parse Addresses Using Our CLI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/retrained_model_parsing.html">Use a Retrained Model to Parse Addresses</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/fine_tuning.html">Retrain a Pretrained Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/fine_tuning_uri.html">Retrain a Pretrained Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/fine_tuning_with_csv_dataset.html">Retrain a Pretrained Model Using a CSV Dataset</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/retrain_attention_model.html">Retrain an Attention Mechanism Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
@@ -215,7 +217,7 @@ following:</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data_path</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The path to the CSV dataset file.</p></li>
-<li><p><strong>column_names</strong> (<em>List</em>) – A column name list to extract the dataset element.
+<li><p><strong>column_names</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – A column name list to extract the dataset element.
 If the dataset container is a predict one, the list must be of exactly one element
 (i.e. the address column). On the other hand, if the dataset container is a training one, the list must be
 of exactly two elements: addresses and tags.</p></li>
@@ -263,7 +265,7 @@ The default value is true.</p></li>
 <dd><p>Return true if one of the string element is an empty one.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>string_elements</strong> (<em>List</em>) – A list of string to validate.</p>
+<dd class="field-odd"><p><strong>string_elements</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – A list of string to validate.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -274,7 +276,7 @@ The default value is true.</p></li>
 <dd><p>Return true if one of the string element is only whitespace.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>string_elements</strong> (<em>List</em>) – A list of string to validate.</p>
+<dd class="field-odd"><p><strong>string_elements</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – A list of string to validate.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -285,7 +287,7 @@ The default value is true.</p></li>
 <dd><p>Return true if one of the string element is a None value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>string_elements</strong> (<em>List</em>) – A list of string to validate.</p>
+<dd class="field-odd"><p><strong>string_elements</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – A list of string to validate.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -297,7 +299,7 @@ The default value is true.</p></li>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="parser.html" class="btn btn-neutral float-left" title="Parser" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pre_processor.html" class="btn btn-neutral float-left" title="Pre-Processors" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="comparer.html" class="btn btn-neutral float-right" title="Comparer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

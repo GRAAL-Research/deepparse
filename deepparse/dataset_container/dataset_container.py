@@ -225,7 +225,7 @@ class CSVDatasetContainer(DatasetContainer):
     Args:
 
         data_path (str): The path to the CSV dataset file.
-        column_names (List): A column name list to extract the dataset element.
+        column_names (list): A column name list to extract the dataset element.
             If the dataset container is a predict one, the list must be of exactly one element
             (i.e. the address column). On the other hand, if the dataset container is a training one, the list must be
             of exactly two elements: addresses and tags.

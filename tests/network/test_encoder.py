@@ -10,6 +10,8 @@ class EncoderTest(TestCase):
         self.input_size_dim = 300
         self.hidden_size = 1024
         self.num_layers = 1
+        # A batch of 3 sequence of length (respectively): 2, 4 and 3. Thus, the longest one is 4.
+        self.a_lengths_list = [1, 4, 3]
 
     def test_whenInstantiateEncoder_thenParametersAreOk(self):
         encoder = Encoder(self.input_size_dim, self.hidden_size, self.num_layers)
@@ -31,14 +33,14 @@ class EncoderTest(TestCase):
 
                     encoder = Encoder(self.input_size_dim, self.hidden_size, self.num_layers)
                     to_predict_mock = MagicMock()
-                    lengths_tensor_mock = MagicMock()
-                    encoder.forward(to_predict_mock, lengths_tensor_mock)
+
+                    encoder.forward(to_predict_mock, self.a_lengths_list)
 
                     pack_padded_sequence_mock.assert_has_calls(
                         [
                             call(
                                 to_predict_mock,
-                                lengths_tensor_mock.cpu(),
+                                self.a_lengths_list,
                                 batch_first=True,
                                 enforce_sorted=False,
                             )

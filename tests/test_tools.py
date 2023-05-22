@@ -17,7 +17,7 @@ from deepparse import (
     download_from_public_repository,
     latest_version,
     download_weights,
-    handle_poutyne_version,
+    extract_package_version,
     valid_poutyne_version,
     validate_data_to_parse,
     DataError,
@@ -33,8 +33,8 @@ class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
         self.temp_dir_obj = TemporaryDirectory()
         self.fake_cache_path = self.temp_dir_obj.name
         self.a_file_extension = "version"
-        self.latest_fasttext_version = "b4f098bb8909b1c8a8d24eea07df3435"
-        self.latest_bpemb_version = "ac0dc019748b6853dca412add7234203"
+        self.latest_fasttext_version = "f67a0517c70a314bdde0b8440f21139d"
+        self.latest_bpemb_version = "aa32fa918494b461202157c57734c374"
         self.a_seed = 42
         self.verbose = False
 
@@ -105,7 +105,7 @@ class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
         with patch("deepparse.tools.download_from_public_repository") as download_from_public_repository_mock:
             download_from_public_repository_mock.side_effect = HTTPError(an_http_error_msg, response=response_mock)
 
-            with self.assertWarns(UserWarning):
+            with self.assertWarns(RuntimeWarning):
                 latest_version("bpemb", self.fake_cache_path, verbose=True)
 
     def test_givenANoInternetError_whenLatestVersionCall_thenReturnTrue(
@@ -126,7 +126,7 @@ class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
         with patch("deepparse.tools.download_from_public_repository") as download_from_public_repository_mock:
             download_from_public_repository_mock.side_effect = MaxRetryError(pool=MagicMock(), url=MagicMock())
 
-            with self.assertWarns(UserWarning):
+            with self.assertWarns(RuntimeWarning):
                 latest_version("bpemb", self.fake_cache_path, verbose=True)
 
     @patch("deepparse.tools.os.path.exists", return_value=True)
@@ -212,7 +212,7 @@ class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
     def test_givenPoutyneVersion1_1_1_givenHandlePoutyneVersion_thenReturnVersion1_1(self, poutyne_mock):
         poutyne_mock.version.__version__ = "1.1.1"
 
-        actual = handle_poutyne_version()
+        actual = extract_package_version(package=poutyne_mock)
         expected = "1.1"
         self.assertEqual(expected, actual)
 
@@ -220,7 +220,7 @@ class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
     def test_givenPoutyneVersion1_1_1_1_givenHandlePoutyneVersion_thenReturnVersion1_1(self, poutyne_mock):
         poutyne_mock.version.__version__ = "1.1.1.1"
 
-        actual = handle_poutyne_version()
+        actual = extract_package_version(package=poutyne_mock)
         expected = "1.1"
         self.assertEqual(expected, actual)
 
@@ -228,7 +228,7 @@ class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
     def test_givenPoutyneVersion1_1_dev_givenHandlePoutyneVersion_thenReturnVersion1_1(self, poutyne_mock):
         poutyne_mock.version.__version__ = "1.1.dev1+81b3c7b"
 
-        actual = handle_poutyne_version()
+        actual = extract_package_version(package=poutyne_mock)
         expected = "1.1"
         self.assertEqual(expected, actual)
 
@@ -236,7 +236,7 @@ class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
     def test_givenPoutyneVersion1_1_1_dev_givenHandlePoutyneVersion_thenReturnVersion1_1(self, poutyne_mock):
         poutyne_mock.version.__version__ = "1.1.dev1+81b3c7b"
 
-        actual = handle_poutyne_version()
+        actual = extract_package_version(package=poutyne_mock)
         expected = "1.1"
         self.assertEqual(expected, actual)
 
@@ -244,7 +244,7 @@ class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
     def test_givenPoutyneVersion1_2_givenHandlePoutyneVersion_thenReturnVersion1_2(self, poutyne_mock):
         poutyne_mock.version.__version__ = "1.2"
 
-        actual = handle_poutyne_version()
+        actual = extract_package_version(package=poutyne_mock)
         expected = "1.2"
         self.assertEqual(expected, actual)
 

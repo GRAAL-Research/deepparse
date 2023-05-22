@@ -21,7 +21,7 @@ class FasttextEmbeddingsModelTest(TestCase):
         model.get_dimension = shape_mock
         self.model = model
 
-    @skipIf(platform.system().lower() == "windows", "Integration test not on Windows env.")
+    @skipIf(platform.system() == "Windows", "Integration test not on Windows env.")
     def test_whenInstantiatedWithPath_thenShouldLoadFasttextModel(self):
         with patch(
             "deepparse.embeddings_models.fasttext_embeddings_model.load_fasttext_embeddings",
@@ -31,7 +31,7 @@ class FasttextEmbeddingsModelTest(TestCase):
 
             loader.assert_called_with(self.a_path)
 
-    @skipIf(platform.system().lower() == "windows", "Integration test not on windows env.")
+    @skipIf(platform.system() == "Windows", "Integration test not on Windows env.")
     def test_whenCalledToEmbed_thenShouldCallLoadedModel(self):
         with patch(
             "deepparse.embeddings_models.fasttext_embeddings_model.load_fasttext_embeddings",
@@ -79,7 +79,7 @@ class FasttextEmbeddingsModelTest(TestCase):
 
                 loader.assert_called_with(self.a_path)
 
-    @skipIf(not platform.system().lower() == "windows", "Integration test on Windows env.")
+    @skipIf(not platform.system() == "Windows", "Integration test on Windows env.")
     def test_givenADimOf9Windows_whenAskDimProperty_thenReturnProperDim(self):
         with patch(
             "deepparse.embeddings_models.fasttext_embeddings_model.load_facebook_vectors",
@@ -91,7 +91,7 @@ class FasttextEmbeddingsModelTest(TestCase):
             expected = self.dim
             self.assertEqual(actual, expected)
 
-    @skipIf(platform.system().lower() == "windows", "Integration test not on Windows env.")
+    @skipIf(platform.system() == "Windows", "Integration test not on Windows env.")
     def test_givenADimOf9Linux_whenAskDimProperty_thenReturnProperDim(self):
         with patch(
             "deepparse.embeddings_models.fasttext_embeddings_model.load_fasttext_embeddings",

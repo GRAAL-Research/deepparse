@@ -18,7 +18,7 @@ from deepparse.errors import FastTextModelError
 from deepparse.metrics import nll_loss, accuracy
 from deepparse.parser import AddressParser
 from tests.parser.base import AddressParserPredictTestCase
-from tests.tools import BATCH_SIZE, ADataContainer, create_file
+from tests.tools import BATCH_SIZE, ADataContainer, create_file, create_fake_checkpoint
 
 
 class AddressParserRetrainTest(AddressParserPredictTestCase):
@@ -78,9 +78,9 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
     ):
         if num_workers is None:
             # AddressParser default num_workers settings is 1
-            # But, we change it to 0 for Windows OS to allow test to pass since it fail (volontairy)
+            # But, we change it to 0 for Windows OS to allow test to pass since it fail (voluntary)
             # at greater than 0 due to parallelism pickle error
-            if platform.system().lower() == "windows":
+            if platform.system() == "Windows":
                 num_workers = 0  # Default setting is 1, but We set it to zero to allow Windows tests to pass
             else:
                 num_workers = 1
@@ -279,8 +279,10 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
             self.address_parser_retrain_call()
 
         expect_error_message = (
-            f"You are currently training a different fasttext version from the one in"
-            f" the {self.a_logging_path}. Verify version."
+            "You are currently retraining a different FastText AddressParser configuration "
+            "in the same directory as a previous retrained model. "
+            "The configurations must be different (number of tag, seq2seq dimensions, etc.). "
+            "The easiest thing to do is to change the saving directory to avoid colliding checkpoint."
         )
         try:
             self.address_parser_retrain_call()
@@ -320,9 +322,11 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
             self.address_parser_retrain_call()
 
         expect_error_message = (
-            f"You are currently training a bpemb in the directory {self.a_logging_path} where a "
-            f"different retrained fasttext is currently his. Thus, the loading of the model is "
-            f"failing. Change directory to retrain the bpemb."
+            "You are currently training a BPEmb in the directory "
+            f"{self.a_logging_path} where a different retrained "
+            f"fasttext model is currently his."
+            f" Thus, the loading of the model checkpoint is failing. Change the logging path "
+            f'"{self.a_logging_path}" to something else to retrain the BPEmb model.'
         )
         try:
             self.address_parser_retrain_call()
@@ -393,7 +397,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         with self.assertRaises(FastTextModelError):
             self.address_parser_retrain_call()
 
-    @patch("deepparse.parser.address_parser.platform")
+    @patch("deepparse.parser.address_parser.system")
     @patch("deepparse.parser.address_parser.ModelFactory")
     @patch("deepparse.parser.address_parser.EmbeddingsModelFactory")
     @patch("deepparse.parser.address_parser.VectorizerFactory")
@@ -406,10 +410,9 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         vectorizer_factory_mock,
         embeddings_factory_mock,
         model_factory_mock,
-        platform_mock,
+        system_mock,
     ):
-        # OS equal Windows
-        platform_mock.system().__eq__.return_value = True
+        system_mock.return_value = "Windows"
 
         self.address_parser = AddressParser(
             model_type=self.a_fastest_model_type,
@@ -418,7 +421,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         )
 
         num_workers_gt_0 = 1
-        with self.assertRaises(ValueError):
+        with self.assertRaises(FastTextModelError):
             self.address_parser_retrain_call(num_workers=num_workers_gt_0)
 
     @patch("deepparse.parser.address_parser.torch.save")
@@ -1716,6 +1719,17 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
                 address_parser.retrain(
                     MagicMock(), train_ratio=0.8, batch_size=1, epochs=1, num_workers=num_workers_gt_0
                 )
+
+    def test_givenAnyModelWith_whenPathToTrainLeadToWrongCheckpoint_thenRaiseError(self):
+        a_path_to_retrained_model_with_missing_metadata = os.path.join(self.a_logging_path, "a_checkpoint.ckpt")
+        create_fake_checkpoint(path=a_path_to_retrained_model_with_missing_metadata, with_metadata=False)
+
+        with self.assertRaises(RuntimeError):
+            AddressParser(
+                model_type=self.a_fasttext_model_type,
+                device=self.a_device,
+                path_to_retrained_model=a_path_to_retrained_model_with_missing_metadata,
+            )
 
 
 if __name__ == "__main__":

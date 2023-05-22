@@ -29,7 +29,7 @@ Use deepparse to
 - retrain our pretrained models with or without freezing some layers,
 - train a new Seq2Seq addresses parsing models easily using a new model configuration.
 
-Deepparse is compatible with the **latest version of PyTorch** and  **Python >= 3.7**.
+Deepparse is compatible with the **latest version of PyTorch** and  **Python >= 3.8**.
 
 Countries and Results
 =====================
@@ -765,6 +765,7 @@ API Reference
   :caption: API
 
   parser
+  pre_processor
   dataset_container
   comparer
   cli
@@ -775,9 +776,11 @@ API Reference
   :caption: Examples
 
   examples/parse_addresses
+  examples/parse_addresses_uri
   examples/parse_addresses_with_cli
   examples/retrained_model_parsing
   examples/fine_tuning
+  examples/fine_tuning_uri
   examples/fine_tuning_with_csv_dataset
   examples/retrain_attention_model
   examples/retrain_with_new_prediction_tags

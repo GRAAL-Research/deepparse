@@ -38,7 +38,7 @@ class BPEmbSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
         self.decoder_input_setUp()
 
         predictions = self.seq2seq_model.forward(
-            self.to_predict_tensor, self.decomposition_lengths, self.a_lengths_tensor
+            self.to_predict_tensor, self.decomposition_lengths, self.a_lengths_list
         )
 
         self.assert_output_is_valid_dim(predictions, output_dim=self.number_of_tags)
@@ -51,7 +51,7 @@ class BPEmbSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
         predictions = self.seq2seq_model.forward(
             self.to_predict_tensor,
             self.decomposition_lengths,
-            self.a_lengths_tensor,
+            self.a_lengths_list,
             self.a_target_vector,
         )
 
@@ -69,7 +69,7 @@ class BPEmbSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
         self.decoder_input_setUp()
 
         predictions = self.seq2seq_model.forward(
-            self.to_predict_tensor, self.decomposition_lengths, self.a_lengths_tensor
+            self.to_predict_tensor, self.decomposition_lengths, self.a_lengths_list
         )
 
         self.assert_output_is_valid_dim(predictions, output_dim=self.re_trained_output_dim)
@@ -88,7 +88,7 @@ class BPEmbSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
         predictions = self.seq2seq_model.forward(
             self.to_predict_tensor,
             self.decomposition_lengths,
-            self.a_lengths_tensor,
+            self.a_lengths_list,
             self.a_target_vector,
         )
 

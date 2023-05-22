@@ -14,7 +14,7 @@ addresses, tags = zip(*address_container)
 speed_test_directory = "results/speed_test_results"
 os.makedirs(speed_test_directory, exist_ok=True)
 
-for model in ["fasttext", "bpemb"]:
+for model in ["fasttext", "bpemb", "fasttext-light"]:
     for attention_mechanism in [True, False]:
         for device in [0, "cpu"]:
             with open(

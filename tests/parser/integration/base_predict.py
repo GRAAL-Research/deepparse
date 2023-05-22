@@ -20,6 +20,7 @@ class AddressParserBase(TestCase):
     @classmethod
     def setUpClass(cls):
         cls.an_address_to_parse = "350 rue des lilas o"
+        cls.another_address_to_parse = "425 rue des lilas o"
 
     def setup_model_with_config(self, config):
         self.a_model = AddressParser(**config)
@@ -29,6 +30,7 @@ class AddressParserPredictBase(AddressParserBase):
     def assert_properly_parse(self, parsed_address, multiple_address=False):
         if multiple_address:
             self.assertIsInstance(parsed_address, List)
+            self.assertNotEqual(parsed_address[0], parsed_address[1])
             parsed_address = parsed_address[0]
         self.assertIsInstance(parsed_address, FormattedParsedAddress)
 

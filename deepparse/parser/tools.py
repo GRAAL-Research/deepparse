@@ -1,7 +1,7 @@
-import math
 import os
 from typing import List, OrderedDict, Tuple
 
+import math
 import numpy as np
 import torch
 
@@ -134,7 +134,10 @@ def infer_model_type(checkpoint_weights: OrderedDict, attention_mechanism: bool)
         else:
             model_type = "fasttext"
 
-    if "decoder.linear_attention_mechanism_encoder_outputs.weight" in checkpoint_weights.keys():
+    if (
+        "decoder.linear_attention_mechanism_encoder_outputs.weight"
+        in checkpoint_weights.get("address_tagger_model").keys()
+    ):
         attention_mechanism = True
 
     return model_type, attention_mechanism

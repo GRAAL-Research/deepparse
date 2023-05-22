@@ -257,7 +257,6 @@ class AddressParser:
                     "See AddressParser.retrain for more details."
                 )
                 raise RuntimeError(error_text)
-
             if validate_if_new_seq2seq_params(checkpoint_weights):
                 seq2seq_kwargs = checkpoint_weights.get("seq2seq_params")
             if validate_if_new_prediction_tags(checkpoint_weights):

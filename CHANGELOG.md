@@ -313,7 +313,7 @@
   suggested in the [documentation](https://pytorch.org/tutorials//intermediate/torch_compile_tutorial.html). It
   increases the performance by about 1/100.
 
-## dev
+## 0.9.7
 
 - New models release with more meta-data
 - Add a feature to use an AddressParser from a URI
@@ -325,3 +325,5 @@
 - Bug-fix the broken FastText installation using `fasttext-wheel` instead of `fasttext` (
   see [here](https://github.com/facebookresearch/fastText/issues/512#issuecomment-1534519551)
   and [here](https://github.com/facebookresearch/fastText/pull/1292)).
+
+## dev

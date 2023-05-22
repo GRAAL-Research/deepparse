@@ -25,23 +25,25 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
         cls.a_target_vector = torch.tensor([[0, 1, 1, 4, 5, 8], [1, 0, 3, 8, 0, 0]], device=cls.a_cpu_device)
         cls.a_transpose_target_vector = cls.a_target_vector.transpose(0, 1)
 
+    @patch("deepparse.weights_tools.torch")
     @patch("os.path.isfile")
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
     def test_givenNotLocalWeights_whenInstantiatingAFastTextSeq2SeqModel_thenShouldDownloadWeights(
-        self, load_state_dict_mock, torch_mock, isfile_mock
+        self, load_state_dict_mock, torch_mock, isfile_mock, torch_load_mock
     ):
         isfile_mock.return_value = False
         with patch("deepparse.network.seq2seq.download_weights") as download_weights_mock:
             FastTextSeq2SeqModel(self.cache_dir, self.a_cpu_device, output_size=self.output_size, verbose=self.verbose)
             download_weights_mock.assert_called_with(self.model_type, self.a_root_path, verbose=self.verbose)
 
+    @patch("deepparse.weights_tools.torch")
     @patch("deepparse.network.seq2seq.latest_version")
     @patch("os.path.isfile")
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
     def test_givenLocalWeightsNotLastVersion_whenInstantiatingAFastTextSeq2SeqModel_thenShouldDownloadWeights(
-        self, load_state_dict_mock, torch_mock, isfile_mock, last_version_mock
+        self, load_state_dict_mock, torch_mock, isfile_mock, last_version_mock, torch_load_mock
     ):
         isfile_mock.return_value = True
         last_version_mock.return_value = False
@@ -69,6 +71,7 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
 
         load_state_dict_mock.assert_called()
 
+    @patch("deepparse.weights_tools.torch")
     @patch("deepparse.network.seq2seq.Encoder")
     @patch("deepparse.network.seq2seq.download_weights")
     @patch("deepparse.network.seq2seq.latest_version")
@@ -83,6 +86,7 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
         last_version_mock,
         download_weights_mock,
         encoder_mock,
+        torch_load_mock,
     ):
         seq2seq_model = FastTextSeq2SeqModel(self.cache_dir, self.a_cpu_device, self.output_size, self.verbose)
 
@@ -95,6 +99,7 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
 
         encoder_mock.assert_has_calls(encoder_call)
 
+    @patch("deepparse.weights_tools.torch")
     @patch("deepparse.network.seq2seq.Decoder")
     @patch("deepparse.network.seq2seq.download_weights")
     @patch("deepparse.network.seq2seq.latest_version")
@@ -109,6 +114,7 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
         last_version_mock,
         download_weights_mock,
         decoder_mock,
+        torch_load_mock,
     ):
         seq2seq_model = FastTextSeq2SeqModel(
             self.cache_dir,
@@ -139,6 +145,7 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
 
         decoder_mock.assert_has_calls(decoder_call)
 
+    @patch("deepparse.weights_tools.torch")
     @patch("deepparse.network.seq2seq.Decoder")
     @patch("deepparse.network.seq2seq.download_weights")
     @patch("deepparse.network.seq2seq.latest_version")
@@ -153,6 +160,7 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
         last_version_mock,
         download_weights_mock,
         decoder_mock,
+        torch_load_mock,
     ):
         seq2seq_model = FastTextSeq2SeqModel(
             self.cache_dir,
@@ -183,6 +191,7 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
 
         decoder_mock.assert_has_calls(decoder_call)
 
+    @patch("deepparse.weights_tools.torch")
     @patch("deepparse.network.seq2seq.random.random")
     @patch("deepparse.network.seq2seq.Decoder")
     @patch("deepparse.network.seq2seq.download_weights")
@@ -199,6 +208,7 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
         download_weights_mock,
         decoder_mock,
         random_mock,
+        torch_load_mock,
     ):
         random_mock.return_value = self.a_value_lower_than_threshold
 
@@ -230,6 +240,7 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
 
         self.assert_has_calls_tensor_equals(decoder_mock, decoder_call)
 
+    @patch("deepparse.weights_tools.torch")
     @patch("deepparse.network.seq2seq.Encoder")
     @patch("deepparse.network.seq2seq.Decoder")
     @patch("deepparse.network.seq2seq.download_weights")
@@ -246,6 +257,7 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
         download_weights_mock,
         decoder_mock,
         encoder_mock,
+        torch_load_mock,
     ):
         to_predict_mock, lengths_list = self.setup_encoder_mocks()
 
@@ -276,6 +288,7 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
             ]
         )
 
+    @patch("deepparse.weights_tools.torch")
     @patch("deepparse.network.seq2seq.random.random")
     @patch("deepparse.network.seq2seq.Encoder")
     @patch("deepparse.network.seq2seq.Decoder")
@@ -294,6 +307,7 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
         decoder_mock,
         encoder_mock,
         random_mock,
+        torch_load_mock,
     ):
         random_mock.return_value = self.a_value_lower_than_threshold
 
@@ -332,6 +346,7 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
         )
         target_mock.assert_has_calls([call.transpose(0, 1)])
 
+    @patch("deepparse.weights_tools.torch")
     @patch("deepparse.network.seq2seq.random.random")
     @patch("deepparse.network.seq2seq.Encoder")
     @patch("deepparse.network.seq2seq.Decoder")
@@ -350,6 +365,7 @@ class FasttextSeq2SeqCPUTest(Seq2SeqTestCase):
         decoder_mock,
         encoder_mock,
         random_mock,
+        torch_load_mock,
     ):
         random_mock.return_value = self.a_value_lower_than_threshold
 

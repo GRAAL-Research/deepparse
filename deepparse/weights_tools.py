@@ -52,4 +52,5 @@ def handle_weights_upload(
                 raise FileNotFoundError(
                     "Are You trying to use a AWS S3 URI? If so path need to start with s3://."
                 ) from error
+            raise FileNotFoundError(f"The file {path_to_model_to_upload} was not found.") from error
     return checkpoint_weights

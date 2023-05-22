@@ -6,7 +6,7 @@ from typing import Tuple, List
 import torch
 from torch import nn
 
-from ..weights_init import weights_init
+from .. import weights_init
 
 
 class Decoder(nn.Module):

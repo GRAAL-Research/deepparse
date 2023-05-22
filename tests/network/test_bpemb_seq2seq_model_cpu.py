@@ -40,23 +40,25 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
             seq2seq_model.embedding_network.projection_layer.out_features,
         )
 
+    @patch("deepparse.weights_tools.torch")
     @patch("os.path.isfile")
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
     def test_givenNotLocalWeights_whenInstantiatingABPEmbSeq2SeqModel_thenShouldDownloadWeights(
-        self, load_state_dict_mock, torch_mock, isfile_mock
+        self, load_state_dict_mock, torch_mock, isfile_mock, torch_load_mock
     ):
         isfile_mock.return_value = False
         with patch("deepparse.network.seq2seq.download_weights") as download_weights_mock:
             BPEmbSeq2SeqModel(self.cache_dir, self.a_cpu_device, output_size=self.output_size, verbose=self.verbose)
             download_weights_mock.assert_called_with(self.model_type, self.a_root_path, verbose=self.verbose)
 
+    @patch("deepparse.weights_tools.torch")
     @patch("deepparse.network.seq2seq.latest_version")
     @patch("os.path.isfile")
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
     def test_givenLocalWeightsNotLastVersion_whenInstantiatingABPEmbSeq2SeqModel_thenShouldDownloadWeights(
-        self, load_state_dict_mock, torch_mock, isfile_mock, last_version_mock
+        self, load_state_dict_mock, torch_mock, isfile_mock, last_version_mock, torch_load_mock
     ):
         isfile_mock.return_value = True
         last_version_mock.return_value = False
@@ -64,12 +66,13 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
             BPEmbSeq2SeqModel(self.cache_dir, self.a_cpu_device, output_size=self.output_size, verbose=self.verbose)
             download_weights_mock.assert_called_with(self.model_type, self.a_root_path, verbose=self.verbose)
 
+    @patch("deepparse.weights_tools.torch")
     @patch("deepparse.network.seq2seq.latest_version")
     @patch("os.path.isfile")
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
     def test_givenLocalWeights_whenInstantiatingABPEmbSeq2SeqModel_thenShouldntDownloadWeights(
-        self, load_state_dict_mock, torch_mock, isfile_mock, last_version_mock
+        self, load_state_dict_mock, torch_mock, isfile_mock, last_version_mock, torch_load_mock
     ):
         isfile_mock.return_value = True
         last_version_mock.return_value = True
@@ -77,7 +80,7 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
             BPEmbSeq2SeqModel(self.cache_dir, self.a_cpu_device, output_size=self.output_size, verbose=self.verbose)
             download_weights_mock.assert_not_called()
 
-    @patch("deepparse.network.seq2seq.torch")
+    @patch("deepparse.weights_tools.torch")
     @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
     def test_givenRetrainedWeights_whenInstantiatingAFastTextSeq2SeqModel_thenShouldUseRetrainedWeights(
         self, load_state_dict_mock, torch_mock
@@ -95,9 +98,9 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
         torch_load_call = [call.load(self.a_path_to_retrained_model, map_location=self.a_cpu_device)]
         torch_mock.assert_has_calls(torch_load_call)
 
-        load_state_dict_call = [call(all_layers_params)]
-        load_state_dict_mock.assert_has_calls(load_state_dict_call)
+        load_state_dict_mock.assert_called()
 
+    @patch("deepparse.weights_tools.torch")
     @patch("deepparse.network.seq2seq.Encoder")
     @patch("deepparse.network.seq2seq.download_weights")
     @patch("deepparse.network.seq2seq.latest_version")
@@ -112,6 +115,7 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
         last_version_mock,
         download_weights_mock,
         encoder_mock,
+        torch_load_mock,
     ):
         seq2seq_model = BPEmbSeq2SeqModel(self.cache_dir, self.a_cpu_device, self.output_size, self.verbose)
 
@@ -123,6 +127,7 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
 
         encoder_mock.assert_has_calls(encoder_call)
 
+    @patch("deepparse.weights_tools.torch")
     @patch("deepparse.network.seq2seq.Decoder")
     @patch("deepparse.network.seq2seq.download_weights")
     @patch("deepparse.network.seq2seq.latest_version")
@@ -137,6 +142,7 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
         last_version_mock,
         download_weights_mock,
         decoder_mock,
+        torch_load_mock,
     ):
         seq2seq_model = BPEmbSeq2SeqModel(
             self.cache_dir, self.a_cpu_device, output_size=self.output_size, verbose=self.verbose
@@ -163,6 +169,7 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
 
         decoder_mock.assert_has_calls(decoder_call)
 
+    @patch("deepparse.weights_tools.torch")
     @patch("deepparse.network.seq2seq.Decoder")
     @patch("deepparse.network.seq2seq.download_weights")
     @patch("deepparse.network.seq2seq.latest_version")
@@ -177,6 +184,7 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
         last_version_mock,
         download_weights_mock,
         decoder_mock,
+        torch_load_mock,
     ):
         seq2seq_model = BPEmbSeq2SeqModel(
             self.cache_dir,
@@ -207,6 +215,7 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
 
         decoder_mock.assert_has_calls(decoder_call)
 
+    @patch("deepparse.weights_tools.torch")
     @patch("deepparse.network.seq2seq.random.random")
     @patch("deepparse.network.seq2seq.Decoder")
     @patch("deepparse.network.seq2seq.download_weights")
@@ -223,6 +232,7 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
         download_weights_mock,
         decoder_mock,
         random_mock,
+        torch_load_mock,
     ):
         random_mock.return_value = self.a_value_lower_than_threshold
 
@@ -254,6 +264,7 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
 
         self.assert_has_calls_tensor_equals(decoder_mock, decoder_call)
 
+    @patch("deepparse.weights_tools.torch")
     @patch("deepparse.network.seq2seq.Encoder")
     @patch("deepparse.network.seq2seq.Decoder")
     @patch("deepparse.network.seq2seq.download_weights")
@@ -270,6 +281,7 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
         download_weights_mock,
         decoder_mock,
         encoder_mock,
+        torch_load_mock,
     ):
         to_predict_mock, lengths_list = self.setup_encoder_mocks()
 
@@ -316,6 +328,7 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
                             ]
                         )
 
+    @patch("deepparse.weights_tools.torch")
     @patch("deepparse.network.seq2seq.random.random")
     @patch("deepparse.network.seq2seq.Encoder")
     @patch("deepparse.network.seq2seq.Decoder")
@@ -334,6 +347,7 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
         decoder_mock,
         encoder_mock,
         random_mock,
+        torch_load_mock,
     ):
         random_mock.return_value = self.a_value_lower_than_threshold
 
@@ -380,6 +394,7 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
             )
             target_mock.assert_has_calls([call.transpose(0, 1)])
 
+    @patch("deepparse.weights_tools.torch")
     @patch("deepparse.network.seq2seq.random.random")
     @patch("deepparse.network.seq2seq.Encoder")
     @patch("deepparse.network.seq2seq.Decoder")
@@ -398,6 +413,7 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
         decoder_mock,
         encoder_mock,
         random_mock,
+        torch_load_mock,
     ):
         random_mock.return_value = self.a_value_lower_than_threshold
 

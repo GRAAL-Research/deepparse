@@ -264,7 +264,7 @@ class ParseTests(PretrainedWeightsBase):
             )
 
         expected_first_message = (
-            f"Parsing dataset file {self.fake_data_path_pickle} using the parser " f"PreTrainedFastTextAddressParser"
+            f"Parsing dataset file {self.fake_data_path_pickle} using the parser PreTrainedFastTextAddressParser"
         )
         actual_first_message = self._caplog.records[0].message
         self.assertEqual(expected_first_message, actual_first_message)

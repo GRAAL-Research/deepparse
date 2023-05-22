@@ -144,3 +144,5 @@ deepparse/version.py
 *.ckpt
 
 *mlruns/
+
+*model/

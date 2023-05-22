@@ -13,3 +13,6 @@ testpaths = [
 
 [tool.pylint.ini_options]
 DJANGO_SETTINGS_MODULE = "settings"
+
+[build-system]
+requires = ["setuptools", "wheel", "pybind11"]

@@ -130,7 +130,7 @@ class Seq2SeqTest(TestCase):
         self.assertEqual(expected, actual)
 
     @patch("os.path.isfile")
-    @patch("deepparse.network.seq2seq.torch")
+    @patch("deepparse.weights_tools.torch")
     @patch("deepparse.network.seq2seq.torch.nn.Module.load_state_dict")
     def test_givenSeq2seqModel_whenNoPretrainedWeights_thenDownloadIt(
         self,
@@ -156,7 +156,7 @@ class Seq2SeqTest(TestCase):
             download_weights_mock.assert_called_with(self.a_model_type, self.cache_dir, verbose=False)
 
     @patch("os.path.isfile")
-    @patch("deepparse.network.seq2seq.torch")
+    @patch("deepparse.weights_tools.torch")
     @patch("deepparse.network.seq2seq.torch.nn.Module.load_state_dict")
     def test_givenSeq2seqModelVerbose_whenNoPretrainedWeights_thenWarns(
         self,
@@ -181,7 +181,7 @@ class Seq2SeqTest(TestCase):
 
     @patch("deepparse.network.seq2seq.latest_version")
     @patch("os.path.isfile")
-    @patch("deepparse.network.seq2seq.torch")
+    @patch("deepparse.weights_tools.torch")
     @patch("deepparse.network.seq2seq.torch.nn.Module.load_state_dict")
     @skipIf(not torch.cuda.is_available(), "no gpu available")
     def test_givenSeq2seqModel_whenLoadPreTrainedWeightsNotRecentVersion_thenDownloadIt(
@@ -206,7 +206,7 @@ class Seq2SeqTest(TestCase):
 
     @patch("deepparse.network.seq2seq.latest_version")
     @patch("os.path.isfile")
-    @patch("deepparse.network.seq2seq.torch")
+    @patch("deepparse.weights_tools.torch")
     @patch("deepparse.network.seq2seq.torch.nn.Module.load_state_dict")
     @skipIf(not torch.cuda.is_available(), "no gpu available")
     def test_givenSeq2seqModel_whenLoadPreTrainedWeightsVerboseGPU_thenWarningsRaised(
@@ -230,7 +230,7 @@ class Seq2SeqTest(TestCase):
 
     @patch("deepparse.network.seq2seq.latest_version")
     @patch("os.path.isfile")
-    @patch("deepparse.network.seq2seq.torch")
+    @patch("deepparse.weights_tools.torch")
     @patch("deepparse.network.seq2seq.torch.nn.Module.load_state_dict")
     def test_givenSeq2seqModel_whenLoadPreTrainedWeightsNotVerboseGPU_thenWarningsNotRaised(
         self, torch_nn_mock, torch_mock, isfile_mock, last_version_mock
@@ -254,7 +254,7 @@ class Seq2SeqTest(TestCase):
 
     @patch("deepparse.network.seq2seq.latest_version")
     @patch("os.path.isfile")
-    @patch("deepparse.network.seq2seq.torch")
+    @patch("deepparse.weights_tools.torch")
     @patch("deepparse.network.seq2seq.torch.nn.Module.load_state_dict")
     def test_givenSeq2seqModel_whenLoadPreTrainedWeightsVerboseCPU_thenWarningsRaised(
         self, torch_nn_mock, torch_mock, isfile_mock, last_version_mock
@@ -277,7 +277,7 @@ class Seq2SeqTest(TestCase):
 
     @patch("deepparse.network.seq2seq.latest_version")
     @patch("os.path.isfile")
-    @patch("deepparse.network.seq2seq.torch")
+    @patch("deepparse.weights_tools.torch")
     @patch("deepparse.network.seq2seq.torch.nn.Module.load_state_dict")
     def test_givenSeq2seqModel_whenLoadPreTrainedWeightsNotVerboseCPU_thenWarningsNotRaised(
         self, torch_nn_mock, torch_mock, isfile_mock, last_version_mock
@@ -299,7 +299,7 @@ class Seq2SeqTest(TestCase):
                 seq2seq_model._load_pre_trained_weights(self.a_model_type, cache_dir=self.cache_dir, offline=False)
             self.assertEqual(0, len(record))
 
-    @patch("deepparse.network.seq2seq.torch")
+    @patch("deepparse.weights_tools.torch")
     @patch("deepparse.network.seq2seq.torch.nn.Module.load_state_dict")
     def test_givenSeq2SeqModelRetrained_whenLoadRetrainedWeights_thenLoadProperly(self, torch_nn_mock, torch_mock):
         # pylint: disable=unnecessary-dunder-call
@@ -324,7 +324,7 @@ class Seq2SeqTest(TestCase):
         torch_nn_mock.assert_called()
         torch_nn_mock.asser_has_calls([call(all_layers_params_mock)])
 
-    @patch("deepparse.network.seq2seq.torch")
+    @patch("deepparse.weights_tools.torch")
     @patch("deepparse.network.seq2seq.torch.nn.Module.load_state_dict")
     def test_givenSeq2SeqModelRetrained_whenLoadRetrainedWeightsNewTagModel_thenLoadProperDict(
         self, torch_nn_mock, torch_mock
@@ -351,7 +351,7 @@ class Seq2SeqTest(TestCase):
 
     @patch("deepparse.network.seq2seq.latest_version")
     @patch("os.path.isfile")
-    @patch("deepparse.network.seq2seq.torch")
+    @patch("deepparse.weights_tools.torch")
     @patch("deepparse.network.seq2seq.torch.nn.Module.load_state_dict")
     def test_givenAnOfflineSeq2SeqModel_whenInit_thenDontCallOnlineFunctions(
         self, torch_nn_mock, torch_mock, isfile_mock, last_version_mock

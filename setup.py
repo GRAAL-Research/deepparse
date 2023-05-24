@@ -74,7 +74,7 @@ def main():
             "bpemb",
             "gensim>=4.0.0",
             "requests",
-            "fasttext",
+            "fasttext-wheel",
             "pymagnitude-light",
             "poutyne",
             "pandas",

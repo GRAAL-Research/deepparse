@@ -326,4 +326,8 @@
   see [here](https://github.com/facebookresearch/fastText/issues/512#issuecomment-1534519551)
   and [here](https://github.com/facebookresearch/fastText/pull/1292)).
 
+## 0.9.8
+
+- Hot-Fix wheel install (See [issue 196](https://github.com/GRAAL-Research/deepparse/issues/196)).
+
 ## dev

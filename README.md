@@ -325,6 +325,8 @@ Or you can use our cli to download our pretrained models directly using:
 download_model <model_name>
 ```
 
+Starting at version 0.9.8, we will also release the weights with the GitHub release note available [here](https://github.com/GRAAL-Research/deepparse/releases).
+
 ------------------
 
 ## Installation

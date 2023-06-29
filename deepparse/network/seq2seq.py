@@ -93,7 +93,7 @@ class Seq2SeqModel(ABC, nn.Module):
             model_type (str): The network pretrained weights to load.
             cache_dir (str): The path to the cached directory to use for downloading (and loading) the
                 model weights.
-            offline (bool): Whether or not the model is an offline or an online.
+            offline (bool): Whether the model is an offline or an online.
         """
         model_path = os.path.join(cache_dir, f"{model_type}.ckpt")
 
@@ -129,6 +129,23 @@ class Seq2SeqModel(ABC, nn.Module):
         # All the time, our torch archive include meta-data along with the model weights
         all_layers_params = all_layers_params.get("address_tagger_model")
         self.load_state_dict(all_layers_params)
+
+    @staticmethod
+    def _load_version(model_type: str, cache_dir: str) -> str:
+        """
+        Method to load the local hashed version of the model as an attribute.
+
+        Args:
+            model_type (str): The network pretrained weights to load.
+            cache_dir (str): The path to the cached directory to use for downloading (and loading) the
+                model weights.
+
+        Return:
+            The hash of the model.
+
+        """
+        with open(os.path.join(cache_dir, model_type + ".version"), encoding="utf-8") as local_model_hash_file:
+            return local_model_hash_file.readline()
 
     def _encoder_step(self, to_predict: torch.Tensor, lengths: List, batch_size: int) -> Tuple:
         """

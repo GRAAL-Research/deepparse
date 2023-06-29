@@ -332,3 +332,5 @@
 - Starting now, we also include model weights release in the GitHub release.
 
 ## dev
+
+- Add version to Seq2Seq and AddressParser.

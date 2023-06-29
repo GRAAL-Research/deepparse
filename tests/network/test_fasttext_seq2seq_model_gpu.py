@@ -38,7 +38,7 @@ class FasttextSeq2SeqGPUTest(Seq2SeqTestCase):
             FastTextSeq2SeqModel(
                 self.fake_cache_dir, self.a_torch_device, output_size=self.output_size, verbose=self.verbose
             )
-            download_weights_mock.assert_called_with(self.model_type, self.fake_fake_cache_dir, verbose=self.verbose)
+            download_weights_mock.assert_called_with(self.model_type, self.fake_cache_dir, verbose=self.verbose)
 
     @patch("deepparse.weights_tools.torch")
     @patch("deepparse.network.seq2seq.latest_version")
@@ -54,7 +54,7 @@ class FasttextSeq2SeqGPUTest(Seq2SeqTestCase):
             FastTextSeq2SeqModel(
                 self.fake_cache_dir, self.a_torch_device, output_size=self.output_size, verbose=self.verbose
             )
-            download_weights_mock.assert_called_with(self.model_type, self.fake_fake_cache_dir, verbose=self.verbose)
+            download_weights_mock.assert_called_with(self.model_type, self.fake_cache_dir, verbose=self.verbose)
 
     @patch("deepparse.weights_tools.torch")
     @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")

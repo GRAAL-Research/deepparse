@@ -130,7 +130,8 @@ class Seq2SeqModel(ABC, nn.Module):
         all_layers_params = all_layers_params.get("address_tagger_model")
         self.load_state_dict(all_layers_params)
 
-    def _load_version(self, model_type: str, cache_dir: str) -> None:
+    @staticmethod
+    def _load_version(model_type: str, cache_dir: str) -> str:
         """
         Method to load the local hashed version of the model as an attribute.
 
@@ -139,10 +140,12 @@ class Seq2SeqModel(ABC, nn.Module):
             cache_dir (str): The path to the cached directory to use for downloading (and loading) the
                 model weights.
 
+        Return:
+            The hash of the model.
+
         """
         with open(os.path.join(cache_dir, model_type + ".version"), encoding="utf-8") as local_model_hash_file:
-            local_model_hash_version = local_model_hash_file.readline()
-        self.version = local_model_hash_version
+            return local_model_hash_file.readline()
 
     def _encoder_step(self, to_predict: torch.Tensor, lengths: List, batch_size: int) -> Tuple:
         """

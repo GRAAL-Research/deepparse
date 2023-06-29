@@ -4,6 +4,9 @@
 # Pylint raise error for the call method mocking
 # pylint: disable=unnecessary-dunder-call
 
+# Pylint kick for temporary directory
+# pylint: disable=consider-using-with
+
 import os
 from tempfile import TemporaryDirectory
 from unittest import TestCase

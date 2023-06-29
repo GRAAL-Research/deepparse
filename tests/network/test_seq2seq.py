@@ -3,6 +3,9 @@
 # We also skip protected-access since we test the _load_weights
 # pylint: disable=protected-access, unused-argument, not-callable
 
+# Pylint kick for temporary directory
+# pylint: disable=consider-using-with
+
 import os
 import unittest
 from tempfile import TemporaryDirectory

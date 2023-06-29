@@ -44,7 +44,7 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
     @patch("os.path.isfile")
     @patch("deepparse.network.seq2seq.torch")
     @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
-    def test_givenFineTunedModel_whenLoadVersion_thenModelHashWithFineTuned(
+    def test_givenDefaultModel_whenLoadVersion_thenModelHash(
         self, load_state_dict_mock, torch_mock, isfile_mock, torch_load_mock
     ):
         isfile_mock.return_value = False

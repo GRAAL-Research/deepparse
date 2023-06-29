@@ -9,4 +9,5 @@ gensim>=4.2.0
 fasttext-wheel
 pandas
 urllib3
+fastapi
 cloudpathlib[s3, gs, azure]

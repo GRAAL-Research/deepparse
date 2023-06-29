@@ -31,7 +31,7 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
         self, load_pre_trained_weights_mock
     ):
         seq2seq_model = BPEmbSeq2SeqModel(
-            self.cache_dir, self.a_torch_device, output_size=self.output_size, verbose=self.verbose
+            self.fake_cache_dir, self.a_torch_device, output_size=self.output_size, verbose=self.verbose
         )
 
         self.assertEqual(self.input_size, seq2seq_model.embedding_network.model.input_size)
@@ -50,8 +50,10 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
     ):
         isfile_mock.return_value = False
         with patch("deepparse.network.seq2seq.download_weights") as download_weights_mock:
-            BPEmbSeq2SeqModel(self.cache_dir, self.a_torch_device, output_size=self.output_size, verbose=self.verbose)
-            download_weights_mock.assert_called_with(self.model_type, self.a_root_path, verbose=self.verbose)
+            BPEmbSeq2SeqModel(
+                self.fake_cache_dir, self.a_torch_device, output_size=self.output_size, verbose=self.verbose
+            )
+            download_weights_mock.assert_called_with(self.model_type, self.fake_cache_dir, verbose=self.verbose)
 
     @patch("deepparse.weights_tools.torch")
     @patch("deepparse.network.seq2seq.latest_version")
@@ -64,8 +66,10 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
         isfile_mock.return_value = True
         last_version_mock.return_value = False
         with patch("deepparse.network.seq2seq.download_weights") as download_weights_mock:
-            BPEmbSeq2SeqModel(self.cache_dir, self.a_torch_device, output_size=self.output_size, verbose=self.verbose)
-            download_weights_mock.assert_called_with(self.model_type, self.a_root_path, verbose=self.verbose)
+            BPEmbSeq2SeqModel(
+                self.fake_cache_dir, self.a_torch_device, output_size=self.output_size, verbose=self.verbose
+            )
+            download_weights_mock.assert_called_with(self.model_type, self.fake_cache_dir, verbose=self.verbose)
 
     @patch("deepparse.weights_tools.torch")
     @patch("deepparse.network.seq2seq.latest_version")
@@ -78,7 +82,9 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
         isfile_mock.return_value = True
         last_version_mock.return_value = True
         with patch("deepparse.network.seq2seq.download_weights") as download_weights_mock:
-            BPEmbSeq2SeqModel(self.cache_dir, self.a_torch_device, output_size=self.output_size, verbose=self.verbose)
+            BPEmbSeq2SeqModel(
+                self.fake_cache_dir, self.a_torch_device, output_size=self.output_size, verbose=self.verbose
+            )
             download_weights_mock.assert_not_called()
 
     @patch("deepparse.weights_tools.torch")
@@ -89,7 +95,7 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
         all_layers_params = MagicMock()
         torch_mock.load.return_value = all_layers_params
         BPEmbSeq2SeqModel(
-            self.cache_dir,
+            self.fake_cache_dir,
             self.a_torch_device,
             output_size=self.output_size,
             verbose=self.verbose,
@@ -118,7 +124,7 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
         encoder_mock,
         torch_load_mock,
     ):
-        seq2seq_model = BPEmbSeq2SeqModel(self.cache_dir, self.a_torch_device, self.output_size, self.verbose)
+        seq2seq_model = BPEmbSeq2SeqModel(self.fake_cache_dir, self.a_torch_device, self.output_size, self.verbose)
 
         to_predict_mock, lengths_list = self.setup_encoder_mocks()
         encoder_mock.__call__().return_value = (MagicMock(), MagicMock())
@@ -146,7 +152,7 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
         torch_load_mock,
     ):
         seq2seq_model = BPEmbSeq2SeqModel(
-            self.cache_dir, self.a_torch_device, output_size=self.output_size, verbose=self.verbose
+            self.fake_cache_dir, self.a_torch_device, output_size=self.output_size, verbose=self.verbose
         )
 
         decoder_input_mock, decoder_hidden_mock = self.setUp_decoder_mocks(decoder_mock, attention_mechanism=False)
@@ -188,7 +194,7 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
         torch_load_mock,
     ):
         seq2seq_model = BPEmbSeq2SeqModel(
-            self.cache_dir,
+            self.fake_cache_dir,
             self.a_torch_device,
             output_size=self.output_size,
             verbose=self.verbose,
@@ -238,7 +244,7 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
         random_mock.return_value = self.a_value_lower_than_threshold
 
         seq2seq_model = BPEmbSeq2SeqModel(
-            self.cache_dir, self.a_torch_device, output_size=self.output_size, verbose=self.verbose
+            self.fake_cache_dir, self.a_torch_device, output_size=self.output_size, verbose=self.verbose
         )
 
         decoder_input_mock, decoder_hidden_mock = self.setUp_decoder_mocks(decoder_mock, attention_mechanism=False)
@@ -301,7 +307,7 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
             # we mock the output of the embedding layer
             embedded_output_mock = MagicMock()
             embedding_network_patch().return_value = embedded_output_mock
-            seq2seq_model = BPEmbSeq2SeqModel(self.cache_dir, self.a_torch_device, self.output_size, self.verbose)
+            seq2seq_model = BPEmbSeq2SeqModel(self.fake_cache_dir, self.a_torch_device, self.output_size, self.verbose)
 
             seq2seq_model.forward(
                 to_predict=to_predict_mock,
@@ -366,7 +372,7 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
             # we mock the output of the embedding layer
             embedded_output_mock = MagicMock()
             embedding_network_patch().return_value = embedded_output_mock
-            seq2seq_model = BPEmbSeq2SeqModel(self.cache_dir, self.a_torch_device, self.output_size, self.verbose)
+            seq2seq_model = BPEmbSeq2SeqModel(self.fake_cache_dir, self.a_torch_device, self.output_size, self.verbose)
 
             seq2seq_model.forward(
                 to_predict=to_predict_mock,
@@ -432,7 +438,7 @@ class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
             embedded_output_mock = MagicMock()
             embedding_network_patch().return_value = embedded_output_mock
             seq2seq_model = BPEmbSeq2SeqModel(
-                self.cache_dir,
+                self.fake_cache_dir,
                 self.a_torch_device,
                 self.output_size,
                 self.verbose,

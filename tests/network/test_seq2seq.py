@@ -5,6 +5,7 @@
 
 import os
 import unittest
+from tempfile import TemporaryDirectory
 from unittest import TestCase
 from unittest import skipIf
 from unittest.mock import patch, MagicMock, call
@@ -13,6 +14,7 @@ import pytest
 import torch
 
 from deepparse.network import Seq2SeqModel
+from tests.tools import create_file
 
 
 class Seq2SeqTest(TestCase):
@@ -31,9 +33,39 @@ class Seq2SeqTest(TestCase):
 
         cls.a_fake_retrain_path = "a/fake/path/retrain/model"
 
+        cls.temp_dir_obj = TemporaryDirectory()
+        cls.fake_cache_dir = os.path.join(cls.temp_dir_obj.name, "fake_cache")
+        os.makedirs(cls.fake_cache_dir, exist_ok=True)
+
+        cls.a_hash_value = "f67a0517c70a314bdde0b8440f21139d"
+
+        version_file_path = os.path.join(cls.fake_cache_dir, "fasttext.version")
+        create_file(version_file_path, cls.a_hash_value)
+
         cls.cache_dir = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
 
         cls.a_model_type = "a_model_type"
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        cls.temp_dir_obj.cleanup()
+
+    def test_givenDefaultModel_whenLoadVersion_thenModelHash(self):
+        # We test using FastText but same is expected with BPEmb
+        seq2seq_model = Seq2SeqModel(
+            self.a_cpu_device,
+            input_size=self.encoder_input_size_dim,
+            encoder_hidden_size=self.encoder_hidden_size,
+            encoder_num_layers=self.encoder_num_layers,
+            decoder_hidden_size=self.decoder_hidden_size,
+            decoder_num_layers=self.decoder_num_layers,
+            output_size=self.decoder_output_size,
+        )
+
+        actual = seq2seq_model._load_version(model_type="fasttext", cache_dir=self.fake_cache_dir)
+        expected = self.a_hash_value
+
+        self.assertEqual(actual, expected)
 
     def test_whenInstantiateASeq2SeqModel_thenParametersAreOk(self):
         seq2seq_model = Seq2SeqModel(

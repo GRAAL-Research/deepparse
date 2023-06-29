@@ -70,6 +70,8 @@ class BPEmbSeq2SeqModel(Seq2SeqModel):
                 model_weights_name += "_attention"
             self._load_pre_trained_weights(model_weights_name, cache_dir=cache_dir, offline=offline)
 
+        self._load_version()
+
     def forward(
         self,
         to_predict: torch.Tensor,

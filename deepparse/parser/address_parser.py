@@ -304,6 +304,10 @@ class AddressParser:
         """
         return self._model_type_formatted
 
+    @property
+    def version(self):
+        return self.model.version
+
     def __call__(
         self,
         addresses_to_parse: Union[List[str], str, DatasetContainer],

@@ -17,7 +17,7 @@ from deepparse.network import BPEmbSeq2SeqModel
 from tests.network.base import Seq2SeqTestCase
 
 
-@skipIf(os.environ["TEST_LEVEL"] in ("unit", "runner"), "Cannot run test on without NVIDIA installed.")
+@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test on without NVIDIA installed.")
 class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
     @classmethod
     def setUpClass(cls):

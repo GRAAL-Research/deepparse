@@ -33,9 +33,7 @@ _new_tag_set = {
 }
 
 
-@skipIf(
-    os.environ["TEST_LEVEL"] in ("unit", "runner"), "Cannot run test on runner or unit test since download is too long."
-)
+@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run for unit tests since download is too long.")
 class RetrainTests(RetrainTestCase):
     @classmethod
     def setUpClass(cls):

@@ -59,7 +59,7 @@ class Seq2SeqTest(TestCase):
         self.assertEqual(self.decoder_output_size, seq2seq_model.decoder.linear.out_features)
         self.assertEqual(self.a_cpu_device, seq2seq_model.decoder.lstm.all_weights[0][0].device)
 
-    @skipIf(os.environ["TEST_LEVEL"] in ("unit", "runner"), "Cannot run test on without a proper GPU or RAM.")
+    @skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
     def test_whenInstantiateASeq2SeqModelGPU_thenParametersAreOk(self):
         seq2seq_model = Seq2SeqModel(
             self.a_torch_device,
@@ -183,7 +183,7 @@ class Seq2SeqTest(TestCase):
     @patch("os.path.isfile")
     @patch("deepparse.weights_tools.torch")
     @patch("deepparse.network.seq2seq.torch.nn.Module.load_state_dict")
-    @skipIf(os.environ["TEST_LEVEL"] in ("unit", "runner"), "Cannot run test on without a proper GPU or RAM.")
+    @skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
     def test_givenSeq2seqModel_whenLoadPreTrainedWeightsNotRecentVersion_thenDownloadIt(
         self, torch_nn_mock, torch_mock, isfile_mock, last_version_mock
     ):
@@ -208,7 +208,7 @@ class Seq2SeqTest(TestCase):
     @patch("os.path.isfile")
     @patch("deepparse.weights_tools.torch")
     @patch("deepparse.network.seq2seq.torch.nn.Module.load_state_dict")
-    @skipIf(os.environ["TEST_LEVEL"] in ("unit", "runner"), "Cannot run test on without a proper GPU or RAM.")
+    @skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
     def test_givenSeq2seqModel_whenLoadPreTrainedWeightsVerboseGPU_thenWarningsRaised(
         self, torch_nn_mock, torch_mock, isfile_mock, last_version_mock
     ):

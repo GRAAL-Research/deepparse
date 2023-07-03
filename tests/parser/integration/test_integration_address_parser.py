@@ -19,7 +19,7 @@ from tests.parser.integration.base_predict import (
 )
 
 
-@skipIf(os.environ["TEST_LEVEL"] in ("unit", "runner"), "Cannot run test on without a proper GPU or RAM.")
+@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
 class AddressParserTest(AddressParserBase, FileCreationTestCase):
     @classmethod
     def setUpClass(cls):

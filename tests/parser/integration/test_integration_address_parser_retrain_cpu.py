@@ -15,7 +15,7 @@ from tests.base_capture_output import CaptureOutputTestCase
 from tests.parser.integration.base_retrain import AddressParserRetrainTestCase
 
 
-@skipIf(os.environ["TEST_LEVEL"] in ("unit", "runner"), "Cannot run test on without a proper GPU or RAM.")
+@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
 class AddressParserIntegrationRetrainCPUTest(AddressParserRetrainTestCase, CaptureOutputTestCase):
     def test_givenAFasttextAddressParser_whenRetrain_thenTrainingOccur(self):
         address_parser = AddressParser(

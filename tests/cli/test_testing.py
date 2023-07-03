@@ -13,9 +13,7 @@ from tests.parser.base import PretrainedWeightsBase
 from tests.parser.integration.base_retrain import RetrainTestCase
 
 
-@skipIf(
-    os.environ["TEST_LEVEL"] in ("unit", "runner"), "Cannot run test on runner or unit test since download is too long."
-)
+@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run for unit tests since download is too long.")
 class TestingTests(RetrainTestCase, PretrainedWeightsBase):
     @pytest.fixture(autouse=True)
     def inject_fixtures(self, caplog):

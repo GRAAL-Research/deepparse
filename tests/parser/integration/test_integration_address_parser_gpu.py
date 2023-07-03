@@ -1,6 +1,6 @@
 # Bug with PyTorch source code makes torch.tensor as not callable for pylint.
 # pylint: disable=not-callable
-
+import os
 from unittest import skipIf
 
 import torch
@@ -8,7 +8,7 @@ import torch
 from tests.parser.integration.base_predict import AddressParserPredictBase
 
 
-@skipIf(not torch.cuda.is_available(), "no gpu available")
+@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
 class AddressParserPredictGPUTest(AddressParserPredictBase):
     @classmethod
     def setUpClass(cls):
@@ -69,7 +69,7 @@ class AddressParserPredictGPUTest(AddressParserPredictBase):
 
 
 # test if num_workers > 0 is correct for the data loader
-@skipIf(not torch.cuda.is_available(), "no gpu available")
+@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
 class AddressParserPredictGPUMultiProcessTest(AddressParserPredictBase):
     @classmethod
     def setUpClass(cls):

@@ -7,17 +7,13 @@ from unittest import skipIf
 from unittest.mock import patch
 
 import pytest
-import torch
 
 from deepparse.cli import test, generate_export_path
 from tests.parser.base import PretrainedWeightsBase
 from tests.parser.integration.base_retrain import RetrainTestCase
 
 
-@skipIf(
-    not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
-    "download of model too long for test in runner",
-)
+@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run for unit tests since download is too long.")
 class TestingTests(RetrainTestCase, PretrainedWeightsBase):
     @pytest.fixture(autouse=True)
     def inject_fixtures(self, caplog):
@@ -68,7 +64,6 @@ class TestingTests(RetrainTestCase, PretrainedWeightsBase):
 
         self.assertTrue(os.path.isfile(os.path.join(self.temp_dir_obj.name, "data", expected_file_path)))
 
-    @skipIf(not torch.cuda.is_available(), "no gpu available")
     def test_integration_gpu(self):
         parser_params = [
             self.a_fasttext_model_type,
@@ -131,7 +126,6 @@ class TestingTests(RetrainTestCase, PretrainedWeightsBase):
 
         self.assertEqual(0, len(self._caplog.records))
 
-    @skipIf(not torch.cuda.is_available(), "no gpu available")
     def test_integration_attention_model(self):
         parser_params = [
             self.a_fasttext_att_model_type,

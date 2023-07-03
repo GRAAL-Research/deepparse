@@ -14,14 +14,12 @@ from deepparse.network import FastTextSeq2SeqModel
 from ..integration.base import Seq2SeqIntegrationTestCase
 
 
-@skipIf(
-    not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
-    "download of model too long for test in runner",
-)
+@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
 class FastTextSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
     @classmethod
     def setUpClass(cls):
         super(FastTextSeq2SeqIntegrationTest, cls).setUpClass()
+        cls.a_cpu_device = torch.device("cpu")
         cls.models_setup(model_type="fasttext", cache_dir=cls.path)
         cls.a_retrain_model_path = os.path.join(cls.path, cls.retrain_file_name_format.format("fasttext") + ".ckpt")
 

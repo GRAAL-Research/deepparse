@@ -9,10 +9,7 @@ from deepparse.parser import AddressParser
 from tests.parser.integration.base_retrain import AddressParserRetrainTestCase
 
 
-@skipIf(
-    not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
-    "download of model too long for test in runner",
-)
+@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
 class AddressParserIntegrationTestFreezeLayers(AddressParserRetrainTestCase):
     def assert_layer_frozen(self, model_part):
         # A frozen layer does not requires grad

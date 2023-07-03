@@ -11,17 +11,13 @@ from unittest import skipIf
 from unittest.mock import patch
 
 import pytest
-import torch
 
 from deepparse.cli import parse, generate_export_path
 from tests.parser.base import PretrainedWeightsBase
 from tests.tools import create_pickle_file, create_csv_file
 
 
-@skipIf(
-    not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
-    "download of model too long for test in runner",
-)
+@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run for unit tests since download is too long.")
 class ParseTests(PretrainedWeightsBase):
     @classmethod
     def setUpClass(cls):
@@ -75,7 +71,6 @@ class ParseTests(PretrainedWeightsBase):
         export_path = generate_export_path(self.fake_data_path_pickle, self.pickle_p_export_filename)
         self.assertTrue(os.path.isfile(export_path))
 
-    @skipIf(not torch.cuda.is_available(), "no gpu available")
     def test_integration_gpu(self):
         create_pickle_file(self.fake_data_path_pickle, predict_container=True)
 
@@ -133,7 +128,6 @@ class ParseTests(PretrainedWeightsBase):
             )
         self.assertEqual(0, len(self._caplog.records))
 
-    @skipIf(not torch.cuda.is_available(), "no gpu available")
     def test_integration_attention_model(self):
         create_pickle_file(self.fake_data_path_pickle, predict_container=True)
 

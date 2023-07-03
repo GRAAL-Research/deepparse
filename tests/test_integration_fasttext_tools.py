@@ -5,13 +5,11 @@ import os
 from tempfile import TemporaryDirectory
 from unittest import skipIf
 
-import torch
-
 from deepparse import download_fasttext_embeddings, download_fasttext_magnitude_embeddings
 from tests.base_file_exist import FileCreationTestCase
 
 
-@skipIf(not torch.cuda.is_available(), "Cannot run test on GitHub action runner.")
+@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
 class IntegrationFastTextToolsTests(FileCreationTestCase):
     def setUp(self) -> None:
         self.temp_dir_obj = TemporaryDirectory()

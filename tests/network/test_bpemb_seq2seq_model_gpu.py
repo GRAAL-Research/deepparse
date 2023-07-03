@@ -2,6 +2,7 @@
 # We also skip protected-access since we test the encoder and decoder step
 # Bug with PyTorch source code makes torch.tensor as not callable for pylint.
 # pylint: disable=unused-argument, protected-access, too-many-arguments, not-callable, too-many-locals
+import os
 
 # Pylint raise error for the call method mocking
 # pylint: disable=unnecessary-dunder-call
@@ -16,14 +17,14 @@ from deepparse.network import BPEmbSeq2SeqModel
 from tests.network.base import Seq2SeqTestCase
 
 
-@skipIf(not torch.cuda.is_available(), "no gpu available")
+@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test on without NVIDIA installed.")
 class BPEmbSeq2SeqGPUTest(Seq2SeqTestCase):
     @classmethod
     def setUpClass(cls):
         super(BPEmbSeq2SeqGPUTest, cls).setUpClass()
         cls.model_type = "bpemb"
 
-        cls.a_target_vector = torch.tensor([[0, 1, 1, 4, 5, 8], [1, 0, 3, 8, 0, 0]], device=cls.a_cpu_device)
+        cls.a_target_vector = torch.tensor([[0, 1, 1, 4, 5, 8], [1, 0, 3, 8, 0, 0]], device=cls.a_torch_device)
         cls.a_transpose_target_vector = cls.a_target_vector.transpose(0, 1)
 
     @patch("deepparse.network.seq2seq.Seq2SeqModel._load_pre_trained_weights")

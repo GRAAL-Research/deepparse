@@ -65,8 +65,8 @@ class WeightsToolsTests(TestCase):
             handle_weights_upload(path_to_model_to_upload=s3_path)
 
     @skipIf(
-        not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
-        "download of model too long for test in runner",
+        os.environ["TEST_LEVEL"] in ("unit", "runner"),
+        "Cannot run test on runner or unit test since download is too long.",
     )
     def test_integration_handle_weights_with_uri(self):
         uri = "s3://deepparse/fasttext.ckpt"

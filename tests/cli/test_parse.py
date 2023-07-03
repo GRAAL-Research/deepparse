@@ -17,7 +17,9 @@ from tests.parser.base import PretrainedWeightsBase
 from tests.tools import create_pickle_file, create_csv_file
 
 
-@skipIf(os.environ["TEST_LEVEL"] in ("runner", "unit"), "Cannot run test on runner since download is too long.")
+@skipIf(
+    os.environ["TEST_LEVEL"] in ("unit", "runner"), "Cannot run test on runner or unit test since download is too long."
+)
 class ParseTests(PretrainedWeightsBase):
     @classmethod
     def setUpClass(cls):

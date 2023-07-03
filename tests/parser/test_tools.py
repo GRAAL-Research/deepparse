@@ -142,7 +142,7 @@ class ToolsTests(PretrainedWeightsBase):
 
         self.assertEqual(actual, expected)
 
-    @skipIf(not torch.cuda.is_available(), "no gpu available")
+    @skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
     def test_givenATupleToLoadOfTensorIntoDevice_whenLoad_thenProperlyLoad(self):
         a_device = torch.device("cuda:0")
         a_random_tensor = torch.rand(1, 2)
@@ -402,8 +402,8 @@ class ToolsTests(PretrainedWeightsBase):
             self.assertEqual(actual_error_message.args[0], expect_error_message)
 
     @skipIf(
-        not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
-        "download of model too long for test in runner",
+        os.environ["TEST_LEVEL"] == "unit",
+        "Cannot run for unit tests since download is too long.",
     )
     def test_givenAModelTypeToInfer_whenNotRealRetrainFastText_thenReturnFasttext(self):
         path_to_retrained_model = os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "fasttext.ckpt")
@@ -421,8 +421,8 @@ class ToolsTests(PretrainedWeightsBase):
         self.assertEqual(expected_attention_mechanism, actual_inferred_attention_mechanism)
 
     @skipIf(
-        not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
-        "download of model too long for test in runner",
+        os.environ["TEST_LEVEL"] == "unit",
+        "Cannot run for unit tests since download is too long.",
     )
     def test_givenAModelTypeToInfer_whenNotRealRetrainFastTextAttention_thenReturnAttention(self):
         path_to_retrained_model = os.path.join(
@@ -442,8 +442,8 @@ class ToolsTests(PretrainedWeightsBase):
         self.assertEqual(expected_attention_mechanism, actual_inferred_attention_mechanism)
 
     @skipIf(
-        not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
-        "download of model too long for test in runner",
+        os.environ["TEST_LEVEL"] == "unit",
+        "Cannot run for unit tests since download is too long.",
     )
     def test_givenAModelTypeToInfer_whenNotRealRetrainBPEmb_thenReturnBPEmb(self):
         path_to_retrained_model = os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "bpemb.ckpt")
@@ -461,8 +461,8 @@ class ToolsTests(PretrainedWeightsBase):
         self.assertEqual(expected_attention_mechanism, actual_inferred_attention_mechanism)
 
     @skipIf(
-        not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
-        "download of model too long for test in runner",
+        os.environ["TEST_LEVEL"] == "unit",
+        "Cannot run for unit tests since download is too long.",
     )
     def test_givenAModelTypeToInfer_whenNotRealRetrainBPEmbAttention_thenReturnAttention(self):
         path_to_retrained_model = os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "bpemb_attention.ckpt")
@@ -480,8 +480,8 @@ class ToolsTests(PretrainedWeightsBase):
         self.assertEqual(expected_attention_mechanism, actual_inferred_attention_mechanism)
 
     @skipIf(
-        not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
-        "download of model too long for test in runner",
+        os.environ["TEST_LEVEL"] == "unit",
+        "Cannot run for unit tests since download is too long.",
     )
     def test_givenAModelTypeToInfer_whenRealRetrainFastText_thenReturnFastText(self):
         self.prepare_pre_trained_weights()
@@ -497,8 +497,8 @@ class ToolsTests(PretrainedWeightsBase):
         self.assertEqual(expected_inferred_model_type, actual_inferred_model_type)
 
     @skipIf(
-        not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
-        "download of model too long for test in runner",
+        os.environ["TEST_LEVEL"] == "unit",
+        "Cannot run for unit tests since download is too long.",
     )
     def test_givenAModelTypeToInfer_whenRealRetrainBPEmb_thenReturnBPEmb(self):
         self.prepare_pre_trained_weights()

@@ -8,8 +8,6 @@ import os
 from tempfile import TemporaryDirectory
 from unittest import TestCase, skipIf
 
-import torch
-
 from deepparse import download_from_public_repository
 from deepparse.dataset_container import PickleDatasetContainer, DatasetContainer
 from deepparse.parser import (
@@ -19,7 +17,7 @@ from deepparse.parser import (
 )
 
 
-@skipIf(not torch.cuda.is_available(), "no gpu available")
+@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
 # We skip it even if it is CPU since the downloading is too long
 class AddressParserPredictNewTagsTest(TestCase):
     @classmethod

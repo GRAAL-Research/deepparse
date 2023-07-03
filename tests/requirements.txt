@@ -4,3 +4,4 @@ pytest
 pytest_cov
 tensorboard
 pytest-xdist[psutil]
+pytest-env

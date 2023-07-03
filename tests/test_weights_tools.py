@@ -1,10 +1,5 @@
 # pylint: disable=too-many-public-methods
 import os
-
-# Pylint error for TemporaryDirectory ask for with statement
-# pylint: disable=consider-using-with
-
-
 import unittest
 from unittest import TestCase, skipIf
 from unittest.mock import MagicMock, patch, call
@@ -13,6 +8,10 @@ from cloudpathlib import S3Path, CloudPath
 
 from deepparse import handle_weights_upload
 from deepparse.parser import AddressParser, FormattedParsedAddress
+
+
+# Pylint error for TemporaryDirectory ask for with statement
+# pylint: disable=consider-using-with
 
 
 class WeightsToolsTests(TestCase):

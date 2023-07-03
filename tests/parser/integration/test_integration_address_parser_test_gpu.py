@@ -1,18 +1,16 @@
 # Bug with PyTorch source code makes torch.tensor as not callable for pylint.
 # pylint: disable=not-callable, too-many-public-methods
-
+import os
 import unittest
 from unittest import skipIf
 from unittest.mock import MagicMock, call, ANY
-
-import torch
 
 from deepparse.errors import FastTextModelError
 from deepparse.parser import AddressParser
 from tests.parser.integration.base_retrain import AddressParserRetrainTestCase
 
 
-@skipIf(not torch.cuda.is_available(), "no gpu available")
+@skipIf(os.environ["TEST_LEVEL"] in ("unit", "runner"), "Cannot run test on without a proper GPU or RAM.")
 class AddressParserIntegrationTestAPIGPUTest(AddressParserRetrainTestCase):
     def test_givenAFasttextAddressParser_whenTestWithNumWorkerAt0_thenTestOccur(self):
         address_parser = AddressParser(

@@ -2,6 +2,7 @@
 # We also skip protected-access since we test the encoder and decoder step
 # Bug with PyTorch source code makes torch.tensor as not callable for pylint.
 # pylint: disable=unused-argument, protected-access, too-many-arguments, not-callable, too-many-locals
+import os
 
 # Pylint raise error for the call method mocking
 # pylint: disable=unnecessary-dunder-call
@@ -16,7 +17,7 @@ from deepparse.network import FastTextSeq2SeqModel
 from tests.network.base import Seq2SeqTestCase
 
 
-@skipIf(not torch.cuda.is_available(), "no gpu available")
+@skipIf(os.environ["TEST_LEVEL"] in ("unit", "runner"), "Cannot run test on without NVIDIA installed.")
 class FasttextSeq2SeqGPUTest(Seq2SeqTestCase):
     @classmethod
     def setUpClass(cls):

@@ -58,7 +58,7 @@ class EncoderCase(TestCase):
             self.assertEqual(self.hidden_size, actual_prediction.shape[1])
 
 
-@skipIf(not torch.cuda.is_available(), "no gpu available")
+@skipIf(os.environ["TEST_LEVEL"] in ("unit", "runner"), "Cannot run test on without a proper GPU or RAM.")
 class EncoderGPUTest(EncoderCase):
     def test_whenForwardStepGPU_thenStepIsOk(self):
         self.setUp_encoder(self.a_torch_device)

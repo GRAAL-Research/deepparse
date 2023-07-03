@@ -134,6 +134,12 @@ pytest -o env="all"
 
 > The integration tests need to be executed on a device with a GPU with at least 16 GO of RAM.
 
+There is 4 options to run the tests
+
+  - `"unit"` to run all the unit tests, it needs a CUDA device to be executed since some tests rely on a torch device;
+  - `"runner"` to run all the unit tests but without those that require a torch device;
+  - `"all"` to run all the device, including the integration. It required a GPU and at least 16  GO of RAM.
+
 We also provide a script, `run_tests_python_envs.sh`, to run all the tests (including integration tests) in all the 
 supported versions. To do so, you need to install Conda and run the following command
 

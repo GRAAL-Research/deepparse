@@ -33,10 +33,7 @@ _new_tag_set = {
 }
 
 
-@skipIf(
-    not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
-    "download of model too long for test in runner",
-)
+@skipIf(os.environ["TEST_LEVEL"] in ("runner", "unit"), "Cannot run test on runner since download is too long.")
 class RetrainTests(RetrainTestCase):
     @classmethod
     def setUpClass(cls):

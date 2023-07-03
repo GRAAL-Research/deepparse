@@ -71,7 +71,7 @@ class DecoderCase(TestCase):
             self.assertEqual(self.hidden_size, actual_prediction.shape[2])
 
 
-@skipIf(not torch.cuda.is_available(), "no gpu available")
+@skipIf(os.environ["TEST_LEVEL"] in ("unit", "runner"), "Cannot run test on without a proper GPU or RAM.")
 class DecoderGPUTest(DecoderCase):
     def test_whenForwardStepGPU_thenStepIsOk(self):
         output_size = 9

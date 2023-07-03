@@ -12,10 +12,7 @@ from tests.parser.integration.base_predict import (
 )
 
 
-@skipIf(
-    not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
-    "download of model too long for test in runner",
-)
+@skipIf(os.environ["TEST_LEVEL"] in ("unit", "runner"), "Cannot run test on without a proper GPU or RAM.")
 class AddressParserCPUTest(AddressParserBase):
     def setUp(self) -> None:
         a_config = {"model_type": "fasttext", "device": "cpu", "verbose": False}
@@ -52,10 +49,7 @@ class AddressParserCPUTest(AddressParserBase):
             self.assertIn(expected, actual)
 
 
-@skipIf(
-    not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
-    "download of model too long for test in runner",
-)
+@skipIf(os.environ["TEST_LEVEL"] in ("unit", "runner"), "Cannot run test on without a proper GPU or RAM.")
 class AddressParserPredictCPUTest(AddressParserPredictBase):
     @classmethod
     def setUpClass(cls):
@@ -116,10 +110,7 @@ class AddressParserPredictCPUTest(AddressParserPredictBase):
 
 
 # test if num_workers > 0 is correct for the data loader
-@skipIf(
-    not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
-    "download of model too long for test in runner",
-)
+@skipIf(os.environ["TEST_LEVEL"] in ("unit", "runner"), "Cannot run test on without a proper GPU or RAM.")
 class AddressParserPredictCPUMultiProcessTest(AddressParserPredictBase):
     @classmethod
     def setUpClass(cls):

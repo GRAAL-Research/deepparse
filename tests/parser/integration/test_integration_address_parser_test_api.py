@@ -8,10 +8,7 @@ from tests.base_capture_output import CaptureOutputTestCase
 from tests.parser.integration.base_retrain import AddressParserRetrainTestCase
 
 
-@skipIf(
-    not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
-    "download of model too long for test in runner",
-)
+@skipIf(os.environ["TEST_LEVEL"] in ("unit", "runner"), "Cannot run test on without a proper GPU or RAM.")
 class AddressParserIntegrationTestAPITest(AddressParserRetrainTestCase, CaptureOutputTestCase):
     def test_givenAnVerboseTrueAddressParser_whenTestOverrideTrue_thenPrint(self):
         self._capture_output()

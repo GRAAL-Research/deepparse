@@ -1,5 +1,6 @@
 # Since we use a patch as model mock we skip the unused argument error
 # pylint: disable=unused-argument, too-many-arguments
+import os
 import platform
 import unittest
 from unittest import skipIf
@@ -110,7 +111,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
     @patch("deepparse.parser.address_parser.VectorizerFactory")
     @patch("deepparse.parser.address_parser.DataProcessorFactory")
     @patch("deepparse.parser.address_parser.DataPadder")
-    @skipIf(not torch.cuda.is_available(), "no gpu available")
+    @skipIf(os.environ["TEST_LEVEL"] in ("unit", "runner"), "Cannot run test on without a proper GPU or RAM.")
     def test_givenAFasttextModel_whenTestGPU_thenInstantiateExperimentProperly(
         self,
         data_padder_mock,
@@ -252,7 +253,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
     @patch("deepparse.parser.address_parser.VectorizerFactory")
     @patch("deepparse.parser.address_parser.DataProcessorFactory")
     @patch("deepparse.parser.address_parser.DataPadder")
-    @skipIf(not torch.cuda.is_available(), "no gpu available")
+    @skipIf(os.environ["TEST_LEVEL"] in ("unit", "runner"), "Cannot run test on without a proper GPU or RAM.")
     def test_givenABPEmbModel_whenTestGPU_thenInstantiateExperimentProperly(
         self,
         data_padder_mock,

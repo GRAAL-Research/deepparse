@@ -506,7 +506,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
     @patch("deepparse.parser.address_parser.VectorizerFactory")
     @patch("deepparse.parser.address_parser.DataProcessorFactory")
     @patch("deepparse.parser.address_parser.DataPadder")
-    @skipIf(not torch.cuda.is_available(), "no gpu available")
+    @skipIf(os.environ["TEST_LEVEL"] in ("unit", "runner"), "Cannot run test on without a proper GPU or RAM.")
     def test_givenFastTextModel_whenRetrainGPU_thenInstantiateExperimentProperly(
         self,
         data_padder_mock,
@@ -786,7 +786,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
     @patch("deepparse.parser.address_parser.VectorizerFactory")
     @patch("deepparse.parser.address_parser.DataProcessorFactory")
     @patch("deepparse.parser.address_parser.DataPadder")
-    @skipIf(not torch.cuda.is_available(), "no gpu available")
+    @skipIf(os.environ["TEST_LEVEL"] in ("unit", "runner"), "Cannot run test on without a proper GPU or RAM.")
     def test_givenABPEmbModel_whenRetrainGPU_thenInstantiateExperimentProperly(
         self,
         data_padder_mock,
@@ -852,7 +852,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
     @patch("deepparse.parser.address_parser.VectorizerFactory")
     @patch("deepparse.parser.address_parser.DataProcessorFactory")
     @patch("deepparse.parser.address_parser.DataPadder")
-    @skipIf(not torch.cuda.is_available(), "no gpu available")
+    @skipIf(os.environ["TEST_LEVEL"] in ("unit", "runner"), "Cannot run test on without a proper GPU or RAM.")
     def test_givenABPEmbModel_whenRetrainGPU_thenInstantiateDataLoaderAndTrainProperly(
         self,
         data_padder_mock,

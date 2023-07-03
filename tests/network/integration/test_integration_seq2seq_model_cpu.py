@@ -14,11 +14,13 @@ from deepparse.network import Seq2SeqModel
 from ..integration.base import Seq2SeqIntegrationTestCase
 
 
-@skipIf(
-    not os.path.exists(os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "cc.fr.300.bin")),
-    "download of model too long for test in runner",
-)
-class Seq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
+@skipIf(os.environ["TEST_LEVEL"] in ("unit", "runner"), "Cannot run test on without a proper GPU or RAM.")
+class Seq2SeqCPUIntegrationTest(Seq2SeqIntegrationTestCase):
+    @classmethod
+    def setUpClass(cls):
+        super(Seq2SeqCPUIntegrationTest, cls).setUpClass()
+        cls.a_cpu_device = torch.device("cpu")
+
     def setUp(self) -> None:
         super().setUp()
         self.pre_trained_seq2seq_model = Seq2SeqModel(

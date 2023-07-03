@@ -1,4 +1,4 @@
-# pylint: disable=too-many-arguments, duplicate-code
+# pylint: disable=too-many-arguments, duplicate-code, too-many-locals
 
 from typing import Union, List
 
@@ -55,14 +55,23 @@ class FastTextSeq2SeqModel(Seq2SeqModel):
             verbose=verbose,
         )
 
+        model_weights_name = "fasttext"
+        if attention_mechanism:
+            model_weights_name += "_attention"
+
         if path_to_retrained_model is not None:
             self._load_weights(path_to_retrained_model)
+
+            version = "FineTunedModel" + self._load_version(model_type=model_weights_name, cache_dir=cache_dir)
         elif pre_trained_weights:
             # Means we use the pretrained weights
-            model_weights_name = "fasttext"
-            if attention_mechanism:
-                model_weights_name += "_attention"
             self._load_pre_trained_weights(model_weights_name, cache_dir=cache_dir, offline=offline)
+
+            version = self._load_version(model_type=model_weights_name, cache_dir=cache_dir)
+        else:
+            version = ""
+
+        self.version = version
 
     def forward(
         self,

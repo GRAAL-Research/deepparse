@@ -1,9 +1,5 @@
 """REST API."""
-import json
-import logging
 from pydantic import BaseModel
-
-import coloredlogs
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from deepparse.parser import AddressParser
@@ -18,7 +14,7 @@ class Address(BaseModel):
 
 
 @app.post("/parse/{parsing_model}")
-def parse_addresses(parsing_model: str, addresses: list[Address]):
+async def parse(parsing_model: str, addresses: list[Address]):
     assert addresses, "Addresses parameter must not be empty"
     assert parsing_model in choices, f"Parsing model not implemented, available choices: {choices}"
 
@@ -27,10 +23,15 @@ def parse_addresses(parsing_model: str, addresses: list[Address]):
 
     response_payload = {
         "model_type": address_parser.get_formatted_model_name(),
-        "parsed_addresses": {raw_address.raw: parsed_address.to_dict() for parsed_address, raw_address in zip(parsed_addresses, addresses)}
+        "version": address_parser.version,
+        "parsed_addresses": {
+            raw_address.raw: parsed_address.to_dict()
+            for parsed_address, raw_address in zip(parsed_addresses, addresses)
+        },
     }
 
     return JSONResponse(content=response_payload)
+
 
 if __name__ == "__main__":
     import uvicorn

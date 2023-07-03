@@ -4,11 +4,17 @@
 # Pylint raise error for the call method mocking
 # pylint: disable=unnecessary-dunder-call
 
+# Pylint kick for temporary directory
+# pylint: disable=consider-using-with
+
 import os
+from tempfile import TemporaryDirectory
 from unittest import TestCase
 from unittest.mock import MagicMock
 
 import torch
+
+from tests.tools import create_file
 
 
 class Seq2SeqTestCase(TestCase):
@@ -21,8 +27,6 @@ class Seq2SeqTestCase(TestCase):
         cls.a_none_target = None
         cls.a_value_lower_than_threshold = 0.1
 
-        cls.a_root_path = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
-
         cls.a_path_to_retrained_model = "a/path/to/a/retrain/model"
 
         cls.input_size = 300
@@ -31,7 +35,17 @@ class Seq2SeqTestCase(TestCase):
 
         cls.output_size = 9
 
-        cls.cache_dir = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
+        cls.temp_dir_obj = TemporaryDirectory()
+        cls.fake_cache_dir = os.path.join(cls.temp_dir_obj.name, "fake_cache")
+        os.makedirs(cls.fake_cache_dir, exist_ok=True)
+
+        cls.a_fasttext_hash_value = "f67a0517c70a314bdde0b8440f21139d"
+        create_file(os.path.join(cls.fake_cache_dir, "fasttext.version"), cls.a_fasttext_hash_value)
+        create_file(os.path.join(cls.fake_cache_dir, "fasttext_attention.version"), cls.a_fasttext_hash_value)
+
+        cls.a_bpemb_hash_value = "f67a0517c70a314bdde0b8440f21139d"
+        create_file(os.path.join(cls.fake_cache_dir, "bpemb.version"), cls.a_bpemb_hash_value)
+        create_file(os.path.join(cls.fake_cache_dir, "bpemb_attention.version"), cls.a_bpemb_hash_value)
 
         # A batch of 3 sequence of length (respectively): 2, 4 and 3. Thus, the longest one is 4.
         cls.a_lengths_list = [1, 4, 3]

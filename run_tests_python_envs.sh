@@ -20,7 +20,7 @@ pip install -Ur ../requirements.txt
 
 # Run pytest from conda env
 echo "*****Running test in Conda Python version 3.8*****"
-conda run -n deepparse_pytest_3_8 --live-stream pytest -o env="all" --cov ../deepparse --cov-report html:html_report_3_8 --cov-report xml:export_xml_report_3_8.xml --cov-config=.coveragerc ../tests
+conda run -n deepparse_pytest_3_8 --live-stream pytest -o env="TEST_LEVEL=all" --cov ../deepparse --cov-report html:html_report_3_8 --cov-report xml:export_xml_report_3_8.xml --cov-config=.coveragerc ../tests
 
 if [ $? -eq 0 ]; then
   python3_8_tests_res=1
@@ -42,7 +42,7 @@ pip install -Ur ../requirements.txt
 
 # Run pytest from conda env
 echo "*****Running test in Conda Python version 3.9*****"
-conda run -n deepparse_pytest_3_9 --live-stream pytest -o env="all" --cov ../deepparse --cov-report html:html_report_3_9 --cov-report xml:export_xml_report_3_9.xml --cov-config=.coveragerc ../tests
+conda run -n deepparse_pytest_3_9 --live-stream pytest -o env="TEST_LEVEL=all" --cov ../deepparse --cov-report html:html_report_3_9 --cov-report xml:export_xml_report_3_9.xml --cov-config=.coveragerc ../tests
 
 if [ $? -eq 0 ]; then
   python3_9_tests_res=1
@@ -64,7 +64,7 @@ pip install -Ur ../requirements.txt
 
 # Run pytest from conda env
 echo "*****Running test in Conda Python version 3.10*****"
-conda run -n deepparse_pytest_3_10 --live-stream pytest -o env="all" --cov ../deepparse --cov-report html:html_report_3_10 --cov-report xml:export_xml_report_3_10.xml --cov-config=.coveragerc ../tests
+conda run -n deepparse_pytest_3_10 --live-stream pytest -o env="TEST_LEVEL=all" --cov ../deepparse --cov-report html:html_report_3_10 --cov-report xml:export_xml_report_3_10.xml --cov-config=.coveragerc ../tests
 
 if [ $? -eq 0 ]; then
   python3_10_tests_res=1
@@ -86,7 +86,7 @@ pip install -Ur ../requirements.txt
 
 # Run pytest from conda env
 echo "*****Running test in Conda Python version 3.11*****"
-conda run -n deepparse_pytest_3_11 --live-stream pytest -o env="all" --cov ../deepparse --cov-report html:html_report_3_11 --cov-report xml:export_xml_report_3_11.xml --cov-config=.coveragerc ../tests
+conda run -n deepparse_pytest_3_11 --live-stream pytest -o env="TEST_LEVEL=all" --cov ../deepparse --cov-report html:html_report_3_11 --cov-report xml:export_xml_report_3_11.xml --cov-config=.coveragerc ../tests
 
 if [ $? -eq 0 ]; then
   python3_11_tests_res=1

@@ -129,7 +129,7 @@ pytest -n 4
 will only run the unit tests. To run `"all"` the test, you need to execute the following command
 
 ```shell
-pytest -o env="all"
+pytest -o env="TEST_LEVEL=all"
 ```
 
 > The integration tests need to be executed on a device with a GPU with at least 16 GO of RAM.

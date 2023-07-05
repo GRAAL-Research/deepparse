@@ -3,7 +3,9 @@ from fastapi.testclient import TestClient
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 
-from deepparse.app.app import app, format_parsed_addresses
+from deepparse.app.app import app, format_parsed_addresses, Address, AddressParser
+from deepparse.parser import FormattedParsedAddress
+from unittest.mock import MagicMock
 
 
 @pytest.fixture(scope="session", name="client")
@@ -12,7 +14,7 @@ def fixture_client():
         yield _client
 
 
-def test_parse_addresses(client: TestClient):
+def test_parse(client: TestClient):
     parsing_model = "bpemb"
     raw_address_1 = "2325 Rue de l'Université, Québec, QC G1V 0A6"
     raw_address_2 = "350 rue des Lilas Ouest Quebec city Quebec G1L 1B6"
@@ -54,13 +56,12 @@ def test_parse_addresses(client: TestClient):
 
     model_version = "aa32fa918494b461202157c57734c374\n"
 
-    mocked_response = JSONResponse(
-        {
+    mocked_response = {
             "model_type": parsing_model,
             "parsed_addresses": expected_parsed_addresses,
             "version": model_version,
         }
-    )
+
 
     def mock_format_parsed_addresses() -> JSONResponse:
         return mocked_response
@@ -75,6 +76,98 @@ def test_parse_addresses(client: TestClient):
         "parsed_addresses": expected_parsed_addresses,
         "version": model_version,
     }
+
+
+def test_format_parsed_addresses(mocker):
+    # Create a mock for the AddressParser
+    model_type = "bpemb"
+    version = "1234"
+
+    address_parser_mock = MagicMock(spec=AddressParser)
+    address_parser_mock.model_type = model_type
+    address_parser_mock.version = version
+
+    raw_address_1 = "2325 Rue de l'Université, Québec, QC G1V 0A6"
+    raw_address_2 = "350 rue des Lilas Ouest Quebec city Quebec G1L 1B6"
+
+    # Mock the return value of the address_parser method
+    formatted_parsed_address_1 = FormattedParsedAddress({raw_address_1: [("Québec", "Municipality"),
+                        ("G1V 0A6", "PostalCode"),
+                        ("QC", "Province"),
+                        ("Rue de l'Université", "StreetName"),
+                        ("2325", "StreetNumber"),]})
+
+    formatted_parsed_address_2 = FormattedParsedAddress({raw_address_2: [
+            ("350", "StreetNumber"),
+            ("rue des Lilas", "StreetName"),
+            ("Ouest", "Orientation"),
+            ("Québec", "Municipality"),
+            ("Québec", "Province"),
+            ("G1L 1B6", "PostalCode"),
+        ]})
+
+    formatted_parsed_addresses = [formatted_parsed_address_1, formatted_parsed_address_2]
+
+    address_parser_mock.return_value = formatted_parsed_addresses
+
+    # Use mocker.patch to replace the AddressParser instance with the mock
+    mocker.patch('deepparse.app.app.AddressParser', return_value=address_parser_mock)
+
+    addresses = [Address(raw=raw_address_1), Address(raw=raw_address_2)]
+
+    response = format_parsed_addresses(model_type, addresses)
+
+    # Assertions or checks on the response
+    parsed_address_1 = formatted_parsed_address_1.to_dict()
+    parsed_address_2 = formatted_parsed_address_2.to_dict()
+
+    expected_parsed_addresses = {raw_address_1: parsed_address_1, raw_address_2: parsed_address_2}
+
+    expected_response = {"model_type": model_type,
+                                              "parsed_addresses": expected_parsed_addresses,
+                                              "version": version}
+
+    assert response == expected_response
+
+
+
+def test_format_parsed_addresses__one_address(mocker):
+    # Create a mock for the AddressParser
+    model_type = "bpemb"
+    version = "1234"
+
+    address_parser_mock = MagicMock(spec=AddressParser)
+    address_parser_mock.model_type = model_type
+    address_parser_mock.version = version
+
+    raw_address_1 = "2325 Rue de l'Université, Québec, QC G1V 0A6"
+
+    # Mock the return value of the address_parser method
+    formatted_parsed_address = FormattedParsedAddress({raw_address_1: [("Québec", "Municipality"),
+                        ("G1V 0A6", "PostalCode"),
+                        ("QC", "Province"),
+                        ("Rue de l'Université", "StreetName"),
+                        ("2325", "StreetNumber"),]})
+
+    address_parser_mock.return_value = formatted_parsed_address
+
+    # Use mocker.patch to replace the AddressParser instance with the mock
+    mocker.patch('deepparse.app.app.AddressParser', return_value=address_parser_mock)
+
+    addresses = [Address(raw=raw_address_1), ]
+
+    response = format_parsed_addresses(model_type, addresses)
+
+    # Assertions or checks on the response
+    parsed_address = formatted_parsed_address.to_dict()
+
+    expected_parsed_address = {raw_address_1: parsed_address,}
+
+    expected_response = {"model_type": model_type,
+                                              "parsed_addresses": expected_parsed_address,
+                                              "version": version}
+
+    assert response == expected_response
 
 
 def test_parse_empty_addresses(client: TestClient):

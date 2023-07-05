@@ -1,6 +1,8 @@
 pycountry
 pandas
 pytest
+pytest-mock
+pytest-asyncio
 pytest_cov
 tensorboard
 pytest-xdist[psutil]

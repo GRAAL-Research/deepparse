@@ -1,5 +1,5 @@
 """REST API."""
-from typing import List
+from typing import List, Dict, Union
 
 from pydantic import BaseModel
 from fastapi import FastAPI, Depends
@@ -15,7 +15,7 @@ class Address(BaseModel):
     raw: str
 
 
-async def format_parsed_addresses(parsing_model: str, addresses: List[Address]) -> JSONResponse:
+def format_parsed_addresses(parsing_model: str, addresses: List[Address]) -> Dict[str, Union[str, Dict[str, str]]]:
     """
     Format parsed addresses.
 
@@ -42,11 +42,11 @@ async def format_parsed_addresses(parsing_model: str, addresses: List[Address]) 
         "version": address_parser.version,
     }
 
-    return JSONResponse(content=response_payload)
+    return response_payload
 
 
 @app.post("/parse/{parsing_model}")
-async def parse(parsing_model: str, addresses: List[Address], resp=Depends(format_parsed_addresses)):
+def parse(parsing_model: str, addresses: List[Address], resp=Depends(format_parsed_addresses)):
     """
     Parse addresses using the specified parsing model.
 
@@ -78,7 +78,7 @@ async def parse(parsing_model: str, addresses: List[Address], resp=Depends(forma
     """
     assert addresses, "Addresses parameter must not be empty"
     assert parsing_model in choices, f"Parsing model not implemented, available choices: {choices}"
-    return resp
+    return JSONResponse(content=resp)
 
 
 if __name__ == "__main__":

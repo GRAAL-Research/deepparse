@@ -1,3 +1,4 @@
+from unittest.mock import MagicMock
 import pytest
 from fastapi.testclient import TestClient
 from fastapi.responses import JSONResponse
@@ -5,7 +6,6 @@ from fastapi.encoders import jsonable_encoder
 
 from deepparse.app.app import app, format_parsed_addresses, Address, AddressParser
 from deepparse.parser import FormattedParsedAddress
-from unittest.mock import MagicMock
 
 
 @pytest.fixture(scope="session", name="client")

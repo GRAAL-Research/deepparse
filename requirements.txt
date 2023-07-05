@@ -10,4 +10,5 @@ fasttext-wheel
 pandas
 urllib3
 fastapi
+uvicorn
 cloudpathlib[s3, gs, azure]

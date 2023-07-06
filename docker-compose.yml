@@ -11,3 +11,5 @@ services:
       - "8000:8000"
     profiles:
       - app
+    volumes:
+      - "/$HOME/.cache/deepparse:/root/.cache/deepparse"

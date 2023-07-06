@@ -1,21 +1,48 @@
 """REST API."""
 from typing import List, Dict, Union
+from contextlib import asynccontextmanager
 
 from pydantic import BaseModel
 from fastapi import FastAPI, Depends
 from fastapi.responses import JSONResponse
 
-from ..parser import AddressParser
-from ..cli.parser_arguments_adder import choices
+from deepparse.cli import download_models_test, parser_arguments_adder
+from deepparse.tools import CACHE_PATH
+from deepparse.parser import AddressParser
 
-app = FastAPI()
+address_parser_mapping: Dict[str, AddressParser] = {}
+
+
+@asynccontextmanager
+async def lifespan(application: FastAPI):  # pylint: disable=unused-argument
+    # Load the models
+    download_models_test(CACHE_PATH)
+    for model in parser_arguments_adder.choices:
+        if model not in ["fasttext", "fasttext-attention"]:
+            attention = False
+            if "attention" in model:
+                attention = True
+            address_parser_mapping[model] = AddressParser(
+                model_type=model,
+                offline=True,
+                attention_mechanism=attention,
+                device="cpu",
+            )
+    yield
+    # Clean up the address parsers and release the resources
+    address_parser_mapping.clear()
+
+
+app = FastAPI(lifespan=lifespan)
 
 
 class Address(BaseModel):
     raw: str
 
 
-def format_parsed_addresses(parsing_model: str, addresses: List[Address]) -> Dict[str, Union[str, Dict[str, str]]]:
+def format_parsed_addresses(
+    parsing_model: str, addresses: List[Address], model_mapping=None
+) -> Dict[str, Union[str, Dict[str, str]]]:
     """
     Format parsed addresses.
 
@@ -26,20 +53,26 @@ def format_parsed_addresses(parsing_model: str, addresses: List[Address]) -> Dic
     Returns:
     - **JSONResponse**: JSON response containing the parsed addresses, along with the model type and version.
     """
+    assert addresses, "Addresses parameter must not be empty"
+    assert (
+        parsing_model in parser_arguments_adder.choices
+    ), f"Parsing model not implemented, available choices: {parser_arguments_adder.choices}"
 
-    address_parser = AddressParser(model_type=parsing_model)
-    parsed_addresses = address_parser([address.raw for address in addresses])
+    if model_mapping is None:
+        model_mapping = address_parser_mapping
+
+    parsed_addresses = model_mapping[parsing_model]([address.raw for address in addresses])
 
     if not isinstance(parsed_addresses, list):
         parsed_addresses = [parsed_addresses]
 
     response_payload = {
-        "model_type": address_parser.model_type,
+        "model_type": model_mapping[parsing_model].model_type,
         "parsed_addresses": {
             raw_address.raw: parsed_address.to_dict()
             for parsed_address, raw_address in zip(parsed_addresses, addresses)
         },
-        "version": address_parser.version,
+        "version": model_mapping[parsing_model].version,
     }
 
     return response_payload
@@ -77,11 +110,13 @@ def parse(parsing_model: str, addresses: List[Address], resp=Depends(format_pars
         print(parsed_addresses)
     """
     assert addresses, "Addresses parameter must not be empty"
-    assert parsing_model in choices, f"Parsing model not implemented, available choices: {choices}"
+    assert (
+        parsing_model in parser_arguments_adder.choices
+    ), f"Parsing model not implemented, available choices: {parser_arguments_adder.choices}"
     return JSONResponse(content=resp)
 
 
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8001)

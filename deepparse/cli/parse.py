@@ -11,7 +11,6 @@ from .parser_arguments_adder import (
     add_cache_dir_arg,
     add_batch_size_arg,
     add_path_to_retrained_model_arg,
-    choices,
 )
 from .tools import (
     is_csv_path,
@@ -26,6 +25,7 @@ from .tools import (
     attention_model_type_handling,
     data_container_factory,
 )
+from .. import MODEL_CHOICES
 from ..parser import AddressParser
 
 
@@ -124,7 +124,7 @@ def get_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument(
         "parsing_model",
-        choices=choices,
+        choices=MODEL_CHOICES,
         help=wrap("The parsing module to use."),
     )
 

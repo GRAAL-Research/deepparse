@@ -145,7 +145,7 @@ class Seq2SeqModel(ABC, nn.Module):
 
         """
         with open(os.path.join(cache_dir, model_type + ".version"), encoding="utf-8") as local_model_hash_file:
-            return local_model_hash_file.readline()
+            return local_model_hash_file.readline().strip()
 
     def _encoder_step(self, to_predict: torch.Tensor, lengths: List, batch_size: int) -> Tuple:
         """

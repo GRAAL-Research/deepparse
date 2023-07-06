@@ -10,9 +10,8 @@ from deepparse import (
     latest_version,
     download_fasttext_embeddings,
     download_weights,
+    MODEL_CHOICES,
 )
-
-models_type = ["fasttext", "fasttext_attention", "bpemb", "bpemb_attention"]
 
 
 def main(args=None) -> None:
@@ -43,7 +42,7 @@ def main(args=None) -> None:
         lang="multi", vs=100000, dim=300, cache_dir=saving_cache_path
     )  # The class manage the download of the pretrained words embedding
 
-    for model_type in models_type:
+    for model_type in MODEL_CHOICES:
         model_path = os.path.join(saving_cache_path, f"{model_type}.ckpt")
         version_path = os.path.join(saving_cache_path, f"{model_type}.version")
         if not os.path.isfile(model_path) or not os.path.isfile(version_path):

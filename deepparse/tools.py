@@ -3,11 +3,12 @@ import shutil
 import warnings
 from pathlib import Path
 from typing import List
-
-import poutyne
 import requests
 from requests import HTTPError
 from urllib3.exceptions import MaxRetryError
+
+import poutyne
+from bpemb import BPEmb
 
 from .data_validation import (
     validate_if_any_none,
@@ -16,6 +17,9 @@ from .data_validation import (
 )
 from .errors.data_error import DataError
 from .errors.server_error import ServerError
+
+from deepparse.fasttext_tools import download_fasttext_magnitude_embeddings, download_fasttext_embeddings
+
 
 BASE_URL = "https://graal.ift.ulaval.ca/public/deepparse/{}.{}"
 CACHE_PATH = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
@@ -176,3 +180,30 @@ def validate_data_to_parse(addresses_to_parse: List) -> None:
         raise DataError("Some addresses are empty.")
     if validate_if_any_whitespace_only(addresses_to_parse):
         raise DataError("Some addresses only include whitespace thus cannot be parsed.")
+
+
+def download_models(saving_cache_path=None):
+    for model_type in MODEL_CHOICES:
+        download_model(model_type, saving_cache_path=saving_cache_path)
+
+
+def download_model(model_type: str, saving_cache_path: Path = None, ) -> None:
+    if saving_cache_path is None:
+        saving_cache_path = CACHE_PATH
+
+    if "fasttext" in model_type and "fasttext-light" not in model_type:
+        download_fasttext_embeddings(cache_dir=saving_cache_path)
+    elif model_type == "fasttext-light":
+        download_fasttext_magnitude_embeddings(cache_dir=saving_cache_path)
+    elif "bpemb" in model_type:
+        BPEmb(
+            lang="multi", vs=100000, dim=300, cache_dir=saving_cache_path
+        )  # The class manage the download of the pretrained words embedding
+
+    model_path = os.path.join(saving_cache_path, f"{model_type}.ckpt")
+    version_path = os.path.join(saving_cache_path, f"{model_type}.version")
+    if not os.path.isfile(model_path) or not os.path.isfile(version_path):
+        download_weights(model_type, saving_dir=saving_cache_path)
+    elif not latest_version(model_type, cache_path=saving_cache_path, verbose=True):
+        print("A new version of the pretrained model is available. The newest model will be downloaded.")
+        download_weights(model_type, saving_dir=saving_cache_path)

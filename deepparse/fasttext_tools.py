@@ -6,7 +6,7 @@ from urllib.request import urlopen
 
 from fasttext.FastText import _FastText
 
-from .tools import download_from_public_repository
+from deepparse.tools import download_from_public_repository
 
 
 def download_fasttext_magnitude_embeddings(cache_dir: str, verbose: bool = True, offline: bool = False) -> str:

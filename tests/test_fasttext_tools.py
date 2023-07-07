@@ -12,13 +12,15 @@ from unittest.mock import patch, mock_open
 
 from fasttext.FastText import _FastText
 
-from deepparse import (
+from deepparse.fasttext_tools import (
     download_fasttext_embeddings,
     download_fasttext_magnitude_embeddings,
-    download_from_public_repository,
     load_fasttext_embeddings,
+    _print_progress,
+    download_from_public_repository
 )
-from deepparse.fasttext_tools import _print_progress
+
+
 from tests.base_capture_output import CaptureOutputTestCase
 from tests.tools import create_file
 

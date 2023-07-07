@@ -6,8 +6,7 @@ from pydantic import BaseModel
 from fastapi import FastAPI, Depends
 from fastapi.responses import JSONResponse
 
-from deepparse.cli import download_models_test, parser_arguments_adder
-from deepparse.tools import CACHE_PATH
+from deepparse.download_tools import download_models, CACHE_PATH, MODEL_MAPPING_CHOICES
 from deepparse.parser import AddressParser
 
 address_parser_mapping: Dict[str, AddressParser] = {}
@@ -16,8 +15,8 @@ address_parser_mapping: Dict[str, AddressParser] = {}
 @asynccontextmanager
 async def lifespan(application: FastAPI):  # pylint: disable=unused-argument
     # Load the models
-    download_models_test(CACHE_PATH)
-    for model in parser_arguments_adder.choices:
+    download_models(CACHE_PATH)
+    for model in MODEL_MAPPING_CHOICES:
         if model not in ["fasttext", "fasttext-attention"]:
             attention = False
             if "attention" in model:
@@ -55,8 +54,8 @@ def format_parsed_addresses(
     """
     assert addresses, "Addresses parameter must not be empty"
     assert (
-        parsing_model in parser_arguments_adder.choices
-    ), f"Parsing model not implemented, available choices: {parser_arguments_adder.choices}"
+        parsing_model in MODEL_MAPPING_CHOICES
+    ), f"Parsing model not implemented, available choices: {list(MODEL_MAPPING_CHOICES)}"
 
     if model_mapping is None:
         model_mapping = address_parser_mapping
@@ -111,8 +110,8 @@ def parse(parsing_model: str, addresses: List[Address], resp=Depends(format_pars
     """
     assert addresses, "Addresses parameter must not be empty"
     assert (
-        parsing_model in parser_arguments_adder.choices
-    ), f"Parsing model not implemented, available choices: {parser_arguments_adder.choices}"
+        parsing_model in MODEL_MAPPING_CHOICES
+    ), f"Parsing model not implemented, available choices: {list(MODEL_MAPPING_CHOICES)}"
     return JSONResponse(content=resp)
 
 

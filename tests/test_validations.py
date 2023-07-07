@@ -28,7 +28,7 @@ from tests.base_file_exist import FileCreationTestCase
 from tests.tools import create_file
 
 
-class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
+class ValidationsTests(CaptureOutputTestCase, FileCreationTestCase):
     def setUp(self) -> None:
         self.temp_dir_obj = TemporaryDirectory()
         self.fake_cache_path = self.temp_dir_obj.name
@@ -77,7 +77,7 @@ class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
         an_http_error_msg = "An http error message"
         response_mock = MagicMock()
         response_mock.status_code = 400
-        with patch("deepparse.tools.download_from_public_repository") as download_from_public_repository_mock:
+        with patch("deepparse.download_tools.download_from_public_repository") as download_from_public_repository_mock:
             download_from_public_repository_mock.side_effect = HTTPError(an_http_error_msg, response=response_mock)
 
             self.assertTrue(latest_version("bpemb", self.fake_cache_path, verbose=False))
@@ -88,7 +88,7 @@ class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
         an_http_error_msg = "An http error message"
         response_mock = MagicMock()
         response_mock.status_code = 300
-        with patch("deepparse.tools.download_from_public_repository") as download_from_public_repository_mock:
+        with patch("deepparse.download_tools.download_from_public_repository") as download_from_public_repository_mock:
             download_from_public_repository_mock.side_effect = HTTPError(an_http_error_msg, response=response_mock)
 
             with self.assertRaises(HTTPError):
@@ -102,7 +102,7 @@ class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
         an_http_error_msg = "An http error message"
         response_mock = MagicMock()
         response_mock.status_code = 400
-        with patch("deepparse.tools.download_from_public_repository") as download_from_public_repository_mock:
+        with patch("deepparse.download_tools.download_from_public_repository") as download_from_public_repository_mock:
             download_from_public_repository_mock.side_effect = HTTPError(an_http_error_msg, response=response_mock)
 
             with self.assertWarns(RuntimeWarning):
@@ -113,7 +113,7 @@ class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
     ):
         self.create_cache_version("bpemb", self.latest_fasttext_version)
 
-        with patch("deepparse.tools.download_from_public_repository") as download_from_public_repository_mock:
+        with patch("deepparse.download_tools.download_from_public_repository") as download_from_public_repository_mock:
             download_from_public_repository_mock.side_effect = MaxRetryError(pool=MagicMock(), url=MagicMock())
 
             self.assertTrue(latest_version("bpemb", self.fake_cache_path, verbose=False))
@@ -123,14 +123,14 @@ class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
     ):
         self.create_cache_version("bpemb", self.latest_fasttext_version)
 
-        with patch("deepparse.tools.download_from_public_repository") as download_from_public_repository_mock:
+        with patch("deepparse.download_tools.download_from_public_repository") as download_from_public_repository_mock:
             download_from_public_repository_mock.side_effect = MaxRetryError(pool=MagicMock(), url=MagicMock())
 
             with self.assertWarns(RuntimeWarning):
                 latest_version("bpemb", self.fake_cache_path, verbose=True)
 
-    @patch("deepparse.tools.os.path.exists", return_value=True)
-    @patch("deepparse.tools.shutil.rmtree")
+    @patch("deepparse.download_tools.os.path.exists", return_value=True)
+    @patch("deepparse.download_tools.shutil.rmtree")
     def test_givenAModelVersion_whenVerifyIfLastVersion_thenCleanTmpRepo(self, os_path_exists_mock, shutil_rmtree_mock):
         self.create_cache_version("bpemb", "a_version")
         latest_version("bpemb", self.fake_cache_path, verbose=False)
@@ -165,14 +165,14 @@ class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
             download_from_public_repository(wrong_file_name, self.fake_cache_path, self.a_file_extension)
 
     def test_givenModelWeightsToDownload_whenDownloadOk_thenWeightsAreDownloaded(self):
-        with patch("deepparse.tools.download_from_public_repository") as downloader:
-            download_weights(model="fasttext", saving_dir="./", verbose=self.verbose)
+        with patch("deepparse.download_tools.download_from_public_repository") as downloader:
+            download_weights(model_filename="fasttext", saving_dir="./", verbose=self.verbose)
 
             downloader.assert_any_call("fasttext", "./", "ckpt")
             downloader.assert_any_call("fasttext", "./", "version")
 
-        with patch("deepparse.tools.download_from_public_repository") as downloader:
-            download_weights(model="bpemb", saving_dir="./", verbose=self.verbose)
+        with patch("deepparse.download_tools.download_from_public_repository") as downloader:
+            download_weights(model_filename="bpemb", saving_dir="./", verbose=self.verbose)
 
             downloader.assert_any_call("bpemb", "./", "ckpt")
             downloader.assert_any_call("bpemb", "./", "version")
@@ -181,8 +181,8 @@ class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
         self,
     ):
         self._capture_output()
-        with patch("deepparse.tools.download_from_public_repository"):
-            download_weights(model="fasttext", saving_dir="./", verbose=True)
+        with patch("deepparse.download_tools.download_from_public_repository"):
+            download_weights(model_filename="fasttext", saving_dir="./", verbose=True)
 
         actual = self.test_out.getvalue().strip()
         expected = "Downloading the pre-trained weights for the network fasttext."
@@ -191,8 +191,8 @@ class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
 
     def test_givenModelBPEmbWeightsToDownloadVerbose_whenDownloadOk_thenVerbose(self):
         self._capture_output()
-        with patch("deepparse.tools.download_from_public_repository"):
-            download_weights(model="bpemb", saving_dir="./", verbose=True)
+        with patch("deepparse.download_tools.download_from_public_repository"):
+            download_weights(model_filename="bpemb", saving_dir="./", verbose=True)
 
         actual = self.test_out.getvalue().strip()
         expected = "Downloading the pre-trained weights for the network bpemb."
@@ -202,13 +202,13 @@ class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
     def test_givenModelWeightsToDownload_whenDownloadHTTPTimeOut_thenRaiseError(self):
         response_mock = MagicMock()
 
-        with patch("deepparse.tools.download_from_public_repository") as downloader:
+        with patch("deepparse.download_tools.download_from_public_repository") as downloader:
             downloader.side_effect = requests.exceptions.ConnectTimeout("An error message", response=response_mock)
 
             with self.assertRaises(ServerError):
-                download_weights(model="fasttext", saving_dir="./", verbose=self.verbose)
+                download_weights(model_filename="fasttext", saving_dir="./", verbose=self.verbose)
 
-    @patch("deepparse.tools.poutyne")
+    @patch("deepparse.validations.poutyne")
     def test_givenPoutyneVersion1_1_1_givenHandlePoutyneVersion_thenReturnVersion1_1(self, poutyne_mock):
         poutyne_mock.version.__version__ = "1.1.1"
 
@@ -216,7 +216,7 @@ class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
         expected = "1.1"
         self.assertEqual(expected, actual)
 
-    @patch("deepparse.tools.poutyne")
+    @patch("deepparse.validations.poutyne")
     def test_givenPoutyneVersion1_1_1_1_givenHandlePoutyneVersion_thenReturnVersion1_1(self, poutyne_mock):
         poutyne_mock.version.__version__ = "1.1.1.1"
 
@@ -224,7 +224,7 @@ class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
         expected = "1.1"
         self.assertEqual(expected, actual)
 
-    @patch("deepparse.tools.poutyne")
+    @patch("deepparse.validations.poutyne")
     def test_givenPoutyneVersion1_1_dev_givenHandlePoutyneVersion_thenReturnVersion1_1(self, poutyne_mock):
         poutyne_mock.version.__version__ = "1.1.dev1+81b3c7b"
 
@@ -232,7 +232,7 @@ class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
         expected = "1.1"
         self.assertEqual(expected, actual)
 
-    @patch("deepparse.tools.poutyne")
+    @patch("deepparse.validations.poutyne")
     def test_givenPoutyneVersion1_1_1_dev_givenHandlePoutyneVersion_thenReturnVersion1_1(self, poutyne_mock):
         poutyne_mock.version.__version__ = "1.1.dev1+81b3c7b"
 
@@ -240,7 +240,7 @@ class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
         expected = "1.1"
         self.assertEqual(expected, actual)
 
-    @patch("deepparse.tools.poutyne")
+    @patch("deepparse.validations.poutyne")
     def test_givenPoutyneVersion1_2_givenHandlePoutyneVersion_thenReturnVersion1_2(self, poutyne_mock):
         poutyne_mock.version.__version__ = "1.2"
 
@@ -248,63 +248,63 @@ class ToolsTests(CaptureOutputTestCase, FileCreationTestCase):
         expected = "1.2"
         self.assertEqual(expected, actual)
 
-    @patch("deepparse.tools.poutyne")
+    @patch("deepparse.validations.poutyne")
     def test_givenPoutyneVersion1_2_givenValidPoutyneVersion_thenReturnTrue(self, poutyne_mock):
         poutyne_mock.version.__version__ = "1.2"
 
         actual = valid_poutyne_version()
         self.assertTrue(actual)
 
-    @patch("deepparse.tools.poutyne")
+    @patch("deepparse.validations.poutyne")
     def test_givenPoutyneVersion1_2_dev_givenValidPoutyneVersion_thenReturnTrue(self, poutyne_mock):
         poutyne_mock.version.__version__ = "1.2.dev1+81b3c7b"
 
         actual = valid_poutyne_version()
         self.assertTrue(actual)
 
-    @patch("deepparse.tools.poutyne")
+    @patch("deepparse.validations.poutyne")
     def test_givenPoutyneVersion1_1_givenValidPoutyneVersion_thenReturnFalse(self, poutyne_mock):
         poutyne_mock.version.__version__ = "1.1"
 
         actual = valid_poutyne_version()
         self.assertFalse(actual)
 
-    @patch("deepparse.tools.poutyne")
+    @patch("deepparse.validations.poutyne")
     def test_givenPoutyneVersion1_1_dev_givenValidPoutyneVersion_thenReturnFalse(self, poutyne_mock):
         poutyne_mock.version.__version__ = "1.1.dev1+81b3c7b"
 
         actual = valid_poutyne_version()
         self.assertFalse(actual)
 
-    @patch("deepparse.tools.poutyne")
+    @patch("deepparse.validations.poutyne")
     def test_givenPoutyneVersion1_8_givenValidPoutyneVersion1_8_thenReturnTrue(self, poutyne_mock):
         poutyne_mock.version.__version__ = "1.8"
 
         actual = valid_poutyne_version(min_major=1, min_minor=8)
         self.assertTrue(actual)
 
-    @patch("deepparse.tools.poutyne")
+    @patch("deepparse.validations.poutyne")
     def test_givenPoutyneVersion1_11_givenValidPoutyneVersion1_8_thenReturnTrue(self, poutyne_mock):
         poutyne_mock.version.__version__ = "1.11"
 
         actual = valid_poutyne_version(min_major=1, min_minor=8)
         self.assertTrue(actual)
 
-    @patch("deepparse.tools.poutyne")
+    @patch("deepparse.validations.poutyne")
     def test_givenPoutyneVersion2_givenValidPoutyneVersion1_8_thenReturnTrue(self, poutyne_mock):
         poutyne_mock.version.__version__ = "2.0"
 
         actual = valid_poutyne_version(min_major=1, min_minor=8)
         self.assertTrue(actual)
 
-    @patch("deepparse.tools.poutyne")
+    @patch("deepparse.validations.poutyne")
     def test_givenPoutyneVersion2_11_givenValidPoutyneVersion1_8_thenReturnTrue(self, poutyne_mock):
         poutyne_mock.version.__version__ = "2.11"
 
         actual = valid_poutyne_version(min_major=1, min_minor=8)
         self.assertTrue(actual)
 
-    @patch("deepparse.tools.poutyne")
+    @patch("deepparse.validations.poutyne")
     def test_givenPoutyneVersion2_givenValidPoutyneVersion3_thenReturnFalse(self, poutyne_mock):
         poutyne_mock.version.__version__ = "2.0"
 

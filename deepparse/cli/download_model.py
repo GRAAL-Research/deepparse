@@ -2,7 +2,7 @@ import argparse
 import sys
 
 
-from deepparse.tools import download_model, MODEL_CHOICES
+from deepparse.download_tools import download_model, MODEL_MAPPING_CHOICES
 
 
 def main(args=None) -> None:
@@ -23,14 +23,10 @@ def main(args=None) -> None:
     parsed_args = get_args(args)
 
     model_type = parsed_args.model_type
-    if "-attention" in model_type:
-        root_model_type = model_type.split("-")[0]
-        model_type = root_model_type + "_attention"
 
     saving_cache_path = parsed_args.saving_cache_dir
 
     download_model(model_type, saving_cache_path=saving_cache_path)
-
 
 
 def get_parser() -> argparse.ArgumentParser:
@@ -38,7 +34,7 @@ def get_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "model_type",
-        choices=MODEL_CHOICES,
+        choices=MODEL_MAPPING_CHOICES,
         help="The model type to download.",
     )
     parser.add_argument(

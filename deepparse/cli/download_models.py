@@ -1,7 +1,7 @@
 import argparse
 import sys
 
-from deepparse.tools import download_models
+from deepparse.download_tools import download_models
 
 
 def main(args=None) -> None:

@@ -6,8 +6,8 @@ from pydantic import BaseModel
 from fastapi import FastAPI, Depends
 from fastapi.responses import JSONResponse
 
-from deepparse.cli import download_models_test, parser_arguments_adder
-from deepparse.tools import CACHE_PATH
+from deepparse.cli import download_models_test
+from deepparse.tools import CACHE_PATH, MODEL_CHOICES
 from deepparse.parser import AddressParser
 
 address_parser_mapping: Dict[str, AddressParser] = {}
@@ -17,13 +17,13 @@ address_parser_mapping: Dict[str, AddressParser] = {}
 async def lifespan(application: FastAPI):  # pylint: disable=unused-argument
     # Load the models
     download_models_test(CACHE_PATH)
-    for model in parser_arguments_adder.choices:
+    for model in MODEL_CHOICES:
         if model not in ["fasttext", "fasttext-attention"]:
             attention = False
-            if "attention" in model:
+            if "-attention" in model:
                 attention = True
             address_parser_mapping[model] = AddressParser(
-                model_type=model,
+                model_type=model.replace("-", "_"),
                 offline=True,
                 attention_mechanism=attention,
                 device="cpu",
@@ -55,8 +55,8 @@ def format_parsed_addresses(
     """
     assert addresses, "Addresses parameter must not be empty"
     assert (
-        parsing_model in parser_arguments_adder.choices
-    ), f"Parsing model not implemented, available choices: {parser_arguments_adder.choices}"
+        parsing_model in MODEL_CHOICES
+    ), f"Parsing model not implemented, available choices: {MODEL_CHOICES}"
 
     if model_mapping is None:
         model_mapping = address_parser_mapping
@@ -111,8 +111,8 @@ def parse(parsing_model: str, addresses: List[Address], resp=Depends(format_pars
     """
     assert addresses, "Addresses parameter must not be empty"
     assert (
-        parsing_model in parser_arguments_adder.choices
-    ), f"Parsing model not implemented, available choices: {parser_arguments_adder.choices}"
+        parsing_model in MODEL_CHOICES
+    ), f"Parsing model not implemented, available choices: {MODEL_CHOICES}"
     return JSONResponse(content=resp)
 
 

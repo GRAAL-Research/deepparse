@@ -17,7 +17,7 @@ class DownloadModelTests(TestCase):
     def setUp(self) -> None:
         self.temp_dir_obj = TemporaryDirectory()
         self.fake_cache_dir = os.path.join(self.temp_dir_obj.name, "fake_cache")
-        self.models_type = ["fasttext", "fasttext_attention", "bpemb", "bpemb_attention"]
+        self.models_type = ["fasttext", "fasttext-attention", "bpemb", "bpemb-attention", "fasttext-light"]
 
     def tearDown(self) -> None:
         self.temp_dir_obj.cleanup()
@@ -46,7 +46,7 @@ class DownloadModelTests(TestCase):
 
         weights_download_mock.assert_called()
 
-        expected_call_count = 4
+        expected_call_count = 5
         actual_call_count = weights_download_mock.call_count
         self.assertEqual(expected_call_count, actual_call_count)
 

@@ -26,6 +26,14 @@ HTTP_CLIENT_ERROR_STATUS_CODE = 400
 # Status code starting in the 5xx are the next range status code.
 NEXT_RANGE_STATUS_CODE = 500
 
+MODEL_CHOICES = [
+    "fasttext",
+    "fasttext-attention",
+    "fasttext-light",
+    "bpemb",
+    "bpemb-attention",
+]
+
 
 def latest_version(model: str, cache_path: str, verbose: bool) -> bool:
     """

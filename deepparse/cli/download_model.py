@@ -10,8 +10,8 @@ from deepparse import (
     latest_version,
     download_fasttext_embeddings,
     download_weights,
+    MODEL_CHOICES,
 )
-from .parser_arguments_adder import choices
 
 
 def main(args=None) -> None:
@@ -64,7 +64,7 @@ def get_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "model_type",
-        choices=choices,
+        choices=MODEL_CHOICES,
         help="The model type to download.",
     )
     parser.add_argument(

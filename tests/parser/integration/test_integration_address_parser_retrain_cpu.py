@@ -35,7 +35,7 @@ class AddressParserIntegrationRetrainCPUTest(AddressParserRetrainTestCase, Captu
 
         self.assertIsNotNone(performance_after_training)
 
-    @patch("deepparse.tools.poutyne")
+    @patch("deepparse.validations.poutyne")
     def test_givenAnAddressParser_whenRetrainWithPoutyne17andBefore_thenTrainingOccurWithAWarningPrint(
         self, poutyne_mock
     ):
@@ -65,7 +65,7 @@ class AddressParserIntegrationRetrainCPUTest(AddressParserRetrainTestCase, Captu
 
         self.assertEqual(actual, expected)
 
-    @patch("deepparse.tools.poutyne")
+    @patch("deepparse.validations.poutyne")
     def test_givenAnAddressParser_whenRetrainWithPoutyne18andAfter_thenTrainingOccurWithoutAWarningPrint(
         self, poutyne_mock
     ):
@@ -96,7 +96,7 @@ class AddressParserIntegrationRetrainCPUTest(AddressParserRetrainTestCase, Captu
 
         self.assertNotRegex(actual, not_expected)
 
-    @patch("deepparse.tools.poutyne")
+    @patch("deepparse.validations.poutyne")
     def test_givenAnAddressParser_whenRetrainWithPoutyne111andAfter_thenTrainingOccurWithoutAWarningPrint(
         self, poutyne_mock
     ):
@@ -127,7 +127,7 @@ class AddressParserIntegrationRetrainCPUTest(AddressParserRetrainTestCase, Captu
 
         self.assertNotRegex(actual, not_expected)
 
-    @patch("deepparse.tools.poutyne")
+    @patch("deepparse.validations.poutyne")
     def test_givenAnAddressParser_whenRetrainWithPoutyne2_thenTrainingOccurWithoutAWarningPrint(self, poutyne_mock):
         poutyne_mock.version.__version__ = "2.0"
         self._capture_output()

@@ -19,6 +19,8 @@ from poutyne.framework import Experiment
 from torch.optim import SGD
 from torch.utils.data import DataLoader, Subset
 
+from ..download_tools import CACHE_PATH
+from ..validations import valid_poutyne_version
 from . import formatted_parsed_address
 from .capturing import Capturing
 from .formatted_parsed_address import FormattedParsedAddress
@@ -42,7 +44,7 @@ from ..metrics import nll_loss, accuracy
 from ..network import ModelFactory
 from ..pre_processing import coma_cleaning, lower_cleaning, hyphen_cleaning
 from ..pre_processing import trailing_whitespace_cleaning, double_whitespaces_cleaning
-from ..tools import CACHE_PATH, valid_poutyne_version
+
 from ..vectorizer import VectorizerFactory
 from ..weights_tools import handle_weights_upload
 

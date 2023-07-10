@@ -1,22 +1,19 @@
-from typing import Dict, Annotated
-
-
 import gzip
 import os
 import shutil
 import sys
-from urllib.request import urlopen
-from pathlib import Path
 import warnings
+from pathlib import Path
+from typing import Dict, Annotated
+from urllib.request import urlopen
 
 import requests
+from bpemb import BPEmb
+from fasttext.FastText import _FastText
 from requests import HTTPError
 from urllib3.exceptions import MaxRetryError
-from fasttext.FastText import _FastText
-from bpemb import BPEmb
 
 from .errors.server_error import ServerError
-
 
 BASE_URL = "https://graal.ift.ulaval.ca/public/deepparse/{}.{}"
 CACHE_PATH = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
@@ -62,6 +59,131 @@ def download_fasttext_magnitude_embeddings(cache_dir: str, verbose: bool = True,
                 shutil.copyfileobj(f, f_out)
         os.remove(os.path.join(cache_dir, gz_file_name))
     return file_name
+
+
+def download_weights(model_filename: str, saving_dir: str, verbose: bool = True) -> None:
+    """
+    Function to download the pretrained weights of the models.
+    Args:
+        model_filename: The network type (i.e. fasttext or bpemb).
+        saving_dir: The path to the saving directory.
+        verbose (bool): Turn on/off the verbosity of the model. The default value is True.
+    """
+    if verbose:
+        print(f"Downloading the pre-trained weights for the network {model_filename}.")
+
+    try:
+        download_from_public_repository(model_filename, saving_dir, "ckpt")
+        download_from_public_repository(model_filename, saving_dir, "version")
+    except requests.exceptions.ConnectTimeout as error:
+        raise ServerError(
+            "There was an error trying to connect to the Deepparse server. Please try again later."
+        ) from error
+
+
+def download_from_public_repository(file_name: str, saving_dir: str, file_extension: str) -> None:
+    """
+    Simple function to download the content of a file from Deepparse public repository.
+    The repository URL string is `'https://graal.ift.ulaval.ca/public/deepparse/{}.{}'``
+    where the first bracket is the file name and the second is the file extension.
+    """
+    url = BASE_URL.format(file_name, file_extension)
+    r = requests.get(url, timeout=5)
+    r.raise_for_status()  # Raise exception
+    Path(saving_dir).mkdir(parents=True, exist_ok=True)
+    with open(os.path.join(saving_dir, f"{file_name}.{file_extension}"), "wb") as file:
+        file.write(r.content)
+
+
+def download_models(saving_cache_path=None):
+    for model_type in MODEL_MAPPING_CHOICES:
+        download_model(model_type, saving_cache_path=saving_cache_path)
+
+
+def download_model(
+    model_type: str,
+    saving_cache_path: Path = None,
+) -> None:
+    if saving_cache_path is None:
+        saving_cache_path = CACHE_PATH
+
+    if "fasttext" in model_type and "fasttext-light" not in model_type:
+        download_fasttext_embeddings(cache_dir=saving_cache_path)
+    elif model_type == "fasttext-light":
+        download_fasttext_magnitude_embeddings(cache_dir=saving_cache_path)
+    elif "bpemb" in model_type:
+        BPEmb(
+            lang="multi", vs=100000, dim=300, cache_dir=saving_cache_path
+        )  # The class manage the download of the pretrained words embedding
+
+    model_type_filename = MODEL_MAPPING_CHOICES[model_type]
+    model_path = os.path.join(saving_cache_path, f"{model_type_filename}.ckpt")
+    version_path = os.path.join(saving_cache_path, f"{model_type_filename}.version")
+    if not os.path.isfile(model_path) or not os.path.isfile(version_path):
+        download_weights(model_type_filename, saving_dir=saving_cache_path)
+    elif not latest_version(model_type_filename, cache_path=saving_cache_path, verbose=True):
+        print("A new version of the pretrained model is available. The newest model will be downloaded.")
+        download_weights(model_type_filename, saving_dir=saving_cache_path)
+
+
+def latest_version(model: str, cache_path: str, verbose: bool) -> bool:
+    """
+    Verify if the local model is the latest.
+    """
+    # Reading of the actual local version
+    with open(os.path.join(cache_path, model + ".version"), encoding="utf-8") as local_model_hash_file:
+        local_model_hash_version = local_model_hash_file.readline()
+
+    # We create a temporary directory for the server-side version file
+    tmp_cache = os.path.join(cache_path, "tmp")
+    try:
+        # We create a temporary directory for the server-side version file
+        os.makedirs(tmp_cache, exist_ok=True)
+
+        download_from_public_repository(model, tmp_cache, "version")
+
+        # Reading of the server-side version
+        with open(os.path.join(tmp_cache, model + ".version"), encoding="utf-8") as remote_model_hash_file:
+            remote_model_hash_version = remote_model_hash_file.readline()
+
+        is_latest_version = local_model_hash_version.strip() == remote_model_hash_version.strip()
+
+    except HTTPError as exception:  # HTTP connection error handling
+        if HTTP_CLIENT_ERROR_STATUS_CODE <= exception.response.status_code < NEXT_RANGE_STATUS_CODE:
+            # Case where Deepparse server is down.
+            if verbose:
+                warnings.warn(
+                    f"We where not able to verify the cached model in the cache directory {cache_path}. It seems like"
+                    f"Deepparse server is not available at the moment. We recommend to attempt to verify "
+                    f"the model version another time using our download CLI function.",
+                    category=RuntimeWarning,
+                )
+            # The is_lastest_version is set to True even if we were not able to validate the version. We do so not to
+            # block the rest of the process.
+            is_latest_version = True
+        else:
+            # We re-raise the exception if the status_code is not in the two ranges we are interested in
+            # (local server or remote server error).
+            raise
+    except MaxRetryError:
+        # Case where the user does not have an Internet connection. For example, one can run it in a
+        # Docker container not connected to the Internet.
+        if verbose:
+            warnings.warn(
+                f"We where not able to verify the cached model in the cache directory {cache_path}. It seems like"
+                f"you are not connected to the Internet. We recommend to verify if you have the latest using our "
+                f"download CLI function.",
+                category=RuntimeWarning,
+            )
+        # The is_lastest_version is set to True even if we were not able to validate the version. We do so not to
+        # block the rest of the process.
+        is_latest_version = True
+    finally:
+        # Cleaning the temporary directory
+        if os.path.exists(tmp_cache):
+            shutil.rmtree(tmp_cache)
+
+    return is_latest_version
 
 
 # pylint: disable=pointless-string-statement
@@ -188,128 +310,3 @@ def load_fasttext_embeddings(path: str) -> _FastText:
     Wrapper to load a model given a filepath and return a model object.
     """
     return _FastText(model_path=path)
-
-
-def download_weights(model_filename: str, saving_dir: str, verbose: bool = True) -> None:
-    """
-    Function to download the pretrained weights of the models.
-    Args:
-        model_filename: The network type (i.e. fasttext or bpemb).
-        saving_dir: The path to the saving directory.
-        verbose (bool): Turn on/off the verbosity of the model. The default value is True.
-    """
-    if verbose:
-        print(f"Downloading the pre-trained weights for the network {model_filename}.")
-
-    try:
-        download_from_public_repository(model_filename, saving_dir, "ckpt")
-        download_from_public_repository(model_filename, saving_dir, "version")
-    except requests.exceptions.ConnectTimeout as error:
-        raise ServerError(
-            "There was an error trying to connect to the Deepparse server. Please try again later."
-        ) from error
-
-
-def download_from_public_repository(file_name: str, saving_dir: str, file_extension: str) -> None:
-    """
-    Simple function to download the content of a file from Deepparse public repository.
-    The repository URL string is `'https://graal.ift.ulaval.ca/public/deepparse/{}.{}'``
-    where the first bracket is the file name and the second is the file extension.
-    """
-    url = BASE_URL.format(file_name, file_extension)
-    r = requests.get(url, timeout=5)
-    r.raise_for_status()  # Raise exception
-    Path(saving_dir).mkdir(parents=True, exist_ok=True)
-    with open(os.path.join(saving_dir, f"{file_name}.{file_extension}"), "wb") as file:
-        file.write(r.content)
-
-
-def download_models(saving_cache_path=None):
-    for model_type in MODEL_MAPPING_CHOICES:
-        download_model(model_type, saving_cache_path=saving_cache_path)
-
-
-def download_model(
-    model_type: str,
-    saving_cache_path: Path = None,
-) -> None:
-    if saving_cache_path is None:
-        saving_cache_path = CACHE_PATH
-
-    if "fasttext" in model_type and "fasttext-light" not in model_type:
-        download_fasttext_embeddings(cache_dir=saving_cache_path)
-    elif model_type == "fasttext-light":
-        download_fasttext_magnitude_embeddings(cache_dir=saving_cache_path)
-    elif "bpemb" in model_type:
-        BPEmb(
-            lang="multi", vs=100000, dim=300, cache_dir=saving_cache_path
-        )  # The class manage the download of the pretrained words embedding
-
-    model_type_filename = MODEL_MAPPING_CHOICES[model_type]
-    model_path = os.path.join(saving_cache_path, f"{model_type_filename}.ckpt")
-    version_path = os.path.join(saving_cache_path, f"{model_type_filename}.version")
-    if not os.path.isfile(model_path) or not os.path.isfile(version_path):
-        download_weights(model_type_filename, saving_dir=saving_cache_path)
-    elif not latest_version(model_type_filename, cache_path=saving_cache_path, verbose=True):
-        print("A new version of the pretrained model is available. The newest model will be downloaded.")
-        download_weights(model_type_filename, saving_dir=saving_cache_path)
-
-
-def latest_version(model: str, cache_path: str, verbose: bool) -> bool:
-    """
-    Verify if the local model is the latest.
-    """
-    # Reading of the actual local version
-    with open(os.path.join(cache_path, model + ".version"), encoding="utf-8") as local_model_hash_file:
-        local_model_hash_version = local_model_hash_file.readline()
-
-    # We create a temporary directory for the server-side version file
-    tmp_cache = os.path.join(cache_path, "tmp")
-    try:
-        # We create a temporary directory for the server-side version file
-        os.makedirs(tmp_cache, exist_ok=True)
-
-        download_from_public_repository(model, tmp_cache, "version")
-
-        # Reading of the server-side version
-        with open(os.path.join(tmp_cache, model + ".version"), encoding="utf-8") as remote_model_hash_file:
-            remote_model_hash_version = remote_model_hash_file.readline()
-
-        is_latest_version = local_model_hash_version.strip() == remote_model_hash_version.strip()
-
-    except HTTPError as exception:  # HTTP connection error handling
-        if HTTP_CLIENT_ERROR_STATUS_CODE <= exception.response.status_code < NEXT_RANGE_STATUS_CODE:
-            # Case where Deepparse server is down.
-            if verbose:
-                warnings.warn(
-                    f"We where not able to verify the cached model in the cache directory {cache_path}. It seems like"
-                    f"Deepparse server is not available at the moment. We recommend to attempt to verify "
-                    f"the model version another time using our download CLI function.",
-                    category=RuntimeWarning,
-                )
-            # The is_lastest_version is set to True even if we were not able to validate the version. We do so not to
-            # block the rest of the process.
-            is_latest_version = True
-        else:
-            # We re-raise the exception if the status_code is not in the two ranges we are interested in
-            # (local server or remote server error).
-            raise
-    except MaxRetryError:
-        # Case where the user does not have an Internet connection. For example, one can run it in a
-        # Docker container not connected to the Internet.
-        if verbose:
-            warnings.warn(
-                f"We where not able to verify the cached model in the cache directory {cache_path}. It seems like"
-                f"you are not connected to the Internet. We recommend to verify if you have the latest using our "
-                f"download CLI function.",
-                category=RuntimeWarning,
-            )
-        # The is_lastest_version is set to True even if we were not able to validate the version. We do so not to
-        # block the rest of the process.
-        is_latest_version = True
-    finally:
-        # Cleaning the temporary directory
-        if os.path.exists(tmp_cache):
-            shutil.rmtree(tmp_cache)
-
-    return is_latest_version

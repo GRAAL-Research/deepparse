@@ -88,6 +88,13 @@ Also, you should run `python setup.py develop` to build the project and be able 
 python setup.py develop
 ```
 
+Once the packages are installed inside your activated environment, you can run the following command to install the pre-commit
+hooks.
+
+``` shell
+pre-commit install
+```
+
 ## Use a Consistent Coding Style
 
 All of the code is formatted using [black](https://black.readthedocs.io) with the
@@ -108,6 +115,15 @@ introduce code incoherences detected by the linting. You can run the linting pro
 ``` shell
 pylint deepparse
 pylint tests
+```
+
+### Pre-commit hooks
+These last commands will automatically be run along with others verifications when committing your code change using pre-commit hooks.
+
+You can also run them locally with the following command:
+
+``` shell 
+pre-commit run --all-files colors always
 ```
 
 ## Tests

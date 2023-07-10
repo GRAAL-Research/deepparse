@@ -6,8 +6,8 @@ from tempfile import TemporaryDirectory
 from typing import List
 from unittest import skipIf
 from unittest.mock import patch
+
 import pytest
-from argparse import ArgumentError
 
 from deepparse.cli import retrain
 from deepparse.cli.retrain import get_args, parse_retrained_arguments

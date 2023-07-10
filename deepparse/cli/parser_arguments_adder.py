@@ -7,7 +7,7 @@ from .. import MODEL_MAPPING_CHOICES
 def add_base_parsing_model_arg(parser: ArgumentParser) -> None:
     parser.add_argument(
         "base_parsing_model",
-        choices=list(MODEL_MAPPING_CHOICES),
+        choices=MODEL_MAPPING_CHOICES,
         help=wrap("The base parsing module to use for retraining."),
     )
 

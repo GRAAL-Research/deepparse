@@ -325,6 +325,5 @@ class RetrainTests(RetrainTestCase):
             retrain.main(parser_params)
 
 
-
 if __name__ == "__main__":
     unittest.main()

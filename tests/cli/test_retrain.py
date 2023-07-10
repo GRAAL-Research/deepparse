@@ -7,6 +7,8 @@ from typing import List
 from unittest import skipIf
 from unittest.mock import patch
 
+import pytest
+
 from deepparse.cli import retrain
 from deepparse.cli.retrain import get_args, parse_retrained_arguments
 from tests.parser.integration.base_retrain import RetrainTestCase
@@ -315,6 +317,12 @@ class RetrainTests(RetrainTestCase):
                 os.path.join(self.temp_checkpoints_obj.name, "checkpoints", "retrained_fasttext_address_parser.ckpt")
             )
         )
+
+    def test_retrainWithWrongModelName(self):
+        with pytest.raises(SystemExit):
+            parser_params = self.set_up_params(model_type="wrong_model_name")
+
+            retrain.main(parser_params)
 
 
 if __name__ == "__main__":

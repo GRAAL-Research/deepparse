@@ -25,7 +25,7 @@ from .tools import (
     attention_model_type_handling,
     data_container_factory,
 )
-from .. import MODEL_CHOICES
+from .. import MODEL_MAPPING_CHOICES
 from ..parser import AddressParser
 
 
@@ -124,7 +124,7 @@ def get_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument(
         "parsing_model",
-        choices=MODEL_CHOICES,
+        choices=MODEL_MAPPING_CHOICES,
         help=wrap("The parsing module to use."),
     )
 

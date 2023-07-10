@@ -120,7 +120,6 @@ def download_model(
 
     if saving_cache_path is None:
         # We use the default cache path '~/.cache/deepparse'.
-        # We use the default cache path './cache/deepparse'.
         saving_cache_path = CACHE_PATH
 
     if "fasttext" in model_type and "fasttext-light" not in model_type:

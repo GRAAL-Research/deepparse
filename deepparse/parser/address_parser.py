@@ -19,8 +19,8 @@ from poutyne.framework import Experiment
 from torch.optim import SGD
 from torch.utils.data import DataLoader, Subset
 
-from deepparse.download_tools import CACHE_PATH
-from deepparse.validations import valid_poutyne_version
+from ..download_tools import CACHE_PATH
+from ..validations import valid_poutyne_version
 from . import formatted_parsed_address
 from .capturing import Capturing
 from .formatted_parsed_address import FormattedParsedAddress

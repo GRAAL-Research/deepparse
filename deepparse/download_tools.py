@@ -4,7 +4,7 @@ import shutil
 import sys
 import warnings
 from pathlib import Path
-from typing import Dict, Annotated
+from typing import Dict, Union
 from urllib.request import urlopen
 
 import requests
@@ -24,7 +24,7 @@ HTTP_CLIENT_ERROR_STATUS_CODE = 400
 # Status code starting in the 5xx are the next range status code.
 NEXT_RANGE_STATUS_CODE = 500
 
-MODEL_MAPPING_CHOICES: Annotated[Dict[str, str], "model_type and model_filename"] = {
+MODEL_MAPPING_CHOICES: Dict[str, str] = {
     "fasttext": "fasttext",
     "fasttext-attention": "fasttext_attention",
     "fasttext-light": "fasttext",
@@ -63,11 +63,11 @@ def download_fasttext_magnitude_embeddings(cache_dir: str, verbose: bool = True,
 
 def download_weights(model_filename: str, saving_dir: str, verbose: bool = True) -> None:
     """
-    Function to download the pretrained weights of the models.
+    Function to download the pretrained weights of one of our pre-trained base models.
     Args:
-        model_filename: The network type (i.e. fasttext or bpemb).
+       model_filename: The network type (i.e. ``fasttext`` or ``bpemb``).
         saving_dir: The path to the saving directory.
-        verbose (bool): Turn on/off the verbosity of the model. The default value is True.
+        verbose (bool): Either or not to be verbose during the download of a model. The default value is True.
     """
     if verbose:
         print(f"Downloading the pre-trained weights for the network {model_filename}.")
@@ -95,16 +95,31 @@ def download_from_public_repository(file_name: str, saving_dir: str, file_extens
         file.write(r.content)
 
 
-def download_models(saving_cache_path=None):
+def download_models(saving_cache_path: Union[Path, None] = None) -> None:
+    """
+    Function to download all the pretrained models.  It will download all the models checkpoint and version file.
+
+    Args:
+        saving_cache_path: The path to the saving cache directory for the specified model.
+    """
     for model_type in MODEL_MAPPING_CHOICES:
         download_model(model_type, saving_cache_path=saving_cache_path)
 
 
 def download_model(
     model_type: str,
-    saving_cache_path: Path = None,
+    saving_cache_path: Union[Path, None] = None,
 ) -> None:
+    """
+    Function to download a pretrained model. It will download its corresponding checkpoint and version file.
+
+    Args:
+        model_type: The model type (i.e. ``fasttext`` or ``bpemb-attention``).
+        saving_cache_path: The path to the saving cache directory for the specified model.
+    """
+
     if saving_cache_path is None:
+        # We use the default cache path '~/.cache/deepparse'.
         saving_cache_path = CACHE_PATH
 
     if "fasttext" in model_type and "fasttext-light" not in model_type:

@@ -9,10 +9,10 @@ from typing import Tuple, Union, List
 import torch
 from torch import nn
 
-from deepparse.network.decoder import Decoder
-from deepparse.network.encoder import Encoder
-from deepparse.weights_tools import handle_weights_upload
-from deepparse.download_tools import download_weights, latest_version
+from ..network.decoder import Decoder
+from ..network.encoder import Encoder
+from ..weights_tools import handle_weights_upload
+from ..download_tools import download_weights, latest_version
 
 
 class Seq2SeqModel(ABC, nn.Module):

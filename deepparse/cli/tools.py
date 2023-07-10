@@ -191,7 +191,7 @@ def data_container_factory(
 
 
 # pylint: disable=pointless-string-statement
-"""
+PYPYR_COPYRIGHT_APACHE_LICENSE = """
 The code below was copied from the pypyr project, and has been modified for the purpose of this package.
 
 COPYRIGHT

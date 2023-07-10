@@ -38,7 +38,7 @@ def download_fasttext_magnitude_embeddings(cache_dir: str, verbose: bool = True,
 
 
 # pylint: disable=pointless-string-statement
-"""
+FASTTEXT_COPYRIGHT_MIT_LICENSE = """
 The code below was copied from the fastText project, and has been modified for the purpose of this package.
 
 COPYRIGHT

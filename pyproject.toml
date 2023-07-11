@@ -1,4 +1,6 @@
 [tool.black]
+target-version = ['py38', 'py39', 'py310', 'py311']
+
 line-length = 120
 skip-string-normalization = true
 required-version = "23.3.0"

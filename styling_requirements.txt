@@ -1,3 +1,4 @@
 black==23.3.0
 pylint==2.16.2
 pylint-django[with_django]
+pre-commit

@@ -753,7 +753,7 @@ look at our `contributing guidelines <https://github.com/GRAAL-Research/deeppars
 details on this matter.
 
 License
-=======
+========
 Deepparse is LGPLv3 licensed, as found in the `LICENSE file <https://github.com/GRAAL-Research/deepparse/blob/main/LICENSE>`_.
 
 

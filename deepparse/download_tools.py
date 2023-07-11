@@ -202,7 +202,7 @@ def latest_version(model: str, cache_path: str, verbose: bool) -> bool:
 
 
 # pylint: disable=pointless-string-statement
-"""
+FASTTEXT_COPYRIGHT_MIT_LICENSE = """
 The code below was copied from the fastText project, and has been modified for the purpose of this package.
 
 COPYRIGHT

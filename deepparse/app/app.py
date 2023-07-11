@@ -1,14 +1,19 @@
 """REST API."""
 from typing import List, Dict, Union
 from contextlib import asynccontextmanager
+import logging
 
 from pydantic import BaseModel
 from fastapi import FastAPI, Depends
 from fastapi.responses import JSONResponse
 
-from deepparse.cli import download_models_test
-from deepparse.tools import CACHE_PATH, MODEL_CHOICES
+
+from deepparse.download_tools import MODEL_MAPPING_CHOICES, download_models
 from deepparse.parser import AddressParser
+
+logger = logging.getLogger(__name__)
+FORMAT = "%(asctime)s; %(levelname)s: %(message)s"
+logging.basicConfig(format=FORMAT, level=logging.INFO)
 
 address_parser_mapping: Dict[str, AddressParser] = {}
 
@@ -16,14 +21,17 @@ address_parser_mapping: Dict[str, AddressParser] = {}
 @asynccontextmanager
 async def lifespan(application: FastAPI):  # pylint: disable=unused-argument
     # Load the models
-    download_models_test(CACHE_PATH)
-    for model in MODEL_CHOICES:
+    logger.info("downloading models")
+    download_models()
+    logger.info("initializing models")
+    for model in MODEL_MAPPING_CHOICES:
         if model not in ["fasttext", "fasttext-attention"]:
+            logger.info(f"initializing {model}")
             attention = False
             if "-attention" in model:
                 attention = True
             address_parser_mapping[model] = AddressParser(
-                model_type=model.replace("-", "_"),
+                model_type=model,
                 offline=True,
                 attention_mechanism=attention,
                 device="cpu",
@@ -55,8 +63,8 @@ def format_parsed_addresses(
     """
     assert addresses, "Addresses parameter must not be empty"
     assert (
-        parsing_model in MODEL_CHOICES
-    ), f"Parsing model not implemented, available choices: {MODEL_CHOICES}"
+        parsing_model in MODEL_MAPPING_CHOICES
+    ), f"Parsing model not implemented, available choices: {MODEL_MAPPING_CHOICES}"
 
     if model_mapping is None:
         model_mapping = address_parser_mapping
@@ -111,8 +119,8 @@ def parse(parsing_model: str, addresses: List[Address], resp=Depends(format_pars
     """
     assert addresses, "Addresses parameter must not be empty"
     assert (
-        parsing_model in MODEL_CHOICES
-    ), f"Parsing model not implemented, available choices: {MODEL_CHOICES}"
+        parsing_model in MODEL_MAPPING_CHOICES
+    ), f"Parsing model not implemented, available choices: {MODEL_MAPPING_CHOICES}"
     return JSONResponse(content=resp)
 
 

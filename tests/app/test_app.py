@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, Union
 
 from unittest.mock import MagicMock
 import pytest
@@ -63,7 +63,7 @@ def test_parse(client: TestClient):
         "version": model_version,
     }
 
-    def mock_format_parsed_addresses() -> Dict[str, str | List[Dict]]:
+    def mock_format_parsed_addresses() -> Dict[str, Union[str, List[Dict]]]:
         return mocked_response
 
     app.dependency_overrides[format_parsed_addresses] = mock_format_parsed_addresses

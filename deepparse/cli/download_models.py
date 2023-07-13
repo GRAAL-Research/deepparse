@@ -26,27 +26,6 @@ def main(args=None) -> None:
     download_models(saving_cache_path=saving_cache_path)
 
 
-def download_models_test(saving_cache_path=None):
-    if saving_cache_path is None:
-        saving_cache_path = CACHE_PATH
-
-    download_fasttext_embeddings(cache_dir=saving_cache_path)
-    download_fasttext_magnitude_embeddings(cache_dir=saving_cache_path)
-    BPEmb(
-        lang="multi", vs=100000, dim=300, cache_dir=saving_cache_path
-    )  # The class manage the download of the pretrained words embedding
-
-    for model_type in MODEL_CHOICES:
-        model_type = model_type.replace("-", "_")
-        model_path = os.path.join(saving_cache_path, f"{model_type}.ckpt")
-        version_path = os.path.join(saving_cache_path, f"{model_type}.version")
-        if not os.path.isfile(model_path) or not os.path.isfile(version_path):
-            download_weights(model_type, saving_dir=saving_cache_path)
-        elif not latest_version(model_type, cache_path=saving_cache_path, verbose=True):
-            print("A new version of the pretrained model is available. The newest model will be downloaded.")
-            download_weights(model_type, saving_dir=saving_cache_path)
-
-
 def get_parser() -> argparse.ArgumentParser:
     """Return ArgumentParser for the cli."""
     parser = argparse.ArgumentParser()

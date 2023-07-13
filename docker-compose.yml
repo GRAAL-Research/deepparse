@@ -13,3 +13,5 @@ services:
       - app
     volumes:
       - "/$HOME/.cache/deepparse:/root/.cache/deepparse"
+    env_file:
+      - .env

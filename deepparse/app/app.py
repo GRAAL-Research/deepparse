@@ -10,23 +10,25 @@ from fastapi.responses import JSONResponse
 
 from deepparse.download_tools import MODEL_MAPPING_CHOICES, download_models
 from deepparse.parser import AddressParser
+from deepparse.app.sentry import configure_sentry
 
 logger = logging.getLogger(__name__)
 FORMAT = "%(asctime)s; %(levelname)s: %(message)s"
-logging.basicConfig(format=FORMAT, level=logging.INFO)
+logging.basicConfig(format=FORMAT, level=logging.DEBUG)
 
 address_parser_mapping: Dict[str, AddressParser] = {}
+
+configure_sentry()
 
 
 @asynccontextmanager
 async def lifespan(application: FastAPI):  # pylint: disable=unused-argument
     # Load the models
-    logger.info("downloading models")
+    logger.debug("downloading models")
     download_models()
-    logger.info("initializing models")
     for model in MODEL_MAPPING_CHOICES:
         if model not in ["fasttext", "fasttext-attention"]:
-            logger.info(f"initializing {model}")
+            logger.debug("initializing %s", model)
             attention = False
             if "-attention" in model:
                 attention = True

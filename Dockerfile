@@ -39,10 +39,16 @@ FROM python:3.11.0-slim AS app
 # set env variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
+ENV ENVIRONMENT production
+
+# copy project
+COPY /deepparse ./deepparse
+COPY setup.cfg ./
+COPY setup.py ./
+COPY README.md ./
+COPY version.txt ./
+RUN pip install .
 
 # install dependencies
 COPY requirements.txt .
 RUN pip install -r requirements.txt
-
-# copy project
-COPY /deepparse /deepparse

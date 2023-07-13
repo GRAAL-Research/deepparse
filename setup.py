@@ -80,7 +80,7 @@ def main():
             "pandas",
             "urllib3",
             "cloudpathlib[s3, gs, azure]",
-            "fastapi",
+            "fastapi[all]",
             "uvicorn",
             "sentry-sdk[fastapi]",
             "python-decouple",

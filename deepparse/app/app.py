@@ -32,7 +32,7 @@ address_parser_mapping: Dict[str, AddressParser] = {}
 @asynccontextmanager
 async def lifespan(application: FastAPI):  # pylint: disable=unused-argument
     # Load the models
-    logger.debug("downloading models")
+    logger.debug("Downloading models")
     download_models()
     for model in MODEL_MAPPING_CHOICES:
         if model not in ["fasttext", "fasttext-attention", "fasttext-light"]:

@@ -15,9 +15,7 @@ try:
 
 
 except ModuleNotFoundError as e:
-    raise ModuleNotFoundError(
-        "Ensure you installed the packages for the app_requirements.txt file found in the root of the project"
-    ) from e
+    raise ModuleNotFoundError("Ensure you installed the extra packages using: 'pip install deepparse[app]''") from e
 
 
 logger = logging.getLogger(__name__)

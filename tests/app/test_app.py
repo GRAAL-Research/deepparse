@@ -1,20 +1,30 @@
 from typing import Dict, List, Union
+import os
 
 from unittest.mock import MagicMock
+from unittest import skipIf
 import pytest
-from fastapi.testclient import TestClient
-from fastapi.encoders import jsonable_encoder
+
+try:
+    from fastapi.testclient import TestClient
+    from fastapi.encoders import jsonable_encoder
+except ModuleNotFoundError as e:
+    raise ModuleNotFoundError(
+        "Ensure you installed the packages for the app_requirements.txt file found in the root of the project"
+    ) from e
 
 from deepparse.app.app import app, format_parsed_addresses, Address, AddressParser
 from deepparse.parser import FormattedParsedAddress
 
 
+@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
 @pytest.fixture(scope="session", name="client")
 def fixture_client():
     with TestClient(app) as _client:
         yield _client
 
 
+@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
 def test_parse(client: TestClient):
     parsing_model = "bpemb"
     raw_address_1 = "2325 Rue de l'Université, Québec, QC G1V 0A6"
@@ -78,11 +88,13 @@ def test_parse(client: TestClient):
     }
 
 
+@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
 def test_parse_empty_addresses(client: TestClient):
     with pytest.raises(AssertionError, match="Addresses parameter must not be empty"):
         client.post("/parse/bpemb", json=[])
 
 
+@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
 def test_parse_invalid_model(client: TestClient):
     with pytest.raises(AssertionError):
         addresses = [
@@ -92,6 +104,7 @@ def test_parse_invalid_model(client: TestClient):
         client.post("/parse/invalid_model", json=addresses)
 
 
+@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
 def test_format_parsed_addresses():
     # Create a mock for the AddressParser
     model_type = "bpemb"
@@ -153,6 +166,7 @@ def test_format_parsed_addresses():
     assert response == expected_response
 
 
+@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
 def test_format_parsed_addresses__one_address():
     # Create a mock for the AddressParser
     model_type = "bpemb"

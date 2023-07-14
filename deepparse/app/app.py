@@ -3,22 +3,30 @@ from typing import List, Dict, Union
 from contextlib import asynccontextmanager
 import logging
 
-from pydantic import BaseModel
-from fastapi import FastAPI, Depends
-from fastapi.responses import JSONResponse
-
-
 from deepparse.download_tools import MODEL_MAPPING_CHOICES, download_models
 from deepparse.parser import AddressParser
-from deepparse.app.sentry import configure_sentry
+
+try:
+    from deepparse.app.sentry import configure_sentry
+    from pydantic import BaseModel
+    from fastapi import FastAPI, Depends
+    from fastapi.responses import JSONResponse
+    import uvicorn
+
+
+except ModuleNotFoundError as e:
+    raise ModuleNotFoundError(
+        "Ensure you installed the packages for the app_requirements.txt file found in the root of the project"
+    ) from e
+
 
 logger = logging.getLogger(__name__)
 FORMAT = "%(asctime)s; %(levelname)s: %(message)s"
 logging.basicConfig(format=FORMAT, level=logging.DEBUG)
 
-address_parser_mapping: Dict[str, AddressParser] = {}
-
 configure_sentry()
+
+address_parser_mapping: Dict[str, AddressParser] = {}
 
 
 @asynccontextmanager
@@ -27,7 +35,7 @@ async def lifespan(application: FastAPI):  # pylint: disable=unused-argument
     logger.debug("downloading models")
     download_models()
     for model in MODEL_MAPPING_CHOICES:
-        if model not in ["fasttext", "fasttext-attention"]:
+        if model not in ["fasttext", "fasttext-attention", "fasttext-light"]:
             logger.debug("initializing %s", model)
             attention = False
             if "-attention" in model:
@@ -127,6 +135,4 @@ def parse(parsing_model: str, addresses: List[Address], resp=Depends(format_pars
 
 
 if __name__ == "__main__":
-    import uvicorn
-
-    uvicorn.run(app, host="0.0.0.0", port=8001)
+    uvicorn.run(app, host="0.0.0.0", port=8080)

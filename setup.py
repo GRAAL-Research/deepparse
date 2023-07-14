@@ -80,16 +80,18 @@ def main():
             "pandas",
             "urllib3",
             "cloudpathlib[s3, gs, azure]",
-            "fastapi[all]",
-            "uvicorn",
-            "sentry-sdk[fastapi]",
-            "python-decouple",
         ],
         python_requires=">=3.8",
         description="A library for parsing multinational street addresses using deep learning.",
         long_description=readme,
         long_description_content_type="text/markdown",
-        extras_require={"colorama": "colorama>=0.4.3"},
+        extras_require={
+            "colorama": "colorama>=0.4.3",
+            "fastapi[all]": "fastapi[all]>=0.68.0",
+            "uvicorn": "uvicorn>=0.15.0",
+            "sentry-sdk[fastapi]": "sentry-sdk[fastapi]>=1.4.3",
+            "python-decouple": "python-decouple>=3.4",
+        },
     )
 
 

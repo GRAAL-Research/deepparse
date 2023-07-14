@@ -7,7 +7,7 @@ from decouple import config
 
 def configure_sentry() -> None:
     """Configure Sentry."""
-    sentry_dsn = config("SENTRY_DSN")
+    sentry_dsn = config("SENTRY_DSN", "")
     environment = config("ENVIRONMENT", "local")
     sentry_sdk.init(
         dsn=sentry_dsn,

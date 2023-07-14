@@ -1,0 +1,4 @@
+fastapi[all]
+uvicorn
+sentry-sdk[fastapi]
+python-decouple

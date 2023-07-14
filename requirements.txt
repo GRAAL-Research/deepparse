@@ -10,7 +10,3 @@ fasttext-wheel
 pandas
 urllib3
 cloudpathlib[s3, gs, azure]
-fastapi[all]
-uvicorn
-sentry-sdk[fastapi]
-python-decouple

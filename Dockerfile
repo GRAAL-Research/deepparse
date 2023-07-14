@@ -49,6 +49,6 @@ COPY README.md ./
 COPY version.txt ./
 RUN pip install .
 
-# install dependencies
-COPY requirements.txt .
-RUN pip install -r requirements.txt
+# install app dependencies
+COPY app_requirements.txt .
+RUN pip install -r app_requirements.txt

@@ -95,7 +95,7 @@ def main():
                 "python-decouple==3.8",  # app
                 "black==23.3.0",
                 "pylint==2.16.2",
-                "pyling-django[with_django]==2.5.3",  # styling requirements
+                "pylint-django[with_django]==2.5.3",  # styling requirements
                 "pre-commit==3.3.3",
                 "pandas==2.0.3",
                 "pycountry==22.3.5",
@@ -106,8 +106,8 @@ def main():
                 "pytest-mock==3.11.1",
                 "pytest-xdist[psutil]==3.3.1",
                 "tensorboard==2.13.0",
-                "sphinx==7.0.1",
-                "sphinx_rtd_theme==1.2.2",  # documentation requirements
+                "sphinx==6.2.1",  # documentation requirements
+                "sphinx_rtd_theme==1.2.2",
             ],
         },
     )

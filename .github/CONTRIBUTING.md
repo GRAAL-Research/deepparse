@@ -72,20 +72,12 @@ When creating your enhancement request, please:
 
 We created three requirements files to install all the tools used for the development of the
 library. `tests/requirements.txt` define the requirements for the tests, `styling_requirements.txt` for the styling
-and `docs/requirements.txt` for the documentation.
+and `docs/requirements.txt` for the documentation. `app_requirements.txt` define the requirements for the application.
 
-You can install all the requirements with
-
-``` shell
-pip install -r tests/requirements.txt
-pip install -r styling_requirements.txt
-pip install -r docs/requirements.txt
-```
-
-Also, you should run `python setup.py develop` to build the project and be able to build the documentation.
+You can install all the requirements to build the project and be able to build the documentation with the following command
 
 ``` shell
-python setup.py develop
+pip install -e .[all]
 ```
 
 Once the packages are installed inside your activated environment, you can run the following command to install the pre-commit

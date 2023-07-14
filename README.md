@@ -339,6 +339,12 @@ Before installing deepparse, you must have the latest version of [PyTorch](https
 pip install deepparse
 ```
 
+- **Install the stable version of deepparse with the app extra dependencies:**
+
+```sh
+pip install deepparse[app]
+```
+
 - **Install the latest development version of deepparse:**
 
 ```sh

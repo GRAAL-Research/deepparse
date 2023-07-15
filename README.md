@@ -33,6 +33,7 @@ Use deepparse to
 
 - parse multinational address using one of our pretrained models with or without attention mechanism,
 - parse addresses directly from the command line without code to write,
+- parse addresses with our out-of-the-box FastAPI parser,
 - retrain our pretrained models on new data to improve parsing on specific country address patterns,
 - retrain our pretrained models with new prediction tags easily,
 - retrain our pretrained models with or without freezing some layers,
@@ -221,6 +222,14 @@ address_parser = AddressParser(
 )
 
 address_parser("350 rue des Lilas Ouest Québec Québec G1L 1B6")
+```
+
+### Parse Address With Our Out-Of-The-Box FastAPI Parse Model
+
+TODO
+
+```shell
+
 ```
 
 ### Retrain a Model

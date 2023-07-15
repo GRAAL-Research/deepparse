@@ -24,6 +24,7 @@ Use deepparse to
 
 - parse multinational address using one of our pretrained models with or without attention mechanism,
 - parse addresses directly from the command line without code to write,
+- parse addresses with our out-of-the-box FastAPI parser,
 - retrain our pretrained models on new data to improve parsing on specific country address patterns,
 - retrain our pretrained models with new prediction tags easily,
 - retrain our pretrained models with or without freezing some layers,
@@ -650,6 +651,15 @@ class name) when reloading it.
 .. code-block:: python
 
     address_parser.retrain(training_container, train_ratio=0.8, epochs=5, batch_size=8, name_of_the_retrain_parser="MyNewParser")
+
+
+Parse Address With Our Out-Of-The-Box FastAPI Parse Model
+*********************************************************
+
+.. code-block:: shell
+
+    todo
+
 
 
 Retrain a Model With an Attention Mechanism

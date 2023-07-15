@@ -15,7 +15,7 @@ try:
 
 
 except ModuleNotFoundError as e:
-    raise ModuleNotFoundError("Ensure you installed the extra packages using: 'pip install deepparse[app]''") from e
+    raise ModuleNotFoundError("Ensure you installed the extra packages using: 'pip install deepparse[app]'") from e
 
 
 logger = logging.getLogger(__name__)

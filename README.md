@@ -400,7 +400,8 @@ pip install deepparse
 - **Install the stable version of deepparse with the app extra dependencies:**
 
 ```sh
-pip install deepparse[app]
+pip install deepparse[app]  # for bash terminal
+pip install 'deepparse[app]' # for ZSH terminal
 ```
 
 - **Install the latest development version of deepparse:**

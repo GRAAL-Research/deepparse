@@ -9,9 +9,7 @@ services:
     tty: true
     ports:
       - "8000:8000"
-    profiles:
-      - app
     volumes:
       - "/$HOME/.cache/deepparse:/root/.cache/deepparse"
-    env_file:
-      - .env
+    environment:
+      - SENTRY_DSN=${SENTRY_DSN}

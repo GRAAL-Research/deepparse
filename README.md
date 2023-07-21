@@ -236,8 +236,6 @@ if not, you can install them using the following documentations in the following
 1. [Docker Engine](https://docs.docker.com/engine/install/)
 2. [Docker Compose](https://docs.docker.com/compose/install/linux/#install-using-the-repository)
 
-Also, you can monitor your application usage with [Sentry](https://sentry.io) by setting the environment variable `SENTRY_DSN` to your Sentry's project
-DSN. There is an example of the .env file in the root of the project named `.env_example`.
 
 
 Once you have Docker Engine and Docker Compose installed, you can run the following command to start the FastAPI application:
@@ -246,6 +244,18 @@ Once you have Docker Engine and Docker Compose installed, you can run the follow
 docker compose up app
 ```
 
+#### Sentry:
+Also, you can monitor your application usage with [Sentry](https://sentry.io) by setting the environment variable `SENTRY_DSN` to your Sentry's project
+DSN. There is an example of the .env file in the root of the project named `.env_example`. you can just copy it using the following command: 
+
+```shell
+cp .env_example .env
+```
+
+If you do not have a Sentry account, you can create one [here](https://sentry.io/signup/).
+
+If you do not want to use Sentry, you can just remove the `SENTRY_DSN` environment variable from the `.env` file or set it to an empty string, also, not creating
+the `.env` file will also work. The application will run without any problem if Sentry is not set.
 
 #### Request Examples:
 

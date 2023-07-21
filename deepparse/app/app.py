@@ -6,6 +6,7 @@ import logging
 from deepparse.download_tools import MODEL_MAPPING_CHOICES, download_models
 from deepparse.parser import AddressParser
 
+
 try:
     from deepparse.app.sentry import configure_sentry
     from pydantic import BaseModel
@@ -33,7 +34,7 @@ async def lifespan(application: FastAPI):  # pylint: disable=unused-argument
     logger.debug("Downloading models")
     download_models()
     for model in MODEL_MAPPING_CHOICES:
-        if model not in ["fasttext", "fasttext-attention", "fasttext-light"]:
+        if model not in ["fasttext", "fasttext-attention", "fasttext-light"]:  # Skip fasttext models
             logger.debug("initializing %s", model)
             attention = False
             if "-attention" in model:

@@ -30,3 +30,7 @@ with open(
         timer.elapsed_time / len(addresses),
         file=file,
     )
+    print(
+        "Temps moyen pour porcess avec Libpostal :",
+        timer.elapsed_time / len(addresses),
+    )

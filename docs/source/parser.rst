@@ -68,8 +68,8 @@ are a little bit lower for the trained country (around ~2%) but are similar for 
         *   - Libpostal
             - N/A
             - N/A
-            - <1
-            - ~0.00007
+            - N/A
+            - ~0.00004
 
 .. [1] Note that on Windows, we use the Gensim FastText models with ~10 GO with similar performance.
 
@@ -103,8 +103,8 @@ are a little bit lower for the trained country (around ~2%) but are similar for 
             - ~0.0075
         *   - Libpostal
             - N/A
-            - <1
-            - ~0.00007
+            - N/A
+            - ~0.00004
 
 .. [2] Note that on Windows, we use the Gensim FastText models that use ~10 GO with similar performance.
 

@@ -1,3 +1,4 @@
 pycountry
 pandas
 tabulate
+memory_profiler

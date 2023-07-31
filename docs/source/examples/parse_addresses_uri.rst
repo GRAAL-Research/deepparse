@@ -1,8 +1,8 @@
 .. role:: hidden
     :class: hidden-section
 
-Parse Addresses
-***************
+Parse Addresses Using A URI
+***************************
 
 .. code-block:: python
 

@@ -17,14 +17,14 @@ class MagnitudeEmbeddingsModelTest(TestCase):
         self.model = MagicMock()
         self.model.dim = self.dim
 
-    def test_whenInstanciatedWithPath_thenShouldLoadFasttextModel(self):
+    def test_whenInstantiatedWithPath_thenShouldLoadFasttextModel(self):
         with patch(
             "deepparse.embeddings_models.magnitude_embeddings_model.Magnitude",
             return_value=self.model,
         ) as loader:
-            _ = MagnitudeEmbeddingsModel(self.a_path, verbose=self.verbose)
+            _ = MagnitudeEmbeddingsModel(embeddings_path=self.a_path, verbose=self.verbose)
 
-            loader.assert_called_with(self.a_path)
+            loader.assert_called_with(blocking=True, lazy_loading=-1, path=self.a_path)
 
     def test_whenCalledToEmbed_thenShouldCallLoadedModel(self):
         with patch(

@@ -19,9 +19,7 @@ jobs:
           python-version: "3.11"
       - name: Install dependencies
         run: |
-          pip install -Ur requirements.txt
-          pip install -Ur docs/requirements.txt
-          python setup.py develop
+          pip install -e .[all]
       - name: Building doc
         run: |
           cd docs

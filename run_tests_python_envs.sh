@@ -15,8 +15,7 @@ conda create --name deepparse_pytest_3_8 python=3.8 -y --force
 conda activate deepparse_pytest_3_8
 
 # Install dependencies
-pip install -Ur ../tests/requirements.txt
-pip install -Ur ../requirements.txt
+pip install -e '..[all]'
 
 # Run pytest from conda env
 echo "*****Running test in Conda Python version 3.8*****"
@@ -37,8 +36,7 @@ conda create --name deepparse_pytest_3_9 python=3.9 -y --force
 conda activate deepparse_pytest_3_9
 
 # Install dependencies
-pip install -Ur ../tests/requirements.txt
-pip install -Ur ../requirements.txt
+pip install -e '..[all]'
 
 # Run pytest from conda env
 echo "*****Running test in Conda Python version 3.9*****"
@@ -59,8 +57,7 @@ conda create --name deepparse_pytest_3_10 python=3.10 -y --force
 conda activate deepparse_pytest_3_10
 
 # Install dependencies
-pip install -Ur ../tests/requirements.txt
-pip install -Ur ../requirements.txt
+pip install -e '..[all]'
 
 # Run pytest from conda env
 echo "*****Running test in Conda Python version 3.10*****"
@@ -81,8 +78,7 @@ conda create --name deepparse_pytest_3_11 python=3.11 -y --force
 conda activate deepparse_pytest_3_11
 
 # Install dependencies
-pip install -Ur ../tests/requirements.txt
-pip install -Ur ../requirements.txt
+pip install -e '..[all]'
 
 # Run pytest from conda env
 echo "*****Running test in Conda Python version 3.11*****"

@@ -1,0 +1,4 @@
+fastapi[all]==0.99.1
+uvicorn==0.22.0
+sentry-sdk[fastapi]==1.28.1
+python-decouple==3.8

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Parser &mdash; deepparse 0.9.8 documentation</title>
+  <title>Parser &mdash; deepparse 0.9.9 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -37,7 +37,7 @@
               <img src="_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.9.8
+                0.9.9
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -88,11 +88,11 @@
 <p class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="examples/parse_addresses.html">Parse Addresses</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples/parse_addresses_uri.html">Parse Addresses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/parse_addresses_uri.html">Parse Addresses Using A URI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/parse_addresses_with_cli.html">Parse Addresses Using Our CLI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/retrained_model_parsing.html">Use a Retrained Model to Parse Addresses</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/fine_tuning.html">Retrain a Pretrained Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples/fine_tuning_uri.html">Retrain a Pretrained Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/fine_tuning_uri.html">Retrain a Pretrained Model Using A URI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/fine_tuning_with_csv_dataset.html">Retrain a Pretrained Model Using a CSV Dataset</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/retrain_attention_model.html">Retrain an Attention Mechanism Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
@@ -190,8 +190,8 @@ are a little bit lower for the trained country (around ~2%) but are similar for 
 <tr class="row-odd"><td><p>Libpostal</p></td>
 <td><p>N/A</p></td>
 <td><p>N/A</p></td>
-<td><p>&lt;1</p></td>
-<td><p>~0.00007</p></td>
+<td><p>N/A</p></td>
+<td><p>~0.00004</p></td>
 </tr>
 </tbody>
 </table>
@@ -237,8 +237,8 @@ are a little bit lower for the trained country (around ~2%) but are similar for 
 </tr>
 <tr class="row-odd"><td><p>Libpostal</p></td>
 <td><p>N/A</p></td>
-<td><p>&lt;1</p></td>
-<td><p>~0.00007</p></td>
+<td><p>N/A</p></td>
+<td><p>~0.00004</p></td>
 </tr>
 </tbody>
 </table>
@@ -250,9 +250,9 @@ are a little bit lower for the trained country (around ~2%) but are similar for 
 </aside>
 <p>Thus, the more address is, the faster each address can be processed. You can also improve performance by using more
 workers for the data loader created with your data within the call. But note that this performance improvement is not linear.
-Furthermore, as of version <cite>0.9.6</cite>, we now use Torch 2.0 and many other tricks to improve
+Furthermore, as of version <code class="docutils literal notranslate"><span class="pre">0.9.6</span></code>, we now use Torch 2.0 and many other tricks to improve
 processing performance. Here a few: if the parser uses a GPU, it will pin the memory in the Dataloader and reduce some
-operations (e.g. useless <cite>.to(device)</cite>).</p>
+operations (e.g. useless <code class="docutils literal notranslate"><span class="pre">.to(device)</span></code>).</p>
 </section>
 </section>
 <section id="addressparser">
@@ -440,7 +440,7 @@ the hyphen split between the unit and the street number (e.g. Canada). For examp
 replaced as <code class="docutils literal notranslate"><span class="pre">'3</span> <span class="pre">305'</span></code> for the parsing. Where <code class="docutils literal notranslate"><span class="pre">'3'</span></code> is the unit, and <code class="docutils literal notranslate"><span class="pre">'305'</span></code> is the street number.
 We use a regular expression to replace alphanumerical characters separated by a hyphen at
 the start of the string. We do so since some cities use hyphens in their names. The default
-is <code class="docutils literal notranslate"><span class="pre">False</span></code>. If True, it adds the <a class="reference internal" href="pre_processor.html#deepparse.pre_processing.pre_processor.hyphen_cleaning" title="deepparse.pre_processing.pre_processor.hyphen_cleaning"><code class="xref py py-func docutils literal notranslate"><span class="pre">hyphen_cleaning()</span></code></a>
+is <code class="docutils literal notranslate"><span class="pre">False</span></code>. If True, it adds the <code class="xref py py-func docutils literal notranslate"><span class="pre">hyphen_cleaning()</span></code>
 pre-processor <strong>at the end</strong> of the pre-processor list to apply.</p></li>
 <li><p><strong>pre_processors</strong> (<em>Union</em><em>[</em><em>None</em><em>, </em><em>List</em><em>[</em><em>Callable</em><em>]</em><em>]</em>) – A list of functions (callable) to apply pre-processing on
 all the addresses to parse before parsing. See <a class="reference internal" href="pre_processor.html#pre-processor-label"><span class="std std-ref">Pre-Processors</span></a> for examples of

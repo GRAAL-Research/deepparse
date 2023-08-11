@@ -8,7 +8,7 @@
 <meta content="https://deepparse.org/_static/logos/deepparse.png" property="og:image" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Here is Deepparse &mdash; deepparse 0.9.8 documentation</title>
+  <title>Here is Deepparse &mdash; deepparse 0.9.9 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -39,7 +39,7 @@
               <img src="_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.9.8
+                0.9.9
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -60,11 +60,11 @@
 <p class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="examples/parse_addresses.html">Parse Addresses</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples/parse_addresses_uri.html">Parse Addresses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/parse_addresses_uri.html">Parse Addresses Using A URI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/parse_addresses_with_cli.html">Parse Addresses Using Our CLI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/retrained_model_parsing.html">Use a Retrained Model to Parse Addresses</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/fine_tuning.html">Retrain a Pretrained Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples/fine_tuning_uri.html">Retrain a Pretrained Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/fine_tuning_uri.html">Retrain a Pretrained Model Using A URI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/fine_tuning_with_csv_dataset.html">Retrain a Pretrained Model Using a CSV Dataset</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/retrain_attention_model.html">Retrain an Attention Mechanism Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
@@ -107,6 +107,7 @@
 <ul class="simple">
 <li><p>parse multinational address using one of our pretrained models with or without attention mechanism,</p></li>
 <li><p>parse addresses directly from the command line without code to write,</p></li>
+<li><p>parse addresses with our out-of-the-box FastAPI parser,</p></li>
 <li><p>retrain our pretrained models on new data to improve parsing on specific country address patterns,</p></li>
 <li><p>retrain our pretrained models with new prediction tags easily,</p></li>
 <li><p>retrain our pretrained models with or without freezing some layers,</p></li>
@@ -792,6 +793,56 @@ class name) when reloading it.</p>
 </pre></div>
 </div>
 </section>
+<section id="parse-address-with-our-out-of-the-box-fastapi-parse-model">
+<h2>Parse Address With Our Out-Of-The-Box FastAPI Parse Model<a class="headerlink" href="#parse-address-with-our-out-of-the-box-fastapi-parse-model" title="Permalink to this heading"></a></h2>
+<p>You can use Out-Of-The-Box RESTAPI to parse addresses:</p>
+<section id="installation">
+<h3>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h3>
+<p>First, ensure that you have Docker Engine and Docker Compose installed on your machine.
+if not, you can install them using the following documentations in the following order:</p>
+<ol class="arabic simple">
+<li><p><a class="reference external" href="https://docs.docker.com/engine/install/">Docker Engine</a></p></li>
+<li><p><a class="reference external" href="https://docs.docker.com/compose/install/">Docker Compose</a></p></li>
+</ol>
+<p>Also, you can monitor your application usage with <a class="reference external" href="https://sentry.io">Sentry</a> by setting the environment variable SENTRY_DSN to your Sentry’s project DSN. There is an example of the .env file in the root of the project named .env_example.</p>
+<p>Once you have Docker Engine and Docker Compose installed, you can run the following command to start the FastAPI application:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>app
+</pre></div>
+</div>
+</section>
+<section id="request-examples">
+<h3>Request Examples<a class="headerlink" href="#request-examples" title="Permalink to this heading"></a></h3>
+<p>Once the application is up and running and the port 8000 is exported on your localhost, you can send request with one of the following methods:</p>
+<section id="curl-post-request">
+<h4>cURL POST request<a class="headerlink" href="#curl-post-request" title="Permalink to this heading"></a></h4>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>--location<span class="w"> </span><span class="s2">&quot;http://127.0.0.1:8000/parse/bpemb-attention&quot;</span><span class="w"> </span>--http1.1<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;Host: 127.0.0.1:8000&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-d<span class="w"> </span><span class="s2">&quot;[</span>
+<span class="s2">          {\&quot;raw\&quot;: \&quot;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6\&quot;},</span>
+<span class="s2">          {\&quot;raw\&quot;: \&quot;2325 Rue de l&#39;Université, Québec, QC G1V 0A6\&quot;}</span>
+<span class="s2">        ]&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="python-post-request">
+<h4>Python POST request<a class="headerlink" href="#python-post-request" title="Permalink to this heading"></a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;http://localhost:8000/parse/bpemb&#39;</span>
+<span class="n">addresses</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span><span class="s2">&quot;raw&quot;</span><span class="p">:</span> <span class="s2">&quot;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;raw&quot;</span><span class="p">:</span> <span class="s2">&quot;2325 Rue de l&#39;Université, Québec, QC G1V 0A6&quot;</span><span class="p">}</span>
+    <span class="p">]</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">addresses</span><span class="p">)</span>
+<span class="n">parsed_addresses</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">parsed_addresses</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
 <section id="retrain-a-model-with-an-attention-mechanism">
 <h2>Retrain a Model With an Attention Mechanism<a class="headerlink" href="#retrain-a-model-with-an-attention-mechanism" title="Permalink to this heading"></a></h2>
 <p>See <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/main/examples/retrain_attention_model.py">here</a> for a complete example.</p>
@@ -837,8 +888,8 @@ a complete example.</p>
 </div>
 </section>
 </section>
-<section id="installation">
-<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h1>
+<section id="id7">
+<h1>Installation<a class="headerlink" href="#id7" title="Permalink to this heading"></a></h1>
 <p>Before installing deepparse, you must have the latest version of <a class="reference external" href="https://pytorch.org/">PyTorch</a> in your environment.</p>
 <ul>
 <li><p><strong>Install the stable version of deepparse:</strong></p>
@@ -900,11 +951,11 @@ details on this matter.</p>
 <p class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="examples/parse_addresses.html">Parse Addresses</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples/parse_addresses_uri.html">Parse Addresses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/parse_addresses_uri.html">Parse Addresses Using A URI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/parse_addresses_with_cli.html">Parse Addresses Using Our CLI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/retrained_model_parsing.html">Use a Retrained Model to Parse Addresses</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/fine_tuning.html">Retrain a Pretrained Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples/fine_tuning_uri.html">Retrain a Pretrained Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/fine_tuning_uri.html">Retrain a Pretrained Model Using A URI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/fine_tuning_with_csv_dataset.html">Retrain a Pretrained Model Using a CSV Dataset</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/retrain_attention_model.html">Retrain an Attention Mechanism Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Retrain a Pretrained Model &mdash; deepparse 0.9.8 documentation</title>
+  <title>Retrain a Pretrained Model Using A URI &mdash; deepparse 0.9.9 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -36,7 +36,7 @@
               <img src="../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.9.8
+                0.9.9
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -57,11 +57,11 @@
 <p class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="parse_addresses.html">Parse Addresses</a></li>
-<li class="toctree-l1"><a class="reference internal" href="parse_addresses_uri.html">Parse Addresses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parse_addresses_uri.html">Parse Addresses Using A URI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parse_addresses_with_cli.html">Parse Addresses Using Our CLI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="retrained_model_parsing.html">Use a Retrained Model to Parse Addresses</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fine_tuning.html">Retrain a Pretrained Model</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Retrain a Pretrained Model</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Retrain a Pretrained Model Using A URI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fine_tuning_with_csv_dataset.html">Retrain a Pretrained Model Using a CSV Dataset</a></li>
 <li class="toctree-l1"><a class="reference internal" href="retrain_attention_model.html">Retrain an Attention Mechanism Model</a></li>
 <li class="toctree-l1"><a class="reference internal" href="retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
@@ -83,7 +83,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Retrain a Pretrained Model</li>
+      <li class="breadcrumb-item active">Retrain a Pretrained Model Using A URI</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/examples/fine_tuning_uri.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -93,8 +93,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="retrain-a-pretrained-model">
-<h1>Retrain a Pretrained Model<a class="headerlink" href="#retrain-a-pretrained-model" title="Permalink to this heading"></a></h1>
+  <section id="retrain-a-pretrained-model-using-a-uri">
+<h1>Retrain a Pretrained Model Using A URI<a class="headerlink" href="#retrain-a-pretrained-model-using-a-uri" title="Permalink to this heading"></a></h1>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">poutyne</span>
 
 <span class="kn">from</span> <span class="nn">deepparse</span> <span class="kn">import</span> <span class="n">download_from_public_repository</span>

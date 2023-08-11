@@ -72,7 +72,7 @@ Now let's test our fine-tuned model using the best checkpoint (default parameter
 
 
 Now let's see how we can reload our new AddressParser.
-When you retrain a model, at the end, we create a retrained checkpoint using the best checkpoint and also include some metadata for the reloading (the tags, the dimension, etc.). By defaults, the checkpoint is named `"retrain_modeltype_parser.ckpt"`.
+When you retrain a model, at the end, we create a retrained checkpoint using the best checkpoint and also include some metadata for the reloading (the tags, the dimension, etc.). By defaults, the checkpoint is named ``"retrain_modeltype_parser.ckpt"``.
 
 .. code-block:: python
 

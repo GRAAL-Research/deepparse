@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Retrain With New Prediction Tags &mdash; deepparse 0.9.8 documentation</title>
+  <title>Retrain With New Prediction Tags &mdash; deepparse 0.9.9 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -36,7 +36,7 @@
               <img src="../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.9.8
+                0.9.9
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -57,11 +57,11 @@
 <p class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="parse_addresses.html">Parse Addresses</a></li>
-<li class="toctree-l1"><a class="reference internal" href="parse_addresses_uri.html">Parse Addresses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parse_addresses_uri.html">Parse Addresses Using A URI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parse_addresses_with_cli.html">Parse Addresses Using Our CLI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="retrained_model_parsing.html">Use a Retrained Model to Parse Addresses</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fine_tuning.html">Retrain a Pretrained Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="fine_tuning_uri.html">Retrain a Pretrained Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fine_tuning_uri.html">Retrain a Pretrained Model Using A URI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fine_tuning_with_csv_dataset.html">Retrain a Pretrained Model Using a CSV Dataset</a></li>
 <li class="toctree-l1"><a class="reference internal" href="retrain_attention_model.html">Retrain an Attention Mechanism Model</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Retrain With New Prediction Tags</a></li>
@@ -151,7 +151,7 @@ Let’s start with the default learning rate of <code class="docutils literal no
 </pre></div>
 </div>
 <p>Now let’s see how we can reload our new AddressParser.
-When you retrain a model, at the end, we create a retrained checkpoint using the best checkpoint and also include some metadata for the reloading (the tags, the dimension, etc.). By defaults, the checkpoint is named <cite>“retrain_modeltype_parser.ckpt”</cite>.</p>
+When you retrain a model, at the end, we create a retrained checkpoint using the best checkpoint and also include some metadata for the reloading (the tags, the dimension, etc.). By defaults, the checkpoint is named <code class="docutils literal notranslate"><span class="pre">&quot;retrain_modeltype_parser.ckpt&quot;</span></code>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">retrain_model_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;checkpoints&quot;</span><span class="p">,</span> <span class="s2">&quot;retrained_fasttext_address_parser.ckpt&quot;</span><span class="p">)</span>
 <span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="n">path_to_retrained_model</span><span class="o">=</span><span class="n">retrain_model_path</span><span class="p">)</span>
 </pre></div>

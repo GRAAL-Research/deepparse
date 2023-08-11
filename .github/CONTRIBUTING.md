@@ -72,24 +72,18 @@ When creating your enhancement request, please:
 
 We created three requirements files to install all the tools used for the development of the
 library. `tests/requirements.txt` define the requirements for the tests, `styling_requirements.txt` for the styling
-and `docs/requirements.txt` for the documentation.
+and `docs/requirements.txt` for the documentation. `app_requirements.txt` define the requirements for the application.
 
-You can install all the requirements with
-
-``` shell
-pip install -r tests/requirements.txt
-pip install -r styling_requirements.txt
-pip install -r docs/requirements.txt
-```
-
-Also, you should run `python setup.py develop` to build the project and be able to build the documentation.
+You can install all the requirements to build the project and be able to build the documentation with the following
+command
 
 ``` shell
-python setup.py develop
+pip install -e .[all] # For bash terminal
+pip install -e '.[all]' # For ZSH terminal
 ```
 
-Once the packages are installed inside your activated environment, you can run the following command to install the pre-commit
-hooks.
+Once the packages are installed inside your activated environment, you can run the following command to install the
+pre-commit hooks.
 
 ``` shell
 pre-commit install
@@ -118,7 +112,9 @@ pylint tests
 ```
 
 ### Pre-commit hooks
-These last commands will automatically be run along with others verifications when committing your code change using pre-commit hooks.
+
+These last commands will automatically be run along with others verifications when committing your code change using
+pre-commit hooks.
 
 You can also run them locally with the following command:
 
@@ -131,7 +127,7 @@ pre-commit run --all-files colors always
 If your pull request introduces a new feature, please deliver it with tests that ensure correct behavior. All of the
 current tests are located under the `tests` folder, if you want to see some examples.
 
-For any pull request submitted, **ALL** of the tests must succeed. By default, Pytest only execute the unit test, 
+For any pull request submitted, **ALL** of the tests must succeed. By default, Pytest only execute the unit test,
 so running
 
 ``` shell
@@ -152,11 +148,11 @@ pytest -o env="TEST_LEVEL=all"
 
 There is 4 options to run the tests
 
-  - `"unit"` to run all the unit tests but without those that require a torch device,
-  - `"all"` to run all the device, including the integration. It required a GPU and at least 16  GO of RAM.
+- `"unit"` to run all the unit tests but without those that require a torch device,
+- `"all"` to run all the device, including the integration. It required a GPU and at least 16 GO of RAM.
 
-We also provide a script, `run_tests_python_envs.sh`, to run all the tests (including integration tests) in all the 
-supported versions. To do so, you need to install Conda and run the following command
+We also provide a script, `run_tests_python_envs.sh`, to run all the tests (including integration tests) (need a GPU) 
+in all the supported versions. To do so, you need to install Conda and run the following command
 
 ``` shell
 bash -l run_tests_python_envs.sh # For bash terminal

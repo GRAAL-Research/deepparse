@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+      target: app
+    command: uvicorn deepparse.app.app:app --host 0.0.0.0
+    tty: true
+    ports:
+      - "8000:8000"
+    volumes:
+      - "/$HOME/.cache/deepparse:/root/.cache/deepparse"
+    environment:
+      - SENTRY_DSN=${SENTRY_DSN}

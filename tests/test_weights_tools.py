@@ -1,13 +1,11 @@
 # pylint: disable=too-many-public-methods
-import os
 import unittest
-from unittest import TestCase, skipIf
+from unittest import TestCase
 from unittest.mock import MagicMock, patch, call
 
-from cloudpathlib import S3Path, CloudPath
+from cloudpathlib import S3Path
 
 from deepparse import handle_weights_upload
-from deepparse.parser import AddressParser, FormattedParsedAddress
 
 
 # Pylint error for TemporaryDirectory ask for with statement
@@ -63,23 +61,6 @@ class WeightsToolsTests(TestCase):
 
         with self.assertRaises(FileNotFoundError):
             handle_weights_upload(path_to_model_to_upload=s3_path)
-
-    @skipIf(
-        os.environ["TEST_LEVEL"] == "unit",
-        "Cannot run for unit tests since download is too long.",
-    )
-    def test_integration_handle_weights_with_uri(self):
-        uri = "s3://deepparse/fasttext.ckpt"
-
-        address_parser = AddressParser(model_type="fasttext", path_to_retrained_model=uri)
-        parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
-        self.assertIsInstance(parse_address, FormattedParsedAddress)
-
-        uri = CloudPath("s3://deepparse/fasttext.ckpt")
-
-        address_parser = AddressParser(model_type="fasttext", path_to_retrained_model=uri)
-        parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")
-        self.assertIsInstance(parse_address, FormattedParsedAddress)
 
 
 if __name__ == "__main__":

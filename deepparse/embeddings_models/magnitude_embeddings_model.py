@@ -16,7 +16,7 @@ class MagnitudeEmbeddingsModel(EmbeddingsModel):
 
     def __init__(self, embeddings_path: str, verbose: bool = True) -> None:
         super().__init__(verbose=verbose)
-        self.model = Magnitude(embeddings_path)
+        self.model = Magnitude(path=embeddings_path, lazy_loading=-1, blocking=True)
 
     def __call__(self, words: str) -> ndarray:
         """

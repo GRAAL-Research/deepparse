@@ -20,6 +20,7 @@ from torch.optim import SGD
 from torch.utils.data import DataLoader, Subset
 
 from ..download_tools import CACHE_PATH
+from ..pre_processing.pre_processor_list import PreProcessorList
 from ..validations import valid_poutyne_version
 from . import formatted_parsed_address
 from .capturing import Capturing
@@ -432,8 +433,8 @@ class AddressParser:
         if with_hyphen_split:
             pre_processors.append(hyphen_cleaning)
 
-        self.pre_processors = pre_processors
-        clean_addresses = self._apply_pre_processors(addresses_to_parse)
+        self.pre_processors = PreProcessorList(pre_processors)
+        clean_addresses = self.pre_processors.apply(addresses_to_parse)
 
         if self.verbose and len(addresses_to_parse) > PREDICTION_TIME_PERFORMANCE_THRESHOLD:
             print("Vectorizing the address")
@@ -1315,18 +1316,6 @@ class AddressParser:
                 " to allow torch parallelism.",
                 category=UserWarning,
             )
-
-    def _apply_pre_processors(self, addresses: List[str]) -> List[str]:
-        res = []
-
-        for address in addresses:
-            processed_address = address
-
-            for pre_processor in self.pre_processors:
-                processed_address = pre_processor(address)
-
-            res.append(" ".join(processed_address.split()))
-        return res
 
     def is_same_model_type(self, other) -> bool:
         return self.model_type == other.model_type

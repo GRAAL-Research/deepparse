@@ -334,3 +334,6 @@
 ## dev
 
 - Add version to Seq2Seq and AddressParser.
+- Add a Deepparse as an API using FastAPI.
+- Add a Dockerfile and a `docker-compose.yml` to build a Docker container for the API.
+- Bug-fix the default pre-processors that were not all apply but only the last one.

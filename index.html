@@ -806,16 +806,17 @@ if not, you can install them using the following documentations in the following
 </ol>
 <p>Also, you can monitor your application usage with <a class="reference external" href="https://sentry.io">Sentry</a> by setting the environment variable SENTRY_DSN to your Sentry’s project DSN. There is an example of the .env file in the root of the project named .env_example.</p>
 <p>Once you have Docker Engine and Docker Compose installed, you can run the following command to start the FastAPI application:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>app
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>app
 </pre></div>
 </div>
 </section>
 <section id="request-examples">
 <h3>Request Examples<a class="headerlink" href="#request-examples" title="Permalink to this heading"></a></h3>
-<p>Once the application is up and running and the port 8000 is exported on your localhost, you can send request with one of the following methods:</p>
+<p>Once the application is up and running and port 8000 is exported on your localhost, you can send a request with one
+of the following methods:</p>
 <section id="curl-post-request">
 <h4>cURL POST request<a class="headerlink" href="#curl-post-request" title="Permalink to this heading"></a></h4>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>--location<span class="w"> </span><span class="s2">&quot;http://127.0.0.1:8000/parse/bpemb-attention&quot;</span><span class="w"> </span>--http1.1<span class="w"> </span><span class="se">\</span>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>--location<span class="w"> </span><span class="s2">&quot;http://127.0.0.1:8000/parse/bpemb-attention&quot;</span><span class="w"> </span>--http1.1<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;Host: 127.0.0.1:8000&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-d<span class="w"> </span><span class="s2">&quot;[</span>

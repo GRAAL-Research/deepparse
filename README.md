@@ -240,7 +240,7 @@ if not, you can install them using the following documentations in the following
 
 Once you have Docker Engine and Docker Compose installed, you can run the following command to start the FastAPI application:
 
-```shell
+```sh
 docker compose up app
 ```
 
@@ -248,16 +248,16 @@ docker compose up app
 Also, you can monitor your application usage with [Sentry](https://sentry.io) by setting the environment variable `SENTRY_DSN` to your Sentry's project
 DSN. There is an example of the .env file in the project's root named `.env_example`. You can copy it using the following command: 
 
-```shell
+```sh
 cp .env_example .env
-
+```
 #### Request Examples:
 
-Once the application is up and running and the port 8000 is exported on your localhost, you can send request with one
+Once the application is up and running and port 8000 is exported on your localhost, you can send a request with one
 of the following methods:
 
 ##### cURL POST request:
-```shell
+```sh
 curl -X POST --location "http://127.0.0.1:8000/parse/bpemb-attention" --http1.1 \
     -H "Host: 127.0.0.1:8000" \
     -H "Content-Type: application/json" \

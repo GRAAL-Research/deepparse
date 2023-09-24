@@ -348,7 +348,7 @@ class AddressParser:
                 replaced as ``'3 305'`` for the parsing. Where ``'3'`` is the unit, and ``'305'`` is the street number.
                 We use a regular expression to replace alphanumerical characters separated by a hyphen at
                 the start of the string. We do so since some cities use hyphens in their names. The default
-                is ``False``. If True, it adds the :func:`~deepparse.pre_processing.pre_processor.hyphen_cleaning`
+                is ``False``. If True, it adds the :func:`~deepparse.pre_processing.address_cleaner.hyphen_cleaning`
                 pre-processor **at the end** of the pre-processor list to apply.
             pre_processors (Union[None, List[Callable]]): A list of functions (callable) to apply pre-processing on
                 all the addresses to parse before parsing. See :ref:`pre_processor_label` for examples of

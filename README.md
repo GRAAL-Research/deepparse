@@ -224,14 +224,14 @@ address_parser = AddressParser(
 address_parser("350 rue des Lilas Ouest Québec Québec G1L 1B6")
 ```
 
-### Parse Address With Our Out-Of-The-Box FastAPI Parse Model
+### Parse Address With Our Out-Of-The-Box API
 
-You can use Out-Of-The-Box RESTAPI to parse addresses:
+We also offer an out-of-the-box RESTAPI to parse addresses using FastAPI.
 
 #### Installation:
 
 First, ensure that you have Docker Engine and Docker Compose installed on your machine.
-if not, you can install them using the following documentations in the following order:
+If not, you can install them using the following documentations in the following order:
 
 1. [Docker Engine](https://docs.docker.com/engine/install/)
 2. [Docker Compose](https://docs.docker.com/compose/install/linux/#install-using-the-repository)
@@ -246,14 +246,14 @@ docker compose up app
 
 #### Sentry:
 Also, you can monitor your application usage with [Sentry](https://sentry.io) by setting the environment variable `SENTRY_DSN` to your Sentry's project
-DSN. There is an example of the .env file in the project's root named `.env_example`. You can copy it using the following command: 
+DSN. There is an example of the `.env` file in the project's root named `.env_example`. You can copy it using the following command: 
 
 ```sh
 cp .env_example .env
 ```
 #### Request Examples:
 
-Once the application is up and running and port 8000 is exported on your localhost, you can send a request with one
+Once the application is up and running and port `8000` is exported on your localhost, you can send a request with one
 of the following methods:
 
 ##### cURL POST request:

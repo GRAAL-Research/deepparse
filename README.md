@@ -395,20 +395,27 @@ Starting at version 0.9.8, we will also release the weights with the GitHub rele
 
 Before installing deepparse, you must have the latest version of [PyTorch](https://pytorch.org/) in your environment.
 
-- **Install the stable version of deepparse:**
+- **Install the stable version of Deepparse:**
 
 ```sh
 pip install deepparse
 ```
 
-- **Install the stable version of deepparse with the app extra dependencies:**
+- **Install the stable version of Deepparse with the app extra dependencies:**
 
 ```sh
 pip install deepparse[app]  # for bash terminal
 pip install 'deepparse[app]' # for ZSH terminal
 ```
 
-- **Install the latest development version of deepparse:**
+- **Install the stable version of Deepparse with all extra dependencies:**
+
+```sh
+pip install deepparse[all]  # for bash terminal
+pip install 'deepparse[all]' # for ZSH terminal
+```
+
+- **Install the latest development version of Deepparse:**
 
 ```sh
 pip install -U git+https://github.com/GRAAL-Research/deepparse.git@dev

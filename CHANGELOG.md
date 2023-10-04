@@ -331,6 +331,11 @@
 - Hot-Fix wheel install (See [issue 196](https://github.com/GRAAL-Research/deepparse/issues/196)).
 - Starting now, we also include model weights release in the GitHub release.
 
-## dev
+## 0.9.9
 
 - Add version to Seq2Seq and AddressParser.
+- Add a Deepparse as an API using FastAPI.
+- Add a Dockerfile and a `docker-compose.yml` to build a Docker container for the API.
+- Bug-fix the default pre-processors that were not all apply but only the last one.
+
+## dev

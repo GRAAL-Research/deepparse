@@ -9,7 +9,7 @@ from deepparse.pre_processing import (
 )
 
 
-class PreProcessorTest(TestCase):
+class AddressClearnerTest(TestCase):
     @classmethod
     def setUpClass(cls):
         cls.a_clean_address = "350 rue des lilas ouest québec québec g1l 1b6"

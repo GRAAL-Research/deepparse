@@ -1,14 +1,24 @@
 version: "3.9"
 
 services:
+  web:
+    build:
+      context: .
+      target: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - app
+
   app:
     build:
       context: .
       target: app
-    command: uvicorn deepparse.app.app:app --host 0.0.0.0
+    command: gunicorn deepparse.app.app:app --workers 1 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:8080
     tty: true
     ports:
-      - "8000:8000"
+      - "8080:8080"
     volumes:
       - "/$HOME/.cache/deepparse:/root/.cache/deepparse"
     environment:

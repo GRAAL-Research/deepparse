@@ -1,20 +1,18 @@
 ###
-POST /parse/bpemb HTTP/1.1
-Host: 127.0.0.1:8000
+POST 0.0.0.0:80/api/parse/bpemb HTTP/1.1
 Content-Type: application/json
 
 [
-    {"raw": "123 rue Valancourt, Val-Alain, quebec, g9v1s3"}
+    {"address": "123 rue Valancourt, Val-Alain, quebec, g9v1s3"}
 
 ]
 
 ###
 
-POST /parse/bpemb-attention HTTP/1.1
-Host: 127.0.0.1:8000
+POST 0.0.0.0:80/api/parse/bpemb-attention HTTP/1.1
 Content-Type: application/json
 
 [
-  {"raw": "16 rue Grande-Place, Victoriaville, QC, G6S 1E6"},
-  {"raw": "123 rue Valancourt, Val-Alain, quebec, g9v1s3"}
+  {"address": "16 rue Grande-Place, Victoriaville, QC, G6S 1E6"},
+  {"address": "123 rue Valancourt, Val-Alain, quebec, g9v1s3"}
 ]

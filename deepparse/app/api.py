@@ -49,7 +49,7 @@ class AddressParserService:
     def __init__(self, address_parser_models: Dict[str, AddressParser]) -> None:
         self.address_parser_mapping = address_parser_models
 
-    def __call__(self, model: str, addresses: list[str]) -> dict[str, Any]:
+    def __call__(self, model: str, addresses: List[str]) -> Dict[str, Any]:
         parsed_addresses = self.address_parser_models[model](addresses)
 
         if not isinstance(parsed_addresses, list):

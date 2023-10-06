@@ -9,7 +9,7 @@ In the world of machine learning, this is what's refered to as `fine-tuning`, wh
 models more efficiently and with less data.
 
 Since the process of fine-tuning models can be tricky, this section of the documentation provides some guidelines and insights that may 
-be useful in order to succesfully adapt our models. See :ref:`fine_tuning` to view an example of
+be useful in order to successfully adapt our models. See :ref:`fine_tuning` to view a coding example of
 how to retrain our models.
 
 .. note::

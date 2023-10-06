@@ -18,7 +18,7 @@ how to retrain our models.
 
 A few use-cases may lead you to want to retrain Deepparse's models. Whether you wish to obtain a better 
 performance on a single or multiple countries that our models weren't trained on, or your data and address schemes require a more complex 
-architecture, or the tag structure of your dataset is different from ours; deepparse's retraining features accomodate all these use-cases, and more.
+architecture, or the tag structure of your dataset, is different from ours; deepparse's retraining features accommodate all these use-cases, and more.
 
 In practice, our models were trained on 20 countries and demonstrated very accurate results on all of them, so unless you wish to predict 
 different tags (e.g: StreetNumber...) we advise you to use our models without retraining. Also, if you wish to retrain 

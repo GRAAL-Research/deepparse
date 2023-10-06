@@ -71,7 +71,7 @@ the :meth:`~deepparse.parser.AddressParser.retrain` method for more details on h
 .. note::
    If you're only interested in the models' performance on the new data, you should not concern yourself with catastrophic forgetting.
 
-Modifying the architecture
+Modifying the Architecture
 **************************
 
 The :meth:`~deepparse.parser.AddressParser.retrain` method allows you to change the architecture of the models using the ``seq2seq_params`` 

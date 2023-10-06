@@ -92,7 +92,6 @@ In case your data is mostly or exclusively unlabeled, you can retrain on the lab
 for a few more randomly chosen unlabeled addresses, verify the predictions and retrain with the newly labeled addresses added to the retraining dataset. 
 This will allow you to incrementally increase the size of your dataset with the help of the models. This is a simple case of *active learning*.
 
-
 Modifying the Architecture
 **************************
 

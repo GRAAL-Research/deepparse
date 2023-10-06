@@ -610,6 +610,17 @@ Deepparse is LGPLv3 licensed, as found in the `LICENSE file <https://github.com/
   get_started/get_started
 
 .. toctree::
+  :maxdepth: 1
+  :caption: API
+
+  parser
+  pre_processor
+  dataset_container
+  comparer
+  cli
+  api
+
+.. toctree::
   :glob:
   :maxdepth: 1
   :caption: Examples
@@ -628,14 +639,9 @@ Deepparse is LGPLv3 licensed, as found in the `LICENSE file <https://github.com/
 
 .. toctree::
   :maxdepth: 1
-  :caption: API
+  :caption: Model training
 
-  parser
-  pre_processor
-  dataset_container
-  comparer
-  cli
-  api
+  training_guide
 
 Indices and Tables
 ==================

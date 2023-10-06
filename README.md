@@ -244,7 +244,8 @@ Once you have Docker Engine and Docker Compose installed, you can run the follow
 docker compose up app
 ```
 
-#### Sentry:
+#### Sentry
+
 Also, you can monitor your application usage with [Sentry](https://sentry.io) by setting the environment variable `SENTRY_DSN` to your Sentry's project
 DNS. There is an example of the `.env` file in the project's root named `.env_example`. You can copy it using the following command:
 
@@ -257,13 +258,15 @@ If you do not have a Sentry account, you can create one [here](https://sentry.io
 If you do not want to use Sentry, you can just remove the `SENTRY_DSN` environment variable from the `.env` file or set it to an empty string, also, not creating
 the `.env` file will also work. The application will run without any problem if Sentry is not set.
 
-#### Request Examples:
+#### Request Examples
 
 Once the application is up and running and port `8000` is exported on your localhost, you can send a request with one
 of the following methods:
 
-##### cURL POST request:
-```shell
+##### cURL POST request
+
+```sh
+
 curl -X POST --location "http://127.0.0.1:8000/parse/bpemb-attention" --http1.1 \
     -H "Host: 127.0.0.1:8000" \
     -H "Content-Type: application/json" \
@@ -273,7 +276,7 @@ curl -X POST --location "http://127.0.0.1:8000/parse/bpemb-attention" --http1.1 
         ]"
 ```
 
-#####  Python POST request:
+#####  Python POST request
 
 ```python
 import requests

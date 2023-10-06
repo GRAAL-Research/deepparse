@@ -4,7 +4,7 @@
 Training guide
 ==============
 
-In addition to parsing addresses out-of-the-box, deepparse allows you to retrain its models to fit your own data and use-cases. 
+In addition to parsing addresses out-of-the-box, Deepparse allows you to retrain the pre-trained models to fit your own data and use-cases. 
 In the world of machine learning, this is what's refered to as `fine-tuning`, which can make it easier to obtain well-performing
 models more efficiently and with less data.
 

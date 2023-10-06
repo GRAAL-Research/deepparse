@@ -33,7 +33,7 @@ Learning Successfully
 
 Making a model converge is as much an art as it is a science since it often requires quite a bit of experimentation and parameter tuning. In the case 
 of fine-tuning, the models have already developed a base knowledge of the task that they were trained on, which gives them an edge.
-This is especially true in the case of deepparse, since the task you are fine-tuning on remains exactly the same (i.e: parsing addresses). 
+This is especially true in the case of Deepparse since the task you are fine-tuning remains exactly the same (i.e. parsing addresses). 
 However, there are a couple of points to consider in order to obtain favourable results:
 
 - **Make sure you have enough data**: deep learning models are notorious for being pretty data hungry, so unless you have enough data the models 

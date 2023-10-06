@@ -46,7 +46,7 @@ However, there are a couple of points to consider in order to obtain favourable 
 - **Use a proper learning rate**: if you are unfamiliar with gradient descent and neural network optimisation you probably don't know what 
   a `learning rate` is. But have no fear; you do not need a Ph.D. to retrain deepparse's models. All you need to understand is that a learning rate 
   is a value that guides the training process. When it comes to fine-tuning, it is recommended to use a learning rate lower than the one use for the first 
-  training, in this case we recommend using a learning rate lower than 0.1. This parameter can be changed in the :meth:`~deepparse.parser.AddressParser.retrain` method.
+  training, in this case, we recommend using a learning rate lower than ``0.1``. This parameter can be changed in the :meth:`~deepparse.parser.AddressParser.retrain` method.
 
 - **Train for long enough**: deepparse's models are based on the LSTM neural network architecture, which may require a few more training epochs 
   than recent architectures when it comes to fine-tuning. The actual number of epochs would depend on the use-case, but it is

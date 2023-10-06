@@ -653,21 +653,18 @@ class name) when reloading it.
     address_parser.retrain(training_container, train_ratio=0.8, epochs=5, batch_size=8, name_of_the_retrain_parser="MyNewParser")
 
 
-Parse Address With Our Out-Of-The-Box FastAPI Parse Model
-*********************************************************
-You can use Out-Of-The-Box RESTAPI to parse addresses:
+Parse Address With Our Out-Of-The-Box API
+*****************************************
+We also offer an out-of-the-box RESTAPI to parse addresses using FastAPI.
 
 Installation
 ------------
 First, ensure that you have Docker Engine and Docker Compose installed on your machine.
-if not, you can install them using the following documentations in the following order:
+If not, you can install them using the following documentations in the following order:
 
 
 1. `Docker Engine <https://docs.docker.com/engine/install/>`_
-
 2. `Docker Compose <https://docs.docker.com/compose/install/>`_
-
-Also, you can monitor your application usage with `Sentry <https://sentry.io>`_ by setting the environment variable SENTRY_DSN to your Sentry's project DSN. There is an example of the .env file in the root of the project named .env_example.
 
 Once you have Docker Engine and Docker Compose installed, you can run the following command to start the FastAPI application:
 
@@ -675,10 +672,21 @@ Once you have Docker Engine and Docker Compose installed, you can run the follow
 
     docker compose up app
 
+Sentry
+******
+
+Also, you can monitor your application usage with `Sentry <https://sentry.io>`_ by setting the environment variable  ``SENTRY_DSN`` to your Sentry's project
+DSN. There is an example of the ``.env`` file in the project's root named ``.env_example``. You can copy it using the following command:
+
+.. code-block:: sh
+
+    cp .env_example .env
+
 Request Examples
 ----------------
 
-Once the application is up and running and the port 8000 is exported on your localhost, you can send request with one of the following methods:
+Once the application is up and running and port ``8000`` is exported on your localhost, you can send a request with one
+of the following methods:
 
 cURL POST request
 ~~~~~~~~~~~~~~~~~
@@ -828,6 +836,7 @@ API Reference
   dataset_container
   comparer
   cli
+  api
 
 .. toctree::
   :glob:

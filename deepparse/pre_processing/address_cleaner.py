@@ -3,7 +3,7 @@ import re
 
 def double_whitespaces_cleaning(address: str) -> str:
     """
-    Pre-processor to remove double whitespace by one whitespace.
+    Pre-processor to remove double whitespace (``"  "``) by one whitespace (``" "``).
     The regular expression use to clean multiple whitespaces is the following ``" {2,}"``.
 
     Args:
@@ -17,10 +17,10 @@ def double_whitespaces_cleaning(address: str) -> str:
 
 def trailing_whitespace_cleaning(address: str) -> str:
     """
-    Pre-processor to remove trailing whitespace.
+    Pre-processor to remove trailing whitespace (``" "``).
 
     Args:
-        address: The address to apply trailing whitespace cleaning on.
+        address: The address to apply trailing whitespace (``" "``) cleaning on.
 
     Return:
         The trailing whitespace cleaned address.
@@ -64,16 +64,16 @@ def hyphen_cleaning(address: str) -> str:
     """
     Pre-processor to clean hyphen between the street number and unit in an address. Since some addresses use the
     hyphen to split the unit and street address, we replace the hyphen with whitespaces to allow a
-    proper splitting of the address. For example, the proper parsing of the address 3-305 street name is
-    Unit: 3, StreetNumber: 305, StreetName: street name.
+    proper splitting of the address. For example, the proper parsing of the address ``"3-305 street name"`` is
+    ``"Unit": "3", "StreetNumber": "305", "StreetName": "street name"``.
 
     See `issue 137 <https://github.com/GRAAL-Research/deepparse/issues/137>`_ for more details.
 
     The regular expression use to clean hyphen is the following ``"^([0-9]*[a-z]?)-([0-9]*[a-z]?) "``.
     The first group is the unit, and the second is the street number. Both include letters since they can include
-    letters in some countries. For example, unit 3a or address 305a.
+    letters in some countries. For example, ``unit 3a`` or address ``305a``.
 
-    Note: the hyphen is also used in some cities' names, such as Saint-Jean; thus, we use regex to detect
+    Note: the hyphen is also used in some cities' names, such as ``"Saint-Jean"``; thus, we use regex to detect
     the proper hyphen to replace.
 
     Args:

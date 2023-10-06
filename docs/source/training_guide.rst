@@ -15,7 +15,7 @@ how to retrain our models.
 .. note::
    We provide practical recommendations for the fine-tuning process, but you may have to try multiple retraining configurations to 
    achieve an optimal result. If you are having difficulty adapting our models to your use-case, feel free to
-   open an issue on the deepparse `Github <https://github.com/GRAAL-Research/deepparse/issues>`_.
+   open an issue on the Deepparse `GitHub <https://github.com/GRAAL-Research/deepparse/issues>`__ page.
 
 A few use-cases may lead you to want to retrain Deepparse's models. Whether you wish to obtain a better 
 performance on a single or multiple countries that our models weren't trained on, or your data and address schemes require a more complex 
@@ -24,7 +24,7 @@ architecture, or the tag structure of your dataset, is different from ours; deep
 In practice, our models were trained on 20 countries and demonstrated very accurate results on all of them, so unless you wish to predict 
 different tags (e.g: StreetNumber...) we advise you to use our models without retraining. Also, if you wish to retrain 
 our models to obtain a better performance on countries outside of the 20 used in the original training set, you can take a look 
-at `our dataset <https://github.com/GRAAL-Research/deepparse-address-data>`_ which includes an additional 41 countries that were only used for testing.
+at `our dataset <https://github.com/GRAAL-Research/deepparse-address-data>`__ which includes an additional 41 countries that were only used for testing.
 
 There are two main concerns to keep in mind when fine-tuning a model: the model's convergence (i.e: its ability to actually learn from the new data) 
 and the possibility of `catastrophic forgetting` (i.e: losing the model's previous knowledge after training on the new data).

@@ -59,7 +59,7 @@ You can also use our cli to parse addresses using:
 Parse Addresses Using Your Own Retrained Model
 **********************************************
 
-See `here <https://github.com/GRAAL-Research/deepparse/blob/main/examples/retrained_model_parsing.py>`_ for a complete example.
+See `here <https://github.com/GRAAL-Research/deepparse/blob/main/examples/retrained_model_parsing.py>`__ for a complete example.
 
 .. code-block:: python
 
@@ -70,8 +70,8 @@ See `here <https://github.com/GRAAL-Research/deepparse/blob/main/examples/retrai
 
 Retrain a Model
 ***************
-See `here <https://github.com/GRAAL-Research/deepparse/blob/main/examples/fine_tuning.py>`_ for a complete example
-using Pickle and `here <https://github.com/GRAAL-Research/deepparse/blob/main/examples/fine_tuning_with_csv_dataset.py>`_
+See `here <https://github.com/GRAAL-Research/deepparse/blob/main/examples/fine_tuning.py>`__ for a complete example
+using Pickle and `here <https://github.com/GRAAL-Research/deepparse/blob/main/examples/fine_tuning_with_csv_dataset.py>`__
 for a complete example using CSV.
 
 .. code-block:: python
@@ -97,7 +97,7 @@ class name) when reloading it.
 
 Retrain a Model With an Attention Mechanism
 *******************************************
-See `here <https://github.com/GRAAL-Research/deepparse/blob/main/examples/retrain_attention_model.py>`_ for a complete example.
+See `here <https://github.com/GRAAL-Research/deepparse/blob/main/examples/retrain_attention_model.py>`__ for a complete example.
 
 .. code-block:: python
 
@@ -109,7 +109,7 @@ See `here <https://github.com/GRAAL-Research/deepparse/blob/main/examples/retrai
 
 Retrain a Model With New Tags
 *****************************
-See `here <https://github.com/GRAAL-Research/deepparse/blob/main/examples/retrain_with_new_prediction_tags.py>`_ for a complete example.
+See `here <https://github.com/GRAAL-Research/deepparse/blob/main/examples/retrain_with_new_prediction_tags.py>`__ for a complete example.
 
 .. code-block:: python
 
@@ -120,7 +120,7 @@ See `here <https://github.com/GRAAL-Research/deepparse/blob/main/examples/retrai
 Retrain a Seq2Seq Model From Scratch
 ************************************
 
-See  `here <https://github.com/GRAAL-Research/deepparse/blob/main/examples/retrain_with_new_seq2seq_params.py>`_ for
+See  `here <https://github.com/GRAAL-Research/deepparse/blob/main/examples/retrain_with_new_seq2seq_params.py>`__ for
 a complete example.
 
 .. code-block:: python
@@ -133,11 +133,11 @@ Download Our Models
 *******************
 
 Here are the URLs to download our pretrained models directly
-    - `FastText <https://graal.ift.ulaval.ca/public/deepparse/fasttext.ckpt>`_,
-    - `FastTextAttention <https://graal.ift.ulaval.ca/public/deepparse/fasttext_attention.ckpt>`_,
-    - `BPEmb <https://graal.ift.ulaval.ca/public/deepparse/bpemb.ckpt>`_,
-    - `BPEmbAttention <https://graal.ift.ulaval.ca/public/deepparse/bpemb_attention.ckpt>`_,
-    - `FastText Light <https://graal.ift.ulaval.ca/public/deepparse/fasttext.magnitude.gz>`_ (using `Magnitude Light <https://github.com/davebulaval/magnitude-light>`_),.
+    - `FastText <https://graal.ift.ulaval.ca/public/deepparse/fasttext.ckpt>`__,
+    - `FastTextAttention <https://graal.ift.ulaval.ca/public/deepparse/fasttext_attention.ckpt>`__,
+    - `BPEmb <https://graal.ift.ulaval.ca/public/deepparse/bpemb.ckpt>`__,
+    - `BPEmbAttention <https://graal.ift.ulaval.ca/public/deepparse/bpemb_attention.ckpt>`__,
+    - `FastText Light <https://graal.ift.ulaval.ca/public/deepparse/fasttext.magnitude.gz>`__ (using `Magnitude Light <https://github.com/davebulaval/magnitude-light>`__),.
 
 Or you can use our cli to download our pretrained models directly using:
 

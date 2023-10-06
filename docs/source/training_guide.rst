@@ -1,7 +1,7 @@
 .. role:: hidden
     :class: hidden-section
 
-Training guide
+Training Guide
 ==============
 
 In addition to parsing addresses out-of-the-box, Deepparse allows you to retrain the pre-trained models to fit your own data and use-cases. 

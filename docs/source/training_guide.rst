@@ -48,7 +48,7 @@ However, there are a couple of points to consider in order to obtain favourable 
   is a value that guides the training process. When it comes to fine-tuning, it is recommended to use a learning rate lower than the one use for the first 
   training, in this case, we recommend using a learning rate lower than ``0.1``. This parameter can be changed in the :meth:`~deepparse.parser.AddressParser.retrain` method.
 
-- **Train for long enough**: deepparse's models are based on the LSTM neural network architecture, which may require a few more training epochs 
+- **Train for long enough**: Deepparse's models are based on the LSTM neural network architecture, which may require a few more training epochs 
   than recent architectures when it comes to fine-tuning. The actual number of epochs would depend on the use-case, but it is
   important to allow the models to train long enough. Perhaps start somewhere between 5 and 10 epochs and increase the number of epochs if needed.
 

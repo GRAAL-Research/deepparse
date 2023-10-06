@@ -16,7 +16,7 @@ how to retrain our models.
    We provide practical recommendations for the fine-tuning process, but you may have to try multiple retraining configurations to achieve an optimal result. If you are having difficulty adapting our models to your use-case, feel free to
    open an issue on the deepparse `Github <https://github.com/GRAAL-Research/deepparse/issues>`_.
 
-There are a few use-cases that may lead you to want to retrain deepparse's models. Whether you wish to obtain a better 
+A few use-cases may lead you to want to retrain Deepparse's models. Whether you wish to obtain a better 
 performance on a single or multiple countries that our models weren't trained on, or your data and address schemes require a more complex 
 architecture, or the tag structure of your dataset is different from ours; deepparse's retraining features accomodate all these use-cases, and more.
 

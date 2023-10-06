@@ -89,7 +89,7 @@ the ``prediction_tags`` argument. Here are some examples of properly labeled add
   retraining process and will probably yield good results especially if you are training on the same countries in the original training set.
 
 In case your data is mostly or exclusively unlabeled, you can retrain on the labeled portion then use the obtained model to predict labels
-for a few more randomly chosen unlabeled addresses, verify the predictions and retrain with the newly labeled addresses added to the retraining dataset. 
+for a few more randomly chosen unlabeled addresses, verify and correct the predictions and retrain with the newly labelled addresses added to the retraining dataset. 
 This will allow you to incrementally increase the size of your dataset with the help of the models. This is a simple case of *active learning*.
 
 Modifying the Architecture

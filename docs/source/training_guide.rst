@@ -55,7 +55,7 @@ However, there are a couple of points to consider in order to obtain favourable 
 - **Use a GPU**: this is not required for retraining but it is highly recommended to use a GPU if your device has one in order to speed up the 
   training process. This can be specified in the :class:`~deepparse.parser.AddressParser` constructor.
 
-Do not forget!
+Do Not Forget!
 **************
 
 As mentionned above, catastrophic forgetting can happen when fine-tuning machine learning models. This is because the models' internal parameters are 

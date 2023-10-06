@@ -28,7 +28,7 @@ at `our dataset <https://github.com/GRAAL-Research/deepparse-address-data>`_ whi
 There are two main concerns to keep in mind when fine-tuning a model: the model's convergence (i.e: its ability to actually learn from the new data) 
 and the possibility of `catastrophic forgetting` (i.e: losing the model's previous knowledge after training on the new data).
 
-Learning successfully
+Learning Successfully
 *********************
 
 Making a model converge is as much an art as it is a science since it often requires quite a bit of experimentation and parameter tuning. In the case 

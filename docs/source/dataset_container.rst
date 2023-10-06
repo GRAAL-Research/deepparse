@@ -1,3 +1,5 @@
+.. _dataset_container:
+
 .. role:: hidden
     :class: hidden-section
 

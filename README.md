@@ -244,19 +244,20 @@ Once you have Docker Engine and Docker Compose installed, you can run the follow
 docker compose up app
 ```
 
-#### Sentry:
+#### Sentry
+
 Also, you can monitor your application usage with [Sentry](https://sentry.io) by setting the environment variable `SENTRY_DSN` to your Sentry's project
 DSN. There is an example of the `.env` file in the project's root named `.env_example`. You can copy it using the following command: 
 
 ```sh
 cp .env_example .env
 ```
-#### Request Examples:
+#### Request Examples
 
 Once the application is up and running and port `8000` is exported on your localhost, you can send a request with one
 of the following methods:
 
-##### cURL POST request:
+##### cURL POST request
 ```sh
 curl -X POST --location "http://127.0.0.1:8000/parse/bpemb-attention" --http1.1 \
     -H "Host: 127.0.0.1:8000" \
@@ -267,7 +268,7 @@ curl -X POST --location "http://127.0.0.1:8000/parse/bpemb-attention" --http1.1 
         ]"
 ```
 
-#####  Python POST request:
+#####  Python POST request
 
 ```python
 import requests
@@ -395,20 +396,27 @@ Starting at version 0.9.8, we will also release the weights with the GitHub rele
 
 Before installing deepparse, you must have the latest version of [PyTorch](https://pytorch.org/) in your environment.
 
-- **Install the stable version of deepparse:**
+- **Install the stable version of Deepparse:**
 
 ```sh
 pip install deepparse
 ```
 
-- **Install the stable version of deepparse with the app extra dependencies:**
+- **Install the stable version of Deepparse with the app extra dependencies:**
 
 ```sh
 pip install deepparse[app]  # for bash terminal
 pip install 'deepparse[app]' # for ZSH terminal
 ```
 
-- **Install the latest development version of deepparse:**
+- **Install the stable version of Deepparse with all extra dependencies:**
+
+```sh
+pip install deepparse[all]  # for bash terminal
+pip install 'deepparse[all]' # for ZSH terminal
+```
+
+- **Install the latest development version of Deepparse:**
 
 ```sh
 pip install -U git+https://github.com/GRAAL-Research/deepparse.git@dev

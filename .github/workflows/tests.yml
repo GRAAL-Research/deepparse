@@ -10,6 +10,15 @@ jobs:
         python-version: [ "3.8", "3.9", "3.10", "3.11" ]
 
     steps:
+      # Appears that we get disk memory space problem, thus as recommended by this
+      # thread (https://github.com/actions/runner-images/issues/2840#issuecomment-790492173)
+      # we clean the runner before starting the tests to free some spaces.
+      - name: Remove unnecessary files
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf "/usr/local/share/boost"
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
       - uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
@@ -29,6 +38,15 @@ jobs:
         python-version: [ "3.8", "3.9", "3.10", "3.11" ]
 
     steps:
+      # Appears that we get disk memory space problem, thus as recommended by this
+      # thread (https://github.com/actions/runner-images/issues/2840#issuecomment-790492173)
+      # we clean the runner before starting the tests to free some spaces.
+      - name: Remove unnecessary files
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf "/usr/local/share/boost"
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
       - uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4

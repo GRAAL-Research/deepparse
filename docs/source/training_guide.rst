@@ -37,7 +37,7 @@ This is especially true in the case of Deepparse since the task you are fine-tun
 However, there are a couple of points to consider in order to obtain favourable results:
 
 - **Make sure you have enough data**: deep learning models are notorious for being pretty data hungry, so unless you have enough data the models 
-  are going have a hard time learning. Since deepparse's models have already been trained on a few million addresses, the need for data is mitigated when it come to fine-tuning. However, it is recommended to at least have a few thousand examples per new country when retraining.
+  are going have a hard time learning. Since Deepparse's models have already been trained on a few million addresses, the need for data is mitigated when it comes to fine-tuning. However, it is recommended to use at least a few thousand examples per new country when retraining.
 
 - **Prepare your dataset**: once you are done pre-processing your dataset, you must convert it to a format which can be loaded into 
   a :class:`~deepparse.dataset_container.DatasetContainer`. See the :ref:`dataset_container` section for more details.

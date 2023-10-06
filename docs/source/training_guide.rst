@@ -8,7 +8,7 @@ In addition to parsing addresses out-of-the-box, Deepparse allows you to retrain
 In the world of machine learning, this is what's refered to as `fine-tuning`, which can make it easier to obtain well-performing
 models more efficiently and with less data.
 
-Since the process of fine-tuning models can be tricky, this section of the docs provides some guidelines and insights that may 
+Since the process of fine-tuning models can be tricky, this section of the documentation provides some guidelines and insights that may 
 be useful in order to succesfully adapt our models. See :ref:`fine_tuning` to view an example of
 how to retrain our models.
 

@@ -13,7 +13,8 @@ be useful in order to successfully adapt our models. See :ref:`fine_tuning` to v
 how to retrain our models.
 
 .. note::
-   We provide practical recommendations for the fine-tuning process, but you may have to try multiple retraining configurations to achieve an optimal result. If you are having difficulty adapting our models to your use-case, feel free to
+   We provide practical recommendations for the fine-tuning process, but you may have to try multiple retraining configurations to 
+   achieve an optimal result. If you are having difficulty adapting our models to your use-case, feel free to
    open an issue on the deepparse `Github <https://github.com/GRAAL-Research/deepparse/issues>`_.
 
 A few use-cases may lead you to want to retrain Deepparse's models. Whether you wish to obtain a better 
@@ -37,7 +38,8 @@ This is especially true in the case of Deepparse since the task you are fine-tun
 However, there are a couple of points to consider in order to obtain favourable results:
 
 - **Make sure you have enough data**: deep learning models are notorious for being pretty data hungry, so unless you have enough data the models 
-  are going have a hard time learning. Since Deepparse's models have already been trained on a few million addresses, the need for data is mitigated when it comes to fine-tuning. However, it is recommended to use at least a few thousand examples per new country when retraining.
+  are going have a hard time learning. Since Deepparse's models have already been trained on a few million addresses, the need for data is mitigated when it comes to fine-tuning. However, 
+  it is recommended to use at least a few thousand examples per new country when retraining.
 
 - **Prepare your dataset**: once you are done pre-processing your dataset, you must convert it to a format which can be loaded into 
   a :class:`~deepparse.dataset_container.DatasetContainer`. See the :ref:`dataset_container` section for more details.
@@ -70,6 +72,26 @@ the :meth:`~deepparse.parser.AddressParser.retrain` method for more details on h
 
 .. note::
    If you're only interested in the models' performance on the new data, you should not concern yourself with catastrophic forgetting.
+
+
+About The Data
+**************
+
+Deepparse's models learn in a supervised manner, this means that the data provided for retraining must be labeled (i.e: the tag of each element in the 
+address needs to be specified). This is also required when you want to retrain our models with your own custom tags. Each word in the address must
+have a corresponding tag. If you are using custom tags, they must be defined in the :meth:`~deepparse.parser.AddressParser.retrain` method under
+the ``prediction_tags`` argument. Here are some examples of properly labeled addresses:
+
+.. image:: /_static/img/labeled_addresses.png
+
+.. note::
+  If the main objective of retraining is to introduce different tags, it might be a good idea to freeze the model layers. This will speed up the
+  retraining process and will probably yield good results especially if you are training on the same countries in the original training set.
+
+In case your data is mostly or exclusively unlabeled, you can retrain on the labeled portion then use the obtained model to predict labels
+for a few more randomly chosen unlabeled addresses, verify the predictions and retrain with the newly labeled addresses added to the retraining dataset. 
+This will allow you to incrementally increase the size of your dataset with the help of the models. This is a simple case of *active learning*.
+
 
 Modifying the Architecture
 **************************

@@ -19,7 +19,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Parse Addresses" href="examples/parse_addresses.html" />
+    <link rel="next" title="Parse Address With Our Out-Of-The-Box API" href="api.html" />
     <link rel="prev" title="Comparer" href="comparer.html" /> 
 </head>
 
@@ -46,7 +46,15 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">API</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install/installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="get_started/get_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="parser.html">Parser</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pre_processor.html">Pre-Processors</a></li>
@@ -67,9 +75,13 @@
 <li class="toctree-l3"><a class="reference internal" href="#deepparse.cli.test.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#download">Download</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#download">Download</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#deepparse.cli.download_model.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">Parse Address With Our Out-Of-The-Box API</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul>
@@ -84,6 +96,10 @@
 <li class="toctree-l1"><a class="reference internal" href="examples/retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/retrain_with_new_seq2seq_params.html">Retrain With New Seq2Seq Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/single_country_retrain.html">Retrain an Address Parser for Single Country Uses</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Model training</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="training_guide.html">Training Guide</a></li>
 </ul>
 
         </div>
@@ -313,6 +329,18 @@ The results will be logged in a CSV file next to the test dataset.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">--saving_cache_dir</span></code>: To change the default saving cache directory (default to <code class="docutils literal notranslate"><span class="pre">None</span></code>, e.g. default path).</p></li>
 </ul>
 </div></blockquote>
+<dl class="py function">
+<dt class="sig sig-object py" id="deepparse.cli.download_model.main">
+<span class="sig-prename descclassname"><span class="pre">deepparse.cli.download_model.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/deepparse/cli/download_model.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.cli.download_model.main" title="Permalink to this definition"></a></dt>
+<dd><p>CLI function to manually download all the dependencies for a pretrained model.</p>
+<p>Example of usage:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>download_model<span class="w"> </span>fasttext
+
+download_model<span class="w"> </span>fasttext<span class="w"> </span>--saving_cache_dir<span class="w"> </span>a_cache_dir_path
+</pre></div>
+</div>
+</dd></dl>
+
 </section>
 </section>
 
@@ -321,7 +349,7 @@ The results will be logged in a CSV file next to the test dataset.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="comparer.html" class="btn btn-neutral float-left" title="Comparer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="examples/parse_addresses.html" class="btn btn-neutral float-right" title="Parse Addresses" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="api.html" class="btn btn-neutral float-right" title="Parse Address With Our Out-Of-The-Box API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

@@ -46,7 +46,15 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">API</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install/installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="get_started/get_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="parser.html">Parser</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pre_processor.html">Pre-Processors</a></li>
@@ -81,6 +89,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="cli.html">CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">Parse Address With Our Out-Of-The-Box API</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul>
@@ -95,6 +104,10 @@
 <li class="toctree-l1"><a class="reference internal" href="examples/retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/retrain_with_new_seq2seq_params.html">Retrain With New Seq2Seq Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/single_country_retrain.html">Retrain an Address Parser for Single Country Uses</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Model training</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="training_guide.html">Training Guide</a></li>
 </ul>
 
         </div>
@@ -129,12 +142,12 @@
 <dt class="sig sig-object py" id="deepparse.comparer.AddressesComparer">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deepparse.comparer.</span></span><span class="sig-name descname"><span class="pre">AddressesComparer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="parser.html#deepparse.parser.AddressParser" title="deepparse.parser.address_parser.AddressParser"><span class="pre">AddressParser</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deepparse/comparer/addresses_comparer.html#AddressesComparer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.comparer.AddressesComparer" title="Permalink to this definition"></a></dt>
 <dd><p>Address comparer to compare addresses with each other and retrieves the differences between them. The addresses
-are parsed using an address parser based on one of the seq2seq pretrained networks either with fastText or BPEmb.</p>
-<p>The address comparer can compare already parsed addresses. The address parser first recompose the raw
-addresses then suggests its own tags, then it makes a comparison with the tags of the source parsing and the
+are parsed using an address parser based on one of the seq2seq pretrained networks, either with fastText or BPEmb.</p>
+<p>The address comparer can compare already parsed addresses. The address parser first recomposes the raw
+addresses then suggest its own tags; then it makes a comparison with the tags of the source parsing and the
 newly parsed address</p>
 <p>The address comparer is also able to compare raw addresses by first parsing the addresses using the
-address parser and then brings out the differences among the parsed addresses.</p>
+address parser and then bring out the differences among the parsed addresses.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>parser</strong> (<a class="reference internal" href="parser.html#deepparse.parser.AddressParser" title="deepparse.parser.address_parser.AddressParser"><em>AddressParser</em></a>) – the AddressParser used to parse the addresses.</p>
@@ -144,14 +157,14 @@ address parser and then brings out the differences among the parsed addresses.</
 <dt class="sig sig-object py" id="deepparse.comparer.AddressesComparer.compare_tags">
 <span class="sig-name descname"><span class="pre">compare_tags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">addresses_tags_to_compare</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.List" title="(in Python v3.8)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><span class="pre">tuple</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.List" title="(in Python v3.8)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.List" title="(in Python v3.8)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><span class="pre">tuple</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">with_prob</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.List" title="(in Python v3.8)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#deepparse.comparer.FormattedComparedAddressesTags" title="deepparse.comparer.formatted_compared_addresses_tags.FormattedComparedAddressesTags"><span class="pre">FormattedComparedAddressesTags</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#deepparse.comparer.FormattedComparedAddressesTags" title="deepparse.comparer.formatted_compared_addresses_tags.FormattedComparedAddressesTags"><span class="pre">FormattedComparedAddressesTags</span></a></span></span><a class="reference internal" href="_modules/deepparse/comparer/addresses_comparer.html#AddressesComparer.compare_tags"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.comparer.AddressesComparer.compare_tags" title="Permalink to this definition"></a></dt>
 <dd><p>Compare tags of a source parsing with the parsing from AddressParser. First, it reconstructs the
-raw address from the parsing, then AddressParser generates tags and then compares the two parsings.</p>
+raw address from the parsing, AddressParser generates tags and compares the two parsings.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>addresses_tags_to_compare</strong> (<em>Union</em><em>[</em><em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><em>tuple</em></a><em>]</em><em>, </em><em>List</em><em>[</em><em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><em>tuple</em></a><em>]</em><em>]</em><em>]</em>) – list of tuple that contains</p></li>
-<li><p><strong>a</strong> (<em>the tags for the address components from the source. Can compare multiples parsings if passed as</em>) – </p></li>
+<li><p><strong>a</strong> (<em>the tags for the address components from the source. Can compare multiple parsings if passed as</em>) – </p></li>
 <li><p><strong>tuples.</strong> (<em>list of</em>) – </p></li>
-<li><p><strong>with_prob</strong> (<em>Union</em><em>[</em><em>None</em><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>]</em>) – A option flag to either or not include prob in the comparison report.
+<li><p><strong>with_prob</strong> (<em>Union</em><em>[</em><em>None</em><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>]</em>) – An option flag to either or not include prob in the comparison report.
 The probabilities are not compared but only included in the report.
 The default value is None, which means not taking into account.</p></li>
 </ul>
@@ -193,14 +206,14 @@ when there is more than one comparison to make.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="deepparse.comparer.AddressesComparer.compare_raw">
 <span class="sig-name descname"><span class="pre">compare_raw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_addresses_to_compare</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.Tuple" title="(in Python v3.8)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.List" title="(in Python v3.8)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.Tuple" title="(in Python v3.8)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">with_prob</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.List" title="(in Python v3.8)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#deepparse.comparer.FormattedComparedAddressesRaw" title="deepparse.comparer.formatted_compared_addresses_raw.FormattedComparedAddressesRaw"><span class="pre">FormattedComparedAddressesRaw</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/deepparse/comparer/addresses_comparer.html#AddressesComparer.compare_raw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.comparer.AddressesComparer.compare_raw" title="Permalink to this definition"></a></dt>
-<dd><p>Compare a list of raw addresses together, it starts by parsing the addresses
+<dd><p>Compare a list of raw addresses together. It starts by parsing the addresses
 with the setted parser and then return the differences between the addresses components
 retrieved with our model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>raw_addresses_to_compare</strong> (<em>Union</em><em>[</em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>]</em><em>, </em><em>List</em><em>[</em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>]</em><em>]</em><em>]</em>) – List of string that represent raw addresses to compare.</p></li>
-<li><p><strong>with_prob</strong> (<em>Union</em><em>[</em><em>None</em><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>]</em>) – A option flag to either or not include prob in the comparison report.
+<li><p><strong>raw_addresses_to_compare</strong> (<em>Union</em><em>[</em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>]</em><em>, </em><em>List</em><em>[</em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>]</em><em>]</em><em>]</em>) – List of strings that represent raw addresses to compare.</p></li>
+<li><p><strong>with_prob</strong> (<em>Union</em><em>[</em><em>None</em><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>]</em>) – An option flag to either or not include prob in the comparison report.
 The probabilities are not compared but only included in the report.
 The default value is None, which means not taking into account.</p></li>
 </ul>
@@ -245,7 +258,7 @@ The default value is None, which means not taking into account.</p></li>
 for the first one.</p></li>
 <li><p><strong>second_address</strong> (<a class="reference internal" href="parser.html#deepparse.parser.FormattedParsedAddress" title="deepparse.parser.FormattedParsedAddress"><em>FormattedParsedAddress</em></a>) – A formatted parsed address that contains the parsing information
 for the second one.</p></li>
-<li><p><strong>origin</strong> – (Tuple[str, str]): The origin of the parsing (ex : from source or from a deepparse pretrained model).</p></li>
+<li><p><strong>origin</strong> – (Tuple[str, str]): The origin of the parsing (ex : from source or a Deepparse pretrained model).</p></li>
 </ul>
 </dd>
 </dl>
@@ -259,7 +272,7 @@ for the second one.</p></li>
 <dl class="py property">
 <dt class="sig sig-object py" id="deepparse.comparer.FormattedComparedAddresses.list_of_bool">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">list_of_bool</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.List" title="(in Python v3.8)"><span class="pre">List</span></a></em><a class="headerlink" href="#deepparse.comparer.FormattedComparedAddresses.list_of_bool" title="Permalink to this definition"></a></dt>
-<dd><p>A list of boolean that contains all the address components names and indicates if it is the same for the
+<dd><p>A list of boolean that contains all the address components’ names and indicates if it is the same for the
 two addresses.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>

@@ -43,13 +43,22 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">API</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../get_started/get_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../parser.html">Parser</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../pre_processor.html">Pre-Processors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../dataset_container.html">Dataset Container</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../comparer.html">Comparer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../cli.html">CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">Parse Address With Our Out-Of-The-Box API</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul>
@@ -64,6 +73,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_with_new_seq2seq_params.html">Retrain With New Seq2Seq Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/single_country_retrain.html">Retrain an Address Parser for Single Country Uses</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Model training</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../training_guide.html">Training Guide</a></li>
 </ul>
 
         </div>
@@ -441,7 +454,7 @@
 <span class="sd">                replaced as ``&#39;3 305&#39;`` for the parsing. Where ``&#39;3&#39;`` is the unit, and ``&#39;305&#39;`` is the street number.</span>
 <span class="sd">                We use a regular expression to replace alphanumerical characters separated by a hyphen at</span>
 <span class="sd">                the start of the string. We do so since some cities use hyphens in their names. The default</span>
-<span class="sd">                is ``False``. If True, it adds the :func:`~deepparse.pre_processing.pre_processor.hyphen_cleaning`</span>
+<span class="sd">                is ``False``. If True, it adds the :func:`~deepparse.pre_processing.address_cleaner.hyphen_cleaning`</span>
 <span class="sd">                pre-processor **at the end** of the pre-processor list to apply.</span>
 <span class="sd">            pre_processors (Union[None, List[Callable]]): A list of functions (callable) to apply pre-processing on</span>
 <span class="sd">                all the addresses to parse before parsing. See :ref:`pre_processor_label` for examples of</span>
@@ -632,9 +645,9 @@
 <span class="sd">            disable_tensorboard (bool): To disable Poutyne automatic Tensorboard monitoring. By default, we disable them</span>
 <span class="sd">                (true).</span>
 <span class="sd">            prediction_tags (Union[dict, None]): A dictionary where the keys are the address components</span>
-<span class="sd">                (e.g. street name) and the values are the components indices (from 0 to N + 1) to use during retraining</span>
-<span class="sd">                of a model. The ``+ 1`` corresponds to the End Of Sequence (EOS) token that needs to be included in the</span>
-<span class="sd">                dictionary. We will use this dictionary&#39;s length for the prediction layer&#39;s output size.</span>
+<span class="sd">                (e.g. street name) and the values are the components indices (from 0 to N + 1) to use during the</span>
+<span class="sd">                retraining of a model. The ``+ 1`` corresponds to the End Of Sequence (EOS) token that needs to be</span>
+<span class="sd">                included in the dictionary. We will use this dictionary&#39;s length for the prediction layer&#39;s output size.</span>
 <span class="sd">                We also save the dictionary to be used later on when you load the model. The default value is ``None``,</span>
 <span class="sd">                meaning we use our pretrained model prediction tags.</span>
 <span class="sd">            seq2seq_params (Union[dict, None]): A dictionary of seq2seq parameters to modify the seq2seq architecture</span>
@@ -675,7 +688,7 @@
 <span class="sd">                    - if layers_to_freeze is not ``None``, the following tag: ``FreezedLayer{portion}``.</span>
 <span class="sd">            verbose (Union[None, bool]): To override the AddressParser verbosity for the test. When set to True or</span>
 <span class="sd">                False, it will override (but it does not change the AddressParser verbosity) the test verbosity.</span>
-<span class="sd">                If set to the default value None, the AddressParser verbosity is used as the test verbosity.</span>
+<span class="sd">                If set to the default value ``None``, the AddressParser verbosity is used as the test verbosity.</span>
 
 
 <span class="sd">        Return:</span>
@@ -838,7 +851,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">tags_converter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tags_converter</span>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">same_output_dim</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tags_converter</span><span class="o">.</span><span class="n">dim</span><span class="p">):</span>
-                <span class="c1"># Since we have change the output layer dim, we need to handle the prediction layer dim</span>
+                <span class="c1"># Since we have changed the output layer dim, we need to handle the prediction layer dim</span>
                 <span class="n">new_dim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tags_converter</span><span class="o">.</span><span class="n">dim</span>
                 <span class="k">if</span> <span class="n">seq2seq_params</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">handle_new_output_dim</span><span class="p">(</span><span class="n">new_dim</span><span class="p">)</span>
@@ -852,7 +865,7 @@
             <span class="n">seq2seq_params</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;pre_trained_weights&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
 
             <span class="n">model_factory_dict</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;seq2seq_kwargs&quot;</span><span class="p">:</span> <span class="n">seq2seq_params</span><span class="p">})</span>
-            <span class="c1"># We set verbose to false since model is reloaded</span>
+            <span class="c1"># We set verbose to false since the model is reloaded</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_setup_model</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">path_to_retrained_model</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">model_factory_dict</span><span class="p">)</span>
 
         <span class="n">callbacks</span> <span class="o">=</span> <span class="p">[]</span> <span class="k">if</span> <span class="n">callbacks</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">callbacks</span>
@@ -884,7 +897,7 @@
             <span class="n">with_capturing_context</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">valid_poutyne_version</span><span class="p">(</span><span class="n">min_major</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_minor</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
                 <span class="nb">print</span><span class="p">(</span>
-                    <span class="s2">&quot;You are using a older version of Poutyne that does not support properly error management.&quot;</span>
+                    <span class="s2">&quot;You are using an older version of Poutyne that does not support proper error management.&quot;</span>
                     <span class="s2">&quot; Due to that, we cannot show retrain progress. To fix that, update Poutyne to &quot;</span>
                     <span class="s2">&quot;the newest version.&quot;</span>
                 <span class="p">)</span>
@@ -904,7 +917,7 @@
             <span class="n">list_of_file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">list_of_file_path</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">pretrained_parser_in_directory</span><span class="p">(</span><span class="n">logging_path</span><span class="p">):</span>
-                    <span class="c1"># Mean we might already have checkpoint in the training directory</span>
+                    <span class="c1"># Mean we might already have a checkpoint in the training directory</span>
                     <span class="n">files_in_directory</span> <span class="o">=</span> <span class="n">get_files_in_directory</span><span class="p">(</span><span class="n">logging_path</span><span class="p">)</span>
                     <span class="n">retrained_address_parser_in_directory</span> <span class="o">=</span> <span class="n">get_address_parser_in_directory</span><span class="p">(</span><span class="n">files_in_directory</span><span class="p">)[</span>
                         <span class="mi">0</span>
@@ -946,7 +959,7 @@
                 <span class="c1"># Means we have changed the seq2seq params</span>
                 <span class="n">torch_save</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;seq2seq_params&quot;</span><span class="p">:</span> <span class="n">seq2seq_params</span><span class="p">})</span>
             <span class="k">if</span> <span class="n">prediction_tags</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="c1">#  Means we have changed the predictions tags</span>
+                <span class="c1">#  Means we have changed the prediction tags</span>
                 <span class="n">torch_save</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;prediction_tags&quot;</span><span class="p">:</span> <span class="n">prediction_tags</span><span class="p">})</span>
 
             <span class="n">torch_save</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
@@ -978,7 +991,7 @@
                 <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
                     <span class="k">if</span> <span class="s2">&quot;s3&quot;</span> <span class="ow">in</span> <span class="n">file_path</span> <span class="ow">or</span> <span class="s2">&quot;//&quot;</span> <span class="ow">in</span> <span class="n">file_path</span> <span class="ow">or</span> <span class="s2">&quot;:&quot;</span> <span class="ow">in</span> <span class="n">file_path</span><span class="p">:</span>
                         <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
-                            <span class="s2">&quot;Are You trying to use a AWS S3 URI? If so path need to start with s3://.&quot;</span>
+                            <span class="s2">&quot;Are You trying to use an AWS S3 URI? If so path needs to start with s3://.&quot;</span>
                         <span class="p">)</span> <span class="kn">from</span> <span class="nn">error</span>
             <span class="k">return</span> <span class="n">train_res</span></div>
 
@@ -999,7 +1012,7 @@
 <span class="sd">        Args:</span>
 <span class="sd">            test_dataset_container (~deepparse.dataset_container.DatasetContainer):</span>
 <span class="sd">                The test dataset container of the data to use.</span>
-<span class="sd">            batch_size (int): The size of the batch (by default, ``32``).</span>
+<span class="sd">            batch_size (int): The batch size (by default, ``32``).</span>
 <span class="sd">            num_workers (int): Number of workers to use for the data loader (by default, ``1`` worker).</span>
 <span class="sd">            callbacks (Union[list, None]): List of callbacks to use during training.</span>
 <span class="sd">                See Poutyne `callback &lt;https://poutyne.org/callbacks.html#callback-class&gt;`_ for more information.</span>
@@ -1101,7 +1114,7 @@
 <span class="sd">        Method to save, in a Pickle format, the address parser model weights (PyTorch state dictionary).</span>
 
 <span class="sd">        file_path (Union[str, Path]): A complete file path with a pickle extension to save the model weights.</span>
-<span class="sd">            It can either be a string (e.g. &#39;path/to/save.p&#39;) or a path like path (e.g. Path(&#39;path/to/save.p&#39;).</span>
+<span class="sd">            It can either be a string (e.g. &#39;path/to/save.p&#39;) or a path-like path (e.g. Path(&#39;path/to/save.p&#39;).</span>
 
 <span class="sd">        Examples:</span>
 
@@ -1289,7 +1302,7 @@
         <span class="n">verbose</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">bool</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
         <span class="c1"># pylint: disable=too-many-arguments</span>
-        <span class="c1"># If Poutyne 1.7 and before, we capture poutyne print since it print some exception.</span>
+        <span class="c1"># If Poutyne 1.7 and before, we capture poutyne print since it prints some exception.</span>
         <span class="c1"># Otherwise, we use a null context manager.</span>
         <span class="k">with</span> <span class="n">Capturing</span><span class="p">()</span> <span class="k">if</span> <span class="n">capturing_context</span> <span class="k">else</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">nullcontext</span><span class="p">():</span>
             <span class="n">train_res</span> <span class="o">=</span> <span class="n">experiment</span><span class="o">.</span><span class="n">train</span><span class="p">(</span>

@@ -43,13 +43,22 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">API</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../get_started/get_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../parser.html">Parser</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../pre_processor.html">Pre-Processors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../dataset_container.html">Dataset Container</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../comparer.html">Comparer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../cli.html">CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">Parse Address With Our Out-Of-The-Box API</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul>
@@ -64,6 +73,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_with_new_seq2seq_params.html">Retrain With New Seq2Seq Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/single_country_retrain.html">Retrain an Address Parser for Single Country Uses</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Model training</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../training_guide.html">Training Guide</a></li>
 </ul>
 
         </div>
@@ -104,14 +117,14 @@
 <span class="k">class</span> <span class="nc">AddressesComparer</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Address comparer to compare addresses with each other and retrieves the differences between them. The addresses</span>
-<span class="sd">    are parsed using an address parser based on one of the seq2seq pretrained networks either with fastText or BPEmb.</span>
+<span class="sd">    are parsed using an address parser based on one of the seq2seq pretrained networks, either with fastText or BPEmb.</span>
 
-<span class="sd">    The address comparer can compare already parsed addresses. The address parser first recompose the raw</span>
-<span class="sd">    addresses then suggests its own tags, then it makes a comparison with the tags of the source parsing and the</span>
+<span class="sd">    The address comparer can compare already parsed addresses. The address parser first recomposes the raw</span>
+<span class="sd">    addresses then suggest its own tags; then it makes a comparison with the tags of the source parsing and the</span>
 <span class="sd">    newly parsed address</span>
 
 <span class="sd">    The address comparer is also able to compare raw addresses by first parsing the addresses using the</span>
-<span class="sd">    address parser and then brings out the differences among the parsed addresses.</span>
+<span class="sd">    address parser and then bring out the differences among the parsed addresses.</span>
 
 
 <span class="sd">    Args:</span>
@@ -133,13 +146,13 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">FormattedComparedAddressesTags</span><span class="p">],</span> <span class="n">FormattedComparedAddressesTags</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compare tags of a source parsing with the parsing from AddressParser. First, it reconstructs the</span>
-<span class="sd">        raw address from the parsing, then AddressParser generates tags and then compares the two parsings.</span>
+<span class="sd">        raw address from the parsing, AddressParser generates tags and compares the two parsings.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            addresses_tags_to_compare (Union[List[tuple], List[List[tuple]]]): list of tuple that contains</span>
-<span class="sd">            the tags for the address components from the source. Can compare multiples parsings if passed as a</span>
+<span class="sd">            the tags for the address components from the source. Can compare multiple parsings if passed as a</span>
 <span class="sd">            list of tuples.</span>
-<span class="sd">            with_prob (Union[None, bool]): A option flag to either or not include prob in the comparison report.</span>
+<span class="sd">            with_prob (Union[None, bool]): An option flag to either or not include prob in the comparison report.</span>
 <span class="sd">                The probabilities are not compared but only included in the report.</span>
 <span class="sd">                The default value is None, which means not taking into account.</span>
 
@@ -215,14 +228,14 @@
         <span class="n">with_prob</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">FormattedComparedAddressesRaw</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Compare a list of raw addresses together, it starts by parsing the addresses</span>
+<span class="sd">        Compare a list of raw addresses together. It starts by parsing the addresses</span>
 <span class="sd">        with the setted parser and then return the differences between the addresses components</span>
 <span class="sd">        retrieved with our model.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            raw_addresses_to_compare (Union[Tuple[str], List[Tuple[str]]]):</span>
-<span class="sd">                List of string that represent raw addresses to compare.</span>
-<span class="sd">            with_prob (Union[None, bool]): A option flag to either or not include prob in the comparison report.</span>
+<span class="sd">                List of strings that represent raw addresses to compare.</span>
+<span class="sd">            with_prob (Union[None, bool]): An option flag to either or not include prob in the comparison report.</span>
 <span class="sd">                The probabilities are not compared but only included in the report.</span>
 <span class="sd">                The default value is None, which means not taking into account.</span>
 

@@ -46,13 +46,29 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">API</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install/installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="get_started/get_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="parser.html">Parser</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Pre-Processors</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Pre-Processors</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#deepparse.pre_processing.address_cleaner.coma_cleaning"><code class="docutils literal notranslate"><span class="pre">coma_cleaning()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#deepparse.pre_processing.address_cleaner.lower_cleaning"><code class="docutils literal notranslate"><span class="pre">lower_cleaning()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#deepparse.pre_processing.address_cleaner.trailing_whitespace_cleaning"><code class="docutils literal notranslate"><span class="pre">trailing_whitespace_cleaning()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#deepparse.pre_processing.address_cleaner.double_whitespaces_cleaning"><code class="docutils literal notranslate"><span class="pre">double_whitespaces_cleaning()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#deepparse.pre_processing.address_cleaner.hyphen_cleaning"><code class="docutils literal notranslate"><span class="pre">hyphen_cleaning()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="dataset_container.html">Dataset Container</a></li>
 <li class="toctree-l1"><a class="reference internal" href="comparer.html">Comparer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cli.html">CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">Parse Address With Our Out-Of-The-Box API</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul>
@@ -67,6 +83,10 @@
 <li class="toctree-l1"><a class="reference internal" href="examples/retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/retrain_with_new_seq2seq_params.html">Retrain With New Seq2Seq Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/single_country_retrain.html">Retrain an Address Parser for Single Country Uses</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Model training</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="training_guide.html">Training Guide</a></li>
 </ul>
 
         </div>
@@ -97,6 +117,86 @@
 <span id="pre-processor-label"></span><h1>Pre-Processors<a class="headerlink" href="#pre-processors" title="Permalink to this heading"></a></h1>
 <p>Here are the available pre-processor in Deepparse. The first four are used as default settings when parsing
 addresses.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="deepparse.pre_processing.address_cleaner.coma_cleaning">
+<span class="sig-prename descclassname"><span class="pre">deepparse.pre_processing.address_cleaner.</span></span><span class="sig-name descname"><span class="pre">coma_cleaning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span></span><a class="reference internal" href="_modules/deepparse/pre_processing/address_cleaner.html#coma_cleaning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.pre_processing.address_cleaner.coma_cleaning" title="Permalink to this definition"></a></dt>
+<dd><p>Pre-processor to remove coma. It is based on <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/issues/56">issue 56</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>address</strong> – The address to apply coma cleaning on.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The coma-cleaned address.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deepparse.pre_processing.address_cleaner.lower_cleaning">
+<span class="sig-prename descclassname"><span class="pre">deepparse.pre_processing.address_cleaner.</span></span><span class="sig-name descname"><span class="pre">lower_cleaning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span></span><a class="reference internal" href="_modules/deepparse/pre_processing/address_cleaner.html#lower_cleaning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.pre_processing.address_cleaner.lower_cleaning" title="Permalink to this definition"></a></dt>
+<dd><p>Pre-processor to lowercase an address since the original training data was in lowercase.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>address</strong> – The address to apply coma cleaning on.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The lowercase address.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deepparse.pre_processing.address_cleaner.trailing_whitespace_cleaning">
+<span class="sig-prename descclassname"><span class="pre">deepparse.pre_processing.address_cleaner.</span></span><span class="sig-name descname"><span class="pre">trailing_whitespace_cleaning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span></span><a class="reference internal" href="_modules/deepparse/pre_processing/address_cleaner.html#trailing_whitespace_cleaning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.pre_processing.address_cleaner.trailing_whitespace_cleaning" title="Permalink to this definition"></a></dt>
+<dd><p>Pre-processor to remove trailing whitespace (<code class="docutils literal notranslate"><span class="pre">&quot;</span> <span class="pre">&quot;</span></code>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>address</strong> – The address to apply trailing whitespace (<code class="docutils literal notranslate"><span class="pre">&quot;</span> <span class="pre">&quot;</span></code>) cleaning on.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The trailing whitespace cleaned address.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deepparse.pre_processing.address_cleaner.double_whitespaces_cleaning">
+<span class="sig-prename descclassname"><span class="pre">deepparse.pre_processing.address_cleaner.</span></span><span class="sig-name descname"><span class="pre">double_whitespaces_cleaning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span></span><a class="reference internal" href="_modules/deepparse/pre_processing/address_cleaner.html#double_whitespaces_cleaning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.pre_processing.address_cleaner.double_whitespaces_cleaning" title="Permalink to this definition"></a></dt>
+<dd><p>Pre-processor to remove double whitespace (<code class="docutils literal notranslate"><span class="pre">&quot;</span>&#160; <span class="pre">&quot;</span></code>) by one whitespace (<code class="docutils literal notranslate"><span class="pre">&quot;</span> <span class="pre">&quot;</span></code>).
+The regular expression use to clean multiple whitespaces is the following <code class="docutils literal notranslate"><span class="pre">&quot;</span> <span class="pre">{2,}&quot;</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>address</strong> – The address to apply double whitespace cleaning on.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The double whitespace cleaned address.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deepparse.pre_processing.address_cleaner.hyphen_cleaning">
+<span class="sig-prename descclassname"><span class="pre">deepparse.pre_processing.address_cleaner.</span></span><span class="sig-name descname"><span class="pre">hyphen_cleaning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span></span><a class="reference internal" href="_modules/deepparse/pre_processing/address_cleaner.html#hyphen_cleaning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.pre_processing.address_cleaner.hyphen_cleaning" title="Permalink to this definition"></a></dt>
+<dd><p>Pre-processor to clean hyphen between the street number and unit in an address. Since some addresses use the
+hyphen to split the unit and street address, we replace the hyphen with whitespaces to allow a
+proper splitting of the address. For example, the proper parsing of the address <code class="docutils literal notranslate"><span class="pre">&quot;3-305</span> <span class="pre">street</span> <span class="pre">name&quot;</span></code> is
+<code class="docutils literal notranslate"><span class="pre">&quot;Unit&quot;:</span> <span class="pre">&quot;3&quot;,</span> <span class="pre">&quot;StreetNumber&quot;:</span> <span class="pre">&quot;305&quot;,</span> <span class="pre">&quot;StreetName&quot;:</span> <span class="pre">&quot;street</span> <span class="pre">name&quot;</span></code>.</p>
+<p>See <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/issues/137">issue 137</a> for more details.</p>
+<p>The regular expression use to clean hyphen is the following <code class="docutils literal notranslate"><span class="pre">&quot;^([0-9]*[a-z]?)-([0-9]*[a-z]?)</span> <span class="pre">&quot;</span></code>.
+The first group is the unit, and the second is the street number. Both include letters since they can include
+letters in some countries. For example, <code class="docutils literal notranslate"><span class="pre">unit</span> <span class="pre">3a</span></code> or address <code class="docutils literal notranslate"><span class="pre">305a</span></code>.</p>
+<p>Note: the hyphen is also used in some cities’ names, such as <code class="docutils literal notranslate"><span class="pre">&quot;Saint-Jean&quot;</span></code>; thus, we use regex to detect
+the proper hyphen to replace.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>address</strong> – The address to apply coma cleaning on.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The lowercase address.</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 
 

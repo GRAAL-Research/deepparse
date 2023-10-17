@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>deepparse.pre_processing.address_cleaner &mdash; deepparse 0.9.9 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/deepparse.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.9.9
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../get_started/get_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../parser.html">Parser</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pre_processor.html">Pre-Processors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dataset_container.html">Dataset Container</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../comparer.html">Comparer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli.html">CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">Parse Address With Our Out-Of-The-Box API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/parse_addresses.html">Parse Addresses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/parse_addresses_uri.html">Parse Addresses Using A URI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/parse_addresses_with_cli.html">Parse Addresses Using Our CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/retrained_model_parsing.html">Use a Retrained Model to Parse Addresses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/fine_tuning.html">Retrain a Pretrained Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/fine_tuning_uri.html">Retrain a Pretrained Model Using A URI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/fine_tuning_with_csv_dataset.html">Retrain a Pretrained Model Using a CSV Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_attention_model.html">Retrain an Attention Mechanism Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_with_new_seq2seq_params.html">Retrain With New Seq2Seq Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/single_country_retrain.html">Retrain an Address Parser for Single Country Uses</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Model training</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../training_guide.html">Training Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">deepparse</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">deepparse.pre_processing.address_cleaner</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for deepparse.pre_processing.address_cleaner</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">re</span>
+
+
+<div class="viewcode-block" id="double_whitespaces_cleaning"><a class="viewcode-back" href="../../../pre_processor.html#deepparse.pre_processing.address_cleaner.double_whitespaces_cleaning">[docs]</a><span class="k">def</span> <span class="nf">double_whitespaces_cleaning</span><span class="p">(</span><span class="n">address</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Pre-processor to remove double whitespace (``&quot;  &quot;``) by one whitespace (``&quot; &quot;``).</span>
+<span class="sd">    The regular expression use to clean multiple whitespaces is the following ``&quot; {2,}&quot;``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        address: The address to apply double whitespace cleaning on.</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">        The double whitespace cleaned address.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">pattern</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot; {2,}&quot;</span><span class="p">,</span> <span class="n">repl</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">string</span><span class="o">=</span><span class="n">address</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="trailing_whitespace_cleaning"><a class="viewcode-back" href="../../../pre_processor.html#deepparse.pre_processing.address_cleaner.trailing_whitespace_cleaning">[docs]</a><span class="k">def</span> <span class="nf">trailing_whitespace_cleaning</span><span class="p">(</span><span class="n">address</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Pre-processor to remove trailing whitespace (``&quot; &quot;``).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        address: The address to apply trailing whitespace (``&quot; &quot;``) cleaning on.</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">        The trailing whitespace cleaned address.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">address</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="coma_cleaning"><a class="viewcode-back" href="../../../pre_processor.html#deepparse.pre_processing.address_cleaner.coma_cleaning">[docs]</a><span class="k">def</span> <span class="nf">coma_cleaning</span><span class="p">(</span><span class="n">address</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Pre-processor to remove coma. It is based on `issue 56 &lt;https://github.com/GRAAL-Research/deepparse/issues/56&gt;`_.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        address: The address to apply coma cleaning on.</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">        The coma-cleaned address.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">address</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="lower_cleaning"><a class="viewcode-back" href="../../../pre_processor.html#deepparse.pre_processing.address_cleaner.lower_cleaning">[docs]</a><span class="k">def</span> <span class="nf">lower_cleaning</span><span class="p">(</span><span class="n">address</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Pre-processor to lowercase an address since the original training data was in lowercase.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        address: The address to apply coma cleaning on.</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">        The lowercase address.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">address</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span></div>
+
+
+<span class="c1"># The first group is the unit, and the second is the street number.</span>
+<span class="c1"># Both include letters since they can include letters in some countries. For example,</span>
+<span class="c1"># unit 3a or address 305a.</span>
+<span class="n">hyphen_splitted_unit_and_street_number_regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;^([0-9]*[a-z]?)-([0-9]*[a-z]?) &quot;</span>
+
+
+<div class="viewcode-block" id="hyphen_cleaning"><a class="viewcode-back" href="../../../pre_processor.html#deepparse.pre_processing.address_cleaner.hyphen_cleaning">[docs]</a><span class="k">def</span> <span class="nf">hyphen_cleaning</span><span class="p">(</span><span class="n">address</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Pre-processor to clean hyphen between the street number and unit in an address. Since some addresses use the</span>
+<span class="sd">    hyphen to split the unit and street address, we replace the hyphen with whitespaces to allow a</span>
+<span class="sd">    proper splitting of the address. For example, the proper parsing of the address ``&quot;3-305 street name&quot;`` is</span>
+<span class="sd">    ``&quot;Unit&quot;: &quot;3&quot;, &quot;StreetNumber&quot;: &quot;305&quot;, &quot;StreetName&quot;: &quot;street name&quot;``.</span>
+
+<span class="sd">    See `issue 137 &lt;https://github.com/GRAAL-Research/deepparse/issues/137&gt;`_ for more details.</span>
+
+<span class="sd">    The regular expression use to clean hyphen is the following ``&quot;^([0-9]*[a-z]?)-([0-9]*[a-z]?) &quot;``.</span>
+<span class="sd">    The first group is the unit, and the second is the street number. Both include letters since they can include</span>
+<span class="sd">    letters in some countries. For example, ``unit 3a`` or address ``305a``.</span>
+
+<span class="sd">    Note: the hyphen is also used in some cities&#39; names, such as ``&quot;Saint-Jean&quot;``; thus, we use regex to detect</span>
+<span class="sd">    the proper hyphen to replace.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        address: The address to apply coma cleaning on.</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">        The lowercase address.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">pattern</span><span class="o">=</span><span class="n">hyphen_splitted_unit_and_street_number_regex</span><span class="p">,</span> <span class="n">repl</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;\1 \2 &quot;</span><span class="p">,</span> <span class="n">string</span><span class="o">=</span><span class="n">address</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2023, Marouane Yassine &amp; David Beauchemin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

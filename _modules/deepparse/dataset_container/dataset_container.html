@@ -43,13 +43,22 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">API</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../get_started/get_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../parser.html">Parser</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../pre_processor.html">Pre-Processors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../dataset_container.html">Dataset Container</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../comparer.html">Comparer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../cli.html">CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">Parse Address With Our Out-Of-The-Box API</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul>
@@ -64,6 +73,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_with_new_seq2seq_params.html">Retrain With New Seq2Seq Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/single_country_retrain.html">Retrain an Address Parser for Single Country Uses</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Model training</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../training_guide.html">Training Guide</a></li>
 </ul>
 
         </div>
@@ -147,14 +160,14 @@
         <span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">slice</span><span class="p">]</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">]]],</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        If the DatasetContainer is a predict one:</span>
+<span class="sd">        If the DatasetContainer is a &quot;predict&quot; one:</span>
 
-<span class="sd">            - it can be a list of string items (e.g. a list of address (str)), or</span>
+<span class="sd">            - it can be a list of string items (e.g. a list of addresses (str)), or</span>
 <span class="sd">            - it can be a unique string item (e.g. one address).</span>
 
 <span class="sd">        If the DatasetContainer is a training one:</span>
 
-<span class="sd">            - it can be a list of tuple (str, list) items, namely a list of parsed example (e.g. an address with</span>
+<span class="sd">            - it can be a list of tuple (str, list) items, namely a list of parsed examples (e.g. an address with</span>
 <span class="sd">                the tags), or</span>
 <span class="sd">            - it can be a tuple (str, list) item.</span>
 
@@ -207,7 +220,7 @@
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_tags_is_same_len_then_address</span><span class="p">():</span>
             <span class="nb">print</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Some addresses (whitespace-split) and the tags associated with them are not the same len. &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Some addresses (whitespace-split) and the associated tags are not the same len. &quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;If you are using a CSVDatasetContainer, consider using the tag_seperator_reformat_fn argument.&quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;Here is the report of those cases where len differ to help you out:</span><span class="se">\n</span><span class="s2">&quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_data_tags_not_the_same_len_diff</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
@@ -283,8 +296,8 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">is_training_container</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_test_predict_container_is_list_of_tuple</span><span class="p">():</span>
                 <span class="k">raise</span> <span class="n">DataError</span><span class="p">(</span>
-                    <span class="s2">&quot;The data is a list of tuple by the dataset container is a predict container. &quot;</span>
-                    <span class="s2">&quot;Predict container should contains only a list of address.&quot;</span>
+                    <span class="s2">&quot;The data is a list of tuples, but the dataset container is a predict container. &quot;</span>
+                    <span class="s2">&quot;Predict container should contain only a list of addresses.&quot;</span>
                 <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">validate_dataset</span><span class="p">()</span>
@@ -319,17 +332,17 @@
 
 <span class="sd">        data_path (str): The path to the CSV dataset file.</span>
 <span class="sd">        column_names (list): A column name list to extract the dataset element.</span>
-<span class="sd">            If the dataset container is a predict one, the list must be of exactly one element</span>
-<span class="sd">            (i.e. the address column). On the other hand, if the dataset container is a training one, the list must be</span>
+<span class="sd">            If the dataset container is a &quot;predict&quot; one, the list must be of exactly one element</span>
+<span class="sd">            (i.e. the address column). On the other hand, if the dataset container is a &quot;training&quot; one, the list must be</span>
 <span class="sd">            of exactly two elements: addresses and tags.</span>
 <span class="sd">        is_training_container (bool): Either or not, the dataset container is a training container. This will determine</span>
 <span class="sd">            the dataset validation test we apply to the dataset. That is, a predict dataset doesn&#39;t include tags.</span>
 <span class="sd">            The default value is true.</span>
 <span class="sd">        separator (str): The CSV columns separator to use. By default, ``&quot;\\t&quot;``.</span>
 <span class="sd">        tag_seperator_reformat_fn (Callable, optional): A function to parse a tags string and return a list of</span>
-<span class="sd">            address tags. For example, if the tag column is a former python list saved with pandas, the characters ``]``</span>
+<span class="sd">            address tags. For example, if the tag column is a former Python list saved with pandas, the characters ``]``</span>
 <span class="sd">            , ``]`` and ``&#39;`` will be included as the tags&#39; element. Thus, a parsing function will take a string as is</span>
-<span class="sd">            parameter and output a python list. The default function process it as a former python list.</span>
+<span class="sd">            parameter and output a python list. The default function processes it as a former Python list.</span>
 <span class="sd">            That is, it removes the ``[],`` characters and splits the sequence at each comma (``&quot;,&quot;``).</span>
 <span class="sd">        csv_reader_kwargs (dict, optional): Keyword arguments to pass to pandas ``read_csv`` use internally. By default,</span>
 <span class="sd">            the ``data_path`` is passed along with our default ``sep`` value ( ``&quot;\\t&quot;``) and the ``&quot;utf-8&quot;`` encoding</span>

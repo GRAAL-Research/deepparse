@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Getting Started &mdash; deepparse 0.9.9 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Parser" href="../parser.html" />
+    <link rel="prev" title="Installation" href="../install/installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/deepparse.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.9.9
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install/installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#parse-addresses-from-the-command-line">Parse Addresses From the Command Line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#parse-addresses-using-your-own-retrained-model">Parse Addresses Using Your Own Retrained Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#retrain-a-model">Retrain a Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#retrain-a-model-with-an-attention-mechanism">Retrain a Model With an Attention Mechanism</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#retrain-a-model-with-new-tags">Retrain a Model With New Tags</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#retrain-a-seq2seq-model-from-scratch">Retrain a Seq2Seq Model From Scratch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#download-our-models">Download Our Models</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../parser.html">Parser</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pre_processor.html">Pre-Processors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dataset_container.html">Dataset Container</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../comparer.html">Comparer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli.html">CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">Parse Address With Our Out-Of-The-Box API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/parse_addresses.html">Parse Addresses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/parse_addresses_uri.html">Parse Addresses Using A URI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/parse_addresses_with_cli.html">Parse Addresses Using Our CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/retrained_model_parsing.html">Use a Retrained Model to Parse Addresses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/fine_tuning.html">Retrain a Pretrained Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/fine_tuning_uri.html">Retrain a Pretrained Model Using A URI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/fine_tuning_with_csv_dataset.html">Retrain a Pretrained Model Using a CSV Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/retrain_attention_model.html">Retrain an Attention Mechanism Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/retrain_with_new_seq2seq_params.html">Retrain With New Seq2Seq Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/single_country_retrain.html">Retrain an Address Parser for Single Country Uses</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Model training</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../training_guide.html">Training Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">deepparse</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Getting Started</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/get_started/get_started.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="getting-started">
+<h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading"></a></h1>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">deepparse.parser</span> <span class="kn">import</span> <span class="n">AddressParser</span>
+<span class="kn">from</span> <span class="nn">deepparse.dataset_container</span> <span class="kn">import</span> <span class="n">CSVDatasetContainer</span>
+
+<span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;bpemb&quot;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># you can parse one address</span>
+<span class="n">parsed_address</span> <span class="o">=</span> <span class="n">address_parser</span><span class="p">(</span><span class="s2">&quot;350 rue des Lilas Ouest Québec Québec G1L 1B6&quot;</span><span class="p">)</span>
+
+<span class="c1"># or multiple addresses</span>
+<span class="n">parsed_address</span> <span class="o">=</span> <span class="n">address_parser</span><span class="p">([</span><span class="s2">&quot;350 rue des Lilas Ouest Québec Québec G1L 1B6&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;350 rue des Lilas Ouest Québec Québec G1L 1B6&quot;</span><span class="p">])</span>
+
+<span class="c1"># or multinational addresses</span>
+<span class="c1"># Canada, US, Germany, UK and South Korea</span>
+<span class="n">parsed_address</span> <span class="o">=</span> <span class="n">address_parser</span><span class="p">(</span>
+    <span class="p">[</span><span class="s2">&quot;350 rue des Lilas Ouest Québec Québec G1L 1B6&quot;</span><span class="p">,</span> <span class="s2">&quot;777 Brockton Avenue, Abington MA 2351&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;Ansgarstr. 4, Wallenhorst, 49134&quot;</span><span class="p">,</span> <span class="s2">&quot;221 B Baker Street&quot;</span><span class="p">,</span> <span class="s2">&quot;서울특별시 종로구 사직로3길 23&quot;</span><span class="p">])</span>
+
+<span class="c1"># you can also get the probability of the predicted tags</span>
+<span class="n">parsed_address</span> <span class="o">=</span> <span class="n">address_parser</span><span class="p">(</span><span class="s2">&quot;350 rue des Lilas Ouest Québec Québec G1L 1B6&quot;</span><span class="p">,</span>
+     <span class="n">with_prob</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Print the parsed address</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">parsed_address</span><span class="p">)</span>
+
+<span class="c1"># or using one of our dataset container</span>
+<span class="n">addresses_to_parse</span> <span class="o">=</span> <span class="n">CSVDatasetContainer</span><span class="p">(</span><span class="s2">&quot;./a_path.csv&quot;</span><span class="p">,</span> <span class="n">column_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;address_column_name&quot;</span><span class="p">],</span>
+                                         <span class="n">is_training_container</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">address_parser</span><span class="p">(</span><span class="n">addresses_to_parse</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The default predictions tags are the following</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;StreetNumber&quot;</span></code>: for the street number,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;StreetName&quot;</span></code>: for the name of the street,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;Unit&quot;</span></code>: for the unit (such as apartment),</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;Municipality&quot;</span></code>: for the municipality,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;Province&quot;</span></code>: for the province or local region,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;PostalCode&quot;</span></code>: for the postal code,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;Orientation&quot;</span></code>: for the street orientation (e.g. west, east),</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;GeneralDelivery&quot;</span></code>: for other delivery information.</p></li>
+</ul>
+</div></blockquote>
+<section id="parse-addresses-from-the-command-line">
+<h2>Parse Addresses From the Command Line<a class="headerlink" href="#parse-addresses-from-the-command-line" title="Permalink to this heading"></a></h2>
+<p>You can also use our cli to parse addresses using:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>parse<span class="w"> </span>&lt;parsing_model&gt;<span class="w"> </span>&lt;dataset_path&gt;<span class="w"> </span>&lt;export_file_name&gt;
+</pre></div>
+</div>
+</section>
+<section id="parse-addresses-using-your-own-retrained-model">
+<h2>Parse Addresses Using Your Own Retrained Model<a class="headerlink" href="#parse-addresses-using-your-own-retrained-model" title="Permalink to this heading"></a></h2>
+<p>See <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/main/examples/retrained_model_parsing.py">here</a> for a complete example.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span>
+    <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;bpemb&quot;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">path_to_retrained_model</span><span class="o">=</span><span class="s2">&quot;path/to/retrained/bpemb/model.p&quot;</span><span class="p">)</span>
+
+<span class="n">address_parser</span><span class="p">(</span><span class="s2">&quot;350 rue des Lilas Ouest Québec Québec G1L 1B6&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="retrain-a-model">
+<h2>Retrain a Model<a class="headerlink" href="#retrain-a-model" title="Permalink to this heading"></a></h2>
+<p>See <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/main/examples/fine_tuning.py">here</a> for a complete example
+using Pickle and <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/main/examples/fine_tuning_with_csv_dataset.py">here</a>
+for a complete example using CSV.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span><span class="o">.</span><span class="n">retrain</span><span class="p">(</span><span class="n">training_container</span><span class="p">,</span> <span class="n">train_ratio</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>One can also freeze some layers to speed up the training using the <code class="docutils literal notranslate"><span class="pre">layers_to_freeze</span></code> parameter.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span><span class="o">.</span><span class="n">retrain</span><span class="p">(</span><span class="n">training_container</span><span class="p">,</span> <span class="n">train_ratio</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">layers_to_freeze</span><span class="o">=</span><span class="s2">&quot;seq2seq&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Or you can also give a specific name to the retrained model. This name will be use as the model name (for print and
+class name) when reloading it.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span><span class="o">.</span><span class="n">retrain</span><span class="p">(</span><span class="n">training_container</span><span class="p">,</span> <span class="n">train_ratio</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">name_of_the_retrain_parser</span><span class="o">=</span><span class="s2">&quot;MyNewParser&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="retrain-a-model-with-an-attention-mechanism">
+<h2>Retrain a Model With an Attention Mechanism<a class="headerlink" href="#retrain-a-model-with-an-attention-mechanism" title="Permalink to this heading"></a></h2>
+<p>See <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/main/examples/retrain_attention_model.py">here</a> for a complete example.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># We will retrain the fasttext version of our pretrained model.</span>
+<span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;fasttext&quot;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">attention_mechanism</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">address_parser</span><span class="o">.</span><span class="n">retrain</span><span class="p">(</span><span class="n">training_container</span><span class="p">,</span> <span class="n">train_ratio</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="retrain-a-model-with-new-tags">
+<h2>Retrain a Model With New Tags<a class="headerlink" href="#retrain-a-model-with-new-tags" title="Permalink to this heading"></a></h2>
+<p>See <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/main/examples/retrain_with_new_prediction_tags.py">here</a> for a complete example.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_components</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ATag&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;AnotherTag&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;EOS&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+<span class="n">address_parser</span><span class="o">.</span><span class="n">retrain</span><span class="p">(</span><span class="n">training_container</span><span class="p">,</span> <span class="n">train_ratio</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">prediction_tags</span><span class="o">=</span><span class="n">address_components</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="retrain-a-seq2seq-model-from-scratch">
+<h2>Retrain a Seq2Seq Model From Scratch<a class="headerlink" href="#retrain-a-seq2seq-model-from-scratch" title="Permalink to this heading"></a></h2>
+<p>See  <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/main/examples/retrain_with_new_seq2seq_params.py">here</a> for
+a complete example.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">seq2seq_params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;encoder_hidden_size&quot;</span><span class="p">:</span> <span class="mi">512</span><span class="p">,</span> <span class="s2">&quot;decoder_hidden_size&quot;</span><span class="p">:</span> <span class="mi">512</span><span class="p">}</span>
+<span class="n">address_parser</span><span class="o">.</span><span class="n">retrain</span><span class="p">(</span><span class="n">training_container</span><span class="p">,</span> <span class="n">train_ratio</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">seq2seq_params</span><span class="o">=</span><span class="n">seq2seq_params</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="download-our-models">
+<h2>Download Our Models<a class="headerlink" href="#download-our-models" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt>Here are the URLs to download our pretrained models directly</dt><dd><ul class="simple">
+<li><p><a class="reference external" href="https://graal.ift.ulaval.ca/public/deepparse/fasttext.ckpt">FastText</a>,</p></li>
+<li><p><a class="reference external" href="https://graal.ift.ulaval.ca/public/deepparse/fasttext_attention.ckpt">FastTextAttention</a>,</p></li>
+<li><p><a class="reference external" href="https://graal.ift.ulaval.ca/public/deepparse/bpemb.ckpt">BPEmb</a>,</p></li>
+<li><p><a class="reference external" href="https://graal.ift.ulaval.ca/public/deepparse/bpemb_attention.ckpt">BPEmbAttention</a>,</p></li>
+<li><p><a class="reference external" href="https://graal.ift.ulaval.ca/public/deepparse/fasttext.magnitude.gz">FastText Light</a> (using <a class="reference external" href="https://github.com/davebulaval/magnitude-light">Magnitude Light</a>),.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Or you can use our cli to download our pretrained models directly using:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>download_model<span class="w"> </span>&lt;model_name&gt;
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../install/installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../parser.html" class="btn btn-neutral float-right" title="Parser" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2023, Marouane Yassine &amp; David Beauchemin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

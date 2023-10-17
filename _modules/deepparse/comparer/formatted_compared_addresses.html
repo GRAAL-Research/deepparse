@@ -43,13 +43,22 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">API</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../get_started/get_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../parser.html">Parser</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../pre_processor.html">Pre-Processors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../dataset_container.html">Dataset Container</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../comparer.html">Comparer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../cli.html">CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">Parse Address With Our Out-Of-The-Box API</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul>
@@ -64,6 +73,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_with_new_seq2seq_params.html">Retrain With New Seq2Seq Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/single_country_retrain.html">Retrain an Address Parser for Single Country Uses</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Model training</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../training_guide.html">Training Guide</a></li>
 </ul>
 
         </div>
@@ -113,7 +126,7 @@
 <span class="sd">                                                for the first one.</span>
 <span class="sd">        second_address(FormattedParsedAddress): A formatted parsed address that contains the parsing information</span>
 <span class="sd">                                                for the second one.</span>
-<span class="sd">        origin: (Tuple[str, str]): The origin of the parsing (ex : from source or from a deepparse pretrained model).</span>
+<span class="sd">        origin: (Tuple[str, str]): The origin of the parsing (ex : from source or a Deepparse pretrained model).</span>
 
 <span class="sd">    Example:</span>
 
@@ -133,7 +146,7 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">list_of_bool</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        A list of boolean that contains all the address components names and indicates if it is the same for the</span>
+<span class="sd">        A list of boolean that contains all the address components&#39; names and indicates if it is the same for the</span>
 <span class="sd">        two addresses.</span>
 
 <span class="sd">        Return:</span>
@@ -179,7 +192,7 @@
 
     <span class="k">def</span> <span class="nf">_comparison_report</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nb_delimiters</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Builds a comparison_report with delimiters to make the beginning and the end of the comparison easier to spot.</span>
+<span class="sd">        Builds a comparison_report with delimiters to make the comparison&#39;s beginning and end easier to spot.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Get terminal size to adapt the output to the user</span>
@@ -195,15 +208,15 @@
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">_comparison_report_builder</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Builds the core of a comparison report for the different comparisons. Since the procedure to make a tags</span>
-<span class="sd">        comparison and the raw addresses comparison is different, the comparison report is not the same for the two.</span>
+<span class="sd">        Builds the core of a comparison report for the various comparisons. Since the procedure to make a tags</span>
+<span class="sd">        comparison and the raw addresses comparison are different, the comparison report is not the same for the two.</span>
 <span class="sd">        It is then implemented in each specific class.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">_get_probs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the tags from the parsing with their associated probabilities, the method needs to be implemented in each</span>
+<span class="sd">        To get the tags from the parsing with their associated probabilities, the method needs to be implemented in each</span>
 <span class="sd">        class because they don&#39;t use the probabilities the same way.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -273,7 +286,7 @@
 
 <span class="sd">        Args:</span>
 <span class="sd">            name_one (str, optional) : Name associated with first color. The default value is the first address.</span>
-<span class="sd">            name_two (str, optional) : Name associated with second color. The default value is the second address.</span>
+<span class="sd">            name_two (str, optional) : Name associated with the second colour. The default value is the second address.</span>
 <span class="sd">            verbose (bool, optional): If True, it will print a presentation of the colours and what they mean.</span>
 <span class="sd">                The default value is True.</span>
 
@@ -314,14 +327,14 @@
     <span class="k">def</span> <span class="nf">_bool_address_tags_are_the_same</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parsed_addresses</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">tuple</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="nb">tuple</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">tuple</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compare addresses components and put the differences in a dictionary where the keys are the</span>
-<span class="sd">        names of the addresses components, and the values are the value of the addresses component.</span>
+<span class="sd">        names of the addresses components, and the values are the values of the addresses component.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            parsed_addresses (Union[List[List[tuple]], List[tuple]]): Contains the tags and the</span>
-<span class="sd">            address components name for the parsed addresses.</span>
+<span class="sd">            address components&#39; names for the parsed addresses.</span>
 
 <span class="sd">        Return:</span>
-<span class="sd">            List[tuple]: List of tuples that contains all addresses components that differ from each other.</span>
+<span class="sd">            List[tuple]: List of tuples that contain all addresses components that differ from each other.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">unique_address_component_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unique_addresses_component_names</span><span class="p">(</span><span class="n">parsed_addresses</span><span class="p">)</span>
 
@@ -351,16 +364,16 @@
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_unique_addresses_component_names</span><span class="p">(</span><span class="n">parsed_addresses</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">tuple</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Retrieves all the unique address components names from the comparison then returns it.</span>
+<span class="sd">        Retrieves all the unique address component names from the comparison, then returns it.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            parsed_addresses (List[List[tuple]]): Contains the tags and the</span>
-<span class="sd">            address components name for the parsed addresses.</span>
+<span class="sd">            address components&#39; names for the parsed addresses.</span>
 
 <span class="sd">        Return:</span>
-<span class="sd">            Returns a list of all the unique address components names.</span>
+<span class="sd">            Returns a list of all the unique address component names.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># Here we don&#39;t use a set since order will change and report will also change.</span>
+        <span class="c1"># We don&#39;t use a set here since the order and report will change.</span>
         <span class="n">unique_address_component_names</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">tuple_values</span> <span class="ow">in</span> <span class="n">parsed_addresses</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">address_component</span> <span class="ow">in</span> <span class="n">tuple_values</span><span class="p">:</span>

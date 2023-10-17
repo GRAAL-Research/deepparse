@@ -43,13 +43,22 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">API</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../get_started/get_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../parser.html">Parser</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../pre_processor.html">Pre-Processors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../dataset_container.html">Dataset Container</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../comparer.html">Comparer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../cli.html">CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">Parse Address With Our Out-Of-The-Box API</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul>
@@ -64,6 +73,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_with_new_seq2seq_params.html">Retrain With New Seq2Seq Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/single_country_retrain.html">Retrain an Address Parser for Single Country Uses</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Model training</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../training_guide.html">Training Guide</a></li>
 </ul>
 
         </div>
@@ -96,30 +109,33 @@
 
 <div class="viewcode-block" id="validate_if_any_empty"><a class="viewcode-back" href="../../../dataset_container.html#deepparse.data_validation.data_validation.validate_if_any_empty">[docs]</a><span class="k">def</span> <span class="nf">validate_if_any_empty</span><span class="p">(</span><span class="n">string_elements</span><span class="p">:</span> <span class="n">List</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Return true if one of the string element is an empty one.</span>
+<span class="sd">    Return ``True`` if one of the string elements is empty. For example, the second element in the following list is</span>
+<span class="sd">    an empty address: ``[&quot;An address&quot;, &quot;&quot;, &quot;Another address&quot;]``. Thus, it will return ``False``.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        string_elements (list): A list of string to validate.</span>
+<span class="sd">        string_elements (list): A list of strings to validate.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">is_empty</span><span class="p">(</span><span class="n">string_element</span><span class="p">)</span> <span class="k">for</span> <span class="n">string_element</span> <span class="ow">in</span> <span class="n">string_elements</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="validate_if_any_whitespace_only"><a class="viewcode-back" href="../../../dataset_container.html#deepparse.data_validation.data_validation.validate_if_any_whitespace_only">[docs]</a><span class="k">def</span> <span class="nf">validate_if_any_whitespace_only</span><span class="p">(</span><span class="n">string_elements</span><span class="p">:</span> <span class="n">List</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Return true if one of the string element is only whitespace.</span>
+<span class="sd">    Return ``True`` if one of the string elements is only whitespace. For example, the second element in the</span>
+<span class="sd">    following list is only whitespace: ``[&quot;An address&quot;, &quot; &quot;, &quot;Another address&quot;]``. Thus, it will return ``False``.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        string_elements (list): A list of string to validate.</span>
+<span class="sd">        string_elements (list): A list of strings to validate.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">is_whitespace_only</span><span class="p">(</span><span class="n">string_element</span><span class="p">)</span> <span class="k">for</span> <span class="n">string_element</span> <span class="ow">in</span> <span class="n">string_elements</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="validate_if_any_none"><a class="viewcode-back" href="../../../dataset_container.html#deepparse.data_validation.data_validation.validate_if_any_none">[docs]</a><span class="k">def</span> <span class="nf">validate_if_any_none</span><span class="p">(</span><span class="n">string_elements</span><span class="p">:</span> <span class="n">List</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Return true if one of the string element is a None value.</span>
+<span class="sd">    Return ``True`` if one string element is a ``None`` value. For example, the second element in the following</span>
+<span class="sd">    list is a ``None`` value: ``[&quot;An address&quot;, None, &quot;Another address&quot;]``. Thus, it will return ``False``.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        string_elements (list): A list of string to validate.</span>
+<span class="sd">        string_elements (list): A list of strings to validate.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">is_none</span><span class="p">(</span><span class="n">string_element</span><span class="p">)</span> <span class="k">for</span> <span class="n">string_element</span> <span class="ow">in</span> <span class="n">string_elements</span><span class="p">)</span></div>
 

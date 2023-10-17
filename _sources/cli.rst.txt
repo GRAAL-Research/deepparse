@@ -106,6 +106,7 @@ We do not handle the ``seq2seq_params`` fine-tuning argument for now.
 
 Test
 ****
+
 This command allows a user to test the ``base_parsing_model`` (or the retrained one using the
 ``--path_to_retrained_model``) on the ``train_dataset_path`` dataset.
 For the testing, the CSV or Pickle dataset is loader in a specific dataloader (see
@@ -136,4 +137,4 @@ Command to pre-download model weights and requirements. Here is the list of argu
     - ``model_type``: The parsing module to download. The possible choice are ``'fasttext'``, ``'fasttext-attention'``, ``'fasttext-light'``, ``'bpemb'`` and ``'bpemb-attention'``.
     - ``--saving_cache_dir``: To change the default saving cache directory (default to ``None``, e.g. default path).
 
-.. autofunction:: deepparse.cli.download.main
+.. autofunction:: deepparse.cli.download_model.main

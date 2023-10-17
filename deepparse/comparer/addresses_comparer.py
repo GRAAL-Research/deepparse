@@ -11,14 +11,14 @@ from ..parser.formatted_parsed_address import FormattedParsedAddress
 class AddressesComparer:
     """
     Address comparer to compare addresses with each other and retrieves the differences between them. The addresses
-    are parsed using an address parser based on one of the seq2seq pretrained networks either with fastText or BPEmb.
+    are parsed using an address parser based on one of the seq2seq pretrained networks, either with fastText or BPEmb.
 
-    The address comparer can compare already parsed addresses. The address parser first recompose the raw
-    addresses then suggests its own tags, then it makes a comparison with the tags of the source parsing and the
+    The address comparer can compare already parsed addresses. The address parser first recomposes the raw
+    addresses then suggest its own tags; then it makes a comparison with the tags of the source parsing and the
     newly parsed address
 
     The address comparer is also able to compare raw addresses by first parsing the addresses using the
-    address parser and then brings out the differences among the parsed addresses.
+    address parser and then bring out the differences among the parsed addresses.
 
 
     Args:
@@ -40,13 +40,13 @@ class AddressesComparer:
     ) -> Union[List[FormattedComparedAddressesTags], FormattedComparedAddressesTags]:
         """
         Compare tags of a source parsing with the parsing from AddressParser. First, it reconstructs the
-        raw address from the parsing, then AddressParser generates tags and then compares the two parsings.
+        raw address from the parsing, AddressParser generates tags and compares the two parsings.
 
         Args:
             addresses_tags_to_compare (Union[List[tuple], List[List[tuple]]]): list of tuple that contains
-            the tags for the address components from the source. Can compare multiples parsings if passed as a
+            the tags for the address components from the source. Can compare multiple parsings if passed as a
             list of tuples.
-            with_prob (Union[None, bool]): A option flag to either or not include prob in the comparison report.
+            with_prob (Union[None, bool]): An option flag to either or not include prob in the comparison report.
                 The probabilities are not compared but only included in the report.
                 The default value is None, which means not taking into account.
 
@@ -122,14 +122,14 @@ class AddressesComparer:
         with_prob: Union[None, bool] = None,
     ) -> List[FormattedComparedAddressesRaw]:
         """
-        Compare a list of raw addresses together, it starts by parsing the addresses
+        Compare a list of raw addresses together. It starts by parsing the addresses
         with the setted parser and then return the differences between the addresses components
         retrieved with our model.
 
         Args:
             raw_addresses_to_compare (Union[Tuple[str], List[Tuple[str]]]):
-                List of string that represent raw addresses to compare.
-            with_prob (Union[None, bool]): A option flag to either or not include prob in the comparison report.
+                List of strings that represent raw addresses to compare.
+            with_prob (Union[None, bool]): An option flag to either or not include prob in the comparison report.
                 The probabilities are not compared but only included in the report.
                 The default value is None, which means not taking into account.
 

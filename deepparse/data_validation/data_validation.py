@@ -3,30 +3,33 @@ from typing import List
 
 def validate_if_any_empty(string_elements: List) -> bool:
     """
-    Return true if one of the string element is an empty one.
+    Return ``True`` if one of the string elements is empty. For example, the second element in the following list is
+    an empty address: ``["An address", "", "Another address"]``. Thus, it will return ``False``.
 
     Args:
-        string_elements (list): A list of string to validate.
+        string_elements (list): A list of strings to validate.
     """
     return any(is_empty(string_element) for string_element in string_elements)
 
 
 def validate_if_any_whitespace_only(string_elements: List) -> bool:
     """
-    Return true if one of the string element is only whitespace.
+    Return ``True`` if one of the string elements is only whitespace. For example, the second element in the
+    following list is only whitespace: ``["An address", " ", "Another address"]``. Thus, it will return ``False``.
 
     Args:
-        string_elements (list): A list of string to validate.
+        string_elements (list): A list of strings to validate.
     """
     return any(is_whitespace_only(string_element) for string_element in string_elements)
 
 
 def validate_if_any_none(string_elements: List) -> bool:
     """
-    Return true if one of the string element is a None value.
+    Return ``True`` if one string element is a ``None`` value. For example, the second element in the following
+    list is a ``None`` value: ``["An address", None, "Another address"]``. Thus, it will return ``False``.
 
     Args:
-        string_elements (list): A list of string to validate.
+        string_elements (list): A list of strings to validate.
     """
     return any(is_none(string_element) for string_element in string_elements)
 

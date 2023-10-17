@@ -198,7 +198,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
 
         actual = self.test_out.getvalue()
         expected = (
-            "You are using a older version of Poutyne that does not support properly error management."
+            "You are using an older version of Poutyne that does not support proper error management."
             " Due to that, we cannot show retrain progress. To fix that, update Poutyne to the newest version.\n"
         )
 

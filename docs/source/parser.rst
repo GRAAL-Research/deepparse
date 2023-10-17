@@ -13,7 +13,7 @@ This is the complete pretrained address parser model. This model allows using th
 tags of any address.
 
 We offer, for now, only two pretrained models, FastText and BPEmb. The first one relies on
-`fastText <https://fasttext.cc/>`_ French pretrained embeddings to parse the address, and the second use
+`fastText <https://fasttext.cc/>`__ French pretrained embeddings to parse the address, and the second use
 the `byte-pair multilingual subword <https://nlp.h-its.org/bpemb/>`_ pretrained embeddings. In both cases,
 the architecture is similar, and performances are comparable; our results are available in this
 `article <https://arxiv.org/abs/2006.16152>`_.

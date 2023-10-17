@@ -54,14 +54,14 @@ class DatasetContainer(Dataset, ABC):
         self, idx: Union[int, slice]
     ) -> Union[List[str], str, List[List[Tuple[str, List]]], Tuple[str, List]]:
         """
-        If the DatasetContainer is a predict one:
+        If the DatasetContainer is a "predict" one:
 
-            - it can be a list of string items (e.g. a list of address (str)), or
+            - it can be a list of string items (e.g. a list of addresses (str)), or
             - it can be a unique string item (e.g. one address).
 
         If the DatasetContainer is a training one:
 
-            - it can be a list of tuple (str, list) items, namely a list of parsed example (e.g. an address with
+            - it can be a list of tuple (str, list) items, namely a list of parsed examples (e.g. an address with
                 the tags), or
             - it can be a tuple (str, list) item.
 
@@ -114,7 +114,7 @@ class DatasetContainer(Dataset, ABC):
 
         if not self._data_tags_is_same_len_then_address():
             print(
-                f"Some addresses (whitespace-split) and the tags associated with them are not the same len. "
+                f"Some addresses (whitespace-split) and the associated tags are not the same len. "
                 f"If you are using a CSVDatasetContainer, consider using the tag_seperator_reformat_fn argument."
                 f"Here is the report of those cases where len differ to help you out:\n"
                 f"{self._data_tags_not_the_same_len_diff()}"
@@ -190,8 +190,8 @@ class PickleDatasetContainer(DatasetContainer):
         if not is_training_container:
             if self._test_predict_container_is_list_of_tuple():
                 raise DataError(
-                    "The data is a list of tuple by the dataset container is a predict container. "
-                    "Predict container should contains only a list of address."
+                    "The data is a list of tuples, but the dataset container is a predict container. "
+                    "Predict container should contain only a list of addresses."
                 )
 
         self.validate_dataset()
@@ -226,17 +226,17 @@ class CSVDatasetContainer(DatasetContainer):
 
         data_path (str): The path to the CSV dataset file.
         column_names (list): A column name list to extract the dataset element.
-            If the dataset container is a predict one, the list must be of exactly one element
-            (i.e. the address column). On the other hand, if the dataset container is a training one, the list must be
+            If the dataset container is a "predict" one, the list must be of exactly one element
+            (i.e. the address column). On the other hand, if the dataset container is a "training" one, the list must be
             of exactly two elements: addresses and tags.
         is_training_container (bool): Either or not, the dataset container is a training container. This will determine
             the dataset validation test we apply to the dataset. That is, a predict dataset doesn't include tags.
             The default value is true.
         separator (str): The CSV columns separator to use. By default, ``"\\t"``.
         tag_seperator_reformat_fn (Callable, optional): A function to parse a tags string and return a list of
-            address tags. For example, if the tag column is a former python list saved with pandas, the characters ``]``
+            address tags. For example, if the tag column is a former Python list saved with pandas, the characters ``]``
             , ``]`` and ``'`` will be included as the tags' element. Thus, a parsing function will take a string as is
-            parameter and output a python list. The default function process it as a former python list.
+            parameter and output a python list. The default function processes it as a former Python list.
             That is, it removes the ``[],`` characters and splits the sequence at each comma (``","``).
         csv_reader_kwargs (dict, optional): Keyword arguments to pass to pandas ``read_csv`` use internally. By default,
             the ``data_path`` is passed along with our default ``sep`` value ( ``"\\t"``) and the ``"utf-8"`` encoding

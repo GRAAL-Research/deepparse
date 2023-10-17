@@ -339,3 +339,5 @@
 - Bug-fix the default pre-processors that were not all apply but only the last one.
 
 ## dev
+
+- Improve documentation

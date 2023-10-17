@@ -12,7 +12,7 @@ class FormattedComparedAddressesTags(FormattedComparedAddresses):
 
     def _get_probs(self) -> Dict:
         """
-        Get the tags from the parsing with their associated probabilities, the method needs to be implemented in each
+        To get the tags from the parsing with their associated probabilities, the method needs to be implemented in each
         class because they don't use the probabilities the same way.
         """
         return {
@@ -37,8 +37,8 @@ class FormattedComparedAddressesTags(FormattedComparedAddresses):
 
     def _comparison_report_builder(self) -> str:
         """
-        Builds the core of a comparison report for the different comparisons. Since the procedure to make a tags
-        comparison and the raw addresses comparison is different, the comparison report is not the same for the two.
+        Builds the core of a comparison report for the various comparisons. Since the procedure to make a tags
+        comparison and the raw addresses comparison are different, the comparison report is not the same for the two.
         It is then implemented in each specific class.
         """
 

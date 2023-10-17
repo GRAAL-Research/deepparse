@@ -539,9 +539,9 @@ class AddressParser:
             disable_tensorboard (bool): To disable Poutyne automatic Tensorboard monitoring. By default, we disable them
                 (true).
             prediction_tags (Union[dict, None]): A dictionary where the keys are the address components
-                (e.g. street name) and the values are the components indices (from 0 to N + 1) to use during retraining
-                of a model. The ``+ 1`` corresponds to the End Of Sequence (EOS) token that needs to be included in the
-                dictionary. We will use this dictionary's length for the prediction layer's output size.
+                (e.g. street name) and the values are the components indices (from 0 to N + 1) to use during the
+                retraining of a model. The ``+ 1`` corresponds to the End Of Sequence (EOS) token that needs to be
+                included in the dictionary. We will use this dictionary's length for the prediction layer's output size.
                 We also save the dictionary to be used later on when you load the model. The default value is ``None``,
                 meaning we use our pretrained model prediction tags.
             seq2seq_params (Union[dict, None]): A dictionary of seq2seq parameters to modify the seq2seq architecture
@@ -582,7 +582,7 @@ class AddressParser:
                     - if layers_to_freeze is not ``None``, the following tag: ``FreezedLayer{portion}``.
             verbose (Union[None, bool]): To override the AddressParser verbosity for the test. When set to True or
                 False, it will override (but it does not change the AddressParser verbosity) the test verbosity.
-                If set to the default value None, the AddressParser verbosity is used as the test verbosity.
+                If set to the default value ``None``, the AddressParser verbosity is used as the test verbosity.
 
 
         Return:
@@ -745,7 +745,7 @@ class AddressParser:
             self.processor.tags_converter = self.tags_converter
 
             if not self.model.same_output_dim(self.tags_converter.dim):
-                # Since we have change the output layer dim, we need to handle the prediction layer dim
+                # Since we have changed the output layer dim, we need to handle the prediction layer dim
                 new_dim = self.tags_converter.dim
                 if seq2seq_params is None:
                     self.model.handle_new_output_dim(new_dim)
@@ -759,7 +759,7 @@ class AddressParser:
             seq2seq_params.update({"pre_trained_weights": False})
 
             model_factory_dict.update({"seq2seq_kwargs": seq2seq_params})
-            # We set verbose to false since model is reloaded
+            # We set verbose to false since the model is reloaded
             self._setup_model(verbose=False, path_to_retrained_model=None, **model_factory_dict)
 
         callbacks = [] if callbacks is None else callbacks
@@ -791,7 +791,7 @@ class AddressParser:
             with_capturing_context = False
             if not valid_poutyne_version(min_major=1, min_minor=8):
                 print(
-                    "You are using a older version of Poutyne that does not support properly error management."
+                    "You are using an older version of Poutyne that does not support proper error management."
                     " Due to that, we cannot show retrain progress. To fix that, update Poutyne to "
                     "the newest version."
                 )
@@ -811,7 +811,7 @@ class AddressParser:
             list_of_file_path = os.listdir(path=".")
             if list_of_file_path:
                 if pretrained_parser_in_directory(logging_path):
-                    # Mean we might already have checkpoint in the training directory
+                    # Mean we might already have a checkpoint in the training directory
                     files_in_directory = get_files_in_directory(logging_path)
                     retrained_address_parser_in_directory = get_address_parser_in_directory(files_in_directory)[
                         0
@@ -853,7 +853,7 @@ class AddressParser:
                 # Means we have changed the seq2seq params
                 torch_save.update({"seq2seq_params": seq2seq_params})
             if prediction_tags is not None:
-                #  Means we have changed the predictions tags
+                #  Means we have changed the prediction tags
                 torch_save.update({"prediction_tags": prediction_tags})
 
             torch_save.update(
@@ -885,7 +885,7 @@ class AddressParser:
                 except FileNotFoundError as error:
                     if "s3" in file_path or "//" in file_path or ":" in file_path:
                         raise FileNotFoundError(
-                            "Are You trying to use a AWS S3 URI? If so path need to start with s3://."
+                            "Are You trying to use an AWS S3 URI? If so path needs to start with s3://."
                         ) from error
             return train_res
 
@@ -906,7 +906,7 @@ class AddressParser:
         Args:
             test_dataset_container (~deepparse.dataset_container.DatasetContainer):
                 The test dataset container of the data to use.
-            batch_size (int): The size of the batch (by default, ``32``).
+            batch_size (int): The batch size (by default, ``32``).
             num_workers (int): Number of workers to use for the data loader (by default, ``1`` worker).
             callbacks (Union[list, None]): List of callbacks to use during training.
                 See Poutyne `callback <https://poutyne.org/callbacks.html#callback-class>`_ for more information.
@@ -1008,7 +1008,7 @@ class AddressParser:
         Method to save, in a Pickle format, the address parser model weights (PyTorch state dictionary).
 
         file_path (Union[str, Path]): A complete file path with a pickle extension to save the model weights.
-            It can either be a string (e.g. 'path/to/save.p') or a path like path (e.g. Path('path/to/save.p').
+            It can either be a string (e.g. 'path/to/save.p') or a path-like path (e.g. Path('path/to/save.p').
 
         Examples:
 
@@ -1196,7 +1196,7 @@ class AddressParser:
         verbose: Union[None, bool],
     ) -> List[Dict]:
         # pylint: disable=too-many-arguments
-        # If Poutyne 1.7 and before, we capture poutyne print since it print some exception.
+        # If Poutyne 1.7 and before, we capture poutyne print since it prints some exception.
         # Otherwise, we use a null context manager.
         with Capturing() if capturing_context else contextlib.nullcontext():
             train_res = experiment.train(

@@ -20,7 +20,7 @@ class FormattedComparedAddresses(ABC):
                                                 for the first one.
         second_address(FormattedParsedAddress): A formatted parsed address that contains the parsing information
                                                 for the second one.
-        origin: (Tuple[str, str]): The origin of the parsing (ex : from source or from a deepparse pretrained model).
+        origin: (Tuple[str, str]): The origin of the parsing (ex : from source or a Deepparse pretrained model).
 
     Example:
 
@@ -40,7 +40,7 @@ class FormattedComparedAddresses(ABC):
     @property
     def list_of_bool(self) -> List:
         """
-        A list of boolean that contains all the address components names and indicates if it is the same for the
+        A list of boolean that contains all the address components' names and indicates if it is the same for the
         two addresses.
 
         Return:
@@ -86,7 +86,7 @@ class FormattedComparedAddresses(ABC):
 
     def _comparison_report(self, nb_delimiters: Union[int, None]) -> str:
         """
-        Builds a comparison_report with delimiters to make the beginning and the end of the comparison easier to spot.
+        Builds a comparison_report with delimiters to make the comparison's beginning and end easier to spot.
         """
 
         # Get terminal size to adapt the output to the user
@@ -102,15 +102,15 @@ class FormattedComparedAddresses(ABC):
     @abstractmethod
     def _comparison_report_builder(self) -> str:
         """
-        Builds the core of a comparison report for the different comparisons. Since the procedure to make a tags
-        comparison and the raw addresses comparison is different, the comparison report is not the same for the two.
+        Builds the core of a comparison report for the various comparisons. Since the procedure to make a tags
+        comparison and the raw addresses comparison are different, the comparison report is not the same for the two.
         It is then implemented in each specific class.
         """
 
     @abstractmethod
     def _get_probs(self) -> Dict:
         """
-        Get the tags from the parsing with their associated probabilities, the method needs to be implemented in each
+        To get the tags from the parsing with their associated probabilities, the method needs to be implemented in each
         class because they don't use the probabilities the same way.
         """
 
@@ -180,7 +180,7 @@ class FormattedComparedAddresses(ABC):
 
         Args:
             name_one (str, optional) : Name associated with first color. The default value is the first address.
-            name_two (str, optional) : Name associated with second color. The default value is the second address.
+            name_two (str, optional) : Name associated with the second colour. The default value is the second address.
             verbose (bool, optional): If True, it will print a presentation of the colours and what they mean.
                 The default value is True.
 
@@ -221,14 +221,14 @@ class FormattedComparedAddresses(ABC):
     def _bool_address_tags_are_the_same(self, parsed_addresses: Union[List[List[tuple]], List[tuple]]) -> List[tuple]:
         """
         Compare addresses components and put the differences in a dictionary where the keys are the
-        names of the addresses components, and the values are the value of the addresses component.
+        names of the addresses components, and the values are the values of the addresses component.
 
         Args:
             parsed_addresses (Union[List[List[tuple]], List[tuple]]): Contains the tags and the
-            address components name for the parsed addresses.
+            address components' names for the parsed addresses.
 
         Return:
-            List[tuple]: List of tuples that contains all addresses components that differ from each other.
+            List[tuple]: List of tuples that contain all addresses components that differ from each other.
         """
         unique_address_component_names = self._unique_addresses_component_names(parsed_addresses)
 
@@ -258,16 +258,16 @@ class FormattedComparedAddresses(ABC):
     @staticmethod
     def _unique_addresses_component_names(parsed_addresses: List[List[tuple]]) -> List:
         """
-        Retrieves all the unique address components names from the comparison then returns it.
+        Retrieves all the unique address component names from the comparison, then returns it.
 
         Args:
             parsed_addresses (List[List[tuple]]): Contains the tags and the
-            address components name for the parsed addresses.
+            address components' names for the parsed addresses.
 
         Return:
-            Returns a list of all the unique address components names.
+            Returns a list of all the unique address component names.
         """
-        # Here we don't use a set since order will change and report will also change.
+        # We don't use a set here since the order and report will change.
         unique_address_component_names = []
         for tuple_values in parsed_addresses:
             for address_component in tuple_values:

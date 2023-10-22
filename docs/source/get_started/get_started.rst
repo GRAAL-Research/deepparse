@@ -132,14 +132,14 @@ a complete example.
 Download Our Models
 *******************
 
-Here are the URLs to download our pretrained models directly
+Deepparse handles model downloads when you use it, but you can also pre-download our model. Here are the URLs to download our pretrained models directly
     - `FastText <https://graal.ift.ulaval.ca/public/deepparse/fasttext.ckpt>`__,
     - `FastTextAttention <https://graal.ift.ulaval.ca/public/deepparse/fasttext_attention.ckpt>`__,
     - `BPEmb <https://graal.ift.ulaval.ca/public/deepparse/bpemb.ckpt>`__,
     - `BPEmbAttention <https://graal.ift.ulaval.ca/public/deepparse/bpemb_attention.ckpt>`__,
     - `FastText Light <https://graal.ift.ulaval.ca/public/deepparse/fasttext.magnitude.gz>`__ (using `Magnitude Light <https://github.com/davebulaval/magnitude-light>`__),.
 
-Or you can use our cli to download our pretrained models directly using:
+Or you can use our CLI to download our pretrained models directly using:
 
 .. code-block:: sh
 

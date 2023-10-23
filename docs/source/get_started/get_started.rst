@@ -133,6 +133,7 @@ Download Our Models
 *******************
 
 Deepparse handles model downloads when you use it, but you can also pre-download our model. Here are the URLs to download our pretrained models directly
+
     - `FastText <https://graal.ift.ulaval.ca/public/deepparse/fasttext.ckpt>`__,
     - `FastTextAttention <https://graal.ift.ulaval.ca/public/deepparse/fasttext_attention.ckpt>`__,
     - `BPEmb <https://graal.ift.ulaval.ca/public/deepparse/bpemb.ckpt>`__,

@@ -3,7 +3,7 @@ target-version = ['py38', 'py39', 'py310', 'py311']
 
 line-length = 120
 skip-string-normalization = true
-required-version = "23.9.1"
+required-version = "23.12.1"
 extend-exclude = "/(slides)/"
 
 [tool.pylint.ini_options]

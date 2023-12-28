@@ -16,5 +16,5 @@ Content-Type: application/json
 
 [
   {"raw": "16 rue Grande-Place, Victoriaville, QC, G6S 1E6"},
-  {"raw": "123 rue Valancourt, Val-Alain, quebec, g9v1s3"}
+  {"raw": "123 rue valancourt, val-alain, quebec, g9v 1s3"}
 ]

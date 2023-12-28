@@ -1,6 +1,6 @@
 class FastTextModelError(Exception):
     """
-    User error when user uses a FastText-like model on an OS that does not support properly multithreading.
+    User error occurs when a user uses a FastText-like model on an OS that does not correctly support multithreading.
     """
 
     def __init__(self, value: str) -> None:

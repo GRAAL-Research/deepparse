@@ -64,7 +64,7 @@ def handle_prediction_tags(parsed_args):
 def main(args=None) -> None:
     # pylint: disable=too-many-locals, too-many-branches
     """
-    CLI function to rapidly retrain an addresses parser and saves it. One can retrain a base pretrained model
+    CLI function to easily retrain an address parser and save it. One can retrain a base pretrained model
     using most of the arguments as the :meth:`~AddressParser.retrain` method. By default, all the parameters have
     the same default value as the :meth:`~AddressParser.retrain` method. The supported parameters are the following:
 
@@ -86,7 +86,7 @@ def main(args=None) -> None:
 
         retrain fasttext ./train_dataset_path.csv
 
-    Using a gpu device
+    Using a GPU device
 
     .. code-block:: sh
 
@@ -142,7 +142,7 @@ def main(args=None) -> None:
 
 
 def get_parser() -> argparse.ArgumentParser:
-    """Return ArgumentParser for the cli."""
+    """Return ArgumentParser for the CLI."""
 
     parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
 
@@ -198,8 +198,8 @@ def get_parser() -> argparse.ArgumentParser:
         "--logging_path",
         help=wrap(
             "The logging path for the checkpoints and the retrained model. "
-            "Note that training creates checkpoints, and we use Poutyne library that use the best epoch "
-            "model and reloads the state if any checkpoints are already there. "
+            "Note that training creates checkpoints, and we use the Poutyne library that uses the best epoch "
+            "model and reload the state if any checkpoints are already there. "
             "Thus, an error will be raised if you change the model type. For example, "
             "you retrain a FastText model and then retrain a BPEmb in the same logging path directory."
             "By default, the path is './checkpoints'."
@@ -241,7 +241,7 @@ def get_parser() -> argparse.ArgumentParser:
         help=wrap(
             "Path to a JSON file of prediction tags to use to retrain. Tags are in a key-value style, where "
             "the key is the tag name, and the value is the index one."
-            "The last element has to be an EOS tag. Read the doc for more detail about EOS tag."
+            "The last element has to be an EOS tag. Read the documentation for more details about the EOS tag."
         ),
         default=None,
         type=str,

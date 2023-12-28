@@ -201,8 +201,8 @@ class RetrainTests(RetrainTestCase):
 
     def test_ifIsCSVFile_noColumnName_raiseValueError(self):
         with self.assertRaises(ValueError):
-            # We set up the params with the default value of csv_column_names of the test case method set_up_params,
-            # which is None, thus no column names.
+            # We set up the params with the default value of ``"csv_column_names"`` of the test case method
+            # set_up_params, which is None, thus no column names.
             parser_params = self.set_up_params(train_dataset_path=self.a_train_csv_dataset_path)
 
             retrain.main(parser_params)

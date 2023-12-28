@@ -19,7 +19,7 @@ class BPEmbEmbeddingsModel(EmbeddingsModel):
 
     Params:
         cache_dir (str): Path to the cache directory to the embeddings' bin vector and the model.
-        verbose (bool): Wether or not to make the loading of the embeddings verbose.
+        verbose (bool): Whether or not to make the loading of the embeddings verbose.
     """
 
     def __init__(self, cache_dir: str, verbose: bool = True) -> None:
@@ -53,7 +53,7 @@ def no_ssl_verification():
 
     Reference: https://gist.github.com/ChenTanyi/0c47652bd916b61dc196968bca7dad1d.
 
-    Will be removed when https://github.com/bheinzerling/bpemb/issues/63 is resolved.
+    It will be removed when https://github.com/bheinzerling/bpemb/issues/63 is resolved.
     """
     opened_adapters = set()
     old_merge_environment_settings = requests.Session.merge_environment_settings

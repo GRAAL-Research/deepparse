@@ -13,6 +13,6 @@ POST 0.0.0.0:80/api/parse/bpemb-attention HTTP/1.1
 Content-Type: application/json
 
 [
-  {"address": "16 rue Grande-Place, Victoriaville, QC, G6S 1E6"},
-  {"address": "123 rue Valancourt, Val-Alain, quebec, g9v1s3"}
+  {"address": "16 rue grande-place, victoriaville, qc, g6s 1e6"},
+  {"address": "123 rue valancourt, val-alain, quebec, g9v 1s3"}
 ]

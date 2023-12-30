@@ -12,7 +12,7 @@ class FormattedComparedAddressesTags(FormattedComparedAddresses):
 
     def _get_probs(self) -> Dict:
         """
-        To get the tags from the parsing with their associated probabilities, the method needs to be implemented in each
+        To get the tags from the parsing with their associated probabilities, A method needs to be implemented in each
         class because they don't use the probabilities the same way.
         """
         return {

@@ -15,7 +15,7 @@
 
 - Added "contributing to"
 - Added fix for comma problem (#56)
-- Added content in Address Parser doc for tags definition
+- Added content in Address Parser documentation for tags definition
 - Fixed Pylint bug with PyTorch 1.6
 - Fixed `pack_padded` cpu error with PyTorch new release
 
@@ -75,7 +75,7 @@
 
 ## 0.3.6
 
-- Added a method for a dict conversion of parsed addresses for simpler `Pandas` integration.
+- Added a method for dictionary conversion of parsed addresses for simpler `Pandas` integration.
 - Added examples for parsing addresses and how to convert them into a DataFrame.
 - Fixed error with download module.
 
@@ -83,7 +83,7 @@
 
 - Added verbose flag to training and test based on the __init__ of address parser.
 - Added a feature to retrain our models with prediction tags dictionary different from the default one.
-- Added in-doc code examples.
+- Added in-documentation code examples.
 - Added code examples.
 - Small improvement of models implementation.
 
@@ -134,7 +134,7 @@
 ## 0.6.2
 
 - Improved (slightly) code speed of data padding method as per PyTorch list or array to Tensor recommendation.
-- Improved doc for RuntimeError due to retraining FastText and BPEmb model in the same directory.
+- Improved documentation for RuntimeError due to retraining FastText and BPEmb model in the same directory.
 - Added error handling RuntimeError when retraining.
 
 ## 0.6.3
@@ -162,13 +162,13 @@
 ## 0.6.6
 
 - Fixed errors in code examples
-- Improved doc of download_from_url
+- Improved documentation of download_from_url
 - Improve error management of retrain and test
 
 ## 0.6.7
 
 - Fixed errors in data validation
-- Improved doc over data validation
+- Improved documentation over data validation
 - Bugfix data slicing error with data containers
 - Add an example on how to use a retrained model
 
@@ -176,7 +176,7 @@
 
 - Improved CLI
 - Fixed bug in CLI export dataset
-- Improved the doc of the CLI
+- Improved the documentation of the CLI
 
 ## 0.7.1
 
@@ -208,7 +208,7 @@
   user-given name
 - Hot-fix missing raise for DataError validation of address to parse when address is tuple
 - Bug-fix handling of string column name for CSVDatasetContainer that raised ValueError
-- Improve parse CLI doc and fix error in doc stating JSON format is supported as input data
+- Improve parse CLI documentation and fix error in documentation stating JSON format is supported as input data
 - Add batch_size to parse CLI
 - Add minimum version to Gensim 4.0.0.
 - Add a new CLI function, retrain, to retrain from the command line

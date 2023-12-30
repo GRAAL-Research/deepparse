@@ -95,8 +95,8 @@ class AddressParser:
             ``None``. To further improve performance, consider using the models (fasttext or BPEmb) with their
             counterparts using an attention mechanism with the ``attention_mechanism`` flag.
         attention_mechanism (bool): Whether to use the model with an attention mechanism. The model will use an
-            attention mechanism that takes an extra 100 MB on GPU usage (see the doc for more statistics).
-            The default value is False.
+            attention mechanism that takes an extra 100 MB on GPU usage (see the documentation for more statistics).
+            The default value is ``False``.
         device (Union[int, str, torch.torch.device]): The device to use can be either:
 
             - a ``GPU`` index in int format (e.g. ``0``),
@@ -104,28 +104,31 @@ class AddressParser:
             - a :class:`~torch.torch.device` object,
             - ``"cpu"`` for a  ``CPU`` use.
 
-            The default value is GPU with the index ``0`` if it exists. Otherwise, the value is ``CPU``.
-        rounding (int): The rounding to use when asking the probability of the tags. The default value is four digits.
-        verbose (bool): Turn on/off the verbosity of the model weights download and loading. The default value is True.
+            The default value is ``0``, witch is a GPU device with the index ``0`` if it exists. Otherwise,
+            the value is ``CPU``.
+        rounding (int): The rounding to use when asking the probability of the tags. The default value is ``4``,
+            namely four digits.
+        verbose (bool): Turn on/off the verbosity of the model weights download and loading. The default value is
+            ``True``.
         path_to_retrained_model (Union[S3Path, str, None]): The path to the retrained model to use for prediction.
             We will infer the ``model_type`` of the retrained model. The default value is ``None``, meaning we use our
             pretrained model. If the retrained model uses an attention mechanism, ``attention_mechanism`` needs to
             be set to True. The path_to_retrain_model can also be a S3-like (Azure, AWS, Google) bucket URI string path
             (e.g. ``"s3://path/to/aws/s3/bucket.ckpt"``). Or it can be a ``S3Path`` S3-like URI using `cloudpathlib`
             to handle S3-like bucket. See `cloudpathlib <https://cloudpathlib.drivendata.org/stable/>`
-            for detail on supported S3 buckets provider and URI condition. The default value is None.
+            for detail on supported S3 buckets provider and URI condition. The default value is ``None``.
         cache_dir (Union[str, None]): The path to the cached directory to use for downloading (and loading) the
             embeddings model and the model pretrained weights.
         offline (bool): Whether or not the model is an offline one, meaning you have already downloaded the pre-trained
             weights and embeddings weights in either the default Deepparse cache directory (``"~./cache/deepparse"``) or
             the ``cache_dir`` directory. When offline, we will not verify if the model is the latest. You can use our
-            ``download_models`` CLI function to download all the requirements for a model. The default value is False
-            (not an offline parsing model).
+            ``download_models`` CLI function to download all the requirements for a model. The default value is
+            ``False`` (not an offline parsing model).
 
     Note:
         For both networks, we will download the pretrained weights and embeddings in the ``.cache`` directory
-        for the root user. The pretrained weights take at most 44 MB. The fastText embeddings take 6.8 GO,
-        the fastText-light embeddings take 3.3 GO and bpemb take 116 MB (in ``".cache/bpemb"``).
+        for the root user. The pretrained weights take at most 44 MB. The FastText embeddings take 6.8 GO,
+        the FastText-light (``"fasttext-light"``) embeddings take 3.3 GO and bpemb take 116 MB (in ``".cache/bpemb"``).
 
         Also, one can download all the dependencies of our pretrained model using our CLI
         (e.g. download_model fasttext) before sending it to a node without access to Internet.
@@ -914,7 +917,7 @@ class AddressParser:
             seed (int): Seed to use (by default, ``42``).
             verbose (Union[None, bool]): To override the AddressParser verbosity for the test. When set to True or
                 False, it will override (but it does not change the AddressParser verbosity) the test verbosity.
-                If set to the default value None, the AddressParser verbosity is used as the test verbosity.
+                If set to the default value ``None``, the AddressParser verbosity is used as the test verbosity.
 
         Return:
             A dictionary with the stats (see `Experiment class
@@ -964,7 +967,7 @@ class AddressParser:
         if "fasttext-light" in self.model_type:
             raise FastTextModelError(
                 "It's not possible to test a fasttext-light due to pymagnitude problem. "
-                "See the Retrain method doc for more details."
+                "See the Retrain method documentation for more details."
             )
 
         if not isinstance(test_dataset_container, DatasetContainer):
@@ -1215,7 +1218,7 @@ class AddressParser:
         if layers_to_freeze not in ("encoder", "decoder", "prediction_layer", "seq2seq"):
             raise ValueError(
                 f"{layers_to_freeze} freezing setting is not supported. Value can be 'encoder', 'decoder', "
-                f"'prediction_layer' and 'seq2seq'. See doc for more details."
+                f"'prediction_layer' and 'seq2seq'. See documentation for more details."
             )
         layer_exclude = None
         if layers_to_freeze == "decoder":
@@ -1271,7 +1274,7 @@ class AddressParser:
         if "fasttext-light" in self.model_type:
             raise FastTextModelError(
                 "It's not possible to retrain a fasttext-light due to pymagnitude problem. "
-                "See the Retrain method doc for more details."
+                "See the Retrain method documentation for more details."
             )
 
         if not isinstance(train_dataset_container, DatasetContainer):

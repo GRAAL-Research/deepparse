@@ -8,7 +8,7 @@ from . import FastTextSeq2SeqModel, BPEmbSeq2SeqModel, Seq2SeqModel
 
 class ModelFactory:
     """
-    A factory for the creation of neural network models that predict the tags from addresses
+    A factory for creating neural network models that predict the tags from addresses.
     """
 
     def create(
@@ -32,12 +32,14 @@ class ModelFactory:
                 - bpemb
             cache_dir (str): The path to the cached directory to use for downloading (and loading) the
                 model weights.
-            device (~torch.device): The device tu use for the prediction.
-            output_size (int): The size of the prediction layers (i.e. the number of tag to predict).
-            attention_mechanism (bool): Either or not to use attention mechanism. The default value is False.
-            path_to_retrained_model (Union[str, None]): The path to the retrained model to use for the seq2seq.
-            offline (bool): Wether or not the model is an offline or an online.
-            verbose (bool): Turn on/off the verbosity of the model. The default value is True.
+            device (~torch.device): The device to use for the prediction.
+            output_size (int): The size of the prediction layers (i.e. the number of tags to predict). The default
+                value is ``9``.
+            attention_mechanism (bool): Either or not to use the attention mechanism. The default value is ``False``.
+            path_to_retrained_model (Union[str, None]): The path to the retrained model to use for the seq2seq. The
+                default value is ``None``.
+            offline (bool): Whether or not the model is an offline or an online. The default value is ``False``.
+            verbose (bool): Turn on/off the verbosity of the model. The default value is ``True``.
 
         Return:
             A :class:`~Seq2SeqModel`.
@@ -69,7 +71,7 @@ class ModelFactory:
         else:
             raise NotImplementedError(
                 f"""
-                    There is no {model_type} network implemented. model_type should be either fasttext or bpemb
+                    There is no {model_type} network implemented. model_type should be either "fasttext" or "bpemb".
             """
             )
 

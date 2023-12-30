@@ -30,7 +30,7 @@ class Timer:
 
     The class can be used as a context manager to time the code inside the 'with' statement, as a decorator of a
     function or a method to time it at each call, or as an iterator to have the total running time of a
-    for loop as well as the mean time taken per iteration. See the doc of the init method for usage examples.
+    for loop as well as the mean time taken per iteration. See the documentation of the init method for usage examples.
     """
 
     def __init__(

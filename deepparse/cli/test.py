@@ -108,7 +108,7 @@ def main(args=None) -> None:
 
 
 def get_parser() -> argparse.ArgumentParser:
-    """Return ArgumentParser for the cli."""
+    """Return ArgumentParser for the CLI."""
 
     parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
 

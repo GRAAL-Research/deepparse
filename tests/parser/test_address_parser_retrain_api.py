@@ -198,7 +198,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
 
         actual = self.test_out.getvalue()
         expected = (
-            "You are using a older version of Poutyne that does not support properly error management."
+            "You are using an older version of Poutyne that does not support proper error management."
             " Due to that, we cannot show retrain progress. To fix that, update Poutyne to the newest version.\n"
         )
 
@@ -1433,8 +1433,8 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         )
 
         # We set possible params type with a value
-        prediction_tags_settings = [{"A dict": 1.0}, None]  # Can be a dict or a None
-        seq2seq_params_settings = [{"A dict": 1.0}, None]  # Can be a dict or a None
+        prediction_tags_settings = [{"A dict": 1.0}, None]  # Can be a dictionary or a None
+        seq2seq_params_settings = [{"A dict": 1.0}, None]  # Can be a dictionary or a None
         layers_to_freeze_settings = [None, "encoder", "decoder", "prediction_layer", "seq2seq"]  # From the doc
 
         # We loop all possible settings

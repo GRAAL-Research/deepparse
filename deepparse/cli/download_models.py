@@ -6,7 +6,7 @@ from deepparse.download_tools import download_models
 
 def main(args=None) -> None:
     """
-    CLI function to manually download all the dependencies for all pretrained models.
+    CLI function to download all the dependencies for all pretrained models manually.
 
     Example of usage:
 
@@ -34,7 +34,7 @@ def get_parser() -> argparse.ArgumentParser:
         "--saving_cache_dir",
         type=str,
         default=None,
-        help="To change the default saving cache directory (default to None e.g. default path).",
+        help="To change the default saving cache directory (default to None, e.g. default path).",
     )
 
     return parser

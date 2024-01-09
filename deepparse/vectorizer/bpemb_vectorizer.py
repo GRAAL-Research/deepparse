@@ -50,7 +50,7 @@ class BPEmbVectorizer(Vectorizer):
             address (str): Address to vectorize using BPEmb.
 
         Return:
-            A tuple of list of word vector and the word decomposition lengths.
+            A tuple of the list of word vectors and the word decomposition lengths.
         """
 
         input_sequence = []

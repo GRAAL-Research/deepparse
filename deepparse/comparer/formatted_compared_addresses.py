@@ -20,7 +20,7 @@ class FormattedComparedAddresses(ABC):
                                                 for the first one.
         second_address(FormattedParsedAddress): A formatted parsed address that contains the parsing information
                                                 for the second one.
-        origin: (Tuple[str, str]): The origin of the parsing (ex : from source or from a deepparse pretrained model).
+        origin: (Tuple[str, str]): The origin of the parsing (ex : from source or a Deepparse pretrained model).
 
     Example:
 
@@ -40,7 +40,7 @@ class FormattedComparedAddresses(ABC):
     @property
     def list_of_bool(self) -> List:
         """
-        A list of boolean that contains all the address components names and indicates if it is the same for the
+        A list of boolean that contains all the address components' names and indicates if it is the same for the
         two addresses.
 
         Return:
@@ -86,7 +86,7 @@ class FormattedComparedAddresses(ABC):
 
     def _comparison_report(self, nb_delimiters: Union[int, None]) -> str:
         """
-        Builds a comparison_report with delimiters to make the beginning and the end of the comparison easier to spot.
+        Builds a comparison_report with delimiters to make the comparison's beginning and end easier to spot.
         """
 
         # Get terminal size to adapt the output to the user
@@ -102,24 +102,24 @@ class FormattedComparedAddresses(ABC):
     @abstractmethod
     def _comparison_report_builder(self) -> str:
         """
-        Builds the core of a comparison report for the different comparisons. Since the procedure to make a tags
-        comparison and the raw addresses comparison is different, the comparison report is not the same for the two.
+        Builds the core of a comparison report for the various comparisons. Since the procedure to make a tags
+        comparison and the raw addresses comparison are different, the comparison report is not the same for the two.
         It is then implemented in each specific class.
         """
 
     @abstractmethod
     def _get_probs(self) -> Dict:
         """
-        Get the tags from the parsing with their associated probabilities, the method needs to be implemented in each
-        class because they don't use the probabilities the same way.
+        A method to get the tags from the parsing with their associated probabilities, it needs to be implemented in
+        each class because they don't use the probabilities the same way.
         """
 
     @staticmethod
     def _get_color_diff(string_one: str, string_two: str, highlight: bool = False) -> str:
         """
-        Compare two strings and determine the difference between the two. The differences are noted with colour code;
-        if the first string has more elements than the second one, it will be noted in one colour; on the contrary,
-        if the other string has something more, it will have a different colour notation.
+        Compare two strings and determine the difference between the two. The differences are highlighted with a
+        coloured scheme; if the first string has more elements than the second one, it will be noted in one colour;
+        on the contrary, if the other string has something more, it will have a different colour notation.
 
         Args:
             string_one (str): The first string to compare.
@@ -129,7 +129,7 @@ class FormattedComparedAddresses(ABC):
                 two strings are spaces. The default is False.
 
         Notes:
-            the method is colorblind-friendly, which means that the output will be
+            The method is colorblind-friendly, which means that the output will be
             in colours that minimize the risk that a user cannot see the difference as
             defined here https://davidmathlogic.com/colorblind/#%23D81B60-%231E88E5-%23FFC107-%23004D40.
 
@@ -137,7 +137,7 @@ class FormattedComparedAddresses(ABC):
             If the first string has something more than the second one, it will be indicated in blue.
             If the second string has something more than the first one, it will be noted in yellow.
 
-            It uses SequenceMatcher to get the different codes to be later converted into colour codes.
+            It uses SequenceMatcher to convert the different codes into colour codes later.
 
         Return:
             str: The two strings joined, and the differences are noted in colour codes
@@ -176,13 +176,16 @@ class FormattedComparedAddresses(ABC):
         verbose: bool = True,
     ) -> str:
         """
-        Print the output of the string with colour codes that represent the differences between the two strings.
+        Print the output of the string with colour codes representing the differences between the two strings.
 
         Args:
-            name_one (str, optional) : Name associated with first color. The default value is the first address.
-            name_two (str, optional) : Name associated with second color. The default value is the second address.
-            verbose (bool, optional): If True, it will print a presentation of the colours and what they mean.
-                The default value is True.
+            name_one (str, optional) : Name associated with first color. The default value is ``"first address"``,
+                namely the first address of the two. We recommend using a whitespace characters between the words.
+            name_two (str, optional) : Name associated with the second colour. The default value is
+                ``"second address"``, namely the second address of the two.  We recommend using a whitespace
+                characters between the words.
+            verbose (bool, optional): If True, it will print a presentation of the colours and their meaning.
+                The default value is ``True``.
 
         """
 
@@ -220,15 +223,15 @@ class FormattedComparedAddresses(ABC):
 
     def _bool_address_tags_are_the_same(self, parsed_addresses: Union[List[List[tuple]], List[tuple]]) -> List[tuple]:
         """
-        Compare addresses components and put the differences in a dictionary where the keys are the
-        names of the addresses components, and the values are the value of the addresses component.
+        Compare the components between two addresses and put the differences in a dictionary where the keys are the
+        names of the addresses components, and the values are the values of the addresses component.
 
         Args:
             parsed_addresses (Union[List[List[tuple]], List[tuple]]): Contains the tags and the
-            address components name for the parsed addresses.
+            address components' names for the parsed addresses.
 
         Return:
-            List[tuple]: List of tuples that contains all addresses components that differ from each other.
+            List[tuple]: List of tuples containing the components that differ from the two addresses.
         """
         unique_address_component_names = self._unique_addresses_component_names(parsed_addresses)
 
@@ -258,16 +261,16 @@ class FormattedComparedAddresses(ABC):
     @staticmethod
     def _unique_addresses_component_names(parsed_addresses: List[List[tuple]]) -> List:
         """
-        Retrieves all the unique address components names from the comparison then returns it.
+        Retrieves all the unique address component names from the comparison, then returns it.
 
         Args:
             parsed_addresses (List[List[tuple]]): Contains the tags and the
-            address components name for the parsed addresses.
+            address components' names for the parsed addresses.
 
         Return:
-            Returns a list of all the unique address components names.
+            Returns a list of all the unique address component names.
         """
-        # Here we don't use a set since order will change and report will also change.
+        # We don't use a set here since the order and report will change.
         unique_address_component_names = []
         for tuple_values in parsed_addresses:
             for address_component in tuple_values:

@@ -391,7 +391,7 @@ address_parser.retrain(
 
 ### Download Our Models
 
-Here are the URLs to download our pretrained models directly
+Deepparse handles model downloads when you use it, but you can also pre-download our model. Here are the URLs to download our pretrained models directly
 
 - [FastText](https://graal.ift.ulaval.ca/public/deepparse/fasttext.ckpt),
 - [FastTextAttention](https://graal.ift.ulaval.ca/public/deepparse/fasttext_attention.ckpt),
@@ -400,7 +400,7 @@ Here are the URLs to download our pretrained models directly
 - [FastText Light](https://graal.ift.ulaval.ca/public/deepparse/fasttext.magnitude.gz) (
   using [Magnitude Light](https://github.com/davebulaval/magnitude-light)).
 
-Or you can use our cli to download our pretrained models directly using:
+Or you can use our CLI to download our pretrained models directly using:
 
 ```sh
 download_model <model_name>

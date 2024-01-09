@@ -4,13 +4,13 @@
 Parse Address With Our Out-Of-The-Box REST API
 ==============================================
 
-We also offer an out-of-the-box RESTAPI to parse addresses using FastAPI.
+We also offer an out-of-the-box REST API to parse addresses using FastAPI.
 
 Installation
 ************
 
-First, ensure that you have Docker Engine and Docker Compose installed on your machine.
-If not, you can install them using the following documentations in the following order:
+First, ensure you have Docker Engine and Docker Compose installed on your machine.
+If not, you can install them using the following documentation in the following order:
 
 1. `Docker Engine <https://docs.docker.com/engine/install/>`_
 2. `Docker Compose <https://docs.docker.com/compose/install/>`_

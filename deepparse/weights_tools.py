@@ -8,7 +8,7 @@ from torch.nn import init
 
 def weights_init(m: nn.Module) -> None:
     """
-    Function to initialize the weights of a model layers.
+    Function to initialize the weights of model layers.
 
     Usage:
         network = Model()
@@ -50,7 +50,7 @@ def handle_weights_upload(
         except FileNotFoundError as error:
             if "s3" in path_to_model_to_upload or "//" in path_to_model_to_upload or ":" in path_to_model_to_upload:
                 raise FileNotFoundError(
-                    "Are You trying to use a AWS S3 URI? If so path need to start with s3://."
+                    "Are You trying to use an AWS S3 URI? If so, the path needs to start with s3://."
                 ) from error
             raise FileNotFoundError(f"The file {path_to_model_to_upload} was not found.") from error
     return checkpoint_weights

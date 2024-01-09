@@ -95,8 +95,8 @@ class AddressParser:
             ``None``. To further improve performance, consider using the models (fasttext or BPEmb) with their
             counterparts using an attention mechanism with the ``attention_mechanism`` flag.
         attention_mechanism (bool): Whether to use the model with an attention mechanism. The model will use an
-            attention mechanism that takes an extra 100 MB on GPU usage (see the doc for more statistics).
-            The default value is False.
+            attention mechanism that takes an extra 100 MB on GPU usage (see the documentation for more statistics).
+            The default value is ``False``.
         device (Union[int, str, torch.torch.device]): The device to use can be either:
 
             - a ``GPU`` index in int format (e.g. ``0``),
@@ -104,28 +104,31 @@ class AddressParser:
             - a :class:`~torch.torch.device` object,
             - ``"cpu"`` for a  ``CPU`` use.
 
-            The default value is GPU with the index ``0`` if it exists. Otherwise, the value is ``CPU``.
-        rounding (int): The rounding to use when asking the probability of the tags. The default value is four digits.
-        verbose (bool): Turn on/off the verbosity of the model weights download and loading. The default value is True.
+            The default value is ``0``, witch is a GPU device with the index ``0`` if it exists. Otherwise,
+            the value is ``CPU``.
+        rounding (int): The rounding to use when asking the probability of the tags. The default value is ``4``,
+            namely four digits.
+        verbose (bool): Turn on/off the verbosity of the model weights download and loading. The default value is
+            ``True``.
         path_to_retrained_model (Union[S3Path, str, None]): The path to the retrained model to use for prediction.
             We will infer the ``model_type`` of the retrained model. The default value is ``None``, meaning we use our
             pretrained model. If the retrained model uses an attention mechanism, ``attention_mechanism`` needs to
             be set to True. The path_to_retrain_model can also be a S3-like (Azure, AWS, Google) bucket URI string path
             (e.g. ``"s3://path/to/aws/s3/bucket.ckpt"``). Or it can be a ``S3Path`` S3-like URI using `cloudpathlib`
             to handle S3-like bucket. See `cloudpathlib <https://cloudpathlib.drivendata.org/stable/>`
-            for detail on supported S3 buckets provider and URI condition. The default value is None.
+            for detail on supported S3 buckets provider and URI condition. The default value is ``None``.
         cache_dir (Union[str, None]): The path to the cached directory to use for downloading (and loading) the
             embeddings model and the model pretrained weights.
         offline (bool): Whether or not the model is an offline one, meaning you have already downloaded the pre-trained
             weights and embeddings weights in either the default Deepparse cache directory (``"~./cache/deepparse"``) or
             the ``cache_dir`` directory. When offline, we will not verify if the model is the latest. You can use our
-            ``download_models`` CLI function to download all the requirements for a model. The default value is False
-            (not an offline parsing model).
+            ``download_models`` CLI function to download all the requirements for a model. The default value is
+            ``False`` (not an offline parsing model).
 
     Note:
         For both networks, we will download the pretrained weights and embeddings in the ``.cache`` directory
-        for the root user. The pretrained weights take at most 44 MB. The fastText embeddings take 6.8 GO,
-        the fastText-light embeddings take 3.3 GO and bpemb take 116 MB (in ``".cache/bpemb"``).
+        for the root user. The pretrained weights take at most 44 MB. The FastText embeddings take 6.8 GO,
+        the FastText-light (``"fasttext-light"``) embeddings take 3.3 GO and bpemb take 116 MB (in ``".cache/bpemb"``).
 
         Also, one can download all the dependencies of our pretrained model using our CLI
         (e.g. download_model fasttext) before sending it to a node without access to Internet.
@@ -539,9 +542,9 @@ class AddressParser:
             disable_tensorboard (bool): To disable Poutyne automatic Tensorboard monitoring. By default, we disable them
                 (true).
             prediction_tags (Union[dict, None]): A dictionary where the keys are the address components
-                (e.g. street name) and the values are the components indices (from 0 to N + 1) to use during retraining
-                of a model. The ``+ 1`` corresponds to the End Of Sequence (EOS) token that needs to be included in the
-                dictionary. We will use this dictionary's length for the prediction layer's output size.
+                (e.g. street name) and the values are the components indices (from 0 to N + 1) to use during the
+                retraining of a model. The ``+ 1`` corresponds to the End Of Sequence (EOS) token that needs to be
+                included in the dictionary. We will use this dictionary's length for the prediction layer's output size.
                 We also save the dictionary to be used later on when you load the model. The default value is ``None``,
                 meaning we use our pretrained model prediction tags.
             seq2seq_params (Union[dict, None]): A dictionary of seq2seq parameters to modify the seq2seq architecture
@@ -582,7 +585,7 @@ class AddressParser:
                     - if layers_to_freeze is not ``None``, the following tag: ``FreezedLayer{portion}``.
             verbose (Union[None, bool]): To override the AddressParser verbosity for the test. When set to True or
                 False, it will override (but it does not change the AddressParser verbosity) the test verbosity.
-                If set to the default value None, the AddressParser verbosity is used as the test verbosity.
+                If set to the default value ``None``, the AddressParser verbosity is used as the test verbosity.
 
 
         Return:
@@ -745,7 +748,7 @@ class AddressParser:
             self.processor.tags_converter = self.tags_converter
 
             if not self.model.same_output_dim(self.tags_converter.dim):
-                # Since we have change the output layer dim, we need to handle the prediction layer dim
+                # Since we have changed the output layer dim, we need to handle the prediction layer dim
                 new_dim = self.tags_converter.dim
                 if seq2seq_params is None:
                     self.model.handle_new_output_dim(new_dim)
@@ -759,7 +762,7 @@ class AddressParser:
             seq2seq_params.update({"pre_trained_weights": False})
 
             model_factory_dict.update({"seq2seq_kwargs": seq2seq_params})
-            # We set verbose to false since model is reloaded
+            # We set verbose to false since the model is reloaded
             self._setup_model(verbose=False, path_to_retrained_model=None, **model_factory_dict)
 
         callbacks = [] if callbacks is None else callbacks
@@ -791,7 +794,7 @@ class AddressParser:
             with_capturing_context = False
             if not valid_poutyne_version(min_major=1, min_minor=8):
                 print(
-                    "You are using a older version of Poutyne that does not support properly error management."
+                    "You are using an older version of Poutyne that does not support proper error management."
                     " Due to that, we cannot show retrain progress. To fix that, update Poutyne to "
                     "the newest version."
                 )
@@ -811,7 +814,7 @@ class AddressParser:
             list_of_file_path = os.listdir(path=".")
             if list_of_file_path:
                 if pretrained_parser_in_directory(logging_path):
-                    # Mean we might already have checkpoint in the training directory
+                    # Mean we might already have a checkpoint in the training directory
                     files_in_directory = get_files_in_directory(logging_path)
                     retrained_address_parser_in_directory = get_address_parser_in_directory(files_in_directory)[
                         0
@@ -853,7 +856,7 @@ class AddressParser:
                 # Means we have changed the seq2seq params
                 torch_save.update({"seq2seq_params": seq2seq_params})
             if prediction_tags is not None:
-                #  Means we have changed the predictions tags
+                #  Means we have changed the prediction tags
                 torch_save.update({"prediction_tags": prediction_tags})
 
             torch_save.update(
@@ -885,7 +888,7 @@ class AddressParser:
                 except FileNotFoundError as error:
                     if "s3" in file_path or "//" in file_path or ":" in file_path:
                         raise FileNotFoundError(
-                            "Are You trying to use a AWS S3 URI? If so path need to start with s3://."
+                            "Are You trying to use an AWS S3 URI? If so path needs to start with s3://."
                         ) from error
             return train_res
 
@@ -906,7 +909,7 @@ class AddressParser:
         Args:
             test_dataset_container (~deepparse.dataset_container.DatasetContainer):
                 The test dataset container of the data to use.
-            batch_size (int): The size of the batch (by default, ``32``).
+            batch_size (int): The batch size (by default, ``32``).
             num_workers (int): Number of workers to use for the data loader (by default, ``1`` worker).
             callbacks (Union[list, None]): List of callbacks to use during training.
                 See Poutyne `callback <https://poutyne.org/callbacks.html#callback-class>`_ for more information.
@@ -914,7 +917,7 @@ class AddressParser:
             seed (int): Seed to use (by default, ``42``).
             verbose (Union[None, bool]): To override the AddressParser verbosity for the test. When set to True or
                 False, it will override (but it does not change the AddressParser verbosity) the test verbosity.
-                If set to the default value None, the AddressParser verbosity is used as the test verbosity.
+                If set to the default value ``None``, the AddressParser verbosity is used as the test verbosity.
 
         Return:
             A dictionary with the stats (see `Experiment class
@@ -964,7 +967,7 @@ class AddressParser:
         if "fasttext-light" in self.model_type:
             raise FastTextModelError(
                 "It's not possible to test a fasttext-light due to pymagnitude problem. "
-                "See the Retrain method doc for more details."
+                "See the Retrain method documentation for more details."
             )
 
         if not isinstance(test_dataset_container, DatasetContainer):
@@ -1008,7 +1011,7 @@ class AddressParser:
         Method to save, in a Pickle format, the address parser model weights (PyTorch state dictionary).
 
         file_path (Union[str, Path]): A complete file path with a pickle extension to save the model weights.
-            It can either be a string (e.g. 'path/to/save.p') or a path like path (e.g. Path('path/to/save.p').
+            It can either be a string (e.g. 'path/to/save.p') or a path-like path (e.g. Path('path/to/save.p').
 
         Examples:
 
@@ -1196,7 +1199,7 @@ class AddressParser:
         verbose: Union[None, bool],
     ) -> List[Dict]:
         # pylint: disable=too-many-arguments
-        # If Poutyne 1.7 and before, we capture poutyne print since it print some exception.
+        # If Poutyne 1.7 and before, we capture poutyne print since it prints some exception.
         # Otherwise, we use a null context manager.
         with Capturing() if capturing_context else contextlib.nullcontext():
             train_res = experiment.train(
@@ -1215,7 +1218,7 @@ class AddressParser:
         if layers_to_freeze not in ("encoder", "decoder", "prediction_layer", "seq2seq"):
             raise ValueError(
                 f"{layers_to_freeze} freezing setting is not supported. Value can be 'encoder', 'decoder', "
-                f"'prediction_layer' and 'seq2seq'. See doc for more details."
+                f"'prediction_layer' and 'seq2seq'. See documentation for more details."
             )
         layer_exclude = None
         if layers_to_freeze == "decoder":
@@ -1271,7 +1274,7 @@ class AddressParser:
         if "fasttext-light" in self.model_type:
             raise FastTextModelError(
                 "It's not possible to retrain a fasttext-light due to pymagnitude problem. "
-                "See the Retrain method doc for more details."
+                "See the Retrain method documentation for more details."
             )
 
         if not isinstance(train_dataset_container, DatasetContainer):

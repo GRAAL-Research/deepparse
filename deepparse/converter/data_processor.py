@@ -37,7 +37,7 @@ class DataProcessor:
         self, addresses: List[str]
     ) -> Union[Tuple[torch.Tensor, torch.Tensor], Tuple[torch.Tensor, List, torch.Tensor]]:
         """
-        Method to vectorize addresses for inference.
+        A method to vectorize the addresses for inference.
         Args:
             addresses (List[str]): a list of addresses
         Return:
@@ -60,13 +60,13 @@ class DataProcessor:
         ],
     ]:
         """
-        Method to vectorize addresses and tags for training.
+        A method to vectorize the addresses and the tags for training.
         Args:
             addresses_and_targets (List[Tuple[str, List[str]]]): a list of tuples where the first element is an
                 address and the second is a list of tags.
             teacher_forcing (bool): if True, the padded target vectors are returned twice,
                 once with the sequences and their lengths, and once on their own. This enables
-                the use of teacher forcing during the training of sequence to sequence models.
+                the use of teacher forcing during the training of sequence-to-sequence models.
         Return:
             A padded batch. Check out :meth:`~deepparse.converter.DataPadder.pad_word_embeddings_batch`
                 and :meth:`~DataPadder.pad_subword_embeddings_batch` for more details.

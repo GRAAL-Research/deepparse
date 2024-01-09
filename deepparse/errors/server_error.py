@@ -1,6 +1,6 @@
 class ServerError(Exception):
     """
-    User error when Deepparse server is not responding.
+    User error occurs when the Deepparse server is not responding.
     """
 
     def __init__(self, value: str) -> None:

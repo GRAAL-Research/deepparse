@@ -2,16 +2,20 @@
 from typing import List, Dict, Any
 from contextlib import asynccontextmanager
 
+from enum import Enum
 
-from deepparse.download_tools import MODEL_MAPPING_CHOICES, download_models
-from deepparse.parser import AddressParser
-from deepparse.app.deepparser_logger import logger
 
 try:
-    from pydantic import BaseModel
+    from pydantic import BaseModel, Field
     from fastapi import FastAPI, Depends
     from fastapi.responses import JSONResponse
+    from fastapi.staticfiles import StaticFiles
     import uvicorn
+    from deepparse.download_tools import MODEL_MAPPING_CHOICES, download_models
+    from deepparse.parser import AddressParser
+    from deepparse.app.deepparser_logger import logger
+    from deepparse.app.sentry import configure_sentry
+    import os
 
 
 except ModuleNotFoundError as e:
@@ -21,8 +25,16 @@ except ModuleNotFoundError as e:
 address_parser_mapping: Dict[str, AddressParser] = {}
 
 
+class ModelName(str, Enum):
+    bpemb = "bpemb"
+    bpemb_attention = "bpemb-attention"
+    fasttext = "fasttext"
+    fasttext_attention = "fasttext-attention"
+    fasttext_light = "fasttext-light"
+
+
 class AddressInput(BaseModel):
-    address: str
+    address: str = Field(examples=["350 rue des Lilas Ouest Quebec city Quebec G1L 1B6"])
 
 
 def initialize_address_parser_mapping() -> Dict[str, AddressParser]:
@@ -30,24 +42,23 @@ def initialize_address_parser_mapping() -> Dict[str, AddressParser]:
     logger.debug("Downloading models")
     download_models()
     for model in MODEL_MAPPING_CHOICES:
-        if model not in ["fasttext", "fasttext-attention", "fasttext-light"]:  # Skip fasttext models
-            logger.debug("initializing %s", model)
-            attention = False
-            if "-attention" in model:
-                attention = True
-            _address_parser_mapping[model] = AddressParser(
-                model_type=model,
-                offline=True,
-                attention_mechanism=attention,
-                device="cpu",
-            )
+        logger.debug("initializing %s", model)
+        attention = False
+        if "-attention" in model:
+            attention = True
+        _address_parser_mapping[model] = AddressParser(
+            model_type=model,
+            offline=True,
+            attention_mechanism=attention,
+            device="cpu",
+        )
 
     return _address_parser_mapping
 
 
 class AddressParserService:
     def __init__(self, address_parser_models: Dict[str, AddressParser]) -> None:
-        self.address_parser_mapping = address_parser_models
+        self.address_parser_models = address_parser_models
 
     def __call__(self, model: str, addresses: List[str]) -> Dict[str, Any]:
         parsed_addresses = self.address_parser_models[model](addresses)
@@ -74,19 +85,21 @@ async def lifespan(application: FastAPI):  # pylint: disable=unused-argument
     address_parser_service = AddressParserService(address_parser_mapping)
     yield
     # Clean up the address parsers and release the resources
-    address_parser_service.address_parser_mapping.clear()
+    address_parser_service.address_parser_models.clear()
 
 
 def get_address_parser_service() -> AddressParserService:
     return AddressParserService(address_parser_mapping)
 
 
+configure_sentry()
+
 api = FastAPI(lifespan=lifespan)
 
 
 @api.post("/parse/{parsing_model}")
 def parse(
-    parsing_model: str,
+    parsing_model: ModelName,
     addresses: List[AddressInput],
     address_parser_service: AddressParserService = Depends(get_address_parser_service),
 ):
@@ -109,7 +122,7 @@ def parse(
 
         import requests
 
-        url = 'http://localhost:8000/parse/bpemb'
+        url = 'http://localhost:8081/parse/bpemb'
         addresses = [
             {"address": "350 rue des Lilas Ouest Quebec city Quebec G1L 1B6"},
             {"address": "2325 Rue de l'Université, Québec, QC G1V 0A6"}
@@ -131,5 +144,11 @@ def parse(
     return JSONResponse(content=response_payload)
 
 
+html_build_path = "docs/_build/html"
+if os.path.exists(html_build_path):
+    api.mount("/", StaticFiles(directory=html_build_path, html=True), name="static")
+else:
+    logger.warning("Unable to mount static files, probably because the docs are not built yet: %s", html_build_path)
+
 if __name__ == "__main__":
-    uvicorn.run(api, host="0.0.0.0", port=8080)
+    uvicorn.run(api, host="0.0.0.0", port=8081)

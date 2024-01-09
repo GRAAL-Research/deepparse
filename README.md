@@ -1,7 +1,6 @@
 <div align="center">
 <img src="https://raw.githubusercontent.com/GRAAL-Research/deepparse/main/docs/source/_static/logos/deepparse.png" width="220" height="91"/>
 
-
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/deepparse)](https://pypi.org/project/deepparse)
 [![PyPI Status](https://badge.fury.io/py/deepparse.svg)](https://badge.fury.io/py/deepparse)
 [![PyPI Status](https://pepy.tech/badge/deepparse)](https://pepy.tech/project/deepparse)
@@ -13,7 +12,7 @@
 [![Docs](https://github.com/GRAAL-Research/deepparse/actions/workflows/docs.yml/badge.svg?branch=stable)](https://github.com/GRAAL-Research/deepparse/actions/workflows/docs.yml)
 
 [![codecov](https://codecov.io/gh/GRAAL-Research/deepparse/branch/main/graph/badge.svg)](https://codecov.io/gh/GRAAL-Research/deepparse)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/62464699ff0740d0b8064227c4274b98)](https://www.codacy.com/gh/GRAAL-Research/deepparse/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=GRAAL-Research/deepparse&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/62464699ff0740d0b8064227c4274b98)](https://www.codacy.com/gh/GRAAL-Research/deepparse/dashboard?utm_source=github.com&utm_medium=referral&utm_content=GRAAL-Research/deepparse&utm_campaign=Badge_Grade)
 <a href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg"></a>
 
 [![pr welcome](https://img.shields.io/badge/PR-Welcome-%23FF8300.svg?)](https://img.shields.io/badge/PR-Welcome-%23FF8300.svg?)
@@ -23,6 +22,7 @@
 [![Download](https://img.shields.io/badge/Download%20Dataset-blue?style=for-the-badge&logo=download)](https://github.com/GRAAL-Research/deepparse-address-data)
 
 [![Rate on Openbase](https://badges.openbase.com/python/rating/deepparse.svg)](https://openbase.com/python/deepparse?utm_source=embedded&utm_medium=badge&utm_campaign=rate-badge)
+
 </div>
 
 ## Here is Deepparse.
@@ -41,7 +41,7 @@ Use deepparse to
 
 Read the documentation at [deepparse.org](https://deepparse.org).
 
-Deepparse is compatible with the __latest version of PyTorch__ and  __Python >= 3.8__.
+Deepparse is compatible with the **latest version of PyTorch** and **Python >= 3.8**.
 
 ### Countries and Results
 
@@ -58,72 +58,72 @@ You can get our dataset [here](https://github.com/GRAAL-Research/deepparse-addre
 The following table presents the accuracy (using clean data) on the 20 countries we used during training for both our
 models. Attention mechanisms improve performance by around 0.5% for all countries.
 
-| Country        |   FastText (%) |   BPEmb (%) | Country     |   FastText (%) |   BPEmb (%) |
-|:---------------|---------------:|------------:|:------------|---------------:|------------:|
-| Norway         |          99.06 |       98.3  | Austria     |          99.21 |       97.82 |
-| Italy          |          99.65 |       98.93 | Mexico      |          99.49 |       98.9  |
-| United Kingdom |          99.58 |       97.62 | Switzerland |          98.9  |       98.38 |
-| Germany        |          99.72 |       99.4  | Denmark     |          99.71 |       99.55 |
-| France         |          99.6  |       98.18 | Brazil      |          99.31 |       97.69 |
-| Netherlands    |          99.47 |       99.54 | Australia   |          99.68 |       98.44 |
-| Poland         |          99.64 |       99.52 | Czechia     |          99.48 |       99.03 |
-| United States  |          99.56 |       97.69 | Canada      |          99.76 |       99.03 |
-| South Korea    |          99.97 |       99.99 | Russia      |          98.9  |       96.97 |
-| Spain          |          99.73 |       99.4  | Finland     |          99.77 |       99.76 |
+| Country        | FastText (%) | BPEmb (%) | Country     | FastText (%) | BPEmb (%) |
+| :------------- | -----------: | --------: | :---------- | -----------: | --------: |
+| Norway         |        99.06 |      98.3 | Austria     |        99.21 |     97.82 |
+| Italy          |        99.65 |     98.93 | Mexico      |        99.49 |      98.9 |
+| United Kingdom |        99.58 |     97.62 | Switzerland |         98.9 |     98.38 |
+| Germany        |        99.72 |      99.4 | Denmark     |        99.71 |     99.55 |
+| France         |         99.6 |     98.18 | Brazil      |        99.31 |     97.69 |
+| Netherlands    |        99.47 |     99.54 | Australia   |        99.68 |     98.44 |
+| Poland         |        99.64 |     99.52 | Czechia     |        99.48 |     99.03 |
+| United States  |        99.56 |     97.69 | Canada      |        99.76 |     99.03 |
+| South Korea    |        99.97 |     99.99 | Russia      |         98.9 |     96.97 |
+| Spain          |        99.73 |      99.4 | Finland     |        99.77 |     99.76 |
 
 We have also made a zero-shot evaluation of our models using clean data from 41 other countries; the results are shown
 in the next table.
 
-| Country      |   FastText (%) |   BPEmb (%) | Country       |   FastText (%) |   BPEmb (%) |
-|:-------------|---------------:|------------:|:--------------|---------------:|------------:|
-| Latvia       |          89.29 |       68.31 | Faroe Islands |          71.22 |       64.74 |
-| Colombia     |          85.96 |       68.09 | Singapore     |          86.03 |       67.19 |
-| Réunion      |          84.3  |       78.65 | Indonesia     |          62.38 |       63.04 |
-| Japan        |          36.26 |       34.97 | Portugal      |          93.09 |       72.01 |
-| Algeria      |          86.32 |       70.59 | Belgium       |          93.14 |       86.06 |
-| Malaysia     |          83.14 |       89.64 | Ukraine       |          93.34 |       89.42 |
-| Estonia      |          87.62 |       70.08 | Bangladesh    |          72.28 |       65.63 |
-| Slovenia     |          89.01 |       83.96 | Hungary       |          51.52 |       37.87 |
-| Bermuda      |          83.19 |       59.16 | Romania       |          90.04 |       82.9  |
-| Philippines  |          63.91 |       57.36 | Belarus       |          93.25 |       78.59 |
-| Bosnia       |          88.54 |       67.46 | Moldova       |          89.22 |       57.48 |
-| Lithuania    |          93.28 |       69.97 | Paraguay      |          96.02 |       87.07 |
-| Croatia      |          95.8  |       81.76 | Argentina     |          81.68 |       71.2  |
-| Ireland      |          80.16 |       54.44 | Kazakhstan    |          89.04 |       76.13 |
-| Greece       |          87.08 |       38.95 | Bulgaria      |          91.16 |       65.76 |
-| Serbia       |          92.87 |       76.79 | New Caledonia |          94.45 |       94.46 |
-| Sweden       |          73.13 |       86.85 | Venezuela     |          79.23 |       70.88 |
-| New Zealand  |          91.25 |       75.57 | Iceland       |          83.7  |       77.09 |
-| India        |          70.3  |       63.68 | Uzbekistan    |          85.85 |       70.1  |
-| Cyprus       |          89.64 |       89.47 | Slovakia      |          78.34 |       68.96 |
-| South Africa |          95.68 |       74.82 |
+| Country      | FastText (%) | BPEmb (%) | Country       | FastText (%) | BPEmb (%) |
+| :----------- | -----------: | --------: | :------------ | -----------: | --------: |
+| Latvia       |        89.29 |     68.31 | Faroe Islands |        71.22 |     64.74 |
+| Colombia     |        85.96 |     68.09 | Singapore     |        86.03 |     67.19 |
+| Réunion      |         84.3 |     78.65 | Indonesia     |        62.38 |     63.04 |
+| Japan        |        36.26 |     34.97 | Portugal      |        93.09 |     72.01 |
+| Algeria      |        86.32 |     70.59 | Belgium       |        93.14 |     86.06 |
+| Malaysia     |        83.14 |     89.64 | Ukraine       |        93.34 |     89.42 |
+| Estonia      |        87.62 |     70.08 | Bangladesh    |        72.28 |     65.63 |
+| Slovenia     |        89.01 |     83.96 | Hungary       |        51.52 |     37.87 |
+| Bermuda      |        83.19 |     59.16 | Romania       |        90.04 |      82.9 |
+| Philippines  |        63.91 |     57.36 | Belarus       |        93.25 |     78.59 |
+| Bosnia       |        88.54 |     67.46 | Moldova       |        89.22 |     57.48 |
+| Lithuania    |        93.28 |     69.97 | Paraguay      |        96.02 |     87.07 |
+| Croatia      |         95.8 |     81.76 | Argentina     |        81.68 |      71.2 |
+| Ireland      |        80.16 |     54.44 | Kazakhstan    |        89.04 |     76.13 |
+| Greece       |        87.08 |     38.95 | Bulgaria      |        91.16 |     65.76 |
+| Serbia       |        92.87 |     76.79 | New Caledonia |        94.45 |     94.46 |
+| Sweden       |        73.13 |     86.85 | Venezuela     |        79.23 |     70.88 |
+| New Zealand  |        91.25 |     75.57 | Iceland       |         83.7 |     77.09 |
+| India        |         70.3 |     63.68 | Uzbekistan    |        85.85 |      70.1 |
+| Cyprus       |        89.64 |     89.47 | Slovakia      |        78.34 |     68.96 |
+| South Africa |        95.68 |     74.82 |
 
 Moreover, we also tested the performance when using attention mechanism to further improve zero-shot performance on
 those countries; the result are shown in the next table.
 
-| Country       |   FastText (%) |   FastTextAtt (%) |   BPEmb (%) |   BPEmbAtt (%) | Country       |   FastText (%) |   FastTextAtt (%) |   BPEmb (%) |   BPEmbAtt (%) |
-|:--------------|---------------:|------------------:|------------:|---------------:|:--------------|---------------:|------------------:|------------:|---------------:|
-| Ireland       |          80.16 |             89.11 |       54.44 |          81.84 | Serbia        |          92.87 |             95.88 |       76.79 |           91.4 |
-| Uzbekistan    |          85.85 |             87.24 |       70.1  |          76.71 | Ukraine       |          93.34 |             94.58 |       89.42 |          92.65 |
-| South Africa  |          95.68 |             97.25 |       74.82 |          97.95 | Paraguay      |          96.02 |             97.08 |       87.07 |          97.36 |
-| Greece        |          87.08 |             86.04 |       38.95 |          58.79 | Algeria       |          86.32 |              87.3 |       70.59 |          84.56 |
-| Belarus       |          93.25 |             97.4  |       78.59 |          97.49 | Sweden        |          73.13 |             89.24 |       86.85 |          93.53 |
-| Portugal      |          93.09 |             94.92 |       72.01 |          93.76 | Hungary       |          51.52 |             51.08 |       37.87 |          24.48 |
-| Iceland       |          83.7  |             96.54 |       77.09 |          96.63 | Colombia      |          85.96 |             90.08 |       68.09 |          88.52 |
-| Latvia        |          89.29 |             93.14 |       68.31 |          73.79 | Malaysia      |          83.14 |             74.62 |       89.64 |          91.14 |
-| Bosnia        |          88.54 |             87.27 |       67.46 |          89.02 | India         |           70.3 |             75.31 |       63.68 |          80.56 |
-| Réunion       |          84.3  |             97.74 |       78.65 |          94.27 | Croatia       |           95.8 |             95.32 |       81.76 |          85.99 |
-| Estonia       |          87.62 |             88.2  |       70.08 |          77.32 | New Caledonia |          94.45 |             99.61 |       94.46 |          99.77 |
-| Japan         |          36.26 |             46.91 |       34.97 |          49.48 | New Zealand   |          91.25 |                97 |       75.57 |           95.7 |
-| Singapore     |          86.03 |             89.92 |       67.19 |          88.17 | Romania       |          90.04 |             95.38 |        82.9 |          93.41 |
-| Bangladesh    |          72.28 |             78.21 |       65.63 |          77.09 | Slovakia      |          78.34 |             82.29 |       68.96 |             96 |
-| Argentina     |          81.68 |             88.59 |       71.2  |          86.8  | Kazakhstan    |          89.04 |             92.37 |       76.13 |          96.08 |
-| Venezuela     |          79.23 |             95.47 |       70.88 |          96.38 | Indonesia     |          62.38 |             66.87 |       63.04 |          71.17 |
-| Bulgaria      |          91.16 |             91.73 |       65.76 |          93.28 | Cyprus        |          89.64 |             97.44 |       89.47 |          98.01 |
-| Bermuda       |          83.19 |             93.25 |       59.16 |          93.8  | Moldova       |          89.22 |             92.07 |       57.48 |          89.08 |
-| Slovenia      |          89.01 |             95.08 |       83.96 |          96.73 | Lithuania     |          93.28 |             87.74 |       69.97 |          78.67 |
-| Philippines   |          63.91 |             81.94 |       57.36 |          83.42 | Belgium       |          93.14 |             90.72 |       86.06 |          89.85 |
-| Faroe Islands |          71.22 |             73.23 |       64.74 |          85.39 |               |                |                   |             |                |
+| Country       | FastText (%) | FastTextAtt (%) | BPEmb (%) | BPEmbAtt (%) | Country       | FastText (%) | FastTextAtt (%) | BPEmb (%) | BPEmbAtt (%) |
+| :------------ | -----------: | --------------: | --------: | -----------: | :------------ | -----------: | --------------: | --------: | -----------: |
+| Ireland       |        80.16 |           89.11 |     54.44 |        81.84 | Serbia        |        92.87 |           95.88 |     76.79 |         91.4 |
+| Uzbekistan    |        85.85 |           87.24 |      70.1 |        76.71 | Ukraine       |        93.34 |           94.58 |     89.42 |        92.65 |
+| South Africa  |        95.68 |           97.25 |     74.82 |        97.95 | Paraguay      |        96.02 |           97.08 |     87.07 |        97.36 |
+| Greece        |        87.08 |           86.04 |     38.95 |        58.79 | Algeria       |        86.32 |            87.3 |     70.59 |        84.56 |
+| Belarus       |        93.25 |            97.4 |     78.59 |        97.49 | Sweden        |        73.13 |           89.24 |     86.85 |        93.53 |
+| Portugal      |        93.09 |           94.92 |     72.01 |        93.76 | Hungary       |        51.52 |           51.08 |     37.87 |        24.48 |
+| Iceland       |         83.7 |           96.54 |     77.09 |        96.63 | Colombia      |        85.96 |           90.08 |     68.09 |        88.52 |
+| Latvia        |        89.29 |           93.14 |     68.31 |        73.79 | Malaysia      |        83.14 |           74.62 |     89.64 |        91.14 |
+| Bosnia        |        88.54 |           87.27 |     67.46 |        89.02 | India         |         70.3 |           75.31 |     63.68 |        80.56 |
+| Réunion       |         84.3 |           97.74 |     78.65 |        94.27 | Croatia       |         95.8 |           95.32 |     81.76 |        85.99 |
+| Estonia       |        87.62 |            88.2 |     70.08 |        77.32 | New Caledonia |        94.45 |           99.61 |     94.46 |        99.77 |
+| Japan         |        36.26 |           46.91 |     34.97 |        49.48 | New Zealand   |        91.25 |              97 |     75.57 |         95.7 |
+| Singapore     |        86.03 |           89.92 |     67.19 |        88.17 | Romania       |        90.04 |           95.38 |      82.9 |        93.41 |
+| Bangladesh    |        72.28 |           78.21 |     65.63 |        77.09 | Slovakia      |        78.34 |           82.29 |     68.96 |           96 |
+| Argentina     |        81.68 |           88.59 |      71.2 |         86.8 | Kazakhstan    |        89.04 |           92.37 |     76.13 |        96.08 |
+| Venezuela     |        79.23 |           95.47 |     70.88 |        96.38 | Indonesia     |        62.38 |           66.87 |     63.04 |        71.17 |
+| Bulgaria      |        91.16 |           91.73 |     65.76 |        93.28 | Cyprus        |        89.64 |           97.44 |     89.47 |        98.01 |
+| Bermuda       |        83.19 |           93.25 |     59.16 |         93.8 | Moldova       |        89.22 |           92.07 |     57.48 |        89.08 |
+| Slovenia      |        89.01 |           95.08 |     83.96 |        96.73 | Lithuania     |        93.28 |           87.74 |     69.97 |        78.67 |
+| Philippines   |        63.91 |           81.94 |     57.36 |        83.42 | Belgium       |        93.14 |           90.72 |     86.06 |        89.85 |
+| Faroe Islands |        71.22 |           73.23 |     64.74 |        85.39 |               |              |                 |           |              |
 
 #### Incomplete Data
 
@@ -131,18 +131,18 @@ The following table presents the accuracy on the 20 countries we used during tra
 incomplete data. We didn't test on the other 41 countries since we did not train on them and therefore do not expect to
 achieve an interesting performance. Attention mechanisms improve performance by around 0.5% for all countries.
 
-| Country        |   FastText (%) |   BPEmb (%) | Country     |   FastText (%) |   BPEmb (%) |
-|:---------------|---------------:|------------:|:------------|---------------:|------------:|
-| Norway         |          99.52 |       99.75 | Austria     |          99.55 |       98.94 |
-| Italy          |          99.16 |       98.88 | Mexico      |          97.24 |       95.93 |
-| United Kingdom |          97.85 |       95.2  | Switzerland |          99.2  |       99.47 |
-| Germany        |          99.41 |       99.38 | Denmark     |          97.86 |       97.9  |
-| France         |          99.51 |       98.49 | Brazil      |          98.96 |       97.12 |
-| Netherlands    |          98.74 |       99.46 | Australia   |          99.34 |       98.7  |
-| Poland         |          99.43 |       99.41 | Czechia     |          98.78 |       98.88 |
-| United States  |          98.49 |       96.5  | Canada      |          98.96 |       96.98 |
-| South Korea    |          91.1  |       99.89 | Russia      |          97.18 |       96.01 |
-| Spain          |          99.07 |       98.35 | Finland     |          99.04 |       99.52 |
+| Country        | FastText (%) | BPEmb (%) | Country     | FastText (%) | BPEmb (%) |
+| :------------- | -----------: | --------: | :---------- | -----------: | --------: |
+| Norway         |        99.52 |     99.75 | Austria     |        99.55 |     98.94 |
+| Italy          |        99.16 |     98.88 | Mexico      |        97.24 |     95.93 |
+| United Kingdom |        97.85 |      95.2 | Switzerland |         99.2 |     99.47 |
+| Germany        |        99.41 |     99.38 | Denmark     |        97.86 |      97.9 |
+| France         |        99.51 |     98.49 | Brazil      |        98.96 |     97.12 |
+| Netherlands    |        98.74 |     99.46 | Australia   |        99.34 |      98.7 |
+| Poland         |        99.43 |     99.41 | Czechia     |        98.78 |     98.88 |
+| United States  |        98.49 |      96.5 | Canada      |        98.96 |     96.98 |
+| South Korea    |         91.1 |     99.89 | Russia      |        97.18 |     96.01 |
+| Spain          |        99.07 |     98.35 | Finland     |        99.04 |     99.52 |
 
 ## Getting Started:
 
@@ -224,7 +224,7 @@ address_parser = AddressParser(
 address_parser("350 rue des Lilas Ouest Québec Québec G1L 1B6")
 ```
 
-### Parse Address With Our Out-Of-The-Box API
+### Parse Address With Our Out-Of-The-Box REST API
 
 We also offer an out-of-the-box RESTAPI to parse addresses using FastAPI.
 
@@ -236,63 +236,73 @@ If not, you can install them using the following documentations in the following
 1. [Docker Engine](https://docs.docker.com/engine/install/)
 2. [Docker Compose](https://docs.docker.com/compose/install/linux/#install-using-the-repository)
 
-
-
-Once you have Docker Engine and Docker Compose installed, you can run the following command to start the FastAPI application:
-
-```shell
-docker compose up app
-```
-
-#### Sentry
-
-Also, you can monitor your application usage with [Sentry](https://sentry.io) by setting the environment variable `SENTRY_DSN` to your Sentry's project
-DNS. There is an example of the `.env` file in the project's root named `.env_example`. You can copy it using the following command:
+Most parameter values are hardcoded directly in the `docker-compose.yml` file, but there is a `.env` file that contains secret or personnal values. There is an example of the `.env` file in the project's root named `.env_example`. You can copy it using the following command:
 
 ```shell
 cp .env_example .env
 ```
 
+You can then adjust the values to your needs.
+
+#### REST API
+
+Once you have Docker Engine and Docker Compose installed and you created your `.env` file, you can serve the API service using this command:
+
+```shell
+docker compose up app
+```
+
+Once the API is launched, you can navigate to localhost:8081/docs to see OpenAPI documentation of the FastAPI endpoints. This is the default address used in the project, you can change it in the `docker-compose.yml` file.
+
+#### Make your API secure with https-portal
+
+you can run the following command to start the [webserver](https://github.com/SteveLTN/https-portal) service that provides SSL security to the endpoint as well as automatic renewal of certificates, it uses NGINX in the background, do not worry, it has a MIT license. Do not forget to add your domain name in the `.env` file.:
+
+```shell
+docker compose up webserver
+```
+
+#### Sentry
+
+Also, you can monitor your application usage with [Sentry](https://sentry.io) by setting the environment variable `SENTRY_DSN` to your Sentry's project DNS.
+
 If you do not have a Sentry account, you can create one [here](https://sentry.io/signup/).
 
-If you do not want to use Sentry, you can just remove the `SENTRY_DSN` environment variable from the `.env` file or set it to an empty string, also, not creating
-the `.env` file will also work. The application will run without any problem if Sentry is not set.
+If you do not want to use Sentry, you can just remove the `SENTRY_DSN` environment variable from the `.env` file or set it to an empty string, The api will run without any problem if Sentry is not set.
 
 #### Request Examples
 
-Once the application is up and running and port `8000` is exported on your localhost, you can send a request with one
-of the following methods:
+Once the application is up and running and your selected port is exported on your host, you can send a request with one
+of the following methods, the host is `localhost` and the selected port is `8081`:
 
 ##### cURL POST request
 
 ```sh
 
-curl -X POST --location "http://127.0.0.1:8000/parse/bpemb-attention" --http1.1 \
-    -H "Host: 127.0.0.1:8000" \
+curl -X POST --location "http://localhost:8081/parse/bpemb-attention" --http1.1 \
+    -H "Host: localhost:8081" \
     -H "Content-Type: application/json" \
     -d "[
-          {\"raw\": \"350 rue des Lilas Ouest Quebec city Quebec G1L 1B6\"},
-          {\"raw\": \"2325 Rue de l'Université, Québec, QC G1V 0A6\"}
+          {\"address\": \"350 rue des Lilas Ouest Quebec city Quebec G1L 1B6\"},
+          {\"address\": \"2325 Rue de l'Université, Québec, QC G1V 0A6\"}
         ]"
 ```
 
-#####  Python POST request
+##### Python POST request
 
 ```python
 import requests
 
-url = 'http://localhost:8000/parse/bpemb'
+url = 'http://localhost:8081/parse/bpemb'
 addresses = [
-    {"raw": "350 rue des Lilas Ouest Quebec city Quebec G1L 1B6"},
-    {"raw": "2325 Rue de l'Université, Québec, QC G1V 0A6"}
+    {"address": "350 rue des Lilas Ouest Quebec city Quebec G1L 1B6"},
+    {"address": "2325 Rue de l'Université, Québec, QC G1V 0A6"}
     ]
 
 response = requests.post(url, json=addresses)
 parsed_addresses = response.json()
 print(parsed_addresses)
 ```
-
-
 
 ### Retrain a Model
 
@@ -308,7 +318,7 @@ address_parser = AddressParser(model_type="fasttext", device=0)
 address_parser.retrain(training_container, train_ratio=0.8, epochs=5, batch_size=8)
 ```
 
-One can also freeze some layers to speed up the training using the ``layers_to_freeze`` parameter.
+One can also freeze some layers to speed up the training using the `layers_to_freeze` parameter.
 
 ```python
 address_parser.retrain(
@@ -398,7 +408,7 @@ download_model <model_name>
 
 Starting at version 0.9.8, we will also release the weights with the GitHub release note available [here](https://github.com/GRAAL-Research/deepparse/releases).
 
-------------------
+---
 
 ## Installation
 
@@ -430,7 +440,7 @@ pip install 'deepparse[all]' # for ZSH terminal
 pip install -U git+https://github.com/GRAAL-Research/deepparse.git@dev
 ```
 
-------------------
+---
 
 ## Cite
 
@@ -457,7 +467,7 @@ and this one for the package;
 }
 ```
 
-------------------
+---
 
 ## Contributing to Deepparse
 
@@ -470,4 +480,4 @@ for more details on this matter.
 Deepparse is LGPLv3 licensed, as found in
 the [LICENSE file](https://github.com/GRAAL-Research/deepparse/blob/main/LICENSE).
 
-------------------
+---

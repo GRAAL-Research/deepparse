@@ -102,7 +102,7 @@ def main():
                 "uvicorn==0.22.0",
                 "sentry-sdk[fastapi]>=1.28.1",
                 "python-decouple==3.8",
-                "black==23.3.0",  # code formatting requirements
+                "black==23.9.1",  # code formatting requirements
                 "pylint==2.16.2",
                 "pylint-django[with_django]==2.5.3",
                 "pre-commit==3.3.3",

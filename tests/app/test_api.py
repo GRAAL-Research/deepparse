@@ -22,6 +22,7 @@ def fixture_client():
         yield _client
 
 
+@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
 def test_parse(client: TestClient):
     parsing_model = "bpemb"
     raw_address_1 = "2325 Rue de l'Université, Québec, QC G1V 0A6"

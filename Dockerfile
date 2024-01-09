@@ -38,14 +38,13 @@ FROM tiangolo/uvicorn-gunicorn-fastapi:python3.11-slim AS app
 # set env variables
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
-ENV ENVIRONMENT=local
 
 
 # copy project
 COPY setup.cfg ./
 COPY setup.py ./
-COPY README.md ./
 COPY version.txt ./
+COPY README.md ./
 RUN pip install -e .[app]
 COPY docs/_build/html ./docs/_build/html
 COPY /deepparse ./deepparse
@@ -54,4 +53,4 @@ COPY /deepparse ./deepparse
 FROM nginx:1.15.8 as nginx
 
 RUN rm /etc/nginx/nginx.conf
-COPY nginx.conf /etc/nginx/
+COPY nginx.conf.template /etc/nginx/

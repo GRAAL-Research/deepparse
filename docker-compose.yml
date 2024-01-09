@@ -1,25 +1,35 @@
 version: "3.9"
 
 services:
-  web:
-    build:
-      context: .
-      target: nginx
+  webserver:
+    image: steveltn/https-portal:1
     ports:
       - "80:80"
       - "443:443"
     depends_on:
       - app
+    restart: always
+    environment:
+      DOMAINS: ${DOMAINS} -> http://app:8081
+      STAGE: local # Don't use production until staging works (choices are local, staging, production)
+      # FORCE_RENEW: 'true' # Use this to force a certificate renewal every time (for testing)
+    volumes:
+      - https-portal-data:/var/lib/https-portal
 
   app:
     build:
       context: .
       target: app
-    command: gunicorn deepparse.app.app:app --workers 1 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:8080
+    command: "gunicorn deepparse.app.api:api --bind 0.0.0.0:8081 --workers 1 --worker-class uvicorn.workers.UvicornWorker"
     tty: true
     ports:
-      - "8080:8080"
+      - "8081:8081"
+    env_file:
+      - .env
     volumes:
       - "/$HOME/.cache/deepparse:/root/.cache/deepparse"
     environment:
       - SENTRY_DSN=${SENTRY_DSN}
+
+volumes:
+  https-portal-data:

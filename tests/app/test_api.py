@@ -16,6 +16,7 @@ except ModuleNotFoundError as e:
 from deepparse.app.api import api, get_address_parser_service, AddressParserService
 
 
+@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
 @pytest.fixture(scope="session", name="client")
 def fixture_client():
     with TestClient(api) as _client:

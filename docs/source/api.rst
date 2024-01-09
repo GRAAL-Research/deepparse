@@ -4,7 +4,8 @@
 Parse Address With Our Out-Of-The-Box REST API
 ==============================================
 
-We also offer an out-of-the-box REST API to parse addresses using FastAPI.
+We also offer an out-of-the-box REST API to parse addresses using FastAPI. You can use it to parse addresses in your applications or to test our parsing engine. `Click here to access the API documentation <../docs>`_ once the API is up and running.
+
 
 Installation
 ************
@@ -34,24 +35,6 @@ Once you have Docker Engine and Docker Compose installed and you created your ``
     docker compose up app
 
 Once the API is launched, you can navigate to localhost:8081/docs to see OpenAPI documentation of the FastAPI endpoints. This is the default address used in the project, you can change it in the ``docker-compose.yml`` file.
-
-Make your API secure with https-portal
-**************************************
-
-you can run the following command to start the `webserver <https://github.com/SteveLTN/https-portal>`_ service that provides SSL security to the endpoint as well as automatic renewal of certificates, it uses NGINX in the background, do not worry, it has a MIT license. Do not forget to add your domain name in the ``.env`` file.:
-
-.. code-block:: sh
-
-    docker compose up webserver
-
-Sentry
-******
-
-Also, you can monitor your application usage with `Sentry <https://sentry.io>`_ by setting the environment variable  ``SENTRY_DSN`` to your Sentry's project DSN. 
-
-If you do not have a Sentry account, you can create one `here <https://sentry.io/signup/>`_.
-
-If you do not want to use Sentry, you can just remove the ``SENTRY_DSN`` environment variable from the ``.env`` file or set it to an empty string, The api will run without any problem if Sentry is not set.
 
 Request Examples
 ----------------
@@ -88,3 +71,22 @@ Python POST request
     response = requests.post(url, json=addresses)
     parsed_addresses = response.json()
     print(parsed_addresses)
+
+
+Make your API secure with https-portal
+**************************************
+
+you can run the following command to start the `webserver <https://github.com/SteveLTN/https-portal>`_ service that provides SSL security to the endpoint as well as automatic renewal of certificates, it uses NGINX in the background, do not worry, it has a MIT license. Do not forget to add your domain name in the ``.env`` file.:
+
+.. code-block:: sh
+
+    docker compose up webserver
+
+Sentry
+******
+
+Also, you can monitor your application usage with `Sentry <https://sentry.io>`_ by setting the environment variable  ``SENTRY_DSN`` to your Sentry's project DSN. 
+
+If you do not have a Sentry account, you can create one `here <https://sentry.io/signup/>`_.
+
+If you do not want to use Sentry, you can just remove the ``SENTRY_DSN`` environment variable from the ``.env`` file or set it to an empty string, The api will run without any problem if Sentry is not set.

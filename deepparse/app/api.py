@@ -42,16 +42,17 @@ def initialize_address_parser_mapping() -> Dict[str, AddressParser]:
     logger.debug("Downloading models")
     download_models()
     for model in MODEL_MAPPING_CHOICES:
-        logger.debug("initializing %s", model)
-        attention = False
-        if "-attention" in model:
-            attention = True
-        _address_parser_mapping[model] = AddressParser(
-            model_type=model,
-            offline=True,
-            attention_mechanism=attention,
-            device="cpu",
-        )
+        if model == "bmepb":
+            logger.debug("initializing %s", model)
+            attention = False
+            if "-attention" in model:
+                attention = True
+            _address_parser_mapping[model] = AddressParser(
+                model_type=model,
+                offline=True,
+                attention_mechanism=attention,
+                device="cpu",
+            )
 
     return _address_parser_mapping
 

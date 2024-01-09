@@ -254,6 +254,40 @@ docker compose up app
 
 Once the API is launched, you can navigate to localhost:8081/docs to see OpenAPI documentation of the FastAPI endpoints. This is the default address used in the project, you can change it in the `docker-compose.yml` file.
 
+##### Request Examples
+
+Once the application is up and running and your selected port is exported on your host, you can send a request with one
+of the following methods, the host is `localhost` and the selected port is `8081`:
+
+###### cURL POST request
+
+```sh
+
+curl -X POST --location "http://localhost:8081/parse/bpemb-attention" --http1.1 \
+    -H "Host: localhost:8081" \
+    -H "Content-Type: application/json" \
+    -d "[
+          {\"address\": \"350 rue des Lilas Ouest Quebec city Quebec G1L 1B6\"},
+          {\"address\": \"2325 Rue de l'Université, Québec, QC G1V 0A6\"}
+        ]"
+```
+
+###### Python POST request
+
+```python
+import requests
+
+url = 'http://localhost:8081/parse/bpemb'
+addresses = [
+    {"address": "350 rue des Lilas Ouest Quebec city Quebec G1L 1B6"},
+    {"address": "2325 Rue de l'Université, Québec, QC G1V 0A6"}
+    ]
+
+response = requests.post(url, json=addresses)
+parsed_addresses = response.json()
+print(parsed_addresses)
+```
+
 #### Make your API secure with https-portal
 
 you can run the following command to start the [webserver](https://github.com/SteveLTN/https-portal) service that provides SSL security to the endpoint as well as automatic renewal of certificates, it uses NGINX in the background, do not worry, it has a MIT license. Do not forget to add your domain name in the `.env` file.:
@@ -269,40 +303,6 @@ Also, you can monitor your application usage with [Sentry](https://sentry.io) by
 If you do not have a Sentry account, you can create one [here](https://sentry.io/signup/).
 
 If you do not want to use Sentry, you can just remove the `SENTRY_DSN` environment variable from the `.env` file or set it to an empty string, The api will run without any problem if Sentry is not set.
-
-#### Request Examples
-
-Once the application is up and running and your selected port is exported on your host, you can send a request with one
-of the following methods, the host is `localhost` and the selected port is `8081`:
-
-##### cURL POST request
-
-```sh
-
-curl -X POST --location "http://localhost:8081/parse/bpemb-attention" --http1.1 \
-    -H "Host: localhost:8081" \
-    -H "Content-Type: application/json" \
-    -d "[
-          {\"address\": \"350 rue des Lilas Ouest Quebec city Quebec G1L 1B6\"},
-          {\"address\": \"2325 Rue de l'Université, Québec, QC G1V 0A6\"}
-        ]"
-```
-
-##### Python POST request
-
-```python
-import requests
-
-url = 'http://localhost:8081/parse/bpemb'
-addresses = [
-    {"address": "350 rue des Lilas Ouest Quebec city Quebec G1L 1B6"},
-    {"address": "2325 Rue de l'Université, Québec, QC G1V 0A6"}
-    ]
-
-response = requests.post(url, json=addresses)
-parsed_addresses = response.json()
-print(parsed_addresses)
-```
 
 ### Retrain a Model
 

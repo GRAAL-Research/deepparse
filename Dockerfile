@@ -46,7 +46,9 @@ COPY setup.py ./
 COPY version.txt ./
 COPY README.md ./
 RUN pip install -e .[app]
-COPY docs/_build/html ./docs/_build/html
+COPY docs ./docs
+RUN cd docs && sphinx-build -M html source _build 
+
 COPY /deepparse ./deepparse
 
 

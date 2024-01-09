@@ -95,6 +95,8 @@ def main():
                 "uvicorn[standard]==0.22.0",
                 "sentry-sdk[fastapi]==1.28.1",
                 "python-decouple==3.8",
+                "sphinx==6.2.1",
+                "sphinx_rtd_theme==1.2.2",
             ],
             "all": [
                 "colorama>=0.4.3",  # colorama
@@ -102,7 +104,7 @@ def main():
                 "uvicorn==0.22.0",
                 "sentry-sdk[fastapi]>=1.28.1",
                 "python-decouple==3.8",
-                "black==23.9.1",  # code formatting requirements
+                "black==23.12.1",  # code formatting requirements
                 "pylint==2.16.2",
                 "pylint-django[with_django]==2.5.3",
                 "pre-commit==3.3.3",

@@ -19,7 +19,7 @@ import sys
 
 sys.path.insert(0, os.path.abspath("../.."))
 
-from deepparse import __version__ as version
+from deepparse.version import __version__ as version
 
 year = str(datetime.datetime.now().year)
 

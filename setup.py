@@ -1,5 +1,6 @@
 import os
 import subprocess
+from pathlib import Path
 
 from setuptools import setup, find_packages
 
@@ -30,7 +31,9 @@ def get_version():
 
 
 def write_version_python_file(version):
-    version_python_file = os.path.join(current_file_path, "deepparse", "version.py")
+    directory = os.path.join(current_file_path, "deepparse")
+    version_python_file = os.path.join(directory, "version.py")
+    Path(directory).mkdir(exist_ok=True)
     with open(version_python_file, "w", encoding="utf-8") as f:
         f.write(f"__version__ = {repr(version)}\n")
 
@@ -87,14 +90,21 @@ def main():
         long_description_content_type="text/markdown",
         extras_require={
             "colorama": "colorama>=0.4.3",
-            "app": ["fastapi[all]==0.99.1", "uvicorn==0.22.0", "sentry-sdk[fastapi]==1.28.1", "python-decouple==3.8"],
+            "app": [
+                "fastapi[all]==0.99.1",
+                "uvicorn[standard]==0.22.0",
+                "sentry-sdk[fastapi]==1.28.1",
+                "python-decouple==3.8",
+                "sphinx==6.2.1",
+                "sphinx_rtd_theme==1.2.2",
+            ],
             "all": [
                 "colorama>=0.4.3",  # colorama
                 "fastapi[all]==0.99.1",  # app requirements
                 "uvicorn==0.22.0",
                 "sentry-sdk[fastapi]>=1.28.1",
                 "python-decouple==3.8",
-                "black==23.3.0",  # code formatting requirements
+                "black==23.12.1",  # code formatting requirements
                 "pylint==2.16.2",
                 "pylint-django[with_django]==2.5.3",
                 "pre-commit==3.3.3",

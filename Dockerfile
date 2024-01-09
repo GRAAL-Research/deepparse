@@ -33,19 +33,26 @@ RUN find /opt/conda/lib/ -follow -type f -name '*.a' -delete \
 ENV PATH /opt/conda/bin:$PATH
 
 
-FROM python:3.11.0-slim AS app
-# set work directory
+FROM tiangolo/uvicorn-gunicorn-fastapi:python3.11-slim AS app
 
 # set env variables
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
-ENV ENVIRONMENT=local
 
 
 # copy project
-COPY /deepparse ./deepparse
 COPY setup.cfg ./
 COPY setup.py ./
-COPY README.md ./
 COPY version.txt ./
+COPY README.md ./
 RUN pip install -e .[app]
+COPY docs ./docs
+RUN cd docs && sphinx-build -M html source _build 
+
+COPY /deepparse ./deepparse
+
+
+FROM nginx:1.15.8 as nginx
+
+RUN rm /etc/nginx/nginx.conf
+COPY nginx.conf.template /etc/nginx/

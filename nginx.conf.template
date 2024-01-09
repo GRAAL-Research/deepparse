@@ -1,0 +1,18 @@
+worker_processes 1;
+
+events {
+  worker_connections 1024;
+}
+
+http {
+    server {
+        server_name app;
+        listen 80;
+
+        location / {
+            proxy_read_timeout 3000s;
+            proxy_connect_timeout 3000s;
+            proxy_pass http://localhost:${APP_PORT}/;
+        }
+    }
+}

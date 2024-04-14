@@ -858,9 +858,11 @@ class AddressParser:
 
             torch_save.update(
                 {
-                    "named_parser": name_of_the_retrain_parser
-                    if name_of_the_retrain_parser is not None
-                    else self._formatted_named_parser_name(prediction_tags, seq2seq_params, layers_to_freeze)
+                    "named_parser": (
+                        name_of_the_retrain_parser
+                        if name_of_the_retrain_parser is not None
+                        else self._formatted_named_parser_name(prediction_tags, seq2seq_params, layers_to_freeze)
+                    )
                 }
             )
 

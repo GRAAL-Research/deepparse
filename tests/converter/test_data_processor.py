@@ -64,8 +64,8 @@ class DataProcessorTest(TestCase):
         )
 
         self.fasttext_batch_padding_callback_mock = Mock()
-        self.fasttext_batch_padding_callback_mock.side_effect = (
-            lambda *params: (
+        self.fasttext_batch_padding_callback_mock.side_effect = lambda *params: (
+            (
                 (
                     self.a_padded_word_embedding_sequence,
                     self.a_sequence_lengths_list,
@@ -89,8 +89,8 @@ class DataProcessorTest(TestCase):
                 self.a_padded_tag_targets,
             )
         )
-        self.bpemb_batch_padding_callback_mock.side_effect = (
-            lambda *params: (
+        self.bpemb_batch_padding_callback_mock.side_effect = lambda *params: (
+            (
                 (
                     self.a_padded_subword_embedding_sequence,
                     self.a_word_decomposition_lengths_list,

@@ -77,7 +77,7 @@ def main():
             "fasttext-wheel",
             "pymagnitude-light",
             "poutyne",
-            "pandas==2.0.3",
+            "pandas",
             "urllib3",
             "cloudpathlib[s3, gs, azure]",
         ],
@@ -94,7 +94,7 @@ def main():
                 "uvicorn==0.22.0",
                 "sentry-sdk[fastapi]>=1.28.1",
                 "python-decouple==3.8",
-                "black==23.3.0",  # code formatting requirements
+                "black",  # code formatting requirements
                 "pylint==2.16.2",
                 "pylint-django[with_django]==2.5.3",
                 "pre-commit==3.3.3",

@@ -1,7 +1,7 @@
 # Bug with PyTorch source code makes torch.tensor as not callable for pylint.
 # pylint: disable=not-callable
 
-# temporary fix for _forward_unimplemented for PyTorch 1.6 https://github.com/pytorch/pytorch/issues/42305
+# Temporary fix for _forward_unimplemented for PyTorch 1.6 https://github.com/pytorch/pytorch/issues/42305
 # pylint: disable=W0223
 
 from typing import Tuple, List
@@ -13,14 +13,15 @@ from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 
 class EmbeddingNetwork(nn.Module):
     """
-    Embedding Network to represent the address components byte-pair embedding representation using a LSTM.
+    Embedding Network to represent the address components byte-pair embedding representation using an LSTM.
 
     Args:
         input_size (int): The input size of the LSTM.
         hidden_size (int): The hidden size of the LSTM.
-        num_layers (int): The number of layer of the LSTM. Default is one (1) layer.
-        maxpool (bool): Either or not to add a maximum pooling layer after the embedding composition. Default is false.
-        maxpool_kernel_size (int): The kernel size of the maximum pooling layer. Default is three (3).
+        num_layers (int): The number of layers of the LSTM. The default value is ``1``, namely one layer.
+        maxpool (bool): Either or not to add a maximum pooling layer after the embedding composition. The default
+            value is ``False``.
+        maxpool_kernel_size (int): The kernel size of the maximum pooling layer. The default value is ``3``.
     """
 
     def __init__(
@@ -73,7 +74,7 @@ class EmbeddingNetwork(nn.Module):
         for i in range(to_predict.size(0)):
             lengths = []
 
-            # reorder decomposition, could use a transpose but take a LOT (like a LOT) of memory
+            # Reorder decomposition, could use a transpose but take a LOT (like a LOT) of memory
             for decomposition_length in decomposition_lengths:
                 lengths.append(decomposition_length[i])
 
@@ -86,15 +87,15 @@ class EmbeddingNetwork(nn.Module):
 
             packed_output, _ = self.model(packed_sequence)
 
-            # pad packed the output to be applied later on in the projection layer
+            # Pad packed the output to be applied later on in the projection layer.
             padded_output, padded_output_lengths = pad_packed_sequence(packed_output, batch_first=True)
 
-            # filling the embedding by idx
+            # Filling the embedding by IDX.
             word_context = torch.zeros(padded_output.size(0), padded_output.size(2), device=device)
             for j in range(batch_size):
                 word_context[j] = padded_output[j, padded_output_lengths[j] - 1, :]
 
-            # projection layer from dim 600 to 300
+            # Projection layer from dim 600 to 300.
             projection_output = self.projection_layer(word_context)
 
             if self.maxpooling_layer is not None:

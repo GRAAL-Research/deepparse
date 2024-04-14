@@ -9,22 +9,24 @@ from .seq2seq import Seq2SeqModel
 
 class FastTextSeq2SeqModel(Seq2SeqModel):
     """
-    FastText Seq2Seq network, the lightest of the two model we propose (in ``GPU``/``CPU`` consumption) for a little
+    FastText Seq2Seq network, the lightest of the two models we propose (in ``GPU``/``CPU`` consumption) for a little
     less accuracy.
 
     Args:
         cache_dir (str): The path to the cached directory to use for downloading (and loading) the
             model weights.
         device (~torch.device): The device tu use for the prediction.
-        input_size (int): The input size of the encoder (i.e. the embeddings size). The default value is 300.
-        encoder_hidden_size (int): The size of the hidden layer(s) of the encoder. The default value is 1024.
-        encoder_num_layers (int): The number of hidden layers of the encoder. The default value is 1.
-        decoder_hidden_size (int): The size of the hidden layer(s) of the decoder. The default value is 1024.
-        decoder_num_layers (int): The number of hidden layers of the decoder. The default value is 1.
-        output_size (int): The size of the prediction layers (i.e. the number of tag to predict).
-        attention_mechanism (bool): Either or not to use attention mechanism. The default value is False.
-        verbose (bool): Turn on/off the verbosity of the model. The default value is True.
-        path_to_retrained_model (Union[str, None]): The path to the retrained model to use for the seq2seq.
+        input_size (int): The input size of the encoder (i.e. the size of the embedding). The default value is ``300``.
+        encoder_hidden_size (int): The size of the encoder's hidden layer(s). The default value is ``1024``.
+        encoder_num_layers (int): The number of hidden layers of the encoder. The default value is ``1``.
+        decoder_hidden_size (int): The size of the decoder's hidden layer(s). The default value is ``1024``.
+        decoder_num_layers (int): The number of hidden layers of the decoder. The default value is ``1``.
+        output_size (int): The size of the prediction layers (i.e. the number of tags to predict). The default value
+            is ``9``.
+        attention_mechanism (bool): Either or not to use the attention mechanism. The default value is ``False``.
+        verbose (bool): Turn on/off the verbosity of the model. The default value is ``True``.
+        path_to_retrained_model (Union[str, None]): The path to the retrained model to use for the seq2seq. The default
+            value is ``None``.
     """
 
     def __init__(
@@ -88,7 +90,7 @@ class FastTextSeq2SeqModel(Seq2SeqModel):
             lengths (list) : The lengths of the batch elements (since packed).
             target (~torch.LongTensor) : The target of the batch element, use only when we retrain the model since we do
                 `teacher forcing <https://machinelearningmastery.com/teacher-forcing-for-recurrent-neural-networks/>`_.
-                Default value is None since we mostly don't have the target except for retrain.
+                The default value is ``None`` since we mostly don't have the target except for retrain.
 
         Return:
             A Tensor of the predicted sequence.

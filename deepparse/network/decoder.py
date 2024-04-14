@@ -11,7 +11,7 @@ from .. import weights_init
 
 class Decoder(nn.Module):
     """
-    Decoder module that use a LSTM to decode a previously encoded sequence and a linear layer to map
+    Decoder module that uses a LSTM to decode a previously encoded sequence and a linear layer to map
     the decoded sequence tags.
 
     Args:
@@ -33,7 +33,7 @@ class Decoder(nn.Module):
         super().__init__()
         self.attention_mechanism = attention_mechanism
         if attention_mechanism:
-            # Since layer also have attention mechanism
+            # Since layer also has attention mechanism
             self.hidden_size = hidden_size
             input_size = input_size + hidden_size
             self._attention_mechanism_set_up()

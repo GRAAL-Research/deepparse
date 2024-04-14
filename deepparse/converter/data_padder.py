@@ -22,13 +22,15 @@ class DataPadder:
         Tuple[Tuple[torch.Tensor, List, torch.Tensor], torch.Tensor],
     ]:
         """
-        Method to pad a batch of word embeddings sequences and their targets to the length of the longest one.
+        A method to apply padding to a batch of word embeddings sequences and their targets to the length of the
+        longest one.
+
         Args:
             batch (list[Tuple[list, list]]): a list of tuples where the first element is a list
                 of word embeddings (the sequence) and the second is a list of targets.
             teacher_forcing (bool): if True, the padded target vectors are returned twice,
                 once with the sequences and their lengths, and once on their own. This enables
-                the use of teacher forcing during the training of sequence to sequence models.
+                the use of teacher forcing during the training of sequence-to-sequence models.
         Return:
             A tuple of two elements:
                 - a tuple containing either a
@@ -52,7 +54,7 @@ class DataPadder:
 
     def pad_word_embeddings_sequences(self, sequences_batch: List) -> Tuple[torch.Tensor, List]:
         """
-        Method to pad a batch of word embeddings sequences.
+        A method to apply batch padding to sequences of word embeddings.
         Args:
             sequences_batch (list): a tuple containing lists of word embeddings (the sequences)
         Return:
@@ -81,15 +83,17 @@ class DataPadder:
         Tuple[Tuple[torch.Tensor, List, List, torch.Tensor], torch.Tensor],
     ]:
         """
-        Method to pad a batch of subword embeddings sequences and their targets to the length of the longest one.
+        A method to apply padding to a batch of subword embeddings sequences and their targets to the length of the
+        longest one.
+
         Args:
             batch (list[Tuple[Tuple[list, list], list]]): a list of tuples containing the two following elements:
-                - a tuple where the first element is a list of words represented as subword embeddings and the
+                - a tuple where the first element is a list of words represented as subword embeddings, and the
                     second element is a list of the number of subword embeddings that each word is decomposed into.
                 - a list of targets.
             teacher_forcing (bool): if True, the padded target vectors are returned twice,
                 once with the sequences and their lengths, and once on their own. This enables
-                the use of teacher forcing during the training of sequence to sequence models.
+                the use of teacher forcing during the training of sequence-to-sequence models.
         Return:
             A tuple of two elements:
                 - A tuple (``x``, ``y`` , ``z``). The element ``x`` is a :class:`~torch.Tensor` of
@@ -122,9 +126,9 @@ class DataPadder:
         self, sequences_batch: List[Tuple[List, List]]
     ) -> Tuple[torch.Tensor, List, List]:
         """
-        Method to pad a batch of subword embeddings sequences.
+        A method to apply padding to a batch of subword embeddings sequences.
         Args:
-            sequences_batch (list[Tuple[list, list]]): a list of tuple containing tuples of two elements:
+            sequences_batch (list[Tuple[list, list]]): a list of tuples containing tuples of two elements:
                 - a list of lists representing words as lists of subword embeddings.
                 - a list of the number of subword embeddings that each word is decomposed into.
         Return:
@@ -158,7 +162,7 @@ class DataPadder:
 
     def pad_targets(self, target_batch: List) -> torch.Tensor:
         """
-        Method to pad a batch of target indices to the longest one.
+        A method to apply padding to a batch of target indices to the longest one.
         Args:
             target_batch (list): a tuple containing lists of target indices.
         Return:
@@ -170,7 +174,7 @@ class DataPadder:
 
     def _extract_word_embeddings_sequences_and_target(self, batch: List[Tuple[List, List]]) -> Tuple[List, List]:
         """
-        Method that takes a list of word embedding sequences and targets and zips the
+        A method that takes a list of word embedding sequences and targets and zips the
             sequences together and the targets together.
         """
         sorted_batch = sorted(batch, key=lambda x: len(x[0]), reverse=True)

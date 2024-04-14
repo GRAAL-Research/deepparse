@@ -86,7 +86,7 @@ class FormattedParsedAddress:
 
     def __eq__(self, other) -> bool:
         """
-        Equal if all address components elements are equals. If attributes are not the same, will return False.
+        Equal if all address components elements are equals. If attributes are not the same, it will return False.
         """
         for field in self.__dict__:
             address_component = getattr(self, field)
@@ -114,7 +114,7 @@ class FormattedParsedAddress:
 
         Args:
             fields (Union[list, None]): Optional argument to define the fields to order the address components of
-                the address. If None, we will use the inferred order base on the address tags appearance. For example,
+                the address. If None, we will use the inferred order based on the address tags' appearance. For example,
                 if the parsed address is ``(305, StreetNumber), (rue, StreetName), (des, StreetName),
                 (Lilas, StreetName)``, the inferred order will be ``StreetNumber, StreetName``.
             capitalize_fields (Union[list, None]): Optional argument to define the capitalized fields for the formatted
@@ -138,7 +138,7 @@ class FormattedParsedAddress:
                 # > 350, rue des lilas, ouest, quebec city, quebec, g1l 1b6
 
                 parse_address.formatted_address(fields_separator=", ", capitalize_fields=["StreetName", "Orientation"])
-                # > 350, Rue des lilas, Ouest, quebec city, quebec, g1l 1b6
+                # > 350, rue des lilas, ouest, quebec city, quebec, g1l 1b6
 
                 parse_address.formatted_address(fields_separator=", ", upper_case_fields=["PostalCode""])
                 # > 350 rue des lilas ouest quebec city quebec G1L 1B6
@@ -214,7 +214,7 @@ class FormattedParsedAddress:
     def to_pandas(self) -> Dict:
         """
         Method to convert a parsed address into a dictionary for pandas where the first key is the raw address and
-        the followings keys are the address components, and the values are the value of those components.
+        the following keys are the address components, and the values are the values of those components.
         For example, the parsed address ``<StreetNumber> 305 <StreetName> rue des Lilas`` will be converted into
         the following dictionary: ``{'Address': '305 rue des Lilas', 'StreetNumber':'305', 'StreetName':
         'rue des Lilas'}``.
@@ -228,7 +228,7 @@ class FormattedParsedAddress:
     def to_pickle(self) -> Tuple[str, List]:
         """
         Method to convert a parsed address into a list of tuple for pickle where the first tuple element is the
-        raw address and the followings tuples are the address components, and the values are the value of
+        raw address and the following tuples are the address components, and the values are the values of
         those components. For example, the parsed address ``<StreetNumber> 305 <StreetName> rue des Lilas``
         will be converted into the following list of tuples: ``'305 rue des Lilas', ('305', 'StreetNumber'),
         ('rue des Lilas', 'StreetName')]``.

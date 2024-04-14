@@ -34,7 +34,7 @@ tag_dictionary = {"ATag": 0, "AnotherTag": 1, "EOS": 2}
 logging_path = "./checkpoints"
 
 # The new seq2seq params settings using smaller hidden size
-# See the doc for the list of tunable seq2seq parameters
+# See the documentation for the list of tunable seq2seq parameters
 seq2seq_params = {"encoder_hidden_size": 512, "decoder_hidden_size": 512}
 
 address_parser.retrain(

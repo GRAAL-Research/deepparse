@@ -1,4 +1,4 @@
-# temporary fix for _forward_unimplemented for torch 1.6 https://github.com/pytorch/pytorch/issues/42305
+# Temporary fix for _forward_unimplemented for torch 1.6 https://github.com/pytorch/pytorch/issues/42305
 # pylint: disable=W0223
 
 from typing import Tuple, List
@@ -12,12 +12,12 @@ from .. import weights_init
 
 class Encoder(nn.Module):
     """
-    Encoder module that use a LSTM to encode a sequence.
+    Encoder module that uses an LSTM to encode a sequence.
 
     Args:
         input_size (int): The input size of the encoder.
         hidden_size (int): The hidden size of the encoder.
-        num_layers (int): The number of layer to the encoder.
+        num_layers (int): The number of layers to the encoder.
     """
 
     def __init__(self, input_size: int, hidden_size: int, num_layers: int) -> None:

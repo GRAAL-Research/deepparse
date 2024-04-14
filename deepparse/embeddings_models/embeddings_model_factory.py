@@ -11,12 +11,12 @@ class EmbeddingsModelFactory:
         """
         Embeddings model creation method.
         Args:
-            embeddings_model_type (str): the type of the embeddings model to create. Valid options:
+            embedding_model_type (str): the type of the embeddings model to create. Valid options:
                 - bpemb
                 - fasttext
                 - fasttext_magnitude
             cache_dir (str): Path to the cache directory where the embeddings model exists or is to be downloaded.
-            verbose (bool): Wether or not to make the loading of the embeddings verbose.
+            verbose (bool): Whether or not to make the loading of the embeddings verbose.
         Return:
             An :class:`~EmbeddingsModel`
         """

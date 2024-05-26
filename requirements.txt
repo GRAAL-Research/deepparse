@@ -5,7 +5,7 @@ requests
 pymagnitude-light
 colorama>=0.4.3
 poutyne
-gensim>=4.2.0
+gensim@ git+https://github.com/piskvorky/gensim.git@da2f388
 fasttext-wheel
 pandas
 urllib3

@@ -1,4 +1,4 @@
-black==24.3.0
-pylint==2.16.2
-pylint-django[with_django]==2.5.3
-pre-commit==3.3.3
+black
+pylint
+pylint-django[with_django]
+pre-commit

@@ -7,8 +7,14 @@ import pandas as pd
 from torch.utils.data import Dataset
 
 from .tools import former_python_list, validate_column_names
+from ..data_validation import (
+    validate_if_any_empty,
+    validate_if_any_whitespace_only,
+    validate_if_any_none,
+    validate_if_any_multiple_consecutive_whitespace,
+    validate_if_any_newline_character,
+)
 from ..errors.data_error import DataError
-from ..data_validation import validate_if_any_empty, validate_if_any_whitespace_only, validate_if_any_none
 
 
 class DatasetContainer(Dataset, ABC):
@@ -86,7 +92,7 @@ class DatasetContainer(Dataset, ABC):
             data_to_validate = self.data
 
         if validate_if_any_none(string_elements=data_to_validate):
-            raise DataError("Some addresses data points are None value.")
+            raise DataError("Some addresses data points are 'None' value.")
 
         if self.is_training_container:
             # Not done in previous similar if since none test not applied
@@ -97,6 +103,14 @@ class DatasetContainer(Dataset, ABC):
 
         if validate_if_any_whitespace_only(string_elements=data_to_validate):
             raise DataError("Some addresses only include whitespace thus cannot be parsed.")
+
+        if validate_if_any_multiple_consecutive_whitespace(string_elements=data_to_validate):
+            raise DataError(
+                "Some addresses include consecutive whitespaces (i.e. 'An  address') thus cannot be properly parsed."
+            )
+
+        if validate_if_any_newline_character(string_elements=data_to_validate):
+            raise DataError("Some addresses include newline characters (i.e. '\n') thus cannot be properly parsed.")
 
     def _data_is_a_list(self) -> bool:
         return isinstance(self.data, list)

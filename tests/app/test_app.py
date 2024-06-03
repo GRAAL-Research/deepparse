@@ -1,8 +1,8 @@
-from typing import Dict, List, Union
 import os
-
-from unittest.mock import MagicMock
+from typing import Dict, List, Union
 from unittest import skipIf
+from unittest.mock import MagicMock
+
 import pytest
 
 try:
@@ -13,12 +13,15 @@ except ModuleNotFoundError as e:
         "Ensure you installed the packages for the app_requirements.txt file found in the root of the project"
     ) from e
 
-from deepparse.app.app import app, format_parsed_addresses, Address, AddressParser
+from deepparse.app.app import format_parsed_addresses, Address, AddressParser
 from deepparse.parser import FormattedParsedAddress
 
+if os.environ["TEST_LEVEL"] == "all":
+    from deepparse.app.app import app
 
-@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
+
 @pytest.fixture(scope="session", name="client")
+@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
 def fixture_client():
     with TestClient(app) as _client:
         yield _client

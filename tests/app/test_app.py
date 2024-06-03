@@ -1,3 +1,5 @@
+# pylint: disable=possibly-used-before-assignment
+
 import os
 from typing import Dict, List, Union
 from unittest import skipIf
@@ -13,11 +15,11 @@ except ModuleNotFoundError as e:
         "Ensure you installed the packages for the app_requirements.txt file found in the root of the project"
     ) from e
 
-from deepparse.app.app import format_parsed_addresses, Address, AddressParser
-from deepparse.parser import FormattedParsedAddress
 
 if os.environ["TEST_LEVEL"] == "all":
     from deepparse.app.app import app
+    from deepparse.app import format_parsed_addresses, Address
+    from deepparse.parser import FormattedParsedAddress, AddressParser
 
 
 @pytest.fixture(scope="session", name="client")

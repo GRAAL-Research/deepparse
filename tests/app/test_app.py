@@ -1,4 +1,4 @@
-# pylint: disable=possibly-used-before-assignment
+# pylint: disable=E0606
 
 import os
 from typing import Dict, List, Union

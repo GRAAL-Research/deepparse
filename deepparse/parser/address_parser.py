@@ -4,7 +4,6 @@
 # It must be due to the complex try, except else case.
 # pylint: disable=inconsistent-return-statements
 
-import contextlib
 import os
 import re
 import warnings
@@ -19,11 +18,7 @@ from poutyne.framework import Experiment
 from torch.optim import SGD
 from torch.utils.data import DataLoader, Subset
 
-from ..download_tools import CACHE_PATH
-from ..pre_processing.pre_processor_list import PreProcessorList
-from ..validations import valid_poutyne_version
 from . import formatted_parsed_address
-from .capturing import Capturing
 from .formatted_parsed_address import FormattedParsedAddress
 from .tools import (
     get_address_parser_in_directory,
@@ -39,13 +34,15 @@ from .tools import (
 from .. import validate_data_to_parse
 from ..converter import TagsConverter, DataProcessorFactory, DataPadder
 from ..dataset_container import DatasetContainer
+from ..download_tools import CACHE_PATH
 from ..embeddings_models import EmbeddingsModelFactory
 from ..errors import FastTextModelError
 from ..metrics import nll_loss, accuracy
 from ..network import ModelFactory
 from ..pre_processing import coma_cleaning, lower_cleaning, hyphen_cleaning
 from ..pre_processing import trailing_whitespace_cleaning, double_whitespaces_cleaning
-
+from ..pre_processing.pre_processor_list import PreProcessorList
+from ..validations import valid_poutyne_version
 from ..vectorizer import VectorizerFactory
 from ..weights_tools import handle_weights_upload
 
@@ -791,14 +788,12 @@ class AddressParser:
             verbose = self.verbose
 
         try:
-            with_capturing_context = False
             if not valid_poutyne_version(min_major=1, min_minor=8):
-                print(
+                raise ImportError(
                     "You are using an older version of Poutyne that does not support proper error management."
-                    " Due to that, we cannot show retrain progress. To fix that, update Poutyne to "
+                    " Due to that, we cannot show retrain progress. To fix that, please update Poutyne to "
                     "the newest version."
                 )
-                with_capturing_context = True
             train_res = self._retrain(
                 experiment=exp,
                 train_generator=train_generator,
@@ -807,7 +802,6 @@ class AddressParser:
                 seed=seed,
                 callbacks=callbacks,
                 disable_tensorboard=disable_tensorboard,
-                capturing_context=with_capturing_context,
                 verbose=verbose,
             )
         except RuntimeError as error:
@@ -1197,22 +1191,18 @@ class AddressParser:
         seed: int,
         callbacks: List,
         disable_tensorboard: bool,
-        capturing_context: bool,
         verbose: Union[None, bool],
     ) -> List[Dict]:
         # pylint: disable=too-many-arguments
-        # If Poutyne 1.7 and before, we capture poutyne print since it prints some exception.
-        # Otherwise, we use a null context manager.
-        with Capturing() if capturing_context else contextlib.nullcontext():
-            train_res = experiment.train(
-                train_generator,
-                valid_generator=valid_generator,
-                epochs=epochs,
-                seed=seed,
-                callbacks=callbacks,
-                disable_tensorboard=disable_tensorboard,
-                verbose=verbose,
-            )
+        train_res = experiment.train(
+            train_generator,
+            valid_generator=valid_generator,
+            epochs=epochs,
+            seed=seed,
+            callbacks=callbacks,
+            disable_tensorboard=disable_tensorboard,
+            verbose=verbose,
+        )
         return train_res
 
     def _freeze_model_params(self, layers_to_freeze: Union[str]) -> None:

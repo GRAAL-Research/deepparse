@@ -109,7 +109,13 @@ class AddressParserTest(AddressParserPredictTestCase):
             self.assertIn(expected, actual)
 
     def test_givenAModel_whenInit_thenProperFieldsSet(self):
-        address_parser = AddressParser(model_type=self.a_bpemb_model_type, device=self.a_cpu_device, verbose=True)
+        # We use BPEmb but could use FastText also
+        with patch("deepparse.parser.address_parser.EmbeddingsModelFactory") as _:
+            with patch("deepparse.parser.address_parser.VectorizerFactory") as _:
+                with patch("deepparse.parser.address_parser.DataProcessorFactory") as _:
+                    address_parser = AddressParser(
+                        model_type=self.a_bpemb_model_type, device=self.a_cpu_device, verbose=True
+                    )
         expected_fields = self.expected_fields
 
         actual_tags = list(address_parser.tags_converter.tags_to_idx.keys())
@@ -120,25 +126,32 @@ class AddressParserTest(AddressParserPredictTestCase):
         self.assert_equal_not_ordered(actual_fields, expected_fields)
 
     def test_givenACPUDeviceSetup_whenInstantiatingParser_thenDeviceIsCPU(self):
-        address_parser = AddressParser(
-            model_type=self.a_best_model_type.capitalize(),
-            # we use BPEmb for simplicity
-            device=self.a_cpu_device,
-        )
+        # We use BPEmb but could use FastText also
+        with patch("deepparse.parser.address_parser.EmbeddingsModelFactory") as _:
+            with patch("deepparse.parser.address_parser.VectorizerFactory") as _:
+                with patch("deepparse.parser.address_parser.DataProcessorFactory") as _:
+                    address_parser = AddressParser(
+                        model_type=self.a_best_model_type.capitalize(),
+                        # we use BPEmb for simplicity
+                        device=self.a_cpu_device,
+                    )
         actual = address_parser.device
         expected = self.a_cpu_torch_device
         self.assertEqual(actual, expected)
 
-    # We use BPEmb but could use FastText also
     @patch("deepparse.parser.address_parser.torch.cuda")
     def test_givenAGPUDeviceSetup_whenInstantiatingParserWithoutGPU_thenRaiseWarningAndCPU(self, cuda_mock):
-        cuda_mock.is_available.return_value = False
-        with self.assertWarns(UserWarning):
-            address_parser = AddressParser(
-                model_type=self.a_best_model_type.capitalize(),
-                # we use BPEmb for simplicity
-                device=self.a_gpu_device,
-            )
+        # We use BPEmb but could use FastText also
+        with patch("deepparse.parser.address_parser.EmbeddingsModelFactory") as _:
+            with patch("deepparse.parser.address_parser.VectorizerFactory") as _:
+                with patch("deepparse.parser.address_parser.DataProcessorFactory") as _:
+                    cuda_mock.is_available.return_value = False
+                    with self.assertWarns(UserWarning):
+                        address_parser = AddressParser(
+                            model_type=self.a_best_model_type.capitalize(),
+                            # we use BPEmb for simplicity
+                            device=self.a_gpu_device,
+                        )
         actual = address_parser.device
         expected = self.a_cpu_torch_device
         self.assertEqual(actual, expected)

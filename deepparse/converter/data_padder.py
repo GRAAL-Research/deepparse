@@ -15,9 +15,7 @@ class DataPadder:
     def __init__(self, padding_value: int = -100) -> None:
         self.padding_value = padding_value
 
-    def pad_word_embeddings_batch(
-        self, batch: List[Tuple[List, List]], teacher_forcing: bool = False
-    ) -> Union[
+    def pad_word_embeddings_batch(self, batch: List[Tuple[List, List]], teacher_forcing: bool = False) -> Union[
         Tuple[Tuple[torch.Tensor, List], torch.Tensor],
         Tuple[Tuple[torch.Tensor, List, torch.Tensor], torch.Tensor],
     ]:

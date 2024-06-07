@@ -345,3 +345,4 @@
 - Fix app errors.
 - Add data validation for 1) multiple consecutive whitespace and 2) newline.
 - Fixes some errors in tests.
+- Add an argument to the `DatasetContainer` interface to use a pre-processing data cleaning function before validation.

@@ -35,9 +35,9 @@ MODEL_MAPPING_CHOICES: Dict[str, str] = {
 
 def download_fasttext_magnitude_embeddings(cache_dir: str, verbose: bool = True, offline: bool = False) -> str:
     """
-    Function to download the magnitude pretrained fastText model.
+    Function to download the magnitude pretrained FastText model.
 
-    Return the full path to the fastText embeddings.
+    Return the full path to the FastText embeddings.
     """
 
     os.makedirs(cache_dir, exist_ok=True)
@@ -48,7 +48,7 @@ def download_fasttext_magnitude_embeddings(cache_dir: str, verbose: bool = True,
     if not os.path.isfile(file_name) and not offline:
         if verbose:
             print(
-                "The fastText pretrained word embeddings will be download in magnitude format (2.3 GO), "
+                "The FastText pretrained word embeddings will be download in magnitude format (2.3 GO), "
                 "this process will take several minutes."
             )
         extension = extension + ".gz"
@@ -67,7 +67,7 @@ def download_weights(model_filename: str, saving_dir: str, verbose: bool = True)
     Args:
        model_filename: The network type (i.e. ``fasttext`` or ``bpemb``).
         saving_dir: The path to the saving directory.
-        verbose (bool): Either or not to be verbose during the download of a model. The default value is True.
+        verbose (bool): Either or not to be verbose during the download of a model. The default value is ``True``.
     """
     if verbose:
         print(f"Downloading the pre-trained weights for the network {model_filename}.")
@@ -83,7 +83,7 @@ def download_weights(model_filename: str, saving_dir: str, verbose: bool = True)
 
 def download_from_public_repository(file_name: str, saving_dir: str, file_extension: str) -> None:
     """
-    Simple function to download the content of a file from Deepparse public repository.
+    Simple function to download the content of a file from the Deepparse public repository.
     The repository URL string is `'https://graal.ift.ulaval.ca/public/deepparse/{}.{}'``
     where the first bracket is the file name and the second is the file extension.
     """
@@ -97,7 +97,7 @@ def download_from_public_repository(file_name: str, saving_dir: str, file_extens
 
 def download_models(saving_cache_path: Union[Path, None] = None) -> None:
     """
-    Function to download all the pretrained models.  It will download all the models checkpoint and version file.
+    Function to download all the pretrained models.  It will download all the model's checkpoints and version files.
 
     Args:
         saving_cache_path: The path to the saving cache directory for the specified model.
@@ -129,7 +129,7 @@ def download_model(
     elif "bpemb" in model_type:
         BPEmb(
             lang="multi", vs=100000, dim=300, cache_dir=saving_cache_path
-        )  # The class manage the download of the pretrained words embedding
+        )  # The class manages the download of the pretrained words embedding
 
     model_type_filename = MODEL_MAPPING_CHOICES[model_type]
     model_path = os.path.join(saving_cache_path, f"{model_type_filename}.ckpt")
@@ -165,15 +165,15 @@ def latest_version(model: str, cache_path: str, verbose: bool) -> bool:
 
     except HTTPError as exception:  # HTTP connection error handling
         if HTTP_CLIENT_ERROR_STATUS_CODE <= exception.response.status_code < NEXT_RANGE_STATUS_CODE:
-            # Case where Deepparse server is down.
+            # Case where the Deepparse server is down.
             if verbose:
                 warnings.warn(
-                    f"We where not able to verify the cached model in the cache directory {cache_path}. It seems like"
-                    f"Deepparse server is not available at the moment. We recommend to attempt to verify "
+                    f"We could not verify the cached model in the cache directory {cache_path}. It seems like"
+                    f"Deepparse server is not available at the moment. We recommend attempting to verify "
                     f"the model version another time using our download CLI function.",
                     category=RuntimeWarning,
                 )
-            # The is_lastest_version is set to True even if we were not able to validate the version. We do so not to
+            # The is_lastest_version is set to True even if we cannot validate the version. We do so not to
             # block the rest of the process.
             is_latest_version = True
         else:
@@ -182,15 +182,15 @@ def latest_version(model: str, cache_path: str, verbose: bool) -> bool:
             raise
     except MaxRetryError:
         # Case where the user does not have an Internet connection. For example, one can run it in a
-        # Docker container not connected to the Internet.
+        # The Docker container is not connected to the Internet.
         if verbose:
             warnings.warn(
-                f"We where not able to verify the cached model in the cache directory {cache_path}. It seems like"
-                f"you are not connected to the Internet. We recommend to verify if you have the latest using our "
+                f"We could not verify the cached model in the cache directory {cache_path}. It seems like"
+                f"you are not connected to the Internet. We recommend verifying if you have the latest using our "
                 f"download CLI function.",
                 category=RuntimeWarning,
             )
-        # The is_lastest_version is set to True even if we were not able to validate the version. We do so not to
+        # The is_lastest_version is set to True even if we cannot validate the version. We do so not to
         # block the rest of the process.
         is_latest_version = True
     finally:
@@ -203,7 +203,7 @@ def latest_version(model: str, cache_path: str, verbose: bool) -> bool:
 
 # pylint: disable=pointless-string-statement
 FASTTEXT_COPYRIGHT_MIT_LICENSE = """
-The code below was copied from the fastText project, and has been modified for the purpose of this package.
+The code below was copied from the FastText project, and has been modified for the purpose of this package.
 
 COPYRIGHT
 
@@ -237,11 +237,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 def download_fasttext_embeddings(cache_dir: str, verbose: bool = True, offline: bool = False) -> str:
     """
-    Simpler version of the download_model function from fastText to download pretrained common-crawl
-    vectors from fastText's website https://fasttext.cc/docs/en/crawl-vectors.html and save it in the
+    Simpler version of the download_model function from FastText to download pretrained common-crawl
+    vectors from FastText's website https://fasttext.cc/docs/en/crawl-vectors.html and save it in the
     saving directory (saving_dir).
 
-    Return the full path to the fastText embeddings.
+    Return the full path to the FastText embeddings.
     """
     os.makedirs(cache_dir, exist_ok=True)
 
@@ -258,21 +258,21 @@ def download_fasttext_embeddings(cache_dir: str, verbose: bool = True, offline: 
                 shutil.copyfileobj(f, f_out)
         os.remove(os.path.join(cache_dir, gz_file_name))
 
-    return file_name_path  # return the full path to the fastText embeddings
+    return file_name_path  # return the full path to the FastText embeddings
 
 
 # Now use a saving path and don't return a bool
 def download_gz_model(gz_file_name: str, saving_path: str, verbose: bool = True) -> None:
     """
-    Simpler version of the _download_gz_model function from fastText to download pretrained common-crawl
-    vectors from fastText's website https://fasttext.cc/docs/en/crawl-vectors.html and save it in the
+    Simpler version of the _download_gz_model function from FastText to download pretrained common-crawl
+    vectors from FastText's website https://fasttext.cc/docs/en/crawl-vectors.html and save it in the
     saving directory (saving_path).
     """
 
     url = f"https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/{gz_file_name}"
     if verbose:
         print(
-            "The fastText pretrained word embeddings will be downloaded (6.8 GO), "
+            "The FastText pretrained word embeddings will be downloaded (6.8 GO), "
             "this process will take several minutes."
         )
     _download_file(url, saving_path, verbose=verbose)

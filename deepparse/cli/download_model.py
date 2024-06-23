@@ -1,13 +1,12 @@
 import argparse
 import sys
 
-
 from deepparse.download_tools import download_model, MODEL_MAPPING_CHOICES
 
 
 def main(args=None) -> None:
     """
-    CLI function to manually download all the dependencies for a pretrained model.
+    CLI function to download all the dependencies for a pretrained model manually.
 
     Example of usage:
 
@@ -41,7 +40,7 @@ def get_parser() -> argparse.ArgumentParser:
         "--saving_cache_dir",
         type=str,
         default=None,
-        help="To change the default saving cache directory (default to None e.g. default path).",
+        help="To change the default saving cache directory (default to None, e.g. default path).",
     )
 
     return parser

@@ -32,7 +32,7 @@ from ..parser import AddressParser
 def main(args=None) -> None:
     # pylint: disable=too-many-locals, too-many-branches
     """
-    CLI function to rapidly parse an addresses dataset and output it in another file.
+    CLI function to easily parse an address dataset and output it in another file.
 
     Examples of usage:
 
@@ -40,7 +40,7 @@ def main(args=None) -> None:
 
         parse fasttext ./dataset_path.csv parsed_address.pickle
 
-    Using a gpu device
+    Using a GPU device
 
     .. code-block:: sh
 
@@ -119,7 +119,7 @@ def main(args=None) -> None:
 
 
 def get_parser() -> argparse.ArgumentParser:
-    """Return ArgumentParser for the cli."""
+    """Return ArgumentParser for the CLI."""
 
     parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument(
@@ -137,11 +137,11 @@ def get_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "export_filename",
         help=wrap(
-            "The filename to use to export the parsed addresses. We will infer the file format base on the "
+            "The filename to use to export the parsed addresses. We will infer the file format based on the "
             "file extension. That is, if the file is a pickle (.p or .pickle), we will export it into a pickle file. "
-            "The supported format are Pickle, CSV and JSON. "
+            "The supported formats are Pickle, CSV and JSON. "
             "The file will be exported in the same repositories as the dataset_path. "
-            "See the doc for more details on the format exporting."
+            "See the documentation for more details on the format exporting."
         ),
         type=str,
     )

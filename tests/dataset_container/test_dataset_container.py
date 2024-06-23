@@ -104,6 +104,24 @@ class DatasetContainerTest(TestCase):
         with self.assertRaises(DataError):
             ADatasetContainer(some_invalid_data)
 
+    def test_when_multiple_consecutive_whitespace_address_then_raise_data_error(self):
+        some_invalid_data = [("An address", [1, 0]), ("An  address", [1, 0]), ("A last address", [3, 4, 0])]
+        with self.assertRaises(DataError):
+            ADatasetContainer(some_invalid_data)
+
+        some_invalid_data = [("An address", [1, 0]), ("A second  Address", [2, 3, 4]), ("A last address", [3, 4, 0])]
+        with self.assertRaises(DataError):
+            ADatasetContainer(some_invalid_data)
+
+    def test_when_newline_address_then_raise_data_error(self):
+        some_invalid_data = [("An address", [1, 0]), ("An address\n", [1, 0]), ("A last address", [3, 4, 0])]
+        with self.assertRaises(DataError):
+            ADatasetContainer(some_invalid_data)
+
+        some_invalid_data = [("An address", [1, 0]), ("A second \nAddress", [2, 3, 4]), ("A last address", [3, 4, 0])]
+        with self.assertRaises(DataError):
+            ADatasetContainer(some_invalid_data)
+
     def test_when_empty_tags_set_then_raise_data_error(self):
         some_invalid_data = [("An address", [1, 0]), ("another address", []), ("A last address", [3, 4, 0])]
         with self.assertRaises(DataError):

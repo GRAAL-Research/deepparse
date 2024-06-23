@@ -1,6 +1,6 @@
 class DataError(Exception):
     """
-    User error when data is not construct as expected.
+    User error occurs when the data structure is not as expected.
     """
 
     def __init__(self, value: str) -> None:

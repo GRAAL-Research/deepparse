@@ -12,10 +12,10 @@ Pre-trained Complete Model
 This is the complete pretrained address parser model. This model allows using the pretrained weights to predict the
 tags of any address.
 
-We offer, for now, only two pretrained models, FastText and BPEmb. The first one relies on
+For now, we offer only two pretrained models, FastText and BPEmb. The first one relies on
 `fastText <https://fasttext.cc/>`__ French pretrained embeddings to parse the address, and the second use
 the `byte-pair multilingual subword <https://nlp.h-its.org/bpemb/>`_ pretrained embeddings. In both cases,
-the architecture is similar, and performances are comparable; our results are available in this
+the architecture and performances are similar; our results are available in this
 `article <https://arxiv.org/abs/2006.16152>`_.
 
 Memory Usage and Time Performance
@@ -27,7 +27,7 @@ we report the RAM usage, and in the first table, we also report the GPU memory u
 Also, for both tables, we report the mean-time of execution
 that was obtained by processing ~183,000 addresses using different batch sizes (2^0, ..., 2^9)
 (i.e. :math:`\frac{\text{Total time to process all addresses}}{~183,000} =` time per address).
-In addition, we proposed a lighter version (fasttext-light) of our fastText model using
+In addition, we proposed a lighter version (``"fasttext-light"``) of our fastText model using
 `Magnitude embeddings mapping <https://github.com/plasticityai/magnitude>`_. For this lighter model, on average, results
 are a little bit lower for the trained country (around ~2%) but are similar for the zero-shot country
 (see our `article <https://arxiv.org/abs/2006.16152>`_ for more details).
@@ -108,10 +108,10 @@ are a little bit lower for the trained country (around ~2%) but are similar for 
 
 .. [2] Note that on Windows, we use the Gensim FastText models that use ~10 GO with similar performance.
 
-Thus, the more address is, the faster each address can be processed. You can also improve performance by using more
+Thus, the more addresses there are, the faster each address can be processed. You can also improve performance by using more
 workers for the data loader created with your data within the call. But note that this performance improvement is not linear.
 Furthermore, as of version ``0.9.6``, we now use Torch 2.0 and many other tricks to improve
-processing performance. Here a few: if the parser uses a GPU, it will pin the memory in the Dataloader and reduce some
+processing performance. Here are a few: if the parser uses a GPU, it will pin the memory in the Dataloader and reduce some
 operations (e.g. useless ``.to(device)``).
 
 AddressParser

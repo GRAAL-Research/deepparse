@@ -5,7 +5,7 @@ Training Guide
 ==============
 
 In addition to parsing addresses out-of-the-box, Deepparse allows you to retrain the pre-trained models to fit your data and use cases.
-In the world of machine learning, this is what's refered to as ``fine-tuning``, which can make it easier to obtain well-performing
+In the world of machine learning, this is what's referred to as ``fine-tuning``, which can make it easier to obtain well-performing
 models more efficiently and with less data.
 
 Since fine-tuning models can be tricky, this section of the documentation provides some guidelines and insights that may
@@ -19,14 +19,14 @@ how to retrain our models.
 
 A few use cases may lead you to want to retrain Deepparse's models. Whether you wish to obtain a better
 performance on a single or multiple countries that our models weren't trained on, or your data and address schemes require a more complex
-architecture, or the tag structure of your dataset, is different from ours; deepparse's retraining features accommodate all these use cases and more.
+architecture, or your dataset's tag structure, differs from ours; Deepparse's retraining features accommodate all these use cases and more.
 
 In practice, our models were trained on 20 countries. They demonstrated very accurate results on all of them, so we advise you to use our models without retraining unless you wish to predict
-different tags (e.g., StreetNumber ...). Also, suppose you want to retrain
+different tags (e.g., StreetNumber, ...). Also, suppose you want to retrain
 our models to perform better on countries outside of the 20 used in the original training set. In that case, you can look
 at `our dataset <https://github.com/GRAAL-Research/deepparse-address-data>`__ which includes an additional 41 countries used only for testing.
 
-There are two main concerns to keep in mind when fine-tuning a model: the model's convergence (i.e, its ability actually to learn from the new data)
+There are two main concerns to keep in mind when fine-tuning a model: the model's convergence (i.e., its ability actually to learn from the new data)
 and the possibility of ``catastrophic forgetting`` (i.e., losing the model's previous knowledge after training on the new data).
 
 Learning Successfully
@@ -37,7 +37,7 @@ of fine-tuning, the models have already developed a base knowledge of the task t
 This is especially true in the case of Deepparse since the task you are fine-tuning remains the same (i.e. parsing addresses).
 However, there are a couple of points to consider to obtain favourable results:
 
-- **Make sure you have enough data**: deep learning models are notorious for being pretty data hungry, so unless you have enough data, the models
+- **Make sure you have enough data**: deep learning models are notorious for being pretty data-hungry, so unless you have enough data, the models
   will have a hard time learning. Since Deepparse's models have already been trained on a few million addresses, the need for data is mitigated for fine-tuning. However,
   it is recommended to use at least a few thousand examples per new country when retraining.
 
@@ -59,7 +59,7 @@ However, there are a couple of points to consider to obtain favourable results:
 Do Not Forget!
 **************
 
-As mentionned above, catastrophic forgetting can happen when fine-tuning machine learning models. This is because the models' internal parameters are
+As mentioned above, catastrophic forgetting can happen when fine-tuning machine learning models. This is because the models' internal parameters are
 modified to accommodate the new task/data, which can impact their ability to be appropriate for the previous task/data.
 
 There are many fancy ways to mitigate catastrophic forgetting when fine-tuning models. Still, given the task and data that Deepparse handles, we recommend including some of the previous data when constructing your retraining dataset. The amount
@@ -95,5 +95,5 @@ Modifying the Architecture
 
 The :meth:`~deepparse.parser.AddressParser.retrain` method allows you to change the architecture of the models using the ``seq2seq_params``
 argument. This can be useful if you need a more complex model or a lighter model, for example. However, if you
-change the models' architecture, you will end up with a completely new model that will be retrained from scratch. This
-means that all the previous knowledge that the initial model had will disapear.
+change the models' architecture, a completely new model will be retrained from scratch. This
+means that all the previous knowledge that the initial model had will disappear.

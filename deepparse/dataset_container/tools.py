@@ -13,9 +13,9 @@ def former_python_list(tags: str) -> List:
     Return:
         A list of the parsed tag set.
     """
-    # We remove the [ and ] of the list.
+    # We removed the ``"["`` and ``"]"`` from the list.
     # Then, we split each element using a comma as a separator.
-    # Finally, in some cases, the element are separated by a comma (e.g. element1,element2)
+    # Finally, in some cases, the elements are separated by a comma (e.g. element1,element2)
     # or a comma and a whitespace (e.g. element1, element2), we strip the whitespace on all tags to
     # remove the trailing whitespace when a coma and a whitespace separate elements.
     # To fix https://github.com/GRAAL-Research/deepparse/issues/124.

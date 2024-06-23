@@ -6,7 +6,7 @@ from .. import validate_data_to_parse
 
 class FastTextVectorizer(Vectorizer):
     """
-    FastText vectorizer to convert an address into fastText embeddings.
+    FastText vectorizer to convert an address into FastText embeddings.
     """
 
     def __call__(self, addresses: List[str]) -> List:
@@ -28,7 +28,7 @@ class FastTextVectorizer(Vectorizer):
         Method to vectorize the address.
 
         Args:
-            address (str): Address to vectorize using fastText.
+            address (str): Address to vectorize using FastText.
 
         Return:
             A list of word vector.

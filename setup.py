@@ -69,9 +69,10 @@ def main():
         ],
         packages=packages,
         install_requires=[
-            "numpy<=2.0.0",
+            "numpy<2.0.0",
             "torch",
             "bpemb",
+            "scipy<=1.10.1",
             "gensim>=4.0.0",
             "requests",
             "fasttext-wheel",

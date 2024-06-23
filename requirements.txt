@@ -1,6 +1,6 @@
 torch
 bpemb
-numpy
+numpy==1.26.4
 requests
 pymagnitude-light
 colorama>=0.4.3

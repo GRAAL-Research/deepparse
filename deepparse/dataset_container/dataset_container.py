@@ -30,28 +30,35 @@ class DatasetContainer(Dataset, ABC):
         - no address is a ``None`` value,
         - no address is empty,
         - no address is composed of only whitespace,
+        - no address includes consecutive whitespace (e.g. "An  address"),
         - no tags list is empty, if data is a list of tuple (``[('an address', ['a_tag', 'another_tag']), ...]``), and
         - if the addresses (whitespace-split) are the same length as their respective tags list.
 
     While for a predict container (unknown prediction tag), it validates the following:
 
         - no address is a ``None`` value,
-        - no address is empty, and
-        - no address is composed of only whitespace.
+        - no address is empty,
+        - no address is composed of only whitespace, and
+        - no address includes consecutive whitespace (e.g. "An  address").
 
     Args:
         is_training_container (bool): Either or not, the dataset container is a training container. This will determine
             the dataset validation test we apply to the dataset. That is, a predict dataset doesn't include tags.
             The default value is ``True``.
+        data_cleaning_pre_processing_fn (Callable): Function to apply as data clea ning pre-processing step after
+            loading the data, but before applying the validation steps. The default value is ``None``.
     """
 
     @abstractmethod
-    def __init__(self, is_training_container: bool = True) -> None:
+    def __init__(
+        self, is_training_container: bool = True, data_cleaning_pre_processing_fn: Union[None, Callable] = None
+    ) -> None:
         """
         The method to init the class. It needs to be defined by the child's class.
         """
         self.data = None
         self.is_training_container = is_training_container
+        self.data_cleaning_pre_processing_fn = data_cleaning_pre_processing_fn
 
     def __len__(self) -> int:
         return len(self.data)
@@ -180,6 +187,7 @@ class PickleDatasetContainer(DatasetContainer):
         - no address is a ``None`` value,
         - no address is empty,
         - no address is composed of only whitespace,
+        - no address includes consecutive whitespace (e.g. "An  address"),
         - no tags list is empty, if data is a list of tuple (``[('an address', ['a_tag', 'another_tag']), ...]``), and
         - if the addresses (whitespace-split) are the same length as their respective tags list.
 
@@ -187,19 +195,29 @@ class PickleDatasetContainer(DatasetContainer):
     following:
 
         - no address is a ``None`` value,
-        - no address is empty, and
-        - no address is composed of only whitespace.
+        - no address is empty,
+        - no address is composed of only whitespace, and
+        - no address includes consecutive whitespace (e.g. "An  address").
 
     Args:
         data_path (str): The path to the pickle dataset file.
         is_training_container (bool): Either or not, the dataset container is a training container. This will determine
             the dataset validation test we apply to the dataset. That is, a predict dataset doesn't include tags.
             The default value is ``True``.
+        data_cleaning_pre_processing_fn (Callable): Function to apply as data clea ning pre-processing step after
+            loading the data, but before applying the validation steps. The default value is ``None``.
 
     """
 
-    def __init__(self, data_path: str, is_training_container: bool = True) -> None:
-        super().__init__(is_training_container=is_training_container)
+    def __init__(
+        self,
+        data_path: str,
+        is_training_container: bool = True,
+        data_cleaning_pre_processing_fn: Union[None, Callable] = None,
+    ) -> None:
+        super().__init__(
+            is_training_container=is_training_container, data_cleaning_pre_processing_fn=data_cleaning_pre_processing_fn
+        )
         with open(data_path, "rb") as f:
             self.data = load(f)
 
@@ -209,6 +227,8 @@ class PickleDatasetContainer(DatasetContainer):
                     "The data is a list of tuples, but the dataset container is a predict container. "
                     "Predict container should contain only a list of addresses."
                 )
+        if self.data_cleaning_pre_processing_fn is not None:
+            self.data = self.data_cleaning_pre_processing_fn(self.data)
 
         self.validate_dataset()
 
@@ -229,6 +249,7 @@ class CSVDatasetContainer(DatasetContainer):
         - no address is a ``None`` value,
         - no address is empty,
         - no address is composed of only whitespace,
+        - no address includes consecutive whitespace (e.g. "An  address"),
         - no tags list is empty, if data is a list of tuple (``[('an address', ['a_tag', 'another_tag']), ...]``), and
         - if the addresses (whitespace-split) are the same length as their respective tags list.
 
@@ -236,8 +257,9 @@ class CSVDatasetContainer(DatasetContainer):
     following:
 
         - no address is a ``None`` value,
-        - no address is empty, and
-        - no address is composed of only whitespace.
+        - no address is empty,
+        - no address is composed of only whitespace, and
+        - no address includes consecutive whitespace (e.g. "An  address").
 
     Args:
 
@@ -257,7 +279,9 @@ class CSVDatasetContainer(DatasetContainer):
             That is, it removes the ``[],`` characters and splits the sequence at each comma (``","``).
         csv_reader_kwargs (dict, optional): Keyword arguments to pass to pandas ``read_csv`` use internally. By default,
             the ``data_path`` is passed along with our default ``sep`` value ( ``"\\t"``) and the ``"utf-8"`` encoding
-            format. However, this can be overridded by using this argument again.
+            format. However, this can be overridden by using this argument again.
+        data_cleaning_pre_processing_fn (Callable): Function to apply as data clea ning pre-processing step after
+            loading the data, but before applying the validation steps. The default value is ``None``.
     """
 
     def __init__(
@@ -268,8 +292,11 @@ class CSVDatasetContainer(DatasetContainer):
         separator: str = "\t",
         tag_seperator_reformat_fn: Union[None, Callable] = None,
         csv_reader_kwargs: Union[None, Dict] = None,
+        data_cleaning_pre_processing_fn: Union[None, Callable] = None,
     ) -> None:
-        super().__init__(is_training_container=is_training_container)
+        super().__init__(
+            is_training_container=is_training_container, data_cleaning_pre_processing_fn=data_cleaning_pre_processing_fn
+        )
         if is_training_container:
             if isinstance(column_names, str):
                 raise ValueError(
@@ -306,6 +333,10 @@ class CSVDatasetContainer(DatasetContainer):
         else:
             data = [data_point[0] for data_point in pd.read_csv(**csv_reader_kwargs)[column_names].to_numpy()]
         self.data = data
+
+        if self.data_cleaning_pre_processing_fn is not None:
+            self.data = self.data_cleaning_pre_processing_fn(self.data)
+
         self.validate_dataset()
 
 
@@ -320,9 +351,22 @@ class ListDatasetContainer(DatasetContainer):
         is_training_container (bool): Either or not, the dataset container is a training container. This will determine
             the dataset validation test we apply to the dataset. That is, a predict dataset doesn't include tags.
             The default value is ``True``.
+        data_cleaning_pre_processing_fn (Callable): Function to apply as data clea ning pre-processing step after
+            loading the data, but before applying the validation steps. The default value is ``None``.
     """
 
-    def __init__(self, data: List, is_training_container: bool = True) -> None:
-        super().__init__(is_training_container=is_training_container)
+    def __init__(
+        self,
+        data: List,
+        is_training_container: bool = True,
+        data_cleaning_pre_processing_fn: Union[None, Callable] = None,
+    ) -> None:
+        super().__init__(
+            is_training_container=is_training_container, data_cleaning_pre_processing_fn=data_cleaning_pre_processing_fn
+        )
         self.data = data
+
+        if self.data_cleaning_pre_processing_fn is not None:
+            self.data = self.data_cleaning_pre_processing_fn(self.data)
+
         self.validate_dataset()

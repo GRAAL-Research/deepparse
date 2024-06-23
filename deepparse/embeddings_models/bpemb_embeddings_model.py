@@ -4,11 +4,16 @@ from pathlib import Path
 
 import requests
 from bpemb import BPEmb
-
 from numpy.core.multiarray import ndarray
 from urllib3.exceptions import InsecureRequestWarning
 
 from .embeddings_model import EmbeddingsModel
+
+
+class BPEmbBaseURLWrapperBugFix(BPEmb):
+    def __init__(self, **kwargs):
+        self.base_url = "https://bpemb.h-its.org/multi/"
+        super().__init__(**kwargs)
 
 
 class BPEmbEmbeddingsModel(EmbeddingsModel):
@@ -31,7 +36,9 @@ class BPEmbEmbeddingsModel(EmbeddingsModel):
             # hotfix until https://github.com/bheinzerling/bpemb/issues/63
             # is resolved.
             with no_ssl_verification():
-                model = BPEmb(lang="multi", vs=100000, dim=300, cache_dir=Path(cache_dir))  # defaults parameters
+                # We use the default parameters other than the dim at 300 and a vs of 100,000
+                # We use a BPEmb wrapper since the base URL is broken and the issue is not resolved as of june 23rd.
+                model = BPEmbBaseURLWrapperBugFix(lang="multi", vs=100000, dim=300, cache_dir=Path(cache_dir))
         self.model = model
 
     def __call__(self, word: str) -> ndarray:

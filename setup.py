@@ -69,7 +69,7 @@ def main():
         ],
         packages=packages,
         install_requires=[
-            "numpy==1.26.4",
+            "numpy<=2.0.0",
             "torch",
             "bpemb",
             "gensim>=4.0.0",

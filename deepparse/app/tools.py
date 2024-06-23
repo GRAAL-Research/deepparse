@@ -1,8 +1,10 @@
 from typing import List, Dict, Union
 
-from deepparse.app import address_parser_mapping
 from deepparse.app.address import Address
 from deepparse.download_tools import MODEL_MAPPING_CHOICES
+from deepparse.parser import AddressParser
+
+address_parser_mapping: Dict[str, AddressParser] = {}
 
 
 def format_parsed_addresses(

@@ -2,10 +2,10 @@
 
 import logging
 from contextlib import asynccontextmanager
-from typing import List, Dict
+from typing import List
 
 from deepparse.app.address import Address
-from deepparse.app.tools import format_parsed_addresses
+from deepparse.app.tools import format_parsed_addresses, address_parser_mapping
 from deepparse.download_tools import MODEL_MAPPING_CHOICES, download_models
 from deepparse.parser import AddressParser
 
@@ -22,8 +22,6 @@ FORMAT = "%(asctime)s; %(levelname)s: %(message)s"
 logging.basicConfig(format=FORMAT, level=logging.DEBUG)
 
 configure_sentry()
-
-address_parser_mapping: Dict[str, AddressParser] = {}
 
 
 @asynccontextmanager

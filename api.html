@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Parse Address With Our Out-Of-The-Box API &mdash; deepparse 0.9.9 documentation</title>
+  <title>Parse Address With Our Out-Of-The-Box API &mdash; deepparse 0.9.10 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -36,7 +36,7 @@
               <img src="_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.9.9
+                0.9.10
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -119,11 +119,11 @@
              
   <section id="parse-address-with-our-out-of-the-box-api">
 <h1>Parse Address With Our Out-Of-The-Box API<a class="headerlink" href="#parse-address-with-our-out-of-the-box-api" title="Permalink to this heading"></a></h1>
-<p>We also offer an out-of-the-box RESTAPI to parse addresses using FastAPI.</p>
+<p>We also offer an out-of-the-box REST API to parse addresses using FastAPI.</p>
 <section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h2>
-<p>First, ensure that you have Docker Engine and Docker Compose installed on your machine.
-If not, you can install them using the following documentations in the following order:</p>
+<p>First, ensure you have Docker Engine and Docker Compose installed on your machine.
+If not, you can install them using the following documentation in the following order:</p>
 <ol class="arabic simple">
 <li><p><a class="reference external" href="https://docs.docker.com/engine/install/">Docker Engine</a></p></li>
 <li><p><a class="reference external" href="https://docs.docker.com/compose/install/">Docker Compose</a></p></li>
@@ -135,14 +135,14 @@ If not, you can install them using the following documentations in the following
 </section>
 <section id="sentry">
 <h2>Sentry<a class="headerlink" href="#sentry" title="Permalink to this heading"></a></h2>
-<p>Also, you can monitor your application usage with <a class="reference external" href="https://sentry.io">Sentry</a> by setting the environment variable  <code class="docutils literal notranslate"><span class="pre">SENTRY_DSN</span></code> to your Sentry’s project
+<p>Also, you can monitor your application usage with <a class="reference external" href="https://sentry.io">Sentry</a> by setting the environment variable <code class="docutils literal notranslate"><span class="pre">SENTRY_DSN</span></code> to your Sentry project
 DSN. There is an example of the <code class="docutils literal notranslate"><span class="pre">.env</span></code> file in the project’s root named <code class="docutils literal notranslate"><span class="pre">.env_example</span></code>. You can copy it using the following command:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>cp<span class="w"> </span>.env_example<span class="w"> </span>.env
 </pre></div>
 </div>
 <section id="request-examples">
 <h3>Request Examples<a class="headerlink" href="#request-examples" title="Permalink to this heading"></a></h3>
-<p>Once the application is up and running and port <code class="docutils literal notranslate"><span class="pre">8000</span></code> is exported on your localhost, you can send a request with one
+<p>Once the application is up and running and port <code class="docutils literal notranslate"><span class="pre">8000</span></code> is exported on your <code class="docutils literal notranslate"><span class="pre">localhost</span></code>, you can send a request with one
 of the following methods:</p>
 <section id="curl-post-request">
 <h4>cURL POST request<a class="headerlink" href="#curl-post-request" title="Permalink to this heading"></a></h4>
@@ -187,7 +187,7 @@ of the following methods:</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020-2023, Marouane Yassine &amp; David Beauchemin.</p>
+    <p>&#169; Copyright 2020-2024, Marouane Yassine &amp; David Beauchemin.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

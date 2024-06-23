@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>deepparse.cli.retrain &mdash; deepparse 0.9.9 documentation</title>
+  <title>deepparse.cli.retrain &mdash; deepparse 0.9.10 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -33,7 +33,7 @@
               <img src="../../../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.9.9
+                0.9.10
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -170,7 +170,7 @@
 <div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../cli.html#deepparse.cli.retrain.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="c1"># pylint: disable=too-many-locals, too-many-branches</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    CLI function to rapidly retrain an addresses parser and saves it. One can retrain a base pretrained model</span>
+<span class="sd">    CLI function to easily retrain an address parser and save it. One can retrain a base pretrained model</span>
 <span class="sd">    using most of the arguments as the :meth:`~AddressParser.retrain` method. By default, all the parameters have</span>
 <span class="sd">    the same default value as the :meth:`~AddressParser.retrain` method. The supported parameters are the following:</span>
 
@@ -192,7 +192,7 @@
 
 <span class="sd">        retrain fasttext ./train_dataset_path.csv</span>
 
-<span class="sd">    Using a gpu device</span>
+<span class="sd">    Using a GPU device</span>
 
 <span class="sd">    .. code-block:: sh</span>
 
@@ -248,7 +248,7 @@
 
 
 <span class="k">def</span> <span class="nf">get_parser</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return ArgumentParser for the cli.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return ArgumentParser for the CLI.&quot;&quot;&quot;</span>
 
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">RawTextHelpFormatter</span><span class="p">)</span>
 
@@ -304,8 +304,8 @@
         <span class="s2">&quot;--logging_path&quot;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span>
             <span class="s2">&quot;The logging path for the checkpoints and the retrained model. &quot;</span>
-            <span class="s2">&quot;Note that training creates checkpoints, and we use Poutyne library that use the best epoch &quot;</span>
-            <span class="s2">&quot;model and reloads the state if any checkpoints are already there. &quot;</span>
+            <span class="s2">&quot;Note that training creates checkpoints, and we use the Poutyne library that uses the best epoch &quot;</span>
+            <span class="s2">&quot;model and reload the state if any checkpoints are already there. &quot;</span>
             <span class="s2">&quot;Thus, an error will be raised if you change the model type. For example, &quot;</span>
             <span class="s2">&quot;you retrain a FastText model and then retrain a BPEmb in the same logging path directory.&quot;</span>
             <span class="s2">&quot;By default, the path is &#39;./checkpoints&#39;.&quot;</span>
@@ -347,7 +347,7 @@
         <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span>
             <span class="s2">&quot;Path to a JSON file of prediction tags to use to retrain. Tags are in a key-value style, where &quot;</span>
             <span class="s2">&quot;the key is the tag name, and the value is the index one.&quot;</span>
-            <span class="s2">&quot;The last element has to be an EOS tag. Read the doc for more detail about EOS tag.&quot;</span>
+            <span class="s2">&quot;The last element has to be an EOS tag. Read the documentation for more details about the EOS tag.&quot;</span>
         <span class="p">),</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
@@ -378,7 +378,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020-2023, Marouane Yassine &amp; David Beauchemin.</p>
+    <p>&#169; Copyright 2020-2024, Marouane Yassine &amp; David Beauchemin.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

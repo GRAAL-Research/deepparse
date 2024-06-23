@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>deepparse.comparer.addresses_comparer &mdash; deepparse 0.9.9 documentation</title>
+  <title>deepparse.comparer.addresses_comparer &mdash; deepparse 0.9.10 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -33,7 +33,7 @@
               <img src="../../../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.9.9
+                0.9.10
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -116,8 +116,9 @@
 <div class="viewcode-block" id="AddressesComparer"><a class="viewcode-back" href="../../../comparer.html#deepparse.comparer.AddressesComparer">[docs]</a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">AddressesComparer</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Address comparer to compare addresses with each other and retrieves the differences between them. The addresses</span>
-<span class="sd">    are parsed using an address parser based on one of the seq2seq pretrained networks, either with fastText or BPEmb.</span>
+<span class="sd">    Address comparer is used to compare addresses with each other and retrieve the differences between them. The</span>
+<span class="sd">    addresses are parsed using an address parser based on one of the seq2seq pretrained networks, either with</span>
+<span class="sd">    FastText or BPEmb.</span>
 
 <span class="sd">    The address comparer can compare already parsed addresses. The address parser first recomposes the raw</span>
 <span class="sd">    addresses then suggest its own tags; then it makes a comparison with the tags of the source parsing and the</span>
@@ -149,12 +150,12 @@
 <span class="sd">        raw address from the parsing, AddressParser generates tags and compares the two parsings.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            addresses_tags_to_compare (Union[List[tuple], List[List[tuple]]]): list of tuple that contains</span>
+<span class="sd">            addresses_tags_to_compare (Union[List[tuple], List[List[tuple]]]): list of tuples that contain</span>
 <span class="sd">            the tags for the address components from the source. Can compare multiple parsings if passed as a</span>
 <span class="sd">            list of tuples.</span>
-<span class="sd">            with_prob (Union[None, bool]): An option flag to either or not include prob in the comparison report.</span>
-<span class="sd">                The probabilities are not compared but only included in the report.</span>
-<span class="sd">                The default value is None, which means not taking into account.</span>
+<span class="sd">            with_prob (Union[None, bool]): An option flag to either or not include probabilities in the comparison</span>
+<span class="sd">                report. The probabilities are not compared but only included in the report. The default value is</span>
+<span class="sd">                ``None``, which means not taking into account.</span>
 
 <span class="sd">        Return:</span>
 <span class="sd">            Either a :class:`~FormattedComparedAddressesTags` or a list of :class:`~FormattedComparedAddressTags`</span>
@@ -229,15 +230,14 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">FormattedComparedAddressesRaw</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compare a list of raw addresses together. It starts by parsing the addresses</span>
-<span class="sd">        with the setted parser and then return the differences between the addresses components</span>
-<span class="sd">        retrieved with our model.</span>
+<span class="sd">        with the parser and then return the differences between the parsed address components of the two addresses.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            raw_addresses_to_compare (Union[Tuple[str], List[Tuple[str]]]):</span>
 <span class="sd">                List of strings that represent raw addresses to compare.</span>
-<span class="sd">            with_prob (Union[None, bool]): An option flag to either or not include prob in the comparison report.</span>
-<span class="sd">                The probabilities are not compared but only included in the report.</span>
-<span class="sd">                The default value is None, which means not taking into account.</span>
+<span class="sd">            with_prob (Union[None, bool]): An option flag to either or not include probabilities in the comparison</span>
+<span class="sd">                report. The probabilities are not compared but only included in the report. The default value is</span>
+<span class="sd">                ``None``, which means not taking into account.</span>
 
 <span class="sd">        Return:</span>
 <span class="sd">            Either a :class:`~FormattedComparedAddressesRaw` or a list of</span>
@@ -290,8 +290,8 @@
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_format_comparisons_dict</span><span class="p">(</span><span class="n">comparison_tuples</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">origin_tuple</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">with_prob</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return formatted dict that contains two FormattedParsedAddress and the origin name tuple and output it in a</span>
-<span class="sd">        dict format.</span>
+<span class="sd">        Return formatted dictionary that contains two FormattedParsedAddress and the origin name tuple and output it</span>
+<span class="sd">        in a dictionary format.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">list_of_formatted_comparisons_dict</span> <span class="o">=</span> <span class="p">[]</span>
@@ -320,7 +320,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020-2023, Marouane Yassine &amp; David Beauchemin.</p>
+    <p>&#169; Copyright 2020-2024, Marouane Yassine &amp; David Beauchemin.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

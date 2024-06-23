@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Comparer &mdash; deepparse 0.9.9 documentation</title>
+  <title>Comparer &mdash; deepparse 0.9.10 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -36,7 +36,7 @@
               <img src="_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.9.9
+                0.9.10
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -141,8 +141,9 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="deepparse.comparer.AddressesComparer">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deepparse.comparer.</span></span><span class="sig-name descname"><span class="pre">AddressesComparer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="parser.html#deepparse.parser.AddressParser" title="deepparse.parser.address_parser.AddressParser"><span class="pre">AddressParser</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deepparse/comparer/addresses_comparer.html#AddressesComparer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.comparer.AddressesComparer" title="Permalink to this definition"></a></dt>
-<dd><p>Address comparer to compare addresses with each other and retrieves the differences between them. The addresses
-are parsed using an address parser based on one of the seq2seq pretrained networks, either with fastText or BPEmb.</p>
+<dd><p>Address comparer is used to compare addresses with each other and retrieve the differences between them. The
+addresses are parsed using an address parser based on one of the seq2seq pretrained networks, either with
+FastText or BPEmb.</p>
 <p>The address comparer can compare already parsed addresses. The address parser first recomposes the raw
 addresses then suggest its own tags; then it makes a comparison with the tags of the source parsing and the
 newly parsed address</p>
@@ -161,12 +162,12 @@ raw address from the parsing, AddressParser generates tags and compares the two 
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>addresses_tags_to_compare</strong> (<em>Union</em><em>[</em><em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><em>tuple</em></a><em>]</em><em>, </em><em>List</em><em>[</em><em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><em>tuple</em></a><em>]</em><em>]</em><em>]</em>) – list of tuple that contains</p></li>
+<li><p><strong>addresses_tags_to_compare</strong> (<em>Union</em><em>[</em><em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><em>tuple</em></a><em>]</em><em>, </em><em>List</em><em>[</em><em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><em>tuple</em></a><em>]</em><em>]</em><em>]</em>) – list of tuples that contain</p></li>
 <li><p><strong>a</strong> (<em>the tags for the address components from the source. Can compare multiple parsings if passed as</em>) – </p></li>
 <li><p><strong>tuples.</strong> (<em>list of</em>) – </p></li>
-<li><p><strong>with_prob</strong> (<em>Union</em><em>[</em><em>None</em><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>]</em>) – An option flag to either or not include prob in the comparison report.
-The probabilities are not compared but only included in the report.
-The default value is None, which means not taking into account.</p></li>
+<li><p><strong>with_prob</strong> (<em>Union</em><em>[</em><em>None</em><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>]</em>) – An option flag to either or not include probabilities in the comparison
+report. The probabilities are not compared but only included in the report. The default value is
+<code class="docutils literal notranslate"><span class="pre">None</span></code>, which means not taking into account.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -207,15 +208,14 @@ when there is more than one comparison to make.</p>
 <dt class="sig sig-object py" id="deepparse.comparer.AddressesComparer.compare_raw">
 <span class="sig-name descname"><span class="pre">compare_raw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_addresses_to_compare</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.Tuple" title="(in Python v3.8)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.List" title="(in Python v3.8)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.Tuple" title="(in Python v3.8)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">with_prob</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.List" title="(in Python v3.8)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#deepparse.comparer.FormattedComparedAddressesRaw" title="deepparse.comparer.formatted_compared_addresses_raw.FormattedComparedAddressesRaw"><span class="pre">FormattedComparedAddressesRaw</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/deepparse/comparer/addresses_comparer.html#AddressesComparer.compare_raw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.comparer.AddressesComparer.compare_raw" title="Permalink to this definition"></a></dt>
 <dd><p>Compare a list of raw addresses together. It starts by parsing the addresses
-with the setted parser and then return the differences between the addresses components
-retrieved with our model.</p>
+with the parser and then return the differences between the parsed address components of the two addresses.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>raw_addresses_to_compare</strong> (<em>Union</em><em>[</em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>]</em><em>, </em><em>List</em><em>[</em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>]</em><em>]</em><em>]</em>) – List of strings that represent raw addresses to compare.</p></li>
-<li><p><strong>with_prob</strong> (<em>Union</em><em>[</em><em>None</em><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>]</em>) – An option flag to either or not include prob in the comparison report.
-The probabilities are not compared but only included in the report.
-The default value is None, which means not taking into account.</p></li>
+<li><p><strong>with_prob</strong> (<em>Union</em><em>[</em><em>None</em><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>]</em>) – An option flag to either or not include probabilities in the comparison
+report. The probabilities are not compared but only included in the report. The default value is
+<code class="docutils literal notranslate"><span class="pre">None</span></code>, which means not taking into account.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -343,7 +343,7 @@ two addresses.</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020-2023, Marouane Yassine &amp; David Beauchemin.</p>
+    <p>&#169; Copyright 2020-2024, Marouane Yassine &amp; David Beauchemin.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Training Guide &mdash; deepparse 0.9.9 documentation</title>
+  <title>Training Guide &mdash; deepparse 0.9.10 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -35,7 +35,7 @@
               <img src="_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.9.9
+                0.9.10
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -114,7 +114,7 @@
   <section id="training-guide">
 <h1>Training Guide<a class="headerlink" href="#training-guide" title="Permalink to this heading"></a></h1>
 <p>In addition to parsing addresses out-of-the-box, Deepparse allows you to retrain the pre-trained models to fit your data and use cases.
-In the world of machine learning, this is what’s refered to as <code class="docutils literal notranslate"><span class="pre">fine-tuning</span></code>, which can make it easier to obtain well-performing
+In the world of machine learning, this is what’s referred to as <code class="docutils literal notranslate"><span class="pre">fine-tuning</span></code>, which can make it easier to obtain well-performing
 models more efficiently and with less data.</p>
 <p>Since fine-tuning models can be tricky, this section of the documentation provides some guidelines and insights that may
 be useful to adapt our models successfully. See <a class="reference internal" href="examples/fine_tuning.html#fine-tuning"><span class="std std-ref">Retrain a Pretrained Model</span></a> for a coding example of
@@ -127,12 +127,12 @@ open an issue on the Deepparse <a class="reference external" href="https://githu
 </div>
 <p>A few use cases may lead you to want to retrain Deepparse’s models. Whether you wish to obtain a better
 performance on a single or multiple countries that our models weren’t trained on, or your data and address schemes require a more complex
-architecture, or the tag structure of your dataset, is different from ours; deepparse’s retraining features accommodate all these use cases and more.</p>
+architecture, or your dataset’s tag structure, differs from ours; Deepparse’s retraining features accommodate all these use cases and more.</p>
 <p>In practice, our models were trained on 20 countries. They demonstrated very accurate results on all of them, so we advise you to use our models without retraining unless you wish to predict
-different tags (e.g., StreetNumber …). Also, suppose you want to retrain
+different tags (e.g., StreetNumber, …). Also, suppose you want to retrain
 our models to perform better on countries outside of the 20 used in the original training set. In that case, you can look
 at <a class="reference external" href="https://github.com/GRAAL-Research/deepparse-address-data">our dataset</a> which includes an additional 41 countries used only for testing.</p>
-<p>There are two main concerns to keep in mind when fine-tuning a model: the model’s convergence (i.e, its ability actually to learn from the new data)
+<p>There are two main concerns to keep in mind when fine-tuning a model: the model’s convergence (i.e., its ability actually to learn from the new data)
 and the possibility of <code class="docutils literal notranslate"><span class="pre">catastrophic</span> <span class="pre">forgetting</span></code> (i.e., losing the model’s previous knowledge after training on the new data).</p>
 <section id="learning-successfully">
 <h2>Learning Successfully<a class="headerlink" href="#learning-successfully" title="Permalink to this heading"></a></h2>
@@ -141,7 +141,7 @@ of fine-tuning, the models have already developed a base knowledge of the task t
 This is especially true in the case of Deepparse since the task you are fine-tuning remains the same (i.e. parsing addresses).
 However, there are a couple of points to consider to obtain favourable results:</p>
 <ul class="simple">
-<li><p><strong>Make sure you have enough data</strong>: deep learning models are notorious for being pretty data hungry, so unless you have enough data, the models
+<li><p><strong>Make sure you have enough data</strong>: deep learning models are notorious for being pretty data-hungry, so unless you have enough data, the models
 will have a hard time learning. Since Deepparse’s models have already been trained on a few million addresses, the need for data is mitigated for fine-tuning. However,
 it is recommended to use at least a few thousand examples per new country when retraining.</p></li>
 <li><p><strong>Prepare your dataset</strong>: once you are done pre-processing your dataset, you must convert it to a format which can be loaded into
@@ -159,7 +159,7 @@ training process. This can be specified in the <a class="reference internal" hre
 </section>
 <section id="do-not-forget">
 <h2>Do Not Forget!<a class="headerlink" href="#do-not-forget" title="Permalink to this heading"></a></h2>
-<p>As mentionned above, catastrophic forgetting can happen when fine-tuning machine learning models. This is because the models’ internal parameters are
+<p>As mentioned above, catastrophic forgetting can happen when fine-tuning machine learning models. This is because the models’ internal parameters are
 modified to accommodate the new task/data, which can impact their ability to be appropriate for the previous task/data.</p>
 <p>There are many fancy ways to mitigate catastrophic forgetting when fine-tuning models. Still, given the task and data that Deepparse handles, we recommend including some of the previous data when constructing your retraining dataset. The amount
 of addresses to keep would vary depending on the number of new addresses, but somewhere between 1% and 10% would be a good start.</p>
@@ -190,8 +190,8 @@ This will allow you to incrementally increase the size of your dataset with the 
 <h2>Modifying the Architecture<a class="headerlink" href="#modifying-the-architecture" title="Permalink to this heading"></a></h2>
 <p>The <a class="reference internal" href="parser.html#deepparse.parser.AddressParser.retrain" title="deepparse.parser.AddressParser.retrain"><code class="xref py py-meth docutils literal notranslate"><span class="pre">retrain()</span></code></a> method allows you to change the architecture of the models using the <code class="docutils literal notranslate"><span class="pre">seq2seq_params</span></code>
 argument. This can be useful if you need a more complex model or a lighter model, for example. However, if you
-change the models’ architecture, you will end up with a completely new model that will be retrained from scratch. This
-means that all the previous knowledge that the initial model had will disapear.</p>
+change the models’ architecture, a completely new model will be retrained from scratch. This
+means that all the previous knowledge that the initial model had will disappear.</p>
 </section>
 </section>
 
@@ -205,7 +205,7 @@ means that all the previous knowledge that the initial model had will disapear.<
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020-2023, Marouane Yassine &amp; David Beauchemin.</p>
+    <p>&#169; Copyright 2020-2024, Marouane Yassine &amp; David Beauchemin.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>deepparse.parser.address_parser &mdash; deepparse 0.9.9 documentation</title>
+  <title>deepparse.parser.address_parser &mdash; deepparse 0.9.10 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -33,7 +33,7 @@
               <img src="../../../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.9.9
+                0.9.10
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -110,7 +110,6 @@
 <span class="c1"># It must be due to the complex try, except else case.</span>
 <span class="c1"># pylint: disable=inconsistent-return-statements</span>
 
-<span class="kn">import</span> <span class="nn">contextlib</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
@@ -125,11 +124,7 @@
 <span class="kn">from</span> <span class="nn">torch.optim</span> <span class="kn">import</span> <span class="n">SGD</span>
 <span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">DataLoader</span><span class="p">,</span> <span class="n">Subset</span>
 
-<span class="kn">from</span> <span class="nn">..download_tools</span> <span class="kn">import</span> <span class="n">CACHE_PATH</span>
-<span class="kn">from</span> <span class="nn">..pre_processing.pre_processor_list</span> <span class="kn">import</span> <span class="n">PreProcessorList</span>
-<span class="kn">from</span> <span class="nn">..validations</span> <span class="kn">import</span> <span class="n">valid_poutyne_version</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">formatted_parsed_address</span>
-<span class="kn">from</span> <span class="nn">.capturing</span> <span class="kn">import</span> <span class="n">Capturing</span>
 <span class="kn">from</span> <span class="nn">.formatted_parsed_address</span> <span class="kn">import</span> <span class="n">FormattedParsedAddress</span>
 <span class="kn">from</span> <span class="nn">.tools</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">get_address_parser_in_directory</span><span class="p">,</span>
@@ -145,13 +140,15 @@
 <span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">validate_data_to_parse</span>
 <span class="kn">from</span> <span class="nn">..converter</span> <span class="kn">import</span> <span class="n">TagsConverter</span><span class="p">,</span> <span class="n">DataProcessorFactory</span><span class="p">,</span> <span class="n">DataPadder</span>
 <span class="kn">from</span> <span class="nn">..dataset_container</span> <span class="kn">import</span> <span class="n">DatasetContainer</span>
+<span class="kn">from</span> <span class="nn">..download_tools</span> <span class="kn">import</span> <span class="n">CACHE_PATH</span>
 <span class="kn">from</span> <span class="nn">..embeddings_models</span> <span class="kn">import</span> <span class="n">EmbeddingsModelFactory</span>
 <span class="kn">from</span> <span class="nn">..errors</span> <span class="kn">import</span> <span class="n">FastTextModelError</span>
 <span class="kn">from</span> <span class="nn">..metrics</span> <span class="kn">import</span> <span class="n">nll_loss</span><span class="p">,</span> <span class="n">accuracy</span>
 <span class="kn">from</span> <span class="nn">..network</span> <span class="kn">import</span> <span class="n">ModelFactory</span>
 <span class="kn">from</span> <span class="nn">..pre_processing</span> <span class="kn">import</span> <span class="n">coma_cleaning</span><span class="p">,</span> <span class="n">lower_cleaning</span><span class="p">,</span> <span class="n">hyphen_cleaning</span>
 <span class="kn">from</span> <span class="nn">..pre_processing</span> <span class="kn">import</span> <span class="n">trailing_whitespace_cleaning</span><span class="p">,</span> <span class="n">double_whitespaces_cleaning</span>
-
+<span class="kn">from</span> <span class="nn">..pre_processing.pre_processor_list</span> <span class="kn">import</span> <span class="n">PreProcessorList</span>
+<span class="kn">from</span> <span class="nn">..validations</span> <span class="kn">import</span> <span class="n">valid_poutyne_version</span>
 <span class="kn">from</span> <span class="nn">..vectorizer</span> <span class="kn">import</span> <span class="n">VectorizerFactory</span>
 <span class="kn">from</span> <span class="nn">..weights_tools</span> <span class="kn">import</span> <span class="n">handle_weights_upload</span>
 
@@ -201,8 +198,8 @@
 <span class="sd">            ``None``. To further improve performance, consider using the models (fasttext or BPEmb) with their</span>
 <span class="sd">            counterparts using an attention mechanism with the ``attention_mechanism`` flag.</span>
 <span class="sd">        attention_mechanism (bool): Whether to use the model with an attention mechanism. The model will use an</span>
-<span class="sd">            attention mechanism that takes an extra 100 MB on GPU usage (see the doc for more statistics).</span>
-<span class="sd">            The default value is False.</span>
+<span class="sd">            attention mechanism that takes an extra 100 MB on GPU usage (see the documentation for more statistics).</span>
+<span class="sd">            The default value is ``False``.</span>
 <span class="sd">        device (Union[int, str, torch.torch.device]): The device to use can be either:</span>
 
 <span class="sd">            - a ``GPU`` index in int format (e.g. ``0``),</span>
@@ -210,28 +207,31 @@
 <span class="sd">            - a :class:`~torch.torch.device` object,</span>
 <span class="sd">            - ``&quot;cpu&quot;`` for a  ``CPU`` use.</span>
 
-<span class="sd">            The default value is GPU with the index ``0`` if it exists. Otherwise, the value is ``CPU``.</span>
-<span class="sd">        rounding (int): The rounding to use when asking the probability of the tags. The default value is four digits.</span>
-<span class="sd">        verbose (bool): Turn on/off the verbosity of the model weights download and loading. The default value is True.</span>
+<span class="sd">            The default value is ``0``, witch is a GPU device with the index ``0`` if it exists. Otherwise,</span>
+<span class="sd">            the value is ``CPU``.</span>
+<span class="sd">        rounding (int): The rounding to use when asking the probability of the tags. The default value is ``4``,</span>
+<span class="sd">            namely four digits.</span>
+<span class="sd">        verbose (bool): Turn on/off the verbosity of the model weights download and loading. The default value is</span>
+<span class="sd">            ``True``.</span>
 <span class="sd">        path_to_retrained_model (Union[S3Path, str, None]): The path to the retrained model to use for prediction.</span>
 <span class="sd">            We will infer the ``model_type`` of the retrained model. The default value is ``None``, meaning we use our</span>
 <span class="sd">            pretrained model. If the retrained model uses an attention mechanism, ``attention_mechanism`` needs to</span>
 <span class="sd">            be set to True. The path_to_retrain_model can also be a S3-like (Azure, AWS, Google) bucket URI string path</span>
 <span class="sd">            (e.g. ``&quot;s3://path/to/aws/s3/bucket.ckpt&quot;``). Or it can be a ``S3Path`` S3-like URI using `cloudpathlib`</span>
 <span class="sd">            to handle S3-like bucket. See `cloudpathlib &lt;https://cloudpathlib.drivendata.org/stable/&gt;`</span>
-<span class="sd">            for detail on supported S3 buckets provider and URI condition. The default value is None.</span>
+<span class="sd">            for detail on supported S3 buckets provider and URI condition. The default value is ``None``.</span>
 <span class="sd">        cache_dir (Union[str, None]): The path to the cached directory to use for downloading (and loading) the</span>
 <span class="sd">            embeddings model and the model pretrained weights.</span>
 <span class="sd">        offline (bool): Whether or not the model is an offline one, meaning you have already downloaded the pre-trained</span>
 <span class="sd">            weights and embeddings weights in either the default Deepparse cache directory (``&quot;~./cache/deepparse&quot;``) or</span>
 <span class="sd">            the ``cache_dir`` directory. When offline, we will not verify if the model is the latest. You can use our</span>
-<span class="sd">            ``download_models`` CLI function to download all the requirements for a model. The default value is False</span>
-<span class="sd">            (not an offline parsing model).</span>
+<span class="sd">            ``download_models`` CLI function to download all the requirements for a model. The default value is</span>
+<span class="sd">            ``False`` (not an offline parsing model).</span>
 
 <span class="sd">    Note:</span>
 <span class="sd">        For both networks, we will download the pretrained weights and embeddings in the ``.cache`` directory</span>
-<span class="sd">        for the root user. The pretrained weights take at most 44 MB. The fastText embeddings take 6.8 GO,</span>
-<span class="sd">        the fastText-light embeddings take 3.3 GO and bpemb take 116 MB (in ``&quot;.cache/bpemb&quot;``).</span>
+<span class="sd">        for the root user. The pretrained weights take at most 44 MB. The FastText embeddings take 6.8 GO,</span>
+<span class="sd">        the FastText-light (``&quot;fasttext-light&quot;``) embeddings take 3.3 GO and bpemb take 116 MB (in ``&quot;.cache/bpemb&quot;``).</span>
 
 <span class="sd">        Also, one can download all the dependencies of our pretrained model using our CLI</span>
 <span class="sd">        (e.g. download_model fasttext) before sending it to a node without access to Internet.</span>
@@ -894,14 +894,12 @@
             <span class="n">verbose</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span>
 
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">with_capturing_context</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">valid_poutyne_version</span><span class="p">(</span><span class="n">min_major</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_minor</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
-                <span class="nb">print</span><span class="p">(</span>
+                <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
                     <span class="s2">&quot;You are using an older version of Poutyne that does not support proper error management.&quot;</span>
-                    <span class="s2">&quot; Due to that, we cannot show retrain progress. To fix that, update Poutyne to &quot;</span>
+                    <span class="s2">&quot; Due to that, we cannot show retrain progress. To fix that, please update Poutyne to &quot;</span>
                     <span class="s2">&quot;the newest version.&quot;</span>
                 <span class="p">)</span>
-                <span class="n">with_capturing_context</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="n">train_res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_retrain</span><span class="p">(</span>
                 <span class="n">experiment</span><span class="o">=</span><span class="n">exp</span><span class="p">,</span>
                 <span class="n">train_generator</span><span class="o">=</span><span class="n">train_generator</span><span class="p">,</span>
@@ -910,7 +908,6 @@
                 <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
                 <span class="n">callbacks</span><span class="o">=</span><span class="n">callbacks</span><span class="p">,</span>
                 <span class="n">disable_tensorboard</span><span class="o">=</span><span class="n">disable_tensorboard</span><span class="p">,</span>
-                <span class="n">capturing_context</span><span class="o">=</span><span class="n">with_capturing_context</span><span class="p">,</span>
                 <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
@@ -964,9 +961,11 @@
 
             <span class="n">torch_save</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
                 <span class="p">{</span>
-                    <span class="s2">&quot;named_parser&quot;</span><span class="p">:</span> <span class="n">name_of_the_retrain_parser</span>
-                    <span class="k">if</span> <span class="n">name_of_the_retrain_parser</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-                    <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_formatted_named_parser_name</span><span class="p">(</span><span class="n">prediction_tags</span><span class="p">,</span> <span class="n">seq2seq_params</span><span class="p">,</span> <span class="n">layers_to_freeze</span><span class="p">)</span>
+                    <span class="s2">&quot;named_parser&quot;</span><span class="p">:</span> <span class="p">(</span>
+                        <span class="n">name_of_the_retrain_parser</span>
+                        <span class="k">if</span> <span class="n">name_of_the_retrain_parser</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                        <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_formatted_named_parser_name</span><span class="p">(</span><span class="n">prediction_tags</span><span class="p">,</span> <span class="n">seq2seq_params</span><span class="p">,</span> <span class="n">layers_to_freeze</span><span class="p">)</span>
+                    <span class="p">)</span>
                 <span class="p">}</span>
             <span class="p">)</span>
 
@@ -1020,7 +1019,7 @@
 <span class="sd">            seed (int): Seed to use (by default, ``42``).</span>
 <span class="sd">            verbose (Union[None, bool]): To override the AddressParser verbosity for the test. When set to True or</span>
 <span class="sd">                False, it will override (but it does not change the AddressParser verbosity) the test verbosity.</span>
-<span class="sd">                If set to the default value None, the AddressParser verbosity is used as the test verbosity.</span>
+<span class="sd">                If set to the default value ``None``, the AddressParser verbosity is used as the test verbosity.</span>
 
 <span class="sd">        Return:</span>
 <span class="sd">            A dictionary with the stats (see `Experiment class</span>
@@ -1070,7 +1069,7 @@
         <span class="k">if</span> <span class="s2">&quot;fasttext-light&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">FastTextModelError</span><span class="p">(</span>
                 <span class="s2">&quot;It&#39;s not possible to test a fasttext-light due to pymagnitude problem. &quot;</span>
-                <span class="s2">&quot;See the Retrain method doc for more details.&quot;</span>
+                <span class="s2">&quot;See the Retrain method documentation for more details.&quot;</span>
             <span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">test_dataset_container</span><span class="p">,</span> <span class="n">DatasetContainer</span><span class="p">):</span>
@@ -1298,22 +1297,18 @@
         <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">callbacks</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span>
         <span class="n">disable_tensorboard</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
-        <span class="n">capturing_context</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
         <span class="n">verbose</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">bool</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
         <span class="c1"># pylint: disable=too-many-arguments</span>
-        <span class="c1"># If Poutyne 1.7 and before, we capture poutyne print since it prints some exception.</span>
-        <span class="c1"># Otherwise, we use a null context manager.</span>
-        <span class="k">with</span> <span class="n">Capturing</span><span class="p">()</span> <span class="k">if</span> <span class="n">capturing_context</span> <span class="k">else</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">nullcontext</span><span class="p">():</span>
-            <span class="n">train_res</span> <span class="o">=</span> <span class="n">experiment</span><span class="o">.</span><span class="n">train</span><span class="p">(</span>
-                <span class="n">train_generator</span><span class="p">,</span>
-                <span class="n">valid_generator</span><span class="o">=</span><span class="n">valid_generator</span><span class="p">,</span>
-                <span class="n">epochs</span><span class="o">=</span><span class="n">epochs</span><span class="p">,</span>
-                <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
-                <span class="n">callbacks</span><span class="o">=</span><span class="n">callbacks</span><span class="p">,</span>
-                <span class="n">disable_tensorboard</span><span class="o">=</span><span class="n">disable_tensorboard</span><span class="p">,</span>
-                <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
-            <span class="p">)</span>
+        <span class="n">train_res</span> <span class="o">=</span> <span class="n">experiment</span><span class="o">.</span><span class="n">train</span><span class="p">(</span>
+            <span class="n">train_generator</span><span class="p">,</span>
+            <span class="n">valid_generator</span><span class="o">=</span><span class="n">valid_generator</span><span class="p">,</span>
+            <span class="n">epochs</span><span class="o">=</span><span class="n">epochs</span><span class="p">,</span>
+            <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
+            <span class="n">callbacks</span><span class="o">=</span><span class="n">callbacks</span><span class="p">,</span>
+            <span class="n">disable_tensorboard</span><span class="o">=</span><span class="n">disable_tensorboard</span><span class="p">,</span>
+            <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="n">train_res</span>
 
     <span class="k">def</span> <span class="nf">_freeze_model_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layers_to_freeze</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -1321,7 +1316,7 @@
         <span class="k">if</span> <span class="n">layers_to_freeze</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;encoder&quot;</span><span class="p">,</span> <span class="s2">&quot;decoder&quot;</span><span class="p">,</span> <span class="s2">&quot;prediction_layer&quot;</span><span class="p">,</span> <span class="s2">&quot;seq2seq&quot;</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">layers_to_freeze</span><span class="si">}</span><span class="s2"> freezing setting is not supported. Value can be &#39;encoder&#39;, &#39;decoder&#39;, &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;&#39;prediction_layer&#39; and &#39;seq2seq&#39;. See doc for more details.&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;&#39;prediction_layer&#39; and &#39;seq2seq&#39;. See documentation for more details.&quot;</span>
             <span class="p">)</span>
         <span class="n">layer_exclude</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">layers_to_freeze</span> <span class="o">==</span> <span class="s2">&quot;decoder&quot;</span><span class="p">:</span>
@@ -1377,7 +1372,7 @@
         <span class="k">if</span> <span class="s2">&quot;fasttext-light&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">FastTextModelError</span><span class="p">(</span>
                 <span class="s2">&quot;It&#39;s not possible to retrain a fasttext-light due to pymagnitude problem. &quot;</span>
-                <span class="s2">&quot;See the Retrain method doc for more details.&quot;</span>
+                <span class="s2">&quot;See the Retrain method documentation for more details.&quot;</span>
             <span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">train_dataset_container</span><span class="p">,</span> <span class="n">DatasetContainer</span><span class="p">):</span>
@@ -1434,7 +1429,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020-2023, Marouane Yassine &amp; David Beauchemin.</p>
+    <p>&#169; Copyright 2020-2024, Marouane Yassine &amp; David Beauchemin.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

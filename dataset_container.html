@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dataset Container &mdash; deepparse 0.9.9 documentation</title>
+  <title>Dataset Container &mdash; deepparse 0.9.10 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -36,7 +36,7 @@
               <img src="_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.9.9
+                0.9.10
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -130,7 +130,7 @@
 <h2>Interface<a class="headerlink" href="#interface" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="deepparse.dataset_container.DatasetContainer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deepparse.dataset_container.</span></span><span class="sig-name descname"><span class="pre">DatasetContainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">is_training_container</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deepparse/dataset_container/dataset_container.html#DatasetContainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.dataset_container.DatasetContainer" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deepparse.dataset_container.</span></span><span class="sig-name descname"><span class="pre">DatasetContainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">is_training_container</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_cleaning_pre_processing_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.Callable" title="(in Python v3.8)"><span class="pre">Callable</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deepparse/dataset_container/dataset_container.html#DatasetContainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.dataset_container.DatasetContainer" title="Permalink to this definition"></a></dt>
 <dd><p>Interface for the dataset. This interface defines most of the methods that the dataset needs to define.
 If you define another dataset container, the init must define the attribute data.</p>
 <p>We also recommend using the <code class="docutils literal notranslate"><span class="pre">validate_dataset</span></code> method in your init to validate some characteristics of your
@@ -138,26 +138,32 @@ dataset.</p>
 <p>For a training container, it validates the following:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>all addresses are not None value,</p></li>
-<li><p>all addresses are not empty,</p></li>
-<li><p>all addresses are not whitespace string,</p></li>
-<li><p>all tags are not empty, if data is a list of tuple (<code class="docutils literal notranslate"><span class="pre">[('an</span> <span class="pre">address',</span> <span class="pre">['a_tag',</span> <span class="pre">'another_tag']),</span> <span class="pre">...]</span></code>), and</p></li>
+<li><p>no address is a <code class="docutils literal notranslate"><span class="pre">None</span></code> value,</p></li>
+<li><p>no address is empty,</p></li>
+<li><p>no address is composed of only whitespace,</p></li>
+<li><p>no address includes consecutive whitespace (e.g. “An  address”),</p></li>
+<li><p>no tags list is empty, if data is a list of tuple (<code class="docutils literal notranslate"><span class="pre">[('an</span> <span class="pre">address',</span> <span class="pre">['a_tag',</span> <span class="pre">'another_tag']),</span> <span class="pre">...]</span></code>), and</p></li>
 <li><p>if the addresses (whitespace-split) are the same length as their respective tags list.</p></li>
 </ul>
 </div></blockquote>
 <p>While for a predict container (unknown prediction tag), it validates the following:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>all addresses are not None,</p></li>
-<li><p>all addresses are not empty, and</p></li>
-<li><p>all addresses are not whitespace string.</p></li>
+<li><p>no address is a <code class="docutils literal notranslate"><span class="pre">None</span></code> value,</p></li>
+<li><p>no address is empty,</p></li>
+<li><p>no address is composed of only whitespace, and</p></li>
+<li><p>no address includes consecutive whitespace (e.g. “An  address”).</p></li>
 </ul>
 </div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>is_training_container</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Either or not, the dataset container is a training container. This will determine
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>is_training_container</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Either or not, the dataset container is a training container. This will determine
 the dataset validation test we apply to the dataset. That is, a predict dataset doesn’t include tags.
-The default value is true.</p>
+The default value is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+<li><p><strong>data_cleaning_pre_processing_fn</strong> (<em>Callable</em>) – Function to apply as data clea ning pre-processing step after
+loading the data, but before applying the validation steps. The default value is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -167,18 +173,19 @@ The default value is true.</p>
 <h2>Implementations<a class="headerlink" href="#implementations" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="deepparse.dataset_container.PickleDatasetContainer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deepparse.dataset_container.</span></span><span class="sig-name descname"><span class="pre">PickleDatasetContainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_training_container</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deepparse/dataset_container/dataset_container.html#PickleDatasetContainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.dataset_container.PickleDatasetContainer" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deepparse.dataset_container.</span></span><span class="sig-name descname"><span class="pre">PickleDatasetContainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_training_container</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_cleaning_pre_processing_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.Callable" title="(in Python v3.8)"><span class="pre">Callable</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deepparse/dataset_container/dataset_container.html#PickleDatasetContainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.dataset_container.PickleDatasetContainer" title="Permalink to this definition"></a></dt>
 <dd><p>Pickle dataset container that imports a list of addresses in pickle format and does some validation on it.</p>
 <p>The dataset needs to be a list of tuples where the first element of each tuple is the address (a string),
 and the second is a list of the expected tag to predict (e.g. <code class="docutils literal notranslate"><span class="pre">[('an</span> <span class="pre">address',</span> <span class="pre">['a_tag',</span> <span class="pre">'another_tag']),</span> <span class="pre">...]</span></code>).
-The len of the tags needs to be the same as the len of the address when whitespace split.</p>
+The length of the tags needs to be the same as the length of the address when the whitespace-split is used.</p>
 <p>For a training container, the validation tests applied on the dataset are the following:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>all addresses are not None value,</p></li>
-<li><p>all addresses are not empty,</p></li>
-<li><p>all addresses are not whitespace string,</p></li>
-<li><p>all tags are not empty, if data is a list of tuple (<code class="docutils literal notranslate"><span class="pre">[('an</span> <span class="pre">address',</span> <span class="pre">['a_tag',</span> <span class="pre">'another_tag']),</span> <span class="pre">...]</span></code>), and</p></li>
+<li><p>no address is a <code class="docutils literal notranslate"><span class="pre">None</span></code> value,</p></li>
+<li><p>no address is empty,</p></li>
+<li><p>no address is composed of only whitespace,</p></li>
+<li><p>no address includes consecutive whitespace (e.g. “An  address”),</p></li>
+<li><p>no tags list is empty, if data is a list of tuple (<code class="docutils literal notranslate"><span class="pre">[('an</span> <span class="pre">address',</span> <span class="pre">['a_tag',</span> <span class="pre">'another_tag']),</span> <span class="pre">...]</span></code>), and</p></li>
 <li><p>if the addresses (whitespace-split) are the same length as their respective tags list.</p></li>
 </ul>
 </div></blockquote>
@@ -186,9 +193,10 @@ The len of the tags needs to be the same as the len of the address when whitespa
 following:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>all addresses are not None value,</p></li>
-<li><p>all addresses are not empty, and</p></li>
-<li><p>all addresses are not whitespace string.</p></li>
+<li><p>no address is a <code class="docutils literal notranslate"><span class="pre">None</span></code> value,</p></li>
+<li><p>no address is empty,</p></li>
+<li><p>no address is composed of only whitespace, and</p></li>
+<li><p>no address includes consecutive whitespace (e.g. “An  address”).</p></li>
 </ul>
 </div></blockquote>
 <dl class="field-list simple">
@@ -197,7 +205,9 @@ following:</p>
 <li><p><strong>data_path</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The path to the pickle dataset file.</p></li>
 <li><p><strong>is_training_container</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Either or not, the dataset container is a training container. This will determine
 the dataset validation test we apply to the dataset. That is, a predict dataset doesn’t include tags.
-The default value is true.</p></li>
+The default value is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+<li><p><strong>data_cleaning_pre_processing_fn</strong> (<em>Callable</em>) – Function to apply as data clea ning pre-processing step after
+loading the data, but before applying the validation steps. The default value is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
 </ul>
 </dd>
 </dl>
@@ -205,17 +215,19 @@ The default value is true.</p></li>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="deepparse.dataset_container.CSVDatasetContainer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deepparse.dataset_container.</span></span><span class="sig-name descname"><span class="pre">CSVDatasetContainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.List" title="(in Python v3.8)"><span class="pre">List</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_training_container</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">separator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'\t'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag_seperator_reformat_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.Callable" title="(in Python v3.8)"><span class="pre">Callable</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csv_reader_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.Dict" title="(in Python v3.8)"><span class="pre">Dict</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deepparse/dataset_container/dataset_container.html#CSVDatasetContainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.dataset_container.CSVDatasetContainer" title="Permalink to this definition"></a></dt>
-<dd><p>CSV dataset container that imports a CSV of addresses. If the dataset is a predict one, it needs to have at least
-one column with some addresses. If the dataset is a training one (with prediction tags), it needs to have at
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deepparse.dataset_container.</span></span><span class="sig-name descname"><span class="pre">CSVDatasetContainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.List" title="(in Python v3.8)"><span class="pre">List</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_training_container</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">separator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'\t'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag_seperator_reformat_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.Callable" title="(in Python v3.8)"><span class="pre">Callable</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csv_reader_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.Dict" title="(in Python v3.8)"><span class="pre">Dict</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_cleaning_pre_processing_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.Callable" title="(in Python v3.8)"><span class="pre">Callable</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deepparse/dataset_container/dataset_container.html#CSVDatasetContainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.dataset_container.CSVDatasetContainer" title="Permalink to this definition"></a></dt>
+<dd><p>CSV dataset container that imports a CSV of addresses. If the dataset is a predict one, it must have at least
+one column with some addresses. If the dataset is a training one (with prediction tags), it must have at
 least two columns, one with some addresses and another with a list of tags for each address.</p>
 <p>After loading the CSV dataset, some tests will be applied depending on its type.</p>
 <p>For a training container, the validation tests applied on the dataset are the following:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>all addresses are not None value,</p></li>
-<li><p>all addresses are not empty,</p></li>
-<li><p>all addresses are not whitespace string, and</p></li>
+<li><p>no address is a <code class="docutils literal notranslate"><span class="pre">None</span></code> value,</p></li>
+<li><p>no address is empty,</p></li>
+<li><p>no address is composed of only whitespace,</p></li>
+<li><p>no address includes consecutive whitespace (e.g. “An  address”),</p></li>
+<li><p>no tags list is empty, if data is a list of tuple (<code class="docutils literal notranslate"><span class="pre">[('an</span> <span class="pre">address',</span> <span class="pre">['a_tag',</span> <span class="pre">'another_tag']),</span> <span class="pre">...]</span></code>), and</p></li>
 <li><p>if the addresses (whitespace-split) are the same length as their respective tags list.</p></li>
 </ul>
 </div></blockquote>
@@ -223,9 +235,10 @@ least two columns, one with some addresses and another with a list of tags for e
 following:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>all addresses are not None value,</p></li>
-<li><p>all addresses are not empty, and</p></li>
-<li><p>all addresses are not whitespace string.</p></li>
+<li><p>no address is a <code class="docutils literal notranslate"><span class="pre">None</span></code> value,</p></li>
+<li><p>no address is empty,</p></li>
+<li><p>no address is composed of only whitespace, and</p></li>
+<li><p>no address includes consecutive whitespace (e.g. “An  address”).</p></li>
 </ul>
 </div></blockquote>
 <dl class="field-list simple">
@@ -238,7 +251,7 @@ If the dataset container is a “predict” one, the list must be of exactly one
 of exactly two elements: addresses and tags.</p></li>
 <li><p><strong>is_training_container</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Either or not, the dataset container is a training container. This will determine
 the dataset validation test we apply to the dataset. That is, a predict dataset doesn’t include tags.
-The default value is true.</p></li>
+The default value is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
 <li><p><strong>separator</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The CSV columns separator to use. By default, <code class="docutils literal notranslate"><span class="pre">&quot;\t&quot;</span></code>.</p></li>
 <li><p><strong>tag_seperator_reformat_fn</strong> (<em>Callable</em><em>, </em><em>optional</em>) – A function to parse a tags string and return a list of
 address tags. For example, if the tag column is a former Python list saved with pandas, the characters <code class="docutils literal notranslate"><span class="pre">]</span></code>
@@ -248,6 +261,8 @@ That is, it removes the <code class="docutils literal notranslate"><span class="
 <li><p><strong>csv_reader_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em>, </em><em>optional</em>) – Keyword arguments to pass to pandas <code class="docutils literal notranslate"><span class="pre">read_csv</span></code> use internally. By default,
 the <code class="docutils literal notranslate"><span class="pre">data_path</span></code> is passed along with our default <code class="docutils literal notranslate"><span class="pre">sep</span></code> value ( <code class="docutils literal notranslate"><span class="pre">&quot;\t&quot;</span></code>) and the <code class="docutils literal notranslate"><span class="pre">&quot;utf-8&quot;</span></code> encoding
 format. However, this can be overridden by using this argument again.</p></li>
+<li><p><strong>data_cleaning_pre_processing_fn</strong> (<em>Callable</em>) – Function to apply as data clea ning pre-processing step after
+loading the data, but before applying the validation steps. The default value is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
 </ul>
 </dd>
 </dl>
@@ -255,7 +270,7 @@ format. However, this can be overridden by using this argument again.</p></li>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="deepparse.dataset_container.ListDatasetContainer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deepparse.dataset_container.</span></span><span class="sig-name descname"><span class="pre">ListDatasetContainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.List" title="(in Python v3.8)"><span class="pre">List</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_training_container</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deepparse/dataset_container/dataset_container.html#ListDatasetContainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.dataset_container.ListDatasetContainer" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deepparse.dataset_container.</span></span><span class="sig-name descname"><span class="pre">ListDatasetContainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.List" title="(in Python v3.8)"><span class="pre">List</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_training_container</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_cleaning_pre_processing_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.Callable" title="(in Python v3.8)"><span class="pre">Callable</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deepparse/dataset_container/dataset_container.html#ListDatasetContainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.dataset_container.ListDatasetContainer" title="Permalink to this definition"></a></dt>
 <dd><p>List dataset container that loads a list dataset into a DatasetContainer class. It also validates the dataset.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -264,7 +279,9 @@ format. However, this can be overridden by using this argument again.</p></li>
 identical as the <a class="reference internal" href="#deepparse.dataset_container.PickleDatasetContainer" title="deepparse.dataset_container.PickleDatasetContainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">PickleDatasetContainer</span></code></a>.</p></li>
 <li><p><strong>is_training_container</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Either or not, the dataset container is a training container. This will determine
 the dataset validation test we apply to the dataset. That is, a predict dataset doesn’t include tags.
-The default value is true.</p></li>
+The default value is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+<li><p><strong>data_cleaning_pre_processing_fn</strong> (<em>Callable</em>) – Function to apply as data clea ning pre-processing step after
+loading the data, but before applying the validation steps. The default value is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
 </ul>
 </dd>
 </dl>
@@ -278,7 +295,7 @@ The default value is true.</p></li>
 <dt class="sig sig-object py" id="deepparse.data_validation.data_validation.validate_if_any_empty">
 <span class="sig-prename descclassname"><span class="pre">deepparse.data_validation.data_validation.</span></span><span class="sig-name descname"><span class="pre">validate_if_any_empty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string_elements</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.List" title="(in Python v3.8)"><span class="pre">List</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/deepparse/data_validation/data_validation.html#validate_if_any_empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.data_validation.data_validation.validate_if_any_empty" title="Permalink to this definition"></a></dt>
 <dd><p>Return <code class="docutils literal notranslate"><span class="pre">True</span></code> if one of the string elements is empty. For example, the second element in the following list is
-an empty address: <code class="docutils literal notranslate"><span class="pre">[&quot;An</span> <span class="pre">address&quot;,</span> <span class="pre">&quot;&quot;,</span> <span class="pre">&quot;Another</span> <span class="pre">address&quot;]</span></code>. Thus, it will return <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+an empty address: <code class="docutils literal notranslate"><span class="pre">[&quot;An</span> <span class="pre">address&quot;,</span> <span class="pre">&quot;&quot;,</span> <span class="pre">&quot;Another</span> <span class="pre">address&quot;]</span></code>. Thus, it will return <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>string_elements</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – A list of strings to validate.</p>
@@ -290,7 +307,7 @@ an empty address: <code class="docutils literal notranslate"><span class="pre">[
 <dt class="sig sig-object py" id="deepparse.data_validation.data_validation.validate_if_any_whitespace_only">
 <span class="sig-prename descclassname"><span class="pre">deepparse.data_validation.data_validation.</span></span><span class="sig-name descname"><span class="pre">validate_if_any_whitespace_only</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string_elements</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.List" title="(in Python v3.8)"><span class="pre">List</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/deepparse/data_validation/data_validation.html#validate_if_any_whitespace_only"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.data_validation.data_validation.validate_if_any_whitespace_only" title="Permalink to this definition"></a></dt>
 <dd><p>Return <code class="docutils literal notranslate"><span class="pre">True</span></code> if one of the string elements is only whitespace. For example, the second element in the
-following list is only whitespace: <code class="docutils literal notranslate"><span class="pre">[&quot;An</span> <span class="pre">address&quot;,</span> <span class="pre">&quot;</span> <span class="pre">&quot;,</span> <span class="pre">&quot;Another</span> <span class="pre">address&quot;]</span></code>. Thus, it will return <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+following list is only whitespace: <code class="docutils literal notranslate"><span class="pre">[&quot;An</span> <span class="pre">address&quot;,</span> <span class="pre">&quot;</span> <span class="pre">&quot;,</span> <span class="pre">&quot;Another</span> <span class="pre">address&quot;]</span></code>. Thus, it will return <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>string_elements</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – A list of strings to validate.</p>
@@ -302,7 +319,7 @@ following list is only whitespace: <code class="docutils literal notranslate"><s
 <dt class="sig sig-object py" id="deepparse.data_validation.data_validation.validate_if_any_none">
 <span class="sig-prename descclassname"><span class="pre">deepparse.data_validation.data_validation.</span></span><span class="sig-name descname"><span class="pre">validate_if_any_none</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string_elements</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.List" title="(in Python v3.8)"><span class="pre">List</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/deepparse/data_validation/data_validation.html#validate_if_any_none"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.data_validation.data_validation.validate_if_any_none" title="Permalink to this definition"></a></dt>
 <dd><p>Return <code class="docutils literal notranslate"><span class="pre">True</span></code> if one string element is a <code class="docutils literal notranslate"><span class="pre">None</span></code> value. For example, the second element in the following
-list is a <code class="docutils literal notranslate"><span class="pre">None</span></code> value: <code class="docutils literal notranslate"><span class="pre">[&quot;An</span> <span class="pre">address&quot;,</span> <span class="pre">None,</span> <span class="pre">&quot;Another</span> <span class="pre">address&quot;]</span></code>. Thus, it will return <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+list is a <code class="docutils literal notranslate"><span class="pre">None</span></code> value: <code class="docutils literal notranslate"><span class="pre">[&quot;An</span> <span class="pre">address&quot;,</span> <span class="pre">None,</span> <span class="pre">&quot;Another</span> <span class="pre">address&quot;]</span></code>. Thus, it will return <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>string_elements</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – A list of strings to validate.</p>
@@ -324,7 +341,7 @@ list is a <code class="docutils literal notranslate"><span class="pre">None</spa
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020-2023, Marouane Yassine &amp; David Beauchemin.</p>
+    <p>&#169; Copyright 2020-2024, Marouane Yassine &amp; David Beauchemin.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

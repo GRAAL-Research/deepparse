@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>deepparse.parser.formatted_parsed_address &mdash; deepparse 0.9.9 documentation</title>
+  <title>deepparse.parser.formatted_parsed_address &mdash; deepparse 0.9.10 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -33,7 +33,7 @@
               <img src="../../../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.9.9
+                0.9.10
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -192,7 +192,7 @@
 
     <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Equal if all address components elements are equals. If attributes are not the same, will return False.</span>
+<span class="sd">        Equal if all address components elements are equals. If attributes are not the same, it will return False.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">:</span>
             <span class="n">address_component</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span>
@@ -220,7 +220,7 @@
 
 <span class="sd">        Args:</span>
 <span class="sd">            fields (Union[list, None]): Optional argument to define the fields to order the address components of</span>
-<span class="sd">                the address. If None, we will use the inferred order base on the address tags appearance. For example,</span>
+<span class="sd">                the address. If None, we will use the inferred order based on the address tags&#39; appearance. For example,</span>
 <span class="sd">                if the parsed address is ``(305, StreetNumber), (rue, StreetName), (des, StreetName),</span>
 <span class="sd">                (Lilas, StreetName)``, the inferred order will be ``StreetNumber, StreetName``.</span>
 <span class="sd">            capitalize_fields (Union[list, None]): Optional argument to define the capitalized fields for the formatted</span>
@@ -244,7 +244,7 @@
 <span class="sd">                # &gt; 350, rue des lilas, ouest, quebec city, quebec, g1l 1b6</span>
 
 <span class="sd">                parse_address.formatted_address(fields_separator=&quot;, &quot;, capitalize_fields=[&quot;StreetName&quot;, &quot;Orientation&quot;])</span>
-<span class="sd">                # &gt; 350, Rue des lilas, Ouest, quebec city, quebec, g1l 1b6</span>
+<span class="sd">                # &gt; 350, rue des lilas, ouest, quebec city, quebec, g1l 1b6</span>
 
 <span class="sd">                parse_address.formatted_address(fields_separator=&quot;, &quot;, upper_case_fields=[&quot;PostalCode&quot;&quot;])</span>
 <span class="sd">                # &gt; 350 rue des lilas ouest quebec city quebec G1L 1B6</span>
@@ -320,7 +320,7 @@
 <div class="viewcode-block" id="FormattedParsedAddress.to_pandas"><a class="viewcode-back" href="../../../parser.html#deepparse.parser.FormattedParsedAddress.to_pandas">[docs]</a>    <span class="k">def</span> <span class="nf">to_pandas</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to convert a parsed address into a dictionary for pandas where the first key is the raw address and</span>
-<span class="sd">        the followings keys are the address components, and the values are the value of those components.</span>
+<span class="sd">        the following keys are the address components, and the values are the values of those components.</span>
 <span class="sd">        For example, the parsed address ``&lt;StreetNumber&gt; 305 &lt;StreetName&gt; rue des Lilas`` will be converted into</span>
 <span class="sd">        the following dictionary: ``{&#39;Address&#39;: &#39;305 rue des Lilas&#39;, &#39;StreetNumber&#39;:&#39;305&#39;, &#39;StreetName&#39;:</span>
 <span class="sd">        &#39;rue des Lilas&#39;}``.</span>
@@ -334,7 +334,7 @@
 <div class="viewcode-block" id="FormattedParsedAddress.to_pickle"><a class="viewcode-back" href="../../../parser.html#deepparse.parser.FormattedParsedAddress.to_pickle">[docs]</a>    <span class="k">def</span> <span class="nf">to_pickle</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to convert a parsed address into a list of tuple for pickle where the first tuple element is the</span>
-<span class="sd">        raw address and the followings tuples are the address components, and the values are the value of</span>
+<span class="sd">        raw address and the following tuples are the address components, and the values are the values of</span>
 <span class="sd">        those components. For example, the parsed address ``&lt;StreetNumber&gt; 305 &lt;StreetName&gt; rue des Lilas``</span>
 <span class="sd">        will be converted into the following list of tuples: ``&#39;305 rue des Lilas&#39;, (&#39;305&#39;, &#39;StreetNumber&#39;),</span>
 <span class="sd">        (&#39;rue des Lilas&#39;, &#39;StreetName&#39;)]``.</span>
@@ -395,7 +395,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020-2023, Marouane Yassine &amp; David Beauchemin.</p>
+    <p>&#169; Copyright 2020-2024, Marouane Yassine &amp; David Beauchemin.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

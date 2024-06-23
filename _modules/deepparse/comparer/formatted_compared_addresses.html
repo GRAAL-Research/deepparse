@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>deepparse.comparer.formatted_compared_addresses &mdash; deepparse 0.9.9 documentation</title>
+  <title>deepparse.comparer.formatted_compared_addresses &mdash; deepparse 0.9.10 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -33,7 +33,7 @@
               <img src="../../../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.9.9
+                0.9.10
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -216,16 +216,16 @@
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">_get_probs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        To get the tags from the parsing with their associated probabilities, the method needs to be implemented in each</span>
-<span class="sd">        class because they don&#39;t use the probabilities the same way.</span>
+<span class="sd">        A method to get the tags from the parsing with their associated probabilities, it needs to be implemented in</span>
+<span class="sd">        each class because they don&#39;t use the probabilities the same way.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_color_diff</span><span class="p">(</span><span class="n">string_one</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">string_two</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">highlight</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Compare two strings and determine the difference between the two. The differences are noted with colour code;</span>
-<span class="sd">        if the first string has more elements than the second one, it will be noted in one colour; on the contrary,</span>
-<span class="sd">        if the other string has something more, it will have a different colour notation.</span>
+<span class="sd">        Compare two strings and determine the difference between the two. The differences are highlighted with a</span>
+<span class="sd">        coloured scheme; if the first string has more elements than the second one, it will be noted in one colour;</span>
+<span class="sd">        on the contrary, if the other string has something more, it will have a different colour notation.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            string_one (str): The first string to compare.</span>
@@ -235,7 +235,7 @@
 <span class="sd">                two strings are spaces. The default is False.</span>
 
 <span class="sd">        Notes:</span>
-<span class="sd">            the method is colorblind-friendly, which means that the output will be</span>
+<span class="sd">            The method is colorblind-friendly, which means that the output will be</span>
 <span class="sd">            in colours that minimize the risk that a user cannot see the difference as</span>
 <span class="sd">            defined here https://davidmathlogic.com/colorblind/#%23D81B60-%231E88E5-%23FFC107-%23004D40.</span>
 
@@ -243,7 +243,7 @@
 <span class="sd">            If the first string has something more than the second one, it will be indicated in blue.</span>
 <span class="sd">            If the second string has something more than the first one, it will be noted in yellow.</span>
 
-<span class="sd">            It uses SequenceMatcher to get the different codes to be later converted into colour codes.</span>
+<span class="sd">            It uses SequenceMatcher to convert the different codes into colour codes later.</span>
 
 <span class="sd">        Return:</span>
 <span class="sd">            str: The two strings joined, and the differences are noted in colour codes</span>
@@ -282,13 +282,16 @@
         <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Print the output of the string with colour codes that represent the differences between the two strings.</span>
+<span class="sd">        Print the output of the string with colour codes representing the differences between the two strings.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            name_one (str, optional) : Name associated with first color. The default value is the first address.</span>
-<span class="sd">            name_two (str, optional) : Name associated with the second colour. The default value is the second address.</span>
-<span class="sd">            verbose (bool, optional): If True, it will print a presentation of the colours and what they mean.</span>
-<span class="sd">                The default value is True.</span>
+<span class="sd">            name_one (str, optional) : Name associated with first color. The default value is ``&quot;first address&quot;``,</span>
+<span class="sd">                namely the first address of the two. We recommend using a whitespace characters between the words.</span>
+<span class="sd">            name_two (str, optional) : Name associated with the second colour. The default value is</span>
+<span class="sd">                ``&quot;second address&quot;``, namely the second address of the two.  We recommend using a whitespace</span>
+<span class="sd">                characters between the words.</span>
+<span class="sd">            verbose (bool, optional): If True, it will print a presentation of the colours and their meaning.</span>
+<span class="sd">                The default value is ``True``.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -326,7 +329,7 @@
 
     <span class="k">def</span> <span class="nf">_bool_address_tags_are_the_same</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parsed_addresses</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">tuple</span><span class="p">]],</span> <span class="n">List</span><span class="p">[</span><span class="nb">tuple</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">tuple</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Compare addresses components and put the differences in a dictionary where the keys are the</span>
+<span class="sd">        Compare the components between two addresses and put the differences in a dictionary where the keys are the</span>
 <span class="sd">        names of the addresses components, and the values are the values of the addresses component.</span>
 
 <span class="sd">        Args:</span>
@@ -334,7 +337,7 @@
 <span class="sd">            address components&#39; names for the parsed addresses.</span>
 
 <span class="sd">        Return:</span>
-<span class="sd">            List[tuple]: List of tuples that contain all addresses components that differ from each other.</span>
+<span class="sd">            List[tuple]: List of tuples containing the components that differ from the two addresses.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">unique_address_component_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unique_addresses_component_names</span><span class="p">(</span><span class="n">parsed_addresses</span><span class="p">)</span>
 
@@ -390,7 +393,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020-2023, Marouane Yassine &amp; David Beauchemin.</p>
+    <p>&#169; Copyright 2020-2024, Marouane Yassine &amp; David Beauchemin.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

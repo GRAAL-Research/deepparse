@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>deepparse.cli.parse &mdash; deepparse 0.9.9 documentation</title>
+  <title>deepparse.cli.parse &mdash; deepparse 0.9.10 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -33,7 +33,7 @@
               <img src="../../../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.9.9
+                0.9.10
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -138,7 +138,7 @@
 <div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../cli.html#deepparse.cli.parse.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="c1"># pylint: disable=too-many-locals, too-many-branches</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    CLI function to rapidly parse an addresses dataset and output it in another file.</span>
+<span class="sd">    CLI function to easily parse an address dataset and output it in another file.</span>
 
 <span class="sd">    Examples of usage:</span>
 
@@ -146,7 +146,7 @@
 
 <span class="sd">        parse fasttext ./dataset_path.csv parsed_address.pickle</span>
 
-<span class="sd">    Using a gpu device</span>
+<span class="sd">    Using a GPU device</span>
 
 <span class="sd">    .. code-block:: sh</span>
 
@@ -225,7 +225,7 @@
 
 
 <span class="k">def</span> <span class="nf">get_parser</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return ArgumentParser for the cli.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return ArgumentParser for the CLI.&quot;&quot;&quot;</span>
 
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">RawTextHelpFormatter</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
@@ -243,11 +243,11 @@
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
         <span class="s2">&quot;export_filename&quot;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span>
-            <span class="s2">&quot;The filename to use to export the parsed addresses. We will infer the file format base on the &quot;</span>
+            <span class="s2">&quot;The filename to use to export the parsed addresses. We will infer the file format based on the &quot;</span>
             <span class="s2">&quot;file extension. That is, if the file is a pickle (.p or .pickle), we will export it into a pickle file. &quot;</span>
-            <span class="s2">&quot;The supported format are Pickle, CSV and JSON. &quot;</span>
+            <span class="s2">&quot;The supported formats are Pickle, CSV and JSON. &quot;</span>
             <span class="s2">&quot;The file will be exported in the same repositories as the dataset_path. &quot;</span>
-            <span class="s2">&quot;See the doc for more details on the format exporting.&quot;</span>
+            <span class="s2">&quot;See the documentation for more details on the format exporting.&quot;</span>
         <span class="p">),</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
     <span class="p">)</span>
@@ -281,7 +281,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020-2023, Marouane Yassine &amp; David Beauchemin.</p>
+    <p>&#169; Copyright 2020-2024, Marouane Yassine &amp; David Beauchemin.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

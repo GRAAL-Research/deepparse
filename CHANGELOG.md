@@ -345,3 +345,4 @@
 - Fix app errors.
 - Add data validation for 1) multiple consecutive whitespace and 2) newline.
 - Fixes some errors in tests.
+- Hot-fix the issue with BPEmb base URL download problem see [issue 221](https://github.com/GRAAL-Research/deepparse/issues/221).

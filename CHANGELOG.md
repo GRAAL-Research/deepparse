@@ -349,5 +349,7 @@
 - Hot-fix the issue with BPEmb base URL download problem see [issue 221](https://github.com/GRAAL-Research/deepparse/issues/221).
 - Fix NumPy version due to major release with breaking changes.
 - Fix SciPy version due to breaking change with Gensim.
+- Fix circular import in API app.
+- Fix deprecated `max_request_body_size` in Sentry.
 
 ## dev

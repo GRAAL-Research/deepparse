@@ -338,7 +338,7 @@
 - Add a Dockerfile and a `docker-compose.yml` to build a Docker container for the API.
 - Bug-fix the default pre-processors that did not all apply but only the last one.
 
-## dev
+## 0.9.10
 
 - Fix and improve documentation.
 - Remove fixed dependencies version.
@@ -347,3 +347,5 @@
 - Fixes some errors in tests.
 - Add an argument to the `DatasetContainer` interface to use a pre-processing data cleaning function before validation.
 - Hot-fix the issue with BPEmb base URL download problem see [issue 221](https://github.com/GRAAL-Research/deepparse/issues/221).
+
+## dev

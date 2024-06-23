@@ -1,31 +1,27 @@
 """REST API."""
-from typing import List, Dict, Union
-from contextlib import asynccontextmanager
-import logging
 
+import logging
+from contextlib import asynccontextmanager
+from typing import List
+
+from deepparse.app.address import Address
+from deepparse.app.tools import format_parsed_addresses, address_parser_mapping
 from deepparse.download_tools import MODEL_MAPPING_CHOICES, download_models
 from deepparse.parser import AddressParser
 
-
 try:
     from deepparse.app.sentry import configure_sentry
-    from pydantic import BaseModel
     from fastapi import FastAPI, Depends
     from fastapi.responses import JSONResponse
     import uvicorn
-
-
 except ModuleNotFoundError as e:
     raise ModuleNotFoundError("Ensure you installed the extra packages using: 'pip install deepparse[app]'") from e
-
 
 logger = logging.getLogger(__name__)
 FORMAT = "%(asctime)s; %(levelname)s: %(message)s"
 logging.basicConfig(format=FORMAT, level=logging.DEBUG)
 
 configure_sentry()
-
-address_parser_mapping: Dict[str, AddressParser] = {}
 
 
 @asynccontextmanager
@@ -51,48 +47,6 @@ async def lifespan(application: FastAPI):  # pylint: disable=unused-argument
 
 
 app = FastAPI(lifespan=lifespan)
-
-
-class Address(BaseModel):
-    raw: str
-
-
-def format_parsed_addresses(
-    parsing_model: str, addresses: List[Address], model_mapping=None
-) -> Dict[str, Union[str, Dict[str, str]]]:
-    """
-    Format parsed addresses.
-
-    Args:
-    - **parsing_model** (str): The parsing model to use for address parsing.
-    - **addresses** (List[Address]): List of addresses to parse.
-
-    Returns:
-    - **JSONResponse**: JSON response containing the parsed addresses, along with the model type and version.
-    """
-    assert addresses, "Addresses parameter must not be empty"
-    assert (
-        parsing_model in MODEL_MAPPING_CHOICES
-    ), f"Parsing model not implemented, available choices: {MODEL_MAPPING_CHOICES}"
-
-    if model_mapping is None:
-        model_mapping = address_parser_mapping
-
-    parsed_addresses = model_mapping[parsing_model]([address.raw for address in addresses])
-
-    if not isinstance(parsed_addresses, list):
-        parsed_addresses = [parsed_addresses]
-
-    response_payload = {
-        "model_type": model_mapping[parsing_model].model_type,
-        "parsed_addresses": {
-            raw_address.raw: parsed_address.to_dict()
-            for parsed_address, raw_address in zip(parsed_addresses, addresses)
-        },
-        "version": model_mapping[parsing_model].version,
-    }
-
-    return response_payload
 
 
 @app.post("/parse/{parsing_model}")

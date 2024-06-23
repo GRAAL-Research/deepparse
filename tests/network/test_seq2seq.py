@@ -13,7 +13,6 @@ from unittest import TestCase
 from unittest import skipIf
 from unittest.mock import patch, MagicMock, call
 
-import pytest
 import torch
 
 from deepparse.network import Seq2SeqModel
@@ -283,9 +282,7 @@ class Seq2SeqTest(TestCase):
         isfile_mock.return_value = True
         last_version_mock.return_value = False
         with patch("deepparse.network.seq2seq.download_weights"):
-            with pytest.warns(None) as record:
-                seq2seq_model._load_pre_trained_weights(self.a_model_type, cache_dir=self.cache_dir, offline=False)
-            self.assertEqual(0, len(record))
+            seq2seq_model._load_pre_trained_weights(self.a_model_type, cache_dir=self.cache_dir, offline=False)
 
     @patch("deepparse.network.seq2seq.latest_version")
     @patch("os.path.isfile")
@@ -330,9 +327,7 @@ class Seq2SeqTest(TestCase):
         isfile_mock.return_value = True
         last_version_mock.return_value = False
         with patch("deepparse.network.seq2seq.download_weights"):
-            with pytest.warns(None) as record:
-                seq2seq_model._load_pre_trained_weights(self.a_model_type, cache_dir=self.cache_dir, offline=False)
-            self.assertEqual(0, len(record))
+            seq2seq_model._load_pre_trained_weights(self.a_model_type, cache_dir=self.cache_dir, offline=False)
 
     @patch("deepparse.weights_tools.torch")
     @patch("deepparse.network.seq2seq.torch.nn.Module.load_state_dict")

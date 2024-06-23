@@ -56,7 +56,7 @@ Let's start with the default learning rate of ``0.01`` and use a learning rate s
     logging_path = "./checkpoints"
 
     # The new seq2seq params settings using smaller hidden size
-    # See the doc for the list of tunable seq2seq parameters
+    # See the documentation for the list of tunable seq2seq parameters
     seq2seq_params = {
         "encoder_hidden_size": 512,
         "decoder_hidden_size": 512

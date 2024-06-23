@@ -25,7 +25,7 @@ def add_csv_column_name_arg(parser: ArgumentParser) -> None:
     parser.add_argument(
         "--csv_column_name",
         help=wrap(
-            "The column name to extract address in the CSV. Need to be specified if the provided dataset_path "
+            "The column name to extract the address in the CSV. It needs to be specified if the provided dataset_path "
             "leads to a CSV file."
         ),
         type=str,
@@ -37,7 +37,7 @@ def add_csv_column_names_arg(parser: ArgumentParser) -> None:
     parser.add_argument(
         "--csv_column_names",
         help=wrap(
-            "The column names to extract address and tags in the CSV. Need to be specified if the provided "
+            "The column names to extract addresses and tags in the CSV. It needs to be specified if the provided "
             "dataset_path leads to a CSV file. Column names have to be separated by a whitespace. For"
             "example, --csv_column_names column1 column2. By default, None."
         ),

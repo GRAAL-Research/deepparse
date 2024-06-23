@@ -4,11 +4,16 @@ from pathlib import Path
 
 import requests
 from bpemb import BPEmb
-
 from numpy.core.multiarray import ndarray
 from urllib3.exceptions import InsecureRequestWarning
 
 from .embeddings_model import EmbeddingsModel
+
+
+class BPEmbBaseURLWrapperBugFix(BPEmb):
+    def __init__(self, **kwargs):
+        self.base_url = "https://bpemb.h-its.org/multi/"
+        super().__init__(**kwargs)
 
 
 class BPEmbEmbeddingsModel(EmbeddingsModel):
@@ -19,7 +24,7 @@ class BPEmbEmbeddingsModel(EmbeddingsModel):
 
     Params:
         cache_dir (str): Path to the cache directory to the embeddings' bin vector and the model.
-        verbose (bool): Wether or not to make the loading of the embeddings verbose.
+        verbose (bool): Whether or not to make the loading of the embeddings verbose.
     """
 
     def __init__(self, cache_dir: str, verbose: bool = True) -> None:
@@ -31,7 +36,9 @@ class BPEmbEmbeddingsModel(EmbeddingsModel):
             # hotfix until https://github.com/bheinzerling/bpemb/issues/63
             # is resolved.
             with no_ssl_verification():
-                model = BPEmb(lang="multi", vs=100000, dim=300, cache_dir=Path(cache_dir))  # defaults parameters
+                # We use the default parameters other than the dim at 300 and a vs of 100,000
+                # We use a BPEmb wrapper since the base URL is broken and the issue is not resolved as of june 23rd.
+                model = BPEmbBaseURLWrapperBugFix(lang="multi", vs=100000, dim=300, cache_dir=Path(cache_dir))
         self.model = model
 
     def __call__(self, word: str) -> ndarray:
@@ -53,7 +60,7 @@ def no_ssl_verification():
 
     Reference: https://gist.github.com/ChenTanyi/0c47652bd916b61dc196968bca7dad1d.
 
-    Will be removed when https://github.com/bheinzerling/bpemb/issues/63 is resolved.
+    It will be removed when https://github.com/bheinzerling/bpemb/issues/63 is resolved.
     """
     opened_adapters = set()
     old_merge_environment_settings = requests.Session.merge_environment_settings

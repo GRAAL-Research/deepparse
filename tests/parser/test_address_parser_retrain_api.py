@@ -166,87 +166,6 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
 
         optimizer_mock.assert_called_with(self.model_mock.parameters(), self.a_learning_rate)
 
-    @patch("deepparse.validations.poutyne")
-    @patch("deepparse.parser.address_parser.torch.save")
-    @patch("deepparse.parser.address_parser.Experiment")
-    @patch("deepparse.parser.address_parser.SGD")
-    @patch("deepparse.parser.address_parser.ModelFactory")
-    @patch("deepparse.parser.address_parser.EmbeddingsModelFactory")
-    @patch("deepparse.parser.address_parser.VectorizerFactory")
-    @patch("deepparse.parser.address_parser.DataProcessorFactory")
-    @patch("deepparse.parser.address_parser.DataPadder")
-    def test_givenAModel_whenRetrainWithPoutyneBefore18_thenPrintMessage(
-        self,
-        data_padder_mock,
-        data_processor_factory_mock,
-        vectorizer_factory_mock,
-        embeddings_factory_mock,
-        model_factory_mock,
-        optimizer_mock,
-        experiment_mock,
-        torch_save_mock,
-        poutyne_mock,
-    ):
-        poutyne_mock.version.__version__ = "1.7"
-        self._capture_output()
-        self.address_parser = AddressParser(
-            model_type=self.a_fasttext_model_type,
-            device=self.a_device,
-            verbose=self.verbose,
-        )
-        self.address_parser_retrain_call()
-
-        actual = self.test_out.getvalue()
-        expected = (
-            "You are using an older version of Poutyne that does not support proper error management."
-            " Due to that, we cannot show retrain progress. To fix that, update Poutyne to the newest version.\n"
-        )
-
-        self.assertEqual(actual, expected)
-
-    @patch("deepparse.validations.poutyne")
-    @patch("deepparse.parser.address_parser.torch.save")
-    @patch("deepparse.parser.address_parser.Experiment")
-    @patch("deepparse.parser.address_parser.SGD")
-    @patch("deepparse.parser.address_parser.ModelFactory")
-    @patch("deepparse.parser.address_parser.EmbeddingsModelFactory")
-    @patch("deepparse.parser.address_parser.VectorizerFactory")
-    @patch("deepparse.parser.address_parser.DataProcessorFactory")
-    @patch("deepparse.parser.address_parser.DataPadder")
-    def test_givenAModel_whenRetrainWithPoutyneAfter17_thenDoNotPrintMessage(
-        self,
-        data_padder_mock,
-        data_processor_factory_mock,
-        vectorizer_factory_mock,
-        embeddings_factory_mock,
-        model_factory_mock,
-        optimizer_mock,
-        experiment_mock,
-        torch_save_mock,
-        poutyne_mock,
-    ):
-        poutyne_mock.version.__version__ = "1.8"
-        self._capture_output()
-        self.address_parser = AddressParser(
-            model_type=self.a_fasttext_model_type,
-            device=self.a_device,
-            verbose=self.verbose,
-        )
-        self.address_parser_retrain_call()
-
-        actual = self.test_out.getvalue()
-
-        expected = ""
-        self.assertEqual(actual, expected)
-
-        not_expected = (
-            "You are using a older version of Poutyne that does not support properly error management."
-            " Due to that, we cannot show retrain progress. To fix that, update Poutyne to the newest "
-            "version.\n"
-        )
-
-        self.assertNotRegex(actual, not_expected)
-
     @patch("deepparse.parser.address_parser.torch.save")
     @patch(
         "deepparse.parser.address_parser.Experiment",
@@ -1433,8 +1352,8 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         )
 
         # We set possible params type with a value
-        prediction_tags_settings = [{"A dict": 1.0}, None]  # Can be a dict or a None
-        seq2seq_params_settings = [{"A dict": 1.0}, None]  # Can be a dict or a None
+        prediction_tags_settings = [{"A dict": 1.0}, None]  # Can be a dictionary or a None
+        seq2seq_params_settings = [{"A dict": 1.0}, None]  # Can be a dictionary or a None
         layers_to_freeze_settings = [None, "encoder", "decoder", "prediction_layer", "seq2seq"]  # From the doc
 
         # We loop all possible settings

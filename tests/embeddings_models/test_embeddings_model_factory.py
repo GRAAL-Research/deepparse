@@ -25,7 +25,7 @@ class EmbeddingsModelFactoryTest(TestCase):
     def setUp(self):
         self.embeddings_model_factory = EmbeddingsModelFactory()
 
-    @patch("deepparse.embeddings_models.bpemb_embeddings_model.BPEmb")
+    @patch("deepparse.embeddings_models.bpemb_embeddings_model.BPEmbBaseURLWrapperBugFix")
     def test_givenABpembEmbeddingsModelType_whenCreatingEmbeddingsModel_thenShouldReturnCorrectEmbeddingsModel(
         self, bpemb_mock
     ):

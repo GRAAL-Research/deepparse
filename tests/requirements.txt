@@ -1,8 +1,8 @@
-pycountry==22.3.5
-pytest==7.4.0
-pytest-asyncio==0.21.1
-pytest_cov==4.1.0
-pytest-env==0.8.2
-pytest-mock==3.11.1
-pytest-xdist[psutil]==3.3.1
-tensorboard==2.13.0
+pycountry
+pytest
+pytest-asyncio
+pytest_cov
+pytest-env
+pytest-mock
+pytest-xdist[psutil]
+tensorboard

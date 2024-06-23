@@ -15,5 +15,5 @@ def configure_sentry() -> None:
         release=f"deepparse@{get_version('deepparse')}",
         profiles_sample_rate=1.0,
         environment=environment,
-        request_bodies="small",
+        max_request_body_size="small",
     )

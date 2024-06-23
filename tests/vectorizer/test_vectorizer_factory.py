@@ -13,7 +13,7 @@ from deepparse.embeddings_models import (
 
 class VectorizerFactoryTest(TestCase):
     @classmethod
-    @patch("deepparse.embeddings_models.bpemb_embeddings_model.BPEmb")
+    @patch("deepparse.embeddings_models.bpemb_embeddings_model.BPEmbBaseURLWrapperBugFix")
     @patch("deepparse.embeddings_models.fasttext_embeddings_model.load_fasttext_embeddings")
     @patch("deepparse.embeddings_models.fasttext_embeddings_model.load_facebook_vectors")
     @patch("deepparse.embeddings_models.magnitude_embeddings_model.Magnitude")

@@ -8,7 +8,7 @@ from .. import validate_data_to_parse
 
 class MagnitudeVectorizer(Vectorizer):
     """
-    FastText Magnitude vectorizer to convert an address into fastText embeddings using magnitude mapping.
+    FastText Magnitude vectorizer to convert an address into FastText embeddings using magnitude mapping.
     """
 
     def __call__(self, addresses: List[str]) -> List:
@@ -30,7 +30,7 @@ class MagnitudeVectorizer(Vectorizer):
         Method to vectorize the address.
 
         Args:
-            address (str): Address to vectorize using fastText.
+            address (str): Address to vectorize using FastText.
 
         Return:
             A list of word vector.

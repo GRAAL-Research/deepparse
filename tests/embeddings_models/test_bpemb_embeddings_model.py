@@ -19,7 +19,7 @@ class BPEmbEmbeddingsModelTest(TestCase):
 
     def test_whenInstantiatedWithPath_thenShouldLoadBPEmbModel(self):
         with patch(
-            "deepparse.embeddings_models.bpemb_embeddings_model.BPEmb",
+            "deepparse.embeddings_models.bpemb_embeddings_model.BPEmbBaseURLWrapperBugFix",
             return_value=self.model,
         ) as loader:
             _ = BPEmbEmbeddingsModel(self.a_path, verbose=False)
@@ -28,7 +28,7 @@ class BPEmbEmbeddingsModelTest(TestCase):
 
     def test_whenCalledToEmbed_thenShouldCallLoadedModel(self):
         with patch(
-            "deepparse.embeddings_models.bpemb_embeddings_model.BPEmb",
+            "deepparse.embeddings_models.bpemb_embeddings_model.BPEmbBaseURLWrapperBugFix",
             return_value=self.model,
         ):
             embeddings_model = BPEmbEmbeddingsModel(self.a_path, verbose=False)
@@ -39,7 +39,7 @@ class BPEmbEmbeddingsModelTest(TestCase):
 
     def test_givenADimOf9_whenAskDimProperty_thenReturnProperDim(self):
         with patch(
-            "deepparse.embeddings_models.bpemb_embeddings_model.BPEmb",
+            "deepparse.embeddings_models.bpemb_embeddings_model.BPEmbBaseURLWrapperBugFix",
             return_value=self.model,
         ):
             embeddings_model = BPEmbEmbeddingsModel(self.a_path, verbose=False)

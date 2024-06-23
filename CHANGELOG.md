@@ -346,10 +346,10 @@
 - Add data validation for 1) multiple consecutive whitespace and 2) newline.
 - Fixes some errors in tests.
 - Add an argument to the `DatasetContainer` interface to use a pre-processing data cleaning function before validation.
-- Hot-fix the issue with BPEmb base URL download problem see [issue 221](https://github.com/GRAAL-Research/deepparse/issues/221).
-- Fix NumPy version due to major release with breaking changes.
-- Fix SciPy version due to breaking change with Gensim.
-- Fix circular import in API app.
+- Hot-fix the issue with the BPEmb base URL download problem. See [issue 221](https://github.com/GRAAL-Research/deepparse/issues/221).
+- Fix the NumPy version due to a major release with breaking changes.
+- Fix the SciPy version due to breaking change with Gensim.
+- Fix circular import in the API app.
 - Fix deprecated `max_request_body_size` in Sentry.
 
 ## dev

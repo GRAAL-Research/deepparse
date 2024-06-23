@@ -14,7 +14,8 @@ except ModuleNotFoundError as e:
     ) from e
 
 if os.environ["TEST_LEVEL"] == "all":
-    from deepparse.app import app, format_parsed_addresses, Address
+    from deepparse.app.app import app
+    from deepparse.app.tools import format_parsed_addresses, Address
     from deepparse.parser import FormattedParsedAddress, AddressParser
 else:
     # To handle pylint error E0606.

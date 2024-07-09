@@ -31,7 +31,7 @@ class DownloadModelsTests(TestCase):
     @patch("deepparse.download_tools.download_weights")
     @patch("deepparse.download_tools.download_fasttext_embeddings")
     @patch("deepparse.download_tools.download_fasttext_magnitude_embeddings")
-    @patch("deepparse.download_tools.BPEmb")
+    @patch("deepparse.download_tools.BPEmbBaseURLWrapperBugFix")
     def test_givenADownloadAllModels_whenModelsAreNotLocal_thenDownloadAllModels(
         self,
         BPEmb_mock,

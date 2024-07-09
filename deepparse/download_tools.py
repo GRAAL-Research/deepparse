@@ -12,7 +12,7 @@ from fasttext.FastText import _FastText
 from requests import HTTPError
 from urllib3.exceptions import MaxRetryError
 
-from .embeddings_models import BPEmbBaseURLWrapperBugFix
+from .bpemb_url_bug_fix import BPEmbBaseURLWrapperBugFix
 from .errors.server_error import ServerError
 
 BASE_URL = "https://graal.ift.ulaval.ca/public/deepparse/{}.{}"

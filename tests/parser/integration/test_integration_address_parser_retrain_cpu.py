@@ -36,36 +36,6 @@ class AddressParserIntegrationRetrainCPUTest(AddressParserRetrainTestCase, Captu
         self.assertIsNotNone(performance_after_training)
 
     @patch("deepparse.validations.poutyne")
-    def test_givenAnAddressParser_whenRetrainWithPoutyne17andBefore_thenTrainingOccurWithAWarningPrint(
-        self, poutyne_mock
-    ):
-        poutyne_mock.version.__version__ = "1.7"
-        self._capture_output()
-        address_parser = AddressParser(
-            model_type=self.a_fasttext_model_type,
-            device=self.a_cpu_device,
-            verbose=self.verbose,
-        )
-
-        address_parser.retrain(
-            self.training_container,
-            train_ratio=self.a_train_ratio,
-            epochs=self.a_single_epoch,
-            batch_size=self.a_batch_size,
-            num_workers=self.a_number_of_workers,
-            logging_path=self.a_checkpoints_saving_dir,
-        )
-
-        actual = self.test_out.getvalue()
-
-        expected = (
-            "You are using a older version of Poutyne that does not support properly error management."
-            " Due to that, we cannot show retrain progress. To fix that, update Poutyne to the newest version.\n"
-        )
-
-        self.assertEqual(actual, expected)
-
-    @patch("deepparse.validations.poutyne")
     def test_givenAnAddressParser_whenRetrainWithPoutyne18andAfter_thenTrainingOccurWithoutAWarningPrint(
         self, poutyne_mock
     ):

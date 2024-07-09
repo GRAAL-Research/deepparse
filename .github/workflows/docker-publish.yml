@@ -1,4 +1,4 @@
-name: Create and publish a Docker image as a Github Package
+name: Publish Docker Image
 
 on:
   release:

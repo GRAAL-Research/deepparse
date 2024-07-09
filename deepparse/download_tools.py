@@ -8,11 +8,11 @@ from typing import Dict, Union
 from urllib.request import urlopen
 
 import requests
-from bpemb import BPEmb
 from fasttext.FastText import _FastText
 from requests import HTTPError
 from urllib3.exceptions import MaxRetryError
 
+from .embeddings_models import BPEmbBaseURLWrapperBugFix
 from .errors.server_error import ServerError
 
 BASE_URL = "https://graal.ift.ulaval.ca/public/deepparse/{}.{}"
@@ -127,7 +127,7 @@ def download_model(
     elif model_type == "fasttext-light":
         download_fasttext_magnitude_embeddings(cache_dir=saving_cache_path)
     elif "bpemb" in model_type:
-        BPEmb(
+        BPEmbBaseURLWrapperBugFix(
             lang="multi", vs=100000, dim=300, cache_dir=saving_cache_path
         )  # The class manages the download of the pretrained words embedding
 

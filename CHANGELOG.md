@@ -352,4 +352,8 @@
 - Fix circular import in the API app.
 - Fix deprecated `max_request_body_size` in Sentry.
 
+## 0.9.11
+
+- Fix Sentry version error in Docker Image.
+
 ## dev

@@ -250,8 +250,8 @@ class AddressParser:
                 # Validate if we have the proper metadata, it has at least the parser model type
                 # if no other thing have been modified.
                 error_text = (
-                    "You are not using the proper retrained checkpoint for Deepparse, since we also export other"
-                    "informations along with the model weights. "
+                    "You are not using the proper retrained checkpoint for Deepparse, since we also export other "
+                    "information's along with the model weights. "
                     "When we retrain an AddressParser, by default, we create a "
                     "checkpoint name 'retrained_modeltype_address_parser.ckpt'. "
                     "Where 'modeltype' is the AddressParser model type (e.g. 'fasttext', 'bpemb'). "

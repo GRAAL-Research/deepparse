@@ -356,4 +356,8 @@
 
 - Fix Sentry version error in Docker Image.
 
+## 0.9.12
+
+- Bug-fix the call to the BPEmb class instead of the BPEmbBaseURLWrapperBugFix to fix the download URL in `download_models`.
+
 ## dev

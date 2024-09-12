@@ -90,7 +90,7 @@ def main():
             "colorama": "colorama",
             "app": ["fastapi[all]>=0.109.1", "uvicorn==0.22.0", "sentry-sdk[fastapi]>=2.0.0", "python-decouple==3.8"],
             "all": [
-                "colorama>",  # colorama
+                "colorama",  # colorama
                 "fastapi[all]>=0.109.1",  # app requirements
                 "uvicorn==0.22.0",
                 "sentry-sdk[fastapi]>=2.0.0",

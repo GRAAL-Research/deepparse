@@ -1,12 +1,12 @@
 torch
 bpemb
 numpy<2.0.0
-scipy<=1.10.1
+scipy
 requests
 pymagnitude-light
 colorama>=0.4.3
 poutyne
-gensim>=4.2.0
+gensim>=4.3.3
 fasttext-wheel
 pandas
 urllib3

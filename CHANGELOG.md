@@ -360,4 +360,8 @@
 
 - Bug-fix the call to the BPEmb class instead of the BPEmbBaseURLWrapperBugFix to fix the download URL in `download_models`.
 
+## 0.9.13
+
+- Update Gensim version in setup to allow for the installation of recent Scipy versions.
+
 ## dev

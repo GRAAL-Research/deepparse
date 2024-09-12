@@ -72,8 +72,8 @@ def main():
             "numpy<2.0.0",
             "torch",
             "bpemb",
-            "scipy<=1.10.1",
-            "gensim>=4.0.0",
+            "scipy",
+            "gensim>=4.3.3",
             "requests",
             "fasttext-wheel",
             "pymagnitude-light",
@@ -90,7 +90,7 @@ def main():
             "colorama": "colorama",
             "app": ["fastapi[all]>=0.109.1", "uvicorn==0.22.0", "sentry-sdk[fastapi]>=2.0.0", "python-decouple==3.8"],
             "all": [
-                "colorama>",  # colorama
+                "colorama",  # colorama
                 "fastapi[all]>=0.109.1",  # app requirements
                 "uvicorn==0.22.0",
                 "sentry-sdk[fastapi]>=2.0.0",

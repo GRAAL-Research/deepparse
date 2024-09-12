@@ -3,17 +3,11 @@ import warnings
 from pathlib import Path
 
 import requests
-from bpemb import BPEmb
 from numpy.core.multiarray import ndarray
 from urllib3.exceptions import InsecureRequestWarning
 
+from ..bpemb_url_bug_fix import BPEmbBaseURLWrapperBugFix
 from .embeddings_model import EmbeddingsModel
-
-
-class BPEmbBaseURLWrapperBugFix(BPEmb):
-    def __init__(self, **kwargs):
-        self.base_url = "https://bpemb.h-its.org/multi/"
-        super().__init__(**kwargs)
 
 
 class BPEmbEmbeddingsModel(EmbeddingsModel):

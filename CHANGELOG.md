@@ -365,3 +365,5 @@
 - Update Gensim version in setup to allow for the installation of recent Scipy versions.
 
 ## dev
+
+- Add Python 3.12.

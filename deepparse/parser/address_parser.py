@@ -485,6 +485,7 @@ class AddressParser:
         layers_to_freeze: Union[str, None] = None,
         name_of_the_retrain_parser: Union[None, str] = None,
         verbose: Union[None, bool] = None,
+        retrain_device: Union[None, str, int, List[int]] = None,
     ) -> List[Dict]:
         # pylint: disable=too-many-arguments, too-many-locals, too-many-branches, too-many-statements
 
@@ -773,11 +774,13 @@ class AddressParser:
 
         optimizer = SGD(self.model.parameters(), learning_rate)
 
+        device = retrain_device if retrain_device is not None else self.device
+
         # Poutyne handle model.train()
         exp = Experiment(
             logging_path,
             self.model,
-            device=self.device,
+            device=device,
             optimizer=optimizer,
             loss_function=nll_loss,
             batch_metrics=[accuracy],

@@ -24,7 +24,7 @@ class EmbeddingsModelFactory:
             embeddings_model = BPEmbEmbeddingsModel(verbose=verbose, cache_dir=cache_dir)
 
         elif "fasttext" in embedding_model_type:
-            if "fasttext-light" in embedding_model_type:
+            if "fasttext_light" in embedding_model_type:
                 file_name = download_fasttext_magnitude_embeddings(cache_dir=cache_dir, verbose=verbose)
 
                 embeddings_model = MagnitudeEmbeddingsModel(file_name, verbose=verbose)

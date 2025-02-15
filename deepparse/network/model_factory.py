@@ -44,7 +44,7 @@ class ModelFactory:
         Return:
             A :class:`~Seq2SeqModel`.
         """
-        if "fasttext" in model_type or "fasttext-light" in model_type:
+        if "fasttext" in model_type or "fasttext_light" in model_type:
             model = FastTextSeq2SeqModel(
                 cache_dir=cache_dir,
                 device=device,

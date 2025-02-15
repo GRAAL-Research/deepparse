@@ -87,8 +87,8 @@ def handle_model_name(model_type: str, attention_mechanism: bool) -> Tuple[str, 
         model_type = model_type.replace("_", "")
         model_type = model_type.replace("-", "")
 
-    if model_type in ("lightest", "fasttext-light"):
-        model_type = "fasttext-light"  # We change name to 'fasttext-light' since lightest = fasttext-light
+    if model_type in ("lightest", "fasttext_light"):
+        model_type = "fasttext_light"  # We change name "lightest" to 'fasttext_light' since lightest = fasttext_light
         formatted_name = "FastTextLight"
     elif model_type in ("fastest", "fasttext"):
         model_type = "fasttext"  # We change name to fasttext since fastest = fasttext

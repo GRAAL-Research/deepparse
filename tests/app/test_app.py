@@ -98,6 +98,24 @@ def test_parse(client: TestClient):
 
 
 @skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
+def test_parse_return_consistent_model_name(client: TestClient):
+    parsing_models = ["bpemb", "bpemb_attention"]
+    raw_address_1 = "2325 Rue de l'Université, Québec, QC G1V 0A6"
+
+    json_addresses = jsonable_encoder(
+        [
+            {
+                "raw": raw_address_1,
+            },
+        ]
+    )
+    for parsing_model in parsing_models:
+        response = client.post(f"/parse/{parsing_model}", json=json_addresses)
+
+        assert response.get("model_type") == parsing_model
+
+
+@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
 def test_parse_empty_addresses(client: TestClient):
     with pytest.raises(AssertionError, match="Addresses parameter must not be empty"):
         client.post("/parse/bpemb", json=[])
@@ -176,7 +194,7 @@ def test_format_parsed_addresses():
 
 
 @skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
-def test_format_parsed_addresses__one_address():
+def test_format_parsed_addresses_one_address():
     # Create a mock for the AddressParser
     model_type = "bpemb"
     version = "1234"

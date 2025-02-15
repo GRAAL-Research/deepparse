@@ -82,10 +82,10 @@ class AddressParser:
         model_type (str): The network name to use, can be either:
 
             - ``"fasttext"`` (need ~9 GO of RAM to be used),
-            - ``"fasttext-light"`` (need ~2 GO of RAM to be used, but slower than fasttext version),
+            - ``"fasttext_light"`` (need ~2 GO of RAM to be used, but slower than fasttext version),
             - ``"bpemb"`` (need ~2 GO of RAM to be used),
             - ``"fastest"`` (quicker to process one address) (equivalent to ``"fasttext"``),
-            - ``"lightest"`` (the one using the less RAM and GPU usage) (equivalent to ``"fasttext-light"``),
+            - ``"lightest"`` (the one using the less RAM and GPU usage) (equivalent to ``"fasttext_light"``),
             - ``"best"`` (the best accuracy performance) (equivalent to ``"bpemb"``).
 
             The default value is ``"best"`` for the most accurate model. Ignored if ``path_to_model_weights`` is not
@@ -125,7 +125,7 @@ class AddressParser:
     Note:
         For both networks, we will download the pretrained weights and embeddings in the ``.cache`` directory
         for the root user. The pretrained weights take at most 44 MB. The FastText embeddings take 6.8 GO,
-        the FastText-light (``"fasttext-light"``) embeddings take 3.3 GO and bpemb take 116 MB (in ``".cache/bpemb"``).
+        the FastText_light (``"fasttext_light"``) embeddings take 3.3 GO and bpemb take 116 MB (in ``".cache/bpemb"``).
 
         Also, one can download all the dependencies of our pretrained model using our CLI
         (e.g. download_model fasttext) before sending it to a node without access to Internet.
@@ -143,7 +143,7 @@ class AddressParser:
         `issue <https://github.com/GRAAL-Research/deepparse/issues/89>`_.
 
     Note:
-        You may observe a 100% CPU load the first time you call the fasttext-light model. We
+        You may observe a 100% CPU load the first time you call the fasttext_light model. We
         `hypotheses <https://github.com/GRAAL-Research/deepparse/pull/54#issuecomment-743463855>`_ that this is due
         to the SQLite database behind ``pymagnitude``. This approach creates a cache to speed up processing, and
         since the memory mapping is saved between the runs, and it's more intensive the first time you call it and
@@ -603,8 +603,8 @@ class AddressParser:
 
         Note:
             Due to pymagnitude, we could not train using the Magnitude embeddings, meaning it's not possible to
-            train using the fasttext-light model. But, since we don't update the embeddings weights, one can retrain
-            using the fasttext model and later on use the weights with the fasttext-light.
+            train using the fasttext_light model. But, since we don't update the embeddings weights, one can retrain
+            using the fasttext model and later on use the weights with the fasttext_light.
 
         Note:
             When retraining a model, Poutyne will create checkpoints. After the training, we use the best checkpoint
@@ -960,9 +960,9 @@ class AddressParser:
         """
         self._model_os_validation(num_workers=num_workers)
 
-        if "fasttext-light" in self.model_type:
+        if "fasttext_light" in self.model_type:
             raise FastTextModelError(
-                "It's not possible to test a fasttext-light due to pymagnitude problem. "
+                "It's not possible to test a fasttext_light due to pymagnitude problem. "
                 "See the Retrain method documentation for more details."
             )
 
@@ -1263,9 +1263,9 @@ class AddressParser:
         """
         self._model_os_validation(num_workers=num_workers)
 
-        if "fasttext-light" in self.model_type:
+        if "fasttest_light" in self.model_type:
             raise FastTextModelError(
-                "It's not possible to retrain a fasttext-light due to pymagnitude problem. "
+                "It's not possible to retrain a fasttest_light due to pymagnitude problem. "
                 "See the Retrain method documentation for more details."
             )
 

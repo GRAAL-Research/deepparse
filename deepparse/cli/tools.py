@@ -143,7 +143,7 @@ def attention_model_type_handling(parsing_model) -> Dict:
         A params dict.
     """
     parser_args_update_args = {}
-    if "-attention" in parsing_model:
+    if "_attention" in parsing_model:
         parser_args_update_args.update({"attention_mechanism": True})
         parsing_model = parsing_model.strip("attention").strip("-")
     parser_args_update_args.update({"model_type": parsing_model})

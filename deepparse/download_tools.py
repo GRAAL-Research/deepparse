@@ -26,10 +26,10 @@ NEXT_RANGE_STATUS_CODE = 500
 
 MODEL_MAPPING_CHOICES: Dict[str, str] = {
     "fasttext": "fasttext",
-    "fasttext-attention": "fasttext_attention",
-    "fasttext-light": "fasttext",
+    "fasttext_attention": "fasttext_attention",
+    "fasttext_light": "fasttext",
     "bpemb": "bpemb",
-    "bpemb-attention": "bpemb_attention",
+    "bpemb_attention": "bpemb_attention",
 }
 
 
@@ -114,7 +114,7 @@ def download_model(
     Function to download a pretrained model. It will download its corresponding checkpoint and version file.
 
     Args:
-        model_type: The model type (i.e. ``fasttext`` or ``bpemb-attention``).
+        model_type: The model type (i.e. ``fasttext`` or ``bpemb_attention``).
         saving_cache_path: The path to the saving cache directory for the specified model.
     """
 
@@ -122,9 +122,9 @@ def download_model(
         # We use the default cache path '~/.cache/deepparse'.
         saving_cache_path = CACHE_PATH
 
-    if "fasttext" in model_type and "fasttext-light" not in model_type:
+    if "fasttext" in model_type and "fasttext_light" not in model_type:
         download_fasttext_embeddings(cache_dir=saving_cache_path)
-    elif model_type == "fasttext-light":
+    elif model_type == "fasttext_light":
         download_fasttext_magnitude_embeddings(cache_dir=saving_cache_path)
     elif "bpemb" in model_type:
         BPEmbBaseURLWrapperBugFix(

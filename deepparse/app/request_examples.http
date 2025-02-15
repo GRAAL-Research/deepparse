@@ -10,7 +10,7 @@ Content-Type: application/json
 
 ###
 
-POST /parse/bpemb-attention HTTP/1.1
+POST /parse/bpemb_attention HTTP/1.1
 Host: 127.0.0.1:8000
 Content-Type: application/json
 

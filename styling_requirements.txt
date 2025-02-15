@@ -2,3 +2,4 @@ black
 pylint
 pylint-django[with_django]
 pre-commit
+black[jupyter]

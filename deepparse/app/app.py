@@ -30,10 +30,10 @@ async def lifespan(application: FastAPI):  # pylint: disable=unused-argument
     logger.debug("Downloading models")
     download_models()
     for model in MODEL_MAPPING_CHOICES:
-        if model not in ["fasttext", "fasttext-attention", "fasttext-light"]:  # Skip fasttext models
+        if model not in ["fasttext", "fasttext_attention", "fasttext_light"]:  # Skip fasttext models
             logger.debug("initializing %s", model)
             attention = False
-            if "-attention" in model:
+            if "_attention" in model:
                 attention = True
             address_parser_mapping[model] = AddressParser(
                 model_type=model,
@@ -56,7 +56,7 @@ def parse(parsing_model: str, addresses: List[Address], resp=Depends(format_pars
 
     Args:
     - **parsing_model** (str, path parameter): The parsing model to use for address parsing.
-      Available choices: fasttext, fasttext-attention, fasttext-light, bpemb, bpemb-attention
+      Available choices: fasttext, fasttext_attention, fasttext_light, bpemb, bpemb_attention
     - **addresses** (List[Address], request body): List of addresses to parse.
 
     Returns:

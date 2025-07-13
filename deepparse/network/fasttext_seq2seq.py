@@ -15,7 +15,6 @@ class FastTextSeq2SeqModel(Seq2SeqModel):
     Args:
         cache_dir (str): The path to the cached directory to use for downloading (and loading) the
             model weights.
-        device (~torch.device): The device tu use for the prediction.
         input_size (int): The input size of the encoder (i.e. the size of the embedding). The default value is ``300``.
         encoder_hidden_size (int): The size of the encoder's hidden layer(s). The default value is ``1024``.
         encoder_num_layers (int): The number of hidden layers of the encoder. The default value is ``1``.
@@ -32,7 +31,6 @@ class FastTextSeq2SeqModel(Seq2SeqModel):
     def __init__(
         self,
         cache_dir: str,
-        device: torch.device,
         input_size: int = 300,
         encoder_hidden_size: int = 1024,
         encoder_num_layers: int = 1,
@@ -46,7 +44,6 @@ class FastTextSeq2SeqModel(Seq2SeqModel):
         offline: bool = False,
     ) -> None:
         super().__init__(
-            device,
             input_size=input_size,
             encoder_hidden_size=encoder_hidden_size,
             encoder_num_layers=encoder_num_layers,

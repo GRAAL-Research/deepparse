@@ -47,7 +47,6 @@ class ModelFactory:
         if "fasttext" in model_type or "fasttext-light" in model_type:
             model = FastTextSeq2SeqModel(
                 cache_dir=cache_dir,
-                device=device,
                 output_size=output_size,
                 verbose=verbose,
                 path_to_retrained_model=path_to_retrained_model,
@@ -59,7 +58,6 @@ class ModelFactory:
         elif "bpemb" in model_type:
             model = BPEmbSeq2SeqModel(
                 cache_dir=cache_dir,
-                device=device,
                 output_size=output_size,
                 verbose=verbose,
                 path_to_retrained_model=path_to_retrained_model,
@@ -74,5 +72,7 @@ class ModelFactory:
                     There is no {model_type} network implemented. model_type should be either "fasttext" or "bpemb".
             """
             )
+
+        model.to_device(device)
 
         return model

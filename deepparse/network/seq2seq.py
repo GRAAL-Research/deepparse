@@ -8,6 +8,7 @@ from typing import Tuple, Union, List
 
 import torch
 from torch import nn
+from huggingface_hub import PyTorchModelHubMixin
 
 from ..network.decoder import Decoder
 from ..network.encoder import Encoder
@@ -15,12 +16,11 @@ from ..weights_tools import handle_weights_upload
 from ..download_tools import download_weights, latest_version
 
 
-class Seq2SeqModel(ABC, nn.Module):
+class Seq2SeqModel(ABC, nn.Module, PyTorchModelHubMixin):
     """
     Abstract class for Seq2Seq networks.
 
      Args:
-        device (~torch.device): The device tu use for the prediction.
         input_size (int): The input size of the encoder (i.e. the size of the embedding). The default value is ``300``.
         encoder_hidden_size (int): The size of the encoder's hidden layer(s). The default value is ``1024``.
         encoder_num_layers (int): The number of hidden layers of the encoder. The default value is ``1``.
@@ -34,7 +34,6 @@ class Seq2SeqModel(ABC, nn.Module):
 
     def __init__(
         self,
-        device: torch.device,
         input_size: int,
         encoder_hidden_size: int,
         encoder_num_layers: int,
@@ -45,16 +44,16 @@ class Seq2SeqModel(ABC, nn.Module):
         verbose: bool = True,
     ) -> None:
         super().__init__()
-        self.device = device
         self.verbose = verbose
         self.attention_mechanism = attention_mechanism
+
+        self.device = torch.device("cpu")
 
         self.encoder = Encoder(
             input_size=input_size,
             hidden_size=encoder_hidden_size,
             num_layers=encoder_num_layers,
         )
-        self.encoder.to(self.device)
 
         self.decoder = Decoder(
             input_size=encoder_num_layers,
@@ -64,9 +63,12 @@ class Seq2SeqModel(ABC, nn.Module):
             attention_mechanism=self.attention_mechanism,
         )
 
-        self.decoder.to(self.device)
-
         self.output_size = output_size
+
+    def to_device(self, device: torch.device):
+        self.device = device
+
+        self.to(self.device)
 
     def same_output_dim(self, size: int) -> bool:
         """
@@ -124,7 +126,7 @@ class Seq2SeqModel(ABC, nn.Module):
             path_to_model_torch_archive (str): The path to the fine-tuned model Torch archive.
         """
         all_layers_params = handle_weights_upload(
-            path_to_model_to_upload=path_to_model_torch_archive, device=self.device
+            path_to_model_to_upload=path_to_model_torch_archive#, device=self.device TODO: make sure to handle the device when refactoring this part
         )
 
         # All the time, our torch archive includes meta-data along with the model weights.

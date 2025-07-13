@@ -52,21 +52,23 @@ class Seq2SeqTest(TestCase):
     def tearDownClass(cls) -> None:
         cls.temp_dir_obj.cleanup()
 
-    def test_givenDefaultModel_whenLoadVersion_thenModelHash(self):
-        # We test using FastText but same is expected with BPEmb
-        seq2seq_model = Seq2SeqModel(
-            input_size=self.encoder_input_size_dim,
-            encoder_hidden_size=self.encoder_hidden_size,
-            encoder_num_layers=self.encoder_num_layers,
-            decoder_hidden_size=self.decoder_hidden_size,
-            decoder_num_layers=self.decoder_num_layers,
-            output_size=self.decoder_output_size,
-        )
+    # TODO: MODEL LOADING LOGIC WILL BE MOVED TO MODELFACTORY !!!!!!!!!!!
 
-        actual = seq2seq_model._load_version(model_type="fasttext", cache_dir=self.fake_cache_dir)
-        expected = self.a_hash_value
-
-        self.assertEqual(actual, expected)
+    # def test_givenDefaultModel_whenLoadVersion_thenModelHash(self):
+    #     # We test using FastText but same is expected with BPEmb
+    #     seq2seq_model = Seq2SeqModel(
+    #         input_size=self.encoder_input_size_dim,
+    #         encoder_hidden_size=self.encoder_hidden_size,
+    #         encoder_num_layers=self.encoder_num_layers,
+    #         decoder_hidden_size=self.decoder_hidden_size,
+    #         decoder_num_layers=self.decoder_num_layers,
+    #         output_size=self.decoder_output_size,
+    #     )
+    #
+    #     actual = seq2seq_model._load_version(model_type="fasttext", cache_dir=self.fake_cache_dir)
+    #     expected = self.a_hash_value
+    #
+    #     self.assertEqual(actual, expected)
 
     def test_whenInstantiateASeq2SeqModel_thenParametersAreOk(self):
         seq2seq_model = Seq2SeqModel(
@@ -153,56 +155,57 @@ class Seq2SeqTest(TestCase):
         actual = seq2seq_model.decoder.linear.out_features
         self.assertEqual(expected, actual)
 
-    @patch("os.path.isfile")
-    @patch("deepparse.weights_tools.torch")
-    @patch("deepparse.network.seq2seq.torch.nn.Module.load_state_dict")
-    def test_givenSeq2seqModel_whenNoPretrainedWeights_thenDownloadIt(
-        self,
-        torch_nn_mock,
-        torch_mock,
-        isfile_mock,
-    ):
-        seq2seq_model = Seq2SeqModel(
-            input_size=self.encoder_input_size_dim,
-            encoder_hidden_size=self.encoder_hidden_size,
-            encoder_num_layers=self.encoder_num_layers,
-            decoder_hidden_size=self.decoder_hidden_size,
-            decoder_num_layers=self.decoder_num_layers,
-            output_size=self.decoder_output_size,
-            verbose=False,
-        )
-        isfile_mock.return_value = False
-        with patch("deepparse.network.seq2seq.download_weights") as download_weights_mock:
-            seq2seq_model._load_pre_trained_weights(self.a_model_type, cache_dir=self.cache_dir, offline=False)
-
-            download_weights_mock.assert_called()
-            download_weights_mock.assert_called_with(self.a_model_type, self.cache_dir, verbose=False)
-
-    @patch("os.path.isfile")
-    @patch("deepparse.weights_tools.torch")
-    @patch("deepparse.network.seq2seq.torch.nn.Module.load_state_dict")
-    def test_givenSeq2seqModelVerbose_whenNoPretrainedWeights_thenWarns(
-        self,
-        torch_nn_mock,
-        torch_mock,
-        isfile_mock,
-    ):
-        seq2seq_model = Seq2SeqModel(
-            input_size=self.encoder_input_size_dim,
-            encoder_hidden_size=self.encoder_hidden_size,
-            encoder_num_layers=self.encoder_num_layers,
-            decoder_hidden_size=self.decoder_hidden_size,
-            decoder_num_layers=self.decoder_num_layers,
-            output_size=self.decoder_output_size,
-            verbose=False,
-        )
-        isfile_mock.return_value = False
-        with patch("deepparse.network.seq2seq.download_weights"):
-            with self.assertWarns(UserWarning):
-                seq2seq_model._load_pre_trained_weights(self.a_model_type, cache_dir=self.cache_dir, offline=False)
-
-
     # TODO: MODEL LOADING LOGIC WILL BE MOVED TO MODELFACTORY !!!!!!!!!!!
+
+    # @patch("os.path.isfile")
+    # @patch("deepparse.weights_tools.torch")
+    # @patch("deepparse.network.seq2seq.torch.nn.Module.load_state_dict")
+    # def test_givenSeq2seqModel_whenNoPretrainedWeights_thenDownloadIt(
+    #     self,
+    #     torch_nn_mock,
+    #     torch_mock,
+    #     isfile_mock,
+    # ):
+    #     seq2seq_model = Seq2SeqModel(
+    #         input_size=self.encoder_input_size_dim,
+    #         encoder_hidden_size=self.encoder_hidden_size,
+    #         encoder_num_layers=self.encoder_num_layers,
+    #         decoder_hidden_size=self.decoder_hidden_size,
+    #         decoder_num_layers=self.decoder_num_layers,
+    #         output_size=self.decoder_output_size,
+    #         verbose=False,
+    #     )
+    #     isfile_mock.return_value = False
+    #     with patch("deepparse.network.seq2seq.download_weights") as download_weights_mock:
+    #         seq2seq_model._load_pre_trained_weights(self.a_model_type, cache_dir=self.cache_dir, offline=False)
+    #
+    #         download_weights_mock.assert_called()
+    #         download_weights_mock.assert_called_with(self.a_model_type, self.cache_dir, verbose=False)
+
+    # @patch("os.path.isfile")
+    # @patch("deepparse.weights_tools.torch")
+    # @patch("deepparse.network.seq2seq.torch.nn.Module.load_state_dict")
+    # def test_givenSeq2seqModelVerbose_whenNoPretrainedWeights_thenWarns(
+    #     self,
+    #     torch_nn_mock,
+    #     torch_mock,
+    #     isfile_mock,
+    # ):
+    #     seq2seq_model = Seq2SeqModel(
+    #         input_size=self.encoder_input_size_dim,
+    #         encoder_hidden_size=self.encoder_hidden_size,
+    #         encoder_num_layers=self.encoder_num_layers,
+    #         decoder_hidden_size=self.decoder_hidden_size,
+    #         decoder_num_layers=self.decoder_num_layers,
+    #         output_size=self.decoder_output_size,
+    #         verbose=False,
+    #     )
+    #     isfile_mock.return_value = False
+    #     with patch("deepparse.network.seq2seq.download_weights"):
+    #         with self.assertWarns(UserWarning):
+    #             seq2seq_model._load_pre_trained_weights(self.a_model_type, cache_dir=self.cache_dir, offline=False)
+
+
 
     # @patch("deepparse.network.seq2seq.latest_version")
     # @patch("os.path.isfile")
@@ -363,39 +366,39 @@ class Seq2SeqTest(TestCase):
     #
     #     all_layers_params_mock.get.assert_called()
 
-    @patch("deepparse.network.seq2seq.latest_version")
-    @patch("os.path.isfile")
-    @patch("deepparse.weights_tools.torch")
-    @patch("deepparse.network.seq2seq.torch.nn.Module.load_state_dict")
-    def test_givenAnOfflineSeq2SeqModel_whenInit_thenDontCallOnlineFunctions(
-        self, torch_nn_mock, torch_mock, isfile_mock, last_version_mock
-    ):
-        # Test if functions latest_version and download_weights
-        seq2seq_model = Seq2SeqModel(
-            input_size=self.encoder_input_size_dim,
-            encoder_hidden_size=self.encoder_hidden_size,
-            encoder_num_layers=self.encoder_num_layers,
-            decoder_hidden_size=self.decoder_hidden_size,
-            decoder_num_layers=self.decoder_num_layers,
-            output_size=self.decoder_output_size,
-            verbose=False,
-        )
-
-        # Test if download_weights was not called
-        isfile_mock.return_value = False
-
-        with patch("deepparse.network.seq2seq.download_weights") as download_weights_mock:
-            seq2seq_model._load_pre_trained_weights(self.a_model_type, cache_dir=self.cache_dir, offline=True)
-
-            download_weights_mock.assert_not_called()
-
-        # Test if latest_version was not called
-        isfile_mock.return_value = True
-        last_version_mock.return_value = False
-
-        seq2seq_model._load_pre_trained_weights(self.a_model_type, cache_dir=self.cache_dir, offline=True)
-
-        last_version_mock.assert_not_called()
+    # @patch("deepparse.network.seq2seq.latest_version")
+    # @patch("os.path.isfile")
+    # @patch("deepparse.weights_tools.torch")
+    # @patch("deepparse.network.seq2seq.torch.nn.Module.load_state_dict")
+    # def test_givenAnOfflineSeq2SeqModel_whenInit_thenDontCallOnlineFunctions(
+    #     self, torch_nn_mock, torch_mock, isfile_mock, last_version_mock
+    # ):
+    #     # Test if functions latest_version and download_weights
+    #     seq2seq_model = Seq2SeqModel(
+    #         input_size=self.encoder_input_size_dim,
+    #         encoder_hidden_size=self.encoder_hidden_size,
+    #         encoder_num_layers=self.encoder_num_layers,
+    #         decoder_hidden_size=self.decoder_hidden_size,
+    #         decoder_num_layers=self.decoder_num_layers,
+    #         output_size=self.decoder_output_size,
+    #         verbose=False,
+    #     )
+    #
+    #     # Test if download_weights was not called
+    #     isfile_mock.return_value = False
+    #
+    #     with patch("deepparse.network.seq2seq.download_weights") as download_weights_mock:
+    #         seq2seq_model._load_pre_trained_weights(self.a_model_type, cache_dir=self.cache_dir, offline=True)
+    #
+    #         download_weights_mock.assert_not_called()
+    #
+    #     # Test if latest_version was not called
+    #     isfile_mock.return_value = True
+    #     last_version_mock.return_value = False
+    #
+    #     seq2seq_model._load_pre_trained_weights(self.a_model_type, cache_dir=self.cache_dir, offline=True)
+    #
+    #     last_version_mock.assert_not_called()
 
 
 if __name__ == "__main__":

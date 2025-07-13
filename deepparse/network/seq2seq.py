@@ -2,7 +2,7 @@
 
 import os
 import random
-import warnings
+# import warnings
 from abc import ABC
 from typing import Tuple, Union, List
 
@@ -12,8 +12,8 @@ from huggingface_hub import PyTorchModelHubMixin
 
 from ..network.decoder import Decoder
 from ..network.encoder import Encoder
-from ..weights_tools import handle_weights_upload
-from ..download_tools import download_weights, latest_version
+# from ..weights_tools import handle_weights_upload
+# from ..download_tools import download_weights, latest_version
 
 
 class Seq2SeqModel(ABC, nn.Module, PyTorchModelHubMixin):
@@ -87,68 +87,6 @@ class Seq2SeqModel(ABC, nn.Module, PyTorchModelHubMixin):
         """
         self.decoder.linear_layer_set_up(output_size=new_dim)
         self.output_size = new_dim
-
-    def _load_pre_trained_weights(self, model_type: str, cache_dir: str, offline: bool) -> None:
-        """
-        Method to download and resolve the loading (into the network) of the pre-trained weights.
-
-        Args:
-            model_type (str): The network pretrained weights to load.
-            cache_dir (str): The path to the cached directory to use for downloading (and loading) the
-                model weights.
-            offline (bool): Whether the model is an offline or an online.
-        """
-        model_path = os.path.join(cache_dir, f"{model_type}.ckpt")
-
-        if not offline:
-            if not os.path.isfile(model_path):
-                warnings.warn(
-                    f"No pre-trained model where found in the cache directory {cache_dir}. Thus, we will"
-                    "automatically download the pre-trained model.",
-                    category=UserWarning,
-                )
-                download_weights(model_type, cache_dir, verbose=self.verbose)
-            elif not latest_version(model_type, cache_path=cache_dir, verbose=self.verbose):
-                if self.verbose:
-                    warnings.warn(
-                        "A new version of the pretrained model is available. The newest model will be downloaded.",
-                        category=UserWarning,
-                    )
-                download_weights(model_type, cache_dir, verbose=self.verbose)
-
-        self._load_weights(path_to_model_torch_archive=model_path)
-
-    def _load_weights(self, path_to_model_torch_archive: str) -> None:
-        """
-        Method to load (into the network) the weights.
-
-        Args:
-            path_to_model_torch_archive (str): The path to the fine-tuned model Torch archive.
-        """
-        all_layers_params = handle_weights_upload(
-            path_to_model_to_upload=path_to_model_torch_archive#, device=self.device TODO: make sure to handle the device when refactoring this part
-        )
-
-        # All the time, our torch archive includes meta-data along with the model weights.
-        all_layers_params = all_layers_params.get("address_tagger_model")
-        self.load_state_dict(all_layers_params)
-
-    @staticmethod
-    def _load_version(model_type: str, cache_dir: str) -> str:
-        """
-        Method to load the local hashed version of the model as an attribute.
-
-        Args:
-            model_type (str): The network pretrained weights to load.
-            cache_dir (str): The path to the cached directory to use for downloading (and loading) the
-                model weights.
-
-        Return:
-            The hash of the model.
-
-        """
-        with open(os.path.join(cache_dir, model_type + ".version"), encoding="utf-8") as local_model_hash_file:
-            return local_model_hash_file.readline().strip()
 
     def _encoder_step(self, to_predict: torch.Tensor, lengths: List, batch_size: int) -> Tuple:
         """

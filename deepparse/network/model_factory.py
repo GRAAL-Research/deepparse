@@ -69,18 +69,14 @@ class ModelFactory:
         if "fasttext" in model_type or "fasttext-light" in model_type:
             model = FastTextSeq2SeqModel(
                 output_size=output_size,
-                verbose=verbose,
                 attention_mechanism=attention_mechanism,
-                version=version,
                 **seq2seq_kwargs,
             )
 
         elif "bpemb" in model_type:
             model = BPEmbSeq2SeqModel(
                 output_size=output_size,
-                verbose=verbose,
                 attention_mechanism=attention_mechanism,
-                version=version,
                 **seq2seq_kwargs,
             )
 

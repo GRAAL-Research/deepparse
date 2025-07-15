@@ -21,7 +21,6 @@ class FastTextSeq2SeqModel(Seq2SeqModel):
         output_size (int): The size of the prediction layers (i.e. the number of tags to predict). The default value
             is ``9``.
         attention_mechanism (bool): Either or not to use the attention mechanism. The default value is ``False``.
-        verbose (bool): Turn on/off the verbosity of the model. The default value is ``True``.
     """
 
     def __init__(
@@ -33,8 +32,6 @@ class FastTextSeq2SeqModel(Seq2SeqModel):
         decoder_num_layers: int = 1,
         output_size: int = 9,
         attention_mechanism: bool = False,
-        verbose: bool = True,
-        version: str = "",
     ) -> None:
         super().__init__(
             input_size=input_size,
@@ -44,10 +41,7 @@ class FastTextSeq2SeqModel(Seq2SeqModel):
             decoder_num_layers=decoder_num_layers,
             output_size=output_size,
             attention_mechanism=attention_mechanism,
-            verbose=verbose,
         )
-
-        self.version = version
 
     def forward(
         self,

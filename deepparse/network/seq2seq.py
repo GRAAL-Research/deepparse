@@ -29,7 +29,6 @@ class Seq2SeqModel(ABC, nn.Module, PyTorchModelHubMixin):
         output_size (int): The size of the prediction layers (i.e. the number of tags to predict). The default value is
             ``9``.
         attention_mechanism (bool): Either or not to use the attention mechanism. The default value is ``False``.
-        verbose (bool): Turn on/off the verbosity of the model. The default value is ``True``.
     """
 
     def __init__(
@@ -41,10 +40,8 @@ class Seq2SeqModel(ABC, nn.Module, PyTorchModelHubMixin):
         decoder_num_layers: int,
         output_size: int,
         attention_mechanism: bool = False,
-        verbose: bool = True,
     ) -> None:
         super().__init__()
-        self.verbose = verbose
         self.attention_mechanism = attention_mechanism
 
         self.device = torch.device("cpu")

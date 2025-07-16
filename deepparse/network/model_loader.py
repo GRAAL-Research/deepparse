@@ -1,10 +1,9 @@
 from typing import Tuple
-import warnings
 
 import torch
-from transformers.utils import cached_file, extract_commit_hash
 
 from . import Seq2SeqModel
+from ..download_tools import download_weights, load_version
 from ..weights_tools import handle_weights_upload
 
 
@@ -32,29 +31,11 @@ class ModelLoader():
 
         """
 
-        if not offline and verbose:
-            warnings.warn(
-                    f"The offline parameter is set to False, so if a new pre-trained model is available it will "
-                    "automatically be downloaded.",
-                    category=UserWarning,
-            )
+        model_id = download_weights(model_type, saving_dir=self.cache_dir, verbose=verbose, offline=offline)
 
-        # TODO: handle this better
-        if "bpemb" in model_type: 
-            if "attention" not in model_type:
-                repo_id = "deepparse/bpemb-base"
-            else:
-                repo_id = "deepparse/bpemb-attention"
+        model = model.from_pretrained(model_id, local_files_only=True, cache_dir=self.cache_dir)
 
-        elif "fasttext" in model_type:
-            if "attention" not in model_type:
-                repo_id = "deepparse/fasttext-base"
-            else:
-                repo_id = "deepparse/fasttext-attention"
-
-        model = model.from_pretrained(repo_id, local_files_only=offline, cache_dir=self.cache_dir)
-
-        version = self._load_version(model_type, self.cache_dir)
+        version = load_version(model_type, self.cache_dir)
 
         return model, version
 
@@ -83,37 +64,4 @@ class ModelLoader():
         version = all_layers_params["version"]
 
         return model, version
-
-    #TODO: replace this with hf equivalent
-    def _load_version(self, model_type: str, cache_dir: str) -> str:
-        """
-        Method to load the local hashed version of the model as an attribute.
-
-        Args:
-            model_type (str): The network pretrained weights to load.
-            cache_dir (str): The path to the cached directory to use for downloading (and loading) the
-                model weights.
-
-        Return:
-            The hash of the model.
-
-        """
-         # TODO: handle this better
-        if "bpemb" in model_type: 
-            if "attention" not in model_type:
-                repo_id = "deepparse/bpemb-base"
-            else:
-                repo_id = "deepparse/bpemb-attention"
-
-        elif "fasttext" in model_type:
-            if "attention" not in model_type:
-                repo_id = "deepparse/fasttext-base"
-            else:
-                repo_id = "deepparse/fasttext-attention"
-
-        config_file = cached_file(repo_id, "config.json", local_files_only=True, cache_dir=cache_dir)
-
-        version = extract_commit_hash(config_file, None)
-
-        return version
 

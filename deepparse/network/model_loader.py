@@ -34,8 +34,8 @@ class ModelLoader():
 
         if not offline and verbose:
             warnings.warn(
-                    f"The offline parameter is set to False, so if a new pre-trained model is available we will"
-                    "automatically download it.",
+                    f"The offline parameter is set to False, so if a new pre-trained model is available it will "
+                    "automatically be downloaded.",
                     category=UserWarning,
             )
 

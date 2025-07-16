@@ -11,6 +11,8 @@ import requests
 from fasttext.FastText import _FastText
 from requests import HTTPError
 from urllib3.exceptions import MaxRetryError
+from huggingface_hub import hf_hub_download
+from transformers.utils.hub import cached_file
 
 from .bpemb_url_bug_fix import BPEmbBaseURLWrapperBugFix
 from .errors.server_error import ServerError
@@ -40,26 +42,18 @@ def download_fasttext_magnitude_embeddings(cache_dir: str, verbose: bool = True,
     Return the full path to the FastText embeddings.
     """
 
-    os.makedirs(cache_dir, exist_ok=True)
-
-    model = "fasttext"
-    extension = "magnitude"
-    file_name = os.path.join(cache_dir, f"{model}.{extension}")
-    if not os.path.isfile(file_name) and not offline:
+    try:
+        local_embeddings_file_path = cached_file("deepparse/fasttext-base", filename="fasttext.magnitude", revision="light-embeddings", local_files_only=True, cache_dir=cache_dir)
+    except OSError:
         if verbose:
             print(
-                "The FastText pretrained word embeddings will be download in magnitude format (2.3 GO), "
-                "this process will take several minutes."
-            )
-        extension = extension + ".gz"
-        download_from_public_repository(file_name=model, saving_dir=cache_dir, file_extension=extension)
-        gz_file_name = file_name + ".gz"
-        with gzip.open(os.path.join(cache_dir, gz_file_name), "rb") as f:
-            with open(os.path.join(cache_dir, file_name), "wb") as f_out:
-                shutil.copyfileobj(f, f_out)
-        os.remove(os.path.join(cache_dir, gz_file_name))
-    return file_name
+                    "The FastText pretrained word embeddings will be downloaded in magnitude format (3.5 GO), "
+                    "this process will take several minutes."
+                )
 
+    local_embeddings_file_path = hf_hub_download("deepparse/fasttext-base", filename="fasttext.magnitude", revision="light-embeddings", cache_dir=cache_dir, local_files_only=offline)
+
+    return local_embeddings_file_path
 
 def download_weights(model_filename: str, saving_dir: str, verbose: bool = True) -> None:
     """

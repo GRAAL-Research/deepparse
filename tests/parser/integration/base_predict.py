@@ -11,8 +11,7 @@ from unittest import TestCase
 
 import torch
 
-from deepparse import download_from_public_repository
-from deepparse.dataset_container import PickleDatasetContainer, DatasetContainer
+from deepparse.dataset_container import PickleDatasetContainer, DatasetContainer, ListDatasetContainer
 from deepparse.parser import AddressParser, FormattedParsedAddress
 
 
@@ -45,13 +44,45 @@ class AddressParserPredictNewParamsBase(TestCase):
         cls.temp_dir_obj = TemporaryDirectory()
         cls.a_data_saving_dir = os.path.join(cls.temp_dir_obj.name, "data")
         os.makedirs(cls.a_data_saving_dir, exist_ok=True)
-        file_extension = "p"
-        training_dataset_name = "sample_incomplete_data"
-        download_from_public_repository(training_dataset_name, cls.a_data_saving_dir, file_extension=file_extension)
-
-        cls.training_container = PickleDatasetContainer(
-            os.path.join(cls.a_data_saving_dir, training_dataset_name + "." + file_extension)
-        )
+        # file_extension = "p"
+        # training_dataset_name = "sample_incomplete_data"
+        # download_from_public_repository(training_dataset_name, cls.a_data_saving_dir, file_extension=file_extension)
+        #
+        # cls.training_container = PickleDatasetContainer(
+        #     os.path.join(cls.a_data_saving_dir, training_dataset_name + "." + file_extension)
+        a_incomplete_list_dataset = [
+            (
+                '350 rue des Lilas Ouest Quebec city Quebec G1L 1B6',
+                [
+                    'StreetNumber',
+                    'StreetName',
+                    'StreetName',
+                    'StreetName',
+                    'Municipality',
+                    'Municipality',
+                    'Municipality',
+                    'Province',
+                    'PostalCode',
+                    'PostalCode',
+                ],
+            ),
+            (
+                '350 rue des Lilas Ouest Quebec city Quebec G1L 1B6',
+                [
+                    'StreetNumber',
+                    'StreetName',
+                    'StreetName',
+                    'StreetName',
+                    'Municipality',
+                    'Municipality',
+                    'Municipality',
+                    'Province',
+                    'PostalCode',
+                    'PostalCode',
+                ],
+            ),
+        ]       
+        cls.training_container = ListDatasetContainer(a_incomplete_list_dataset)
 
         cls.a_fasttext_model_type = "fasttext"
         cls.a_bpemb_model_type = "bpemb"

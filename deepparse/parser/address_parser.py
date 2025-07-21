@@ -1303,7 +1303,14 @@ class AddressParser:
             )
 
         if system() == "Darwin" and "fasttext" in self.model_type and num_workers > 0:
-            torch.multiprocessing.set_start_method('fork')
+            try:
+                torch.multiprocessing.set_start_method('fork')
+            except RuntimeError as e:
+                if 'context has already been set' in str(e):
+                    pass
+                else:
+                    raise RuntimeError("There has been an issue with the multiprocessing context initialisation")
+
             warnings.warn(
                 "On MacOS system, we cannot use FastText-like models with parallelism out-of-the-box since "
                 "FastText objects are not pickleable with the parallelism process used by default by MacOS. "

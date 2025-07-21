@@ -41,6 +41,8 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
     def setUp(self):
         self.model_mock = MagicMock()
 
+        self.a_model_version = "a_version"
+
     def address_parser_test_call(self, dataset_container=None, num_workers=None):
         if dataset_container is None:
             dataset_container = self.mocked_data_container
@@ -93,7 +95,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         experiment_mock,
         data_loader_mock,
     ):
-        model_factory_mock().create.return_value = self.model_mock
+        model_factory_mock().create.return_value = self.model_mock, self.a_model_version
         self.address_parser = AddressParser(
             model_type=self.a_fasttext_model_type,
             device=self.a_device,
@@ -123,7 +125,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         experiment_mock,
         data_loader_mock,
     ):
-        model_factory_mock().create.return_value = self.model_mock
+        model_factory_mock().create.return_value = self.model_mock, self.a_model_version
         self.address_parser = AddressParser(
             model_type=self.a_fasttext_model_type,
             device=self.a_torch_device,
@@ -152,6 +154,8 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         experiment_mock,
         data_loader_mock,
     ):
+        model_factory_mock().create.return_value = self.model_mock, self.a_model_version
+
         self.address_parser = AddressParser(
             model_type=self.a_fasttext_model_type,
             device=self.a_device,
@@ -180,6 +184,8 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         experiment_mock,
         data_loader_mock,
     ):
+        model_factory_mock().create.return_value = self.model_mock, self.a_model_version
+
         verbose = True
         self.address_parser = AddressParser(
             model_type=self.a_fasttext_model_type, device=self.a_device, verbose=verbose
@@ -208,6 +214,8 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         experiment_mock,
         data_loader_mock,
     ):
+        model_factory_mock().create.return_value = self.model_mock, self.a_model_version
+
         verbose = True
         self.address_parser = AddressParser(
             model_type=self.a_fasttext_model_type, device=self.a_device, verbose=verbose
@@ -235,7 +243,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         experiment_mock,
         data_loader_mock,
     ):
-        model_factory_mock().create.return_value = self.model_mock
+        model_factory_mock().create.return_value = self.model_mock, self.a_model_version
         self.address_parser = AddressParser(
             model_type=self.a_bpemb_model_type,
             device=self.a_device,
@@ -265,7 +273,8 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         experiment_mock,
         data_loader_mock,
     ):
-        model_factory_mock().create.return_value = self.model_mock
+        model_factory_mock().create.return_value = self.model_mock, self.a_model_version
+
         self.address_parser = AddressParser(
             model_type=self.a_bpemb_model_type,
             device=self.a_torch_device,
@@ -294,6 +303,8 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         experiment_mock,
         data_loader_mock,
     ):
+        model_factory_mock().create.return_value = self.model_mock, self.a_model_version
+
         self.address_parser = AddressParser(
             model_type=self.a_bpemb_model_type,
             device=self.a_device,
@@ -322,6 +333,8 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         experiment_mock,
         data_loader_mock,
     ):
+        model_factory_mock().create.return_value = self.model_mock, self.a_model_version
+
         verbose = True
         self.address_parser = AddressParser(model_type=self.a_bpemb_model_type, device=self.a_device, verbose=verbose)
         self.address_parser_test_call()
@@ -341,6 +354,8 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         embeddings_model_factory_mock,
         model_factory_mock,
     ):
+        model_factory_mock().create.return_value = self.model_mock, self.a_model_version
+
         self.address_parser = AddressParser(
             model_type=self.a_bpemb_model_type,
             device=self.a_device,
@@ -363,6 +378,8 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         embeddings_model_factory_mock,
         model_factory_mock,
     ):
+        model_factory_mock().create.return_value = self.model_mock, self.a_model_version
+
         self.address_parser = AddressParser(
             model_type=self.a_bpemb_model_type,
             device=self.a_device,

@@ -101,6 +101,8 @@ class AddressParserTest(AddressParserPredictTestCase):
         self.fasttext_mock = MagicMock()
 
         self.model_mock = MagicMock()
+        
+        self.a_model_version = "a_version"
 
         self.embeddings_model_mock = MagicMock()
 
@@ -305,6 +307,7 @@ class AddressParserTest(AddressParserPredictTestCase):
         self, data_processor_factory_mock, vectorizer_factory_mock, embeddings_model_factory_mock
     ):
         with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
+            model_factory_mock().create.return_value = self.model_mock, self.a_model_version
             AddressParser(
                 model_type=self.a_best_model_type,
                 device=self.a_cpu_device,
@@ -313,7 +316,6 @@ class AddressParserTest(AddressParserPredictTestCase):
 
             model_factory_mock().create.assert_called_with(
                 model_type=self.a_bpemb_model_type,
-                cache_dir=self.cache_dir,
                 device=self.a_cpu_torch_device,
                 output_size=self.number_tags,
                 verbose=self.verbose,
@@ -329,6 +331,8 @@ class AddressParserTest(AddressParserPredictTestCase):
         self, data_processor_factory_mock, vectorizer_factory_mock, embeddings_model_factory_mock
     ):
         with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
+            model_factory_mock().create.return_value = self.model_mock, self.a_model_version
+
             self.setup_retrain_new_tags_model(self.correct_address_components, self.a_bpemb_model_type)
             AddressParser(
                 model_type=self.a_bpemb_model_type,
@@ -339,7 +343,6 @@ class AddressParserTest(AddressParserPredictTestCase):
 
             model_factory_mock().create.assert_called_with(
                 model_type=self.a_bpemb_model_type,
-                cache_dir=self.cache_dir,
                 device=self.a_cpu_torch_device,
                 output_size=len(self.correct_address_components),
                 verbose=self.verbose,
@@ -355,6 +358,7 @@ class AddressParserTest(AddressParserPredictTestCase):
         self, data_processor_factory_mock, vectorizer_factory_mock, embeddings_model_factory_mock
     ):
         with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
+            model_factory_mock().create.return_value = self.model_mock, self.a_model_version
             self.setup_retrain_new_params_model(self.new_seq2seq_params, self.a_bpemb_model_type)
             AddressParser(
                 model_type=self.a_bpemb_model_type,
@@ -365,7 +369,6 @@ class AddressParserTest(AddressParserPredictTestCase):
 
             model_factory_mock().create.assert_called_with(
                 model_type=self.a_bpemb_model_type,
-                cache_dir=self.cache_dir,
                 device=self.a_cpu_torch_device,
                 output_size=self.number_tags,
                 verbose=self.verbose,
@@ -383,6 +386,7 @@ class AddressParserTest(AddressParserPredictTestCase):
         self, data_processor_factory_mock, vectorizer_factory_mock, embeddings_model_factory_mock
     ):
         with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
+            model_factory_mock().create.return_value = self.model_mock, self.a_model_version
             self.setup_retrain_new_tags_model(self.incorrect_address_components, self.a_fasttext_model_type)
             AddressParser(
                 model_type=self.a_fasttext_model_type,
@@ -393,7 +397,6 @@ class AddressParserTest(AddressParserPredictTestCase):
 
             model_factory_mock().create.assert_called_with(
                 model_type=self.a_fasttext_model_type,
-                cache_dir=self.cache_dir,
                 device=self.a_cpu_torch_device,
                 output_size=len(self.incorrect_address_components),
                 verbose=self.verbose,
@@ -409,6 +412,7 @@ class AddressParserTest(AddressParserPredictTestCase):
         self, data_processor_factory_mock, vectorizer_factory_mock, embeddings_model_factory_mock
     ):
         with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
+            model_factory_mock().create.return_value = self.model_mock, self.a_model_version
             self.setup_retrain_new_params_model(self.new_seq2seq_params, self.a_fasttext_model_type)
             AddressParser(
                 model_type=self.a_fasttext_model_type,
@@ -419,7 +423,6 @@ class AddressParserTest(AddressParserPredictTestCase):
 
             model_factory_mock().create.assert_called_with(
                 model_type=self.a_fasttext_model_type,
-                cache_dir=self.cache_dir,
                 device=self.a_cpu_torch_device,
                 output_size=self.number_tags,
                 verbose=self.verbose,
@@ -437,6 +440,7 @@ class AddressParserTest(AddressParserPredictTestCase):
         self, data_processor_factory_mock, vectorizer_factory_mock, embeddings_model_factory_mock
     ):
         with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
+            model_factory_mock().create.return_value = self.model_mock, self.a_model_version
             AddressParser(
                 model_type=self.a_bpemb_model_type,
                 device=self.a_cpu_device,
@@ -445,7 +449,6 @@ class AddressParserTest(AddressParserPredictTestCase):
 
             model_factory_mock().create.assert_called_with(
                 model_type=self.a_bpemb_model_type,
-                cache_dir=self.cache_dir,
                 device=self.a_cpu_torch_device,
                 output_size=self.number_tags,
                 verbose=self.verbose,
@@ -463,6 +466,9 @@ class AddressParserTest(AddressParserPredictTestCase):
         ) as embeddings_factory_mock:
             embeddings_factory_mock().create.return_value = self.embeddings_model_mock
             with patch("deepparse.parser.address_parser.VectorizerFactory") as vectorizer_factory_mock:
+                with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
+                    model_factory_mock().create.return_value = self.model_mock, self.a_model_version
+
                 AddressParser(
                     model_type=self.a_fastest_model_type,
                     device=self.a_cpu_device,
@@ -481,6 +487,9 @@ class AddressParserTest(AddressParserPredictTestCase):
         ) as embeddings_factory_mock:
             embeddings_factory_mock().create.return_value = self.embeddings_model_mock
             with patch("deepparse.parser.address_parser.VectorizerFactory") as vectorizer_factory_mock:
+                with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
+                    model_factory_mock().create.return_value = self.model_mock, self.a_model_version
+
                 AddressParser(
                     model_type=self.a_fasttext_light_model_type,
                     device=self.a_cpu_device,
@@ -499,6 +508,8 @@ class AddressParserTest(AddressParserPredictTestCase):
         ) as embeddings_factory_mock:
             embeddings_factory_mock().create.return_value = self.embeddings_model_mock
             with patch("deepparse.parser.address_parser.VectorizerFactory") as vectorizer_factory_mock:
+                with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
+                    model_factory_mock().create.return_value = self.model_mock, self.a_model_version
                 AddressParser(
                     model_type=self.a_fasttext_lightest_model_type,
                     device=self.a_cpu_device,
@@ -514,6 +525,7 @@ class AddressParserTest(AddressParserPredictTestCase):
         self, data_processor_factory_mock, vectorizer_factory_mock, embeddings_model_factory_mock
     ):
         with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
+            model_factory_mock().create.return_value = self.model_mock, self.a_model_version
             AddressParser(
                 model_type=self.a_fastest_model_type,
                 device=self.a_cpu_device,
@@ -522,7 +534,6 @@ class AddressParserTest(AddressParserPredictTestCase):
 
             model_factory_mock().create.assert_called_with(
                 model_type=self.a_fasttext_model_type,
-                cache_dir=self.cache_dir,
                 device=self.a_cpu_torch_device,
                 output_size=self.number_tags,
                 verbose=self.verbose,
@@ -538,6 +549,7 @@ class AddressParserTest(AddressParserPredictTestCase):
         self, data_processor_factory_mock, vectorizer_factory_mock, embeddings_model_factory_mock
     ):
         with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
+            model_factory_mock().create.return_value = self.model_mock, self.a_model_version
             AddressParser(
                 model_type=self.a_fasttext_model_type,
                 device=self.a_cpu_device,
@@ -546,7 +558,6 @@ class AddressParserTest(AddressParserPredictTestCase):
 
             model_factory_mock().create.assert_called_with(
                 model_type=self.a_fasttext_model_type,
-                cache_dir=self.cache_dir,
                 device=self.a_cpu_torch_device,
                 output_size=self.number_tags,
                 verbose=self.verbose,
@@ -564,7 +575,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     ):
         with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
             self.mock_predictions_vectors(self.model_mock)
-            model_factory_mock().create.return_value = self.model_mock
+            model_factory_mock().create.return_value = self.model_mock, self.a_model_version
 
             address_parser = AddressParser(
                 model_type=self.a_fasttext_model_type,
@@ -586,7 +597,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     ):
         with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
             self.mock_predictions_vectors(self.model_mock)
-            model_factory_mock().create.return_value = self.model_mock
+            model_factory_mock().create.return_value = self.model_mock, self.a_model_version
 
             address_parser = AddressParser(
                 model_type=self.a_fasttext_model_type,
@@ -609,7 +620,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     ):
         with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
             self.mock_multiple_predictions_vectors(self.model_mock)
-            model_factory_mock().create.return_value = self.model_mock
+            model_factory_mock().create.return_value = self.model_mock, self.a_model_version
 
             address_parser = AddressParser(
                 model_type=self.a_fasttext_model_type,
@@ -633,7 +644,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     ):
         with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
             self.mock_multiple_predictions_vectors(self.model_mock)
-            model_factory_mock().create.return_value = self.model_mock
+            model_factory_mock().create.return_value = self.model_mock, self.a_model_version
 
             address_parser = AddressParser(
                 model_type=self.a_fasttext_model_type,
@@ -658,7 +669,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     ):
         with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
             self.mock_predictions_vectors(self.model_mock)
-            model_factory_mock().create.return_value = self.model_mock
+            model_factory_mock().create.return_value = self.model_mock, self.a_model_version
 
             address_parser = AddressParser(
                 model_type=self.a_fasttext_model_type,
@@ -685,7 +696,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     ):
         with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
             self.mock_predictions_vectors(self.model_mock)
-            model_factory_mock().create.return_value = self.model_mock
+            model_factory_mock().create.return_value = self.model_mock, self.a_model_version
 
             address_parser = AddressParser(
                 model_type=self.a_fasttext_model_type,
@@ -713,7 +724,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     ):
         with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
             self.mock_predictions_vectors(self.model_mock)
-            model_factory_mock().create.return_value = self.model_mock
+            model_factory_mock().create.return_value = self.model_mock, self.a_model_version
 
             self.mock_predictions_vectors(self.model_mock)
             address_parser = AddressParser(
@@ -736,7 +747,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     ):
         with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
             self.mock_predictions_vectors(self.model_mock)
-            model_factory_mock().create.return_value = self.model_mock
+            model_factory_mock().create.return_value = self.model_mock, self.a_model_version
 
             address_parser = AddressParser(
                 model_type=self.a_fasttext_light_model_type,
@@ -759,7 +770,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     ):
         with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
             self.mock_multiple_predictions_vectors(self.model_mock)
-            model_factory_mock().create.return_value = self.model_mock
+            model_factory_mock().create.return_value = self.model_mock, self.a_model_version
 
             address_parser = AddressParser(
                 model_type=self.a_fasttext_light_model_type,
@@ -783,7 +794,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     ):
         with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
             self.mock_multiple_predictions_vectors(self.model_mock)
-            model_factory_mock().create.return_value = self.model_mock
+            model_factory_mock().create.return_value = self.model_mock, self.a_model_version
 
             address_parser = AddressParser(
                 model_type=self.a_fasttext_light_model_type,
@@ -808,7 +819,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     ):
         with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
             self.mock_predictions_vectors(self.model_mock)
-            model_factory_mock().create.return_value = self.model_mock
+            model_factory_mock().create.return_value = self.model_mock, self.a_model_version
 
             address_parser = AddressParser(
                 model_type=self.a_fasttext_light_model_type,
@@ -835,7 +846,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     ):
         with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
             self.mock_predictions_vectors(self.model_mock)
-            model_factory_mock().create.return_value = self.model_mock
+            model_factory_mock().create.return_value = self.model_mock, self.a_model_version
 
             address_parser = AddressParser(
                 model_type=self.a_fasttext_light_model_type,
@@ -863,7 +874,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     ):
         with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
             self.mock_predictions_vectors(self.model_mock)
-            model_factory_mock().create.return_value = self.model_mock
+            model_factory_mock().create.return_value = self.model_mock, self.a_model_version
 
             address_parser = AddressParser(
                 model_type=self.a_bpemb_model_type,
@@ -885,7 +896,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     ):
         with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
             self.mock_predictions_vectors(self.model_mock)
-            model_factory_mock().create.return_value = self.model_mock
+            model_factory_mock().create.return_value = self.model_mock, self.a_model_version
 
             address_parser = AddressParser(
                 model_type=self.a_bpemb_model_type,
@@ -908,7 +919,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     ):
         with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
             self.mock_multiple_predictions_vectors(self.model_mock)
-            model_factory_mock().create.return_value = self.model_mock
+            model_factory_mock().create.return_value = self.model_mock, self.a_model_version
 
             address_parser = AddressParser(
                 model_type=self.a_bpemb_model_type,
@@ -932,7 +943,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     ):
         with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
             self.mock_multiple_predictions_vectors(self.model_mock)
-            model_factory_mock().create.return_value = self.model_mock
+            model_factory_mock().create.return_value = self.model_mock, self.a_model_version
 
             address_parser = AddressParser(
                 model_type=self.a_bpemb_model_type,
@@ -957,7 +968,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     ):
         with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
             self.mock_predictions_vectors(self.model_mock)
-            model_factory_mock().create.return_value = self.model_mock
+            model_factory_mock().create.return_value = self.model_mock, self.a_model_version
 
             address_parser = AddressParser(
                 model_type=self.a_bpemb_model_type,
@@ -984,7 +995,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     ):
         with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
             self.mock_predictions_vectors(self.model_mock)
-            model_factory_mock().create.return_value = self.model_mock
+            model_factory_mock().create.return_value = self.model_mock, self.a_model_version
 
             address_parser = AddressParser(
                 model_type=self.a_bpemb_model_type,
@@ -1016,7 +1027,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                 0,
             ):
                 self.mock_predictions_vectors(self.model_mock)
-                model_factory_mock().create.return_value = self.model_mock
+                model_factory_mock().create.return_value = self.model_mock, self.a_model_version
 
                 address_parser = AddressParser(
                     model_type=self.a_bpemb_model_type,
@@ -1044,7 +1055,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                 0,
             ):
                 self.mock_predictions_vectors(self.model_mock)
-                model_factory_mock().create.return_value = self.model_mock
+                model_factory_mock().create.return_value = self.model_mock, self.a_model_version
 
                 address_parser = AddressParser(
                     model_type=self.a_bpemb_model_type,
@@ -1070,7 +1081,7 @@ class AddressParserTest(AddressParserPredictTestCase):
 
         with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
             self.mock_predictions_vectors(self.model_mock)
-            model_factory_mock().create.return_value = self.model_mock
+            model_factory_mock().create.return_value = self.model_mock, self.a_model_version
 
             address_parser = AddressParser(
                 model_type=self.a_bpemb_model_type,
@@ -1091,7 +1102,7 @@ class AddressParserTest(AddressParserPredictTestCase):
 
         with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
             self.mock_predictions_vectors(self.model_mock)
-            model_factory_mock().create.return_value = self.model_mock
+            model_factory_mock().create.return_value = self.model_mock, self.a_model_version
 
             address_parser = AddressParser(
                 model_type=self.a_bpemb_model_type,
@@ -1113,7 +1124,7 @@ class AddressParserTest(AddressParserPredictTestCase):
 
         with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
             self.mock_predictions_vectors(self.model_mock)
-            model_factory_mock().create.return_value = self.model_mock
+            model_factory_mock().create.return_value = self.model_mock, self.a_model_version
 
             address_parser = AddressParser(
                 model_type=self.a_best_model_type,
@@ -1134,7 +1145,7 @@ class AddressParserTest(AddressParserPredictTestCase):
 
         with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
             self.mock_predictions_vectors(self.model_mock)
-            model_factory_mock().create.return_value = self.model_mock
+            model_factory_mock().create.return_value = self.model_mock, self.a_model_version
 
             address_parser = AddressParser(
                 model_type=self.a_best_model_type,
@@ -1156,7 +1167,7 @@ class AddressParserTest(AddressParserPredictTestCase):
 
         with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
             self.mock_predictions_vectors(self.model_mock)
-            model_factory_mock().create.return_value = self.model_mock
+            model_factory_mock().create.return_value = self.model_mock, self.a_model_version
 
             address_parser = AddressParser(
                 model_type=self.a_fasttext_model_type,
@@ -1177,7 +1188,7 @@ class AddressParserTest(AddressParserPredictTestCase):
 
         with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
             self.mock_predictions_vectors(self.model_mock)
-            model_factory_mock().create.return_value = self.model_mock
+            model_factory_mock().create.return_value = self.model_mock, self.a_model_version
 
             address_parser = AddressParser(
                 model_type=self.a_fasttext_model_type,
@@ -1199,7 +1210,7 @@ class AddressParserTest(AddressParserPredictTestCase):
 
         with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
             self.mock_predictions_vectors(self.model_mock)
-            model_factory_mock().create.return_value = self.model_mock
+            model_factory_mock().create.return_value = self.model_mock, self.a_model_version
 
             address_parser = AddressParser(
                 model_type=self.a_fasttext_model_type,
@@ -1220,7 +1231,7 @@ class AddressParserTest(AddressParserPredictTestCase):
 
         with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
             self.mock_predictions_vectors(self.model_mock)
-            model_factory_mock().create.return_value = self.model_mock
+            model_factory_mock().create.return_value = self.model_mock, self.a_model_version
 
             address_parser = AddressParser(
                 model_type=self.a_fasttext_model_type,
@@ -1242,7 +1253,7 @@ class AddressParserTest(AddressParserPredictTestCase):
 
         with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
             self.mock_predictions_vectors(self.model_mock)
-            model_factory_mock().create.return_value = self.model_mock
+            model_factory_mock().create.return_value = self.model_mock, self.a_model_version
 
             address_parser = AddressParser(
                 model_type=self.a_fasttext_lightest_model_type,
@@ -1263,7 +1274,7 @@ class AddressParserTest(AddressParserPredictTestCase):
 
         with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
             self.mock_predictions_vectors(self.model_mock)
-            model_factory_mock().create.return_value = self.model_mock
+            model_factory_mock().create.return_value = self.model_mock, self.a_model_version
 
             address_parser = AddressParser(
                 model_type=self.a_fasttext_lightest_model_type,
@@ -1285,7 +1296,7 @@ class AddressParserTest(AddressParserPredictTestCase):
 
         with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
             self.mock_predictions_vectors(self.model_mock)
-            model_factory_mock().create.return_value = self.model_mock
+            model_factory_mock().create.return_value = self.model_mock, self.a_model_version
 
             address_parser = AddressParser(
                 model_type=self.a_fasttext_lightest_model_type,
@@ -1306,7 +1317,7 @@ class AddressParserTest(AddressParserPredictTestCase):
 
         with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
             self.mock_predictions_vectors(self.model_mock)
-            model_factory_mock().create.return_value = self.model_mock
+            model_factory_mock().create.return_value = self.model_mock, self.a_model_version
 
             address_parser = AddressParser(
                 model_type=self.a_fasttext_lightest_model_type,
@@ -1373,7 +1384,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                 0,
             ):
                 self.mock_predictions_vectors(self.model_mock)
-                model_factory_mock().create.return_value = self.model_mock
+                model_factory_mock().create.return_value = self.model_mock, self.a_model_version
 
                 address_parser = AddressParser(
                     model_type=self.a_bpemb_model_type,
@@ -1397,7 +1408,7 @@ class AddressParserTest(AddressParserPredictTestCase):
     ):
         with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
             self.mock_predictions_vectors(self.model_mock)
-            model_factory_mock().create.return_value = self.model_mock
+            model_factory_mock().create.return_value = self.model_mock, self.a_model_version
 
             address_parser = AddressParser(
                 model_type=self.a_bpemb_model_type,
@@ -1484,7 +1495,7 @@ class AddressParserTest(AddressParserPredictTestCase):
 
         with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
             self.mock_predictions_vectors(self.model_mock)
-            model_factory_mock().create.return_value = self.model_mock
+            model_factory_mock().create.return_value = self.model_mock, self.a_model_version
 
             address_parser = AddressParser(model_type=self.a_bpemb_model_type, device=self.a_cpu_device)
             with self.assertRaises(DataError):
@@ -1504,7 +1515,7 @@ class AddressParserTest(AddressParserPredictTestCase):
 
         with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
             self.mock_predictions_vectors(self.model_mock)
-            model_factory_mock().create.return_value = self.model_mock
+            model_factory_mock().create.return_value = self.model_mock, self.a_model_version
 
             address_parser = AddressParser(model_type=self.a_bpemb_model_type, device=self.a_cpu_device)
             with self.assertRaises(DataError):
@@ -1553,7 +1564,7 @@ class AddressParserTest(AddressParserPredictTestCase):
         self, torch_save_mock, data_processor_factory_mock, vectorizer_factory_mock, embeddings_model_factory_mock
     ):
         with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
-            model_factory_mock().create.return_value = self.model_mock
+            model_factory_mock().create.return_value = self.model_mock, self.a_model_version
 
             address_parser = AddressParser(
                 model_type=self.a_fasttext_model_type,

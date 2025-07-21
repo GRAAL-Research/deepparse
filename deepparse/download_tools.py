@@ -154,7 +154,7 @@ def download_model(
 
     model_type = MODEL_MAPPING_CHOICES[model_type]
 
-    download_weights(model_type, saving_cache_path, True, False)
+    download_weights(model_type, saving_cache_path, verbose=True, offline=False)
 
 # pylint: disable=pointless-string-statement
 FASTTEXT_COPYRIGHT_MIT_LICENSE = """

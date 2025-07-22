@@ -753,12 +753,11 @@ class AddressParser:
 
         if seq2seq_params is not None:
             # Handle seq2seq params
-            # We set the flag to use the pretrained weights to false since we train new ones
-            seq2seq_params.update({"pre_trained_weights": False})
-
             model_factory_dict.update({"seq2seq_kwargs": seq2seq_params})
+
             # We set verbose to false since the model is reloaded
-            self._setup_model(verbose=False, path_to_retrained_model=None, **model_factory_dict)
+            # We set the flag to use the pretrained weights to false since we train new ones
+            self._setup_model(verbose=False, path_to_retrained_model=None, pre_trained_weights=False, **model_factory_dict)
 
         callbacks = [] if callbacks is None else callbacks
         train_generator, valid_generator = self._create_training_data_generator(
@@ -839,7 +838,7 @@ class AddressParser:
             )
             file_path = os.path.join(logging_path, file_name)
 
-            self.version = self.version if "Finetuned" in self.version else "Finetuned_"+self.version
+            self.version = "Finetuned_"+self.version
             torch_save = {
                 "address_tagger_model": exp.model.network.state_dict(),
                 "model_type": self.model_type,
@@ -1138,6 +1137,7 @@ class AddressParser:
         self,
         verbose: bool,
         path_to_retrained_model: Union[str, None] = None,
+        pre_trained_weights: bool = True,
         prediction_layer_len: int = 9,
         attention_mechanism=False,
         seq2seq_kwargs: Union[dict, None] = None,
@@ -1162,6 +1162,7 @@ class AddressParser:
             output_size=prediction_layer_len,
             attention_mechanism=attention_mechanism,
             path_to_retrained_model=path_to_retrained_model,
+            pre_trained_weights=pre_trained_weights,
             offline=offline,
             verbose=verbose,
             **seq2seq_kwargs,

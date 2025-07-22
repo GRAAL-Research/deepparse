@@ -23,6 +23,7 @@ class ModelFactory:
         output_size: int = 9,
         attention_mechanism: bool = False,
         path_to_retrained_model: Union[str, None] = None,
+        pre_trained_weights: bool = True,
         offline: bool = False,
         verbose: bool = True,
         **seq2seq_kwargs: Dict,
@@ -40,6 +41,8 @@ class ModelFactory:
             attention_mechanism (bool): Either or not to use the attention mechanism. The default value is ``False``.
             path_to_retrained_model (Union[str, None]): The path to the retrained model to use for the seq2seq. The
                 default value is ``None``.
+            pre_trained_weights (bool): Whether to load pre-trained weights or return an untrained model. 
+                The `path_to_retrained_model` argument takes precedence if specified. The default value is ``True``.
             offline (bool): Whether or not the model is an offline or an online. The default value is ``False``.
             verbose (bool): Turn on/off the verbosity of the model. The default value is ``True``.
 
@@ -69,11 +72,14 @@ class ModelFactory:
             )
 
 
-        if not path_to_retrained_model:
+        if path_to_retrained_model:
+            model, version = self.model_loader.load_weights(model, path_to_retrained_model, device)
+
+        elif pre_trained_weights:
             model, version = self.model_loader.load_pre_trained_model(model, model_type, offline, verbose)
 
         else:
-            model, version = self.model_loader.load_weights(model, path_to_retrained_model, device)
+            version = ""
 
         model.to_device(device)
 

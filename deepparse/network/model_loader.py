@@ -61,7 +61,7 @@ class ModelLoader():
 
         model.load_state_dict(all_layers_params)
 
-        version = all_layers_params["version"]
+        version = all_layers_params.get("version")
 
         return model, version
 

@@ -15,19 +15,12 @@ from deepparse.parser import AddressParser
 from tests.parser.integration.base_retrain import AddressParserRetrainTestCase
 
 
-@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
+#@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
 class AddressParserIntegrationTestNewAddressComponents(AddressParserRetrainTestCase):
     @classmethod
     def setUpClass(cls):
         super(AddressParserIntegrationTestNewAddressComponents, cls).setUpClass()
-        #
-        # file_extension = "p"
-        # training_dataset_name = "test_sample_data_new_prediction_tags"
-        # download_from_public_repository(training_dataset_name, cls.a_data_saving_dir, file_extension=file_extension)
-        #
-        # cls.new_prediction_data_container = PickleDatasetContainer(
-        #     os.path.join(cls.a_data_saving_dir, training_dataset_name + "." + file_extension)
-        # )
+ 
         a_list_dataset_with_new_tags = [
             (
                 '350 rue des Lilas Ouest Quebec city Quebec G1L 1B6',
@@ -36,6 +29,7 @@ class AddressParserIntegrationTestNewAddressComponents(AddressParserRetrainTestC
                     'ATag',
                     'ATag',
                     'ATag',
+                    'AnotherTag',
                     'AnotherTag',
                     'AnotherTag',
                     'ALastTag',
@@ -59,7 +53,7 @@ class AddressParserIntegrationTestNewAddressComponents(AddressParserRetrainTestC
                 ],
             ),
         ]
-        cls.a_new_prediction_data_container = ListDatasetContainer(a_list_dataset_with_new_tags)
+        cls.new_prediction_data_container = ListDatasetContainer(a_list_dataset_with_new_tags)
 
 
 

@@ -10,7 +10,7 @@ from tests.parser.base import PretrainedWeightsBase
 from tests.parser.integration.base_retrain import AddressParserRetrainTestCase
 
 
-@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
+#@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
 class AddressParserIntegrationReloadRetrainAPITest(AddressParserRetrainTestCase, PretrainedWeightsBase):
     @classmethod
     def setUpClass(cls):

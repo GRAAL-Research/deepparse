@@ -10,42 +10,14 @@ from unittest import TestCase
 
 import torch
 
-from deepparse.dataset_container import PickleDatasetContainer, DatasetContainer, ListDatasetContainer
+from deepparse.dataset_container import DatasetContainer, ListDatasetContainer
 from deepparse.parser import CACHE_PATH, AddressParser
 
 
-class RetrainTestCase(TestCase):
+class AddressParserRetrainTestCase(TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.temp_dir_obj = TemporaryDirectory()
-        cls.a_data_saving_dir = os.path.join(cls.temp_dir_obj.name, "data")
-        os.makedirs(cls.a_data_saving_dir, exist_ok=True)
-        file_extension = "p"
-        training_dataset_name = "sample_incomplete_data"
-        test_dataset_name = "test_sample_data"
-        # download_from_public_repository(training_dataset_name, cls.a_data_saving_dir, file_extension=file_extension)
-        # download_from_public_repository(test_dataset_name, cls.a_data_saving_dir, file_extension=file_extension)
-
-        cls.a_train_pickle_dataset_path = os.path.join(
-            cls.a_data_saving_dir, training_dataset_name + "." + file_extension
-        )
-
-        cls.a_test_pickle_dataset_path = os.path.join(cls.a_data_saving_dir, test_dataset_name + "." + file_extension)
-
-        # file_extension = "csv"
-        # download_from_public_repository(training_dataset_name, cls.a_data_saving_dir, file_extension=file_extension)
-
-        cls.a_train_csv_dataset_path = os.path.join(cls.a_data_saving_dir, training_dataset_name + "." + file_extension)
-
-    @classmethod
-    def tearDownClass(cls) -> None:
-        cls.temp_dir_obj.cleanup()
-
-
-class AddressParserRetrainTestCase(RetrainTestCase):
-    @classmethod
-    def setUpClass(cls):
-        super(AddressParserRetrainTestCase, cls).setUpClass()
+        # super(AddressParserRetrainTestCase, cls).setUpClass()
 
         a_list_dataset = [
             (
@@ -81,10 +53,7 @@ class AddressParserRetrainTestCase(RetrainTestCase):
         ]
 
         cls.training_container = ListDatasetContainer(a_list_dataset)
-        cls.training_container = ListDatasetContainer(a_list_dataset)
-
-        # cls.test_container = PickleDatasetContainer(cls.a_test_pickle_dataset_path)
-        # cls.test_container = PickleDatasetContainer(cls.a_test_pickle_dataset_path)
+        cls.test_container = ListDatasetContainer(a_list_dataset)
 
         cls.a_fasttext_model_type = "fasttext"
         cls.a_fasttext_light_model_type = "fasttext-light"

@@ -8,7 +8,7 @@ import torch
 from tests.parser.integration.base_predict import AddressParserPredictBase
 
 
-@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
+#@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
 class AddressParserPredictGPUTest(AddressParserPredictBase):
     @classmethod
     def setUpClass(cls):
@@ -69,7 +69,7 @@ class AddressParserPredictGPUTest(AddressParserPredictBase):
 
 
 # test if num_workers > 0 is correct for the data loader
-@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
+#@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
 class AddressParserPredictGPUMultiProcessTest(AddressParserPredictBase):
     @classmethod
     def setUpClass(cls):

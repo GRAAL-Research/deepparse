@@ -11,9 +11,12 @@ import os
 from tempfile import TemporaryDirectory
 from unittest import TestCase
 
+import safetensors
 import torch
 from torch import tensor
+from transformers.utils.hub import cached_file
 
+from deepparse.download_tools import download_weights
 from deepparse.parser import formatted_parsed_address
 from tests.base_capture_output import CaptureOutputTestCase
 
@@ -25,39 +28,56 @@ class PretrainedWeightsBase(CaptureOutputTestCase):
 
     @classmethod
     def prepare_pre_trained_weights(cls):
+        cls.model_weights_temp_dir = TemporaryDirectory()
+
         cls.fake_cache_path = os.path.join(cls.model_weights_temp_dir.name, "fake_cache")
 
-        path_to_default_model = os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "fasttext.ckpt")
-        default_checkpoint_weights = torch.load(path_to_default_model, map_location="cpu")
-        checkpoint_weights = {
-            "address_tagger_model": default_checkpoint_weights.get("address_tagger_model"),
-            "model_type": "fasttext",
-            "named_parser": "PreTrainedFastTextAddressParser",
+        retrain_file_name_format = "retrained_{}_address_parser.ckpt"
+
+        # We simulate a fasttext retrained model
+        model_type = "fasttext"
+        model_id = download_weights(model_type, cls.fake_cache_path, verbose=False, offline=False)
+
+        model_file_name = retrain_file_name_format.format(model_type)
+
+        weights = safetensors.torch.load_file(cached_file(model_id, filename="model.safetensors", local_files_only=True, cache_dir=cls.fake_cache_path))
+
+        version = "Finetuned_"
+        torch_save = {
+                "address_tagger_model": weights,
+                "model_type": model_type,
+                "version": version,
+                "named_parser": "PreTrainedFastTextAddressParser"
         }
 
-        cls.path_to_retrain_fasttext = os.path.join(
-            cls.model_weights_temp_dir.name, "retrained_fasttext_address_parser.ckpt"
-        )
-        with open(cls.path_to_retrain_fasttext, "wb") as file:
-            torch.save(checkpoint_weights, file)
+        cls.path_to_retrain_fasttext = os.path.join(cls.fake_cache_path, model_file_name)
+        torch.save(torch_save, cls.path_to_retrain_fasttext)
+        
+        # We simulate a bpemb retrained model
+        model_type = "bpemb"
+        model_id = download_weights(model_type, cls.fake_cache_path, verbose=False, offline=False)
 
-        path_to_default_model = os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "bpemb.ckpt")
-        default_checkpoint_weights = torch.load(path_to_default_model, map_location="cpu")
-        checkpoint_weights = {
-            "address_tagger_model": default_checkpoint_weights.get("address_tagger_model"),
-            "model_type": "bpemb",
-            "named_parser": "PreTrainedBPEmbAddressParser",
+        model_file_name = retrain_file_name_format.format(model_type)
+
+        weights = safetensors.torch.load_file(cached_file(model_id, filename="model.safetensors", local_files_only=True, cache_dir=cls.fake_cache_path))
+
+        version = "Finetuned_"
+        torch_save = {
+                "address_tagger_model": weights,
+                "model_type": model_type,
+                "version": version,
+                "named_parser": "PreTrainedBPEmbAddressParser"
         }
 
-        cls.path_to_retrain_bpemb = os.path.join(cls.model_weights_temp_dir.name, "retrained_bpemb_address_parser.ckpt")
-        with open(cls.path_to_retrain_bpemb, "wb") as file:
-            torch.save(checkpoint_weights, file)
+        cls.path_to_retrain_bpemb = os.path.join(cls.fake_cache_path, model_file_name)
+        torch.save(torch_save, cls.path_to_retrain_bpemb)
 
-        checkpoint_weights.update({"named_parser": "MyModelNewName"})
+        # We simulate a retrained named parser 
+        torch_save.update({"named_parser": "MyModelNewName"})
 
         cls.path_to_named_model = os.path.join(cls.model_weights_temp_dir.name, "retrained_named_address_parser.ckpt")
         with open(cls.path_to_named_model, "wb") as file:
-            torch.save(checkpoint_weights, file)
+            torch.save(torch_save, file)
 
     @classmethod
     def tearDownClass(cls) -> None:

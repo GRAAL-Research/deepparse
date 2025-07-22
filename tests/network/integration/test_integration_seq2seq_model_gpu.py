@@ -12,7 +12,7 @@ from deepparse.network import Seq2SeqModel
 from ..integration.base import Seq2SeqIntegrationTestCase
 
 
-@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
+#@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
 class Seq2SeqGPUIntegrationTest(Seq2SeqIntegrationTestCase):
     @classmethod
     def setUpClass(cls):
@@ -24,7 +24,6 @@ class Seq2SeqGPUIntegrationTest(Seq2SeqIntegrationTestCase):
         super().setUp()
 
         self.pre_trained_seq2seq_model = Seq2SeqModel(
-            self.a_torch_device,
             input_size=self.input_size,
             encoder_hidden_size=self.encoder_hidden_size,
             encoder_num_layers=self.num_layers,
@@ -32,6 +31,8 @@ class Seq2SeqGPUIntegrationTest(Seq2SeqIntegrationTestCase):
             decoder_num_layers=self.num_layers,
             output_size=self.output_size,
         )
+
+        self.pre_trained_seq2seq_model.to_device(self.a_torch_device)
 
         self.encoder_input_setUp(
             "fasttext", self.a_torch_device

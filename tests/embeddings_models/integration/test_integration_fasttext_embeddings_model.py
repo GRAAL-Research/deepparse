@@ -19,7 +19,7 @@ from tests.embeddings_models.integration.tools import MockedDataTransform
 from tests.parser.integration.base_retrain import AddressParserRetrainTestCase
 
 
-@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
+#@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
 class FastTextEmbeddingsModelIntegrationTest(AddressParserRetrainTestCase):
     @classmethod
     def setUpClass(cls):

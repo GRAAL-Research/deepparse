@@ -16,7 +16,7 @@ from deepparse.parser import (
 )
 
 
-@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
+#@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
 # We skip it even if it is CPU since the downloading is too long
 class AddressParserPredictNewTagsTest(TestCase):
     @classmethod
@@ -25,14 +25,7 @@ class AddressParserPredictNewTagsTest(TestCase):
         cls.temp_dir_obj = TemporaryDirectory()
         cls.a_data_saving_dir = os.path.join(cls.temp_dir_obj.name, "data")
         os.makedirs(cls.a_data_saving_dir, exist_ok=True)
-        # file_extension = "p"
-        # training_dataset_name = "test_sample_data_new_prediction_tags"
-        # download_from_public_repository(training_dataset_name, cls.a_data_saving_dir, file_extension=file_extension)
  
-
-        # cls.training_container = PickleDatasetContainer(
-        #     os.path.join(cls.a_data_saving_dir, training_dataset_name + "." + file_extension)
-        # )
         a_list_dataset_with_new_tags = [
             (
                 '350 rue des Lilas Ouest Quebec city Quebec G1L 1B6',
@@ -41,6 +34,7 @@ class AddressParserPredictNewTagsTest(TestCase):
                     'ATag',
                     'ATag',
                     'ATag',
+                    'AnotherTag',
                     'AnotherTag',
                     'AnotherTag',
                     'ALastTag',

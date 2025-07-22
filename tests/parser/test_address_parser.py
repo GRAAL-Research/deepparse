@@ -158,7 +158,7 @@ class AddressParserTest(AddressParserPredictTestCase):
         expected = self.a_cpu_torch_device
         self.assertEqual(actual, expected)
 
-    @skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
+    #@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
     def test_givenAGPUDeviceSetup_whenInstantiatingParser_thenDeviceIsGPU(self):
         address_parser = AddressParser(
             model_type=self.a_best_model_type.capitalize(),
@@ -169,7 +169,7 @@ class AddressParserTest(AddressParserPredictTestCase):
         expected = self.a_gpu_torch_device
         self.assertEqual(actual, expected)
 
-    @skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
+    #@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
     def test_givenAGPUDeviceSetupSTRFormat_whenInstantiatingParser_thenDeviceIsGPU(self):
         address_parser = AddressParser(
             model_type=self.a_best_model_type.capitalize(),
@@ -180,7 +180,7 @@ class AddressParserTest(AddressParserPredictTestCase):
         expected = self.a_gpu_torch_device
         self.assertEqual(actual, expected)
 
-    @skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
+    #@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
     def test_givenAGPUDeviceSetupINTFormat_whenInstantiatingParser_thenDeviceIsGPU(self):
         address_parser = AddressParser(
             model_type=self.a_best_model_type.capitalize(),
@@ -191,7 +191,7 @@ class AddressParserTest(AddressParserPredictTestCase):
         expected = self.a_gpu_torch_device
         self.assertEqual(actual, expected)
 
-    @skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
+    #@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
     def test_givenAGPUTorchDeviceSetup_whenInstantiatingParser_thenDeviceIsGPU(self):
         address_parser = AddressParser(
             model_type=self.a_best_model_type.capitalize(),
@@ -320,6 +320,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                 output_size=self.number_tags,
                 verbose=self.verbose,
                 path_to_retrained_model=None,
+                pre_trained_weights=True,
                 attention_mechanism=False,
                 offline=False,
             )
@@ -347,6 +348,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                 output_size=len(self.correct_address_components),
                 verbose=self.verbose,
                 path_to_retrained_model=self.a_model_path,
+                pre_trained_weights=True,
                 attention_mechanism=False,
                 offline=False,
             )
@@ -373,6 +375,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                 output_size=self.number_tags,
                 verbose=self.verbose,
                 path_to_retrained_model=self.a_model_path,
+                pre_trained_weights=True,
                 attention_mechanism=False,
                 encoder_hidden_size=512,
                 decoder_hidden_size=512,
@@ -401,6 +404,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                 output_size=len(self.incorrect_address_components),
                 verbose=self.verbose,
                 path_to_retrained_model=self.a_model_path,
+                pre_trained_weights=True,
                 attention_mechanism=False,
                 offline=False,
             )
@@ -427,6 +431,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                 output_size=self.number_tags,
                 verbose=self.verbose,
                 path_to_retrained_model=self.a_model_path,
+                pre_trained_weights=True,
                 attention_mechanism=False,
                 encoder_hidden_size=512,
                 decoder_hidden_size=512,
@@ -453,6 +458,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                 output_size=self.number_tags,
                 verbose=self.verbose,
                 path_to_retrained_model=None,
+                pre_trained_weights=True,
                 attention_mechanism=False,
                 offline=False,
             )
@@ -538,6 +544,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                 output_size=self.number_tags,
                 verbose=self.verbose,
                 path_to_retrained_model=None,
+                pre_trained_weights=True,
                 attention_mechanism=False,
                 offline=False,
             )
@@ -562,6 +569,7 @@ class AddressParserTest(AddressParserPredictTestCase):
                 output_size=self.number_tags,
                 verbose=self.verbose,
                 path_to_retrained_model=None,
+                pre_trained_weights=True,
                 attention_mechanism=False,
                 offline=False,
             )

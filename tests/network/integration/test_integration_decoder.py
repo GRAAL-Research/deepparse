@@ -59,7 +59,7 @@ class DecoderCase(TestCase):
             self.assertEqual(self.hidden_size, actual_prediction.shape[2])
 
 
-@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
+#@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
 class DecoderGPUTest(DecoderCase):
     def test_whenForwardStepGPU_thenStepIsOk(self):
         output_size = 9

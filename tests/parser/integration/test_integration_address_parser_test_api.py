@@ -8,7 +8,7 @@ from tests.base_capture_output import CaptureOutputTestCase
 from tests.parser.integration.base_retrain import AddressParserRetrainTestCase
 
 
-@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
+#@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
 class AddressParserIntegrationTestAPITest(AddressParserRetrainTestCase, CaptureOutputTestCase):
     def test_givenAnVerboseTrueAddressParser_whenTestOverrideTrue_thenPrint(self):
         self._capture_output()

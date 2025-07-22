@@ -11,6 +11,7 @@ from unittest import TestCase
 
 import torch
 import safetensors
+from transformers.utils.hub import cached_file
 
 from deepparse import download_weights, load_version
 
@@ -29,6 +30,7 @@ class Seq2SeqIntegrationTestCase(TestCase):
 
         cls.a_batch_size = 2
         cls.sequence_len = 6
+        cls.decomposition_len = 6
 
         cls.output_size = 9
 
@@ -48,10 +50,9 @@ class Seq2SeqIntegrationTestCase(TestCase):
         # We also simulate a retrained model
         model_file_name = cls.retrain_file_name_format.format(model_type)
 
-        weights = safetensors.load_file(cached_file(model_id, filename="model.safetensors", local_files_only=True, cache_dir=cache_dir))
+        weights = safetensors.torch.load_file(cached_file(model_id, filename="model.safetensors", local_files_only=True, cache_dir=cache_dir))
 
-        version = load_version(model_id, cache_dir)
-        version = "Finetuned" + version
+        version = "Finetuned_"
         torch_save = {
                 "address_tagger_model": weights,
                 "model_type": model_type,
@@ -67,7 +68,11 @@ class Seq2SeqIntegrationTestCase(TestCase):
         cls.temp_dir_obj.cleanup()
 
     def encoder_input_setUp(self, model_type: str, device: torch.device):
-        self.to_predict_tensor = torch.rand((self.a_batch_size, self.sequence_len, self.input_size))
+        if "bpemb" in model_type:
+            self.to_predict_tensor = torch.rand((self.a_batch_size, self.sequence_len, self.decomposition_len, self.input_size))
+        else:
+            self.to_predict_tensor = torch.rand((self.a_batch_size, self.sequence_len, self.input_size))
+
         self.to_predict_tensor = self.to_predict_tensor.to(device)
 
         self.a_lengths_list = [6, 6]

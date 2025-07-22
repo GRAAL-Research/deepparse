@@ -40,7 +40,8 @@ class PretrainedWeightsBase(CaptureOutputTestCase):
 
         model_file_name = retrain_file_name_format.format(model_type)
 
-        weights = safetensors.torch.load_file(cached_file(model_id, filename="model.safetensors", local_files_only=True, cache_dir=cls.fake_cache_path))
+        path_to_pretrained_fasttext_weights = cached_file(model_id, filename="model.safetensors", local_files_only=True, cache_dir=cls.fake_cache_path)
+        weights = safetensors.torch.load_file(path_to_pretrained_fasttext_weights)
 
         version = "Finetuned_"
         torch_save = {
@@ -59,7 +60,8 @@ class PretrainedWeightsBase(CaptureOutputTestCase):
 
         model_file_name = retrain_file_name_format.format(model_type)
 
-        weights = safetensors.torch.load_file(cached_file(model_id, filename="model.safetensors", local_files_only=True, cache_dir=cls.fake_cache_path))
+        path_to_pretrained_bpemb_weights = cached_file(model_id, filename="model.safetensors", local_files_only=True, cache_dir=cls.fake_cache_path)
+        weights = safetensors.torch.load_file(path_to_pretrained_bpemb_weights)
 
         version = "Finetuned_"
         torch_save = {

@@ -506,7 +506,7 @@ class ValidationsTests(CaptureOutputTestCase, FileCreationTestCase):
     ):
         self._capture_output()
         with patch("huggingface_hub.snapshot_download"):
-            download_weights(model_type="fasttext", saving_dir="./", verbose=True)
+            download_weights(model_type="fasttext", saving_dir=self.fake_cache_path, verbose=True)
 
         actual = self.test_out.getvalue().strip()
         expected = "Downloading the pre-trained weights for the network fasttext."
@@ -516,7 +516,7 @@ class ValidationsTests(CaptureOutputTestCase, FileCreationTestCase):
     def test_givenModelBPEmbWeightsToDownloadVerbose_whenDownloadOk_thenVerbose(self):
         self._capture_output()
         with patch("huggingface_hub.snapshot_download"):
-            download_weights(model_type="bpemb", saving_dir="./", verbose=True)
+            download_weights(model_type="bpemb", saving_dir=self.fake_cache_path, verbose=True)
 
         actual = self.test_out.getvalue().strip()
         expected = "Downloading the pre-trained weights for the network bpemb."

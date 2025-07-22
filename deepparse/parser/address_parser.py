@@ -27,7 +27,7 @@ from .tools import (
     get_files_in_directory,
     handle_model_name,
     indices_splitting,
-    infer_model_type,
+    infer_retrained_model_type,
     load_tuple_to_device,
     pretrained_parser_in_directory,
     validate_if_new_prediction_tags,
@@ -274,7 +274,7 @@ class AddressParser:
             named_parser = checkpoint_weights.get("named_parser")
 
             # We "infer" the model type, thus we also had to handle the attention_mechanism bool
-            model_type, attention_mechanism = infer_model_type(
+            model_type, attention_mechanism = infer_retrained_model_type(
                 checkpoint_weights, attention_mechanism=attention_mechanism
             )
 

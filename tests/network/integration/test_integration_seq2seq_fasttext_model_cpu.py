@@ -14,7 +14,7 @@ from deepparse.network import FastTextSeq2SeqModel
 from ..integration.base import Seq2SeqIntegrationTestCase
 
 
-#@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
+@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
 class FastTextSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
     @classmethod
     def setUpClass(cls):

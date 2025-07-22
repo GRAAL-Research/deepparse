@@ -43,7 +43,7 @@ class EncoderCase(TestCase):
             self.assertEqual(self.hidden_size, actual_prediction.shape[1])
 
 
-#@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
+@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
 class EncoderGPUTest(EncoderCase):
     def test_whenForwardStepGPU_thenStepIsOk(self):
         self.setUp_encoder(self.a_torch_device)

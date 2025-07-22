@@ -8,7 +8,7 @@ from deepparse.parser import formatted_parsed_address
 from tests.parser.integration.base_predict import AddressParserPredictNewParamsBase
 
 
-#@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
+@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
 # We skip it even if it is CPU since the downloading is too long
 class AddressParserPredictNewParamsTest(AddressParserPredictNewParamsBase):
     def test_givenAAddress_whenParseNewParamsFastTextCPU_thenParseAddressProperly(self):

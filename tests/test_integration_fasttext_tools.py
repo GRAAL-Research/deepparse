@@ -9,7 +9,7 @@ from deepparse import download_fasttext_embeddings, download_fasttext_magnitude_
 from tests.base_file_exist import FileCreationTestCase
 
 
-#@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
+@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
 class IntegrationFastTextToolsTests(FileCreationTestCase):
     def setUp(self) -> None:
         self.temp_dir_obj = TemporaryDirectory()

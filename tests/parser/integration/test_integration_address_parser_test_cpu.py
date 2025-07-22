@@ -12,7 +12,7 @@ from deepparse.parser import AddressParser
 from tests.parser.integration.base_retrain import AddressParserRetrainTestCase
 
 
-#@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
+@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
 class AddressParserIntegrationTestAPICPUTest(AddressParserRetrainTestCase):
     def test_givenAFasttextAddressParser_whenTestWithNumWorkerAt0_thenTestOccur(self):
         address_parser = AddressParser(

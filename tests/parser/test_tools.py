@@ -142,7 +142,7 @@ class ToolsTests(PretrainedWeightsBase):
 
         self.assertEqual(actual, expected)
 
-    #@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
+    @skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
     def test_givenATupleToLoadOfTensorIntoDevice_whenLoad_thenProperlyLoad(self):
         a_device = torch.device("cuda:0")
         a_random_tensor = torch.rand(1, 2)

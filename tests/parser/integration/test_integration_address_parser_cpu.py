@@ -12,7 +12,7 @@ from tests.parser.integration.base_predict import (
 )
 
 
-#@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
+@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
 class AddressParserCPUTest(AddressParserBase):
     def setUp(self) -> None:
         a_config = {"model_type": "fasttext", "device": "cpu", "verbose": False}
@@ -49,7 +49,7 @@ class AddressParserCPUTest(AddressParserBase):
             self.assertIn(expected, actual)
 
 
-#@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
+@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
 class AddressParserPredictCPUTest(AddressParserPredictBase):
     @classmethod
     def setUpClass(cls):
@@ -110,7 +110,7 @@ class AddressParserPredictCPUTest(AddressParserPredictBase):
 
 
 # test if num_workers > 0 is correct for the data loader
-#@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
+@skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
 class AddressParserPredictCPUMultiProcessTest(AddressParserPredictBase):
     @classmethod
     def setUpClass(cls):

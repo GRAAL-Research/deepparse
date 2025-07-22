@@ -101,7 +101,7 @@ class AddressParserTest(AddressParserPredictTestCase):
         self.fasttext_mock = MagicMock()
 
         self.model_mock = MagicMock()
-        
+
         self.a_model_version = "a_version"
 
         self.embeddings_model_mock = MagicMock()

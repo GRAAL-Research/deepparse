@@ -50,14 +50,16 @@ class Seq2SeqIntegrationTestCase(TestCase):
         # We also simulate a retrained model
         model_file_name = cls.retrain_file_name_format.format(model_type)
 
-        weights = safetensors.torch.load_file(cached_file(model_id, filename="model.safetensors", local_files_only=True, cache_dir=cache_dir))
+        weights = safetensors.torch.load_file(
+            cached_file(model_id, filename="model.safetensors", local_files_only=True, cache_dir=cache_dir)
+        )
 
         version = "Finetuned_"
         torch_save = {
-                "address_tagger_model": weights,
-                "model_type": model_type,
-                "version": version,
-                "named_parser": "SimulatedRetrainedParser"
+            "address_tagger_model": weights,
+            "model_type": model_type,
+            "version": version,
+            "named_parser": "SimulatedRetrainedParser",
         }
         torch.save(torch_save, os.path.join(cache_dir, model_file_name))
 
@@ -69,7 +71,9 @@ class Seq2SeqIntegrationTestCase(TestCase):
 
     def encoder_input_setUp(self, model_type: str, device: torch.device):
         if "bpemb" in model_type:
-            self.to_predict_tensor = torch.rand((self.a_batch_size, self.sequence_len, self.decomposition_len, self.input_size))
+            self.to_predict_tensor = torch.rand(
+                (self.a_batch_size, self.sequence_len, self.decomposition_len, self.input_size)
+            )
         else:
             self.to_predict_tensor = torch.rand((self.a_batch_size, self.sequence_len, self.input_size))
 

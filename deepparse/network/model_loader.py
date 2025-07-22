@@ -7,7 +7,7 @@ from ..download_tools import download_weights, load_version
 from ..weights_tools import handle_weights_upload
 
 
-class ModelLoader():
+class ModelLoader:
     def __init__(self, cache_dir: str) -> None:
         """
         Class to download and/or load model weights.
@@ -17,7 +17,9 @@ class ModelLoader():
         """
         self.cache_dir = cache_dir
 
-    def load_pre_trained_model(self, model: Seq2SeqModel, model_type: str, offline: bool, verbose: bool) -> Tuple[Seq2SeqModel, str]:
+    def load_pre_trained_model(
+        self, model: Seq2SeqModel, model_type: str, offline: bool, verbose: bool
+    ) -> Tuple[Seq2SeqModel, str]:
         """
         Method to download and resolve the loading (into the network) of the pre-trained weights.
 
@@ -39,7 +41,9 @@ class ModelLoader():
 
         return model, version
 
-    def load_weights(self, model: Seq2SeqModel, path_to_model_torch_archive: str, device: torch.device) -> Tuple[Seq2SeqModel, str]:
+    def load_weights(
+        self, model: Seq2SeqModel, path_to_model_torch_archive: str, device: torch.device
+    ) -> Tuple[Seq2SeqModel, str]:
         """
         Method to load (into the network) the weights.
 
@@ -52,9 +56,7 @@ class ModelLoader():
             A tuple (``x``, ``y``) where ``x`` is a :class:`~Seq2SeqModel` and ``y`` is a string representing the model's version.
 
         """
-        all_layers_params = handle_weights_upload(
-            path_to_model_to_upload=path_to_model_torch_archive, device=device
-        )
+        all_layers_params = handle_weights_upload(path_to_model_to_upload=path_to_model_torch_archive, device=device)
 
         # All the time, our torch archive includes meta-data along with the model weights.
         all_layers_params = all_layers_params.get("address_tagger_model")
@@ -64,4 +66,3 @@ class ModelLoader():
         version = all_layers_params.get("version")
 
         return model, version
-

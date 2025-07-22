@@ -81,7 +81,7 @@ class AddressParserPredictNewParamsBase(TestCase):
                     'PostalCode',
                 ],
             ),
-        ]       
+        ]
         cls.training_container = ListDatasetContainer(a_incomplete_list_dataset)
 
         cls.a_fasttext_model_type = "fasttext"

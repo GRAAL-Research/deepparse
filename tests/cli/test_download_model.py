@@ -75,7 +75,9 @@ class DownloadModelTests(TestCase):
                 download_model_cli_main([self.a_fasttext_model_type])
 
                 downloader.assert_called()
-                downloader.assert_called_with(self.a_fasttext_model_type, self.fake_cache_dir, verbose=True, offline=False)
+                downloader.assert_called_with(
+                    self.a_fasttext_model_type, self.fake_cache_dir, verbose=True, offline=False
+                )
 
     @patch("deepparse.download_tools.download_fasttext_embeddings")
     def test_givenAFasttextAttDownload_whenModelIsNotLocal_thenDownloadWeights(self, download_embeddings_mock):
@@ -84,7 +86,9 @@ class DownloadModelTests(TestCase):
                 download_model_cli_main([self.a_fasttext_att_model_type])
 
                 downloader.assert_called()
-                downloader.assert_called_with(self.a_fasttext_att_model_file_name, self.fake_cache_dir, verbose=True, offline=False)
+                downloader.assert_called_with(
+                    self.a_fasttext_att_model_file_name, self.fake_cache_dir, verbose=True, offline=False
+                )
 
     @patch("deepparse.download_tools.download_fasttext_magnitude_embeddings")
     def test_givenAFasttextLightDownload_whenModelIsNotLocal_thenDownloadWeights(self, download_embeddings_mock):
@@ -93,7 +97,9 @@ class DownloadModelTests(TestCase):
                 download_model_cli_main([self.a_fasttext_light_model_type])
 
                 downloader.assert_called()
-                downloader.assert_called_with(self.a_fasttext_light_model_file_name, self.fake_cache_dir, verbose=True, offline=False)
+                downloader.assert_called_with(
+                    self.a_fasttext_light_model_file_name, self.fake_cache_dir, verbose=True, offline=False
+                )
 
     @patch("deepparse.download_tools.BPEmbBaseURLWrapperBugFix")
     def test_givenABPembDownload_whenModelIsNotLocal_thenDownloadWeights(self, download_embeddings_mock):
@@ -111,36 +117,44 @@ class DownloadModelTests(TestCase):
                 download_model_cli_main([self.a_bpemb_att_model_type])
 
                 downloader.assert_called()
-                downloader.assert_called_with(self.a_bpemb_att_model_type_file_name, self.fake_cache_dir, verbose=True, offline=False)
+                downloader.assert_called_with(
+                    self.a_bpemb_att_model_type_file_name, self.fake_cache_dir, verbose=True, offline=False
+                )
 
     @patch("deepparse.download_tools.download_fasttext_embeddings")
     @patch("deepparse.download_tools.os.path.isfile", return_value=True)
     def test_givenAFasttextDownload_whenModelIsLocalButNotLatest_thenDownloadWeights(
-        self, download_embeddings_mock, os_is_file_mock 
+        self, download_embeddings_mock, os_is_file_mock
     ):
         with patch("deepparse.download_tools.CACHE_PATH", self.fake_cache_dir):
             with patch("deepparse.download_tools.download_weights") as downloader:
                 download_model_cli_main([self.a_fasttext_model_type])
 
                 downloader.assert_called()
-                downloader.assert_called_with(self.a_fasttext_model_type, self.fake_cache_dir, verbose=True, offline=False)
+                downloader.assert_called_with(
+                    self.a_fasttext_model_type, self.fake_cache_dir, verbose=True, offline=False
+                )
 
     @patch("deepparse.download_tools.download_fasttext_magnitude_embeddings")
     @patch("deepparse.download_tools.os.path.isfile", return_value=True)
     def test_givenAFasttextLightDownload_whenModelIsLocalButNotLatest_thenDownloadWeights(
-        self, download_embeddings_mock, os_is_file_mock 
+        self, download_embeddings_mock, os_is_file_mock
     ):
         with patch("deepparse.download_tools.CACHE_PATH", self.fake_cache_dir):
             with patch("deepparse.download_tools.download_weights") as downloader:
                 download_model_cli_main([self.a_fasttext_light_model_type])
 
                 downloader.assert_called()
-                downloader.assert_called_with(self.a_fasttext_light_model_file_name, self.fake_cache_dir, verbose=True, offline=False)
+                downloader.assert_called_with(
+                    self.a_fasttext_light_model_file_name, self.fake_cache_dir, verbose=True, offline=False
+                )
 
     @patch("deepparse.download_tools.BPEmbBaseURLWrapperBugFix")
     @patch("deepparse.download_tools.os.path.isfile", return_value=True)
     def test_givenABPembDownload_whenModelIsLocalButNotLatest_thenDownloadWeights(
-        self, download_embeddings_mock, os_is_file_mock, 
+        self,
+        download_embeddings_mock,
+        os_is_file_mock,
     ):
         with patch("deepparse.download_tools.CACHE_PATH", self.fake_cache_dir):
             with patch("deepparse.download_tools.download_weights") as downloader:
@@ -159,7 +173,9 @@ class DownloadModelTests(TestCase):
                 download_model_cli_main([self.a_fasttext_model_type])
 
                 downloader.assert_called()
-                downloader.assert_called_with(self.a_fasttext_model_type, self.fake_cache_dir, verbose=True, offline=False)
+                downloader.assert_called_with(
+                    self.a_fasttext_model_type, self.fake_cache_dir, verbose=True, offline=False
+                )
 
     @patch("deepparse.download_tools.download_fasttext_magnitude_embeddings")
     @patch("deepparse.download_tools.os.path.isfile", side_effect=[False, True])  # no version file in local
@@ -171,7 +187,9 @@ class DownloadModelTests(TestCase):
                 download_model_cli_main([self.a_fasttext_light_model_type])
 
                 downloader.assert_called()
-                downloader.assert_called_with(self.a_fasttext_light_model_file_name, self.fake_cache_dir, verbose=True, offline=False)
+                downloader.assert_called_with(
+                    self.a_fasttext_light_model_file_name, self.fake_cache_dir, verbose=True, offline=False
+                )
 
     @patch("deepparse.download_tools.BPEmbBaseURLWrapperBugFix")
     @patch("deepparse.download_tools.os.path.isfile", side_effect=[False, True])  # no version file in local

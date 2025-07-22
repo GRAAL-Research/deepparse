@@ -11,6 +11,7 @@ from pickle import dump
 
 import pandas as pd
 
+
 class RetrainTestCase(TestCase):
     @classmethod
     def setUpClass(cls):
@@ -50,13 +51,11 @@ class RetrainTestCase(TestCase):
                 ],
             ),
         ]
-        
+
         training_dataset_name = "train_sample_data"
         test_dataset_name = "test_sample_data"
 
-        cls.a_train_pickle_dataset_path = os.path.join(
-            cls.a_data_saving_dir, training_dataset_name + "." + "p"
-        )
+        cls.a_train_pickle_dataset_path = os.path.join(cls.a_data_saving_dir, training_dataset_name + "." + "p")
         dump(data, open(cls.a_train_pickle_dataset_path, "wb"))
 
         cls.a_test_pickle_dataset_path = os.path.join(cls.a_data_saving_dir, test_dataset_name + "." + "p")

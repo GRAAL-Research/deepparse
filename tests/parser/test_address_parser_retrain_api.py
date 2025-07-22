@@ -392,7 +392,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
                     "address_tagger_model": experiment_mock().model.network.state_dict(),
                     "model_type": self.a_fasttext_model_type,
                     "named_parser": expected_named_parser_name,
-                    "version": "Finetuned_"+self.a_model_version,
+                    "version": "Finetuned_" + self.a_model_version,
                 },
                 saving_model_path,
             )
@@ -504,7 +504,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
                     "prediction_tags": self.address_components,
                     "model_type": self.a_fasttext_model_type,
                     "named_parser": expected_named_parser_name,
-                    "version": "Finetuned_"+self.a_model_version,
+                    "version": "Finetuned_" + self.a_model_version,
                 },
                 saving_model_path,
             )
@@ -586,7 +586,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
                     "model_type": self.a_fasttext_model_type,
                     "seq2seq_params": self.seq2seq_params,
                     "named_parser": expected_named_parser_name,
-                    "version": "Finetuned_"+self.a_model_version,
+                    "version": "Finetuned_" + self.a_model_version,
                 },
                 saving_model_path,
             )
@@ -635,7 +635,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
                     "seq2seq_params": self.seq2seq_params,
                     "prediction_tags": self.address_components,
                     "named_parser": expected_named_parser_name,
-                    "version": "Finetuned_"+self.a_model_version,
+                    "version": "Finetuned_" + self.a_model_version,
                 },
                 saving_model_path,
             )
@@ -686,7 +686,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
                     "seq2seq_params": self.seq2seq_params,
                     "prediction_tags": self.address_components,
                     "named_parser": expected_named_parser_name,
-                    "version": "Finetuned_"+self.a_model_version,
+                    "version": "Finetuned_" + self.a_model_version,
                 },
                 saving_model_path,
             )
@@ -860,7 +860,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
                     "address_tagger_model": experiment_mock().model.network.state_dict(),
                     "model_type": self.a_bpemb_model_type,
                     "named_parser": expected_named_parser_name,
-                    "version": "Finetuned_"+self.a_model_version,
+                    "version": "Finetuned_" + self.a_model_version,
                 },
                 saving_model_path,
             )
@@ -909,7 +909,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
                     "prediction_tags": self.address_components,
                     "model_type": self.a_bpemb_model_type,
                     "named_parser": expected_named_parser_name,
-                    "version": "Finetuned_"+self.a_model_version,
+                    "version": "Finetuned_" + self.a_model_version,
                 },
                 saving_model_path,
             )
@@ -991,7 +991,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
                     "model_type": self.a_bpemb_model_type,
                     "seq2seq_params": self.seq2seq_params,
                     "named_parser": expected_named_parser_name,
-                    "version": "Finetuned_"+self.a_model_version,
+                    "version": "Finetuned_" + self.a_model_version,
                 },
                 saving_model_path,
             )
@@ -1040,7 +1040,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
                     "seq2seq_params": self.seq2seq_params,
                     "prediction_tags": self.address_components,
                     "named_parser": expected_named_parser_name,
-                    "version": "Finetuned_"+self.a_model_version,
+                    "version": "Finetuned_" + self.a_model_version,
                 },
                 saving_model_path,
             )
@@ -1091,7 +1091,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
                     "seq2seq_params": self.seq2seq_params,
                     "prediction_tags": self.address_components,
                     "named_parser": expected_named_parser_name,
-                    "version": "Finetuned_"+self.a_model_version,
+                    "version": "Finetuned_" + self.a_model_version,
                 },
                 saving_model_path,
             )
@@ -1651,9 +1651,8 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
     @patch("deepparse.parser.address_parser.VectorizerFactory")
     @patch("deepparse.parser.address_parser.DataProcessorFactory")
     def test_givenABPEmbModelType_whenRetrainWithIncorrectPredictionTags_thenRaiseValueError(
-        self, data_processor_factory_mock, vectorizer_factory_mock, embeddings_model_factory_mock 
+        self, data_processor_factory_mock, vectorizer_factory_mock, embeddings_model_factory_mock
     ):
-
         with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
             model_factory_mock().create.return_value = self.model_mock, self.a_model_version
             address_parser = AddressParser(

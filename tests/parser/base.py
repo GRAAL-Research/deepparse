@@ -40,41 +40,45 @@ class PretrainedWeightsBase(CaptureOutputTestCase):
 
         model_file_name = retrain_file_name_format.format(model_type)
 
-        path_to_pretrained_fasttext_weights = cached_file(model_id, filename="model.safetensors", local_files_only=True, cache_dir=cls.fake_cache_path)
+        path_to_pretrained_fasttext_weights = cached_file(
+            model_id, filename="model.safetensors", local_files_only=True, cache_dir=cls.fake_cache_path
+        )
         weights = safetensors.torch.load_file(path_to_pretrained_fasttext_weights)
 
         version = "Finetuned_"
         torch_save = {
-                "address_tagger_model": weights,
-                "model_type": model_type,
-                "version": version,
-                "named_parser": "PreTrainedFastTextAddressParser"
+            "address_tagger_model": weights,
+            "model_type": model_type,
+            "version": version,
+            "named_parser": "PreTrainedFastTextAddressParser",
         }
 
         cls.path_to_retrain_fasttext = os.path.join(cls.fake_cache_path, model_file_name)
         torch.save(torch_save, cls.path_to_retrain_fasttext)
-        
+
         # We simulate a bpemb retrained model
         model_type = "bpemb"
         model_id = download_weights(model_type, cls.fake_cache_path, verbose=False, offline=False)
 
         model_file_name = retrain_file_name_format.format(model_type)
 
-        path_to_pretrained_bpemb_weights = cached_file(model_id, filename="model.safetensors", local_files_only=True, cache_dir=cls.fake_cache_path)
+        path_to_pretrained_bpemb_weights = cached_file(
+            model_id, filename="model.safetensors", local_files_only=True, cache_dir=cls.fake_cache_path
+        )
         weights = safetensors.torch.load_file(path_to_pretrained_bpemb_weights)
 
         version = "Finetuned_"
         torch_save = {
-                "address_tagger_model": weights,
-                "model_type": model_type,
-                "version": version,
-                "named_parser": "PreTrainedBPEmbAddressParser"
+            "address_tagger_model": weights,
+            "model_type": model_type,
+            "version": version,
+            "named_parser": "PreTrainedBPEmbAddressParser",
         }
 
         cls.path_to_retrain_bpemb = os.path.join(cls.fake_cache_path, model_file_name)
         torch.save(torch_save, cls.path_to_retrain_bpemb)
 
-        # We simulate a retrained named parser 
+        # We simulate a retrained named parser
         torch_save.update({"named_parser": "MyModelNewName"})
 
         cls.path_to_named_model = os.path.join(cls.model_weights_temp_dir.name, "retrained_named_address_parser.ckpt")

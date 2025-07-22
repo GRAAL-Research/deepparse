@@ -13,6 +13,7 @@ class ModelFactory:
     """
     A factory for creating neural network models that predict the tags from addresses.
     """
+
     def __init__(self, model_loader: ModelLoader) -> None:
         self.model_loader = model_loader
 
@@ -41,7 +42,7 @@ class ModelFactory:
             attention_mechanism (bool): Either or not to use the attention mechanism. The default value is ``False``.
             path_to_retrained_model (Union[str, None]): The path to the retrained model to use for the seq2seq. The
                 default value is ``None``.
-            pre_trained_weights (bool): Whether to load pre-trained weights or return an untrained model. 
+            pre_trained_weights (bool): Whether to load pre-trained weights or return an untrained model.
                 The `path_to_retrained_model` argument takes precedence if specified. The default value is ``True``.
             offline (bool): Whether or not the model is an offline or an online. The default value is ``False``.
             verbose (bool): Turn on/off the verbosity of the model. The default value is ``True``.
@@ -71,7 +72,6 @@ class ModelFactory:
             """
             )
 
-
         if path_to_retrained_model:
             model, version = self.model_loader.load_weights(model, path_to_retrained_model, device)
 
@@ -84,4 +84,3 @@ class ModelFactory:
         model.to_device(device)
 
         return model, version
-

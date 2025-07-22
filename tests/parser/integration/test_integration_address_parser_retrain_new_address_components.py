@@ -20,7 +20,7 @@ class AddressParserIntegrationTestNewAddressComponents(AddressParserRetrainTestC
     @classmethod
     def setUpClass(cls):
         super(AddressParserIntegrationTestNewAddressComponents, cls).setUpClass()
- 
+
         a_list_dataset_with_new_tags = [
             (
                 '350 rue des Lilas Ouest Quebec city Quebec G1L 1B6',
@@ -54,8 +54,6 @@ class AddressParserIntegrationTestNewAddressComponents(AddressParserRetrainTestC
             ),
         ]
         cls.new_prediction_data_container = ListDatasetContainer(a_list_dataset_with_new_tags)
-
-
 
     # Retrain API tests
     def test_givenAFasttextAddressParser_whenRetrainNewTags_thenTrainingOccur(self):

@@ -757,7 +757,9 @@ class AddressParser:
 
             # We set verbose to false since the model is reloaded
             # We set the flag to use the pretrained weights to false since we train new ones
-            self._setup_model(verbose=False, path_to_retrained_model=None, pre_trained_weights=False, **model_factory_dict)
+            self._setup_model(
+                verbose=False, path_to_retrained_model=None, pre_trained_weights=False, **model_factory_dict
+            )
 
         callbacks = [] if callbacks is None else callbacks
         train_generator, valid_generator = self._create_training_data_generator(
@@ -838,11 +840,11 @@ class AddressParser:
             )
             file_path = os.path.join(logging_path, file_name)
 
-            self.version = "Finetuned_"+self.version
+            self.version = "Finetuned_" + self.version
             torch_save = {
                 "address_tagger_model": exp.model.network.state_dict(),
                 "model_type": self.model_type,
-                "version": self.version
+                "version": self.version,
             }
 
             if seq2seq_params is not None:

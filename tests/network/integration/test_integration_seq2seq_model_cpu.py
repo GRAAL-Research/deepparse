@@ -132,5 +132,6 @@ class Seq2SeqCPUIntegrationTest(Seq2SeqIntegrationTestCase):
 
         random_mock.assert_not_called()
 
+
 if __name__ == "__main__":
     unittest.main()

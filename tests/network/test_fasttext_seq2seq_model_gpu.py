@@ -59,7 +59,6 @@ class FasttextSeq2SeqGPUTest(Seq2SeqTestCase):
     #         )
     #         download_weights_mock.assert_called_with(self.model_type,  verbose=self.verbose)
 
-
     # @patch("deepparse.weights_tools.torch")
     # @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
     # def test_givenRetrainedWeights_whenInstantiatingAFastTextSeq2SeqModel_thenShouldUseRetrainedWeights(
@@ -68,7 +67,7 @@ class FasttextSeq2SeqGPUTest(Seq2SeqTestCase):
     #     all_layers_params = MagicMock()
     #     torch_mock.load.return_value = all_layers_params
     #     FastTextSeq2SeqModel(
-    #         
+    #
     #         output_size=self.output_size,
     #         verbose=self.verbose,
     #         path_to_retrained_model=self.a_path_to_retrained_model,
@@ -92,7 +91,7 @@ class FasttextSeq2SeqGPUTest(Seq2SeqTestCase):
         encoder_mock,
         torch_load_mock,
     ):
-        seq2seq_model = FastTextSeq2SeqModel( self.output_size)
+        seq2seq_model = FastTextSeq2SeqModel(self.output_size)
 
         to_predict_mock, lengths_list = self.setup_encoder_mocks()
         encoder_mock.__call__().return_value = (MagicMock(), MagicMock())
@@ -117,7 +116,6 @@ class FasttextSeq2SeqGPUTest(Seq2SeqTestCase):
         torch_load_mock,
     ):
         seq2seq_model = FastTextSeq2SeqModel(
-            
             output_size=self.output_size,
             attention_mechanism=False,
         )
@@ -157,7 +155,6 @@ class FasttextSeq2SeqGPUTest(Seq2SeqTestCase):
         torch_load_mock,
     ):
         seq2seq_model = FastTextSeq2SeqModel(
-            
             output_size=self.output_size,
             attention_mechanism=True,
         )
@@ -200,9 +197,7 @@ class FasttextSeq2SeqGPUTest(Seq2SeqTestCase):
     ):
         random_mock.return_value = self.a_value_lower_than_threshold
 
-        seq2seq_model = FastTextSeq2SeqModel(
-             output_size=self.output_size
-        )
+        seq2seq_model = FastTextSeq2SeqModel(output_size=self.output_size)
 
         decoder_input_mock, decoder_hidden_mock = self.setUp_decoder_mocks(decoder_mock, attention_mechanism=False)
 
@@ -255,7 +250,7 @@ class FasttextSeq2SeqGPUTest(Seq2SeqTestCase):
         # We mock the return of the decoder output
         encoder_mock.__call__().return_value = (decoder_input_mock, decoder_hidden_mock)
 
-        seq2seq_model = FastTextSeq2SeqModel( self.output_size)
+        seq2seq_model = FastTextSeq2SeqModel(self.output_size)
 
         seq2seq_model.forward(to_predict=to_predict_mock, lengths=lengths_list, target=None)
 
@@ -304,7 +299,7 @@ class FasttextSeq2SeqGPUTest(Seq2SeqTestCase):
         # We mock the return of the decoder output
         encoder_mock.__call__().return_value = (decoder_input_mock, decoder_hidden_mock)
 
-        seq2seq_model = FastTextSeq2SeqModel( self.output_size)
+        seq2seq_model = FastTextSeq2SeqModel(self.output_size)
 
         seq2seq_model.forward(
             to_predict=to_predict_mock,
@@ -359,7 +354,6 @@ class FasttextSeq2SeqGPUTest(Seq2SeqTestCase):
         encoder_mock.__call__().return_value = (decoder_input_mock, decoder_hidden_mock)
 
         seq2seq_model = FastTextSeq2SeqModel(
-            
             self.output_size,
             attention_mechanism=True,
         )

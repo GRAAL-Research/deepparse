@@ -28,9 +28,7 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
     def test_whenInstantiatingABPEmbSeq2SeqModel_thenShouldInstantiateAEmbeddingNetwork(
         self,
     ):
-        seq2seq_model = BPEmbSeq2SeqModel(
-            output_size=self.output_size
-        )
+        seq2seq_model = BPEmbSeq2SeqModel(output_size=self.output_size)
 
         self.assertEqual(self.input_size, seq2seq_model.embedding_network.model.input_size)
         self.assertEqual(self.hidden_size, seq2seq_model.embedding_network.model.hidden_size)
@@ -92,7 +90,6 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
     #         )
     #         download_weights_mock.assert_called_with(self.model_type, self.fake_cache_dir)
 
-
     # @patch("deepparse.weights_tools.torch")
     # @patch("os.path.isfile")
     # @patch("deepparse.network.seq2seq.torch")
@@ -122,7 +119,6 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
     #             self.fake_cache_dir, output_size=self.output_size
     #         )
     #         download_weights_mock.assert_not_called()
-
 
     # @patch("deepparse.weights_tools.torch")
     # @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
@@ -179,9 +175,7 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
         decoder_mock,
         torch_load_mock,
     ):
-        seq2seq_model = BPEmbSeq2SeqModel(
-            output_size=self.output_size
-        )
+        seq2seq_model = BPEmbSeq2SeqModel(output_size=self.output_size)
 
         decoder_input_mock, decoder_hidden_mock = self.setUp_decoder_mocks(decoder_mock, attention_mechanism=False)
 
@@ -260,9 +254,7 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
     ):
         random_mock.return_value = self.a_value_lower_than_threshold
 
-        seq2seq_model = BPEmbSeq2SeqModel(
-            output_size=self.output_size
-        )
+        seq2seq_model = BPEmbSeq2SeqModel(output_size=self.output_size)
 
         decoder_input_mock, decoder_hidden_mock = self.setUp_decoder_mocks(decoder_mock, attention_mechanism=False)
 
@@ -323,9 +315,7 @@ class BPEmbSeq2SeqCPUTest(Seq2SeqTestCase):
             with torch_mock:
                 with encoder_mock:
                     with decoder_mock:
-                        seq2seq_model = BPEmbSeq2SeqModel(
-                            self.fake_cache_dir, self.output_size
-                        )
+                        seq2seq_model = BPEmbSeq2SeqModel(self.fake_cache_dir, self.output_size)
 
                         seq2seq_model.forward(
                             to_predict=to_predict_mock,

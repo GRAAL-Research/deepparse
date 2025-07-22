@@ -205,8 +205,6 @@ class Seq2SeqTest(TestCase):
     #         with self.assertWarns(UserWarning):
     #             seq2seq_model._load_pre_trained_weights(self.a_model_type, cache_dir=self.cache_dir, offline=False)
 
-
-
     # @patch("deepparse.network.seq2seq.latest_version")
     # @patch("os.path.isfile")
     # @patch("deepparse.weights_tools.torch")

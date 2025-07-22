@@ -44,6 +44,7 @@ MODEL_REPO_IDS = {
     "fasttext-light_attention": "deepparse/fasttext-attention",
 }
 
+
 def download_fasttext_magnitude_embeddings(cache_dir: str, verbose: bool = True, offline: bool = False) -> str:
     """
     Function to download the magnitude pretrained FastText model.
@@ -52,17 +53,30 @@ def download_fasttext_magnitude_embeddings(cache_dir: str, verbose: bool = True,
     """
 
     try:
-        local_embeddings_file_path = cached_file("deepparse/fasttext-base", filename="fasttext.magnitude", revision="light-embeddings", local_files_only=True, cache_dir=cache_dir)
+        local_embeddings_file_path = cached_file(
+            "deepparse/fasttext-base",
+            filename="fasttext.magnitude",
+            revision="light-embeddings",
+            local_files_only=True,
+            cache_dir=cache_dir,
+        )
     except OSError:
         if verbose:
             print(
-                    "The FastText pretrained word embeddings will be downloaded in magnitude format (3.5 GO), "
-                    "this process will take several minutes."
-                )
+                "The FastText pretrained word embeddings will be downloaded in magnitude format (3.5 GO), "
+                "this process will take several minutes."
+            )
 
-    local_embeddings_file_path = hf_hub_download("deepparse/fasttext-base", filename="fasttext.magnitude", revision="light-embeddings", cache_dir=cache_dir, local_files_only=offline)
+    local_embeddings_file_path = hf_hub_download(
+        "deepparse/fasttext-base",
+        filename="fasttext.magnitude",
+        revision="light-embeddings",
+        cache_dir=cache_dir,
+        local_files_only=offline,
+    )
 
     return local_embeddings_file_path
+
 
 def download_weights(model_type: str, saving_dir: str, verbose: bool = True, offline: bool = False) -> str:
     """
@@ -80,14 +94,14 @@ def download_weights(model_type: str, saving_dir: str, verbose: bool = True, off
     if not offline:
         if verbose:
             warnings.warn(
-                        f"The offline parameter is set to False, so if a new pre-trained model is available it will "
-                        "automatically be downloaded.",
-                        category=UserWarning,
-                )
+                f"The offline parameter is set to False, so if a new pre-trained model is available it will "
+                "automatically be downloaded.",
+                category=UserWarning,
+            )
             print(f"Downloading the pre-trained weights for the network {model_type}.")
 
         # Disabling progress bar since it shows up even when no files are up to date which can get confusing
-        disable_progress_bar() 
+        disable_progress_bar()
 
         snapshot_download(repo_id, cache_dir=saving_dir, local_files_only=offline)
 
@@ -96,25 +110,27 @@ def download_weights(model_type: str, saving_dir: str, verbose: bool = True, off
 
     return repo_id
 
+
 def load_version(model_type: str, cache_dir: str) -> str:
-        """
-        Method to load the local hashed version of the model as an attribute.
+    """
+    Method to load the local hashed version of the model as an attribute.
 
-        Args:
-            model_type (str): The network pretrained weights to load.
-            cache_dir (str): The path to the cached directory to use for downloading (and loading) the
-                model weights.
+    Args:
+        model_type (str): The network pretrained weights to load.
+        cache_dir (str): The path to the cached directory to use for downloading (and loading) the
+            model weights.
 
-        Return:
-            The hash of the model which corresponds to the hash of the latest commit in the local revision.
-        """
-        repo_id = MODEL_REPO_IDS[model_type]
+    Return:
+        The hash of the model which corresponds to the hash of the latest commit in the local revision.
+    """
+    repo_id = MODEL_REPO_IDS[model_type]
 
-        config_file = cached_file(repo_id, "config.json", local_files_only=True, cache_dir=cache_dir)
+    config_file = cached_file(repo_id, "config.json", local_files_only=True, cache_dir=cache_dir)
 
-        version = extract_commit_hash(config_file, None)
+    version = extract_commit_hash(config_file, None)
 
-        return version
+    return version
+
 
 def download_models(saving_cache_path: Union[Path, None] = None) -> None:
     """
@@ -155,6 +171,7 @@ def download_model(
     model_type = MODEL_MAPPING_CHOICES[model_type]
 
     download_weights(model_type, saving_cache_path, verbose=True, offline=False)
+
 
 # pylint: disable=pointless-string-statement
 FASTTEXT_COPYRIGHT_MIT_LICENSE = """

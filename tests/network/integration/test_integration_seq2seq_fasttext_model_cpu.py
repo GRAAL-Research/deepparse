@@ -48,5 +48,6 @@ class FastTextSeq2SeqIntegrationTest(Seq2SeqIntegrationTestCase):
 
         self.assert_output_is_valid_dim(predictions, output_dim=self.number_of_tags)
 
+
 if __name__ == "__main__":
     unittest.main()

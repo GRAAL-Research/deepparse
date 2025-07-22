@@ -25,7 +25,7 @@ class AddressParserPredictNewTagsTest(TestCase):
         cls.temp_dir_obj = TemporaryDirectory()
         cls.a_data_saving_dir = os.path.join(cls.temp_dir_obj.name, "data")
         os.makedirs(cls.a_data_saving_dir, exist_ok=True)
- 
+
         a_list_dataset_with_new_tags = [
             (
                 '350 rue des Lilas Ouest Quebec city Quebec G1L 1B6',
@@ -59,7 +59,6 @@ class AddressParserPredictNewTagsTest(TestCase):
             ),
         ]
         cls.training_container = ListDatasetContainer(a_list_dataset_with_new_tags)
-
 
         cls.a_fasttext_model_type = "fasttext"
         cls.a_bpemb_model_type = "bpemb"

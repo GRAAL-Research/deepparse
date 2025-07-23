@@ -184,7 +184,7 @@ class FastTextToolsTests(CaptureOutputTestCase):
         urlopen_mock,
         open_mock,
     ):
-        # pylint: disable=too-many-arguments, too-many-positional-arguments
+        # pylint: disable=too-many-arguments
         urlopen_mock().read.side_effect = self.a_response_payload
         self._capture_output()
         with urlopen_mock:
@@ -210,7 +210,7 @@ class FastTextToolsTests(CaptureOutputTestCase):
         urlopen_mock,
         open_mock,
     ):
-        # pylint: disable=too-many-arguments, too-many-positional-arguments
+        # pylint: disable=too-many-arguments
         urlopen_mock().read.side_effect = self.a_response_payload
         urlopen_mock().getheader.return_value = "2"
         self._capture_output()

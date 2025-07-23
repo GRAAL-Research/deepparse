@@ -90,11 +90,10 @@ def download_weights(model_type: str, saving_dir: str, verbose: bool = True, off
     if not offline:
         if verbose:
             warnings.warn(
-                "The offline parameter is set to False, so if a new pre-trained model is available it will "
+                f"The offline parameter is set to False, so if a new pre-trained {model_type} model is available it will "
                 "automatically be downloaded.",
                 category=UserWarning,
             )
-            print(f"Downloading the pre-trained weights for the network {model_type}.")
 
         # Disabling progress bar since it shows up even when no files are up to date which can get confusing
         disable_progress_bar()

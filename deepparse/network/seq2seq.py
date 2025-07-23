@@ -11,6 +11,7 @@ from huggingface_hub import PyTorchModelHubMixin
 from ..network.decoder import Decoder
 from ..network.encoder import Encoder
 
+
 class Seq2SeqModel(ABC, nn.Module, PyTorchModelHubMixin):
     """
     Abstract class for Seq2Seq networks.

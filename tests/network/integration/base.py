@@ -14,6 +14,7 @@ from transformers.utils.hub import cached_file
 
 from deepparse import download_weights
 
+
 class Seq2SeqIntegrationTestCase(TestCase):
     @classmethod
     def setUpClass(cls):

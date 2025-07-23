@@ -134,5 +134,6 @@ class Seq2SeqTest(TestCase):
         actual = seq2seq_model.decoder.linear.out_features
         self.assertEqual(expected, actual)
 
+
 if __name__ == "__main__":
     unittest.main()

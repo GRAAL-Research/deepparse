@@ -21,14 +21,12 @@ from fasttext.FastText import _FastText
 from deepparse.download_tools import (
     download_models,
     download_model,
-    download_weights,
     download_fasttext_embeddings,
     download_fasttext_magnitude_embeddings,
     load_fasttext_embeddings,
     _print_progress,
 )
 
-from tests.base_file_exist import FileCreationTestCase
 from tests.base_capture_output import CaptureOutputTestCase
 from tests.tools import create_file
 
@@ -186,7 +184,7 @@ class FastTextToolsTests(CaptureOutputTestCase):
         urlopen_mock,
         open_mock,
     ):
-        # pylint: disable=too-many-arguments
+        # pylint: disable=too-many-arguments, too-many-positional-arguments
         urlopen_mock().read.side_effect = self.a_response_payload
         self._capture_output()
         with urlopen_mock:
@@ -212,7 +210,7 @@ class FastTextToolsTests(CaptureOutputTestCase):
         urlopen_mock,
         open_mock,
     ):
-        # pylint: disable=too-many-arguments
+        # pylint: disable=too-many-arguments, too-many-positional-arguments
         urlopen_mock().read.side_effect = self.a_response_payload
         urlopen_mock().getheader.return_value = "2"
         self._capture_output()
@@ -469,63 +467,6 @@ class DownloadModelTests(TestCase):
 
                 downloader.assert_called()
                 downloader.assert_any_call(self.a_bpemb_model_type, self.fake_cache_dir, verbose=True, offline=False)
-
-
-class ValidationsTests(CaptureOutputTestCase, FileCreationTestCase):
-    def setUp(self) -> None:
-        self.temp_dir_obj = TemporaryDirectory()
-        self.fake_cache_path = self.temp_dir_obj.name
-        self.a_file_extension = "version"
-        self.latest_fasttext_version = "f67a0517c70a314bdde0b8440f21139d"
-        self.latest_bpemb_version = "aa32fa918494b461202157c57734c374"
-        self.a_seed = 42
-        self.verbose = False
-
-        self.a_model_type_checkpoint = "a_fake_model_type"
-        self.a_fasttext_model_type_checkpoint = "fasttext"
-        self.a_bpemb_model_type_checkpoint = "bpemb"
-
-    def tearDown(self) -> None:
-        self.temp_dir_obj.cleanup()
-
-    def create_cache_version(self, model_name, content):
-        version_file_path = os.path.join(self.fake_cache_path, model_name + ".version")
-        create_file(version_file_path, content)
-
-    # def test_givenModelWeightsToDownload_whenDownloadOk_thenWeightsAreDownloaded(self):
-    #     with patch("deepparse.download_tools.download_from_public_repository") as downloader:
-    #         download_weights(model_filename="fasttext", "./", verbose=self.verbose)
-    #
-    #         downloader.assert_any_call("fasttext", "./", "ckpt")
-    #         downloader.assert_any_call("fasttext", "./", "version")
-    #
-    #     with patch("deepparse.download_tools.download_from_public_repository") as downloader:
-    #         download_weights(model_filename="bpemb", "./", verbose=self.verbose)
-    #
-    #         downloader.assert_any_call("bpemb", "./", "ckpt")
-    #         downloader.assert_any_call("bpemb", "./", "version")
-
-    def test_givenModelFasttextWeightsToDownloadVerbose_whenDownloadOk_thenVerbose(
-        self,
-    ):
-        self._capture_output()
-        with patch("huggingface_hub.snapshot_download"):
-            download_weights(model_type="fasttext", saving_dir=self.fake_cache_path, verbose=True)
-
-        actual = self.test_out.getvalue().strip()
-        expected = "Downloading the pre-trained weights for the network fasttext."
-
-        self.assertEqual(actual, expected)
-
-    def test_givenModelBPEmbWeightsToDownloadVerbose_whenDownloadOk_thenVerbose(self):
-        self._capture_output()
-        with patch("huggingface_hub.snapshot_download"):
-            download_weights(model_type="bpemb", saving_dir=self.fake_cache_path, verbose=True)
-
-        actual = self.test_out.getvalue().strip()
-        expected = "Downloading the pre-trained weights for the network bpemb."
-
-        self.assertEqual(actual, expected)
 
 
 if __name__ == "__main__":

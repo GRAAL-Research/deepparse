@@ -5,9 +5,7 @@
 # pylint: disable=consider-using-with
 
 import os
-import pickle
 import unittest
-from tempfile import TemporaryDirectory
 from unittest import TestCase, skipIf
 
 import torch

@@ -1,9 +1,6 @@
 # pylint: disable=too-many-arguments
-
-import os
 import random
 
-# import warnings
 from abc import ABC
 from typing import Tuple, Union, List
 
@@ -13,10 +10,6 @@ from huggingface_hub import PyTorchModelHubMixin
 
 from ..network.decoder import Decoder
 from ..network.encoder import Encoder
-
-# from ..weights_tools import handle_weights_upload
-# from ..download_tools import download_weights, latest_version
-
 
 class Seq2SeqModel(ABC, nn.Module, PyTorchModelHubMixin):
     """

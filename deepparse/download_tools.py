@@ -7,16 +7,12 @@ from pathlib import Path
 from typing import Dict, Union
 from urllib.request import urlopen
 
-import requests
 from fasttext.FastText import _FastText
-from requests import HTTPError
-from urllib3.exceptions import MaxRetryError
 from huggingface_hub import hf_hub_download, snapshot_download
 from transformers.utils.hub import cached_file, extract_commit_hash
 from transformers.utils.logging import disable_progress_bar, enable_progress_bar
 
 from .bpemb_url_bug_fix import BPEmbBaseURLWrapperBugFix
-from .errors.server_error import ServerError
 
 BASE_URL = "https://graal.ift.ulaval.ca/public/deepparse/{}.{}"
 CACHE_PATH = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
@@ -94,7 +90,7 @@ def download_weights(model_type: str, saving_dir: str, verbose: bool = True, off
     if not offline:
         if verbose:
             warnings.warn(
-                f"The offline parameter is set to False, so if a new pre-trained model is available it will "
+                "The offline parameter is set to False, so if a new pre-trained model is available it will "
                 "automatically be downloaded.",
                 category=UserWarning,
             )

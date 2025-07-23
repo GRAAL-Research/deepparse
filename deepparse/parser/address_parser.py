@@ -18,8 +18,6 @@ from poutyne.framework import Experiment
 from torch.optim import SGD
 from torch.utils.data import DataLoader, Subset
 
-from deepparse.network import model_factory
-
 from . import formatted_parsed_address
 from .formatted_parsed_address import FormattedParsedAddress
 from .tools import (
@@ -120,9 +118,9 @@ class AddressParser:
             embeddings model and the model pretrained weights.
         offline (bool): Whether or not the model is an offline one, meaning you have already downloaded the pre-trained
             weights and embeddings weights in either the default Deepparse cache directory (``"~./cache/deepparse"``) or
-            the ``cache_dir`` directory. When offline is ``False``, we will download the latest model if one is available. You can use our
-            ``download_models`` CLI function to download all the requirements for a model. The default value is
-            ``False`` (not an offline parsing model).
+            the ``cache_dir`` directory. When offline is ``False``, we will download the latest model if one is
+            available. You can use our``download_models`` CLI function to download all the requirements for a model.
+            The default value is``False`` (not an offline parsing model).
 
     Note:
         For both networks, we will download the pretrained weights and embeddings in the ``.cache`` directory
@@ -1312,7 +1310,7 @@ class AddressParser:
                 if 'context has already been set' in str(e):
                     pass
                 else:
-                    raise RuntimeError("There has been an issue with the multiprocessing context initialisation")
+                    raise RuntimeError("There has been an issue with the multiprocessing context initialisation") from e
 
             warnings.warn(
                 "On MacOS system, we cannot use FastText-like models with parallelism out-of-the-box since "

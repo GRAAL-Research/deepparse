@@ -9,7 +9,7 @@ from unittest.mock import MagicMock, call, ANY
 
 from poutyne import Callback
 
-from deepparse.dataset_container import PickleDatasetContainer, ListDatasetContainer
+from deepparse.dataset_container import ListDatasetContainer
 from deepparse.errors import FastTextModelError
 from deepparse.parser import AddressParser
 from tests.parser.integration.base_retrain import AddressParserRetrainTestCase

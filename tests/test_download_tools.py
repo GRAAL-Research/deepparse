@@ -8,12 +8,9 @@ import gzip
 import os
 import unittest
 from tempfile import TemporaryDirectory
-from unittest.mock import patch, mock_open, call, MagicMock
+from unittest.mock import patch, mock_open, call
 from unittest import TestCase
-from urllib3.exceptions import MaxRetryError
 
-import requests
-from requests import HTTPError
 from gensim.models import FastText
 from gensim.test.utils import common_texts
 from gensim.models._fasttext_bin import save
@@ -21,7 +18,6 @@ from gensim.models._fasttext_bin import save
 
 from fasttext.FastText import _FastText
 
-from deepparse.errors.server_error import ServerError
 from deepparse.download_tools import (
     download_models,
     download_model,

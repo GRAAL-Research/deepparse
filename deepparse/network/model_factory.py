@@ -1,7 +1,6 @@
 # pylint: disable=too-many-arguments
 from typing import Dict, Tuple, Union
 
-from fasttext.FastText import load_model
 import torch
 
 from .model_loader import ModelLoader
@@ -48,7 +47,8 @@ class ModelFactory:
             verbose (bool): Turn on/off the verbosity of the model. The default value is ``True``.
 
         Return:
-            A tuple (``x``, ``y``) where ``x`` is a :class:`~Seq2SeqModel` and ``y`` is a string representing the model's version.
+            A tuple (``x``, ``y``) where ``x`` is a :class:`~Seq2SeqModel` and ``y`` is a string representing
+            the model's version.
         """
 
         if "fasttext" in model_type or "fasttext-light" in model_type:

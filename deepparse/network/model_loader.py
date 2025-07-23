@@ -29,7 +29,8 @@ class ModelLoader:
             offline (bool): Whether the model is an offline or an online.
             verbose (bool): Turn on/off the verbosity of the model. The default value is ``True``.
         Return:
-            A tuple (``x``, ``y``) where ``x`` is a :class:`~Seq2SeqModel` and ``y`` is a string representing the model's version.
+            A tuple (``x``, ``y``) where ``x`` is a :class:`~Seq2SeqModel` and ``y`` is a string
+            representing the model's version.
 
         """
 
@@ -53,7 +54,8 @@ class ModelLoader:
             device (~torch.device): The device to use for the prediction.
 
         Return:
-            A tuple (``x``, ``y``) where ``x`` is a :class:`~Seq2SeqModel` and ``y`` is a string representing the model's version.
+            A tuple (``x``, ``y``) where ``x`` is a :class:`~Seq2SeqModel` and ``y`` is a string
+            representing the model's version.
 
         """
         all_layers_params = handle_weights_upload(path_to_model_to_upload=path_to_model_torch_archive, device=device)

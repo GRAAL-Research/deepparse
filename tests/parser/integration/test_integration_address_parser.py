@@ -9,7 +9,6 @@ from collections import OrderedDict
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest import skipIf
-from unittest.mock import patch
 
 import torch
 

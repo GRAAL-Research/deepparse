@@ -5,7 +5,6 @@
 # pylint: disable=consider-using-with
 
 import os
-import pickle
 from tempfile import TemporaryDirectory
 from unittest import TestCase
 
@@ -13,8 +12,7 @@ import torch
 import safetensors
 from transformers.utils.hub import cached_file
 
-from deepparse import download_weights, load_version
-
+from deepparse import download_weights
 
 class Seq2SeqIntegrationTestCase(TestCase):
     @classmethod

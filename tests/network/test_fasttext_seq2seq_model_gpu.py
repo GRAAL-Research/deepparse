@@ -27,57 +27,6 @@ class FasttextSeq2SeqGPUTest(Seq2SeqTestCase):
         cls.a_target_vector = torch.tensor([[0, 1, 1, 4, 5, 8], [1, 0, 3, 8, 0, 0]], device=cls.a_torch_device)
         cls.a_transpose_target_vector = cls.a_target_vector.transpose(0, 1)
 
-    # TODO: MODEL LOADING LOGIC WILL BE MOVED TO MODELFACTORY !!!!!!!!!!!
-
-    # @patch("deepparse.weights_tools.torch")
-    # @patch("os.path.isfile")
-    # @patch("deepparse.network.seq2seq.torch")
-    # @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
-    # def test_givenNotLocalWeights_whenInstantiatingAFastTextSeq2SeqModel_thenShouldDownloadWeights(
-    #     self, load_state_dict_mock, torch_mock, isfile_mock, torch_load_mock
-    # ):
-    #     isfile_mock.return_value = False
-    #     with patch("deepparse.network.seq2seq.download_weights") as download_weights_mock:
-    #         FastTextSeq2SeqModel(
-    #              output_size=self.output_size
-    #         )
-    #         download_weights_mock.assert_called_with(self.model_type,  verbose=self.verbose)
-
-    # @patch("deepparse.weights_tools.torch")
-    # @patch("deepparse.network.seq2seq.latest_version")
-    # @patch("os.path.isfile")
-    # @patch("deepparse.network.seq2seq.torch")
-    # @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
-    # def test_givenLocalWeightsNotLastVersion_whenInstantiatingAFastTextSeq2SeqModel_thenShouldDownloadWeights(
-    #     self, load_state_dict_mock, torch_mock, isfile_mock, last_version_mock, torch_load_mock
-    # ):
-    #     isfile_mock.return_value = True
-    #     last_version_mock.return_value = False
-    #     with patch("deepparse.network.seq2seq.download_weights") as download_weights_mock:
-    #         FastTextSeq2SeqModel(
-    #              output_size=self.output_size
-    #         )
-    #         download_weights_mock.assert_called_with(self.model_type,  verbose=self.verbose)
-
-    # @patch("deepparse.weights_tools.torch")
-    # @patch("deepparse.network.seq2seq.Seq2SeqModel.load_state_dict")
-    # def test_givenRetrainedWeights_whenInstantiatingAFastTextSeq2SeqModel_thenShouldUseRetrainedWeights(
-    #     self, load_state_dict_mock, torch_mock
-    # ):
-    #     all_layers_params = MagicMock()
-    #     torch_mock.load.return_value = all_layers_params
-    #     FastTextSeq2SeqModel(
-    #
-    #         output_size=self.output_size,
-    #         verbose=self.verbose,
-    #         path_to_retrained_model=self.a_path_to_retrained_model,
-    #     )
-
-    #     torch_load_call = [call.load(self.a_path_to_retrained_model, map_location=self.a_torch_device)]
-    #     torch_mock.assert_has_calls(torch_load_call)
-
-    #     load_state_dict_mock.assert_called()
-
     @patch("deepparse.weights_tools.torch")
     @patch("deepparse.network.seq2seq.Encoder")
     @patch("os.path.isfile")

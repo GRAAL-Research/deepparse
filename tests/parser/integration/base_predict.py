@@ -11,7 +11,7 @@ from unittest import TestCase
 
 import torch
 
-from deepparse.dataset_container import PickleDatasetContainer, DatasetContainer, ListDatasetContainer
+from deepparse.dataset_container import DatasetContainer, ListDatasetContainer
 from deepparse.parser import AddressParser, FormattedParsedAddress
 
 

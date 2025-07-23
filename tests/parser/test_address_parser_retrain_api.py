@@ -1403,9 +1403,9 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         data_loader_mock,
         torch_save_mock,
     ):
+        # pylint: disable=too-many-locals, too-many-branches
         model_factory_mock().create.return_value = self.model_mock, self.a_model_version
 
-        # pylint: disable=too-many-locals, too-many-branches
         self.address_parser = AddressParser(
             model_type=self.a_fasttext_model_type,
             device=self.a_device,
@@ -1702,7 +1702,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         self, data_processor_factory_mock, vectorizer_factory_mock, embeddings_model_factory_mock
     ):
         num_workers_gt_0 = 1
-        with patch("deepparse.parser.address_parser.ModelFactory"):
+        with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
             model_factory_mock().create.return_value = self.model_mock, self.a_model_version
 
             address_parser = AddressParser(

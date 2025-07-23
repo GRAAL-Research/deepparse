@@ -39,7 +39,7 @@ class AddressParserTest(AddressParserPredictTestCase):
         cls.a_cpu_device = "cpu"
         cls.a_cpu_torch_device = device(cls.a_cpu_device)
         cls.a_gpu_device = 0
-        cls.a_gpu_torch_device = device(cls.a_gpu_device)
+        cls.a_gpu_torch_device = device(cls.a_gpu_device) if torch.cuda.is_available() else None
         cls.verbose = False
         cls.number_tags = 9
 

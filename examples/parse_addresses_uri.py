@@ -1,3 +1,16 @@
+# pylint: skip-file
+###################
+"""
+IMPORTANT:
+THE EXAMPLE IN THIS FILE IS CURRENTLY NOT FUNCTIONAL
+BECAUSE THE `download_from_public_repository` FUNCTION
+NO LONGER EXISTS. WE HAD TO MAKE A QUICK RELEASE TO
+REMEDIATE AN ISSUE IN OUR PREVIOUS STORAGE SOLUTION.
+THIS WILL BE FIXED IN A FUTURE RELEASE.
+
+IN THE MEAN TIME IF YOU NEED ANY CLARIFICATION
+REGARDING THE PACKAGE PLEASE FEEL FREE TO OPEN AN ISSUE.
+"""
 from deepparse import download_from_public_repository
 from deepparse.dataset_container import PickleDatasetContainer
 from deepparse.parser import AddressParser

@@ -20,7 +20,7 @@ from deepparse.parser.tools import (
     get_files_in_directory,
     pretrained_parser_in_directory,
     handle_model_name,
-    infer_model_type,
+    infer_retrained_model_type,
 )
 from tests.parser.base import PretrainedWeightsBase
 from tests.tools import create_file
@@ -405,84 +405,6 @@ class ToolsTests(PretrainedWeightsBase):
         os.environ["TEST_LEVEL"] == "unit",
         "Cannot run for unit tests since download is too long.",
     )
-    def test_givenAModelTypeToInfer_whenNotRealRetrainFastText_thenReturnFasttext(self):
-        path_to_retrained_model = os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "fasttext.ckpt")
-        checkpoint_weights = torch.load(path_to_retrained_model, map_location="cpu")
-        attention_mechanism = False
-
-        expected_inferred_model_type = "fasttext"
-        expected_attention_mechanism = False
-
-        actual_inferred_model_type, actual_inferred_attention_mechanism = infer_model_type(
-            checkpoint_weights, attention_mechanism
-        )
-
-        self.assertEqual(expected_inferred_model_type, actual_inferred_model_type)
-        self.assertEqual(expected_attention_mechanism, actual_inferred_attention_mechanism)
-
-    @skipIf(
-        os.environ["TEST_LEVEL"] == "unit",
-        "Cannot run for unit tests since download is too long.",
-    )
-    def test_givenAModelTypeToInfer_whenNotRealRetrainFastTextAttention_thenReturnAttention(self):
-        path_to_retrained_model = os.path.join(
-            os.path.expanduser("~"), ".cache", "deepparse", "fasttext_attention.ckpt"
-        )
-        checkpoint_weights = torch.load(path_to_retrained_model, map_location="cpu")
-        attention_mechanism = False
-
-        expected_inferred_model_type = "fasttext"
-        expected_attention_mechanism = True
-
-        actual_inferred_model_type, actual_inferred_attention_mechanism = infer_model_type(
-            checkpoint_weights, attention_mechanism
-        )
-
-        self.assertEqual(expected_inferred_model_type, actual_inferred_model_type)
-        self.assertEqual(expected_attention_mechanism, actual_inferred_attention_mechanism)
-
-    @skipIf(
-        os.environ["TEST_LEVEL"] == "unit",
-        "Cannot run for unit tests since download is too long.",
-    )
-    def test_givenAModelTypeToInfer_whenNotRealRetrainBPEmb_thenReturnBPEmb(self):
-        path_to_retrained_model = os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "bpemb.ckpt")
-        checkpoint_weights = torch.load(path_to_retrained_model, map_location="cpu")
-        attention_mechanism = False
-
-        expected_inferred_model_type = "bpemb"
-        expected_attention_mechanism = False
-
-        actual_inferred_model_type, actual_inferred_attention_mechanism = infer_model_type(
-            checkpoint_weights, attention_mechanism
-        )
-
-        self.assertEqual(expected_inferred_model_type, actual_inferred_model_type)
-        self.assertEqual(expected_attention_mechanism, actual_inferred_attention_mechanism)
-
-    @skipIf(
-        os.environ["TEST_LEVEL"] == "unit",
-        "Cannot run for unit tests since download is too long.",
-    )
-    def test_givenAModelTypeToInfer_whenNotRealRetrainBPEmbAttention_thenReturnAttention(self):
-        path_to_retrained_model = os.path.join(os.path.expanduser("~"), ".cache", "deepparse", "bpemb_attention.ckpt")
-        checkpoint_weights = torch.load(path_to_retrained_model, map_location="cpu")
-        attention_mechanism = False
-
-        expected_inferred_model_type = "bpemb"
-        expected_attention_mechanism = True
-
-        actual_inferred_model_type, actual_inferred_attention_mechanism = infer_model_type(
-            checkpoint_weights, attention_mechanism
-        )
-
-        self.assertEqual(expected_inferred_model_type, actual_inferred_model_type)
-        self.assertEqual(expected_attention_mechanism, actual_inferred_attention_mechanism)
-
-    @skipIf(
-        os.environ["TEST_LEVEL"] == "unit",
-        "Cannot run for unit tests since download is too long.",
-    )
     def test_givenAModelTypeToInfer_whenRealRetrainFastText_thenReturnFastText(self):
         self.prepare_pre_trained_weights()
 
@@ -492,7 +414,7 @@ class ToolsTests(PretrainedWeightsBase):
 
         expected_inferred_model_type = "fasttext"
 
-        actual_inferred_model_type, _ = infer_model_type(checkpoint_weights, attention_mechanism)
+        actual_inferred_model_type, _ = infer_retrained_model_type(checkpoint_weights, attention_mechanism)
 
         self.assertEqual(expected_inferred_model_type, actual_inferred_model_type)
 
@@ -509,7 +431,7 @@ class ToolsTests(PretrainedWeightsBase):
 
         expected_inferred_model_type = "bpemb"
 
-        actual_inferred_model_type, _ = infer_model_type(checkpoint_weights, attention_mechanism)
+        actual_inferred_model_type, _ = infer_retrained_model_type(checkpoint_weights, attention_mechanism)
 
         self.assertEqual(expected_inferred_model_type, actual_inferred_model_type)
 

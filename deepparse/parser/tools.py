@@ -107,7 +107,7 @@ def handle_model_name(model_type: str, attention_mechanism: bool) -> Tuple[str, 
     return model_type, formatted_name
 
 
-def infer_model_type(checkpoint_weights: OrderedDict, attention_mechanism: bool) -> Tuple[str, bool]:
+def infer_retrained_model_type(checkpoint_weights: OrderedDict, attention_mechanism: bool) -> Tuple[str, bool]:
     """
     Function to infer the model type using the weights' matrix.
     We first try to use the "model_type" key added by our retrain process.

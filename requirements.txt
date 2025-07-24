@@ -11,3 +11,5 @@ fasttext-wheel
 pandas
 urllib3
 cloudpathlib[s3, gs, azure]
+transformers
+huggingface_hub

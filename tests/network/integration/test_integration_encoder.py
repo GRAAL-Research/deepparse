@@ -5,14 +5,11 @@
 # pylint: disable=consider-using-with
 
 import os
-import pickle
 import unittest
-from tempfile import TemporaryDirectory
 from unittest import TestCase, skipIf
 
 import torch
 
-from deepparse import download_from_public_repository
 from deepparse.network import Encoder
 
 
@@ -26,25 +23,13 @@ class EncoderCase(TestCase):
         cls.hidden_size = 1024
         cls.num_layers = 1
         cls.a_batch_size = 2
-
-        cls.temp_dir_obj = TemporaryDirectory()
-        cls.weights_dir = os.path.join(cls.temp_dir_obj.name, "weights")
-        download_from_public_repository(
-            file_name="to_predict_fasttext",
-            saving_dir=cls.weights_dir,
-            file_extension="p",
-        )
-
-    @classmethod
-    def tearDownClass(cls) -> None:
-        cls.temp_dir_obj.cleanup()
+        cls.sequence_len = 6
 
     def setUp_encoder(self, device: torch.device) -> None:
         self.encoder = Encoder(self.input_size_dim, self.hidden_size, self.num_layers)
         self.encoder.to(device)  # we mount it into the device
 
-        with open(os.path.join(self.weights_dir, "to_predict_fasttext.p"), "rb") as file:
-            self.to_predict_tensor = pickle.load(file)
+        self.to_predict_tensor = torch.rand((self.a_batch_size, self.sequence_len, self.input_size_dim))
         self.to_predict_tensor = self.to_predict_tensor.to(device)
 
         self.a_lengths_list = [6, 4]

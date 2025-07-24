@@ -6,3 +6,4 @@ from .bpemb_seq2seq import *
 from .fasttext_seq2seq import *
 from .seq2seq import *
 from .model_factory import *
+from .model_loader import *

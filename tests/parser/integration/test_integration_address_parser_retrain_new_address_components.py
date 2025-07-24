@@ -9,8 +9,7 @@ from unittest.mock import MagicMock, call, ANY
 
 from poutyne import Callback
 
-from deepparse import download_from_public_repository
-from deepparse.dataset_container import PickleDatasetContainer
+from deepparse.dataset_container import ListDatasetContainer
 from deepparse.errors import FastTextModelError
 from deepparse.parser import AddressParser
 from tests.parser.integration.base_retrain import AddressParserRetrainTestCase
@@ -22,13 +21,39 @@ class AddressParserIntegrationTestNewAddressComponents(AddressParserRetrainTestC
     def setUpClass(cls):
         super(AddressParserIntegrationTestNewAddressComponents, cls).setUpClass()
 
-        file_extension = "p"
-        training_dataset_name = "test_sample_data_new_prediction_tags"
-        download_from_public_repository(training_dataset_name, cls.a_data_saving_dir, file_extension=file_extension)
-
-        cls.new_prediction_data_container = PickleDatasetContainer(
-            os.path.join(cls.a_data_saving_dir, training_dataset_name + "." + file_extension)
-        )
+        a_list_dataset_with_new_tags = [
+            (
+                '350 rue des Lilas Ouest Quebec city Quebec G1L 1B6',
+                [
+                    'ATag',
+                    'ATag',
+                    'ATag',
+                    'ATag',
+                    'AnotherTag',
+                    'AnotherTag',
+                    'AnotherTag',
+                    'ALastTag',
+                    'ALastTag',
+                    'ALastTag',
+                ],
+            ),
+            (
+                '350 rue des Lilas Ouest Quebec city Quebec G1L 1B6',
+                [
+                    'ATag',
+                    'ATag',
+                    'ATag',
+                    'ATag',
+                    'AnotherTag',
+                    'AnotherTag',
+                    'AnotherTag',
+                    'ALastTag',
+                    'ALastTag',
+                    'ALastTag',
+                ],
+            ),
+        ]
+        cls.new_prediction_data_container = ListDatasetContainer(a_list_dataset_with_new_tags)
 
     # Retrain API tests
     def test_givenAFasttextAddressParser_whenRetrainNewTags_thenTrainingOccur(self):

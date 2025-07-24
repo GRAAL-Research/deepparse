@@ -5,25 +5,17 @@
 # pylint: disable=consider-using-with
 
 import os
-import pickle
 import unittest
-from tempfile import TemporaryDirectory
 from unittest import TestCase, skipIf
 
 import torch
 
-from deepparse import download_from_public_repository
 from deepparse.network import Decoder
 
 
 class DecoderCase(TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.temp_dir_obj = TemporaryDirectory()
-        cls.weights_dir = os.path.join(cls.temp_dir_obj.name, "./weights")
-
-        download_from_public_repository(file_name="decoder_hidden", saving_dir=cls.weights_dir, file_extension="p")
-
         cls.a_torch_device = torch.device("cuda:0")
         cls.a_cpu_device = torch.device("cpu")
 
@@ -32,10 +24,6 @@ class DecoderCase(TestCase):
         cls.num_layers = 1
         cls.a_batch_size = 2
         cls.sequence_len = 1
-
-    @classmethod
-    def tearDownClass(cls) -> None:
-        cls.temp_dir_obj.cleanup()
 
     def setUp_encoder_decoder(self, output_size: int, device: torch.device, attention_mechanism) -> None:
         self.decoder = Decoder(
@@ -52,11 +40,9 @@ class DecoderCase(TestCase):
         self.decoder_input = torch.tensor([[[-1], [-1]]], device=device)
         self.a_lengths_list = [self.sequence_len, self.sequence_len]
 
-        with open(os.path.join(self.weights_dir, "decoder_hidden.p"), "rb") as file:
-            self.decoder_hidden_tensor = pickle.load(file)
         self.decoder_hidden_tensor = (
-            self.decoder_hidden_tensor[0].to(device),
-            self.decoder_hidden_tensor[1].to(device),
+            torch.rand((self.num_layers, self.a_batch_size, self.hidden_size)).to(device),
+            torch.rand((self.num_layers, self.a_batch_size, self.hidden_size)).to(device),
         )
         self.decoder_output = torch.rand((1, self.sequence_len, self.hidden_size), device=device)
 

@@ -25,7 +25,7 @@ from .tools import (
     get_files_in_directory,
     handle_model_name,
     indices_splitting,
-    infer_model_type,
+    infer_retrained_model_type,
     load_tuple_to_device,
     pretrained_parser_in_directory,
     validate_if_new_prediction_tags,
@@ -38,7 +38,7 @@ from ..download_tools import CACHE_PATH
 from ..embeddings_models import EmbeddingsModelFactory
 from ..errors import FastTextModelError
 from ..metrics import nll_loss, accuracy
-from ..network import ModelFactory
+from ..network import ModelFactory, ModelLoader
 from ..pre_processing import coma_cleaning, lower_cleaning, hyphen_cleaning
 from ..pre_processing import trailing_whitespace_cleaning, double_whitespaces_cleaning
 from ..pre_processing.pre_processor_list import PreProcessorList
@@ -118,9 +118,9 @@ class AddressParser:
             embeddings model and the model pretrained weights.
         offline (bool): Whether or not the model is an offline one, meaning you have already downloaded the pre-trained
             weights and embeddings weights in either the default Deepparse cache directory (``"~./cache/deepparse"``) or
-            the ``cache_dir`` directory. When offline, we will not verify if the model is the latest. You can use our
-            ``download_models`` CLI function to download all the requirements for a model. The default value is
-            ``False`` (not an offline parsing model).
+            the ``cache_dir`` directory. When offline is ``False``, we will download the latest model if one is
+            available. You can use our``download_models`` CLI function to download all the requirements for a model.
+            The default value is``False`` (not an offline parsing model).
 
     Note:
         For both networks, we will download the pretrained weights and embeddings in the ``.cache`` directory
@@ -272,7 +272,7 @@ class AddressParser:
             named_parser = checkpoint_weights.get("named_parser")
 
             # We "infer" the model type, thus we also had to handle the attention_mechanism bool
-            model_type, attention_mechanism = infer_model_type(
+            model_type, attention_mechanism = infer_retrained_model_type(
                 checkpoint_weights, attention_mechanism=attention_mechanism
             )
 
@@ -306,10 +306,6 @@ class AddressParser:
         ``"FastText"``.
         """
         return self._model_type_formatted
-
-    @property
-    def version(self):
-        return self.model.version
 
     def __call__(
         self,
@@ -755,12 +751,13 @@ class AddressParser:
 
         if seq2seq_params is not None:
             # Handle seq2seq params
-            # We set the flag to use the pretrained weights to false since we train new ones
-            seq2seq_params.update({"pre_trained_weights": False})
-
             model_factory_dict.update({"seq2seq_kwargs": seq2seq_params})
+
             # We set verbose to false since the model is reloaded
-            self._setup_model(verbose=False, path_to_retrained_model=None, **model_factory_dict)
+            # We set the flag to use the pretrained weights to false since we train new ones
+            self._setup_model(
+                verbose=False, path_to_retrained_model=None, pre_trained_weights=False, **model_factory_dict
+            )
 
         callbacks = [] if callbacks is None else callbacks
         train_generator, valid_generator = self._create_training_data_generator(
@@ -841,9 +838,11 @@ class AddressParser:
             )
             file_path = os.path.join(logging_path, file_name)
 
+            self.version = "Finetuned_" + self.version
             torch_save = {
                 "address_tagger_model": exp.model.network.state_dict(),
                 "model_type": self.model_type,
+                "version": self.version,
             }
 
             if seq2seq_params is not None:
@@ -1138,6 +1137,7 @@ class AddressParser:
         self,
         verbose: bool,
         path_to_retrained_model: Union[str, None] = None,
+        pre_trained_weights: bool = True,
         prediction_layer_len: int = 9,
         attention_mechanism=False,
         seq2seq_kwargs: Union[dict, None] = None,
@@ -1155,13 +1155,14 @@ class AddressParser:
             # Set to default cache_path value
             cache_dir = CACHE_PATH
 
-        self.model = ModelFactory().create(
+        model_factory = ModelFactory(ModelLoader(cache_dir=cache_dir))
+        self.model, self.version = model_factory.create(
             model_type=self.model_type,
-            cache_dir=cache_dir,
             device=self.device,
             output_size=prediction_layer_len,
             attention_mechanism=attention_mechanism,
             path_to_retrained_model=path_to_retrained_model,
+            pre_trained_weights=pre_trained_weights,
             offline=offline,
             verbose=verbose,
             **seq2seq_kwargs,
@@ -1303,7 +1304,14 @@ class AddressParser:
             )
 
         if system() == "Darwin" and "fasttext" in self.model_type and num_workers > 0:
-            torch.multiprocessing.set_start_method('fork')
+            try:
+                torch.multiprocessing.set_start_method('fork')
+            except RuntimeError as e:
+                if 'context has already been set' in str(e):
+                    pass
+                else:
+                    raise RuntimeError("There has been an issue with the multiprocessing context initialisation") from e
+
             warnings.warn(
                 "On MacOS system, we cannot use FastText-like models with parallelism out-of-the-box since "
                 "FastText objects are not pickleable with the parallelism process used by default by MacOS. "

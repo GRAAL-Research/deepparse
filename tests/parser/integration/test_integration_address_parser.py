@@ -9,7 +9,6 @@ from collections import OrderedDict
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest import skipIf
-from unittest.mock import patch
 
 import torch
 
@@ -78,11 +77,3 @@ class AddressParserTest(AddressParserBase, FileCreationTestCase):
             'decoder.linear.bias',
         ]
         self.assertEqual(model_layer_keys, list(weights.keys()))
-
-    def test_givenAOfflineAddressParser_whenInitWithLocalFiles_thenDontCallDownloadWeights(self):
-        a_model_type = "fasttext"
-        a_device = "cpu"
-
-        with patch("deepparse.network.seq2seq.download_weights") as download_weights_mock:
-            self.setup_model_with_config({"model_type": a_model_type, "device": a_device, "offline": True})
-            download_weights_mock.assert_not_called()

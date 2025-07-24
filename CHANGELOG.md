@@ -364,4 +364,6 @@
 
 - Update Gensim version in setup to allow for the installation of recent Scipy versions.
 
-## dev
+## 0.9.14
+
+- Switch model weights hosting to hugging face

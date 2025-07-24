@@ -81,6 +81,8 @@ def main():
             "pandas",
             "urllib3",
             "cloudpathlib[s3, gs, azure]",
+            "transformers",
+            "huggingface_hub",
         ],
         python_requires=">=3.8",
         description="A library for parsing multinational street addresses using deep learning.",

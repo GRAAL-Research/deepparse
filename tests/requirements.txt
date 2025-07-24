@@ -6,3 +6,4 @@ pytest-env
 pytest-mock
 pytest-xdist[psutil]
 tensorboard
+safetensors

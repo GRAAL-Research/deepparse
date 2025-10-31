@@ -19,10 +19,9 @@
 [![pr welcome](https://img.shields.io/badge/PR-Welcome-%23FF8300.svg?)](https://img.shields.io/badge/PR-Welcome-%23FF8300.svg?)
 [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](http://www.gnu.org/licenses/lgpl-3.0)
 [![DOI](https://zenodo.org/badge/276474742.svg)](https://zenodo.org/badge/latestdoi/276474742)
+[![Hugging Face Download](https://img.shields.io/badge/Hugging%20Face-FFD21E?logo=huggingface&logoColor=000)](https://huggingface.co/deepparse)
 
 [![Download](https://img.shields.io/badge/Download%20Dataset-blue?style=for-the-badge&logo=download)](https://github.com/GRAAL-Research/deepparse-address-data)
-
-[![Rate on Openbase](https://badges.openbase.com/python/rating/deepparse.svg)](https://openbase.com/python/deepparse?utm_source=embedded&utm_medium=badge&utm_campaign=rate-badge)
 </div>
 
 ## Here is Deepparse.

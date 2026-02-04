@@ -1088,6 +1088,10 @@ class AddressParser:
                         raise ValueError("Device should not be a negative number.")
                 else:
                     raise ValueError("Device should be a string, an int or a torch device.")
+            elif isinstance(device, torch.device):
+                self.device = device
+                # Not sure if pin memory would work on other libraries
+                self.pin_memory = False
             else:
                 warnings.warn("No CUDA device detected, device will be set to 'CPU'.", category=UserWarning)
                 self.device = torch.device("cpu")

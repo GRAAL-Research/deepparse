@@ -371,7 +371,7 @@
 ## 0.10.0
 
 - **Breaking change**: Drop Python 3.8 and 3.9 support. Minimum required version is now Python 3.10.
-- Add Python 3.12 support.
+- Add Python 3.12, 3.13, and 3.14 support.
 - Add compatibility with Intel GPUs and other Torch acceleration devices.
 - Remove `numpy<2.0.0` version cap to support NumPy 2.x.
 - Bump pinned dependency versions for Python 3.12+ compatibility (unpin `uvicorn`, `python-decouple`, `pylint-django`, `pre-commit`, `pycountry`).

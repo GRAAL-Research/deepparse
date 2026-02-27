@@ -1,6 +1,6 @@
 torch
 bpemb
-numpy<2.0.0
+numpy
 scipy
 requests
 pymagnitude-light

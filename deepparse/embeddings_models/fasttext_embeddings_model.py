@@ -1,7 +1,7 @@
 import platform
 
 from gensim.models.fasttext import load_facebook_vectors
-from numpy.core.multiarray import ndarray
+from numpy import ndarray
 
 from .. import load_fasttext_embeddings
 from .embeddings_model import EmbeddingsModel

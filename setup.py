@@ -67,7 +67,7 @@ def main():
         ],
         packages=packages,
         install_requires=[
-            "numpy<2.0.0",
+            "numpy",
             "torch",
             "bpemb",
             "scipy",

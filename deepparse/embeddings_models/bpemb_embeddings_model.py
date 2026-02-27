@@ -3,7 +3,7 @@ import warnings
 from pathlib import Path
 
 import requests
-from numpy.core.multiarray import ndarray
+from numpy import ndarray
 from urllib3.exceptions import InsecureRequestWarning
 
 from ..bpemb_url_bug_fix import BPEmbBaseURLWrapperBugFix

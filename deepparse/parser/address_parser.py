@@ -1076,31 +1076,27 @@ class AddressParser:
         if device == "cpu":
             self.device = torch.device("cpu")
             self.pin_memory = False
-        else:
-            if torch.cuda.is_available():
-                self.pin_memory = True
-                if isinstance(device, torch.device):
-                    self.device = device
-                elif isinstance(device, str):
-                    if re.fullmatch(r"cuda:\d+", device.lower()):
-                        self.device = torch.device(device)
-                    else:
-                        raise ValueError("String value should follow the pattern 'cuda:[int]'.")
-                elif isinstance(device, int):
-                    if device >= 0:
-                        self.device = torch.device(f"cuda:{device}")
-                    else:
-                        raise ValueError("Device should not be a negative number.")
+        elif isinstance(device, torch.device):
+            self.device = device
+            self.pin_memory = torch.cuda.is_available() and device.type == "cuda"
+        elif torch.cuda.is_available():
+            self.pin_memory = True
+            if isinstance(device, str):
+                if re.fullmatch(r"cuda:\d+", device.lower()):
+                    self.device = torch.device(device)
                 else:
-                    raise ValueError("Device should be a string, an int or a torch device.")
-            elif isinstance(device, torch.device):
-                self.device = device
-                # Not sure if pin memory would work on other libraries
-                self.pin_memory = False
+                    raise ValueError("String value should follow the pattern 'cuda:[int]'.")
+            elif isinstance(device, int):
+                if device >= 0:
+                    self.device = torch.device(f"cuda:{device}")
+                else:
+                    raise ValueError("Device should not be a negative number.")
             else:
-                warnings.warn("No CUDA device detected, device will be set to 'CPU'.", category=UserWarning)
-                self.device = torch.device("cpu")
-                self.pin_memory = False
+                raise ValueError("Device should be a string, an int or a torch device.")
+        else:
+            warnings.warn("No CUDA device detected, device will be set to 'CPU'.", category=UserWarning)
+            self.device = torch.device("cpu")
+            self.pin_memory = False
 
     def _create_training_data_generator(
         self,

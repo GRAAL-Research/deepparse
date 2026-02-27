@@ -3,9 +3,8 @@ from typing import Dict, Tuple, Union
 
 import torch
 
+from . import BPEmbSeq2SeqModel, FastTextSeq2SeqModel, Seq2SeqModel
 from .model_loader import ModelLoader
-
-from . import FastTextSeq2SeqModel, BPEmbSeq2SeqModel, Seq2SeqModel
 
 
 class ModelFactory:

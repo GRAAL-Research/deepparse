@@ -1,7 +1,7 @@
 # pylint: disable=too-many-public-methods
 import unittest
 from unittest import TestCase
-from unittest.mock import MagicMock, patch, call
+from unittest.mock import MagicMock, call, patch
 
 from cloudpathlib import S3Path
 

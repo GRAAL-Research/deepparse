@@ -9,9 +9,9 @@ from unittest.mock import patch
 
 from fasttext.FastText import _FastText
 from gensim.models import FastText
-from gensim.test.utils import common_texts
 from gensim.models._fasttext_bin import save
 from gensim.models.fasttext import FastTextKeyedVectors
+from gensim.test.utils import common_texts
 from torch.utils.data import DataLoader
 
 from deepparse.embeddings_models import FastTextEmbeddingsModel

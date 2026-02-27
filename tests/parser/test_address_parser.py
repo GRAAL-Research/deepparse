@@ -14,7 +14,7 @@ import os
 import unittest
 from tempfile import TemporaryDirectory
 from unittest import skipIf
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
 import torch
 from torch import device

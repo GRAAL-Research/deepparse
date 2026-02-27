@@ -2,7 +2,7 @@ import unittest
 from unittest import TestCase
 from unittest.mock import Mock
 
-from deepparse.network import ModelFactory, FastTextSeq2SeqModel, BPEmbSeq2SeqModel
+from deepparse.network import BPEmbSeq2SeqModel, FastTextSeq2SeqModel, ModelFactory
 
 
 class ModelFactoryTest(TestCase):

@@ -2,9 +2,9 @@ from typing import Tuple
 
 import torch
 
-from . import Seq2SeqModel
 from ..download_tools import download_weights, load_version
 from ..weights_tools import handle_weights_upload
+from . import Seq2SeqModel
 
 
 class ModelLoader:

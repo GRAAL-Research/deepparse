@@ -1,6 +1,7 @@
 """Sentry configuration."""
 
 from importlib.metadata import version as get_version
+
 import sentry_sdk
 from decouple import config
 

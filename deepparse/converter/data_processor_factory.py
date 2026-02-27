@@ -1,5 +1,10 @@
-from . import DataPadder, TagsConverter, DataProcessor
-from ..vectorizer import Vectorizer, BPEmbVectorizer, FastTextVectorizer, MagnitudeVectorizer
+from ..vectorizer import (
+    BPEmbVectorizer,
+    FastTextVectorizer,
+    MagnitudeVectorizer,
+    Vectorizer,
+)
+from . import DataPadder, DataProcessor, TagsConverter
 
 
 class DataProcessorFactory:

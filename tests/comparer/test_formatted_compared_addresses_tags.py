@@ -3,7 +3,9 @@
 import unittest
 from unittest import TestCase
 
-from deepparse.comparer.formatted_compared_addresses_tags import FormattedComparedAddressesTags
+from deepparse.comparer.formatted_compared_addresses_tags import (
+    FormattedComparedAddressesTags,
+)
 from deepparse.parser import FormattedParsedAddress
 
 

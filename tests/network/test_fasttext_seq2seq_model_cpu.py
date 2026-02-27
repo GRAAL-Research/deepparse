@@ -8,7 +8,7 @@
 # pylint: disable=unnecessary-dunder-call
 
 import unittest
-from unittest.mock import patch, call, MagicMock
+from unittest.mock import MagicMock, call, patch
 
 import torch
 

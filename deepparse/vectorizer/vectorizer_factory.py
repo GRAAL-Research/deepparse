@@ -1,8 +1,8 @@
 from ..embeddings_models import (
     BPEmbEmbeddingsModel,
+    EmbeddingsModel,
     FastTextEmbeddingsModel,
     MagnitudeEmbeddingsModel,
-    EmbeddingsModel,
 )
 from . import BPEmbVectorizer, FastTextVectorizer, MagnitudeVectorizer, Vectorizer
 

@@ -1,5 +1,10 @@
-from . import BPEmbEmbeddingsModel, FastTextEmbeddingsModel, MagnitudeEmbeddingsModel, EmbeddingsModel
 from .. import download_fasttext_embeddings, download_fasttext_magnitude_embeddings
+from . import (
+    BPEmbEmbeddingsModel,
+    EmbeddingsModel,
+    FastTextEmbeddingsModel,
+    MagnitudeEmbeddingsModel,
+)
 
 
 class EmbeddingsModelFactory:

@@ -1,7 +1,7 @@
 import platform
 import unittest
 from unittest import TestCase, skipIf
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
 from deepparse.embeddings_models import FastTextEmbeddingsModel
 

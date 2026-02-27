@@ -2,8 +2,8 @@ from typing import List
 
 from numpy import ndarray
 
-from .vectorizer import Vectorizer
 from .. import validate_data_to_parse
+from .vectorizer import Vectorizer
 
 
 class MagnitudeVectorizer(Vectorizer):

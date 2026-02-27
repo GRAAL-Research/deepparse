@@ -5,9 +5,9 @@
 # pylint: disable=consider-using-with
 
 import os
+from pickle import dump
 from tempfile import TemporaryDirectory
 from unittest import TestCase
-from pickle import dump
 
 import pandas as pd
 

@@ -13,9 +13,7 @@ from unittest import skipIf
 import torch
 
 from tests.base_file_exist import FileCreationTestCase
-from tests.parser.integration.base_predict import (
-    AddressParserBase,
-)
+from tests.parser.integration.base_predict import AddressParserBase
 
 
 @skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")

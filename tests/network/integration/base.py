@@ -8,8 +8,8 @@ import os
 from tempfile import TemporaryDirectory
 from unittest import TestCase
 
-import torch
 import safetensors
+import torch
 from transformers.utils.hub import cached_file
 
 from deepparse import download_weights

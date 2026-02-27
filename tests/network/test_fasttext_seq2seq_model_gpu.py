@@ -3,18 +3,17 @@
 # Bug with PyTorch source code makes torch.tensor as not callable for pylint.
 # pylint: disable=unused-argument, protected-access, too-many-arguments, not-callable, too-many-locals
 import os
-
-# Pylint raise error for the call method mocking
-# pylint: disable=unnecessary-dunder-call
-
 import unittest
 from unittest import skipIf
-from unittest.mock import patch, call, MagicMock
+from unittest.mock import MagicMock, call, patch
 
 import torch
 
 from deepparse.network import FastTextSeq2SeqModel
 from tests.network.base import Seq2SeqTestCase
+
+# Pylint raise error for the call method mocking
+# pylint: disable=unnecessary-dunder-call
 
 
 @skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test on without NVIDIA installed.")

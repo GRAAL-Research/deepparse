@@ -1,6 +1,6 @@
 # pylint: disable=too-many-arguments, duplicate-code, too-many-locals
 
-from typing import Union, List
+from typing import List, Union
 
 import torch
 

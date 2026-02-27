@@ -1,10 +1,10 @@
 from dataclasses import dataclass
-from typing import List, Tuple, Union, Dict
+from typing import Dict, List, Tuple, Union
 
-from .formatted_compared_addresses_raw import FormattedComparedAddressesRaw
-from .formatted_compared_addresses_tags import FormattedComparedAddressesTags
 from ..parser import AddressParser
 from ..parser.formatted_parsed_address import FormattedParsedAddress
+from .formatted_compared_addresses_raw import FormattedComparedAddressesRaw
+from .formatted_compared_addresses_tags import FormattedComparedAddressesTags
 
 
 @dataclass(frozen=True)

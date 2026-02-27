@@ -9,8 +9,7 @@
 import os
 import unittest
 from tempfile import TemporaryDirectory
-from unittest import TestCase
-from unittest import skipIf
+from unittest import TestCase, skipIf
 
 from deepparse.network import Seq2SeqModel
 from tests.tools import create_file

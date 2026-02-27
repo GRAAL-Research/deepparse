@@ -7,7 +7,14 @@ from pathlib import Path
 from typing import Dict, Union
 from urllib.request import urlopen
 
-from fasttext.FastText import _FastText
+try:
+    from fasttext.FastText import _FastText
+
+    FASTTEXT_AVAILABLE = True
+except ImportError:
+    _FastText = None
+    FASTTEXT_AVAILABLE = False
+
 from huggingface_hub import hf_hub_download, snapshot_download
 from transformers.utils.hub import cached_file, extract_commit_hash
 from transformers.utils.logging import disable_progress_bar, enable_progress_bar
@@ -287,8 +294,18 @@ def _print_progress(downloaded_bytes: int, total_size: int) -> None:
 
 
 # The difference with the original code is the removal of the print warning.
-def load_fasttext_embeddings(path: str) -> _FastText:
+def load_fasttext_embeddings(path: str):
     """
     Wrapper to load a model given a filepath and return a model object.
+
+    If the ``fasttext`` package is not installed (e.g. on Python 3.13+), a
+    :class:`~ImportError` is raised. In that case, the caller should fall
+    back to ``gensim.models.fasttext.load_facebook_vectors``.
     """
+    if not FASTTEXT_AVAILABLE:
+        raise ImportError(
+            "The 'fasttext' package is not installed. Install it with "
+            "'pip install fasttext-wheel' or use the gensim fallback "
+            "(automatic on Python 3.13+ and Windows)."
+        )
     return _FastText(model_path=path)

@@ -61,6 +61,8 @@ def main():
             "Programming Language :: Python :: 3.10",
             "Programming Language :: Python :: 3.11",
             "Programming Language :: Python :: 3.12",
+            "Programming Language :: Python :: 3.13",
+            "Programming Language :: Python :: 3.14",
             "Topic :: Software Development :: Libraries",
             "Topic :: Software Development :: Libraries :: Python Modules",
             "Topic :: Scientific/Engineering",
@@ -74,7 +76,6 @@ def main():
             "scipy",
             "gensim>=4.3.3",
             "requests",
-            "fasttext-wheel",
             "pymagnitude-light",
             "poutyne",
             "pandas",
@@ -89,6 +90,7 @@ def main():
         long_description_content_type="text/markdown",
         extras_require={
             "colorama": "colorama",
+            "fasttext": ["fasttext-wheel"],
             "app": ["fastapi[all]>=0.109.1", "uvicorn>=0.22.0", "sentry-sdk[fastapi]>=2.0.0", "python-decouple>=3.8"],
             "all": [
                 "colorama",  # colorama

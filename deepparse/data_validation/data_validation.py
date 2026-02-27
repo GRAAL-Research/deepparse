@@ -8,7 +8,7 @@ consecutive_whitespace_regular_expression = re.compile(r"\s{2,}")
 newline_regular_expression = re.compile(r"\n")
 
 
-def validate_if_any_empty(string_elements: List) -> bool:
+def validate_if_any_empty(string_elements: List[str]) -> bool:
     """
     Return ``True`` if one of the string elements is empty. For example, the second element in the following list is
     an empty address: ``["An address", "", "Another address"]``. Thus, it will return ``True``.
@@ -19,7 +19,7 @@ def validate_if_any_empty(string_elements: List) -> bool:
     return any(is_empty(string_element) for string_element in string_elements)
 
 
-def validate_if_any_whitespace_only(string_elements: List) -> bool:
+def validate_if_any_whitespace_only(string_elements: List[str]) -> bool:
     """
     Return ``True`` if one of the string elements is only whitespace. For example, the second element in the
     following list is only whitespace: ``["An address", " ", "Another address"]``. Thus, it will return ``True``.
@@ -30,7 +30,7 @@ def validate_if_any_whitespace_only(string_elements: List) -> bool:
     return any(is_whitespace_only(string_element) for string_element in string_elements)
 
 
-def validate_if_any_none(string_elements: List) -> bool:
+def validate_if_any_none(string_elements: List[str]) -> bool:
     """
     Return ``True`` if one string element is a ``None`` value. For example, the second element in the following
     list is a ``None`` value: ``["An address", None, "Another address"]``. Thus, it will return ``True``.
@@ -41,7 +41,7 @@ def validate_if_any_none(string_elements: List) -> bool:
     return any(is_none(string_element) for string_element in string_elements)
 
 
-def validate_if_any_multiple_consecutive_whitespace(string_elements: List) -> bool:
+def validate_if_any_multiple_consecutive_whitespace(string_elements: List[str]) -> bool:
     """
     Return ``True`` if one string element include multiple consecutive_whitespace.
     For example, the second element in the following list has two consecutive whitespace:
@@ -53,7 +53,7 @@ def validate_if_any_multiple_consecutive_whitespace(string_elements: List) -> bo
     return any(is_multiple_consecutive_whitespace(string_element) for string_element in string_elements)
 
 
-def validate_if_any_newline_character(string_elements: List) -> bool:
+def validate_if_any_newline_character(string_elements: List[str]) -> bool:
     """
     Return ``True`` if one string element include a newline character.
     For example, the second element in the following list include a newline character.

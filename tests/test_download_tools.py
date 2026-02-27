@@ -11,10 +11,17 @@ from tempfile import TemporaryDirectory
 from unittest import TestCase
 from unittest.mock import call, mock_open, patch
 
-from fasttext.FastText import _FastText
 from gensim.models import FastText
 from gensim.models._fasttext_bin import save
 from gensim.test.utils import common_texts
+
+try:
+    from fasttext.FastText import _FastText
+
+    FASTTEXT_AVAILABLE = True
+except ImportError:
+    _FastText = None
+    FASTTEXT_AVAILABLE = False
 
 from deepparse.download_tools import (
     _print_progress,
@@ -230,6 +237,7 @@ class FastTextToolsTests(CaptureOutputTestCase):
         expected = "(100.00%) [==================================================>]"
         self.assertIn(expected, actual)
 
+    @unittest.skipUnless(FASTTEXT_AVAILABLE, "fasttext is not installed")
     def test_givenAFasttextEmbeddingsToLoad_whenLoad_thenLoadProperly(self):
         embeddings = load_fasttext_embeddings(self.a_fake_embeddings_path)
 

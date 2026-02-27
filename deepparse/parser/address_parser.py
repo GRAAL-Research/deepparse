@@ -148,6 +148,14 @@ class AddressParser:
         `issue <https://github.com/GRAAL-Research/deepparse/issues/89>`_.
 
     Note:
+        On Python 3.13+, the ``fasttext`` native library is not available because the underlying C++ code
+        has not been updated for newer Python versions. Deepparse automatically falls back to using Gensim to load
+        FastText embeddings. This fallback uses more RAM (~10 GO vs ~8 GO) and is slower to load, but is
+        functionally equivalent. You can install ``fasttext-wheel`` manually with
+        ``pip install deepparse[fasttext]`` if a compatible version becomes available.
+        BPEmb and FastText Light (Magnitude) models are not affected.
+
+    Note:
         You may observe a 100% CPU load the first time you call the fasttext-light model. We
         `hypotheses <https://github.com/GRAAL-Research/deepparse/pull/54#issuecomment-743463855>`_ that this is due
         to the SQLite database behind ``pymagnitude``. This approach creates a cache to speed up processing, and

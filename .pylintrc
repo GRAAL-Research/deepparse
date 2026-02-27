@@ -92,6 +92,7 @@ disable=raw-checker-failed,
         cyclic-import,
         duplicate-code,
         no-member,
+        unknown-option-value,
         too-many-positional-arguments
 
 # Enable the message, report, category or checker with the given id(s). You can

@@ -22,7 +22,7 @@ class WeightsToolsTests(TestCase):
 
         handle_weights_upload(path_to_model_to_upload=s3_path)
 
-        torch_mock.has_calls([call.load()])
+        torch_mock.assert_has_calls([call.load()])
 
     @patch("deepparse.weights_tools.CloudPath")
     @patch("deepparse.weights_tools.torch")
@@ -34,7 +34,7 @@ class WeightsToolsTests(TestCase):
 
         handle_weights_upload(path_to_model_to_upload=s3_path)
 
-        torch_mock.has_calls([call.load()])
+        torch_mock.assert_has_calls([call.load()])
         cloud_path_mock.assert_called()
 
     @patch("deepparse.weights_tools.CloudPath")
@@ -47,7 +47,7 @@ class WeightsToolsTests(TestCase):
 
         handle_weights_upload(path_to_model_to_upload=s3_path)
 
-        torch_mock.has_calls([call.load()])
+        torch_mock.assert_has_calls([call.load()])
 
         cloud_path_mock.assert_not_called()
 

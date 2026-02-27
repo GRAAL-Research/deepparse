@@ -88,27 +88,27 @@ def main():
         long_description_content_type="text/markdown",
         extras_require={
             "colorama": "colorama",
-            "app": ["fastapi[all]>=0.109.1", "uvicorn==0.22.0", "sentry-sdk[fastapi]>=2.0.0", "python-decouple==3.8"],
+            "app": ["fastapi[all]>=0.109.1", "uvicorn>=0.22.0", "sentry-sdk[fastapi]>=2.0.0", "python-decouple>=3.8"],
             "all": [
                 "colorama",  # colorama
                 "fastapi[all]>=0.109.1",  # app requirements
-                "uvicorn==0.22.0",
+                "uvicorn>=0.22.0",
                 "sentry-sdk[fastapi]>=2.0.0",
-                "python-decouple==3.8",
+                "python-decouple>=3.8",
                 "black",  # code formatting requirements
                 "pylint",
-                "pylint-django[with_django]==2.5.3",
-                "pre-commit==3.3.3",
-                "pycountry==22.3.5",  # tests requirements
+                "pylint-django[with_django]>=2.7.0",
+                "pre-commit>=4.0.0",
+                "pycountry>=22.3.5",  # tests requirements
                 "pytest",
                 "pytest-asyncio",
                 "pytest_cov",
                 "pytest-env",
                 "pytest-mock",
                 "pytest-xdist[psutil]",
-                "tensorboard==2.13.0",
-                "sphinx==6.2.1",  # documentation requirements
-                "sphinx_rtd_theme==1.2.2",
+                "tensorboard>=2.14",
+                "sphinx>=7.4.0",  # documentation requirements
+                "sphinx_rtd_theme>=3.0.0",
             ],
         },
     )

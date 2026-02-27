@@ -1,7 +1,7 @@
 # Since we use patch we skip the unused argument error
 # We also skip protected-access since we test the encoder and decoder step
 # Bug with PyTorch source code makes torch.tensor as not callable for pylint.
-# pylint: disable=unused-argument, protected-access, too-many-arguments, not-callable, too-many-locals
+# pylint: disable=unused-argument, protected-access, too-many-arguments, not-callable, too-many-locals, unnecessary-dunder-call
 import os
 import unittest
 from unittest import skipIf
@@ -11,9 +11,6 @@ import torch
 
 from deepparse.network import FastTextSeq2SeqModel
 from tests.network.base import Seq2SeqTestCase
-
-# Pylint raise error for the call method mocking
-# pylint: disable=unnecessary-dunder-call
 
 
 @skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test on without NVIDIA installed.")

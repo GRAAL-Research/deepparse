@@ -7,11 +7,18 @@ from tempfile import TemporaryDirectory
 from unittest import skipIf
 from unittest.mock import patch
 
-from fasttext.FastText import _FastText
 from gensim.models import FastText
 from gensim.models._fasttext_bin import save
 from gensim.models.fasttext import FastTextKeyedVectors
 from gensim.test.utils import common_texts
+
+try:
+    from fasttext.FastText import _FastText
+
+    FASTTEXT_AVAILABLE = True
+except ImportError:
+    _FastText = None
+    FASTTEXT_AVAILABLE = False
 from torch.utils.data import DataLoader
 
 from deepparse.embeddings_models import FastTextEmbeddingsModel
@@ -48,6 +55,7 @@ class FastTextEmbeddingsModelIntegrationTest(AddressParserRetrainTestCase):
         self.assertIsInstance(model.model, FastTextKeyedVectors)
 
     @skipIf(platform.system() == "Windows", "Integration test not on Windows env.")
+    @skipIf(not FASTTEXT_AVAILABLE, "fasttext is not installed")
     def test_givenANotWindowsOS_whenFasttextModelInit_thenLoadWithProperFunction(self):
         model = FastTextEmbeddingsModel(self.a_fasttext_model_path, verbose=self.verbose)
 

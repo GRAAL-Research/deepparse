@@ -385,3 +385,15 @@
   automatically falls back to Gensim's `load_facebook_vectors` to load FastText embeddings. Install with
   `pip install deepparse[fasttext]` for native FastText support on Python 3.10–3.12.
 - Fix `FastTextEmbeddingsModel.dim` property to use `vector_size` when using the Gensim fallback.
+- Fix Python version in `deploy.yml` and `python-publish.yml` workflows (was set to non-existent 3.14).
+- Update GitHub Actions to latest major versions (`checkout@v4`, `setup-python@v5`, `codeql-action@v3`, `gh-pages@v4`).
+- Fix Dependabot target branch from non-existent `develop` to `dev`.
+- Remove dead code: unused `attention_output` tensor allocation in `Seq2SeqModel._decoder_step`.
+- Fix `download_fasttext_magnitude_embeddings` always re-downloading even when cached.
+- Replace `assert` statements with `HTTPException` in FastAPI app for proper error handling.
+- Change default logging level from `DEBUG` to `WARNING` in app module.
+- Remove unnecessary `pybind11` from build-system requirements.
+- Remove obsolete "temporary fix for torch 1.6" comments in encoder, decoder and embedding network.
+- Remove deprecated `version` key from `docker-compose.yml`.
+- Fix mixed f-string/`%`-formatting in download progress bar.
+- Update Dockerfile base images to PyTorch 2.5.1 / CUDA 12.4 and Python 3.13.

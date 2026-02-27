@@ -4,7 +4,7 @@ updates:
     directory: "/"
     schedule:
       interval: "monthly"
-    target-branch: "develop"
+    target-branch: "dev"
     labels:
       - "Github actions dependencies"
 
@@ -13,7 +13,7 @@ updates:
     schedule:
       interval: "monthly"
     open-pull-requests-limit: 10
-    target-branch: "develop"
+    target-branch: "dev"
     labels:
       - "pip dependencies"
     allow:

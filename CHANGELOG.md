@@ -367,3 +367,15 @@
 ## 0.9.14
 
 - Switch model weights hosting to hugging face
+
+## 0.10.0
+
+- Add Python 3.12 support.
+- Add compatibility with Intel GPUs and other Torch acceleration devices.
+- Remove `numpy<2.0.0` version cap to support NumPy 2.x.
+- Bump pinned dependency versions for Python 3.12+ compatibility.
+- Update CI/CD workflows, documentation, and package setup for Python 3.12.
+- Fix outdated model download URLs from `graal.ift.ulaval.ca` to HuggingFace Hub.
+- Remove unused `BASE_URL` constant.
+- Add missing parameterized type hints across the codebase (`List[str]`, `Dict[str, int]`, `List[Callable]`, etc.).
+- Add missing return type annotations to multiple functions and methods.

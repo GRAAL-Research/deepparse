@@ -40,7 +40,7 @@ Use deepparse to
 
 Read the documentation at [deepparse.org](https://deepparse.org).
 
-Deepparse is compatible with the __latest version of PyTorch__ and  __Python >= 3.8__.
+Deepparse is compatible with the __latest version of PyTorch__ and  __Python >= 3.10__.
 
 ### Countries and Results
 

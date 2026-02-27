@@ -5,15 +5,16 @@ from contextlib import asynccontextmanager
 from typing import List
 
 from deepparse.app.address import Address
-from deepparse.app.tools import format_parsed_addresses, address_parser_mapping
+from deepparse.app.tools import address_parser_mapping, format_parsed_addresses
 from deepparse.download_tools import MODEL_MAPPING_CHOICES, download_models
 from deepparse.parser import AddressParser
 
 try:
-    from deepparse.app.sentry import configure_sentry
-    from fastapi import FastAPI, Depends
-    from fastapi.responses import JSONResponse
     import uvicorn
+    from fastapi import Depends, FastAPI
+    from fastapi.responses import JSONResponse
+
+    from deepparse.app.sentry import configure_sentry  # pylint: disable=ungrouped-imports
 except ModuleNotFoundError as e:
     raise ModuleNotFoundError("Ensure you installed the extra packages using: 'pip install deepparse[app]'") from e
 

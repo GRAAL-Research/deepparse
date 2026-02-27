@@ -2,8 +2,8 @@ from typing import Callable, List, Tuple, Union
 
 import torch
 
-from . import TagsConverter
 from ..vectorizer import Vectorizer
+from . import TagsConverter
 
 
 class DataProcessor:

@@ -1,7 +1,7 @@
+import math
 import os
 from typing import List, OrderedDict, Tuple
 
-import math
 import numpy as np
 import torch
 

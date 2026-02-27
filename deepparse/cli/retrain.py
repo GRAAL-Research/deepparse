@@ -3,23 +3,23 @@ import json
 import sys
 from typing import Dict
 
+from ..parser import AddressParser
 from .parser_arguments_adder import (
-    add_seed_arg,
-    add_batch_size_arg,
     add_base_parsing_model_arg,
-    add_num_workers_arg,
-    add_device_arg,
-    add_csv_column_separator_arg,
+    add_batch_size_arg,
     add_cache_dir_arg,
     add_csv_column_names_arg,
+    add_csv_column_separator_arg,
+    add_device_arg,
+    add_num_workers_arg,
+    add_seed_arg,
 )
 from .tools import (
-    wrap,
-    bool_parse,
     attention_model_type_handling,
+    bool_parse,
     data_container_factory,
+    wrap,
 )
-from ..parser import AddressParser
 
 _retrain_parameters = [
     "train_ratio",

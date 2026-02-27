@@ -5,7 +5,7 @@
 import os
 import unittest
 from unittest import skipIf
-from unittest.mock import MagicMock, call, ANY
+from unittest.mock import ANY, MagicMock, call
 
 from poutyne import Callback
 

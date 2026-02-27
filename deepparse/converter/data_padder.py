@@ -1,8 +1,8 @@
 from typing import List, Tuple, Union
 
+import numpy as np
 import torch
 from torch.nn.utils.rnn import pad_sequence
-import numpy as np
 
 
 class DataPadder:

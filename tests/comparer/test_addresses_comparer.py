@@ -9,8 +9,12 @@ from unittest import TestCase
 from unittest.mock import MagicMock
 
 from deepparse.comparer.addresses_comparer import AddressesComparer
-from deepparse.comparer.formatted_compared_addresses_raw import FormattedComparedAddressesRaw
-from deepparse.comparer.formatted_compared_addresses_tags import FormattedComparedAddressesTags
+from deepparse.comparer.formatted_compared_addresses_raw import (
+    FormattedComparedAddressesRaw,
+)
+from deepparse.comparer.formatted_compared_addresses_tags import (
+    FormattedComparedAddressesTags,
+)
 
 
 class TestAdressesComparer(TestCase):

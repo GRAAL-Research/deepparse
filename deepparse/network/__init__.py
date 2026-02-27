@@ -1,4 +1,5 @@
 # pylint: disable=wildcard-import
+# isort: skip_file
 from .decoder import *
 from .embedding_network import *
 from .encoder import *

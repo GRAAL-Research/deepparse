@@ -4,9 +4,9 @@ from unittest import TestCase
 from unittest.mock import patch
 
 from deepparse.embeddings_models import (
+    BPEmbEmbeddingsModel,
     EmbeddingsModelFactory,
     FastTextEmbeddingsModel,
-    BPEmbEmbeddingsModel,
     MagnitudeEmbeddingsModel,
 )
 

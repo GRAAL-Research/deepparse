@@ -8,11 +8,11 @@ import os
 from tempfile import TemporaryDirectory
 from unittest import TestCase, skipIf
 
-from deepparse.dataset_container import ListDatasetContainer, DatasetContainer
+from deepparse.dataset_container import DatasetContainer, ListDatasetContainer
 from deepparse.parser import (
     AddressParser,
-    formatted_parsed_address,
     FormattedParsedAddress,
+    formatted_parsed_address,
 )
 
 

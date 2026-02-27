@@ -4,7 +4,7 @@
 Installation
 ============
 
-Deepparse is available for Python 3,8 to Python 3.11.
+Deepparse is available for Python 3.10 and Python 3.11.
 
 .. note::
    We do not recommend installation as a root user on your system Python.

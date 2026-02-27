@@ -1,12 +1,11 @@
 # pylint: disable=too-many-public-methods
 import unittest
 from unittest import TestCase
-from unittest.mock import MagicMock, patch, call
+from unittest.mock import MagicMock, call, patch
 
 from cloudpathlib import S3Path
 
 from deepparse import handle_weights_upload
-
 
 # Pylint error for TemporaryDirectory ask for with statement
 # pylint: disable=consider-using-with
@@ -22,7 +21,7 @@ class WeightsToolsTests(TestCase):
 
         handle_weights_upload(path_to_model_to_upload=s3_path)
 
-        torch_mock.has_calls([call.load()])
+        torch_mock.assert_has_calls([call.load()])
 
     @patch("deepparse.weights_tools.CloudPath")
     @patch("deepparse.weights_tools.torch")
@@ -34,7 +33,7 @@ class WeightsToolsTests(TestCase):
 
         handle_weights_upload(path_to_model_to_upload=s3_path)
 
-        torch_mock.has_calls([call.load()])
+        torch_mock.assert_has_calls([call.load()])
         cloud_path_mock.assert_called()
 
     @patch("deepparse.weights_tools.CloudPath")
@@ -47,7 +46,7 @@ class WeightsToolsTests(TestCase):
 
         handle_weights_upload(path_to_model_to_upload=s3_path)
 
-        torch_mock.has_calls([call.load()])
+        torch_mock.assert_has_calls([call.load()])
 
         cloud_path_mock.assert_not_called()
 

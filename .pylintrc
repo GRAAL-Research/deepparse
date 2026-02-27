@@ -53,11 +53,8 @@ persistent=yes
 
 # Minimum Python version to use for version dependent checks. Will default to
 # the version used to run pylint.
-py-version=3.8
+py-version=3.10
 
-# When enabled, pylint would attempt to guess common misconfiguration and emit
-# user-friendly hints instead of false-positive error messages.
-suggestion-mode=yes
 
 # Allow loading of arbitrary C extensions. Extensions are imported into the
 # active Python interpreter and may run arbitrary code.
@@ -94,7 +91,9 @@ disable=raw-checker-failed,
         too-many-instance-attributes,
         cyclic-import,
         duplicate-code,
-        no-member
+        no-member,
+        unknown-option-value,
+        too-many-positional-arguments
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option

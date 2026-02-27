@@ -1,4 +1,4 @@
-from typing import List, Dict, Union
+from typing import Dict, List, Union
 
 from deepparse.app.address import Address
 from deepparse.download_tools import MODEL_MAPPING_CHOICES

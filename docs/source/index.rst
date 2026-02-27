@@ -30,7 +30,7 @@ Use deepparse to
 - retrain our pretrained models with or without freezing some layers,
 - train a new Seq2Seq addresses parsing models easily using a new model configuration.
 
-Deepparse is compatible with the **latest version of PyTorch** and  **Python >= 3.8**.
+Deepparse is compatible with the **latest version of PyTorch** and  **Python >= 3.10, <= 3.11**.
 
 Countries and Results
 =====================

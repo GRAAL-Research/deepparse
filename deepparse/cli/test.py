@@ -4,26 +4,26 @@ import sys
 
 import pandas as pd
 
+from ..parser import AddressParser
 from .parser_arguments_adder import (
-    add_csv_column_separator_arg,
-    add_log_arg,
-    add_cache_dir_arg,
-    add_seed_arg,
-    add_device_arg,
-    add_batch_size_arg,
-    add_path_to_retrained_model_arg,
     add_base_parsing_model_arg,
-    add_num_workers_arg,
+    add_batch_size_arg,
+    add_cache_dir_arg,
     add_csv_column_names_arg,
+    add_csv_column_separator_arg,
+    add_device_arg,
+    add_log_arg,
+    add_num_workers_arg,
+    add_path_to_retrained_model_arg,
+    add_seed_arg,
 )
 from .tools import (
-    wrap,
     attention_model_type_handling,
+    data_container_factory,
     generate_export_path,
     replace_path_extension,
-    data_container_factory,
+    wrap,
 )
-from ..parser import AddressParser
 
 
 def main(args=None) -> None:

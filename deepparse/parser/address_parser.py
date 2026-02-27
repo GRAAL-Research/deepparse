@@ -10,7 +10,7 @@ import warnings
 from functools import partial
 from pathlib import Path
 from platform import system
-from typing import Dict, List, Tuple, Union, Callable
+from typing import Callable, Dict, List, Tuple, Union
 
 import torch
 from cloudpathlib import CloudPath, S3Path
@@ -18,6 +18,25 @@ from poutyne.framework import Experiment
 from torch.optim import SGD
 from torch.utils.data import DataLoader, Subset
 
+from .. import validate_data_to_parse
+from ..converter import DataPadder, DataProcessorFactory, TagsConverter
+from ..dataset_container import DatasetContainer
+from ..download_tools import CACHE_PATH
+from ..embeddings_models import EmbeddingsModelFactory
+from ..errors import FastTextModelError
+from ..metrics import accuracy, nll_loss
+from ..network import ModelFactory, ModelLoader
+from ..pre_processing import (
+    coma_cleaning,
+    double_whitespaces_cleaning,
+    hyphen_cleaning,
+    lower_cleaning,
+    trailing_whitespace_cleaning,
+)
+from ..pre_processing.pre_processor_list import PreProcessorList
+from ..validations import valid_poutyne_version
+from ..vectorizer import VectorizerFactory
+from ..weights_tools import handle_weights_upload
 from . import formatted_parsed_address
 from .formatted_parsed_address import FormattedParsedAddress
 from .tools import (
@@ -31,20 +50,6 @@ from .tools import (
     validate_if_new_prediction_tags,
     validate_if_new_seq2seq_params,
 )
-from .. import validate_data_to_parse
-from ..converter import TagsConverter, DataProcessorFactory, DataPadder
-from ..dataset_container import DatasetContainer
-from ..download_tools import CACHE_PATH
-from ..embeddings_models import EmbeddingsModelFactory
-from ..errors import FastTextModelError
-from ..metrics import nll_loss, accuracy
-from ..network import ModelFactory, ModelLoader
-from ..pre_processing import coma_cleaning, lower_cleaning, hyphen_cleaning
-from ..pre_processing import trailing_whitespace_cleaning, double_whitespaces_cleaning
-from ..pre_processing.pre_processor_list import PreProcessorList
-from ..validations import valid_poutyne_version
-from ..vectorizer import VectorizerFactory
-from ..weights_tools import handle_weights_upload
 
 _pre_trained_tags_to_idx = {
     "StreetNumber": 0,
@@ -1071,27 +1076,27 @@ class AddressParser:
         if device == "cpu":
             self.device = torch.device("cpu")
             self.pin_memory = False
-        else:
-            if torch.cuda.is_available():
-                self.pin_memory = True
-                if isinstance(device, torch.device):
-                    self.device = device
-                elif isinstance(device, str):
-                    if re.fullmatch(r"cuda:\d+", device.lower()):
-                        self.device = torch.device(device)
-                    else:
-                        raise ValueError("String value should follow the pattern 'cuda:[int]'.")
-                elif isinstance(device, int):
-                    if device >= 0:
-                        self.device = torch.device(f"cuda:{device}")
-                    else:
-                        raise ValueError("Device should not be a negative number.")
+        elif isinstance(device, torch.device):
+            self.device = device
+            self.pin_memory = torch.cuda.is_available() and device.type == "cuda"
+        elif torch.cuda.is_available():
+            self.pin_memory = True
+            if isinstance(device, str):
+                if re.fullmatch(r"cuda:\d+", device.lower()):
+                    self.device = torch.device(device)
                 else:
-                    raise ValueError("Device should be a string, an int or a torch device.")
+                    raise ValueError("String value should follow the pattern 'cuda:[int]'.")
+            elif isinstance(device, int):
+                if device >= 0:
+                    self.device = torch.device(f"cuda:{device}")
+                else:
+                    raise ValueError("Device should not be a negative number.")
             else:
-                warnings.warn("No CUDA device detected, device will be set to 'CPU'.", category=UserWarning)
-                self.device = torch.device("cpu")
-                self.pin_memory = False
+                raise ValueError("Device should be a string, an int or a torch device.")
+        else:
+            warnings.warn("No CUDA device detected, device will be set to 'CPU'.", category=UserWarning)
+            self.device = torch.device("cpu")
+            self.pin_memory = False
 
     def _create_training_data_generator(
         self,

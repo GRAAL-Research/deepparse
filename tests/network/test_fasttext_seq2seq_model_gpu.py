@@ -1,15 +1,11 @@
 # Since we use patch we skip the unused argument error
 # We also skip protected-access since we test the encoder and decoder step
 # Bug with PyTorch source code makes torch.tensor as not callable for pylint.
-# pylint: disable=unused-argument, protected-access, too-many-arguments, not-callable, too-many-locals
+# pylint: disable=unused-argument, protected-access, too-many-arguments, not-callable, too-many-locals, unnecessary-dunder-call
 import os
-
-# Pylint raise error for the call method mocking
-# pylint: disable=unnecessary-dunder-call
-
 import unittest
 from unittest import skipIf
-from unittest.mock import patch, call, MagicMock
+from unittest.mock import MagicMock, call, patch
 
 import torch
 

@@ -1,7 +1,7 @@
 from argparse import ArgumentParser
 
-from .tools import wrap, bool_parse
 from .. import MODEL_MAPPING_CHOICES
+from .tools import bool_parse, wrap
 
 
 def add_base_parsing_model_arg(parser: ArgumentParser) -> None:

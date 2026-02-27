@@ -9,16 +9,16 @@ import platform
 import unittest
 from tempfile import TemporaryDirectory
 from unittest import skipIf
-from unittest.mock import patch, call, MagicMock
+from unittest.mock import MagicMock, call, patch
 
 import torch
 
 from deepparse.converter import TagsConverter
 from deepparse.errors import FastTextModelError
-from deepparse.metrics import nll_loss, accuracy
+from deepparse.metrics import accuracy, nll_loss
 from deepparse.parser import AddressParser
 from tests.parser.base import AddressParserPredictTestCase
-from tests.tools import BATCH_SIZE, ADataContainer, create_file, create_fake_checkpoint
+from tests.tools import BATCH_SIZE, ADataContainer, create_fake_checkpoint, create_file
 
 
 class AddressParserRetrainTest(AddressParserPredictTestCase):

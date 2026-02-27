@@ -14,7 +14,7 @@ import os
 import unittest
 from tempfile import TemporaryDirectory
 from unittest import skipIf
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
 import torch
 from torch import device
@@ -157,6 +157,35 @@ class AddressParserTest(AddressParserPredictTestCase):
         actual = address_parser.device
         expected = self.a_cpu_torch_device
         self.assertEqual(actual, expected)
+
+    @patch("deepparse.parser.address_parser.torch.cuda")
+    def test_givenATorchDeviceSetup_whenInstantiatingParserWithoutCUDA_thenDeviceIsPreserved(self, cuda_mock):
+        a_non_cuda_device = device("xpu:0")
+        with patch("deepparse.parser.address_parser.EmbeddingsModelFactory") as _:
+            with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
+                model_factory_mock.return_value.create.return_value = (MagicMock(), "version")
+                with patch("deepparse.parser.address_parser.VectorizerFactory") as _:
+                    with patch("deepparse.parser.address_parser.DataProcessorFactory") as _:
+                        cuda_mock.is_available.return_value = False
+                        address_parser = AddressParser(
+                            model_type=self.a_best_model_type.capitalize(),
+                            device=a_non_cuda_device,
+                        )
+        self.assertEqual(address_parser.device, a_non_cuda_device)
+        self.assertFalse(address_parser.pin_memory)
+
+    @patch("deepparse.parser.address_parser.torch.cuda")
+    def test_givenAStringDeviceSetup_whenInstantiatingParserWithoutCUDA_thenFallbackToCPU(self, cuda_mock):
+        with patch("deepparse.parser.address_parser.EmbeddingsModelFactory") as _:
+            with patch("deepparse.parser.address_parser.VectorizerFactory") as _:
+                with patch("deepparse.parser.address_parser.DataProcessorFactory") as _:
+                    cuda_mock.is_available.return_value = False
+                    with self.assertWarns(UserWarning):
+                        address_parser = AddressParser(
+                            model_type=self.a_best_model_type.capitalize(),
+                            device="cuda:0",
+                        )
+        self.assertEqual(address_parser.device, self.a_cpu_torch_device)
 
     @skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
     def test_givenAGPUDeviceSetup_whenInstantiatingParser_thenDeviceIsGPU(self):

@@ -2,7 +2,7 @@ import unittest
 from unittest import TestCase
 from unittest.mock import Mock
 
-from deepparse.converter import DataProcessorFactory, DataPadder
+from deepparse.converter import DataPadder, DataProcessorFactory
 from deepparse.vectorizer import BPEmbVectorizer, FastTextVectorizer
 
 

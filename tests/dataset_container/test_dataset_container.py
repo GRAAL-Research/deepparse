@@ -12,12 +12,18 @@ from unittest import TestCase
 
 from deepparse import DataError
 from deepparse.dataset_container import (
-    PickleDatasetContainer,
-    DatasetContainer,
     CSVDatasetContainer,
+    DatasetContainer,
     ListDatasetContainer,
+    PickleDatasetContainer,
 )
-from tests.tools import base_string, a_tags_sequence, create_pickle_file, create_csv_file, default_csv_column_name
+from tests.tools import (
+    a_tags_sequence,
+    base_string,
+    create_csv_file,
+    create_pickle_file,
+    default_csv_column_name,
+)
 
 
 def comma_separated_list_reformat(tags: str) -> List:

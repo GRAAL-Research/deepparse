@@ -9,10 +9,10 @@ from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
 from deepparse import (
+    DataError,
     extract_package_version,
     valid_poutyne_version,
     validate_data_to_parse,
-    DataError,
 )
 from tests.base_capture_output import CaptureOutputTestCase
 from tests.base_file_exist import FileCreationTestCase

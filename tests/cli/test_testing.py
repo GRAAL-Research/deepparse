@@ -8,8 +8,9 @@ from unittest.mock import patch
 
 import pytest
 
-from deepparse.cli import test, generate_export_path
+from deepparse.cli import generate_export_path, test
 from tests.parser.base import PretrainedWeightsBase
+
 from .base import RetrainTestCase
 
 

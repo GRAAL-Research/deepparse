@@ -6,8 +6,8 @@ from unittest.mock import MagicMock
 import pytest
 
 try:
-    from fastapi.testclient import TestClient
     from fastapi.encoders import jsonable_encoder
+    from fastapi.testclient import TestClient
 except ModuleNotFoundError as e:
     raise ModuleNotFoundError(
         "Ensure you installed the packages for the app_requirements.txt file found in the root of the project"
@@ -15,8 +15,8 @@ except ModuleNotFoundError as e:
 
 if os.environ["TEST_LEVEL"] == "all":
     from deepparse.app.app import app
-    from deepparse.app.tools import format_parsed_addresses, Address
-    from deepparse.parser import FormattedParsedAddress, AddressParser
+    from deepparse.app.tools import Address, format_parsed_addresses
+    from deepparse.parser import AddressParser, FormattedParsedAddress
 else:
     # To handle pylint error E0606.
     app = None

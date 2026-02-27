@@ -4,7 +4,7 @@ import os
 import platform
 import unittest
 from unittest import skipIf
-from unittest.mock import MagicMock, patch, call
+from unittest.mock import MagicMock, call, patch
 
 import torch
 

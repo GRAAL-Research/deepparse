@@ -3,9 +3,9 @@ from typing import List
 import poutyne
 
 from .data_validation import (
+    validate_if_any_empty,
     validate_if_any_none,
     validate_if_any_whitespace_only,
-    validate_if_any_empty,
 )
 from .errors.data_error import DataError
 

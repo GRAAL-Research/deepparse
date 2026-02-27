@@ -5,7 +5,7 @@ import sys
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from difflib import SequenceMatcher
-from typing import List, Union, Tuple, Dict
+from typing import Dict, List, Tuple, Union
 
 from ..parser import FormattedParsedAddress
 

@@ -1,12 +1,11 @@
 # pylint: disable=too-many-arguments
 import random
-
 from abc import ABC
-from typing import Tuple, Union, List
+from typing import List, Tuple, Union
 
 import torch
-from torch import nn
 from huggingface_hub import PyTorchModelHubMixin
+from torch import nn
 
 from ..network.decoder import Decoder
 from ..network.encoder import Encoder

@@ -3,11 +3,16 @@ import unittest
 from unittest import TestCase
 from unittest.mock import patch
 
-from deepparse.vectorizer import VectorizerFactory, BPEmbVectorizer, MagnitudeVectorizer, FastTextVectorizer
 from deepparse.embeddings_models import (
     BPEmbEmbeddingsModel,
     FastTextEmbeddingsModel,
     MagnitudeEmbeddingsModel,
+)
+from deepparse.vectorizer import (
+    BPEmbVectorizer,
+    FastTextVectorizer,
+    MagnitudeVectorizer,
+    VectorizerFactory,
 )
 
 

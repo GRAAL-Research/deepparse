@@ -1,7 +1,7 @@
 import unittest
 from pathlib import Path
 from unittest import TestCase
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
 from deepparse.embeddings_models import BPEmbEmbeddingsModel
 

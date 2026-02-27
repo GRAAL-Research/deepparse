@@ -1,7 +1,7 @@
 import argparse
 import sys
 
-from deepparse.download_tools import download_model, MODEL_MAPPING_CHOICES
+from deepparse.download_tools import MODEL_MAPPING_CHOICES, download_model
 
 
 def main(args=None) -> None:

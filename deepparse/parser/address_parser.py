@@ -137,9 +137,9 @@ class AddressParser:
 
         Here are the URLs to download our pretrained models directly
 
-            - `FastText <https://graal.ift.ulaval.ca/public/deepparse/fasttext.ckpt>`_,
-            - `BPEmb <https://graal.ift.ulaval.ca/public/deepparse/bpemb.ckpt>`_,
-            - `FastText Light <https://graal.ift.ulaval.ca/public/deepparse/fasttext.magnitude.gz>`_.
+            - `FastText <https://huggingface.co/deepparse/fasttext-base>`_,
+            - `BPEmb <https://huggingface.co/deepparse/bpemb-base>`_,
+            - `FastText Light <https://huggingface.co/deepparse/fasttext-base/tree/light-embeddings>`_.
 
     Note:
         Since Windows uses ``spawn`` instead of ``fork`` during multiprocess (for the data loading pre-processing
@@ -477,16 +477,16 @@ class AddressParser:
         epochs: int = 5,
         num_workers: int = 1,
         learning_rate: float = 0.01,
-        callbacks: Union[List, None] = None,
+        callbacks: Union[List[Callable], None] = None,
         seed: int = 42,
         logging_path: str = "./checkpoints",
         disable_tensorboard: bool = True,
-        prediction_tags: Union[Dict, None] = None,
-        seq2seq_params: Union[Dict, None] = None,
+        prediction_tags: Union[Dict[str, int], None] = None,
+        seq2seq_params: Union[Dict[str, int], None] = None,
         layers_to_freeze: Union[str, None] = None,
         name_of_the_retrain_parser: Union[None, str] = None,
         verbose: Union[None, bool] = None,
-    ) -> List[Dict]:
+    ) -> List[Dict[str, float]]:
         # pylint: disable=too-many-arguments, too-many-locals, too-many-branches, too-many-statements
 
         """
@@ -897,10 +897,10 @@ class AddressParser:
         test_dataset_container: DatasetContainer,
         batch_size: int = 32,
         num_workers: int = 1,
-        callbacks: Union[List, None] = None,
+        callbacks: Union[List[Callable], None] = None,
         seed: int = 42,
         verbose: Union[None, bool] = None,
-    ) -> Dict:
+    ) -> Dict[str, float]:
         # pylint: disable=too-many-arguments, too-many-locals
         """
         Method to test a retrained or a pretrained model using a dataset with the default tags. If you test a
@@ -1037,8 +1037,8 @@ class AddressParser:
 
     def _fill_tagged_addresses_components(
         self,
-        tags_predictions: List,
-        tags_predictions_prob: List,
+        tags_predictions: List[List[int]],
+        tags_predictions_prob: List[List[float]],
         addresses_to_parse: List[str],
         clean_addresses: List[str],
         with_prob: bool,
@@ -1144,7 +1144,7 @@ class AddressParser:
         path_to_retrained_model: Union[str, None] = None,
         pre_trained_weights: bool = True,
         prediction_layer_len: int = 9,
-        attention_mechanism=False,
+        attention_mechanism: bool = False,
         seq2seq_kwargs: Union[dict, None] = None,
         cache_dir: Union[dict, None] = None,
         offline: bool = False,
@@ -1182,7 +1182,7 @@ class AddressParser:
 
         self.processor = DataProcessorFactory().create(vectorizer, padder, self.tags_converter)
 
-    def _predict_pipeline(self, data: List) -> Tuple:
+    def _predict_pipeline(self, data: List[str]) -> Tuple:
         """
         Pipeline to process data in a data loader for prediction.
         """
@@ -1195,10 +1195,10 @@ class AddressParser:
         valid_generator: DatasetContainer,
         epochs: int,
         seed: int,
-        callbacks: List,
+        callbacks: List[Callable],
         disable_tensorboard: bool,
         verbose: Union[None, bool],
-    ) -> List[Dict]:
+    ) -> List[Dict[str, float]]:
         # pylint: disable=too-many-arguments
         train_res = experiment.train(
             train_generator,
@@ -1250,7 +1250,12 @@ class AddressParser:
                 # the freezing. Namely, the decoder.linear when we freeze the decoder, but we expect the final layer
                 # to be unfrozen.
 
-    def _formatted_named_parser_name(self, prediction_tags: Dict, seq2seq_params: Dict, layers_to_freeze: str) -> str:
+    def _formatted_named_parser_name(
+        self,
+        prediction_tags: Union[Dict[str, int], None],
+        seq2seq_params: Union[Dict[str, int], None],
+        layers_to_freeze: Union[str, None],
+    ) -> str:
         prediction_tags_str = "ModifiedPredictionTags" if prediction_tags is not None else ""
         seq2seq_params_str = "ModifiedSeq2SeqConfiguration" if seq2seq_params is not None else ""
         layers_to_freeze_str = f"FreezedLayer{layers_to_freeze.capitalize()}" if layers_to_freeze is not None else ""
@@ -1263,7 +1268,7 @@ class AddressParser:
         val_dataset_container: DatasetContainer,
         num_workers: int,
         name_of_the_retrain_parser: Union[str, None],
-    ):
+    ) -> None:
         """
         Arguments validation test for retrain methods.
         """
@@ -1300,7 +1305,7 @@ class AddressParser:
                     "The name_of_the_retrain_parser should NOT include a file extension or a dot-like filename style."
                 )
 
-    def _model_os_validation(self, num_workers):
+    def _model_os_validation(self, num_workers: int) -> None:
         if system() == "Windows" and "fasttext" in self.model_type and num_workers > 0:
             raise FastTextModelError(
                 "On Windows system, we cannot use FastText-like models with parallelism workers since "
@@ -1325,5 +1330,5 @@ class AddressParser:
                 category=UserWarning,
             )
 
-    def is_same_model_type(self, other) -> bool:
+    def is_same_model_type(self, other: "AddressParser") -> bool:
         return self.model_type == other.model_type

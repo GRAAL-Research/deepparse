@@ -374,11 +374,11 @@ address_parser.retrain(
 
 Deepparse handles model downloads when you use it, but you can also pre-download our model. Here are the URLs to download our pretrained models directly
 
-- [FastText](https://graal.ift.ulaval.ca/public/deepparse/fasttext.ckpt),
-- [FastTextAttention](https://graal.ift.ulaval.ca/public/deepparse/fasttext_attention.ckpt),
-- [BPEmb](https://graal.ift.ulaval.ca/public/deepparse/bpemb.ckpt),
-- [BPEmbAttention](https://graal.ift.ulaval.ca/public/deepparse/bpemb_attention.ckpt),
-- [FastText Light](https://graal.ift.ulaval.ca/public/deepparse/fasttext.magnitude.gz) (
+- [FastText](https://huggingface.co/deepparse/fasttext-base),
+- [FastTextAttention](https://huggingface.co/deepparse/fasttext-attention),
+- [BPEmb](https://huggingface.co/deepparse/bpemb-base),
+- [BPEmbAttention](https://huggingface.co/deepparse/bpemb-attention),
+- [FastText Light](https://huggingface.co/deepparse/fasttext-base/tree/light-embeddings) (
   using [Magnitude Light](https://github.com/davebulaval/magnitude-light)).
 
 Or you can use our CLI to download our pretrained models directly using:

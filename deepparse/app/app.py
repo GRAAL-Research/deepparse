@@ -2,7 +2,7 @@
 
 import logging
 from contextlib import asynccontextmanager
-from typing import List
+from typing import AsyncGenerator, List
 
 from deepparse.app.address import Address
 from deepparse.app.tools import address_parser_mapping, format_parsed_addresses
@@ -26,7 +26,7 @@ configure_sentry()
 
 
 @asynccontextmanager
-async def lifespan(application: FastAPI):  # pylint: disable=unused-argument
+async def lifespan(application: FastAPI) -> AsyncGenerator[None, None]:  # pylint: disable=unused-argument
     # Load the models
     logger.debug("Downloading models")
     download_models()
@@ -51,7 +51,7 @@ app = FastAPI(lifespan=lifespan)
 
 
 @app.post("/parse/{parsing_model}")
-def parse(parsing_model: str, addresses: List[Address], resp=Depends(format_parsed_addresses)):
+def parse(parsing_model: str, addresses: List[Address], resp: dict = Depends(format_parsed_addresses)) -> JSONResponse:
     """
     Parse addresses using the specified parsing model.
 

@@ -380,7 +380,7 @@
 - Remove unused `BASE_URL` constant.
 - Add missing parameterized type hints across the codebase (`List[str]`, `Dict[str, int]`, `List[Callable]`, etc.).
 - Add missing return type annotations to multiple functions and methods.
-- Add Python 3.13 and 3.14 support.
+- Add Python 3.13 support.
 - Make `fasttext-wheel` an optional dependency. On Python 3.13+ (or when `fasttext` is not installed), Deepparse
   automatically falls back to Gensim's `load_facebook_vectors` to load FastText embeddings. Install with
   `pip install deepparse[fasttext]` for native FastText support on Python 3.10–3.12.

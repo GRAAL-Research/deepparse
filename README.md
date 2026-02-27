@@ -422,7 +422,7 @@ pip install deepparse[fasttext]  # for bash terminal
 pip install 'deepparse[fasttext]' # for ZSH terminal
 ```
 
-> **Note:** On Python 3.13 and 3.14, the `fasttext-wheel` package cannot be compiled. Deepparse automatically
+> **Note:** On Python 3.13+, the `fasttext-wheel` package cannot be compiled. Deepparse automatically
 > uses Gensim as a fallback to load FastText embeddings, which uses slightly more RAM (~10 GO vs ~8 GO).
 > BPEmb and FastText Light (Magnitude) models are not affected.
 

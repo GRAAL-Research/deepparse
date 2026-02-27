@@ -4,7 +4,7 @@
 Installation
 ============
 
-Deepparse is available for Python 3.10, Python 3.11, Python 3.12, Python 3.13 and Python 3.14.
+Deepparse is available for Python 3.10, Python 3.11, Python 3.12 and Python 3.13.
 
 .. note::
    We do not recommend installation as a root user on your system Python.
@@ -46,7 +46,7 @@ Before installing deepparse, you must have the latest version of `PyTorch <https
    pip install "deepparse[fasttext]"
 
 .. note::
-   On Python 3.13 and 3.14, the ``fasttext-wheel`` package cannot be compiled. Deepparse will automatically fall
+   On Python 3.13, the ``fasttext-wheel`` package cannot be compiled. Deepparse will automatically fall
    back to Gensim to load FastText embeddings. See :ref:`fasttext-python-313` for details.
 
 - **Install the latest development version of Deepparse:**

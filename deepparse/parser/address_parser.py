@@ -148,7 +148,7 @@ class AddressParser:
         `issue <https://github.com/GRAAL-Research/deepparse/issues/89>`_.
 
     Note:
-        On Python 3.13 and 3.14, the ``fasttext`` native library is not available because the underlying C++ code
+        On Python 3.13+, the ``fasttext`` native library is not available because the underlying C++ code
         has not been updated for newer Python versions. Deepparse automatically falls back to using Gensim to load
         FastText embeddings. This fallback uses more RAM (~10 GO vs ~8 GO) and is slower to load, but is
         functionally equivalent. You can install ``fasttext-wheel`` manually with

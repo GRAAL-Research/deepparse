@@ -151,8 +151,8 @@ Or you can use our CLI to download our pretrained models directly using:
 Note on FastText Models and Python 3.13+
 *****************************************
 
-The ``fasttext`` C++ library has not been updated for Python 3.13 and 3.14, so the ``fasttext-wheel`` package cannot
-be installed on these versions. Deepparse automatically falls back to using
+The ``fasttext`` C++ library has not been updated for Python 3.13+, so the ``fasttext-wheel`` package cannot be
+installed on these versions. Deepparse automatically falls back to using
 `Gensim <https://radimrehurek.com/gensim/>`__ to load FastText embeddings when the ``fasttext`` package is not
 available.
 

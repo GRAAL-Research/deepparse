@@ -24,7 +24,7 @@ class FastTextEmbeddingsModel(EmbeddingsModel):
         `issue <https://github.com/GRAAL-Research/deepparse/issues/89>`_.
 
     Note:
-        On Python 3.13 and 3.14, the ``fasttext`` package is not available because the underlying C++ library
+        On Python 3.13+, the ``fasttext`` package is not available because the underlying C++ library
         has not been updated for newer Python versions. In this case, the Gensim model is used automatically
         as a fallback. This fallback uses more RAM (~10 GO vs ~8 GO) and takes longer to load.
         You can install ``fasttext-wheel`` manually with ``pip install fasttext-wheel`` if a compatible

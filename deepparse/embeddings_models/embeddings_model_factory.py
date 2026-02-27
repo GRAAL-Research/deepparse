@@ -34,10 +34,8 @@ class EmbeddingsModelFactory:
                 embeddings_model = FastTextEmbeddingsModel(file_name, verbose=verbose)
 
         else:
-            raise NotImplementedError(
-                f"""
+            raise NotImplementedError(f"""
             The {embedding_model_type} embeddings model does not exist.
-            Existing embeddings models are: bpemb, fasttext and fasttext_magnitude"""
-            )
+            Existing embeddings models are: bpemb, fasttext and fasttext_magnitude""")
 
         return embeddings_model

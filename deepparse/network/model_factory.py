@@ -1,4 +1,4 @@
-# pylint: disable=too-many-arguments
+# pylint: disable=too-many-arguments, too-many-positional-arguments
 from typing import Dict, Tuple, Union
 
 import torch
@@ -66,11 +66,9 @@ class ModelFactory:
             )
 
         else:
-            raise NotImplementedError(
-                f"""
+            raise NotImplementedError(f"""
                     There is no {model_type} network implemented. model_type should be either "fasttext" or "bpemb".
-            """
-            )
+            """)
 
         if path_to_retrained_model:
             model, version = self.model_loader.load_weights(model, path_to_retrained_model, device)

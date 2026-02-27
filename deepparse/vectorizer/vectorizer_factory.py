@@ -30,11 +30,9 @@ class VectorizerFactory:
             vectorizer = MagnitudeVectorizer(embeddings_model)
 
         else:
-            raise NotImplementedError(
-                """
+            raise NotImplementedError("""
             There's no vectorizer corresponding to the embeddings model type provided.
             Supported embedding models are: BPEmbEmbeddingsModel, FastTextEmbeddingsModel and MagnitudeEmbeddingsModel.
-            """
-            )
+            """)
 
         return vectorizer

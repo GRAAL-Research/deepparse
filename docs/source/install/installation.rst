@@ -39,7 +39,7 @@ Before installing deepparse, you must have the latest version of `PyTorch <https
 
    pip install "deepparse[all]"
 
-- **Install the stable version of Deepparse with FastText support (Python 3.10–3.12 only):**
+- **Install the stable version of Deepparse with native FastText support (requires Python 3.10–3.12):**
 
   .. code-block:: sh
 

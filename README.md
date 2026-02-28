@@ -415,7 +415,7 @@ pip install deepparse[all]  # for bash terminal
 pip install 'deepparse[all]' # for ZSH terminal
 ```
 
-- **Install the stable version of Deepparse with FastText support (Python 3.10–3.12 only):**
+- **Install the stable version of Deepparse with native FastText support (requires Python 3.10–3.12):**
 
 ```sh
 pip install deepparse[fasttext]  # for bash terminal

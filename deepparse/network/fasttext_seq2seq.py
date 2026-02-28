@@ -1,6 +1,6 @@
 # pylint: disable=too-many-arguments, duplicate-code, too-many-locals
 
-from typing import Union, List
+from typing import List, Union
 
 import torch
 
@@ -13,9 +13,6 @@ class FastTextSeq2SeqModel(Seq2SeqModel):
     less accuracy.
 
     Args:
-        cache_dir (str): The path to the cached directory to use for downloading (and loading) the
-            model weights.
-        device (~torch.device): The device tu use for the prediction.
         input_size (int): The input size of the encoder (i.e. the size of the embedding). The default value is ``300``.
         encoder_hidden_size (int): The size of the encoder's hidden layer(s). The default value is ``1024``.
         encoder_num_layers (int): The number of hidden layers of the encoder. The default value is ``1``.
@@ -24,15 +21,10 @@ class FastTextSeq2SeqModel(Seq2SeqModel):
         output_size (int): The size of the prediction layers (i.e. the number of tags to predict). The default value
             is ``9``.
         attention_mechanism (bool): Either or not to use the attention mechanism. The default value is ``False``.
-        verbose (bool): Turn on/off the verbosity of the model. The default value is ``True``.
-        path_to_retrained_model (Union[str, None]): The path to the retrained model to use for the seq2seq. The default
-            value is ``None``.
     """
 
     def __init__(
         self,
-        cache_dir: str,
-        device: torch.device,
         input_size: int = 300,
         encoder_hidden_size: int = 1024,
         encoder_num_layers: int = 1,
@@ -40,13 +32,8 @@ class FastTextSeq2SeqModel(Seq2SeqModel):
         decoder_num_layers: int = 1,
         output_size: int = 9,
         attention_mechanism: bool = False,
-        verbose: bool = True,
-        path_to_retrained_model: Union[str, None] = None,
-        pre_trained_weights: bool = True,
-        offline: bool = False,
     ) -> None:
         super().__init__(
-            device,
             input_size=input_size,
             encoder_hidden_size=encoder_hidden_size,
             encoder_num_layers=encoder_num_layers,
@@ -54,26 +41,7 @@ class FastTextSeq2SeqModel(Seq2SeqModel):
             decoder_num_layers=decoder_num_layers,
             output_size=output_size,
             attention_mechanism=attention_mechanism,
-            verbose=verbose,
         )
-
-        model_weights_name = "fasttext"
-        if attention_mechanism:
-            model_weights_name += "_attention"
-
-        if path_to_retrained_model is not None:
-            self._load_weights(path_to_retrained_model)
-
-            version = "FineTunedModel" + self._load_version(model_type=model_weights_name, cache_dir=cache_dir)
-        elif pre_trained_weights:
-            # Means we use the pretrained weights
-            self._load_pre_trained_weights(model_weights_name, cache_dir=cache_dir, offline=offline)
-
-            version = self._load_version(model_type=model_weights_name, cache_dir=cache_dir)
-        else:
-            version = ""
-
-        self.version = version
 
     def forward(
         self,

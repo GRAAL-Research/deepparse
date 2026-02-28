@@ -11,7 +11,8 @@ import pytest
 
 from deepparse.cli import retrain
 from deepparse.cli.retrain import get_args, parse_retrained_arguments
-from tests.parser.integration.base_retrain import RetrainTestCase
+
+from .base import RetrainTestCase
 
 # Pylint error for TemporaryDirectory ask for with statement
 # pylint: disable=consider-using-with

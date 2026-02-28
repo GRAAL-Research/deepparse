@@ -1,11 +1,11 @@
 from unittest import TestCase
 
 from deepparse.pre_processing import (
+    PreProcessorList,
     coma_cleaning,
+    double_whitespaces_cleaning,
     lower_cleaning,
     trailing_whitespace_cleaning,
-    double_whitespaces_cleaning,
-    PreProcessorList,
 )
 
 

@@ -1,20 +1,20 @@
 # pylint: disable=too-many-arguments
 from abc import ABC, abstractmethod
 from pickle import load
-from typing import Union, List, Dict, Callable, Tuple
+from typing import Callable, Dict, List, Tuple, Union
 
 import pandas as pd
 from torch.utils.data import Dataset
 
-from .tools import former_python_list, validate_column_names
 from ..data_validation import (
     validate_if_any_empty,
-    validate_if_any_whitespace_only,
-    validate_if_any_none,
     validate_if_any_multiple_consecutive_whitespace,
     validate_if_any_newline_character,
+    validate_if_any_none,
+    validate_if_any_whitespace_only,
 )
 from ..errors.data_error import DataError
+from .tools import former_python_list, validate_column_names
 
 
 class DatasetContainer(Dataset, ABC):

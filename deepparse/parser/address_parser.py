@@ -10,7 +10,7 @@ import warnings
 from functools import partial
 from pathlib import Path
 from platform import system
-from typing import Dict, List, Tuple, Union, Callable
+from typing import Callable, Dict, List, Tuple, Union
 
 import torch
 from cloudpathlib import CloudPath, S3Path
@@ -18,6 +18,25 @@ from poutyne.framework import Experiment
 from torch.optim import SGD
 from torch.utils.data import DataLoader, Subset
 
+from .. import validate_data_to_parse
+from ..converter import DataPadder, DataProcessorFactory, TagsConverter
+from ..dataset_container import DatasetContainer
+from ..download_tools import CACHE_PATH
+from ..embeddings_models import EmbeddingsModelFactory
+from ..errors import FastTextModelError
+from ..metrics import accuracy, nll_loss
+from ..network import ModelFactory, ModelLoader
+from ..pre_processing import (
+    coma_cleaning,
+    double_whitespaces_cleaning,
+    hyphen_cleaning,
+    lower_cleaning,
+    trailing_whitespace_cleaning,
+)
+from ..pre_processing.pre_processor_list import PreProcessorList
+from ..validations import valid_poutyne_version
+from ..vectorizer import VectorizerFactory
+from ..weights_tools import handle_weights_upload
 from . import formatted_parsed_address
 from .formatted_parsed_address import FormattedParsedAddress
 from .tools import (
@@ -25,26 +44,12 @@ from .tools import (
     get_files_in_directory,
     handle_model_name,
     indices_splitting,
-    infer_model_type,
+    infer_retrained_model_type,
     load_tuple_to_device,
     pretrained_parser_in_directory,
     validate_if_new_prediction_tags,
     validate_if_new_seq2seq_params,
 )
-from .. import validate_data_to_parse
-from ..converter import TagsConverter, DataProcessorFactory, DataPadder
-from ..dataset_container import DatasetContainer
-from ..download_tools import CACHE_PATH
-from ..embeddings_models import EmbeddingsModelFactory
-from ..errors import FastTextModelError
-from ..metrics import nll_loss, accuracy
-from ..network import ModelFactory
-from ..pre_processing import coma_cleaning, lower_cleaning, hyphen_cleaning
-from ..pre_processing import trailing_whitespace_cleaning, double_whitespaces_cleaning
-from ..pre_processing.pre_processor_list import PreProcessorList
-from ..validations import valid_poutyne_version
-from ..vectorizer import VectorizerFactory
-from ..weights_tools import handle_weights_upload
 
 _pre_trained_tags_to_idx = {
     "StreetNumber": 0,
@@ -118,9 +123,9 @@ class AddressParser:
             embeddings model and the model pretrained weights.
         offline (bool): Whether or not the model is an offline one, meaning you have already downloaded the pre-trained
             weights and embeddings weights in either the default Deepparse cache directory (``"~./cache/deepparse"``) or
-            the ``cache_dir`` directory. When offline, we will not verify if the model is the latest. You can use our
-            ``download_models`` CLI function to download all the requirements for a model. The default value is
-            ``False`` (not an offline parsing model).
+            the ``cache_dir`` directory. When offline is ``False``, we will download the latest model if one is
+            available. You can use our``download_models`` CLI function to download all the requirements for a model.
+            The default value is``False`` (not an offline parsing model).
 
     Note:
         For both networks, we will download the pretrained weights and embeddings in the ``.cache`` directory
@@ -132,15 +137,23 @@ class AddressParser:
 
         Here are the URLs to download our pretrained models directly
 
-            - `FastText <https://graal.ift.ulaval.ca/public/deepparse/fasttext.ckpt>`_,
-            - `BPEmb <https://graal.ift.ulaval.ca/public/deepparse/bpemb.ckpt>`_,
-            - `FastText Light <https://graal.ift.ulaval.ca/public/deepparse/fasttext.magnitude.gz>`_.
+            - `FastText <https://huggingface.co/deepparse/fasttext-base>`_,
+            - `BPEmb <https://huggingface.co/deepparse/bpemb-base>`_,
+            - `FastText Light <https://huggingface.co/deepparse/fasttext-base/tree/light-embeddings>`_.
 
     Note:
         Since Windows uses ``spawn`` instead of ``fork`` during multiprocess (for the data loading pre-processing
         ``num_worker`` > 0) we use the Gensim model, which takes more RAM (~10 GO) than the Fasttext one (~8 GO).
         It also takes a longer time to load. See here the
         `issue <https://github.com/GRAAL-Research/deepparse/issues/89>`_.
+
+    Note:
+        On Python 3.13+, the ``fasttext`` native library is not available because the underlying C++ code
+        has not been updated for newer Python versions. Deepparse automatically falls back to using Gensim to load
+        FastText embeddings. This fallback uses more RAM (~10 GO vs ~8 GO) and is slower to load, but is
+        functionally equivalent. You can install ``fasttext-wheel`` manually with
+        ``pip install deepparse[fasttext]`` if a compatible version becomes available.
+        BPEmb and FastText Light (Magnitude) models are not affected.
 
     Note:
         You may observe a 100% CPU load the first time you call the fasttext-light model. We
@@ -272,7 +285,7 @@ class AddressParser:
             named_parser = checkpoint_weights.get("named_parser")
 
             # We "infer" the model type, thus we also had to handle the attention_mechanism bool
-            model_type, attention_mechanism = infer_model_type(
+            model_type, attention_mechanism = infer_retrained_model_type(
                 checkpoint_weights, attention_mechanism=attention_mechanism
             )
 
@@ -306,10 +319,6 @@ class AddressParser:
         ``"FastText"``.
         """
         return self._model_type_formatted
-
-    @property
-    def version(self):
-        return self.model.version
 
     def __call__(
         self,
@@ -476,16 +485,16 @@ class AddressParser:
         epochs: int = 5,
         num_workers: int = 1,
         learning_rate: float = 0.01,
-        callbacks: Union[List, None] = None,
+        callbacks: Union[List[Callable], None] = None,
         seed: int = 42,
         logging_path: str = "./checkpoints",
         disable_tensorboard: bool = True,
-        prediction_tags: Union[Dict, None] = None,
-        seq2seq_params: Union[Dict, None] = None,
+        prediction_tags: Union[Dict[str, int], None] = None,
+        seq2seq_params: Union[Dict[str, int], None] = None,
         layers_to_freeze: Union[str, None] = None,
         name_of_the_retrain_parser: Union[None, str] = None,
         verbose: Union[None, bool] = None,
-    ) -> List[Dict]:
+    ) -> List[Dict[str, float]]:
         # pylint: disable=too-many-arguments, too-many-locals, too-many-branches, too-many-statements
 
         """
@@ -755,12 +764,13 @@ class AddressParser:
 
         if seq2seq_params is not None:
             # Handle seq2seq params
-            # We set the flag to use the pretrained weights to false since we train new ones
-            seq2seq_params.update({"pre_trained_weights": False})
-
             model_factory_dict.update({"seq2seq_kwargs": seq2seq_params})
+
             # We set verbose to false since the model is reloaded
-            self._setup_model(verbose=False, path_to_retrained_model=None, **model_factory_dict)
+            # We set the flag to use the pretrained weights to false since we train new ones
+            self._setup_model(
+                verbose=False, path_to_retrained_model=None, pre_trained_weights=False, **model_factory_dict
+            )
 
         callbacks = [] if callbacks is None else callbacks
         train_generator, valid_generator = self._create_training_data_generator(
@@ -841,9 +851,11 @@ class AddressParser:
             )
             file_path = os.path.join(logging_path, file_name)
 
+            self.version = "Finetuned_" + self.version
             torch_save = {
                 "address_tagger_model": exp.model.network.state_dict(),
                 "model_type": self.model_type,
+                "version": self.version,
             }
 
             if seq2seq_params is not None:
@@ -893,10 +905,10 @@ class AddressParser:
         test_dataset_container: DatasetContainer,
         batch_size: int = 32,
         num_workers: int = 1,
-        callbacks: Union[List, None] = None,
+        callbacks: Union[List[Callable], None] = None,
         seed: int = 42,
         verbose: Union[None, bool] = None,
-    ) -> Dict:
+    ) -> Dict[str, float]:
         # pylint: disable=too-many-arguments, too-many-locals
         """
         Method to test a retrained or a pretrained model using a dataset with the default tags. If you test a
@@ -1033,8 +1045,8 @@ class AddressParser:
 
     def _fill_tagged_addresses_components(
         self,
-        tags_predictions: List,
-        tags_predictions_prob: List,
+        tags_predictions: List[List[int]],
+        tags_predictions_prob: List[List[float]],
         addresses_to_parse: List[str],
         clean_addresses: List[str],
         with_prob: bool,
@@ -1072,27 +1084,27 @@ class AddressParser:
         if device == "cpu":
             self.device = torch.device("cpu")
             self.pin_memory = False
-        else:
-            if torch.cuda.is_available():
-                self.pin_memory = True
-                if isinstance(device, torch.device):
-                    self.device = device
-                elif isinstance(device, str):
-                    if re.fullmatch(r"cuda:\d+", device.lower()):
-                        self.device = torch.device(device)
-                    else:
-                        raise ValueError("String value should follow the pattern 'cuda:[int]'.")
-                elif isinstance(device, int):
-                    if device >= 0:
-                        self.device = torch.device(f"cuda:{device}")
-                    else:
-                        raise ValueError("Device should not be a negative number.")
+        elif isinstance(device, torch.device):
+            self.device = device
+            self.pin_memory = torch.cuda.is_available() and device.type == "cuda"
+        elif torch.cuda.is_available():
+            self.pin_memory = True
+            if isinstance(device, str):
+                if re.fullmatch(r"cuda:\d+", device.lower()):
+                    self.device = torch.device(device)
                 else:
-                    raise ValueError("Device should be a string, an int or a torch device.")
+                    raise ValueError("String value should follow the pattern 'cuda:[int]'.")
+            elif isinstance(device, int):
+                if device >= 0:
+                    self.device = torch.device(f"cuda:{device}")
+                else:
+                    raise ValueError("Device should not be a negative number.")
             else:
-                warnings.warn("No CUDA device detected, device will be set to 'CPU'.", category=UserWarning)
-                self.device = torch.device("cpu")
-                self.pin_memory = False
+                raise ValueError("Device should be a string, an int or a torch device.")
+        else:
+            warnings.warn("No CUDA device detected, device will be set to 'CPU'.", category=UserWarning)
+            self.device = torch.device("cpu")
+            self.pin_memory = False
 
     def _create_training_data_generator(
         self,
@@ -1138,8 +1150,9 @@ class AddressParser:
         self,
         verbose: bool,
         path_to_retrained_model: Union[str, None] = None,
+        pre_trained_weights: bool = True,
         prediction_layer_len: int = 9,
-        attention_mechanism=False,
+        attention_mechanism: bool = False,
         seq2seq_kwargs: Union[dict, None] = None,
         cache_dir: Union[dict, None] = None,
         offline: bool = False,
@@ -1155,13 +1168,14 @@ class AddressParser:
             # Set to default cache_path value
             cache_dir = CACHE_PATH
 
-        self.model = ModelFactory().create(
+        model_factory = ModelFactory(ModelLoader(cache_dir=cache_dir))
+        self.model, self.version = model_factory.create(
             model_type=self.model_type,
-            cache_dir=cache_dir,
             device=self.device,
             output_size=prediction_layer_len,
             attention_mechanism=attention_mechanism,
             path_to_retrained_model=path_to_retrained_model,
+            pre_trained_weights=pre_trained_weights,
             offline=offline,
             verbose=verbose,
             **seq2seq_kwargs,
@@ -1176,7 +1190,7 @@ class AddressParser:
 
         self.processor = DataProcessorFactory().create(vectorizer, padder, self.tags_converter)
 
-    def _predict_pipeline(self, data: List) -> Tuple:
+    def _predict_pipeline(self, data: List[str]) -> Tuple:
         """
         Pipeline to process data in a data loader for prediction.
         """
@@ -1189,10 +1203,10 @@ class AddressParser:
         valid_generator: DatasetContainer,
         epochs: int,
         seed: int,
-        callbacks: List,
+        callbacks: List[Callable],
         disable_tensorboard: bool,
         verbose: Union[None, bool],
-    ) -> List[Dict]:
+    ) -> List[Dict[str, float]]:
         # pylint: disable=too-many-arguments
         train_res = experiment.train(
             train_generator,
@@ -1244,7 +1258,12 @@ class AddressParser:
                 # the freezing. Namely, the decoder.linear when we freeze the decoder, but we expect the final layer
                 # to be unfrozen.
 
-    def _formatted_named_parser_name(self, prediction_tags: Dict, seq2seq_params: Dict, layers_to_freeze: str) -> str:
+    def _formatted_named_parser_name(
+        self,
+        prediction_tags: Union[Dict[str, int], None],
+        seq2seq_params: Union[Dict[str, int], None],
+        layers_to_freeze: Union[str, None],
+    ) -> str:
         prediction_tags_str = "ModifiedPredictionTags" if prediction_tags is not None else ""
         seq2seq_params_str = "ModifiedSeq2SeqConfiguration" if seq2seq_params is not None else ""
         layers_to_freeze_str = f"FreezedLayer{layers_to_freeze.capitalize()}" if layers_to_freeze is not None else ""
@@ -1257,7 +1276,7 @@ class AddressParser:
         val_dataset_container: DatasetContainer,
         num_workers: int,
         name_of_the_retrain_parser: Union[str, None],
-    ):
+    ) -> None:
         """
         Arguments validation test for retrain methods.
         """
@@ -1294,7 +1313,7 @@ class AddressParser:
                     "The name_of_the_retrain_parser should NOT include a file extension or a dot-like filename style."
                 )
 
-    def _model_os_validation(self, num_workers):
+    def _model_os_validation(self, num_workers: int) -> None:
         if system() == "Windows" and "fasttext" in self.model_type and num_workers > 0:
             raise FastTextModelError(
                 "On Windows system, we cannot use FastText-like models with parallelism workers since "
@@ -1303,7 +1322,14 @@ class AddressParser:
             )
 
         if system() == "Darwin" and "fasttext" in self.model_type and num_workers > 0:
-            torch.multiprocessing.set_start_method('fork')
+            try:
+                torch.multiprocessing.set_start_method('fork')
+            except RuntimeError as e:
+                if 'context has already been set' in str(e):
+                    pass
+                else:
+                    raise RuntimeError("There has been an issue with the multiprocessing context initialisation") from e
+
             warnings.warn(
                 "On MacOS system, we cannot use FastText-like models with parallelism out-of-the-box since "
                 "FastText objects are not pickleable with the parallelism process used by default by MacOS. "
@@ -1312,5 +1338,5 @@ class AddressParser:
                 category=UserWarning,
             )
 
-    def is_same_model_type(self, other) -> bool:
+    def is_same_model_type(self, other: "AddressParser") -> bool:
         return self.model_type == other.model_type

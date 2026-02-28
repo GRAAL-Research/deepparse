@@ -3,30 +3,30 @@ import logging
 import sys
 from functools import partial
 
+from .. import MODEL_MAPPING_CHOICES
+from ..parser import AddressParser
 from .parser_arguments_adder import (
-    add_device_arg,
-    add_csv_column_separator_arg,
-    add_csv_column_name_arg,
-    add_log_arg,
-    add_cache_dir_arg,
     add_batch_size_arg,
+    add_cache_dir_arg,
+    add_csv_column_name_arg,
+    add_csv_column_separator_arg,
+    add_device_arg,
+    add_log_arg,
     add_path_to_retrained_model_arg,
 )
 from .tools import (
-    is_csv_path,
-    is_pickle_path,
-    to_csv,
-    to_pickle,
-    generate_export_path,
-    wrap,
-    is_json_path,
-    to_json,
-    replace_path_extension,
     attention_model_type_handling,
     data_container_factory,
+    generate_export_path,
+    is_csv_path,
+    is_json_path,
+    is_pickle_path,
+    replace_path_extension,
+    to_csv,
+    to_json,
+    to_pickle,
+    wrap,
 )
-from .. import MODEL_MAPPING_CHOICES
-from ..parser import AddressParser
 
 
 def main(args=None) -> None:

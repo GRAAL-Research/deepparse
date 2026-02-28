@@ -8,7 +8,7 @@ import os
 import unittest
 from tempfile import TemporaryDirectory
 from unittest import TestCase
-from unittest.mock import patch, call
+from unittest.mock import call, patch
 
 from deepparse.cli.download_models import main as download_models_cli_main
 
@@ -57,7 +57,7 @@ class DownloadModelsTests(TestCase):
         self.assertEqual(expected_call_count, actual_call_count)
 
         for model_type in self.models_type_mapping.values():
-            weights_download_mock.assert_has_calls([call(model_type, saving_dir=self.fake_cache_dir)])
+            weights_download_mock.assert_has_calls([call(model_type, self.fake_cache_dir, verbose=True, offline=False)])
 
 
 if __name__ == "__main__":

@@ -51,7 +51,8 @@ repos:
                 tests/network/base.py|
                 tests/parser/base.py|
                 tests/network/integration/base.py|
-                tests/network/base.py
+                tests/network/base.py|
+                tests/cli/base.py
             )$
       - id: trailing-whitespace
         types: [ python ]

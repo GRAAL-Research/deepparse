@@ -5,13 +5,14 @@
 # pylint: disable=consider-using-with
 
 import os
-import pickle
 from tempfile import TemporaryDirectory
 from unittest import TestCase
 
+import safetensors
 import torch
+from transformers.utils.hub import cached_file
 
-from deepparse import download_from_public_repository, download_weights
+from deepparse import download_weights
 
 
 class Seq2SeqIntegrationTestCase(TestCase):
@@ -26,32 +27,41 @@ class Seq2SeqIntegrationTestCase(TestCase):
 
         cls.number_of_tags = 9  # default tag space of our models
 
+        cls.a_batch_size = 2
+        cls.sequence_len = 6
+        cls.decomposition_len = 6
+
         cls.output_size = 9
 
         cls.temp_dir_obj = TemporaryDirectory()
         cls.weights_dir = os.path.join(cls.temp_dir_obj.name, "./weights")
 
-        download_from_public_repository(file_name="to_predict_bpemb", saving_dir=cls.weights_dir, file_extension="p")
-        download_from_public_repository(
-            file_name="to_predict_fasttext",
-            saving_dir=cls.weights_dir,
-            file_extension="p",
-        )
-        download_from_public_repository(file_name="decoder_hidden", saving_dir=cls.weights_dir, file_extension="p")
-
         cls.path = os.path.join(cls.temp_dir_obj.name, ".cache", "deepparse")
-        cls.retrain_file_name_format = "retrained_{}_address_parser"
+        cls.retrain_file_name_format = "retrained_{}_address_parser.ckpt"
 
         cls.cache_dir = cls.path  # We use the same cache dir as the path we download the models and weights
 
     @classmethod
     def models_setup(cls, model_type: str, cache_dir: str) -> None:
         # We download the "normal" model and the .version file
-        download_weights(model_type, cache_dir, verbose=False)
+        model_id = download_weights(model_type, cache_dir, verbose=False, offline=False)
 
-        # We also download the "pre_trained" model
-        model = cls.retrain_file_name_format.format(model_type)
-        download_from_public_repository(file_name=model, saving_dir=cache_dir, file_extension="ckpt")
+        # We also simulate a retrained model
+        model_file_name = cls.retrain_file_name_format.format(model_type)
+
+        weights = safetensors.torch.load_file(
+            cached_file(model_id, filename="model.safetensors", local_files_only=True, cache_dir=cache_dir)
+        )
+
+        version = "Finetuned_"
+        torch_save = {
+            "address_tagger_model": weights,
+            "model_type": model_type,
+            "version": version,
+            "named_parser": "SimulatedRetrainedParser",
+        }
+        torch.save(torch_save, os.path.join(cache_dir, model_file_name))
+
         cls.re_trained_output_dim = 3
 
     @classmethod
@@ -59,8 +69,13 @@ class Seq2SeqIntegrationTestCase(TestCase):
         cls.temp_dir_obj.cleanup()
 
     def encoder_input_setUp(self, model_type: str, device: torch.device):
-        with open(os.path.join(self.weights_dir, f"to_predict_{model_type}.p"), "rb") as file:
-            self.to_predict_tensor = pickle.load(file)
+        if "bpemb" in model_type:
+            self.to_predict_tensor = torch.rand(
+                (self.a_batch_size, self.sequence_len, self.decomposition_len, self.input_size)
+            )
+        else:
+            self.to_predict_tensor = torch.rand((self.a_batch_size, self.sequence_len, self.input_size))
+
         self.to_predict_tensor = self.to_predict_tensor.to(device)
 
         self.a_lengths_list = [6, 6]
@@ -68,11 +83,10 @@ class Seq2SeqIntegrationTestCase(TestCase):
 
     def encoder_output_setUp(self, device: torch.device):
         self.decoder_input = torch.tensor([[[-1.0], [-1.0]]], device=device)
-        with open(os.path.join(self.weights_dir, "decoder_hidden.p"), "rb") as file:
-            self.decoder_hidden_tensor = pickle.load(file)
+
         self.decoder_hidden_tensor = (
-            self.decoder_hidden_tensor[0].to(device),
-            self.decoder_hidden_tensor[1].to(device),
+            torch.rand((self.num_layers, self.a_batch_size, self.decoder_hidden_size)).to(device),
+            torch.rand((self.num_layers, self.a_batch_size, self.decoder_hidden_size)).to(device),
         )
         self.encoder_hidden = torch.rand((self.a_batch_size, self.a_target_vector.shape[1], self.encoder_hidden_size))
 

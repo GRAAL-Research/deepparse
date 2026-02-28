@@ -8,9 +8,10 @@ from unittest.mock import patch
 
 import pytest
 
-from deepparse.cli import test, generate_export_path
+from deepparse.cli import generate_export_path, test
 from tests.parser.base import PretrainedWeightsBase
-from tests.parser.integration.base_retrain import RetrainTestCase
+
+from .base import RetrainTestCase
 
 
 @skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run for unit tests since download is too long.")

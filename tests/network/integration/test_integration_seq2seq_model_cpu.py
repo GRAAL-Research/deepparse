@@ -9,8 +9,8 @@ from unittest.mock import patch
 
 import torch
 
-from deepparse import CACHE_PATH
 from deepparse.network import Seq2SeqModel
+
 from ..integration.base import Seq2SeqIntegrationTestCase
 
 
@@ -24,7 +24,6 @@ class Seq2SeqCPUIntegrationTest(Seq2SeqIntegrationTestCase):
     def setUp(self) -> None:
         super().setUp()
         self.pre_trained_seq2seq_model = Seq2SeqModel(
-            self.a_cpu_device,
             input_size=self.input_size,
             encoder_hidden_size=self.encoder_hidden_size,
             encoder_num_layers=self.num_layers,
@@ -132,17 +131,6 @@ class Seq2SeqCPUIntegrationTest(Seq2SeqIntegrationTestCase):
         )
 
         random_mock.assert_not_called()
-
-    @patch("deepparse.network.seq2seq.download_weights")
-    def test_givenAnOfflineSeq2SeqModel_whenInit_thenDontCallDownloadWeights(self, download_weights_mock):
-        # Test if functions latest_version and download_weights
-
-        a_model_type = "fasttext"
-
-        default_cache = CACHE_PATH
-        self.pre_trained_seq2seq_model._load_pre_trained_weights(a_model_type, cache_dir=default_cache, offline=True)
-
-        download_weights_mock.assert_not_called()
 
 
 if __name__ == "__main__":

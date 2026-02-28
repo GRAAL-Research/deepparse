@@ -19,10 +19,9 @@
 [![pr welcome](https://img.shields.io/badge/PR-Welcome-%23FF8300.svg?)](https://img.shields.io/badge/PR-Welcome-%23FF8300.svg?)
 [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](http://www.gnu.org/licenses/lgpl-3.0)
 [![DOI](https://zenodo.org/badge/276474742.svg)](https://zenodo.org/badge/latestdoi/276474742)
+[![Hugging Face Download](https://img.shields.io/badge/Hugging%20Face-FFD21E?logo=huggingface&logoColor=000)](https://huggingface.co/deepparse)
 
 [![Download](https://img.shields.io/badge/Download%20Dataset-blue?style=for-the-badge&logo=download)](https://github.com/GRAAL-Research/deepparse-address-data)
-
-[![Rate on Openbase](https://badges.openbase.com/python/rating/deepparse.svg)](https://openbase.com/python/deepparse?utm_source=embedded&utm_medium=badge&utm_campaign=rate-badge)
 </div>
 
 ## Here is Deepparse.
@@ -41,7 +40,7 @@ Use deepparse to
 
 Read the documentation at [deepparse.org](https://deepparse.org).
 
-Deepparse is compatible with the __latest version of PyTorch__ and  __Python >= 3.8__.
+Deepparse is compatible with the __latest version of PyTorch__ and  __Python >= 3.10, <= 3.13__.
 
 ### Countries and Results
 
@@ -375,11 +374,11 @@ address_parser.retrain(
 
 Deepparse handles model downloads when you use it, but you can also pre-download our model. Here are the URLs to download our pretrained models directly
 
-- [FastText](https://graal.ift.ulaval.ca/public/deepparse/fasttext.ckpt),
-- [FastTextAttention](https://graal.ift.ulaval.ca/public/deepparse/fasttext_attention.ckpt),
-- [BPEmb](https://graal.ift.ulaval.ca/public/deepparse/bpemb.ckpt),
-- [BPEmbAttention](https://graal.ift.ulaval.ca/public/deepparse/bpemb_attention.ckpt),
-- [FastText Light](https://graal.ift.ulaval.ca/public/deepparse/fasttext.magnitude.gz) (
+- [FastText](https://huggingface.co/deepparse/fasttext-base),
+- [FastTextAttention](https://huggingface.co/deepparse/fasttext-attention),
+- [BPEmb](https://huggingface.co/deepparse/bpemb-base),
+- [BPEmbAttention](https://huggingface.co/deepparse/bpemb-attention),
+- [FastText Light](https://huggingface.co/deepparse/fasttext-base/tree/light-embeddings) (
   using [Magnitude Light](https://github.com/davebulaval/magnitude-light)).
 
 Or you can use our CLI to download our pretrained models directly using:
@@ -415,6 +414,17 @@ pip install 'deepparse[app]' # for ZSH terminal
 pip install deepparse[all]  # for bash terminal
 pip install 'deepparse[all]' # for ZSH terminal
 ```
+
+- **Install the stable version of Deepparse with native FastText support (requires Python 3.10–3.12):**
+
+```sh
+pip install deepparse[fasttext]  # for bash terminal
+pip install 'deepparse[fasttext]' # for ZSH terminal
+```
+
+> **Note:** On Python 3.13+, the `fasttext-wheel` package cannot be compiled. Deepparse automatically
+> uses Gensim as a fallback to load FastText embeddings, which uses slightly more RAM (~10 GO vs ~8 GO).
+> BPEmb and FastText Light (Magnitude) models are not affected.
 
 - **Install the latest development version of Deepparse:**
 

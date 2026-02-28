@@ -7,15 +7,20 @@ from pathlib import Path
 from typing import Dict, Union
 from urllib.request import urlopen
 
-import requests
-from fasttext.FastText import _FastText
-from requests import HTTPError
-from urllib3.exceptions import MaxRetryError
+try:
+    from fasttext.FastText import _FastText
+
+    FASTTEXT_AVAILABLE = True
+except ImportError:
+    _FastText = None
+    FASTTEXT_AVAILABLE = False
+
+from huggingface_hub import hf_hub_download, snapshot_download
+from transformers.utils.hub import cached_file, extract_commit_hash
+from transformers.utils.logging import disable_progress_bar, enable_progress_bar
 
 from .bpemb_url_bug_fix import BPEmbBaseURLWrapperBugFix
-from .errors.server_error import ServerError
 
-BASE_URL = "https://graal.ift.ulaval.ca/public/deepparse/{}.{}"
 CACHE_PATH = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
 
 # Status code starting in the 4xx are client error status code.
@@ -32,6 +37,15 @@ MODEL_MAPPING_CHOICES: Dict[str, str] = {
     "bpemb-attention": "bpemb_attention",
 }
 
+MODEL_REPO_IDS = {
+    "bpemb": "deepparse/bpemb-base",
+    "bpemb_attention": "deepparse/bpemb-attention",
+    "fasttext": "deepparse/fasttext-base",
+    "fasttext_attention": "deepparse/fasttext-attention",
+    "fasttext-light": "deepparse/fasttext-base",
+    "fasttext-light_attention": "deepparse/fasttext-attention",
+}
+
 
 def download_fasttext_magnitude_embeddings(cache_dir: str, verbose: bool = True, offline: bool = False) -> str:
     """
@@ -40,59 +54,84 @@ def download_fasttext_magnitude_embeddings(cache_dir: str, verbose: bool = True,
     Return the full path to the FastText embeddings.
     """
 
-    os.makedirs(cache_dir, exist_ok=True)
-
-    model = "fasttext"
-    extension = "magnitude"
-    file_name = os.path.join(cache_dir, f"{model}.{extension}")
-    if not os.path.isfile(file_name) and not offline:
+    try:
+        local_embeddings_file_path = cached_file(
+            "deepparse/fasttext-base",
+            filename="fasttext.magnitude",
+            revision="light-embeddings",
+            local_files_only=True,
+            cache_dir=cache_dir,
+        )
+    except OSError:
         if verbose:
             print(
-                "The FastText pretrained word embeddings will be download in magnitude format (2.3 GO), "
+                "The FastText pretrained word embeddings will be downloaded in magnitude format (3.5 GO), "
                 "this process will take several minutes."
             )
-        extension = extension + ".gz"
-        download_from_public_repository(file_name=model, saving_dir=cache_dir, file_extension=extension)
-        gz_file_name = file_name + ".gz"
-        with gzip.open(os.path.join(cache_dir, gz_file_name), "rb") as f:
-            with open(os.path.join(cache_dir, file_name), "wb") as f_out:
-                shutil.copyfileobj(f, f_out)
-        os.remove(os.path.join(cache_dir, gz_file_name))
-    return file_name
+
+        local_embeddings_file_path = hf_hub_download(
+            "deepparse/fasttext-base",
+            filename="fasttext.magnitude",
+            revision="light-embeddings",
+            cache_dir=cache_dir,
+            local_files_only=offline,
+        )
+
+    return local_embeddings_file_path
 
 
-def download_weights(model_filename: str, saving_dir: str, verbose: bool = True) -> None:
+def download_weights(model_type: str, saving_dir: str, verbose: bool = True, offline: bool = False) -> str:
     """
     Function to download the pretrained weights of one of our pre-trained base models.
     Args:
-       model_filename: The network type (i.e. ``fasttext`` or ``bpemb``).
+        model_type (str): The network pretrained weights to load.
         saving_dir: The path to the saving directory.
         verbose (bool): Either or not to be verbose during the download of a model. The default value is ``True``.
+        offline (bool): Whether the model is an offline or an online.
+    Return:
+        The model rep id (str) which can be used with hugging face's `from_pretrained` method.
     """
-    if verbose:
-        print(f"Downloading the pre-trained weights for the network {model_filename}.")
+    repo_id = MODEL_REPO_IDS[model_type]
 
-    try:
-        download_from_public_repository(model_filename, saving_dir, "ckpt")
-        download_from_public_repository(model_filename, saving_dir, "version")
-    except requests.exceptions.ConnectTimeout as error:
-        raise ServerError(
-            "There was an error trying to connect to the Deepparse server. Please try again later."
-        ) from error
+    if not offline:
+        if verbose:
+            warnings.warn(
+                "The offline parameter is set to False, so if a "
+                f"new pre-trained `{model_type}` model is available it will "
+                "automatically be downloaded.",
+                category=UserWarning,
+            )
+
+        # Disabling progress bar since it shows up even when no files are up to date which can get confusing
+        disable_progress_bar()
+
+        snapshot_download(repo_id, cache_dir=saving_dir, local_files_only=offline)
+
+        # Re-enabling progress bar
+        enable_progress_bar()
+
+    return repo_id
 
 
-def download_from_public_repository(file_name: str, saving_dir: str, file_extension: str) -> None:
+def load_version(model_type: str, cache_dir: str) -> str:
     """
-    Simple function to download the content of a file from the Deepparse public repository.
-    The repository URL string is `'https://graal.ift.ulaval.ca/public/deepparse/{}.{}'``
-    where the first bracket is the file name and the second is the file extension.
+    Method to load the local hashed version of the model as an attribute.
+
+    Args:
+        model_type (str): The network pretrained weights to load.
+        cache_dir (str): The path to the cached directory to use for downloading (and loading) the
+            model weights.
+
+    Return:
+        The hash of the model which corresponds to the hash of the latest commit in the local revision.
     """
-    url = BASE_URL.format(file_name, file_extension)
-    r = requests.get(url, timeout=5)
-    r.raise_for_status()  # Raise exception
-    Path(saving_dir).mkdir(parents=True, exist_ok=True)
-    with open(os.path.join(saving_dir, f"{file_name}.{file_extension}"), "wb") as file:
-        file.write(r.content)
+    repo_id = MODEL_REPO_IDS[model_type]
+
+    config_file = cached_file(repo_id, "config.json", local_files_only=True, cache_dir=cache_dir)
+
+    version = extract_commit_hash(config_file, None)
+
+    return version
 
 
 def download_models(saving_cache_path: Union[Path, None] = None) -> None:
@@ -131,74 +170,9 @@ def download_model(
             lang="multi", vs=100000, dim=300, cache_dir=saving_cache_path
         )  # The class manages the download of the pretrained words embedding
 
-    model_type_filename = MODEL_MAPPING_CHOICES[model_type]
-    model_path = os.path.join(saving_cache_path, f"{model_type_filename}.ckpt")
-    version_path = os.path.join(saving_cache_path, f"{model_type_filename}.version")
-    if not os.path.isfile(model_path) or not os.path.isfile(version_path):
-        download_weights(model_type_filename, saving_dir=saving_cache_path)
-    elif not latest_version(model_type_filename, cache_path=saving_cache_path, verbose=True):
-        print("A new version of the pretrained model is available. The newest model will be downloaded.")
-        download_weights(model_type_filename, saving_dir=saving_cache_path)
+    model_type = MODEL_MAPPING_CHOICES[model_type]
 
-
-def latest_version(model: str, cache_path: str, verbose: bool) -> bool:
-    """
-    Verify if the local model is the latest.
-    """
-    # Reading of the actual local version
-    with open(os.path.join(cache_path, model + ".version"), encoding="utf-8") as local_model_hash_file:
-        local_model_hash_version = local_model_hash_file.readline()
-
-    # We create a temporary directory for the server-side version file
-    tmp_cache = os.path.join(cache_path, "tmp")
-    try:
-        # We create a temporary directory for the server-side version file
-        os.makedirs(tmp_cache, exist_ok=True)
-
-        download_from_public_repository(model, tmp_cache, "version")
-
-        # Reading of the server-side version
-        with open(os.path.join(tmp_cache, model + ".version"), encoding="utf-8") as remote_model_hash_file:
-            remote_model_hash_version = remote_model_hash_file.readline()
-
-        is_latest_version = local_model_hash_version.strip() == remote_model_hash_version.strip()
-
-    except HTTPError as exception:  # HTTP connection error handling
-        if HTTP_CLIENT_ERROR_STATUS_CODE <= exception.response.status_code < NEXT_RANGE_STATUS_CODE:
-            # Case where the Deepparse server is down.
-            if verbose:
-                warnings.warn(
-                    f"We could not verify the cached model in the cache directory {cache_path}. It seems like"
-                    f"Deepparse server is not available at the moment. We recommend attempting to verify "
-                    f"the model version another time using our download CLI function.",
-                    category=RuntimeWarning,
-                )
-            # The is_lastest_version is set to True even if we cannot validate the version. We do so not to
-            # block the rest of the process.
-            is_latest_version = True
-        else:
-            # We re-raise the exception if the status_code is not in the two ranges we are interested in
-            # (local server or remote server error).
-            raise
-    except MaxRetryError:
-        # Case where the user does not have an Internet connection. For example, one can run it in a
-        # The Docker container is not connected to the Internet.
-        if verbose:
-            warnings.warn(
-                f"We could not verify the cached model in the cache directory {cache_path}. It seems like"
-                f"you are not connected to the Internet. We recommend verifying if you have the latest using our "
-                f"download CLI function.",
-                category=RuntimeWarning,
-            )
-        # The is_lastest_version is set to True even if we cannot validate the version. We do so not to
-        # block the rest of the process.
-        is_latest_version = True
-    finally:
-        # Cleaning the temporary directory
-        if os.path.exists(tmp_cache):
-            shutil.rmtree(tmp_cache)
-
-    return is_latest_version
+    download_weights(model_type, saving_cache_path, verbose=True, offline=False)
 
 
 # pylint: disable=pointless-string-statement
@@ -310,7 +284,7 @@ def _print_progress(downloaded_bytes: int, total_size: int) -> None:
     progress_bar = int(percent * bar_size)
     percent = round(percent * 100, 2)
     bar_print = "=" * progress_bar + ">" + " " * (bar_size - progress_bar)
-    update = f"\r(%0.2f%%) [{bar_print}]" % percent
+    update = f"\r({percent:0.2f}%) [{bar_print}]"
 
     sys.stdout.write(update)
     sys.stdout.flush()
@@ -320,8 +294,18 @@ def _print_progress(downloaded_bytes: int, total_size: int) -> None:
 
 
 # The difference with the original code is the removal of the print warning.
-def load_fasttext_embeddings(path: str) -> _FastText:
+def load_fasttext_embeddings(path: str):
     """
     Wrapper to load a model given a filepath and return a model object.
+
+    If the ``fasttext`` package is not installed (e.g. on Python 3.13+), a
+    :class:`~ImportError` is raised. In that case, the caller should fall
+    back to ``gensim.models.fasttext.load_facebook_vectors``.
     """
+    if not FASTTEXT_AVAILABLE:
+        raise ImportError(
+            "The 'fasttext' package is not installed. Install it with "
+            "'pip install fasttext-wheel' or use the gensim fallback "
+            "(automatic on Python 3.13+ and Windows)."
+        )
     return _FastText(model_path=path)

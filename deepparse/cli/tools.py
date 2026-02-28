@@ -3,11 +3,15 @@ import json
 import os
 import pickle
 import textwrap
-from typing import List, Union, Dict
+from typing import Dict, List, Union
 
 import pandas as pd
 
-from ..dataset_container import DatasetContainer, CSVDatasetContainer, PickleDatasetContainer
+from ..dataset_container import (
+    CSVDatasetContainer,
+    DatasetContainer,
+    PickleDatasetContainer,
+)
 from ..parser import FormattedParsedAddress
 
 

@@ -179,7 +179,7 @@ texinfo_documents = [
 
 intersphinx_mapping = {
     "PyTorch": ("https://pytorch.org/docs/stable/", None),
-    "python": ("https://docs.python.org/3.8", None),
+    "python": ("https://docs.python.org/3.10", None),
     "numpy": ("http://docs.scipy.org/doc/numpy/", None),
 }
 

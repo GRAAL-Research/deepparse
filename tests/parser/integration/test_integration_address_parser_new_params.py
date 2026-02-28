@@ -3,8 +3,11 @@
 import os
 from unittest import skipIf
 
-from deepparse.parser import FormattedParsedAddress, AddressParser
-from deepparse.parser import formatted_parsed_address
+from deepparse.parser import (
+    AddressParser,
+    FormattedParsedAddress,
+    formatted_parsed_address,
+)
 from tests.parser.integration.base_predict import AddressParserPredictNewParamsBase
 
 

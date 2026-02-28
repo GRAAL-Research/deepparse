@@ -2,30 +2,31 @@
 
 import logging
 from contextlib import asynccontextmanager
-from typing import List
+from typing import AsyncGenerator, List
 
 from deepparse.app.address import Address
-from deepparse.app.tools import format_parsed_addresses, address_parser_mapping
+from deepparse.app.tools import address_parser_mapping, format_parsed_addresses
 from deepparse.download_tools import MODEL_MAPPING_CHOICES, download_models
 from deepparse.parser import AddressParser
 
 try:
-    from deepparse.app.sentry import configure_sentry
-    from fastapi import FastAPI, Depends
-    from fastapi.responses import JSONResponse
     import uvicorn
+    from fastapi import Depends, FastAPI, HTTPException
+    from fastapi.responses import JSONResponse
+
+    from deepparse.app.sentry import configure_sentry  # pylint: disable=ungrouped-imports
 except ModuleNotFoundError as e:
     raise ModuleNotFoundError("Ensure you installed the extra packages using: 'pip install deepparse[app]'") from e
 
 logger = logging.getLogger(__name__)
 FORMAT = "%(asctime)s; %(levelname)s: %(message)s"
-logging.basicConfig(format=FORMAT, level=logging.DEBUG)
+logging.basicConfig(format=FORMAT, level=logging.WARNING)
 
 configure_sentry()
 
 
 @asynccontextmanager
-async def lifespan(application: FastAPI):  # pylint: disable=unused-argument
+async def lifespan(application: FastAPI) -> AsyncGenerator[None, None]:  # pylint: disable=unused-argument
     # Load the models
     logger.debug("Downloading models")
     download_models()
@@ -50,7 +51,7 @@ app = FastAPI(lifespan=lifespan)
 
 
 @app.post("/parse/{parsing_model}")
-def parse(parsing_model: str, addresses: List[Address], resp=Depends(format_parsed_addresses)):
+def parse(parsing_model: str, addresses: List[Address], resp: dict = Depends(format_parsed_addresses)) -> JSONResponse:
     """
     Parse addresses using the specified parsing model.
 
@@ -63,7 +64,7 @@ def parse(parsing_model: str, addresses: List[Address], resp=Depends(format_pars
     - **JSONResponse**: JSON response containing the parsed addresses, along with the model type and version.
 
     Raises:
-    - **AssertionError**: If the addresses parameter is empty or if the specified parsing model is not implemented.
+    - **HTTPException (422)**: If the addresses parameter is empty or if the specified parsing model is not implemented.
 
     Examples:
         Python Requests:
@@ -80,10 +81,12 @@ def parse(parsing_model: str, addresses: List[Address], resp=Depends(format_pars
         parsed_addresses = response.json()
         print(parsed_addresses)
     """
-    assert addresses, "Addresses parameter must not be empty"
-    assert (
-        parsing_model in MODEL_MAPPING_CHOICES
-    ), f"Parsing model not implemented, available choices: {MODEL_MAPPING_CHOICES}"
+    if not addresses:
+        raise HTTPException(status_code=422, detail="Addresses parameter must not be empty")
+    if parsing_model not in MODEL_MAPPING_CHOICES:
+        raise HTTPException(
+            status_code=422, detail=f"Parsing model not implemented, available choices: {list(MODEL_MAPPING_CHOICES)}"
+        )
     return JSONResponse(content=resp)
 
 

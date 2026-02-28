@@ -3,18 +3,23 @@ import unittest
 from unittest import TestCase
 from unittest.mock import patch
 
-from deepparse.vectorizer import VectorizerFactory, BPEmbVectorizer, MagnitudeVectorizer, FastTextVectorizer
 from deepparse.embeddings_models import (
     BPEmbEmbeddingsModel,
     FastTextEmbeddingsModel,
     MagnitudeEmbeddingsModel,
+)
+from deepparse.vectorizer import (
+    BPEmbVectorizer,
+    FastTextVectorizer,
+    MagnitudeVectorizer,
+    VectorizerFactory,
 )
 
 
 class VectorizerFactoryTest(TestCase):
     @classmethod
     @patch("deepparse.embeddings_models.bpemb_embeddings_model.BPEmbBaseURLWrapperBugFix")
-    @patch("deepparse.embeddings_models.fasttext_embeddings_model.load_fasttext_embeddings")
+    @patch("deepparse.load_fasttext_embeddings")
     @patch("deepparse.embeddings_models.fasttext_embeddings_model.load_facebook_vectors")
     @patch("deepparse.embeddings_models.magnitude_embeddings_model.Magnitude")
     def setUpClass(cls, magnitude_mock, facebook_vectors_load_mock, fasttext_load_mock, bpemb_mock):

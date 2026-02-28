@@ -30,7 +30,14 @@ Use deepparse to
 - retrain our pretrained models with or without freezing some layers,
 - train a new Seq2Seq addresses parsing models easily using a new model configuration.
 
-Deepparse is compatible with the **latest version of PyTorch** and  **Python >= 3.8**.
+Deepparse is compatible with the **latest version of PyTorch** and  **Python >= 3.10, <= 3.13**.
+
+.. note::
+   On Python 3.13, the ``fasttext`` native library is not available due to C++ compilation issues.
+   Deepparse automatically uses `Gensim <https://radimrehurek.com/gensim/>`__ as a fallback to load FastText
+   embeddings. This fallback uses slightly more RAM (~10 GO vs ~8 GO) and is slower to load, but is functionally
+   equivalent. BPEmb and FastText Light (Magnitude) models are not affected. See :ref:`fasttext-python-313` for
+   details.
 
 Countries and Results
 =====================

@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from numpy.core.multiarray import ndarray
+from numpy import ndarray
 
 
 class EmbeddingsModel(ABC):

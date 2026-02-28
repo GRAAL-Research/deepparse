@@ -1,9 +1,10 @@
 import contextlib
 import warnings
 from pathlib import Path
+from typing import Any, Dict
 
 import requests
-from numpy.core.multiarray import ndarray
+from numpy import ndarray
 from urllib3.exceptions import InsecureRequestWarning
 
 from ..bpemb_url_bug_fix import BPEmbBaseURLWrapperBugFix
@@ -59,7 +60,9 @@ def no_ssl_verification():
     opened_adapters = set()
     old_merge_environment_settings = requests.Session.merge_environment_settings
 
-    def merge_environment_settings(self, url, proxies, stream, verify, cert):  # pylint: disable=R0913
+    def merge_environment_settings(  # pylint: disable=R0913
+        self, url: str, proxies: Dict[str, Any], stream: bool, verify: bool, cert: Any
+    ) -> Dict[str, Any]:
         # Verification happens only once per connection, so we need to close
         # all the opened adapters once we're done. Otherwise, the effects of
         # verify=False persist beyond the end of this context manager.

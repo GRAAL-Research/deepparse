@@ -364,4 +364,45 @@
 
 - Update Gensim version in setup to allow for the installation of recent Scipy versions.
 
-## dev
+## 0.9.14
+
+- Switch model weights hosting to hugging face
+
+## 0.10.0
+
+- **Breaking change**: Drop Python 3.8 and 3.9 support. Minimum required version is now Python 3.10.
+- Add Python 3.12 support.
+- Add compatibility with Intel GPUs and other Torch acceleration devices.
+- Remove `numpy<2.0.0` version cap to support NumPy 2.x.
+- Bump pinned dependency versions for Python 3.12+ compatibility (unpin `uvicorn`, `python-decouple`, `pylint-django`, `pre-commit`, `pycountry`).
+- Update CI/CD workflows, documentation, and package setup for Python 3.12.
+- Fix outdated model download URLs from `graal.ift.ulaval.ca` to HuggingFace Hub.
+- Remove unused `BASE_URL` constant.
+- Add missing parameterized type hints across the codebase (`List[str]`, `Dict[str, int]`, `List[Callable]`, etc.).
+- Add missing return type annotations to multiple functions and methods.
+- Add Python 3.13 support.
+- Make `fasttext-wheel` an optional dependency. On Python 3.13+ (or when `fasttext` is not installed), Deepparse
+  automatically falls back to Gensim's `load_facebook_vectors` to load FastText embeddings. Install with
+  `pip install deepparse[fasttext]` for native FastText support on Python 3.10–3.12.
+- Fix `FastTextEmbeddingsModel.dim` property to use `vector_size` when using the Gensim fallback.
+- Fix Python version in `deploy.yml` and `python-publish.yml` workflows (was set to non-existent 3.14).
+- Update GitHub Actions to latest major versions (`checkout@v4`, `setup-python@v5`, `codeql-action@v3`, `gh-pages@v4`).
+- Fix Dependabot target branch from non-existent `develop` to `dev`.
+- Remove dead code: unused `attention_output` tensor allocation in `Seq2SeqModel._decoder_step`.
+- Fix `download_fasttext_magnitude_embeddings` always re-downloading even when cached.
+- Replace `assert` statements with `HTTPException` in FastAPI app for proper error handling.
+- Change default logging level from `DEBUG` to `WARNING` in app module.
+- Remove unnecessary `pybind11` from build-system requirements.
+- Remove obsolete "temporary fix for torch 1.6" comments in encoder, decoder and embedding network.
+- Remove deprecated `version` key from `docker-compose.yml`.
+- Fix mixed f-string/`%`-formatting in download progress bar.
+- Update Dockerfile base images to PyTorch 2.5.1 / CUDA 12.4 and Python 3.13.
+- Migrate PyPI publish workflow from deprecated `setup.py sdist bdist_wheel` to `python -m build`.
+- Add `MANIFEST.in` to ensure `version.txt` and `README.md` are included in source distributions.
+- Restrict docs workflow to only build on `main`, `dev`, and `stable` branches.
+- Bump `actions/setup-python` from v5 to v6.
+- Bump `docker/metadata-action` from 4.3.0 to 5.10.0.
+- Bump `docker/build-push-action` from 4.0.0 to 6.19.2.
+- Bump `github/codeql-action` from v3 to v4.
+- Bump `actions/first-interaction` from v1 to v3.
+- Bump `fastapi[all]` from 0.109.1 to 0.134.0.

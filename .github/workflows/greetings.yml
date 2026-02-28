@@ -12,5 +12,5 @@ jobs:
       - uses: actions/first-interaction@v3
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          issue-message: "Thank you for you interest in improving Deepparse."
-          pr-message: "Thank you for you interest in improving Deepparse."
+          issue_message: "Thank you for your interest in improving Deepparse."
+          pr_message: "Thank you for your interest in improving Deepparse."

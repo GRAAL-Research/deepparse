@@ -2,6 +2,10 @@ name: Docs
 
 on:
   push:
+    branches:
+      - main
+      - dev
+      - stable
   pull_request:
     branches:
       - dev

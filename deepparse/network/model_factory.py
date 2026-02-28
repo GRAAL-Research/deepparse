@@ -1,5 +1,5 @@
 # pylint: disable=too-many-arguments, too-many-positional-arguments
-from typing import Dict, Tuple, Union
+from typing import Dict, Tuple
 
 import torch
 
@@ -21,7 +21,7 @@ class ModelFactory:
         device: torch.device,
         output_size: int = 9,
         attention_mechanism: bool = False,
-        path_to_retrained_model: Union[str, None] = None,
+        path_to_retrained_model: str | None = None,
         pre_trained_weights: bool = True,
         offline: bool = False,
         verbose: bool = True,

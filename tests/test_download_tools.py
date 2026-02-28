@@ -218,19 +218,23 @@ class FastTextToolsTests(CaptureOutputTestCase):
         urlopen_mock().read.side_effect = self.a_response_payload
         urlopen_mock().getheader.return_value = "2"
         self._capture_output()
-        with urlopen_mock:
-            _ = download_fasttext_embeddings(self.a_directory_path, verbose=True)
-        actual = self.test_out.getvalue().strip()
+        with self.assertLogs("deepparse.download_tools", level="INFO") as cm:
+            with urlopen_mock:
+                _ = download_fasttext_embeddings(self.a_directory_path, verbose=True)
+
+        log_messages = " ".join(cm.output)
 
         expected = (
             "The FastText pretrained word embeddings will be downloaded (6.8 GO), "
             "this process will take several minutes."
         )
-        self.assertIn(expected, actual)
+        self.assertIn(expected, log_messages)
 
         expected = "Downloading https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.fr.300.bin.gz"
-        self.assertIn(expected, actual)
+        self.assertIn(expected, log_messages)
 
+        # Progress bar still uses sys.stdout.write
+        actual = self.test_out.getvalue().strip()
         expected = "(50.00%) [=========================>                         ]"
         self.assertIn(expected, actual)
 

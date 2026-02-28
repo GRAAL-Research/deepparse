@@ -406,3 +406,10 @@
 - Bump `github/codeql-action` from v3 to v4.
 - Bump `actions/first-interaction` from v1 to v3.
 - Bump `fastapi[all]` from 0.109.1 to 0.134.0.
+
+## 0.10.1
+
+- Replace `print()` calls with `logging` across the codebase for proper log-level control.
+- Replace `Union[X, None]` type hints with PEP 604 `X | None` pipe syntax (Python 3.10+).
+- Fix CLI `retrain` command silently ignoring the `--prediction_tags` argument.
+- Remove dead code in CLI `retrain` (`parser_args.update` on unused dict) and simplify `handle_prediction_tags()`.

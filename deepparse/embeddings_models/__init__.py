@@ -1,4 +1,5 @@
 # pylint: disable=wildcard-import
+# isort: skip_file
 from .bpemb_embeddings_model import *
 from .embeddings_model import *
 from .fasttext_embeddings_model import *

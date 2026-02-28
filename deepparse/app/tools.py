@@ -1,4 +1,4 @@
-from typing import List, Dict, Union
+from typing import Dict, List, Union
 
 from deepparse.app.address import Address
 from deepparse.download_tools import MODEL_MAPPING_CHOICES
@@ -20,10 +20,10 @@ def format_parsed_addresses(
     Returns:
     - **JSONResponse**: JSON response containing the parsed addresses, along with the model type and version.
     """
-    assert addresses, "Addresses parameter must not be empty"
-    assert (
-        parsing_model in MODEL_MAPPING_CHOICES
-    ), f"Parsing model not implemented, available choices: {MODEL_MAPPING_CHOICES}"
+    if not addresses:
+        raise ValueError("Addresses parameter must not be empty")
+    if parsing_model not in MODEL_MAPPING_CHOICES:
+        raise ValueError(f"Parsing model not implemented, available choices: {list(MODEL_MAPPING_CHOICES)}")
 
     if model_mapping is None:
         model_mapping = address_parser_mapping

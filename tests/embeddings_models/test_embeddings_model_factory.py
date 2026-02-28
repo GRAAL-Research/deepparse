@@ -4,9 +4,9 @@ from unittest import TestCase
 from unittest.mock import patch
 
 from deepparse.embeddings_models import (
+    BPEmbEmbeddingsModel,
     EmbeddingsModelFactory,
     FastTextEmbeddingsModel,
-    BPEmbEmbeddingsModel,
     MagnitudeEmbeddingsModel,
 )
 
@@ -34,7 +34,7 @@ class EmbeddingsModelFactoryTest(TestCase):
         self.assertIsInstance(embeddings_model, BPEmbEmbeddingsModel)
 
     @patch("deepparse.embeddings_models.embeddings_model_factory.download_fasttext_embeddings")
-    @patch("deepparse.embeddings_models.fasttext_embeddings_model.load_fasttext_embeddings")
+    @patch("deepparse.load_fasttext_embeddings")
     @patch("deepparse.embeddings_models.fasttext_embeddings_model.load_facebook_vectors")
     def test_givenAFasttextEmbeddingsModelType_whenCreatingEmbeddingsModel_thenShouldReturnCorrectEmbeddingsModel(
         self, facebook_vectors_load_mock, fasttext_load_mock, download_mock

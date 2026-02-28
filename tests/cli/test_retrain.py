@@ -11,6 +11,7 @@ import pytest
 
 from deepparse.cli import retrain
 from deepparse.cli.retrain import get_args, parse_retrained_arguments
+
 from .base import RetrainTestCase
 
 # Pylint error for TemporaryDirectory ask for with statement

@@ -1,13 +1,12 @@
 torch
 bpemb
-numpy<2.0.0
+numpy
 scipy
 requests
 pymagnitude-light
 colorama>=0.4.3
 poutyne
 gensim>=4.3.3
-fasttext-wheel
 pandas
 urllib3
 cloudpathlib[s3, gs, azure]

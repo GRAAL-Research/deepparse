@@ -1,7 +1,4 @@
-# Temporary fix for _forward_unimplemented for torch 1.6 https://github.com/pytorch/pytorch/issues/42305
-# pylint: disable=W0223
-
-from typing import Tuple, List
+from typing import List, Tuple
 
 import torch
 from torch import nn

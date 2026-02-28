@@ -1,12 +1,11 @@
 # pylint: disable=too-many-arguments
 import random
-
 from abc import ABC
-from typing import Tuple, Union, List
+from typing import List, Tuple, Union
 
 import torch
-from torch import nn
 from huggingface_hub import PyTorchModelHubMixin
+from torch import nn
 
 from ..network.decoder import Decoder
 from ..network.encoder import Encoder
@@ -133,14 +132,7 @@ class Seq2SeqModel(ABC, nn.Module, PyTorchModelHubMixin):
         prediction_sequence = torch.zeros(longest_sequence_length + 1, batch_size, self.output_size, device=self.device)
 
         # We decode the first token.
-        decoder_output, decoder_hidden, attention_weights = self.decoder(
-            decoder_input, decoder_hidden, encoder_outputs, lengths
-        )
-
-        if attention_weights is not None:
-            # We fill the attention.
-            attention_output = torch.ones(longest_sequence_length + 1, batch_size, 1, longest_sequence_length)
-            attention_output[0] = attention_weights
+        decoder_output, decoder_hidden, _ = self.decoder(decoder_input, decoder_hidden, encoder_outputs, lengths)
 
         # We fill the first token prediction.
         prediction_sequence[0] = decoder_output
@@ -154,14 +146,14 @@ class Seq2SeqModel(ABC, nn.Module, PyTorchModelHubMixin):
             target = target.transpose(0, 1)
             for idx in range(longest_sequence_length):
                 decoder_input = target[idx].view(1, batch_size, 1)
-                decoder_output, decoder_hidden, attention_weights = self.decoder(
+                decoder_output, decoder_hidden, _ = self.decoder(
                     decoder_input, decoder_hidden, encoder_outputs, lengths
                 )
                 prediction_sequence[idx + 1] = decoder_output
 
         else:
             for idx in range(longest_sequence_length):
-                decoder_output, decoder_hidden, attention_weights = self.decoder(
+                decoder_output, decoder_hidden, _ = self.decoder(
                     decoder_input.view(1, batch_size, 1),
                     decoder_hidden,
                     encoder_outputs,

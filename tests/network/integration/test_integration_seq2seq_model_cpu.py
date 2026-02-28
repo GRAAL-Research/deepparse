@@ -10,6 +10,7 @@ from unittest.mock import patch
 import torch
 
 from deepparse.network import Seq2SeqModel
+
 from ..integration.base import Seq2SeqIntegrationTestCase
 
 

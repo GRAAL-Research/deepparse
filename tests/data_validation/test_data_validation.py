@@ -2,14 +2,18 @@
 
 from unittest import TestCase
 
-from deepparse import validate_if_any_empty, validate_if_any_whitespace_only, validate_if_any_none
+from deepparse import (
+    validate_if_any_empty,
+    validate_if_any_none,
+    validate_if_any_whitespace_only,
+)
 from deepparse.data_validation import (
-    is_whitespace_only,
     is_empty,
-    is_none,
-    validate_if_any_multiple_consecutive_whitespace,
     is_multiple_consecutive_whitespace,
     is_newline,
+    is_none,
+    is_whitespace_only,
+    validate_if_any_multiple_consecutive_whitespace,
     validate_if_any_newline_character,
 )
 

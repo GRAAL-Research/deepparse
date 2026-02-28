@@ -1,5 +1,10 @@
-from . import DataPadder, TagsConverter, DataProcessor
-from ..vectorizer import Vectorizer, BPEmbVectorizer, FastTextVectorizer, MagnitudeVectorizer
+from ..vectorizer import (
+    BPEmbVectorizer,
+    FastTextVectorizer,
+    MagnitudeVectorizer,
+    Vectorizer,
+)
+from . import DataPadder, DataProcessor, TagsConverter
 
 
 class DataProcessorFactory:
@@ -28,11 +33,9 @@ class DataProcessorFactory:
                 vectorizer, padder.pad_word_embeddings_sequences, padder.pad_word_embeddings_batch, tags_converter
             )
         else:
-            raise NotImplementedError(
-                """
+            raise NotImplementedError("""
             There's no data processor corresponding to the provided vectorizer.
             Supported vectorizers are BPEmbVectorizer, FastTextVectorizerand MagnitudeVectorizer
-            """
-            )
+            """)
 
         return processor

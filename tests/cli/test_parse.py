@@ -12,9 +12,9 @@ from unittest.mock import patch
 
 import pytest
 
-from deepparse.cli import parse, generate_export_path
+from deepparse.cli import generate_export_path, parse
 from tests.parser.base import PretrainedWeightsBase
-from tests.tools import create_pickle_file, create_csv_file
+from tests.tools import create_csv_file, create_pickle_file
 
 
 @skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run for unit tests since download is too long.")

@@ -1,10 +1,7 @@
 # Bug with PyTorch source code makes torch.tensor as not callable for pylint.
 # pylint: disable=not-callable
 
-# Temporary fix for _forward_unimplemented for PyTorch 1.6 https://github.com/pytorch/pytorch/issues/42305
-# pylint: disable=W0223
-
-from typing import Tuple, List
+from typing import List, Tuple
 
 import torch
 from torch import nn
@@ -30,8 +27,8 @@ class EmbeddingNetwork(nn.Module):
         hidden_size: int,
         projection_size: int,
         num_layers: int = 1,
-        maxpool=False,
-        maxpool_kernel_size=3,
+        maxpool: bool = False,
+        maxpool_kernel_size: int = 3,
     ) -> None:
         # pylint: disable=too-many-arguments
         super().__init__()
@@ -105,7 +102,7 @@ class EmbeddingNetwork(nn.Module):
 
         return embeddings.transpose(0, 1)
 
-    def _max_pool(self, projection_output):
+    def _max_pool(self, projection_output: torch.Tensor) -> torch.Tensor:
         """
         Max pooling the projection output of the projection layer.
         """

@@ -1,4 +1,4 @@
-from typing import List
+from typing import Callable, List
 
 
 class PreProcessorList:
@@ -6,7 +6,7 @@ class PreProcessorList:
     A list of pre-processor address cleaner that apply them in batch over a list of addresses.
     """
 
-    def __init__(self, pre_processors: List):
+    def __init__(self, pre_processors: List[Callable]):
         """
 
         Args:

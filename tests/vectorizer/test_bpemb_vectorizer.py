@@ -4,8 +4,8 @@ from unittest.mock import MagicMock
 
 import numpy as np
 
-from deepparse.errors.data_error import DataError
 from deepparse.embeddings_models.embeddings_model import EmbeddingsModel
+from deepparse.errors.data_error import DataError
 from deepparse.vectorizer import BPEmbVectorizer
 
 

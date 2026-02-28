@@ -5,7 +5,7 @@ import sys
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from difflib import SequenceMatcher
-from typing import List, Union, Tuple, Dict
+from typing import Dict, List, Tuple, Union
 
 from ..parser import FormattedParsedAddress
 
@@ -38,7 +38,7 @@ class FormattedComparedAddresses(ABC):
     with_prob: bool
 
     @property
-    def list_of_bool(self) -> List:
+    def list_of_bool(self) -> List[Tuple[str, bool]]:
         """
         A list of boolean that contains all the address components' names and indicates if it is the same for the
         two addresses.
@@ -221,7 +221,9 @@ class FormattedComparedAddresses(ABC):
 
         return formatted_str
 
-    def _bool_address_tags_are_the_same(self, parsed_addresses: Union[List[List[tuple]], List[tuple]]) -> List[tuple]:
+    def _bool_address_tags_are_the_same(
+        self, parsed_addresses: Union[List[List[tuple]], List[tuple]]
+    ) -> List[Tuple[str, bool]]:
         """
         Compare the components between two addresses and put the differences in a dictionary where the keys are the
         names of the addresses components, and the values are the values of the addresses component.
@@ -259,7 +261,7 @@ class FormattedComparedAddresses(ABC):
         return list_of_bool_and_tag
 
     @staticmethod
-    def _unique_addresses_component_names(parsed_addresses: List[List[tuple]]) -> List:
+    def _unique_addresses_component_names(parsed_addresses: List[List[tuple]]) -> List[str]:
         """
         Retrieves all the unique address component names from the comparison, then returns it.
 

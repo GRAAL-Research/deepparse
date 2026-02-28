@@ -9,6 +9,7 @@ from unittest import skipIf
 import torch
 
 from deepparse.network import FastTextSeq2SeqModel
+
 from ..integration.base import Seq2SeqIntegrationTestCase
 
 

@@ -134,15 +134,34 @@ Download Our Models
 
 Deepparse handles model downloads when you use it, but you can also pre-download our model. Here are the URLs to download our pretrained models directly
 
-    - `FastText <https://graal.ift.ulaval.ca/public/deepparse/fasttext.ckpt>`__,
-    - `FastTextAttention <https://graal.ift.ulaval.ca/public/deepparse/fasttext_attention.ckpt>`__,
-    - `BPEmb <https://graal.ift.ulaval.ca/public/deepparse/bpemb.ckpt>`__,
-    - `BPEmbAttention <https://graal.ift.ulaval.ca/public/deepparse/bpemb_attention.ckpt>`__,
-    - `FastText Light <https://graal.ift.ulaval.ca/public/deepparse/fasttext.magnitude.gz>`__ (using `Magnitude Light <https://github.com/davebulaval/magnitude-light>`__),.
+    - `FastText <https://huggingface.co/deepparse/fasttext-base>`__,
+    - `FastTextAttention <https://huggingface.co/deepparse/fasttext-attention>`__,
+    - `BPEmb <https://huggingface.co/deepparse/bpemb-base>`__,
+    - `BPEmbAttention <https://huggingface.co/deepparse/bpemb-attention>`__,
+    - `FastText Light <https://huggingface.co/deepparse/fasttext-base/tree/light-embeddings>`__ (using `Magnitude Light <https://github.com/davebulaval/magnitude-light>`__),.
 
 Or you can use our CLI to download our pretrained models directly using:
 
 .. code-block:: sh
 
     download_model <model_name>
+
+.. _fasttext-python-313:
+
+Note on FastText Models and Python 3.13+
+*****************************************
+
+The ``fasttext`` C++ library has not been updated for Python 3.13+, so the ``fasttext-wheel`` package cannot be
+installed on these versions. Deepparse automatically falls back to using
+`Gensim <https://radimrehurek.com/gensim/>`__ to load FastText embeddings when the ``fasttext`` package is not
+available.
+
+This fallback uses slightly more RAM (~10 GO vs ~8 GO) and takes longer to load, but is **functionally equivalent**.
+The BPEmb and Magnitude (FastText Light) models are **not affected** by this limitation.
+
+If you are using Python 3.10–3.12, you can install ``fasttext-wheel`` for optimal performance:
+
+.. code-block:: sh
+
+    pip install deepparse[fasttext]
 

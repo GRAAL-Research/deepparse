@@ -14,17 +14,17 @@ from unittest.mock import patch
 import pandas as pd
 
 from deepparse.cli import (
-    is_csv_path,
-    is_pickle_path,
-    to_csv,
-    to_pickle,
-    generate_export_path,
-    is_json_path,
-    to_json,
-    replace_path_extension,
     attention_model_type_handling,
     bool_parse,
     data_container_factory,
+    generate_export_path,
+    is_csv_path,
+    is_json_path,
+    is_pickle_path,
+    replace_path_extension,
+    to_csv,
+    to_json,
+    to_pickle,
 )
 from deepparse.parser import FormattedParsedAddress
 

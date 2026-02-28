@@ -12,15 +12,15 @@ from unittest import skipIf
 import torch
 
 from deepparse.parser.tools import (
-    indices_splitting,
-    load_tuple_to_device,
-    validate_if_new_prediction_tags,
-    validate_if_new_seq2seq_params,
     get_address_parser_in_directory,
     get_files_in_directory,
-    pretrained_parser_in_directory,
     handle_model_name,
+    indices_splitting,
     infer_retrained_model_type,
+    load_tuple_to_device,
+    pretrained_parser_in_directory,
+    validate_if_new_prediction_tags,
+    validate_if_new_seq2seq_params,
 )
 from tests.parser.base import PretrainedWeightsBase
 from tests.tools import create_file

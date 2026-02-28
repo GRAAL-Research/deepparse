@@ -7,14 +7,20 @@ from pathlib import Path
 from typing import Dict, Union
 from urllib.request import urlopen
 
-from fasttext.FastText import _FastText
+try:
+    from fasttext.FastText import _FastText
+
+    FASTTEXT_AVAILABLE = True
+except ImportError:
+    _FastText = None
+    FASTTEXT_AVAILABLE = False
+
 from huggingface_hub import hf_hub_download, snapshot_download
 from transformers.utils.hub import cached_file, extract_commit_hash
 from transformers.utils.logging import disable_progress_bar, enable_progress_bar
 
 from .bpemb_url_bug_fix import BPEmbBaseURLWrapperBugFix
 
-BASE_URL = "https://graal.ift.ulaval.ca/public/deepparse/{}.{}"
 CACHE_PATH = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
 
 # Status code starting in the 4xx are client error status code.
@@ -63,13 +69,13 @@ def download_fasttext_magnitude_embeddings(cache_dir: str, verbose: bool = True,
                 "this process will take several minutes."
             )
 
-    local_embeddings_file_path = hf_hub_download(
-        "deepparse/fasttext-base",
-        filename="fasttext.magnitude",
-        revision="light-embeddings",
-        cache_dir=cache_dir,
-        local_files_only=offline,
-    )
+        local_embeddings_file_path = hf_hub_download(
+            "deepparse/fasttext-base",
+            filename="fasttext.magnitude",
+            revision="light-embeddings",
+            cache_dir=cache_dir,
+            local_files_only=offline,
+        )
 
     return local_embeddings_file_path
 
@@ -278,7 +284,7 @@ def _print_progress(downloaded_bytes: int, total_size: int) -> None:
     progress_bar = int(percent * bar_size)
     percent = round(percent * 100, 2)
     bar_print = "=" * progress_bar + ">" + " " * (bar_size - progress_bar)
-    update = f"\r(%0.2f%%) [{bar_print}]" % percent
+    update = f"\r({percent:0.2f}%) [{bar_print}]"
 
     sys.stdout.write(update)
     sys.stdout.flush()
@@ -288,8 +294,18 @@ def _print_progress(downloaded_bytes: int, total_size: int) -> None:
 
 
 # The difference with the original code is the removal of the print warning.
-def load_fasttext_embeddings(path: str) -> _FastText:
+def load_fasttext_embeddings(path: str):
     """
     Wrapper to load a model given a filepath and return a model object.
+
+    If the ``fasttext`` package is not installed (e.g. on Python 3.13+), a
+    :class:`~ImportError` is raised. In that case, the caller should fall
+    back to ``gensim.models.fasttext.load_facebook_vectors``.
     """
+    if not FASTTEXT_AVAILABLE:
+        raise ImportError(
+            "The 'fasttext' package is not installed. Install it with "
+            "'pip install fasttext-wheel' or use the gensim fallback "
+            "(automatic on Python 3.13+ and Windows)."
+        )
     return _FastText(model_path=path)

@@ -5,7 +5,10 @@ import os
 from tempfile import TemporaryDirectory
 from unittest import skipIf
 
-from deepparse import download_fasttext_embeddings, download_fasttext_magnitude_embeddings
+from deepparse import (
+    download_fasttext_embeddings,
+    download_fasttext_magnitude_embeddings,
+)
 from tests.base_file_exist import FileCreationTestCase
 
 

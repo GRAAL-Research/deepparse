@@ -11,6 +11,7 @@ THIS WILL BE FIXED IN A FUTURE RELEASE.
 IN THE MEAN TIME IF YOU NEED ANY CLARIFICATION
 REGARDING THE PACKAGE PLEASE FEEL FREE TO OPEN AN ISSUE.
 """
+
 from deepparse import download_from_public_repository
 from deepparse.dataset_container import PickleDatasetContainer
 from deepparse.parser import AddressParser

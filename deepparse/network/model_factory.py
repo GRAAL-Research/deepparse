@@ -1,11 +1,10 @@
-# pylint: disable=too-many-arguments
+# pylint: disable=too-many-arguments, too-many-positional-arguments
 from typing import Dict, Tuple, Union
 
 import torch
 
+from . import BPEmbSeq2SeqModel, FastTextSeq2SeqModel, Seq2SeqModel
 from .model_loader import ModelLoader
-
-from . import FastTextSeq2SeqModel, BPEmbSeq2SeqModel, Seq2SeqModel
 
 
 class ModelFactory:
@@ -66,11 +65,9 @@ class ModelFactory:
             )
 
         else:
-            raise NotImplementedError(
-                f"""
+            raise NotImplementedError(f"""
                     There is no {model_type} network implemented. model_type should be either "fasttext" or "bpemb".
-            """
-            )
+            """)
 
         if path_to_retrained_model:
             model, version = self.model_loader.load_weights(model, path_to_retrained_model, device)

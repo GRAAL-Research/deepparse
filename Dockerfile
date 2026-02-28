@@ -1,5 +1,5 @@
 # syntax = docker/dockerfile:experimental
-FROM pytorch/pytorch:1.11.0-cuda11.3-cudnn8-runtime
+FROM pytorch/pytorch:2.5.1-cuda12.4-cudnn9-runtime
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -33,7 +33,7 @@ RUN find /opt/conda/lib/ -follow -type f -name '*.a' -delete \
 ENV PATH /opt/conda/bin:$PATH
 
 
-FROM python:3.11.0-slim AS app
+FROM python:3.13-slim AS app
 # set work directory
 
 # set env variables

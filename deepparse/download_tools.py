@@ -69,13 +69,13 @@ def download_fasttext_magnitude_embeddings(cache_dir: str, verbose: bool = True,
                 "this process will take several minutes."
             )
 
-    local_embeddings_file_path = hf_hub_download(
-        "deepparse/fasttext-base",
-        filename="fasttext.magnitude",
-        revision="light-embeddings",
-        cache_dir=cache_dir,
-        local_files_only=offline,
-    )
+        local_embeddings_file_path = hf_hub_download(
+            "deepparse/fasttext-base",
+            filename="fasttext.magnitude",
+            revision="light-embeddings",
+            cache_dir=cache_dir,
+            local_files_only=offline,
+        )
 
     return local_embeddings_file_path
 
@@ -284,7 +284,7 @@ def _print_progress(downloaded_bytes: int, total_size: int) -> None:
     progress_bar = int(percent * bar_size)
     percent = round(percent * 100, 2)
     bar_print = "=" * progress_bar + ">" + " " * (bar_size - progress_bar)
-    update = f"\r(%0.2f%%) [{bar_print}]" % percent
+    update = f"\r({percent:0.2f}%) [{bar_print}]"
 
     sys.stdout.write(update)
     sys.stdout.flush()

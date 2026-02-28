@@ -11,7 +11,7 @@ from deepparse.parser import AddressParser
 
 try:
     import uvicorn
-    from fastapi import Depends, FastAPI
+    from fastapi import Depends, FastAPI, HTTPException
     from fastapi.responses import JSONResponse
 
     from deepparse.app.sentry import configure_sentry  # pylint: disable=ungrouped-imports
@@ -20,7 +20,7 @@ except ModuleNotFoundError as e:
 
 logger = logging.getLogger(__name__)
 FORMAT = "%(asctime)s; %(levelname)s: %(message)s"
-logging.basicConfig(format=FORMAT, level=logging.DEBUG)
+logging.basicConfig(format=FORMAT, level=logging.WARNING)
 
 configure_sentry()
 
@@ -64,7 +64,7 @@ def parse(parsing_model: str, addresses: List[Address], resp: dict = Depends(for
     - **JSONResponse**: JSON response containing the parsed addresses, along with the model type and version.
 
     Raises:
-    - **AssertionError**: If the addresses parameter is empty or if the specified parsing model is not implemented.
+    - **HTTPException (422)**: If the addresses parameter is empty or if the specified parsing model is not implemented.
 
     Examples:
         Python Requests:
@@ -81,10 +81,12 @@ def parse(parsing_model: str, addresses: List[Address], resp: dict = Depends(for
         parsed_addresses = response.json()
         print(parsed_addresses)
     """
-    assert addresses, "Addresses parameter must not be empty"
-    assert (
-        parsing_model in MODEL_MAPPING_CHOICES
-    ), f"Parsing model not implemented, available choices: {MODEL_MAPPING_CHOICES}"
+    if not addresses:
+        raise HTTPException(status_code=422, detail="Addresses parameter must not be empty")
+    if parsing_model not in MODEL_MAPPING_CHOICES:
+        raise HTTPException(
+            status_code=422, detail=f"Parsing model not implemented, available choices: {list(MODEL_MAPPING_CHOICES)}"
+        )
     return JSONResponse(content=resp)
 
 

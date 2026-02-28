@@ -9,4 +9,4 @@ extend-exclude = "/(slides)/"
 DJANGO_SETTINGS_MODULE = "settings"
 
 [build-system]
-requires = ["setuptools", "wheel", "pybind11"]
+requires = ["setuptools", "wheel"]

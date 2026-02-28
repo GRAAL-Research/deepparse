@@ -99,18 +99,19 @@ def test_parse(client: TestClient):
 
 @skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
 def test_parse_empty_addresses(client: TestClient):
-    with pytest.raises(AssertionError, match="Addresses parameter must not be empty"):
-        client.post("/parse/bpemb", json=[])
+    response = client.post("/parse/bpemb", json=[])
+    assert response.status_code == 422
+    assert "Addresses parameter must not be empty" in response.json()["detail"]
 
 
 @skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")
 def test_parse_invalid_model(client: TestClient):
-    with pytest.raises(AssertionError):
-        addresses = [
-            {"raw": "350 rue des Lilas Ouest Quebec city Quebec G1L 1B6"},
-            {"raw": "2325 Rue de l'Université, Québec, QC G1V 0A6"},
-        ]
-        client.post("/parse/invalid_model", json=addresses)
+    addresses = [
+        {"raw": "350 rue des Lilas Ouest Quebec city Quebec G1L 1B6"},
+        {"raw": "2325 Rue de l'Université, Québec, QC G1V 0A6"},
+    ]
+    response = client.post("/parse/invalid_model", json=addresses)
+    assert response.status_code == 422
 
 
 @skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")

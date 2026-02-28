@@ -397,3 +397,12 @@
 - Remove deprecated `version` key from `docker-compose.yml`.
 - Fix mixed f-string/`%`-formatting in download progress bar.
 - Update Dockerfile base images to PyTorch 2.5.1 / CUDA 12.4 and Python 3.13.
+- Migrate PyPI publish workflow from deprecated `setup.py sdist bdist_wheel` to `python -m build`.
+- Add `MANIFEST.in` to ensure `version.txt` and `README.md` are included in source distributions.
+- Restrict docs workflow to only build on `main`, `dev`, and `stable` branches.
+- Bump `actions/setup-python` from v5 to v6.
+- Bump `docker/metadata-action` from 4.3.0 to 5.10.0.
+- Bump `docker/build-push-action` from 4.0.0 to 6.19.2.
+- Bump `github/codeql-action` from v3 to v4.
+- Bump `actions/first-interaction` from v1 to v3.
+- Bump `fastapi[all]` from 0.109.1 to 0.134.0.

@@ -94,11 +94,12 @@ class TestingTests(RetrainTestCase, PretrainedWeightsBase):
 
         data_file_path = os.path.join(self.temp_dir_obj.name, 'data', self.a_train_pickle_dataset_path)
 
+        messages = [r.message for r in self._caplog.records]
+
         expected_first_message = (
             f"Testing results on dataset file {data_file_path} using the parser {self.fasttext_parser_formatted_name}."
         )
-        actual_first_message = self._caplog.records[0].message
-        self.assertEqual(expected_first_message, actual_first_message)
+        self.assertIn(expected_first_message, messages)
 
         expected_file_path = os.path.join(
             self.temp_dir_obj.name,
@@ -109,8 +110,7 @@ class TestingTests(RetrainTestCase, PretrainedWeightsBase):
             f"Testing on the dataset file {data_file_path} is finished. "
             f"The results are logged in the CSV file at {expected_file_path}."
         )
-        actual_second_message = self._caplog.records[1].message
-        self.assertEqual(expected_second_message, actual_second_message)
+        self.assertIn(expected_second_message, messages)
 
     def test_integration_no_logging(self):
         with self._caplog.at_level(logging.INFO):
@@ -125,7 +125,10 @@ class TestingTests(RetrainTestCase, PretrainedWeightsBase):
 
             test.main(parser_params)
 
-        self.assertEqual(0, len(self._caplog.records))
+        # When --log is False, file-logging-specific messages should not be present
+        messages = [r.message for r in self._caplog.records]
+        self.assertFalse(any("Testing results on dataset file" in m for m in messages))
+        self.assertFalse(any("The results are logged in the CSV file" in m for m in messages))
 
     def test_integration_attention_model(self):
         parser_params = [
@@ -201,11 +204,12 @@ class TestingTests(RetrainTestCase, PretrainedWeightsBase):
 
         data_file_path = os.path.join(self.temp_dir_obj.name, 'data', self.a_train_pickle_dataset_path)
 
+        messages = [r.message for r in self._caplog.records]
+
         expected_first_message = (
             f"Testing results on dataset file {data_file_path} using the parser {self.fasttext_parser_formatted_name}."
         )
-        actual_first_message = self._caplog.records[0].message
-        self.assertEqual(expected_first_message, actual_first_message)
+        self.assertIn(expected_first_message, messages)
 
         expected_file_path = os.path.join(
             self.temp_dir_obj.name,
@@ -216,8 +220,7 @@ class TestingTests(RetrainTestCase, PretrainedWeightsBase):
             f"Testing on the dataset file {data_file_path} is finished. "
             f"The results are logged in the CSV file at {expected_file_path}."
         )
-        actual_second_message = self._caplog.records[1].message
-        self.assertEqual(expected_second_message, actual_second_message)
+        self.assertIn(expected_second_message, messages)
 
     def test_ifPathToBPEmbRetrainModel_thenUseBPEmbRetrainModel(self):
         with self._caplog.at_level(logging.INFO):
@@ -231,13 +234,12 @@ class TestingTests(RetrainTestCase, PretrainedWeightsBase):
             test.main(parser_params)
 
         data_file_path = os.path.join(self.temp_dir_obj.name, 'data', self.a_train_pickle_dataset_path)
+        messages = [r.message for r in self._caplog.records]
 
         expected_first_message = (
             f"Testing results on dataset file {data_file_path} using the parser {self.bpemb_parser_formatted_name}."
         )
-        # Not the same position as with fasttext due to BPEmb messages
-        actual_first_message = self._caplog.records[2].message
-        self.assertEqual(expected_first_message, actual_first_message)
+        self.assertIn(expected_first_message, messages)
 
         expected_file_path = os.path.join(
             self.temp_dir_obj.name,
@@ -248,9 +250,7 @@ class TestingTests(RetrainTestCase, PretrainedWeightsBase):
             f"Testing on the dataset file {data_file_path} is finished. "
             f"The results are logged in the CSV file at {expected_file_path}."
         )
-        # Not the same position as with fasttext due to BPEmb messages
-        actual_second_message = self._caplog.records[3].message
-        self.assertEqual(expected_second_message, actual_second_message)
+        self.assertIn(expected_second_message, messages)
 
     def test_ifCachePath_thenUseNewCachePath(self):
         with patch("deepparse.cli.test.AddressParser") as address_parser_mock:

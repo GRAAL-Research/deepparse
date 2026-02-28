@@ -1,10 +1,11 @@
 import gzip
+import logging
 import os
 import shutil
 import sys
 import warnings
 from pathlib import Path
-from typing import Dict, Union
+from typing import Dict
 from urllib.request import urlopen
 
 try:
@@ -20,6 +21,8 @@ from transformers.utils.hub import cached_file, extract_commit_hash
 from transformers.utils.logging import disable_progress_bar, enable_progress_bar
 
 from .bpemb_url_bug_fix import BPEmbBaseURLWrapperBugFix
+
+logger = logging.getLogger(__name__)
 
 CACHE_PATH = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
 
@@ -64,7 +67,7 @@ def download_fasttext_magnitude_embeddings(cache_dir: str, verbose: bool = True,
         )
     except OSError:
         if verbose:
-            print(
+            logger.info(
                 "The FastText pretrained word embeddings will be downloaded in magnitude format (3.5 GO), "
                 "this process will take several minutes."
             )
@@ -134,7 +137,7 @@ def load_version(model_type: str, cache_dir: str) -> str:
     return version
 
 
-def download_models(saving_cache_path: Union[Path, None] = None) -> None:
+def download_models(saving_cache_path: Path | None = None) -> None:
     """
     Function to download all the pretrained models.  It will download all the model's checkpoints and version files.
 
@@ -147,7 +150,7 @@ def download_models(saving_cache_path: Union[Path, None] = None) -> None:
 
 def download_model(
     model_type: str,
-    saving_cache_path: Union[Path, None] = None,
+    saving_cache_path: Path | None = None,
 ) -> None:
     """
     Function to download a pretrained model. It will download its corresponding checkpoint and version file.
@@ -245,7 +248,7 @@ def download_gz_model(gz_file_name: str, saving_path: str, verbose: bool = True)
 
     url = f"https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/{gz_file_name}"
     if verbose:
-        print(
+        logger.info(
             "The FastText pretrained word embeddings will be downloaded (6.8 GO), "
             "this process will take several minutes."
         )
@@ -255,7 +258,7 @@ def download_gz_model(gz_file_name: str, saving_path: str, verbose: bool = True)
 # No modification, we just need to call our _print_progress function
 def _download_file(url: str, write_file_name: str, chunk_size: int = 2**13, verbose: bool = True) -> None:
     if verbose:
-        print(f"Downloading {url}")
+        logger.info("Downloading %s", url)
 
     response = urlopen(url)  # pylint: disable=consider-using-with
     if hasattr(response, "getheader"):

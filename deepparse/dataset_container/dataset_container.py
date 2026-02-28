@@ -1,7 +1,8 @@
 # pylint: disable=too-many-arguments
+import logging
 from abc import ABC, abstractmethod
 from pickle import load
-from typing import Callable, Dict, List, Tuple, Union
+from typing import Callable, Dict, List, Tuple
 
 import pandas as pd
 from torch.utils.data import Dataset
@@ -15,6 +16,8 @@ from ..data_validation import (
 )
 from ..errors.data_error import DataError
 from .tools import former_python_list, validate_column_names
+
+logger = logging.getLogger(__name__)
 
 
 class DatasetContainer(Dataset, ABC):
@@ -51,7 +54,7 @@ class DatasetContainer(Dataset, ABC):
 
     @abstractmethod
     def __init__(
-        self, is_training_container: bool = True, data_cleaning_pre_processing_fn: Union[None, Callable] = None
+        self, is_training_container: bool = True, data_cleaning_pre_processing_fn: None | Callable = None
     ) -> None:
         """
         The method to init the class. It needs to be defined by the child's class.
@@ -63,9 +66,7 @@ class DatasetContainer(Dataset, ABC):
     def __len__(self) -> int:
         return len(self.data)
 
-    def __getitem__(
-        self, idx: Union[int, slice]
-    ) -> Union[List[str], str, List[List[Tuple[str, List]]], Tuple[str, List]]:
+    def __getitem__(self, idx: int | slice) -> List[str] | str | List[List[Tuple[str, List]]] | Tuple[str, List]:
         """
         If the DatasetContainer is a "predict" one:
 
@@ -134,11 +135,12 @@ class DatasetContainer(Dataset, ABC):
             raise DataError("Some tags data points are empty.")
 
         if not self._data_tags_is_same_len_then_address():
-            print(
-                f"Some addresses (whitespace-split) and the associated tags are not the same length. "
-                f"If you use a CSVDatasetContainer, consider using the tag_seperator_reformat_fn argument."
-                f"Here is the report of those cases where len differ to help you out:\n"
-                f"{self._data_tags_not_the_same_len_diff()}"
+            logger.warning(
+                "Some addresses (whitespace-split) and the associated tags are not the same length. "
+                "If you use a CSVDatasetContainer, consider using the tag_seperator_reformat_fn argument."
+                "Here is the report of those cases where len differ to help you out:\n"
+                "%s",
+                self._data_tags_not_the_same_len_diff(),
             )
             raise DataError(
                 "Some addresses (whitespace-split) and the tags associated with them are not the same length."
@@ -213,7 +215,7 @@ class PickleDatasetContainer(DatasetContainer):
         self,
         data_path: str,
         is_training_container: bool = True,
-        data_cleaning_pre_processing_fn: Union[None, Callable] = None,
+        data_cleaning_pre_processing_fn: None | Callable = None,
     ) -> None:
         super().__init__(
             is_training_container=is_training_container, data_cleaning_pre_processing_fn=data_cleaning_pre_processing_fn
@@ -287,12 +289,12 @@ class CSVDatasetContainer(DatasetContainer):
     def __init__(
         self,
         data_path: str,
-        column_names: Union[List, str],
+        column_names: List | str,
         is_training_container: bool = True,
         separator: str = "\t",
-        tag_seperator_reformat_fn: Union[None, Callable] = None,
-        csv_reader_kwargs: Union[None, Dict] = None,
-        data_cleaning_pre_processing_fn: Union[None, Callable] = None,
+        tag_seperator_reformat_fn: None | Callable = None,
+        csv_reader_kwargs: None | Dict = None,
+        data_cleaning_pre_processing_fn: None | Callable = None,
     ) -> None:
         super().__init__(
             is_training_container=is_training_container, data_cleaning_pre_processing_fn=data_cleaning_pre_processing_fn
@@ -359,7 +361,7 @@ class ListDatasetContainer(DatasetContainer):
         self,
         data: List,
         is_training_container: bool = True,
-        data_cleaning_pre_processing_fn: Union[None, Callable] = None,
+        data_cleaning_pre_processing_fn: None | Callable = None,
     ) -> None:
         super().__init__(
             is_training_container=is_training_container, data_cleaning_pre_processing_fn=data_cleaning_pre_processing_fn

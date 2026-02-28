@@ -1,20 +1,20 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>deepparse.parser.address_parser &mdash; deepparse 0.9.13 documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <title>deepparse.parser.address_parser &mdash; deepparse 0.10.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+
   
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=82662543"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -32,9 +32,6 @@
             
               <img src="../../../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
-              <div class="version">
-                0.9.13
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -110,47 +107,52 @@
 <span class="c1"># It must be due to the complex try, except else case.</span>
 <span class="c1"># pylint: disable=inconsistent-return-statements</span>
 
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">platform</span> <span class="kn">import</span> <span class="n">system</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Callable</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">platform</span><span class="w"> </span><span class="kn">import</span> <span class="n">system</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
-<span class="kn">import</span> <span class="nn">torch</span>
-<span class="kn">from</span> <span class="nn">cloudpathlib</span> <span class="kn">import</span> <span class="n">CloudPath</span><span class="p">,</span> <span class="n">S3Path</span>
-<span class="kn">from</span> <span class="nn">poutyne.framework</span> <span class="kn">import</span> <span class="n">Experiment</span>
-<span class="kn">from</span> <span class="nn">torch.optim</span> <span class="kn">import</span> <span class="n">SGD</span>
-<span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">DataLoader</span><span class="p">,</span> <span class="n">Subset</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cloudpathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">CloudPath</span><span class="p">,</span> <span class="n">S3Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">poutyne.framework</span><span class="w"> </span><span class="kn">import</span> <span class="n">Experiment</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.optim</span><span class="w"> </span><span class="kn">import</span> <span class="n">SGD</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.utils.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataLoader</span><span class="p">,</span> <span class="n">Subset</span>
 
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">formatted_parsed_address</span>
-<span class="kn">from</span> <span class="nn">.formatted_parsed_address</span> <span class="kn">import</span> <span class="n">FormattedParsedAddress</span>
-<span class="kn">from</span> <span class="nn">.tools</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_data_to_parse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..converter</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataPadder</span><span class="p">,</span> <span class="n">DataProcessorFactory</span><span class="p">,</span> <span class="n">TagsConverter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..dataset_container</span><span class="w"> </span><span class="kn">import</span> <span class="n">DatasetContainer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..download_tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">CACHE_PATH</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..embeddings_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">EmbeddingsModelFactory</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">FastTextModelError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">accuracy</span><span class="p">,</span> <span class="n">nll_loss</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..network</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelFactory</span><span class="p">,</span> <span class="n">ModelLoader</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..pre_processing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">coma_cleaning</span><span class="p">,</span>
+    <span class="n">double_whitespaces_cleaning</span><span class="p">,</span>
+    <span class="n">hyphen_cleaning</span><span class="p">,</span>
+    <span class="n">lower_cleaning</span><span class="p">,</span>
+    <span class="n">trailing_whitespace_cleaning</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..pre_processing.pre_processor_list</span><span class="w"> </span><span class="kn">import</span> <span class="n">PreProcessorList</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..validations</span><span class="w"> </span><span class="kn">import</span> <span class="n">valid_poutyne_version</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..vectorizer</span><span class="w"> </span><span class="kn">import</span> <span class="n">VectorizerFactory</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..weights_tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">handle_weights_upload</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">formatted_parsed_address</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.formatted_parsed_address</span><span class="w"> </span><span class="kn">import</span> <span class="n">FormattedParsedAddress</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.tools</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">get_address_parser_in_directory</span><span class="p">,</span>
     <span class="n">get_files_in_directory</span><span class="p">,</span>
     <span class="n">handle_model_name</span><span class="p">,</span>
     <span class="n">indices_splitting</span><span class="p">,</span>
-    <span class="n">infer_model_type</span><span class="p">,</span>
+    <span class="n">infer_retrained_model_type</span><span class="p">,</span>
     <span class="n">load_tuple_to_device</span><span class="p">,</span>
     <span class="n">pretrained_parser_in_directory</span><span class="p">,</span>
     <span class="n">validate_if_new_prediction_tags</span><span class="p">,</span>
     <span class="n">validate_if_new_seq2seq_params</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">validate_data_to_parse</span>
-<span class="kn">from</span> <span class="nn">..converter</span> <span class="kn">import</span> <span class="n">TagsConverter</span><span class="p">,</span> <span class="n">DataProcessorFactory</span><span class="p">,</span> <span class="n">DataPadder</span>
-<span class="kn">from</span> <span class="nn">..dataset_container</span> <span class="kn">import</span> <span class="n">DatasetContainer</span>
-<span class="kn">from</span> <span class="nn">..download_tools</span> <span class="kn">import</span> <span class="n">CACHE_PATH</span>
-<span class="kn">from</span> <span class="nn">..embeddings_models</span> <span class="kn">import</span> <span class="n">EmbeddingsModelFactory</span>
-<span class="kn">from</span> <span class="nn">..errors</span> <span class="kn">import</span> <span class="n">FastTextModelError</span>
-<span class="kn">from</span> <span class="nn">..metrics</span> <span class="kn">import</span> <span class="n">nll_loss</span><span class="p">,</span> <span class="n">accuracy</span>
-<span class="kn">from</span> <span class="nn">..network</span> <span class="kn">import</span> <span class="n">ModelFactory</span>
-<span class="kn">from</span> <span class="nn">..pre_processing</span> <span class="kn">import</span> <span class="n">coma_cleaning</span><span class="p">,</span> <span class="n">lower_cleaning</span><span class="p">,</span> <span class="n">hyphen_cleaning</span>
-<span class="kn">from</span> <span class="nn">..pre_processing</span> <span class="kn">import</span> <span class="n">trailing_whitespace_cleaning</span><span class="p">,</span> <span class="n">double_whitespaces_cleaning</span>
-<span class="kn">from</span> <span class="nn">..pre_processing.pre_processor_list</span> <span class="kn">import</span> <span class="n">PreProcessorList</span>
-<span class="kn">from</span> <span class="nn">..validations</span> <span class="kn">import</span> <span class="n">valid_poutyne_version</span>
-<span class="kn">from</span> <span class="nn">..vectorizer</span> <span class="kn">import</span> <span class="n">VectorizerFactory</span>
-<span class="kn">from</span> <span class="nn">..weights_tools</span> <span class="kn">import</span> <span class="n">handle_weights_upload</span>
 
 <span class="n">_pre_trained_tags_to_idx</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;StreetNumber&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
@@ -169,7 +171,9 @@
 <span class="n">PREDICTION_TIME_PERFORMANCE_THRESHOLD</span> <span class="o">=</span> <span class="mi">64</span>
 
 
-<div class="viewcode-block" id="AddressParser"><a class="viewcode-back" href="../../../parser.html#deepparse.parser.AddressParser">[docs]</a><span class="k">class</span> <span class="nc">AddressParser</span><span class="p">:</span>
+<div class="viewcode-block" id="AddressParser">
+<a class="viewcode-back" href="../../../parser.html#deepparse.parser.AddressParser">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AddressParser</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Address parser to parse an address or a list of addresses using one of the seq2seq pretrained</span>
 <span class="sd">    networks either with FastText or BPEmb. The default prediction tags are the following</span>
@@ -224,9 +228,9 @@
 <span class="sd">            embeddings model and the model pretrained weights.</span>
 <span class="sd">        offline (bool): Whether or not the model is an offline one, meaning you have already downloaded the pre-trained</span>
 <span class="sd">            weights and embeddings weights in either the default Deepparse cache directory (``&quot;~./cache/deepparse&quot;``) or</span>
-<span class="sd">            the ``cache_dir`` directory. When offline, we will not verify if the model is the latest. You can use our</span>
-<span class="sd">            ``download_models`` CLI function to download all the requirements for a model. The default value is</span>
-<span class="sd">            ``False`` (not an offline parsing model).</span>
+<span class="sd">            the ``cache_dir`` directory. When offline is ``False``, we will download the latest model if one is</span>
+<span class="sd">            available. You can use our``download_models`` CLI function to download all the requirements for a model.</span>
+<span class="sd">            The default value is``False`` (not an offline parsing model).</span>
 
 <span class="sd">    Note:</span>
 <span class="sd">        For both networks, we will download the pretrained weights and embeddings in the ``.cache`` directory</span>
@@ -238,15 +242,23 @@
 
 <span class="sd">        Here are the URLs to download our pretrained models directly</span>
 
-<span class="sd">            - `FastText &lt;https://graal.ift.ulaval.ca/public/deepparse/fasttext.ckpt&gt;`_,</span>
-<span class="sd">            - `BPEmb &lt;https://graal.ift.ulaval.ca/public/deepparse/bpemb.ckpt&gt;`_,</span>
-<span class="sd">            - `FastText Light &lt;https://graal.ift.ulaval.ca/public/deepparse/fasttext.magnitude.gz&gt;`_.</span>
+<span class="sd">            - `FastText &lt;https://huggingface.co/deepparse/fasttext-base&gt;`_,</span>
+<span class="sd">            - `BPEmb &lt;https://huggingface.co/deepparse/bpemb-base&gt;`_,</span>
+<span class="sd">            - `FastText Light &lt;https://huggingface.co/deepparse/fasttext-base/tree/light-embeddings&gt;`_.</span>
 
 <span class="sd">    Note:</span>
 <span class="sd">        Since Windows uses ``spawn`` instead of ``fork`` during multiprocess (for the data loading pre-processing</span>
 <span class="sd">        ``num_worker`` &gt; 0) we use the Gensim model, which takes more RAM (~10 GO) than the Fasttext one (~8 GO).</span>
 <span class="sd">        It also takes a longer time to load. See here the</span>
 <span class="sd">        `issue &lt;https://github.com/GRAAL-Research/deepparse/issues/89&gt;`_.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        On Python 3.13+, the ``fasttext`` native library is not available because the underlying C++ code</span>
+<span class="sd">        has not been updated for newer Python versions. Deepparse automatically falls back to using Gensim to load</span>
+<span class="sd">        FastText embeddings. This fallback uses more RAM (~10 GO vs ~8 GO) and is slower to load, but is</span>
+<span class="sd">        functionally equivalent. You can install ``fasttext-wheel`` manually with</span>
+<span class="sd">        ``pip install deepparse[fasttext]`` if a compatible version becomes available.</span>
+<span class="sd">        BPEmb and FastText Light (Magnitude) models are not affected.</span>
 
 <span class="sd">    Note:</span>
 <span class="sd">        You may observe a 100% CPU load the first time you call the fasttext-light model. We</span>
@@ -324,7 +336,7 @@
 <span class="sd">            parse_address = address_parser(&quot;350 rue des Lilas Ouest Quebec city Quebec G1L 1B6&quot;)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">model_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;best&quot;</span><span class="p">,</span>
         <span class="n">attention_mechanism</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -378,7 +390,7 @@
             <span class="n">named_parser</span> <span class="o">=</span> <span class="n">checkpoint_weights</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;named_parser&quot;</span><span class="p">)</span>
 
             <span class="c1"># We &quot;infer&quot; the model type, thus we also had to handle the attention_mechanism bool</span>
-            <span class="n">model_type</span><span class="p">,</span> <span class="n">attention_mechanism</span> <span class="o">=</span> <span class="n">infer_model_type</span><span class="p">(</span>
+            <span class="n">model_type</span><span class="p">,</span> <span class="n">attention_mechanism</span> <span class="o">=</span> <span class="n">infer_retrained_model_type</span><span class="p">(</span>
                 <span class="n">checkpoint_weights</span><span class="p">,</span> <span class="n">attention_mechanism</span><span class="o">=</span><span class="n">attention_mechanism</span>
             <span class="p">)</span>
 
@@ -399,25 +411,26 @@
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">named_parser</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">named_parser</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;PreTrained</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_model_type_formatted</span><span class="si">}</span><span class="s2">AddressParser&quot;</span>
 
     <span class="fm">__repr__</span> <span class="o">=</span> <span class="fm">__str__</span>  <span class="c1"># to call __str__ when list of address</span>
 
-<div class="viewcode-block" id="AddressParser.get_formatted_model_name"><a class="viewcode-back" href="../../../parser.html#deepparse.parser.AddressParser.get_formatted_model_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_formatted_model_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="AddressParser.get_formatted_model_name">
+<a class="viewcode-back" href="../../../parser.html#deepparse.parser.AddressParser.get_formatted_model_name">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_formatted_model_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the model type formatted name. For example, if the model type is ``&quot;fasttext&quot;`` the formatted name is</span>
 <span class="sd">        ``&quot;FastText&quot;``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model_type_formatted</span></div>
 
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">version</span>
 
-<div class="viewcode-block" id="AddressParser.__call__"><a class="viewcode-back" href="../../../parser.html#deepparse.parser.AddressParser.__call__">[docs]</a>    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span>
+<div class="viewcode-block" id="AddressParser.__call__">
+<a class="viewcode-back" href="../../../parser.html#deepparse.parser.AddressParser.__call__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">addresses_to_parse</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">,</span> <span class="n">DatasetContainer</span><span class="p">],</span>
         <span class="n">with_prob</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -573,7 +586,10 @@
 
         <span class="k">return</span> <span class="n">tagged_addresses_components</span></div>
 
-<div class="viewcode-block" id="AddressParser.retrain"><a class="viewcode-back" href="../../../parser.html#deepparse.parser.AddressParser.retrain">[docs]</a>    <span class="k">def</span> <span class="nf">retrain</span><span class="p">(</span>
+
+<div class="viewcode-block" id="AddressParser.retrain">
+<a class="viewcode-back" href="../../../parser.html#deepparse.parser.AddressParser.retrain">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">retrain</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">train_dataset_container</span><span class="p">:</span> <span class="n">DatasetContainer</span><span class="p">,</span>
         <span class="n">val_dataset_container</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">DatasetContainer</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -582,16 +598,16 @@
         <span class="n">epochs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
         <span class="n">num_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
         <span class="n">learning_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span>
-        <span class="n">callbacks</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">callbacks</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Callable</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span><span class="p">,</span>
         <span class="n">logging_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;./checkpoints&quot;</span><span class="p">,</span>
         <span class="n">disable_tensorboard</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="n">prediction_tags</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">seq2seq_params</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">prediction_tags</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">seq2seq_params</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">layers_to_freeze</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">name_of_the_retrain_parser</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">verbose</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
         <span class="c1"># pylint: disable=too-many-arguments, too-many-locals, too-many-branches, too-many-statements</span>
 
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -861,12 +877,13 @@
 
         <span class="k">if</span> <span class="n">seq2seq_params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># Handle seq2seq params</span>
-            <span class="c1"># We set the flag to use the pretrained weights to false since we train new ones</span>
-            <span class="n">seq2seq_params</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;pre_trained_weights&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
-
             <span class="n">model_factory_dict</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;seq2seq_kwargs&quot;</span><span class="p">:</span> <span class="n">seq2seq_params</span><span class="p">})</span>
+
             <span class="c1"># We set verbose to false since the model is reloaded</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_setup_model</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">path_to_retrained_model</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">model_factory_dict</span><span class="p">)</span>
+            <span class="c1"># We set the flag to use the pretrained weights to false since we train new ones</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_setup_model</span><span class="p">(</span>
+                <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">path_to_retrained_model</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pre_trained_weights</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">model_factory_dict</span>
+            <span class="p">)</span>
 
         <span class="n">callbacks</span> <span class="o">=</span> <span class="p">[]</span> <span class="k">if</span> <span class="n">callbacks</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">callbacks</span>
         <span class="n">train_generator</span><span class="p">,</span> <span class="n">valid_generator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_training_data_generator</span><span class="p">(</span>
@@ -936,9 +953,9 @@
                             <span class="sa">f</span><span class="s1">&#39;model.&#39;</span>
                         <span class="p">)</span>
 
-                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">value_error_message</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">error</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">value_error_message</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">error</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="kn">from</span> <span class="nn">error</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="kn">from</span><span class="w"> </span><span class="nn">error</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">file_name</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="n">name_of_the_retrain_parser</span> <span class="o">+</span> <span class="s2">&quot;.ckpt&quot;</span>
@@ -947,9 +964,11 @@
             <span class="p">)</span>
             <span class="n">file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">logging_path</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span>
 
+            <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="s2">&quot;Finetuned_&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span>
             <span class="n">torch_save</span> <span class="o">=</span> <span class="p">{</span>
                 <span class="s2">&quot;address_tagger_model&quot;</span><span class="p">:</span> <span class="n">exp</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span>
                 <span class="s2">&quot;model_type&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="p">,</span>
+                <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="p">,</span>
             <span class="p">}</span>
 
             <span class="k">if</span> <span class="n">seq2seq_params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -975,7 +994,7 @@
                     <span class="k">with</span> <span class="n">file_path</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
                         <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">torch_save</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
                 <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s2">&quot;The file in the S3 bucket was not found.&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">error</span>
+                    <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s2">&quot;The file in the S3 bucket was not found.&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">error</span>
 
             <span class="k">elif</span> <span class="s2">&quot;s3://&quot;</span> <span class="ow">in</span> <span class="n">file_path</span><span class="p">:</span>
                 <span class="n">file_path</span> <span class="o">=</span> <span class="n">CloudPath</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
@@ -983,7 +1002,7 @@
                     <span class="k">with</span> <span class="n">file_path</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
                         <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">torch_save</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
                 <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s2">&quot;The file in the S3 bucket was not found.&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">error</span>
+                    <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s2">&quot;The file in the S3 bucket was not found.&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">error</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">torch_save</span><span class="p">,</span> <span class="n">file_path</span><span class="p">)</span>
@@ -991,18 +1010,21 @@
                     <span class="k">if</span> <span class="s2">&quot;s3&quot;</span> <span class="ow">in</span> <span class="n">file_path</span> <span class="ow">or</span> <span class="s2">&quot;//&quot;</span> <span class="ow">in</span> <span class="n">file_path</span> <span class="ow">or</span> <span class="s2">&quot;:&quot;</span> <span class="ow">in</span> <span class="n">file_path</span><span class="p">:</span>
                         <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
                             <span class="s2">&quot;Are You trying to use an AWS S3 URI? If so path needs to start with s3://.&quot;</span>
-                        <span class="p">)</span> <span class="kn">from</span> <span class="nn">error</span>
+                        <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">error</span>
             <span class="k">return</span> <span class="n">train_res</span></div>
 
-<div class="viewcode-block" id="AddressParser.test"><a class="viewcode-back" href="../../../parser.html#deepparse.parser.AddressParser.test">[docs]</a>    <span class="k">def</span> <span class="nf">test</span><span class="p">(</span>
+
+<div class="viewcode-block" id="AddressParser.test">
+<a class="viewcode-back" href="../../../parser.html#deepparse.parser.AddressParser.test">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">test_dataset_container</span><span class="p">:</span> <span class="n">DatasetContainer</span><span class="p">,</span>
         <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
         <span class="n">num_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="n">callbacks</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">callbacks</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Callable</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span><span class="p">,</span>
         <span class="n">verbose</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
         <span class="c1"># pylint: disable=too-many-arguments, too-many-locals</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to test a retrained or a pretrained model using a dataset with the default tags. If you test a</span>
@@ -1108,7 +1130,10 @@
 
         <span class="k">return</span> <span class="n">test_res</span></div>
 
-<div class="viewcode-block" id="AddressParser.save_model_weights"><a class="viewcode-back" href="../../../parser.html#deepparse.parser.AddressParser.save_model_weights">[docs]</a>    <span class="k">def</span> <span class="nf">save_model_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+<div class="viewcode-block" id="AddressParser.save_model_weights">
+<a class="viewcode-back" href="../../../parser.html#deepparse.parser.AddressParser.save_model_weights">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_model_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to save, in a Pickle format, the address parser model weights (PyTorch state dictionary).</span>
 
@@ -1137,10 +1162,11 @@
 
         <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span> <span class="n">file_path</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_fill_tagged_addresses_components</span><span class="p">(</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_fill_tagged_addresses_components</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">tags_predictions</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span>
-        <span class="n">tags_predictions_prob</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span>
+        <span class="n">tags_predictions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]],</span>
+        <span class="n">tags_predictions_prob</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span>
         <span class="n">addresses_to_parse</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
         <span class="n">clean_addresses</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
         <span class="n">with_prob</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
@@ -1169,7 +1195,7 @@
             <span class="k">return</span> <span class="n">tagged_addresses_components</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">tagged_addresses_components</span>
 
-    <span class="k">def</span> <span class="nf">_process_device</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_process_device</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Function to process the device depending on the argument type.</span>
 
@@ -1178,29 +1204,29 @@
         <span class="k">if</span> <span class="n">device</span> <span class="o">==</span> <span class="s2">&quot;cpu&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">pin_memory</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">():</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">pin_memory</span> <span class="o">=</span> <span class="kc">True</span>
-                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">):</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span>
-                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-                    <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;cuda:\d+&quot;</span><span class="p">,</span> <span class="n">device</span><span class="o">.</span><span class="n">lower</span><span class="p">()):</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;String value should follow the pattern &#39;cuda:[int]&#39;.&quot;</span><span class="p">)</span>
-                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-                    <span class="k">if</span> <span class="n">device</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cuda:</span><span class="si">{</span><span class="n">device</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Device should not be a negative number.&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pin_memory</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="ow">and</span> <span class="n">device</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;cuda&quot;</span>
+        <span class="k">elif</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pin_memory</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;cuda:\d+&quot;</span><span class="p">,</span> <span class="n">device</span><span class="o">.</span><span class="n">lower</span><span class="p">()):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Device should be a string, an int or a torch device.&quot;</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;String value should follow the pattern &#39;cuda:[int]&#39;.&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">device</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cuda:</span><span class="si">{</span><span class="n">device</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Device should not be a negative number.&quot;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;No CUDA device detected, device will be set to &#39;CPU&#39;.&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">pin_memory</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Device should be a string, an int or a torch device.&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;No CUDA device detected, device will be set to &#39;CPU&#39;.&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pin_memory</span> <span class="o">=</span> <span class="kc">False</span>
 
-    <span class="k">def</span> <span class="nf">_create_training_data_generator</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_training_data_generator</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">train_dataset_container</span><span class="p">:</span> <span class="n">DatasetContainer</span><span class="p">,</span>
         <span class="n">val_dataset_container</span><span class="p">:</span> <span class="n">DatasetContainer</span><span class="p">,</span>
@@ -1240,12 +1266,13 @@
 
         <span class="k">return</span> <span class="n">train_generator</span><span class="p">,</span> <span class="n">valid_generator</span>
 
-    <span class="k">def</span> <span class="nf">_setup_model</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_setup_model</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
         <span class="n">path_to_retrained_model</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">pre_trained_weights</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">prediction_layer_len</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">9</span><span class="p">,</span>
-        <span class="n">attention_mechanism</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">attention_mechanism</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">seq2seq_kwargs</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">cache_dir</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">offline</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -1261,13 +1288,14 @@
             <span class="c1"># Set to default cache_path value</span>
             <span class="n">cache_dir</span> <span class="o">=</span> <span class="n">CACHE_PATH</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">ModelFactory</span><span class="p">()</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+        <span class="n">model_factory</span> <span class="o">=</span> <span class="n">ModelFactory</span><span class="p">(</span><span class="n">ModelLoader</span><span class="p">(</span><span class="n">cache_dir</span><span class="o">=</span><span class="n">cache_dir</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">model_factory</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
             <span class="n">model_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="p">,</span>
-            <span class="n">cache_dir</span><span class="o">=</span><span class="n">cache_dir</span><span class="p">,</span>
             <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
             <span class="n">output_size</span><span class="o">=</span><span class="n">prediction_layer_len</span><span class="p">,</span>
             <span class="n">attention_mechanism</span><span class="o">=</span><span class="n">attention_mechanism</span><span class="p">,</span>
             <span class="n">path_to_retrained_model</span><span class="o">=</span><span class="n">path_to_retrained_model</span><span class="p">,</span>
+            <span class="n">pre_trained_weights</span><span class="o">=</span><span class="n">pre_trained_weights</span><span class="p">,</span>
             <span class="n">offline</span><span class="o">=</span><span class="n">offline</span><span class="p">,</span>
             <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
             <span class="o">**</span><span class="n">seq2seq_kwargs</span><span class="p">,</span>
@@ -1282,23 +1310,23 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">processor</span> <span class="o">=</span> <span class="n">DataProcessorFactory</span><span class="p">()</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">vectorizer</span><span class="p">,</span> <span class="n">padder</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tags_converter</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_predict_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">List</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_predict_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Pipeline to process data in a data loader for prediction.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">process_for_inference</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_retrain</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_retrain</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">experiment</span><span class="p">:</span> <span class="n">Experiment</span><span class="p">,</span>
         <span class="n">train_generator</span><span class="p">:</span> <span class="n">DatasetContainer</span><span class="p">,</span>
         <span class="n">valid_generator</span><span class="p">:</span> <span class="n">DatasetContainer</span><span class="p">,</span>
         <span class="n">epochs</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="n">callbacks</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span>
+        <span class="n">callbacks</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Callable</span><span class="p">],</span>
         <span class="n">disable_tensorboard</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
         <span class="n">verbose</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">bool</span><span class="p">],</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
         <span class="c1"># pylint: disable=too-many-arguments</span>
         <span class="n">train_res</span> <span class="o">=</span> <span class="n">experiment</span><span class="o">.</span><span class="n">train</span><span class="p">(</span>
             <span class="n">train_generator</span><span class="p">,</span>
@@ -1311,7 +1339,7 @@
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">train_res</span>
 
-    <span class="k">def</span> <span class="nf">_freeze_model_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layers_to_freeze</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_freeze_model_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layers_to_freeze</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">layers_to_freeze</span> <span class="o">=</span> <span class="n">layers_to_freeze</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">layers_to_freeze</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;encoder&quot;</span><span class="p">,</span> <span class="s2">&quot;decoder&quot;</span><span class="p">,</span> <span class="s2">&quot;prediction_layer&quot;</span><span class="p">,</span> <span class="s2">&quot;seq2seq&quot;</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
@@ -1350,20 +1378,25 @@
                 <span class="c1"># the freezing. Namely, the decoder.linear when we freeze the decoder, but we expect the final layer</span>
                 <span class="c1"># to be unfrozen.</span>
 
-    <span class="k">def</span> <span class="nf">_formatted_named_parser_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prediction_tags</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">seq2seq_params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">layers_to_freeze</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_formatted_named_parser_name</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">prediction_tags</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="kc">None</span><span class="p">],</span>
+        <span class="n">seq2seq_params</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="kc">None</span><span class="p">],</span>
+        <span class="n">layers_to_freeze</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">prediction_tags_str</span> <span class="o">=</span> <span class="s2">&quot;ModifiedPredictionTags&quot;</span> <span class="k">if</span> <span class="n">prediction_tags</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
         <span class="n">seq2seq_params_str</span> <span class="o">=</span> <span class="s2">&quot;ModifiedSeq2SeqConfiguration&quot;</span> <span class="k">if</span> <span class="n">seq2seq_params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
         <span class="n">layers_to_freeze_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;FreezedLayer</span><span class="si">{</span><span class="n">layers_to_freeze</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">layers_to_freeze</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
         <span class="n">parser_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model_type_formatted</span> <span class="o">+</span> <span class="n">prediction_tags_str</span> <span class="o">+</span> <span class="n">seq2seq_params_str</span> <span class="o">+</span> <span class="n">layers_to_freeze_str</span>
         <span class="k">return</span> <span class="n">parser_name</span>
 
-    <span class="k">def</span> <span class="nf">_retrain_argumentation_validations</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_retrain_argumentation_validations</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">train_dataset_container</span><span class="p">:</span> <span class="n">DatasetContainer</span><span class="p">,</span>
         <span class="n">val_dataset_container</span><span class="p">:</span> <span class="n">DatasetContainer</span><span class="p">,</span>
         <span class="n">num_workers</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">name_of_the_retrain_parser</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
-    <span class="p">):</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Arguments validation test for retrain methods.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1400,7 +1433,7 @@
                     <span class="s2">&quot;The name_of_the_retrain_parser should NOT include a file extension or a dot-like filename style.&quot;</span>
                 <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_model_os_validation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_workers</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_model_os_validation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_workers</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Windows&quot;</span> <span class="ow">and</span> <span class="s2">&quot;fasttext&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="ow">and</span> <span class="n">num_workers</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">FastTextModelError</span><span class="p">(</span>
                 <span class="s2">&quot;On Windows system, we cannot use FastText-like models with parallelism workers since &quot;</span>
@@ -1409,7 +1442,14 @@
             <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Darwin&quot;</span> <span class="ow">and</span> <span class="s2">&quot;fasttext&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="ow">and</span> <span class="n">num_workers</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">torch</span><span class="o">.</span><span class="n">multiprocessing</span><span class="o">.</span><span class="n">set_start_method</span><span class="p">(</span><span class="s1">&#39;fork&#39;</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">torch</span><span class="o">.</span><span class="n">multiprocessing</span><span class="o">.</span><span class="n">set_start_method</span><span class="p">(</span><span class="s1">&#39;fork&#39;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s1">&#39;context has already been set&#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
+                    <span class="k">pass</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;There has been an issue with the multiprocessing context initialisation&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
                 <span class="s2">&quot;On MacOS system, we cannot use FastText-like models with parallelism out-of-the-box since &quot;</span>
                 <span class="s2">&quot;FastText objects are not pickleable with the parallelism process used by default by MacOS. &quot;</span>
@@ -1418,8 +1458,9 @@
                 <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">,</span>
             <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">is_same_model_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_same_model_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;AddressParser&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">model_type</span></div>
+
 </pre></div>
 
            </div>
@@ -1429,7 +1470,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020-2024, Marouane Yassine &amp; David Beauchemin.</p>
+    <p>&#169; Copyright 2020-2026, Marouane Yassine &amp; David Beauchemin.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

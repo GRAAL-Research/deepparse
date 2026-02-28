@@ -1,21 +1,21 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Getting Started &mdash; deepparse 0.9.13 documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <title>Getting Started &mdash; deepparse 0.10.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
   
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=82662543"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -35,9 +35,6 @@
             
               <img src="../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
-              <div class="version">
-                0.9.13
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -60,6 +57,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#retrain-a-model-with-new-tags">Retrain a Model With New Tags</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#retrain-a-seq2seq-model-from-scratch">Retrain a Seq2Seq Model From Scratch</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#download-our-models">Download Our Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#note-on-fasttext-models-and-python-3-13">Note on FastText Models and Python 3.13+</a></li>
 </ul>
 </li>
 </ul>
@@ -116,9 +114,9 @@
            <div itemprop="articleBody">
              
   <section id="getting-started">
-<h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading"></a></h1>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">deepparse.parser</span> <span class="kn">import</span> <span class="n">AddressParser</span>
-<span class="kn">from</span> <span class="nn">deepparse.dataset_container</span> <span class="kn">import</span> <span class="n">CSVDatasetContainer</span>
+<h1>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading"></a></h1>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">deepparse.parser</span><span class="w"> </span><span class="kn">import</span> <span class="n">AddressParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">deepparse.dataset_container</span><span class="w"> </span><span class="kn">import</span> <span class="n">CSVDatasetContainer</span>
 
 <span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;bpemb&quot;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
@@ -162,14 +160,14 @@
 </ul>
 </div></blockquote>
 <section id="parse-addresses-from-the-command-line">
-<h2>Parse Addresses From the Command Line<a class="headerlink" href="#parse-addresses-from-the-command-line" title="Permalink to this heading"></a></h2>
+<h2>Parse Addresses From the Command Line<a class="headerlink" href="#parse-addresses-from-the-command-line" title="Link to this heading"></a></h2>
 <p>You can also use our cli to parse addresses using:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>parse<span class="w"> </span>&lt;parsing_model&gt;<span class="w"> </span>&lt;dataset_path&gt;<span class="w"> </span>&lt;export_file_name&gt;
 </pre></div>
 </div>
 </section>
 <section id="parse-addresses-using-your-own-retrained-model">
-<h2>Parse Addresses Using Your Own Retrained Model<a class="headerlink" href="#parse-addresses-using-your-own-retrained-model" title="Permalink to this heading"></a></h2>
+<h2>Parse Addresses Using Your Own Retrained Model<a class="headerlink" href="#parse-addresses-using-your-own-retrained-model" title="Link to this heading"></a></h2>
 <p>See <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/main/examples/retrained_model_parsing.py">here</a> for a complete example.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span>
     <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;bpemb&quot;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">path_to_retrained_model</span><span class="o">=</span><span class="s2">&quot;path/to/retrained/bpemb/model.p&quot;</span><span class="p">)</span>
@@ -179,7 +177,7 @@
 </div>
 </section>
 <section id="retrain-a-model">
-<h2>Retrain a Model<a class="headerlink" href="#retrain-a-model" title="Permalink to this heading"></a></h2>
+<h2>Retrain a Model<a class="headerlink" href="#retrain-a-model" title="Link to this heading"></a></h2>
 <p>See <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/main/examples/fine_tuning.py">here</a> for a complete example
 using Pickle and <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/main/examples/fine_tuning_with_csv_dataset.py">here</a>
 for a complete example using CSV.</p>
@@ -197,7 +195,7 @@ class name) when reloading it.</p>
 </div>
 </section>
 <section id="retrain-a-model-with-an-attention-mechanism">
-<h2>Retrain a Model With an Attention Mechanism<a class="headerlink" href="#retrain-a-model-with-an-attention-mechanism" title="Permalink to this heading"></a></h2>
+<h2>Retrain a Model With an Attention Mechanism<a class="headerlink" href="#retrain-a-model-with-an-attention-mechanism" title="Link to this heading"></a></h2>
 <p>See <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/main/examples/retrain_attention_model.py">here</a> for a complete example.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># We will retrain the fasttext version of our pretrained model.</span>
 <span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;fasttext&quot;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">attention_mechanism</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -207,7 +205,7 @@ class name) when reloading it.</p>
 </div>
 </section>
 <section id="retrain-a-model-with-new-tags">
-<h2>Retrain a Model With New Tags<a class="headerlink" href="#retrain-a-model-with-new-tags" title="Permalink to this heading"></a></h2>
+<h2>Retrain a Model With New Tags<a class="headerlink" href="#retrain-a-model-with-new-tags" title="Link to this heading"></a></h2>
 <p>See <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/main/examples/retrain_with_new_prediction_tags.py">here</a> for a complete example.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">address_components</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ATag&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;AnotherTag&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;EOS&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
 <span class="n">address_parser</span><span class="o">.</span><span class="n">retrain</span><span class="p">(</span><span class="n">training_container</span><span class="p">,</span> <span class="n">train_ratio</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">prediction_tags</span><span class="o">=</span><span class="n">address_components</span><span class="p">)</span>
@@ -215,7 +213,7 @@ class name) when reloading it.</p>
 </div>
 </section>
 <section id="retrain-a-seq2seq-model-from-scratch">
-<h2>Retrain a Seq2Seq Model From Scratch<a class="headerlink" href="#retrain-a-seq2seq-model-from-scratch" title="Permalink to this heading"></a></h2>
+<h2>Retrain a Seq2Seq Model From Scratch<a class="headerlink" href="#retrain-a-seq2seq-model-from-scratch" title="Link to this heading"></a></h2>
 <p>See  <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/blob/main/examples/retrain_with_new_seq2seq_params.py">here</a> for
 a complete example.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">seq2seq_params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;encoder_hidden_size&quot;</span><span class="p">:</span> <span class="mi">512</span><span class="p">,</span> <span class="s2">&quot;decoder_hidden_size&quot;</span><span class="p">:</span> <span class="mi">512</span><span class="p">}</span>
@@ -224,19 +222,32 @@ a complete example.</p>
 </div>
 </section>
 <section id="download-our-models">
-<h2>Download Our Models<a class="headerlink" href="#download-our-models" title="Permalink to this heading"></a></h2>
+<h2>Download Our Models<a class="headerlink" href="#download-our-models" title="Link to this heading"></a></h2>
 <p>Deepparse handles model downloads when you use it, but you can also pre-download our model. Here are the URLs to download our pretrained models directly</p>
 <blockquote>
 <div><ul class="simple">
-<li><p><a class="reference external" href="https://graal.ift.ulaval.ca/public/deepparse/fasttext.ckpt">FastText</a>,</p></li>
-<li><p><a class="reference external" href="https://graal.ift.ulaval.ca/public/deepparse/fasttext_attention.ckpt">FastTextAttention</a>,</p></li>
-<li><p><a class="reference external" href="https://graal.ift.ulaval.ca/public/deepparse/bpemb.ckpt">BPEmb</a>,</p></li>
-<li><p><a class="reference external" href="https://graal.ift.ulaval.ca/public/deepparse/bpemb_attention.ckpt">BPEmbAttention</a>,</p></li>
-<li><p><a class="reference external" href="https://graal.ift.ulaval.ca/public/deepparse/fasttext.magnitude.gz">FastText Light</a> (using <a class="reference external" href="https://github.com/davebulaval/magnitude-light">Magnitude Light</a>),.</p></li>
+<li><p><a class="reference external" href="https://huggingface.co/deepparse/fasttext-base">FastText</a>,</p></li>
+<li><p><a class="reference external" href="https://huggingface.co/deepparse/fasttext-attention">FastTextAttention</a>,</p></li>
+<li><p><a class="reference external" href="https://huggingface.co/deepparse/bpemb-base">BPEmb</a>,</p></li>
+<li><p><a class="reference external" href="https://huggingface.co/deepparse/bpemb-attention">BPEmbAttention</a>,</p></li>
+<li><p><a class="reference external" href="https://huggingface.co/deepparse/fasttext-base/tree/light-embeddings">FastText Light</a> (using <a class="reference external" href="https://github.com/davebulaval/magnitude-light">Magnitude Light</a>),.</p></li>
 </ul>
 </div></blockquote>
 <p>Or you can use our CLI to download our pretrained models directly using:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>download_model<span class="w"> </span>&lt;model_name&gt;
+</pre></div>
+</div>
+</section>
+<section id="note-on-fasttext-models-and-python-3-13">
+<span id="fasttext-python-313"></span><h2>Note on FastText Models and Python 3.13+<a class="headerlink" href="#note-on-fasttext-models-and-python-3-13" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">fasttext</span></code> C++ library has not been updated for Python 3.13+, so the <code class="docutils literal notranslate"><span class="pre">fasttext-wheel</span></code> package cannot be
+installed on these versions. Deepparse automatically falls back to using
+<a class="reference external" href="https://radimrehurek.com/gensim/">Gensim</a> to load FastText embeddings when the <code class="docutils literal notranslate"><span class="pre">fasttext</span></code> package is not
+available.</p>
+<p>This fallback uses slightly more RAM (~10 GO vs ~8 GO) and takes longer to load, but is <strong>functionally equivalent</strong>.
+The BPEmb and Magnitude (FastText Light) models are <strong>not affected</strong> by this limitation.</p>
+<p>If you are using Python 3.10–3.12, you can install <code class="docutils literal notranslate"><span class="pre">fasttext-wheel</span></code> for optimal performance:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>deepparse<span class="o">[</span>fasttext<span class="o">]</span>
 </pre></div>
 </div>
 </section>
@@ -253,7 +264,7 @@ a complete example.</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020-2024, Marouane Yassine &amp; David Beauchemin.</p>
+    <p>&#169; Copyright 2020-2026, Marouane Yassine &amp; David Beauchemin.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

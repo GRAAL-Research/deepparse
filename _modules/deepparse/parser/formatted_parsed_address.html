@@ -1,20 +1,20 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>deepparse.parser.formatted_parsed_address &mdash; deepparse 0.9.13 documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <title>deepparse.parser.formatted_parsed_address &mdash; deepparse 0.10.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+
   
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=82662543"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -32,9 +32,6 @@
             
               <img src="../../../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
-              <div class="version">
-                0.9.13
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -104,7 +101,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for deepparse.parser.formatted_parsed_address</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="n">FIELDS</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s2">&quot;StreetNumber&quot;</span><span class="p">,</span>
@@ -119,7 +116,9 @@
 <span class="p">]</span>
 
 
-<div class="viewcode-block" id="FormattedParsedAddress"><a class="viewcode-back" href="../../../parser.html#deepparse.parser.FormattedParsedAddress">[docs]</a><span class="k">class</span> <span class="nc">FormattedParsedAddress</span><span class="p">:</span>
+<div class="viewcode-block" id="FormattedParsedAddress">
+<a class="viewcode-back" href="../../../parser.html#deepparse.parser.FormattedParsedAddress">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">FormattedParsedAddress</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A parsed address as commonly known returned by an address parser.</span>
 
@@ -155,7 +154,7 @@
 <span class="sd">        ``address_parsed_components`` attribute.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">FIELDS</span><span class="p">:</span>
             <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
@@ -166,7 +165,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_tagged_affectation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">address_parsed_components</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the unparsed address plus the parsed address components.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -175,13 +174,13 @@
             <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_formatted_parsed_address_components</span><span class="p">()</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
         <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_formatted_parsed_address_components</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_formatted_parsed_address_components</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">formatted_string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="k">for</span> <span class="n">component_tuple</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">address_parsed_components</span><span class="p">:</span>
             <span class="n">formatted_string</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="n">component_tuple</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span>
         <span class="k">return</span> <span class="n">formatted_string</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>  <span class="c1"># Strip to remove trailing ending whitespace</span>
 
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">values</span> <span class="o">=</span> <span class="p">[</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_get_attr_repr</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span>
@@ -190,7 +189,7 @@
         <span class="n">joined_values</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span> <span class="k">if</span> <span class="n">v</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s2">&quot;&lt;&quot;</span> <span class="o">+</span> <span class="n">joined_values</span> <span class="o">+</span> <span class="s2">&quot;&gt;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Equal if all address components elements are equals. If attributes are not the same, it will return False.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -206,7 +205,9 @@
                 <span class="k">return</span> <span class="kc">False</span>
         <span class="k">return</span> <span class="kc">True</span>
 
-<div class="viewcode-block" id="FormattedParsedAddress.format_address"><a class="viewcode-back" href="../../../parser.html#deepparse.parser.FormattedParsedAddress.format_address">[docs]</a>    <span class="k">def</span> <span class="nf">format_address</span><span class="p">(</span>
+<div class="viewcode-block" id="FormattedParsedAddress.format_address">
+<a class="viewcode-back" href="../../../parser.html#deepparse.parser.FormattedParsedAddress.format_address">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">format_address</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">fields</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">capitalize_fields</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -276,7 +277,10 @@
 
         <span class="k">return</span> <span class="n">formatted_parsed_address</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="n">field_separator</span><span class="p">)</span>  <span class="c1"># To remove last field separator</span></div>
 
-<div class="viewcode-block" id="FormattedParsedAddress.to_dict"><a class="viewcode-back" href="../../../parser.html#deepparse.parser.FormattedParsedAddress.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+
+<div class="viewcode-block" id="FormattedParsedAddress.to_dict">
+<a class="viewcode-back" href="../../../parser.html#deepparse.parser.FormattedParsedAddress.to_dict">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to convert a parsed address into a dictionary where the keys are the address components, and the values</span>
 <span class="sd">        are the value of those components. For example, the parsed address ``&lt;StreetNumber&gt; 305 &lt;StreetName&gt;</span>
@@ -296,7 +300,10 @@
             <span class="n">fields</span> <span class="o">=</span> <span class="n">FIELDS</span>
         <span class="k">return</span> <span class="p">{</span><span class="n">field</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">}</span></div>
 
-<div class="viewcode-block" id="FormattedParsedAddress.to_list_of_tuples"><a class="viewcode-back" href="../../../parser.html#deepparse.parser.FormattedParsedAddress.to_list_of_tuples">[docs]</a>    <span class="k">def</span> <span class="nf">to_list_of_tuples</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">tuple</span><span class="p">]:</span>
+
+<div class="viewcode-block" id="FormattedParsedAddress.to_list_of_tuples">
+<a class="viewcode-back" href="../../../parser.html#deepparse.parser.FormattedParsedAddress.to_list_of_tuples">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_list_of_tuples</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">tuple</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to convert a parsed address into a list of tuples where the first element of the tuples</span>
 <span class="sd">        is the value of the components, and the second value is the name of the components.</span>
@@ -317,7 +324,10 @@
         <span class="n">dict_of_attr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[(</span><span class="n">value</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">dict_of_attr</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span></div>
 
-<div class="viewcode-block" id="FormattedParsedAddress.to_pandas"><a class="viewcode-back" href="../../../parser.html#deepparse.parser.FormattedParsedAddress.to_pandas">[docs]</a>    <span class="k">def</span> <span class="nf">to_pandas</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+
+<div class="viewcode-block" id="FormattedParsedAddress.to_pandas">
+<a class="viewcode-back" href="../../../parser.html#deepparse.parser.FormattedParsedAddress.to_pandas">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_pandas</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to convert a parsed address into a dictionary for pandas where the first key is the raw address and</span>
 <span class="sd">        the following keys are the address components, and the values are the values of those components.</span>
@@ -331,7 +341,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;Address&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw_address</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()}</span></div>
 
-<div class="viewcode-block" id="FormattedParsedAddress.to_pickle"><a class="viewcode-back" href="../../../parser.html#deepparse.parser.FormattedParsedAddress.to_pickle">[docs]</a>    <span class="k">def</span> <span class="nf">to_pickle</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">]:</span>
+
+<div class="viewcode-block" id="FormattedParsedAddress.to_pickle">
+<a class="viewcode-back" href="../../../parser.html#deepparse.parser.FormattedParsedAddress.to_pickle">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_pickle</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to convert a parsed address into a list of tuple for pickle where the first tuple element is the</span>
 <span class="sd">        raw address and the following tuples are the address components, and the values are the values of</span>
@@ -347,7 +360,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw_address</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_list_of_tuples</span><span class="p">()</span></div>
 
-    <span class="k">def</span> <span class="nf">_resolve_tagged_affectation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tagged_address</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_resolve_tagged_affectation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tagged_address</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Private method to resolve the parsing of the tagged address.</span>
 <span class="sd">        Args:</span>
@@ -365,18 +379,18 @@
                 <span class="c1"># we merge the previous components with the new element</span>
                 <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">),</span> <span class="n">address_component</span><span class="p">]))</span>
 
-    <span class="k">def</span> <span class="nf">_get_attr_repr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_attr_repr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">+</span> <span class="nb">repr</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
         <span class="k">return</span> <span class="s2">&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">_validate_argument</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="n">List</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_validate_argument</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="n">List</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">arg_element</span> <span class="ow">in</span> <span class="n">arg</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg_element</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="n">arg_element</span> <span class="o">+</span> <span class="s2">&quot; not an attribute of the formatted parsed address.&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_infer_tags_order</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_infer_tags_order</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Private method to infer the order of the tags base on the address order tag.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -386,6 +400,7 @@
             <span class="k">if</span> <span class="n">tag</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">inferred_order</span><span class="p">:</span>
                 <span class="n">inferred_order</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inferred_order</span> <span class="o">=</span> <span class="n">inferred_order</span></div>
+
 </pre></div>
 
            </div>
@@ -395,7 +410,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020-2024, Marouane Yassine &amp; David Beauchemin.</p>
+    <p>&#169; Copyright 2020-2026, Marouane Yassine &amp; David Beauchemin.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

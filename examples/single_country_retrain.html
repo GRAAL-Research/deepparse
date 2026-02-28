@@ -1,21 +1,21 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Retrain an Address Parser for Single Country Uses &mdash; deepparse 0.9.13 documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <title>Retrain an Address Parser for Single Country Uses &mdash; deepparse 0.10.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
   
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=82662543"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -35,9 +35,6 @@
             
               <img src="../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
-              <div class="version">
-                0.9.13
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -110,7 +107,7 @@
            <div itemprop="articleBody">
              
   <section id="retrain-an-address-parser-for-single-country-uses">
-<h1>Retrain an Address Parser for Single Country Uses<a class="headerlink" href="#retrain-an-address-parser-for-single-country-uses" title="Permalink to this heading"></a></h1>
+<h1>Retrain an Address Parser for Single Country Uses<a class="headerlink" href="#retrain-an-address-parser-for-single-country-uses" title="Link to this heading"></a></h1>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">
@@ -118,16 +115,16 @@
 <li><p>Run in <a class="reference external" href="https://colab.research.google.com/github/GRAAL-Research/deepparse/blob/master/examples/single_country_retrain.ipynb">Google Colab</a></p></li>
 </ul>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">compress_pickle</span>
-<span class="kn">import</span> <span class="nn">pickle</span>
-<span class="kn">from</span> <span class="nn">deepparse</span> <span class="kn">import</span> <span class="n">download_from_public_repository</span>
-<span class="kn">from</span> <span class="nn">deepparse.dataset_container</span> <span class="kn">import</span> <span class="n">PickleDatasetContainer</span>
-<span class="kn">from</span> <span class="nn">deepparse.parser</span> <span class="kn">import</span> <span class="n">AddressParser</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
-<span class="kn">from</span> <span class="nn">poutyne</span> <span class="kn">import</span> <span class="n">set_seeds</span>
-<span class="kn">import</span> <span class="nn">poutyne</span>
-<span class="kn">import</span> <span class="nn">timeit</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">compress_pickle</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">deepparse</span><span class="w"> </span><span class="kn">import</span> <span class="n">download_from_public_repository</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">deepparse.dataset_container</span><span class="w"> </span><span class="kn">import</span> <span class="n">PickleDatasetContainer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">deepparse.parser</span><span class="w"> </span><span class="kn">import</span> <span class="n">AddressParser</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">poutyne</span><span class="w"> </span><span class="kn">import</span> <span class="n">set_seeds</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">poutyne</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">timeit</span>
 
 <span class="n">seed</span> <span class="o">=</span> <span class="mi">42</span>
 <span class="n">set_seeds</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
@@ -135,7 +132,7 @@
 </div>
 <p>In this example, we will retrain a pre-trained model to maximize its performance for specific countries (e.g. the UK or Canada).</p>
 <section id="retrain-a-model">
-<h2>Retrain a Model<a class="headerlink" href="#retrain-a-model" title="Permalink to this heading"></a></h2>
+<h2>Retrain a Model<a class="headerlink" href="#retrain-a-model" title="Link to this heading"></a></h2>
 <p>First, to retrain our supervised model, we need parsed address example, as shown in the following figure.
 Fortunately, we have access to a public dataset of such parsed examples, the
 <a class="reference external" href="https://github.com/GRAAL-Research/deepparse-address-data">Structured Multinational Address Dataset</a>.</p>
@@ -167,7 +164,7 @@ the dataset in the next code cell (the script handles CLI parameters).</p>
 <span class="c1"># instead or CLI parsed argument</span>
 
 <span class="c1"># Function to handle the files paths</span>
-<span class="k">def</span> <span class="nf">absolute_file_paths</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">absolute_file_paths</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Function to get all the absolute paths of files into a directory.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -178,7 +175,7 @@ the dataset in the next code cell (the script handles CLI parameters).</p>
 
 
 <span class="c1"># Function to LZMA decompress the files_directory into the path_to_save directory</span>
-<span class="k">def</span> <span class="nf">lzma_decompress</span><span class="p">(</span><span class="n">files_directory</span><span class="p">,</span> <span class="n">root_path_to_save</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">lzma_decompress</span><span class="p">(</span><span class="n">files_directory</span><span class="p">,</span> <span class="n">root_path_to_save</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Script to decompress the dataset from LZMA compress files into pickled one.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -260,7 +257,7 @@ for all the training parameters.</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020-2024, Marouane Yassine &amp; David Beauchemin.</p>
+    <p>&#169; Copyright 2020-2026, Marouane Yassine &amp; David Beauchemin.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

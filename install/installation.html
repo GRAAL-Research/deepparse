@@ -1,21 +1,21 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Installation &mdash; deepparse 0.9.13 documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <title>Installation &mdash; deepparse 0.10.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
   
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=82662543"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -35,9 +35,6 @@
             
               <img src="../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
-              <div class="version">
-                0.9.13
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -111,15 +108,15 @@
            <div itemprop="articleBody">
              
   <section id="installation">
-<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h1>
-<p>Deepparse is available for Python 3,8 to Python 3.11.</p>
+<h1>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h1>
+<p>Deepparse is available for Python 3.10, Python 3.11, Python 3.12 and Python 3.13.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>We do not recommend installation as a root user on your system Python.
 Please setup a virtual environment, <em>e.g.</em>, via <a class="reference external" href="https://conda.io/projects/conda/en/latest/user-guide/install">Anaconda or Miniconda</a>, or create a <a class="reference external" href="https://www.docker.com/">Docker image</a>.</p>
 </div>
 <section id="quick-start">
-<h2>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this heading"></a></h2>
+<h2>Quick Start<a class="headerlink" href="#quick-start" title="Link to this heading"></a></h2>
 <style>
   .quick-start {
     display: flex;
@@ -269,7 +266,7 @@ Please setup a virtual environment, <em>e.g.</em>, via <a class="reference exter
 
 </script></section>
 <section id="id1">
-<h2>Installation<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h2>
+<h2>Installation<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
 <p>Before installing deepparse, you must have the latest version of <a class="reference external" href="https://pytorch.org/">PyTorch</a> in your environment.</p>
 <ul>
 <li><p><strong>Install the stable version of Deepparse:</strong></p>
@@ -287,6 +284,18 @@ Please setup a virtual environment, <em>e.g.</em>, via <a class="reference exter
 </pre></div>
 </div>
 </li>
+<li><p><strong>Install the stable version of Deepparse with native FastText support (requires Python 3.10–3.12):</strong></p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;deepparse[fasttext]&quot;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>On Python 3.13, the <code class="docutils literal notranslate"><span class="pre">fasttext-wheel</span></code> package cannot be compiled. Deepparse will automatically fall
+back to Gensim to load FastText embeddings. See <a class="reference internal" href="../get_started/get_started.html#fasttext-python-313"><span class="std std-ref">Note on FastText Models and Python 3.13+</span></a> for details.</p>
+</div>
+<ul>
 <li><p><strong>Install the latest development version of Deepparse:</strong></p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span>git+https://github.com/GRAAL-Research/deepparse.git@dev
 </pre></div>
@@ -307,7 +316,7 @@ Please setup a virtual environment, <em>e.g.</em>, via <a class="reference exter
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020-2024, Marouane Yassine &amp; David Beauchemin.</p>
+    <p>&#169; Copyright 2020-2026, Marouane Yassine &amp; David Beauchemin.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

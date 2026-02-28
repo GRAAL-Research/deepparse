@@ -1,20 +1,20 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>deepparse.comparer.formatted_compared_addresses_raw &mdash; deepparse 0.9.13 documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <title>deepparse.comparer.formatted_compared_addresses_raw &mdash; deepparse 0.10.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+
   
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=82662543"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -32,9 +32,6 @@
             
               <img src="../../../_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
-              <div class="version">
-                0.9.13
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -104,19 +101,21 @@
            <div itemprop="articleBody">
              
   <h1>Source code for deepparse.comparer.formatted_compared_addresses_raw</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span>
 
-<span class="kn">from</span> <span class="nn">.formatted_compared_addresses</span> <span class="kn">import</span> <span class="n">FormattedComparedAddresses</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.formatted_compared_addresses</span><span class="w"> </span><span class="kn">import</span> <span class="n">FormattedComparedAddresses</span>
 
 
-<div class="viewcode-block" id="FormattedComparedAddressesRaw"><a class="viewcode-back" href="../../../comparer.html#deepparse.comparer.FormattedComparedAddressesRaw">[docs]</a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="k">class</span> <span class="nc">FormattedComparedAddressesRaw</span><span class="p">(</span><span class="n">FormattedComparedAddresses</span><span class="p">):</span>
+<div class="viewcode-block" id="FormattedComparedAddressesRaw">
+<a class="viewcode-back" href="../../../comparer.html#deepparse.comparer.FormattedComparedAddressesRaw">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">FormattedComparedAddressesRaw</span><span class="p">(</span><span class="n">FormattedComparedAddresses</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A formatted compared address of two raw (not parsed) addresses.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">_get_probs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_probs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method to get the tags from the parsing with their associated probabilities, a method needs to be</span>
 <span class="sd">        implemented in each class because they don&#39;t use the probabilities the same way.</span>
@@ -126,7 +125,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">second_address</span><span class="o">.</span><span class="n">raw_address</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">second_address</span><span class="o">.</span><span class="n">address_parsed_components</span><span class="p">,</span>
         <span class="p">}</span>
 
-    <span class="k">def</span> <span class="nf">_get_raw_diff_color</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_raw_diff_color</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Print the raw addresses and highlight the differences between them.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -149,7 +148,7 @@
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">str_formatted</span>
 
-    <span class="k">def</span> <span class="nf">_comparison_report_builder</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_comparison_report_builder</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Builds the core of a comparison report for the various comparisons. Since the procedure to make a tags</span>
 <span class="sd">        comparison and the raw addresses comparison are different, the comparison report is not the same for the two.</span>
@@ -185,6 +184,7 @@
                 <span class="n">str_formatted</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_tags_diff_color</span><span class="p">()</span>
 
         <span class="k">return</span> <span class="n">str_formatted</span></div>
+
 </pre></div>
 
            </div>
@@ -194,7 +194,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020-2024, Marouane Yassine &amp; David Beauchemin.</p>
+    <p>&#169; Copyright 2020-2026, Marouane Yassine &amp; David Beauchemin.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

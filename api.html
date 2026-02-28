@@ -1,21 +1,21 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Parse Address With Our Out-Of-The-Box API &mdash; deepparse 0.9.13 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <title>Parse Address With Our Out-Of-The-Box API &mdash; deepparse 0.10.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
   
-        <script src="_static/jquery.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=82662543"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -35,9 +35,6 @@
             
               <img src="_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
-              <div class="version">
-                0.9.13
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -118,10 +115,10 @@
            <div itemprop="articleBody">
              
   <section id="parse-address-with-our-out-of-the-box-api">
-<h1>Parse Address With Our Out-Of-The-Box API<a class="headerlink" href="#parse-address-with-our-out-of-the-box-api" title="Permalink to this heading"></a></h1>
+<h1>Parse Address With Our Out-Of-The-Box API<a class="headerlink" href="#parse-address-with-our-out-of-the-box-api" title="Link to this heading"></a></h1>
 <p>We also offer an out-of-the-box REST API to parse addresses using FastAPI.</p>
 <section id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h2>
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
 <p>First, ensure you have Docker Engine and Docker Compose installed on your machine.
 If not, you can install them using the following documentation in the following order:</p>
 <ol class="arabic simple">
@@ -134,18 +131,18 @@ If not, you can install them using the following documentation in the following 
 </div>
 </section>
 <section id="sentry">
-<h2>Sentry<a class="headerlink" href="#sentry" title="Permalink to this heading"></a></h2>
+<h2>Sentry<a class="headerlink" href="#sentry" title="Link to this heading"></a></h2>
 <p>Also, you can monitor your application usage with <a class="reference external" href="https://sentry.io">Sentry</a> by setting the environment variable <code class="docutils literal notranslate"><span class="pre">SENTRY_DSN</span></code> to your Sentry project
 DSN. There is an example of the <code class="docutils literal notranslate"><span class="pre">.env</span></code> file in the project’s root named <code class="docutils literal notranslate"><span class="pre">.env_example</span></code>. You can copy it using the following command:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>cp<span class="w"> </span>.env_example<span class="w"> </span>.env
 </pre></div>
 </div>
 <section id="request-examples">
-<h3>Request Examples<a class="headerlink" href="#request-examples" title="Permalink to this heading"></a></h3>
+<h3>Request Examples<a class="headerlink" href="#request-examples" title="Link to this heading"></a></h3>
 <p>Once the application is up and running and port <code class="docutils literal notranslate"><span class="pre">8000</span></code> is exported on your <code class="docutils literal notranslate"><span class="pre">localhost</span></code>, you can send a request with one
 of the following methods:</p>
 <section id="curl-post-request">
-<h4>cURL POST request<a class="headerlink" href="#curl-post-request" title="Permalink to this heading"></a></h4>
+<h4>cURL POST request<a class="headerlink" href="#curl-post-request" title="Link to this heading"></a></h4>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>--location<span class="w"> </span><span class="s2">&quot;http://127.0.0.1:8000/parse/bpemb-attention&quot;</span><span class="w"> </span>--http1.1<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;Host: 127.0.0.1:8000&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -157,8 +154,8 @@ of the following methods:</p>
 </div>
 </section>
 <section id="python-post-request">
-<h4>Python POST request<a class="headerlink" href="#python-post-request" title="Permalink to this heading"></a></h4>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">requests</span>
+<h4>Python POST request<a class="headerlink" href="#python-post-request" title="Link to this heading"></a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
 
 <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;http://localhost:8000/parse/bpemb&#39;</span>
 <span class="n">addresses</span> <span class="o">=</span> <span class="p">[</span>
@@ -187,7 +184,7 @@ of the following methods:</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020-2024, Marouane Yassine &amp; David Beauchemin.</p>
+    <p>&#169; Copyright 2020-2026, Marouane Yassine &amp; David Beauchemin.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

@@ -1,21 +1,21 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Training Guide &mdash; deepparse 0.9.13 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <title>Training Guide &mdash; deepparse 0.10.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
   
-        <script src="_static/jquery.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=82662543"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -34,9 +34,6 @@
             
               <img src="_static/deepparse.png" class="logo" alt="Logo"/>
           </a>
-              <div class="version">
-                0.9.13
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -112,7 +109,7 @@
            <div itemprop="articleBody">
              
   <section id="training-guide">
-<h1>Training Guide<a class="headerlink" href="#training-guide" title="Permalink to this heading"></a></h1>
+<h1>Training Guide<a class="headerlink" href="#training-guide" title="Link to this heading"></a></h1>
 <p>In addition to parsing addresses out-of-the-box, Deepparse allows you to retrain the pre-trained models to fit your data and use cases.
 In the world of machine learning, this is what’s referred to as <code class="docutils literal notranslate"><span class="pre">fine-tuning</span></code>, which can make it easier to obtain well-performing
 models more efficiently and with less data.</p>
@@ -135,7 +132,7 @@ at <a class="reference external" href="https://github.com/GRAAL-Research/deeppar
 <p>There are two main concerns to keep in mind when fine-tuning a model: the model’s convergence (i.e., its ability actually to learn from the new data)
 and the possibility of <code class="docutils literal notranslate"><span class="pre">catastrophic</span> <span class="pre">forgetting</span></code> (i.e., losing the model’s previous knowledge after training on the new data).</p>
 <section id="learning-successfully">
-<h2>Learning Successfully<a class="headerlink" href="#learning-successfully" title="Permalink to this heading"></a></h2>
+<h2>Learning Successfully<a class="headerlink" href="#learning-successfully" title="Link to this heading"></a></h2>
 <p>Making a model converge is as much an art as a science since it often requires a lot of experimentation and parameter tuning. In the case
 of fine-tuning, the models have already developed a base knowledge of the task that they were trained on, which gives them an edge.
 This is especially true in the case of Deepparse since the task you are fine-tuning remains the same (i.e. parsing addresses).
@@ -158,7 +155,7 @@ training process. This can be specified in the <a class="reference internal" hre
 </ul>
 </section>
 <section id="do-not-forget">
-<h2>Do Not Forget!<a class="headerlink" href="#do-not-forget" title="Permalink to this heading"></a></h2>
+<h2>Do Not Forget!<a class="headerlink" href="#do-not-forget" title="Link to this heading"></a></h2>
 <p>As mentioned above, catastrophic forgetting can happen when fine-tuning machine learning models. This is because the models’ internal parameters are
 modified to accommodate the new task/data, which can impact their ability to be appropriate for the previous task/data.</p>
 <p>There are many fancy ways to mitigate catastrophic forgetting when fine-tuning models. Still, given the task and data that Deepparse handles, we recommend including some of the previous data when constructing your retraining dataset. The amount
@@ -171,7 +168,7 @@ the <a class="reference internal" href="parser.html#deepparse.parser.AddressPars
 </div>
 </section>
 <section id="about-the-data">
-<h2>About The Data<a class="headerlink" href="#about-the-data" title="Permalink to this heading"></a></h2>
+<h2>About The Data<a class="headerlink" href="#about-the-data" title="Link to this heading"></a></h2>
 <p>Deepparse’s models learn in a supervised manner; this means that the data provided for retraining must be labelled (i.e. the tag of each element in the
 address needs to be specified). This is also required when you want to retrain our models with your own custom tags. Each word in the address must
 have a corresponding tag. If you are using custom tags, they must be defined in the <a class="reference internal" href="parser.html#deepparse.parser.AddressParser.retrain" title="deepparse.parser.AddressParser.retrain"><code class="xref py py-meth docutils literal notranslate"><span class="pre">retrain()</span></code></a> method under
@@ -187,7 +184,7 @@ for a few more randomly chosen unlabeled addresses, verify and correct the predi
 This will allow you to incrementally increase the size of your dataset with the help of the models. This is a simple case of <em>active learning</em>.</p>
 </section>
 <section id="modifying-the-architecture">
-<h2>Modifying the Architecture<a class="headerlink" href="#modifying-the-architecture" title="Permalink to this heading"></a></h2>
+<h2>Modifying the Architecture<a class="headerlink" href="#modifying-the-architecture" title="Link to this heading"></a></h2>
 <p>The <a class="reference internal" href="parser.html#deepparse.parser.AddressParser.retrain" title="deepparse.parser.AddressParser.retrain"><code class="xref py py-meth docutils literal notranslate"><span class="pre">retrain()</span></code></a> method allows you to change the architecture of the models using the <code class="docutils literal notranslate"><span class="pre">seq2seq_params</span></code>
 argument. This can be useful if you need a more complex model or a lighter model, for example. However, if you
 change the models’ architecture, a completely new model will be retrained from scratch. This
@@ -205,7 +202,7 @@ means that all the previous knowledge that the initial model had will disappear.
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020-2024, Marouane Yassine &amp; David Beauchemin.</p>
+    <p>&#169; Copyright 2020-2026, Marouane Yassine &amp; David Beauchemin.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

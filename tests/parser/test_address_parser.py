@@ -12,6 +12,7 @@
 
 import os
 import unittest
+import warnings
 from tempfile import TemporaryDirectory
 from unittest import skipIf
 from unittest.mock import MagicMock, patch
@@ -148,12 +149,14 @@ class AddressParserTest(AddressParserPredictTestCase):
             with patch("deepparse.parser.address_parser.VectorizerFactory") as _:
                 with patch("deepparse.parser.address_parser.DataProcessorFactory") as _:
                     cuda_mock.is_available.return_value = False
-                    with self.assertWarns(UserWarning):
+                    with warnings.catch_warnings(record=True) as w:
+                        warnings.simplefilter("always")
                         address_parser = AddressParser(
                             model_type=self.a_best_model_type.capitalize(),
                             # we use BPEmb for simplicity
                             device=self.a_gpu_device,
                         )
+                    self.assertTrue(any(issubclass(x.category, UserWarning) for x in w))
         actual = address_parser.device
         expected = self.a_cpu_torch_device
         self.assertEqual(actual, expected)
@@ -180,11 +183,13 @@ class AddressParserTest(AddressParserPredictTestCase):
             with patch("deepparse.parser.address_parser.VectorizerFactory") as _:
                 with patch("deepparse.parser.address_parser.DataProcessorFactory") as _:
                     cuda_mock.is_available.return_value = False
-                    with self.assertWarns(UserWarning):
+                    with warnings.catch_warnings(record=True) as w:
+                        warnings.simplefilter("always")
                         address_parser = AddressParser(
                             model_type=self.a_best_model_type.capitalize(),
                             device="cuda:0",
                         )
+                    self.assertTrue(any(issubclass(x.category, UserWarning) for x in w))
         self.assertEqual(address_parser.device, self.a_cpu_torch_device)
 
     @skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")

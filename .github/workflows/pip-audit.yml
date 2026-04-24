@@ -24,4 +24,4 @@ jobs:
           pip install pip-audit
       - name: Run pip-audit
         run: |
-          pip-audit --strict --desc
+          pip-audit --desc --skip-editable

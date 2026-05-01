@@ -1,5 +1,5 @@
 fastapi[all]==0.135.2
 uvicorn
-sentry-sdk[fastapi]>=2.0.0
+sentry-sdk[fastapi]>=2.58.0
 python-decouple
 pydantic

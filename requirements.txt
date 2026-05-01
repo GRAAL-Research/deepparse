@@ -6,7 +6,7 @@ requests
 pymagnitude-light
 colorama>=0.4.3
 poutyne
-gensim>=4.3.3
+gensim>=4.4.0
 pandas
 urllib3
 cloudpathlib[s3, gs, azure]

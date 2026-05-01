@@ -4,7 +4,7 @@ numpy
 scipy
 requests
 pymagnitude-light
-colorama>=0.4.3
+colorama>=0.4.6
 poutyne
 gensim>=4.3.3
 pandas

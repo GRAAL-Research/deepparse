@@ -413,3 +413,6 @@
 - Replace `Union[X, None]` type hints with PEP 604 `X | None` pipe syntax (Python 3.10+).
 - Fix CLI `retrain` command silently ignoring the `--prediction_tags` argument.
 - Remove dead code in CLI `retrain` (`parser_args.update` on unused dict) and simplify `handle_prediction_tags()`.
+- Fix training dataset validation not flagging a partially empty tag set: `_empty_tags` used `all` instead of
+  `any`, so a single empty tag list (e.g. `("an address", [])`) was masked and reported through the generic
+  length-mismatch error instead of the clearer "Some tags data points are empty." error.

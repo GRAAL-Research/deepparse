@@ -129,17 +129,27 @@ class DatasetContainerTest(TestCase):
             ADatasetContainer(some_invalid_data)
 
     def test_when_empty_tags_set_then_raise_data_error(self):
+        # A single empty tag set among valid ones must be detected (any, not all). We assert on the
+        # specific message so the test fails if the empty-tags check is weakened to ``all`` (which would
+        # let the generic length-mismatch check raise a different, misleading error instead).
         some_invalid_data = [("An address", [1, 0]), ("another address", []), ("A last address", [3, 4, 0])]
-        with self.assertRaises(DataError):
+        with self.assertRaisesRegex(DataError, "Some tags data points are empty."):
+            ADatasetContainer(some_invalid_data)
+
+    def test_when_all_tags_sets_empty_then_raise_data_error(self):
+        # The empty-tags check must also fire when every tag set is empty.
+        some_invalid_data = [("An address", []), ("another address", []), ("A last address", [])]
+        with self.assertRaisesRegex(DataError, "Some tags data points are empty."):
             ADatasetContainer(some_invalid_data)
 
     def test_when_tags_set_not_same_len_as_address_then_raise_data_error(self):
+        # Tags are non-empty here, so the empty-tags check must NOT fire; the length-mismatch check must.
         some_invalid_data = [("An address", [1, 0]), ("another address", [1]), ("A last address", [3, 4, 0])]
-        with self.assertRaises(DataError):
+        with self.assertRaisesRegex(DataError, "not the same length"):
             ADatasetContainer(some_invalid_data)
 
         some_invalid_data = [("An address", [1, 0]), ("another address", [1, 2, 4]), ("A last address", [3, 4, 0])]
-        with self.assertRaises(DataError):
+        with self.assertRaisesRegex(DataError, "not the same length"):
             ADatasetContainer(some_invalid_data)
 
     def test_when_predict_container_when_data_is_not_a_list_raise_type_error(self):

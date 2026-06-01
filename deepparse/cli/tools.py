@@ -1,9 +1,10 @@
 import argparse
 import json
+import logging
 import os
 import pickle
 import textwrap
-from typing import Dict, List, Union
+from typing import Dict, List
 
 import pandas as pd
 
@@ -13,6 +14,8 @@ from ..dataset_container import (
     PickleDatasetContainer,
 )
 from ..parser import FormattedParsedAddress
+
+logger = logging.getLogger(__name__)
 
 
 def is_csv_path(export_file_name: str) -> bool:
@@ -55,9 +58,7 @@ def is_json_path(export_file_name: str) -> bool:
     return ".json" in export_file_name
 
 
-def to_csv(
-    parsed_addresses: Union[FormattedParsedAddress, List[FormattedParsedAddress]], export_path: str, sep: str
-) -> None:
+def to_csv(parsed_addresses: FormattedParsedAddress | List[FormattedParsedAddress], export_path: str, sep: str) -> None:
     """
     Function to convert some parsed addresses into a dictionary to be exported into a CSV file using pandas.
     """
@@ -65,10 +66,10 @@ def to_csv(
         parsed_addresses = [parsed_addresses]
     nested_dict_formatted_parsed_addresses = [parsed_address.to_pandas() for parsed_address in parsed_addresses]
     pd.DataFrame(nested_dict_formatted_parsed_addresses).to_csv(export_path, sep=sep, index=False)
-    print(f"Data exported to {export_path}.")
+    logger.info("Data exported to %s.", export_path)
 
 
-def to_pickle(parsed_addresses: Union[FormattedParsedAddress, List[FormattedParsedAddress]], export_path: str) -> None:
+def to_pickle(parsed_addresses: FormattedParsedAddress | List[FormattedParsedAddress], export_path: str) -> None:
     """
     Function to convert some parsed addresses into a list of list of tuples to be exported into a pickle file.
     """
@@ -77,10 +78,10 @@ def to_pickle(parsed_addresses: Union[FormattedParsedAddress, List[FormattedPars
     parsed_addresses = [parsed_address.to_pickle() for parsed_address in parsed_addresses]
     with open(export_path, "wb") as file:
         pickle.dump(parsed_addresses, file)
-    print(f"Data exported to {export_path}.")
+    logger.info("Data exported to %s.", export_path)
 
 
-def to_json(parsed_addresses: Union[FormattedParsedAddress, List[FormattedParsedAddress]], export_path: str) -> None:
+def to_json(parsed_addresses: FormattedParsedAddress | List[FormattedParsedAddress], export_path: str) -> None:
     """
     Function to convert some parsed addresses into a json to be exported into a JSON file.
     """
@@ -89,7 +90,7 @@ def to_json(parsed_addresses: Union[FormattedParsedAddress, List[FormattedParsed
     nested_dict_formatted_parsed_addresses = [parsed_address.to_pandas() for parsed_address in parsed_addresses]
     with open(export_path, "w", encoding="utf-8") as file:
         json.dump(nested_dict_formatted_parsed_addresses, file, ensure_ascii=False)
-    print(f"Data exported to {export_path}.")
+    logger.info("Data exported to %s.", export_path)
 
 
 def bool_parse(arg: str) -> bool:

@@ -10,7 +10,7 @@ import warnings
 from functools import partial
 from pathlib import Path
 from platform import system
-from typing import Callable, Dict, List, Tuple, Union
+from typing import Callable, Dict, List, Tuple
 
 import torch
 from cloudpathlib import CloudPath, S3Path
@@ -235,11 +235,11 @@ class AddressParser:
         self,
         model_type: str = "best",
         attention_mechanism: bool = False,
-        device: Union[int, str, torch.device] = 0,
+        device: int | str | torch.device = 0,
         rounding: int = 4,
         verbose: bool = True,
-        path_to_retrained_model: Union[S3Path, str, None] = None,
-        cache_dir: Union[str, None] = None,
+        path_to_retrained_model: S3Path | str | None = None,
+        cache_dir: str | None = None,
         offline: bool = False,
     ) -> None:
         # pylint: disable=too-many-arguments
@@ -322,13 +322,13 @@ class AddressParser:
 
     def __call__(
         self,
-        addresses_to_parse: Union[List[str], str, DatasetContainer],
+        addresses_to_parse: List[str] | str | DatasetContainer,
         with_prob: bool = False,
         batch_size: int = 32,
         num_workers: int = 0,
         with_hyphen_split: bool = False,
-        pre_processors: Union[None, List[Callable]] = None,
-    ) -> Union[FormattedParsedAddress, List[FormattedParsedAddress]]:
+        pre_processors: None | List[Callable] = None,
+    ) -> FormattedParsedAddress | List[FormattedParsedAddress]:
         # pylint: disable=too-many-arguments
         """
         Callable method to parse the components of an address or a list of address.
@@ -479,21 +479,21 @@ class AddressParser:
     def retrain(
         self,
         train_dataset_container: DatasetContainer,
-        val_dataset_container: Union[DatasetContainer, None] = None,
+        val_dataset_container: DatasetContainer | None = None,
         train_ratio: float = 0.8,
         batch_size: int = 32,
         epochs: int = 5,
         num_workers: int = 1,
         learning_rate: float = 0.01,
-        callbacks: Union[List[Callable], None] = None,
+        callbacks: List[Callable] | None = None,
         seed: int = 42,
         logging_path: str = "./checkpoints",
         disable_tensorboard: bool = True,
-        prediction_tags: Union[Dict[str, int], None] = None,
-        seq2seq_params: Union[Dict[str, int], None] = None,
-        layers_to_freeze: Union[str, None] = None,
-        name_of_the_retrain_parser: Union[None, str] = None,
-        verbose: Union[None, bool] = None,
+        prediction_tags: Dict[str, int] | None = None,
+        seq2seq_params: Dict[str, int] | None = None,
+        layers_to_freeze: str | None = None,
+        name_of_the_retrain_parser: None | str = None,
+        verbose: None | bool = None,
     ) -> List[Dict[str, float]]:
         # pylint: disable=too-many-arguments, too-many-locals, too-many-branches, too-many-statements
 
@@ -905,9 +905,9 @@ class AddressParser:
         test_dataset_container: DatasetContainer,
         batch_size: int = 32,
         num_workers: int = 1,
-        callbacks: Union[List[Callable], None] = None,
+        callbacks: List[Callable] | None = None,
         seed: int = 42,
-        verbose: Union[None, bool] = None,
+        verbose: None | bool = None,
     ) -> Dict[str, float]:
         # pylint: disable=too-many-arguments, too-many-locals
         """
@@ -1014,7 +1014,7 @@ class AddressParser:
 
         return test_res
 
-    def save_model_weights(self, file_path: Union[str, Path]) -> None:
+    def save_model_weights(self, file_path: str | Path) -> None:
         """
         Method to save, in a Pickle format, the address parser model weights (PyTorch state dictionary).
 
@@ -1050,7 +1050,7 @@ class AddressParser:
         addresses_to_parse: List[str],
         clean_addresses: List[str],
         with_prob: bool,
-    ) -> Union[FormattedParsedAddress, List[FormattedParsedAddress]]:
+    ) -> FormattedParsedAddress | List[FormattedParsedAddress]:
         # pylint: disable=too-many-arguments, too-many-locals
         """
         Method to fill the mapping for every address between a address components and is associated predicted tag (or
@@ -1075,7 +1075,7 @@ class AddressParser:
             return tagged_addresses_components[0]
         return tagged_addresses_components
 
-    def _process_device(self, device: Union[int, str, torch.device]) -> None:
+    def _process_device(self, device: int | str | torch.device) -> None:
         """
         Function to process the device depending on the argument type.
 
@@ -1149,12 +1149,12 @@ class AddressParser:
     def _setup_model(
         self,
         verbose: bool,
-        path_to_retrained_model: Union[str, None] = None,
+        path_to_retrained_model: str | None = None,
         pre_trained_weights: bool = True,
         prediction_layer_len: int = 9,
         attention_mechanism: bool = False,
-        seq2seq_kwargs: Union[dict, None] = None,
-        cache_dir: Union[dict, None] = None,
+        seq2seq_kwargs: dict | None = None,
+        cache_dir: dict | None = None,
         offline: bool = False,
     ) -> None:
         # pylint: disable=too-many-arguments
@@ -1205,7 +1205,7 @@ class AddressParser:
         seed: int,
         callbacks: List[Callable],
         disable_tensorboard: bool,
-        verbose: Union[None, bool],
+        verbose: None | bool,
     ) -> List[Dict[str, float]]:
         # pylint: disable=too-many-arguments
         train_res = experiment.train(
@@ -1219,7 +1219,7 @@ class AddressParser:
         )
         return train_res
 
-    def _freeze_model_params(self, layers_to_freeze: Union[str]) -> None:
+    def _freeze_model_params(self, layers_to_freeze: str) -> None:
         layers_to_freeze = layers_to_freeze.lower()
         if layers_to_freeze not in ("encoder", "decoder", "prediction_layer", "seq2seq"):
             raise ValueError(
@@ -1260,9 +1260,9 @@ class AddressParser:
 
     def _formatted_named_parser_name(
         self,
-        prediction_tags: Union[Dict[str, int], None],
-        seq2seq_params: Union[Dict[str, int], None],
-        layers_to_freeze: Union[str, None],
+        prediction_tags: Dict[str, int] | None,
+        seq2seq_params: Dict[str, int] | None,
+        layers_to_freeze: str | None,
     ) -> str:
         prediction_tags_str = "ModifiedPredictionTags" if prediction_tags is not None else ""
         seq2seq_params_str = "ModifiedSeq2SeqConfiguration" if seq2seq_params is not None else ""
@@ -1275,7 +1275,7 @@ class AddressParser:
         train_dataset_container: DatasetContainer,
         val_dataset_container: DatasetContainer,
         num_workers: int,
-        name_of_the_retrain_parser: Union[str, None],
+        name_of_the_retrain_parser: str | None,
     ) -> None:
         """
         Arguments validation test for retrain methods.

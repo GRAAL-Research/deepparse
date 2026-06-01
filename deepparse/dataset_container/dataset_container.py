@@ -148,7 +148,7 @@ class DatasetContainer(Dataset, ABC):
 
     def _data_is_list_of_tuple(self) -> bool:
         """
-        Return true if one of the elements in the dataset is not a tuple.
+        Return true only if every element in the dataset is a tuple.
         """
         return all(isinstance(data, tuple) for data in self.data)
 
@@ -156,7 +156,7 @@ class DatasetContainer(Dataset, ABC):
         """
         Return true if one of the tag sets is empty.
         """
-        return all(len(data[1]) == 0 for data in self.data)
+        return any(len(data[1]) == 0 for data in self.data)
 
     def _data_tags_is_same_len_then_address(self) -> bool:
         """

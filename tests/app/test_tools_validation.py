@@ -1,10 +1,11 @@
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
 
 try:
     from fastapi import HTTPException
 
+    from deepparse.app import tools as app_tools
     from deepparse.app.tools import Address, format_parsed_addresses
     from deepparse.parser import FormattedParsedAddress
 
@@ -30,6 +31,16 @@ def test_givenInvalidModel_whenFormatParsedAddresses_thenRaisesHTTPException422(
         format_parsed_addresses("not_a_real_model", [Address(raw="an address")])
 
     assert exception_info.value.status_code == 422
+
+
+@pytest.mark.skipif(not APP_DEPS_AVAILABLE, reason="The app extra (fastapi) is not installed.")
+def test_givenTooManyAddresses_whenFormatParsedAddresses_thenRaisesHTTPException413():
+    # Guard against resource-exhaustion (DoS): a request over the limit must be rejected before any parsing.
+    with patch.object(app_tools, "MAX_ADDRESSES_PER_REQUEST", 2):
+        with pytest.raises(HTTPException) as exception_info:
+            format_parsed_addresses("bpemb", [Address(raw="a"), Address(raw="b"), Address(raw="c")])
+
+    assert exception_info.value.status_code == 413
 
 
 @pytest.mark.skipif(not APP_DEPS_AVAILABLE, reason="The app extra (fastapi) is not installed.")

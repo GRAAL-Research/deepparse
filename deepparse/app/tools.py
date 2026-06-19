@@ -1,5 +1,6 @@
 from typing import Dict, List, Union
 
+from decouple import config
 from fastapi import HTTPException
 
 from deepparse.app.address import Address
@@ -7,6 +8,10 @@ from deepparse.download_tools import MODEL_MAPPING_CHOICES
 from deepparse.parser import AddressParser
 
 address_parser_mapping: Dict[str, AddressParser] = {}
+
+# Upper bound on the number of addresses accepted per request, to avoid resource exhaustion (DoS) from an
+# arbitrarily large payload. Overridable via the MAX_ADDRESSES_PER_REQUEST environment variable.
+MAX_ADDRESSES_PER_REQUEST = config("MAX_ADDRESSES_PER_REQUEST", 1024, cast=int)
 
 
 def format_parsed_addresses(
@@ -26,6 +31,11 @@ def format_parsed_addresses(
     # a ValueError would surface as a 500 error instead of the documented 422.
     if not addresses:
         raise HTTPException(status_code=422, detail="Addresses parameter must not be empty")
+    if len(addresses) > MAX_ADDRESSES_PER_REQUEST:
+        raise HTTPException(
+            status_code=413,
+            detail=f"Too many addresses in a single request (max {MAX_ADDRESSES_PER_REQUEST}).",
+        )
     if parsing_model not in MODEL_MAPPING_CHOICES:
         raise HTTPException(
             status_code=422, detail=f"Parsing model not implemented, available choices: {list(MODEL_MAPPING_CHOICES)}"

@@ -11,7 +11,7 @@ address_parser_mapping: Dict[str, AddressParser] = {}
 
 def format_parsed_addresses(
     parsing_model: str, addresses: List[Address], model_mapping=None
-) -> Dict[str, Union[str, Dict[str, str]]]:
+) -> Dict[str, Union[str, List[Dict[str, Dict[str, str]]]]]:
     """
     Format parsed addresses.
 
@@ -41,10 +41,12 @@ def format_parsed_addresses(
 
     response_payload = {
         "model_type": model_mapping[parsing_model].model_type,
-        "parsed_addresses": {
-            raw_address.raw: parsed_address.to_dict()
+        # A list (not a dict keyed on the raw address) so that duplicate input addresses are preserved and the
+        # output order matches the input order.
+        "parsed_addresses": [
+            {raw_address.raw: parsed_address.to_dict()}
             for parsed_address, raw_address in zip(parsed_addresses, addresses)
-        },
+        ],
         "version": model_mapping[parsing_model].version,
     }
 

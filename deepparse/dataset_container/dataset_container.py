@@ -180,6 +180,11 @@ class PickleDatasetContainer(DatasetContainer):
     """
     Pickle dataset container that imports a list of addresses in pickle format and does some validation on it.
 
+    .. warning::
+        This container uses Python's ``pickle`` to load the dataset. Unpickling executes arbitrary code, so
+        only load pickle files you created yourself or fully trust. Never load a pickle file from an untrusted
+        or third-party source.
+
     The dataset needs to be a list of tuples where the first element of each tuple is the address (a string),
     and the second is a list of the expected tag to predict (e.g. ``[('an address', ['a_tag', 'another_tag']), ...]``).
     The length of the tags needs to be the same as the length of the address when the whitespace-split is used.

@@ -443,3 +443,8 @@
   an attention model on GPU. The mask now follows the model's device.
 - Security: load model checkpoints with `torch.load(..., weights_only=True)` so a maliciously crafted
   checkpoint (e.g. an untrusted `path_to_retrained_model`) cannot execute arbitrary code during unpickling.
+- Security: download the BPEmb embeddings with SSL verification enabled by default. Verification is now only
+  disabled as a failsafe (with a warning) if an SSL error occurs, instead of unconditionally. The previous
+  behaviour exposed the download to man-in-the-middle tampering.
+- Security: document that `PickleDatasetContainer` must only be used with trusted pickle files, since
+  unpickling executes arbitrary code.

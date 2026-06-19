@@ -116,7 +116,14 @@ class Decoder(nn.Module):
         )
 
         longest_sequence_length = max(lengths)
-        mask = torch.arange(longest_sequence_length)[None, :] < torch.tensor(lengths, device="cpu")[:, None]
+        # The mask must live on the same device as alignments_scores (which follows self.weights), otherwise the
+        # boolean index assignment below raises on GPU. self.weights is a real parameter, so its device is the
+        # model's device.
+        device = self.weights.device
+        mask = (
+            torch.arange(longest_sequence_length, device=device)[None, :]
+            < torch.tensor(lengths, device=device)[:, None]
+        )
         mask = mask.unsqueeze(1)
         alignments_scores[~mask] = float("-inf")
 

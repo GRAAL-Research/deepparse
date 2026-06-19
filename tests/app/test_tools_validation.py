@@ -1,9 +1,12 @@
+from unittest.mock import MagicMock
+
 import pytest
 
 try:
     from fastapi import HTTPException
 
     from deepparse.app.tools import Address, format_parsed_addresses
+    from deepparse.parser import FormattedParsedAddress
 
     APP_DEPS_AVAILABLE = True
 except ModuleNotFoundError:
@@ -27,3 +30,23 @@ def test_givenInvalidModel_whenFormatParsedAddresses_thenRaisesHTTPException422(
         format_parsed_addresses("not_a_real_model", [Address(raw="an address")])
 
     assert exception_info.value.status_code == 422
+
+
+@pytest.mark.skipif(not APP_DEPS_AVAILABLE, reason="The app extra (fastapi) is not installed.")
+def test_givenDuplicateRawAddresses_whenFormatParsedAddresses_thenBothAreKept():
+    # Two identical raw addresses must both appear in the response. Keying the response on the raw text (the
+    # previous behaviour) collapsed them into a single entry, silently losing data.
+    model_type = "bpemb"
+    raw_address = "350 rue des Lilas Ouest Quebec city Quebec G1L 1B6"
+    parsed = FormattedParsedAddress({raw_address: [("350", "StreetNumber"), ("rue des Lilas", "StreetName")]})
+
+    parser_mock = MagicMock()
+    parser_mock.model_type = model_type
+    parser_mock.version = "a_version"
+    parser_mock.return_value = [parsed, parsed]
+
+    response = format_parsed_addresses(
+        model_type, [Address(raw=raw_address), Address(raw=raw_address)], {model_type: parser_mock}
+    )
+
+    assert len(response["parsed_addresses"]) == 2

@@ -436,3 +436,6 @@
 - Replace a `except BaseException` (which also swallowed `KeyboardInterrupt`/`SystemExit`) with `except Exception`
   when closing HTTP adapters in the BPEmb embeddings model.
 - Fix a missing space in the `DataProcessorFactory` "unsupported vectorizer" error message.
+- **Breaking change (REST API)**: the `parse` endpoint now returns `parsed_addresses` as a list of
+  `{raw: parsed}` objects instead of a single object keyed on the raw address. The previous format silently
+  collapsed duplicate input addresses (and lost their order); the list preserves every input.

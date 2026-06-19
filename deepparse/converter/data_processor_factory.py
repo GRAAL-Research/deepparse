@@ -35,7 +35,7 @@ class DataProcessorFactory:
         else:
             raise NotImplementedError("""
             There's no data processor corresponding to the provided vectorizer.
-            Supported vectorizers are BPEmbVectorizer, FastTextVectorizerand MagnitudeVectorizer
+            Supported vectorizers are BPEmbVectorizer, FastTextVectorizer and MagnitudeVectorizer
             """)
 
         return processor

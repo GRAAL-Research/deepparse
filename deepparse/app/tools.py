@@ -1,5 +1,7 @@
 from typing import Dict, List, Union
 
+from fastapi import HTTPException
+
 from deepparse.app.address import Address
 from deepparse.download_tools import MODEL_MAPPING_CHOICES
 from deepparse.parser import AddressParser
@@ -20,10 +22,14 @@ def format_parsed_addresses(
     Returns:
     - **JSONResponse**: JSON response containing the parsed addresses, along with the model type and version.
     """
+    # These are raised as HTTPException (not ValueError) because this function runs as a FastAPI dependency:
+    # a ValueError would surface as a 500 error instead of the documented 422.
     if not addresses:
-        raise ValueError("Addresses parameter must not be empty")
+        raise HTTPException(status_code=422, detail="Addresses parameter must not be empty")
     if parsing_model not in MODEL_MAPPING_CHOICES:
-        raise ValueError(f"Parsing model not implemented, available choices: {list(MODEL_MAPPING_CHOICES)}")
+        raise HTTPException(
+            status_code=422, detail=f"Parsing model not implemented, available choices: {list(MODEL_MAPPING_CHOICES)}"
+        )
 
     if model_mapping is None:
         model_mapping = address_parser_mapping

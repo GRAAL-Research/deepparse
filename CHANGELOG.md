@@ -429,3 +429,10 @@
 - Fix CLI attention-model handling using `str.strip("attention")` (a character set) to drop the `-attention`
   suffix; it now uses `removesuffix("-attention")`.
 - Remove a no-op `self.model.state_dict()` call in `save_address_parser_weights`.
+- Fix the REST API returning HTTP 500 instead of the documented 422 for an empty address list or an unknown
+  parsing model: `format_parsed_addresses` (used as a FastAPI dependency) raised `ValueError` instead of
+  `HTTPException`.
+- Fix `DataPadder.pad_subword_embeddings_sequences` mutating the caller's decomposition-length lists in place.
+- Replace a `except BaseException` (which also swallowed `KeyboardInterrupt`/`SystemExit`) with `except Exception`
+  when closing HTTP adapters in the BPEmb embeddings model.
+- Fix a missing space in the `DataProcessorFactory` "unsupported vectorizer" error message.

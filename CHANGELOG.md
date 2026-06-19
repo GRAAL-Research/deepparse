@@ -439,3 +439,5 @@
 - **Breaking change (REST API)**: the `parse` endpoint now returns `parsed_addresses` as a list of
   `{raw: parsed}` objects instead of a single object keyed on the raw address. The previous format silently
   collapsed duplicate input addresses (and lost their order); the list preserves every input.
+- Fix the attention decoder building its length mask on CPU, which raised a device-mismatch error when running
+  an attention model on GPU. The mask now follows the model's device.

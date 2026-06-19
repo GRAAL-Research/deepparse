@@ -416,3 +416,16 @@
 - Fix training dataset validation not flagging a partially empty tag set: `_empty_tags` used `all` instead of
   `any`, so a single empty tag list (e.g. `("an address", [])`) was masked and reported through the generic
   length-mismatch error instead of the clearer "Some tags data points are empty." error.
+- Fix `extract_package_version` reading `package.version.__version__`, which no longer exists in Poutyne >= 1.18
+  and broke `retrain` with an `AttributeError`. It now reads the standard `package.__version__`.
+- Fix the fine-tuned weights loader (`ModelLoader.load_weights`) always returning `None` as the model version:
+  the version was read from the inner state dict instead of the checkpoint metadata.
+- Fix `retrain` silently swallowing a genuine training `RuntimeError` (it inspected the current working directory
+  instead of the logging path); the error is now re-raised when there is no checkpoint collision.
+- Fix the parser mutating a caller-provided `pre_processors` list, which accumulated duplicate pre-processors
+  when the same list was reused across calls.
+- Fix CLI export-format detection matching the extension as a substring anywhere in the file name
+  (e.g. `report.pdf` treated as pickle); it now checks the real file extension.
+- Fix CLI attention-model handling using `str.strip("attention")` (a character set) to drop the `-attention`
+  suffix; it now uses `removesuffix("-attention")`.
+- Remove a no-op `self.model.state_dict()` call in `save_address_parser_weights`.

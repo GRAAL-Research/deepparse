@@ -118,6 +118,14 @@ class ToolsTest(TestCase):
 
         self.assertFalse(is_pickle_path(not_a_pickle_path))
 
+    def test_givenMisleadingSubstringPaths_whenCheckingExtension_thenOnlyTheRealExtensionMatches(self):
+        # These names contain ".p"/".csv"/".json" as a substring that is NOT the actual extension. The
+        # extension check must look at the real suffix only, not a substring anywhere in the name.
+        self.assertFalse(is_pickle_path("report.pdf"))  # ".p" appears in ".pdf"
+        self.assertFalse(is_csv_path("archive.csv.bak"))  # ".csv" is not the suffix
+        self.assertTrue(is_json_path("data.pkg.json"))  # real suffix is .json
+        self.assertFalse(is_pickle_path("data.pkg.json"))  # must not be classified as pickle via ".p" in ".pkg"
+
     def test_givenJSONPath_whenJSONPath_returnTrue(self):
         a_json_path = "a_path.json"
 
@@ -290,10 +298,13 @@ class ToolsTest(TestCase):
         a_att_parsing_model = "fasttext-attention"
         actual_update_args = attention_model_type_handling(a_att_parsing_model)
         self.assertTrue(actual_update_args.get("attention_mechanism"))
+        # The "-attention" suffix must be removed cleanly without truncating the base model name.
+        self.assertEqual(actual_update_args.get("model_type"), "fasttext")
 
         a_att_parsing_model = "bpemb-attention"
         actual_update_args = attention_model_type_handling(a_att_parsing_model)
         self.assertTrue(actual_update_args.get("attention_mechanism"))
+        self.assertEqual(actual_update_args.get("model_type"), "bpemb")
 
     def test_givenNotAnAttModel_whenHandlingAttentionModelType_returnFalse(self):
         not_a_att_parsing_model = "fasttext"

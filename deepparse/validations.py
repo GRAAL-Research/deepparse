@@ -14,7 +14,7 @@ def extract_package_version(package) -> str:
     """
     Handle the retrieval of a Python package's major and minor version parts.
     """
-    full_version = package.version.__version__
+    full_version = package.__version__
     components_parts = full_version.split(".")
     major = components_parts[0]
     minor = components_parts[1]

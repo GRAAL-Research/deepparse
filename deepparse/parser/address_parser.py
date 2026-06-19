@@ -436,11 +436,13 @@ class AddressParser:
             # Default pre_processing setup.
             pre_processors = [coma_cleaning, lower_cleaning, trailing_whitespace_cleaning, double_whitespaces_cleaning]
         else:
-            # We add, at the end, a lower casing cleaning pre-processor.
-            pre_processors.append(lower_cleaning)
+            # We add, at the end, a lower casing cleaning pre-processor. We build a new list rather than mutating
+            # the caller's list, otherwise reusing the same list across calls would accumulate duplicate
+            # pre-processors.
+            pre_processors = [*pre_processors, lower_cleaning]
 
         if with_hyphen_split:
-            pre_processors.append(hyphen_cleaning)
+            pre_processors = [*pre_processors, hyphen_cleaning]
 
         self.pre_processors = PreProcessorList(pre_processors)
         clean_addresses = self.pre_processors.apply(addresses_to_parse)
@@ -815,90 +817,87 @@ class AddressParser:
                 verbose=verbose,
             )
         except RuntimeError as error:
-            list_of_file_path = os.listdir(path=".")
-            if list_of_file_path:
-                if pretrained_parser_in_directory(logging_path):
-                    # Mean we might already have a checkpoint in the training directory
-                    files_in_directory = get_files_in_directory(logging_path)
-                    retrained_address_parser_in_directory = get_address_parser_in_directory(files_in_directory)[
-                        0
-                    ].split("_")[1]
-                    if self.model_type == retrained_address_parser_in_directory:
-                        value_error_message = (
-                            f"You are currently retraining a different {self.get_formatted_model_name()} AddressParser "
-                            f"configuration in the same directory as a previous retrained model. "
-                            "The configurations must be different (number of tag, seq2seq dimensions, etc.). "
-                            "The easiest thing to do is to change the saving directory to avoid colliding checkpoint."
-                        )
-                    else:
-                        value_error_message = (
-                            f"You are currently training a {self.get_formatted_model_name()} in the directory "
-                            f"{logging_path} where a different retrained "
-                            f"{retrained_address_parser_in_directory} model is currently his. "
-                            f"Thus, the loading of the model checkpoint is failing. Change the logging path "
-                            f'"{logging_path}" to something else to retrain the {self.get_formatted_model_name()} '
-                            f'model.'
-                        )
-
-                    raise ValueError(value_error_message) from error
-            else:
-                raise RuntimeError(error.args[0]) from error
-        else:
-            file_name = (
-                name_of_the_retrain_parser + ".ckpt"
-                if name_of_the_retrain_parser is not None
-                else f"retrained_{self.model_type}_address_parser.ckpt"
-            )
-            file_path = os.path.join(logging_path, file_name)
-
-            self.version = "Finetuned_" + self.version
-            torch_save = {
-                "address_tagger_model": exp.model.network.state_dict(),
-                "model_type": self.model_type,
-                "version": self.version,
-            }
-
-            if seq2seq_params is not None:
-                # Means we have changed the seq2seq params
-                torch_save.update({"seq2seq_params": seq2seq_params})
-            if prediction_tags is not None:
-                #  Means we have changed the prediction tags
-                torch_save.update({"prediction_tags": prediction_tags})
-
-            torch_save.update(
-                {
-                    "named_parser": (
-                        name_of_the_retrain_parser
-                        if name_of_the_retrain_parser is not None
-                        else self._formatted_named_parser_name(prediction_tags, seq2seq_params, layers_to_freeze)
+            if pretrained_parser_in_directory(logging_path):
+                # We might already have a checkpoint of a different configuration in the training directory.
+                files_in_directory = get_files_in_directory(logging_path)
+                retrained_address_parser_in_directory = get_address_parser_in_directory(files_in_directory)[0].split(
+                    "_"
+                )[1]
+                if self.model_type == retrained_address_parser_in_directory:
+                    value_error_message = (
+                        f"You are currently retraining a different {self.get_formatted_model_name()} AddressParser "
+                        f"configuration in the same directory as a previous retrained model. "
+                        "The configurations must be different (number of tag, seq2seq dimensions, etc.). "
+                        "The easiest thing to do is to change the saving directory to avoid colliding checkpoint."
                     )
-                }
-            )
+                else:
+                    value_error_message = (
+                        f"You are currently training a {self.get_formatted_model_name()} in the directory "
+                        f"{logging_path} where a different retrained "
+                        f"{retrained_address_parser_in_directory} model is currently his. "
+                        f"Thus, the loading of the model checkpoint is failing. Change the logging path "
+                        f'"{logging_path}" to something else to retrain the {self.get_formatted_model_name()} '
+                        f'model.'
+                    )
 
-            if isinstance(file_path, S3Path):
-                # To handle CloudPath path_to_model_weights
-                try:
-                    with file_path.open("wb") as file:
-                        torch.save(torch_save, file)
-                except FileNotFoundError as error:
-                    raise FileNotFoundError("The file in the S3 bucket was not found.") from error
+                raise ValueError(value_error_message) from error
+            # Otherwise the failure is a genuine training error; re-raise it instead of swallowing it.
+            raise
+        file_name = (
+            name_of_the_retrain_parser + ".ckpt"
+            if name_of_the_retrain_parser is not None
+            else f"retrained_{self.model_type}_address_parser.ckpt"
+        )
+        file_path = os.path.join(logging_path, file_name)
 
-            elif "s3://" in file_path:
-                file_path = CloudPath(file_path)
-                try:
-                    with file_path.open("wb") as file:
-                        torch.save(torch_save, file)
-                except FileNotFoundError as error:
-                    raise FileNotFoundError("The file in the S3 bucket was not found.") from error
-            else:
-                try:
-                    torch.save(torch_save, file_path)
-                except FileNotFoundError as error:
-                    if "s3" in file_path or "//" in file_path or ":" in file_path:
-                        raise FileNotFoundError(
-                            "Are You trying to use an AWS S3 URI? If so path needs to start with s3://."
-                        ) from error
-            return train_res
+        self.version = "Finetuned_" + self.version
+        torch_save = {
+            "address_tagger_model": exp.model.network.state_dict(),
+            "model_type": self.model_type,
+            "version": self.version,
+        }
+
+        if seq2seq_params is not None:
+            # Means we have changed the seq2seq params
+            torch_save.update({"seq2seq_params": seq2seq_params})
+        if prediction_tags is not None:
+            #  Means we have changed the prediction tags
+            torch_save.update({"prediction_tags": prediction_tags})
+
+        torch_save.update(
+            {
+                "named_parser": (
+                    name_of_the_retrain_parser
+                    if name_of_the_retrain_parser is not None
+                    else self._formatted_named_parser_name(prediction_tags, seq2seq_params, layers_to_freeze)
+                )
+            }
+        )
+
+        if isinstance(file_path, S3Path):
+            # To handle CloudPath path_to_model_weights
+            try:
+                with file_path.open("wb") as file:
+                    torch.save(torch_save, file)
+            except FileNotFoundError as error:
+                raise FileNotFoundError("The file in the S3 bucket was not found.") from error
+
+        elif "s3://" in file_path:
+            file_path = CloudPath(file_path)
+            try:
+                with file_path.open("wb") as file:
+                    torch.save(torch_save, file)
+            except FileNotFoundError as error:
+                raise FileNotFoundError("The file in the S3 bucket was not found.") from error
+        else:
+            try:
+                torch.save(torch_save, file_path)
+            except FileNotFoundError as error:
+                if "s3" in file_path or "//" in file_path or ":" in file_path:
+                    raise FileNotFoundError(
+                        "Are You trying to use an AWS S3 URI? If so path needs to start with s3://."
+                    ) from error
+        return train_res
 
     def test(
         self,
@@ -1039,8 +1038,6 @@ class AddressParser:
                 address_parser.save_address_parser_weights(a_path)
 
         """
-        self.model.state_dict()
-
         torch.save(self.model.state_dict(), file_path)
 
     def _fill_tagged_addresses_components(

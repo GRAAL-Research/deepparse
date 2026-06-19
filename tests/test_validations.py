@@ -37,7 +37,7 @@ class ValidationsTests(CaptureOutputTestCase, FileCreationTestCase):
 
     @patch("deepparse.validations.poutyne")
     def test_givenPoutyneVersion1_1_1_givenHandlePoutyneVersion_thenReturnVersion1_1(self, poutyne_mock):
-        poutyne_mock.version.__version__ = "1.1.1"
+        poutyne_mock.__version__ = "1.1.1"
 
         actual = extract_package_version(package=poutyne_mock)
         expected = "1.1"
@@ -45,7 +45,7 @@ class ValidationsTests(CaptureOutputTestCase, FileCreationTestCase):
 
     @patch("deepparse.validations.poutyne")
     def test_givenPoutyneVersion1_1_1_1_givenHandlePoutyneVersion_thenReturnVersion1_1(self, poutyne_mock):
-        poutyne_mock.version.__version__ = "1.1.1.1"
+        poutyne_mock.__version__ = "1.1.1.1"
 
         actual = extract_package_version(package=poutyne_mock)
         expected = "1.1"
@@ -53,7 +53,7 @@ class ValidationsTests(CaptureOutputTestCase, FileCreationTestCase):
 
     @patch("deepparse.validations.poutyne")
     def test_givenPoutyneVersion1_1_dev_givenHandlePoutyneVersion_thenReturnVersion1_1(self, poutyne_mock):
-        poutyne_mock.version.__version__ = "1.1.dev1+81b3c7b"
+        poutyne_mock.__version__ = "1.1.dev1+81b3c7b"
 
         actual = extract_package_version(package=poutyne_mock)
         expected = "1.1"
@@ -61,7 +61,7 @@ class ValidationsTests(CaptureOutputTestCase, FileCreationTestCase):
 
     @patch("deepparse.validations.poutyne")
     def test_givenPoutyneVersion1_1_1_dev_givenHandlePoutyneVersion_thenReturnVersion1_1(self, poutyne_mock):
-        poutyne_mock.version.__version__ = "1.1.dev1+81b3c7b"
+        poutyne_mock.__version__ = "1.1.dev1+81b3c7b"
 
         actual = extract_package_version(package=poutyne_mock)
         expected = "1.1"
@@ -69,7 +69,7 @@ class ValidationsTests(CaptureOutputTestCase, FileCreationTestCase):
 
     @patch("deepparse.validations.poutyne")
     def test_givenPoutyneVersion1_2_givenHandlePoutyneVersion_thenReturnVersion1_2(self, poutyne_mock):
-        poutyne_mock.version.__version__ = "1.2"
+        poutyne_mock.__version__ = "1.2"
 
         actual = extract_package_version(package=poutyne_mock)
         expected = "1.2"
@@ -77,63 +77,63 @@ class ValidationsTests(CaptureOutputTestCase, FileCreationTestCase):
 
     @patch("deepparse.validations.poutyne")
     def test_givenPoutyneVersion1_2_givenValidPoutyneVersion_thenReturnTrue(self, poutyne_mock):
-        poutyne_mock.version.__version__ = "1.2"
+        poutyne_mock.__version__ = "1.2"
 
         actual = valid_poutyne_version()
         self.assertTrue(actual)
 
     @patch("deepparse.validations.poutyne")
     def test_givenPoutyneVersion1_2_dev_givenValidPoutyneVersion_thenReturnTrue(self, poutyne_mock):
-        poutyne_mock.version.__version__ = "1.2.dev1+81b3c7b"
+        poutyne_mock.__version__ = "1.2.dev1+81b3c7b"
 
         actual = valid_poutyne_version()
         self.assertTrue(actual)
 
     @patch("deepparse.validations.poutyne")
     def test_givenPoutyneVersion1_1_givenValidPoutyneVersion_thenReturnFalse(self, poutyne_mock):
-        poutyne_mock.version.__version__ = "1.1"
+        poutyne_mock.__version__ = "1.1"
 
         actual = valid_poutyne_version()
         self.assertFalse(actual)
 
     @patch("deepparse.validations.poutyne")
     def test_givenPoutyneVersion1_1_dev_givenValidPoutyneVersion_thenReturnFalse(self, poutyne_mock):
-        poutyne_mock.version.__version__ = "1.1.dev1+81b3c7b"
+        poutyne_mock.__version__ = "1.1.dev1+81b3c7b"
 
         actual = valid_poutyne_version()
         self.assertFalse(actual)
 
     @patch("deepparse.validations.poutyne")
     def test_givenPoutyneVersion1_8_givenValidPoutyneVersion1_8_thenReturnTrue(self, poutyne_mock):
-        poutyne_mock.version.__version__ = "1.8"
+        poutyne_mock.__version__ = "1.8"
 
         actual = valid_poutyne_version(min_major=1, min_minor=8)
         self.assertTrue(actual)
 
     @patch("deepparse.validations.poutyne")
     def test_givenPoutyneVersion1_11_givenValidPoutyneVersion1_8_thenReturnTrue(self, poutyne_mock):
-        poutyne_mock.version.__version__ = "1.11"
+        poutyne_mock.__version__ = "1.11"
 
         actual = valid_poutyne_version(min_major=1, min_minor=8)
         self.assertTrue(actual)
 
     @patch("deepparse.validations.poutyne")
     def test_givenPoutyneVersion2_givenValidPoutyneVersion1_8_thenReturnTrue(self, poutyne_mock):
-        poutyne_mock.version.__version__ = "2.0"
+        poutyne_mock.__version__ = "2.0"
 
         actual = valid_poutyne_version(min_major=1, min_minor=8)
         self.assertTrue(actual)
 
     @patch("deepparse.validations.poutyne")
     def test_givenPoutyneVersion2_11_givenValidPoutyneVersion1_8_thenReturnTrue(self, poutyne_mock):
-        poutyne_mock.version.__version__ = "2.11"
+        poutyne_mock.__version__ = "2.11"
 
         actual = valid_poutyne_version(min_major=1, min_minor=8)
         self.assertTrue(actual)
 
     @patch("deepparse.validations.poutyne")
     def test_givenPoutyneVersion2_givenValidPoutyneVersion3_thenReturnFalse(self, poutyne_mock):
-        poutyne_mock.version.__version__ = "2.0"
+        poutyne_mock.__version__ = "2.0"
 
         actual = valid_poutyne_version(min_major=3, min_minor=0)
         self.assertFalse(actual)

@@ -29,7 +29,7 @@ def is_csv_path(export_file_name: str) -> bool:
         Either or not, the path is a CSV file extension.
     """
 
-    return ".csv" in export_file_name
+    return os.path.splitext(export_file_name)[1].lower() == ".csv"
 
 
 def is_pickle_path(export_file_name: str) -> bool:
@@ -42,7 +42,7 @@ def is_pickle_path(export_file_name: str) -> bool:
     Return:
         Either or not, the path is a pickle file extension.
     """
-    return ".p" in export_file_name or ".pickle" in export_file_name or ".pckl" in export_file_name
+    return os.path.splitext(export_file_name)[1].lower() in (".p", ".pickle", ".pckl")
 
 
 def is_json_path(export_file_name: str) -> bool:
@@ -55,7 +55,7 @@ def is_json_path(export_file_name: str) -> bool:
     Return:
         Either or not, the path is a json file extension.
     """
-    return ".json" in export_file_name
+    return os.path.splitext(export_file_name)[1].lower() == ".json"
 
 
 def to_csv(parsed_addresses: FormattedParsedAddress | List[FormattedParsedAddress], export_path: str, sep: str) -> None:
@@ -150,7 +150,7 @@ def attention_model_type_handling(parsing_model) -> Dict:
     parser_args_update_args = {}
     if "-attention" in parsing_model:
         parser_args_update_args.update({"attention_mechanism": True})
-        parsing_model = parsing_model.strip("attention").strip("-")
+        parsing_model = parsing_model.removesuffix("-attention")
     parser_args_update_args.update({"model_type": parsing_model})
     return parser_args_update_args
 

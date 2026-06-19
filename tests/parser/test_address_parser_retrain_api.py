@@ -300,6 +300,43 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         except RuntimeError as actual_error_message:
             self.assertEqual(actual_error_message.args[0], expect_error_message)
 
+    @patch("deepparse.parser.address_parser.torch.save")
+    @patch(
+        "deepparse.parser.address_parser.Experiment",
+        **{"return_value.train.side_effect": RuntimeError("Error during training")},
+    )
+    @patch("deepparse.parser.address_parser.SGD")
+    @patch("deepparse.parser.address_parser.ModelFactory")
+    @patch("deepparse.parser.address_parser.EmbeddingsModelFactory")
+    @patch("deepparse.parser.address_parser.VectorizerFactory")
+    @patch("deepparse.parser.address_parser.DataProcessorFactory")
+    @patch("deepparse.parser.address_parser.DataPadder")
+    def test_givenNoCheckpointInLoggingPath_whenRetrainRaisesRuntimeError_thenReRaiseInsteadOfSwallowing(
+        self,
+        data_padder_mock,
+        data_processor_factory_mock,
+        vectorizer_factory_mock,
+        embeddings_factory_mock,
+        model_factory_mock,
+        optimizer_mock,
+        experiment_mock,
+        torch_save_mock,
+    ):
+        # The logging path holds no previous checkpoint, so there is no configuration collision. A genuine
+        # training RuntimeError must be re-raised, not silently swallowed. (The previous implementation
+        # inspected the current working directory instead of the logging path and swallowed the error when
+        # the cwd happened to be non-empty.) We do NOT populate the directory and do NOT mock os.listdir.
+        model_factory_mock().create.return_value = self.model_mock, self.a_model_version
+
+        self.address_parser = AddressParser(
+            model_type=self.a_best_model_type,
+            device=self.a_device,
+            verbose=self.verbose,
+        )
+
+        with self.assertRaises(RuntimeError):
+            self.address_parser_retrain_call()
+
     @patch("deepparse.parser.address_parser.Experiment")
     @patch("deepparse.parser.address_parser.ModelFactory")
     @patch("deepparse.parser.address_parser.EmbeddingsModelFactory")

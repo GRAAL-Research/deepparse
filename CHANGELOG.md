@@ -441,3 +441,5 @@
   collapsed duplicate input addresses (and lost their order); the list preserves every input.
 - Fix the attention decoder building its length mask on CPU, which raised a device-mismatch error when running
   an attention model on GPU. The mask now follows the model's device.
+- Security: load model checkpoints with `torch.load(..., weights_only=True)` so a maliciously crafted
+  checkpoint (e.g. an untrusted `path_to_retrained_model`) cannot execute arbitrary code during unpickling.

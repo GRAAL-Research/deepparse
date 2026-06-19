@@ -1,4 +1,6 @@
 import contextlib
+import logging
+import ssl
 import warnings
 from pathlib import Path
 from typing import Any, Dict
@@ -9,6 +11,8 @@ from urllib3.exceptions import InsecureRequestWarning
 
 from ..bpemb_url_bug_fix import BPEmbBaseURLWrapperBugFix
 from .embeddings_model import EmbeddingsModel
+
+logger = logging.getLogger(__name__)
 
 
 class BPEmbEmbeddingsModel(EmbeddingsModel):
@@ -28,13 +32,30 @@ class BPEmbEmbeddingsModel(EmbeddingsModel):
             # annoying scipy.sparcetools private module warnings removal
             # annoying boto warnings
             warnings.filterwarnings("ignore")
-            # hotfix until https://github.com/bheinzerling/bpemb/issues/63
-            # is resolved.
+            self.model = self._load_bpemb_model(cache_dir)
+
+    def _load_bpemb_model(self, cache_dir: str) -> BPEmbBaseURLWrapperBugFix:
+        """
+        Download (if needed) and load the BPEmb model. We download with SSL verification enabled. The BPEmb
+        host (set by :class:`BPEmbBaseURLWrapperBugFix`) currently has a valid certificate, but it has broken
+        before (`bpemb issue 63 <https://github.com/bheinzerling/bpemb/issues/63>`_). As a failsafe, and only
+        if an SSL error occurs, we retry once with verification disabled while warning loudly, so a transient
+        upstream certificate problem does not break Deepparse outright.
+
+        We use the default parameters other than the dim at 300 and a vs of 100,000.
+        """
+        model_kwargs = {"lang": "multi", "vs": 100000, "dim": 300, "cache_dir": Path(cache_dir)}
+        try:
+            return BPEmbBaseURLWrapperBugFix(**model_kwargs)
+        except (requests.exceptions.SSLError, ssl.SSLError) as ssl_error:
+            logger.warning(
+                "SSL verification failed while downloading the BPEmb embeddings. Retrying once without SSL "
+                "verification as a failsafe; this is insecure (man-in-the-middle risk). If it persists, the "
+                "BPEmb host certificate is likely broken again (see bpemb issue 63). Original error: %s",
+                ssl_error,
+            )
             with no_ssl_verification():
-                # We use the default parameters other than the dim at 300 and a vs of 100,000
-                # We use a BPEmb wrapper since the base URL is broken and the issue is not resolved as of june 23rd.
-                model = BPEmbBaseURLWrapperBugFix(lang="multi", vs=100000, dim=300, cache_dir=Path(cache_dir))
-        self.model = model
+                return BPEmbBaseURLWrapperBugFix(**model_kwargs)
 
     def __call__(self, word: str) -> ndarray:
         """

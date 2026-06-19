@@ -3,6 +3,8 @@ from pathlib import Path
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
 
+import requests
+
 from deepparse.embeddings_models import BPEmbEmbeddingsModel
 
 
@@ -25,6 +27,30 @@ class BPEmbEmbeddingsModelTest(TestCase):
             _ = BPEmbEmbeddingsModel(self.a_path, verbose=False)
 
             loader.assert_called_with(lang="multi", vs=100000, dim=300, cache_dir=Path(self.a_path))
+
+    def test_whenInstantiatedAndDownloadSucceeds_thenSSLVerificationIsNotDisabled(self):
+        # The default path must download with SSL verification ON: no_ssl_verification must not be entered.
+        with patch(
+            "deepparse.embeddings_models.bpemb_embeddings_model.BPEmbBaseURLWrapperBugFix",
+            return_value=self.model,
+        ):
+            with patch("deepparse.embeddings_models.bpemb_embeddings_model.no_ssl_verification") as no_ssl_mock:
+                BPEmbEmbeddingsModel(self.a_path, verbose=False)
+
+            no_ssl_mock.assert_not_called()
+
+    def test_whenDownloadRaisesSSLError_thenFailsafeRetriesWithoutSSLVerification(self):
+        # Failsafe: on an SSL error, retry once inside no_ssl_verification and still return a working model.
+        with patch(
+            "deepparse.embeddings_models.bpemb_embeddings_model.BPEmbBaseURLWrapperBugFix",
+            side_effect=[requests.exceptions.SSLError("broken certificate"), self.model],
+        ) as loader:
+            with patch("deepparse.embeddings_models.bpemb_embeddings_model.no_ssl_verification") as no_ssl_mock:
+                embeddings_model = BPEmbEmbeddingsModel(self.a_path, verbose=False)
+
+            no_ssl_mock.assert_called_once()
+            self.assertEqual(loader.call_count, 2)
+            self.assertIs(embeddings_model.model, self.model)
 
     def test_whenCalledToEmbed_thenShouldCallLoadedModel(self):
         with patch(

@@ -8,6 +8,6 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - "/$HOME/.cache/deepparse:/root/.cache/deepparse"
+      - "/$HOME/.cache/deepparse:/home/appuser/.cache/deepparse"
     environment:
       - SENTRY_DSN=${SENTRY_DSN}

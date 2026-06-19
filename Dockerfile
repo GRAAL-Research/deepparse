@@ -1,5 +1,7 @@
 # syntax = docker/dockerfile:experimental
-FROM pytorch/pytorch:2.5.1-cuda12.4-cudnn9-runtime
+# Base images are pinned by digest (in addition to the tag) so the build is reproducible and not silently
+# swapped under a mutable tag.
+FROM pytorch/pytorch:2.5.1-cuda12.4-cudnn9-runtime@sha256:c8268a92a69bd500f8be0e665b2630ee006dadaf7bfbc24249141b15ff622755
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -33,14 +35,15 @@ RUN find /opt/conda/lib/ -follow -type f -name '*.a' -delete \
 ENV PATH /opt/conda/bin:$PATH
 
 
-FROM python:3.13-slim AS app
-# set work directory
+FROM python:3.13-slim@sha256:c33f0bc4364a6881bed1ec0cc2665e6c53c87a43e774aaeab88e6f17af105e4f AS app
 
 # set env variables
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV ENVIRONMENT=local
 
+# set work directory
+WORKDIR /app
 
 # copy project
 COPY /deepparse ./deepparse
@@ -49,3 +52,7 @@ COPY setup.py ./
 COPY README.md ./
 COPY version.txt ./
 RUN pip install -e .[app]
+
+# Run as a non-root user (least privilege). The model cache lives under this user's home.
+RUN useradd --create-home --uid 1000 appuser && chown -R appuser:appuser /app
+USER appuser

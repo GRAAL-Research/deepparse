@@ -448,3 +448,9 @@
   behaviour exposed the download to man-in-the-middle tampering.
 - Security: document that `PickleDatasetContainer` must only be used with trusted pickle files, since
   unpickling executes arbitrary code.
+- Security (REST API): reject requests with more than `MAX_ADDRESSES_PER_REQUEST` addresses (default 1024,
+  env-overridable) with HTTP 413, to prevent resource-exhaustion denial of service.
+- Security (Sentry): default `traces`/`profiles` sample rates to 0.1 (env-overridable via
+  `SENTRY_TRACES_SAMPLE_RATE`/`SENTRY_PROFILES_SAMPLE_RATE`), never capture request bodies, and disable PII
+  sending, since parsed addresses are personal data.
+- Security (Docker): run the app image as a non-root user and pin the base images by digest.

@@ -28,11 +28,14 @@ def weights_init(m: nn.Module) -> None:
 def handle_weights_upload(
     path_to_model_to_upload: Union[str, S3Path], device: Union[str, torch.device] = "cpu"
 ) -> OrderedDict:
+    # weights_only=True restricts unpickling to tensors and basic types, so loading a crafted checkpoint
+    # cannot execute arbitrary code. Deepparse checkpoints only contain a state dict and string metadata,
+    # so this does not affect legitimate models.
     if isinstance(path_to_model_to_upload, S3Path):
         # To handle CloudPath path_to_model_weights
         try:
             with path_to_model_to_upload.open("rb") as file:
-                checkpoint_weights = torch.load(file, map_location=device)
+                checkpoint_weights = torch.load(file, map_location=device, weights_only=True)
         except FileNotFoundError as error:
             raise FileNotFoundError("The file in the S3 bucket was not found.") from error
     elif "s3://" in path_to_model_to_upload:
@@ -40,13 +43,13 @@ def handle_weights_upload(
         path_to_model_to_upload = CloudPath(path_to_model_to_upload)
         try:
             with path_to_model_to_upload.open("rb") as file:
-                checkpoint_weights = torch.load(file, map_location=device)
+                checkpoint_weights = torch.load(file, map_location=device, weights_only=True)
         except FileNotFoundError as error:
             raise FileNotFoundError("The file in the S3 bucket was not found.") from error
     else:
         # Path is a local one (or a wrongly written S3 URI).
         try:
-            checkpoint_weights = torch.load(path_to_model_to_upload, map_location=device)
+            checkpoint_weights = torch.load(path_to_model_to_upload, map_location=device, weights_only=True)
         except FileNotFoundError as error:
             if "s3" in path_to_model_to_upload or "//" in path_to_model_to_upload or ":" in path_to_model_to_upload:
                 raise FileNotFoundError(

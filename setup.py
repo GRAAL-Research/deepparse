@@ -102,6 +102,7 @@ def main():
                 "pylint-django[with_django]>=2.7.0",
                 "pre-commit>=4.0.0",
                 "pycountry>=22.3.5",  # tests requirements
+                "archunitpython",  # architecture tests requirements
                 "pytest",
                 "pytest-asyncio",
                 "pytest_cov",

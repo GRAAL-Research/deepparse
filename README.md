@@ -467,6 +467,19 @@ We welcome user input, whether it is regarding bugs found in the library or feat
 look at our [contributing guidelines](https://github.com/GRAAL-Research/deepparse/blob/main/.github/CONTRIBUTING.md)
 for more details on this matter.
 
+### Architecture tests
+
+The package layering (foundation → pipeline → orchestrator → consumers) is frozen with
+[ArchUnitPython](https://github.com/LukasNiessen/ArchUnitPython). The allowed dependency graph between the
+`deepparse` sub-packages is declared as a PlantUML diagram in `tests/architecture/test_architecture.py`; any new
+cross-package import that is not part of that graph (and any cycle, layer leak, naming or size drift) makes the suite
+fail. These tests only read the source with `ast` (no model download, no `torch`), so they run in a fraction of a
+second:
+
+```sh
+pytest tests/architecture --override-ini addopts=""
+```
+
 ## License
 
 Deepparse is LGPLv3 licensed, as found in

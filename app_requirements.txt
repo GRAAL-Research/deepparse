@@ -1,4 +1,4 @@
-fastapi[all]==0.136.3
+fastapi[all]==0.138.2
 uvicorn
 sentry-sdk[fastapi]>=2.61.1
 python-decouple

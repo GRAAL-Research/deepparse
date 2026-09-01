@@ -407,7 +407,7 @@
 - Bump `actions/first-interaction` from v1 to v3.
 - Bump `fastapi[all]` from 0.109.1 to 0.134.0.
 
-## 0.10.1
+## 0.11.0
 
 - Replace `print()` calls with `logging` across the codebase for proper log-level control.
 - Replace `Union[X, None]` type hints with PEP 604 `X | None` pipe syntax (Python 3.10+).
@@ -454,3 +454,22 @@
   `SENTRY_TRACES_SAMPLE_RATE`/`SENTRY_PROFILES_SAMPLE_RATE`), never capture request bodies, and disable PII
   sending, since parsed addresses are personal data.
 - Security (Docker): run the app image as a non-root user and pin the base images by digest.
+- Add an architecture test suite (ArchUnitPython) under `tests/architecture/` that freezes the package layering
+  and forbids import cycles between packages.
+- Add a `pip-audit` CI workflow to scan dependencies for known vulnerabilities, running on both `main` and `dev`.
+- Fix the CI test suite failing because `transformers` lazily imports `torchvision`.
+- Fix the greetings workflow failing on every PR.
+- Fix the broken Zenodo DOI badge URL in the README.
+- Bump `fastapi` from 0.134.0 to 0.141.1.
+- Bump `docker/build-push-action` from 6.19.2 to 7.3.0.
+- Bump `docker/metadata-action` from 5.10.0 to 6.2.0.
+- Bump `docker/login-action` from 2.1.0 to 4.6.0.
+- Bump `actions/checkout` from 4 to 7.
+- Bump `actions/setup-python` from 6 to 7.
+- Bump `actions/stale` from 7 to 11.
+- Bump `github/codeql-action` from 4 to 4.37.9.
+- Update `sentry-sdk` requirement from >=2.0.0 to >=2.68.1.
+- Update `gensim` requirement from >=4.3.3 to >=4.4.0.
+- Update `sphinx` requirement from >=7.4.0 to >=8.1.3.
+- Update `sphinx-rtd-theme` requirement from >=3.0.0 to >=3.1.0.
+- Update `colorama` requirement from >=0.4.3 to >=0.4.6.

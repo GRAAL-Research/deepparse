@@ -473,3 +473,12 @@
 - Update `sphinx` requirement from >=7.4.0 to >=8.1.3.
 - Update `sphinx-rtd-theme` requirement from >=3.0.0 to >=3.1.0.
 - Update `colorama` requirement from >=0.4.3 to >=0.4.6.
+
+## dev
+
+- Stop the unit tests from downloading the pre-trained models: instantiating an `AddressParser` reached the
+  HuggingFace Hub, so concurrent CI jobs hit the anonymous rate limit (HTTP 429) and 21 tests failed for
+  reasons unrelated to the code. The model factory is now mocked in `AddressParserTest.setUp`.
+- Restrict the tests workflow `push` trigger to `main`, `dev` and `stable`, so a branch with an open pull
+  request no longer runs the whole matrix twice.
+- Cache the downloaded models between CI runs and pass an optional `HF_TOKEN` to the test steps.

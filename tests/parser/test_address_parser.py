@@ -107,6 +107,15 @@ class AddressParserTest(AddressParserPredictTestCase):
 
         self.embeddings_model_mock = MagicMock()
 
+        # Instantiating an AddressParser downloads the pre-trained weights from the HuggingFace Hub. The unit
+        # tests must not reach the network: concurrent CI jobs hit the Hub's anonymous rate limit (HTTP 429),
+        # which fails the suite for reasons unrelated to the code. The tests that assert on the model factory
+        # patch it themselves, and their patch takes precedence over this one.
+        model_factory_patcher = patch("deepparse.parser.address_parser.ModelFactory")
+        model_factory_mock = model_factory_patcher.start()
+        model_factory_mock.return_value.create.return_value = (self.model_mock, self.a_model_version)
+        self.addCleanup(model_factory_patcher.stop)
+
     def assert_equal_not_ordered(self, actual, expected_elements):
         for expected in expected_elements:
             self.assertIn(expected, actual)

@@ -66,3 +66,10 @@ Python POST request
     response = requests.post(url, json=addresses)
     parsed_addresses = response.json()
     print(parsed_addresses)
+
+Client libraries
+~~~~~~~~~~~~~~~~
+
+Community HTTP clients for the FastAPI parser:
+
+- `Go <https://github.com/adamdecaf/deepparse-go>`_ (``github.com/adamdecaf/deepparse-go``)

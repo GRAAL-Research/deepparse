@@ -283,7 +283,11 @@ parsed_addresses = response.json()
 print(parsed_addresses)
 ```
 
+#### Client libraries
 
+Community HTTP clients for the FastAPI parser:
+
+- [Go](https://github.com/adamdecaf/deepparse-go) (`github.com/adamdecaf/deepparse-go`)
 
 ### Retrain a Model
 

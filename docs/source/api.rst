@@ -67,8 +67,8 @@ Python POST request
     parsed_addresses = response.json()
     print(parsed_addresses)
 
-Client libraries
-~~~~~~~~~~~~~~~~
+Client Libraries
+----------------
 
 Community HTTP clients for the FastAPI parser:
 

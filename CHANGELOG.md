@@ -482,3 +482,5 @@
 - Restrict the tests workflow `push` trigger to `main`, `dev` and `stable`, so a branch with an open pull
   request no longer runs the whole matrix twice.
 - Cache the downloaded models between CI runs and pass an optional `HF_TOKEN` to the test steps.
+- Add a "Client Libraries" section to the README and the Sphinx API documentation pointing to the community
+  Go HTTP client (`adamdecaf/deepparse-go`) for the out-of-the-box FastAPI parser.

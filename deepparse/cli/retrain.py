@@ -61,8 +61,9 @@ def main(args=None) -> None:
     # pylint: disable=too-many-locals, too-many-branches
     """
     CLI function to easily retrain an address parser and save it. One can retrain a base pretrained model
-    using most of the arguments as the :meth:`~deepparse.parser.AddressParser.retrain` method. By default, all the parameters have
-    the same default value as the :meth:`~deepparse.parser.AddressParser.retrain` method. The supported parameters are the following:
+    using most of the arguments as the :meth:`~deepparse.parser.AddressParser.retrain` method. By default, all the
+    parameters have the same default value as the :meth:`~deepparse.parser.AddressParser.retrain` method. The
+    supported parameters are the following:
 
     - ``train_ratio``,
     - ``batch_size``,

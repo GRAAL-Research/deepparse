@@ -508,7 +508,8 @@
   its `embed`, `encode`, `encode_ids`, `vectors` and `dim` API (not the gensim `emb` attribute).
 - Add three Model2Vec models (#328): `model2vec-8m`, `model2vec-32m` and `model2vec-multilingual`, based on the
   `minishlab/potion-*` static embeddings, plus the `tiny` alias for `model2vec-8m`. They need from ~30 MB to ~500 MB
-  of RAM for the embeddings, compared to the ~7 GB fastText embeddings file. Install them with `pip install deepparse[model2vec]`.
+  of RAM for the embeddings, compared to the ~7 GB fastText embeddings file. Install them with
+  `pip install deepparse[model2vec]`.
   They were trained on the `deepparse/worldwide-addresses` HF dataset (20 countries, 100,000 clean and 50,000
   incomplete addresses per country), where `Suburb` and `District` are mapped to `Municipality` and `County` and
   `Country` words are removed. Since the source data has no `Orientation` nor `GeneralDelivery` tags, these models

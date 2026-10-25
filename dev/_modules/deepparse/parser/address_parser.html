@@ -1,0 +1,1495 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>deepparse.parser.address_parser &mdash; deepparse 0.11.0.dev1+5715875 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=1b66cd3a"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/deepparse.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../get_started/get_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../parser.html">Parser</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pre_processor.html">Pre-Processors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dataset_container.html">Dataset Container</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../comparer.html">Comparer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli.html">CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">Parse Address With Our Out-Of-The-Box API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/parse_addresses.html">Parse Addresses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/parse_addresses_uri.html">Parse Addresses Using A URI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/parse_addresses_with_cli.html">Parse Addresses Using Our CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/retrained_model_parsing.html">Use a Retrained Model to Parse Addresses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/fine_tuning.html">Retrain a Pretrained Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/fine_tuning_uri.html">Retrain a Pretrained Model Using A URI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/fine_tuning_with_csv_dataset.html">Retrain a Pretrained Model Using a CSV Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_attention_model.html">Retrain an Attention Mechanism Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_with_new_seq2seq_params.html">Retrain With New Seq2Seq Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/single_country_retrain.html">Retrain an Address Parser for Single Country Uses</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Model training</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../training_guide.html">Training Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">deepparse</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">deepparse.parser.address_parser</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for deepparse.parser.address_parser</h1><div class="highlight"><pre>
+<span></span><span class="c1"># pylint: disable=too-many-lines</span>
+
+<span class="c1"># Pylint raises error for an inconsistent-return-statements for the retrain function</span>
+<span class="c1"># It must be due to the complex try, except else case.</span>
+<span class="c1"># pylint: disable=inconsistent-return-statements</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">platform</span><span class="w"> </span><span class="kn">import</span> <span class="n">system</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cloudpathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">CloudPath</span><span class="p">,</span> <span class="n">S3Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">poutyne.framework</span><span class="w"> </span><span class="kn">import</span> <span class="n">Experiment</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.optim</span><span class="w"> </span><span class="kn">import</span> <span class="n">SGD</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.utils.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataLoader</span><span class="p">,</span> <span class="n">Subset</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_data_to_parse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..converter</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataPadder</span><span class="p">,</span> <span class="n">DataProcessorFactory</span><span class="p">,</span> <span class="n">TagsConverter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..dataset_container</span><span class="w"> </span><span class="kn">import</span> <span class="n">DatasetContainer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..download_tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">CACHE_PATH</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..embeddings_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">EmbeddingsModelFactory</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">FastTextModelError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">accuracy</span><span class="p">,</span> <span class="n">nll_loss</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..network</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelFactory</span><span class="p">,</span> <span class="n">ModelLoader</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..pre_processing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">coma_cleaning</span><span class="p">,</span>
+    <span class="n">double_whitespaces_cleaning</span><span class="p">,</span>
+    <span class="n">hyphen_cleaning</span><span class="p">,</span>
+    <span class="n">lower_cleaning</span><span class="p">,</span>
+    <span class="n">trailing_whitespace_cleaning</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..pre_processing.pre_processor_list</span><span class="w"> </span><span class="kn">import</span> <span class="n">PreProcessorList</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..validations</span><span class="w"> </span><span class="kn">import</span> <span class="n">valid_poutyne_version</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..vectorizer</span><span class="w"> </span><span class="kn">import</span> <span class="n">VectorizerFactory</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..weights_tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">handle_weights_upload</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">formatted_parsed_address</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.formatted_parsed_address</span><span class="w"> </span><span class="kn">import</span> <span class="n">FormattedParsedAddress</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.tools</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">get_address_parser_in_directory</span><span class="p">,</span>
+    <span class="n">get_files_in_directory</span><span class="p">,</span>
+    <span class="n">handle_model_name</span><span class="p">,</span>
+    <span class="n">indices_splitting</span><span class="p">,</span>
+    <span class="n">infer_retrained_model_type</span><span class="p">,</span>
+    <span class="n">load_tuple_to_device</span><span class="p">,</span>
+    <span class="n">pretrained_parser_in_directory</span><span class="p">,</span>
+    <span class="n">validate_if_new_prediction_tags</span><span class="p">,</span>
+    <span class="n">validate_if_new_seq2seq_params</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">_pre_trained_tags_to_idx</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"StreetNumber"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">"StreetName"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">"Unit"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s2">"Municipality"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="s2">"Province"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="s2">"PostalCode"</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="s2">"Orientation"</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+    <span class="s2">"GeneralDelivery"</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
+    <span class="s2">"EOS"</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>  <span class="c1"># the 9th is the EOS with idx 8</span>
+<span class="p">}</span>
+
+<span class="c1"># This threshold represents at which point the prediction of the address takes enough time to</span>
+<span class="c1"># justify predictions verbosity.</span>
+<span class="n">PREDICTION_TIME_PERFORMANCE_THRESHOLD</span> <span class="o">=</span> <span class="mi">64</span>
+
+
+<div class="viewcode-block" id="AddressParser">
+<a class="viewcode-back" href="../../../parser.html#deepparse.parser.AddressParser">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AddressParser</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Address parser to parse an address or a list of addresses using one of the seq2seq pretrained</span>
+<span class="sd">    networks either with FastText or BPEmb. The default prediction tags are the following</span>
+
+<span class="sd">            - ``"StreetNumber"``: for the street number,</span>
+<span class="sd">            - ``"StreetName"``: for the name of the street,</span>
+<span class="sd">            - ``"Unit"``: for the unit (such as an apartment),</span>
+<span class="sd">            - ``"Municipality"``: for the municipality,</span>
+<span class="sd">            - ``"Province"``: for the province or local region,</span>
+<span class="sd">            - ``"PostalCode"``: for the postal code,</span>
+<span class="sd">            - ``"Orientation"``: for the street orientation (e.g. west, east),</span>
+<span class="sd">            - ``"GeneralDelivery"``: for other delivery information,</span>
+<span class="sd">            - ``"EOS"``: (End Of Sequence) since we use an EOS during training, sometimes the models return an EOS tag.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        model_type (str): The network name to use, can be either:</span>
+
+<span class="sd">            - ``"fasttext"`` (need ~9 GO of RAM to be used),</span>
+<span class="sd">            - ``"fasttext-light"`` (need ~2 GO of RAM to be used, but slower than fasttext version),</span>
+<span class="sd">            - ``"bpemb"`` (need ~2 GO of RAM to be used),</span>
+<span class="sd">            - ``"fastest"`` (quicker to process one address) (equivalent to ``"fasttext"``),</span>
+<span class="sd">            - ``"lightest"`` (the one using the less RAM and GPU usage) (equivalent to ``"fasttext-light"``),</span>
+<span class="sd">            - ``"best"`` (the best accuracy performance) (equivalent to ``"bpemb"``).</span>
+
+<span class="sd">            The default value is ``"best"`` for the most accurate model. Ignored if ``path_to_model_weights`` is not</span>
+<span class="sd">            ``None``. To further improve performance, consider using the models (fasttext or BPEmb) with their</span>
+<span class="sd">            counterparts using an attention mechanism with the ``attention_mechanism`` flag.</span>
+<span class="sd">        attention_mechanism (bool): Whether to use the model with an attention mechanism. The model will use an</span>
+<span class="sd">            attention mechanism that takes an extra 100 MB on GPU usage (see the documentation for more statistics).</span>
+<span class="sd">            The default value is ``False``.</span>
+<span class="sd">        device (Union[int, str, torch.torch.device]): The device to use can be either:</span>
+
+<span class="sd">            - a ``GPU`` index in int format (e.g. ``0``),</span>
+<span class="sd">            - a complete device name in a string format (e.g. ``"cuda:0"``),</span>
+<span class="sd">            - a :class:`~torch.torch.device` object,</span>
+<span class="sd">            - ``"cpu"`` for a  ``CPU`` use.</span>
+
+<span class="sd">            The default value is ``0``, witch is a GPU device with the index ``0`` if it exists. Otherwise,</span>
+<span class="sd">            the value is ``CPU``.</span>
+<span class="sd">        rounding (int): The rounding to use when asking the probability of the tags. The default value is ``4``,</span>
+<span class="sd">            namely four digits.</span>
+<span class="sd">        verbose (bool): Turn on/off the verbosity of the model weights download and loading. The default value is</span>
+<span class="sd">            ``True``.</span>
+<span class="sd">        path_to_retrained_model (Union[S3Path, str, None]): The path to the retrained model to use for prediction.</span>
+<span class="sd">            We will infer the ``model_type`` of the retrained model. The default value is ``None``, meaning we use our</span>
+<span class="sd">            pretrained model. If the retrained model uses an attention mechanism, ``attention_mechanism`` needs to</span>
+<span class="sd">            be set to True. The path_to_retrain_model can also be a S3-like (Azure, AWS, Google) bucket URI string path</span>
+<span class="sd">            (e.g. ``"s3://path/to/aws/s3/bucket.ckpt"``). Or it can be a ``S3Path`` S3-like URI using `cloudpathlib`</span>
+<span class="sd">            to handle S3-like bucket. See `cloudpathlib &lt;https://cloudpathlib.drivendata.org/stable/&gt;`</span>
+<span class="sd">            for detail on supported S3 buckets provider and URI condition. The default value is ``None``.</span>
+<span class="sd">        cache_dir (Union[str, None]): The path to the cached directory to use for downloading (and loading) the</span>
+<span class="sd">            embeddings model and the model pretrained weights.</span>
+<span class="sd">        offline (bool): Whether or not the model is an offline one, meaning you have already downloaded the pre-trained</span>
+<span class="sd">            weights and embeddings weights in either the default Deepparse cache directory (``"~./cache/deepparse"``) or</span>
+<span class="sd">            the ``cache_dir`` directory. When offline is ``False``, we will download the latest model if one is</span>
+<span class="sd">            available. You can use our``download_models`` CLI function to download all the requirements for a model.</span>
+<span class="sd">            The default value is``False`` (not an offline parsing model).</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        For both networks, we will download the pretrained weights and embeddings in the ``.cache`` directory</span>
+<span class="sd">        for the root user. The pretrained weights take at most 44 MB. The FastText embeddings take 6.8 GO,</span>
+<span class="sd">        the FastText-light (``"fasttext-light"``) embeddings take 3.3 GO and bpemb take 116 MB (in ``".cache/bpemb"``).</span>
+
+<span class="sd">        Also, one can download all the dependencies of our pretrained model using our CLI</span>
+<span class="sd">        (e.g. download_model fasttext) before sending it to a node without access to Internet.</span>
+
+<span class="sd">        Here are the URLs to download our pretrained models directly</span>
+
+<span class="sd">            - `FastText &lt;https://huggingface.co/deepparse/fasttext-base&gt;`_,</span>
+<span class="sd">            - `BPEmb &lt;https://huggingface.co/deepparse/bpemb-base&gt;`_,</span>
+<span class="sd">            - `FastText Light &lt;https://huggingface.co/deepparse/fasttext-base/tree/light-embeddings&gt;`_.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        The FastText embeddings are read with our own reader of the ``.bin`` format, which gives the same vectors</span>
+<span class="sd">        as the ``fasttext`` package on every supported Python version, without ``fasttext`` nor ``gensim``. The</span>
+<span class="sd">        embeddings matrix is memory-mapped, so it loads in a few seconds and only the rows used are kept in RAM.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        You may observe a 100% CPU load the first time you call the fasttext-light model. We</span>
+<span class="sd">        `hypotheses &lt;https://github.com/GRAAL-Research/deepparse/pull/54#issuecomment-743463855&gt;`_ that this is due</span>
+<span class="sd">        to the SQLite database behind ``pymagnitude``. This approach creates a cache to speed up processing, and</span>
+<span class="sd">        since the memory mapping is saved between the runs, and it's more intensive the first time you call it and</span>
+<span class="sd">        subsequent time this load doesn't appear.</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            address_parser = AddressParser(device=0) # On GPU device 0</span>
+<span class="sd">            parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")</span>
+
+<span class="sd">            address_parser = AddressParser(model_type="fasttext", device="cpu") # fasttext model on cpu</span>
+<span class="sd">            parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")</span>
+
+<span class="sd">        Using a model with an attention mechanism</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            # FasTtext model with an attention mechanism</span>
+<span class="sd">            address_parser = AddressParser(model_type="fasttext", attention_mechanism=True)</span>
+<span class="sd">            parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")</span>
+
+<span class="sd">        Using a retrained model</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            address_parser = AddressParser(model_type="fasttext",</span>
+<span class="sd">                                           path_to_model_weights="/path_to_a_retrain_fasttext_model.ckpt")</span>
+<span class="sd">            parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")</span>
+
+<span class="sd">        Using a retrained model trained on different tags</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            # We don't give the model_type since it's ignored when using path_to_model_weights</span>
+<span class="sd">            address_parser = AddressParser(path_to_model_weights="/path_to_a_retrain_fasttext_model.ckpt")</span>
+<span class="sd">            parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")</span>
+
+<span class="sd">        Using a retrained model with attention</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            address_parser = AddressParser(model_type="fasttext",</span>
+<span class="sd">                                           path_to_model_weights="/path_to_a_retrain_fasttext_attention_model.ckpt",</span>
+<span class="sd">                                           attention_mechanism=True)</span>
+<span class="sd">            parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")</span>
+
+<span class="sd">        Using Deepparse as an offline service (assuming all dependencies have been downloaded in the default cache</span>
+<span class="sd">        dir or a specified dir using the cache_dir parameter).</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            address_parser = AddressParser(model_type="fasttext",</span>
+<span class="sd">                                           offline=True)</span>
+<span class="sd">            parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")</span>
+
+<span class="sd">         Using a retrained model in an S3-like bucket.</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            address_parser = AddressParser(model_type="fasttext",</span>
+<span class="sd">                                           path_to_model_weights="s3://path/to/bucket.ckpt")</span>
+<span class="sd">            parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")</span>
+
+<span class="sd">         Using a retrained model in an S3-like bucket using CloudPathLib.</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            address_parser = AddressParser(model_type="fasttext",</span>
+<span class="sd">                                           path_to_model_weights=CloudPath("s3://path/to/bucket.ckpt"))</span>
+<span class="sd">            parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")</span>
+<span class="sd">    """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">model_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"best"</span><span class="p">,</span>
+        <span class="n">attention_mechanism</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">device</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">rounding</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">path_to_retrained_model</span><span class="p">:</span> <span class="n">S3Path</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">cache_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">offline</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># pylint: disable=too-many-arguments</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_process_device</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">rounding</span> <span class="o">=</span> <span class="n">rounding</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
+        <span class="c1"># Kept to rebuild the model with the same settings when retraining with new seq2seq params.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cache_dir</span> <span class="o">=</span> <span class="n">cache_dir</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_offline</span> <span class="o">=</span> <span class="n">offline</span>
+
+        <span class="n">named_parser</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># Default pretrained tags are loaded</span>
+        <span class="n">tags_to_idx</span> <span class="o">=</span> <span class="n">_pre_trained_tags_to_idx</span>
+        <span class="c1"># Default FIELDS of the formatted address</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">tags_to_idx</span><span class="p">)</span>
+        <span class="c1"># Default new config seq2seq model params</span>
+        <span class="n">seq2seq_kwargs</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># Empty for default settings</span>
+
+        <span class="k">if</span> <span class="n">path_to_retrained_model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">checkpoint_weights</span> <span class="o">=</span> <span class="n">handle_weights_upload</span><span class="p">(</span><span class="n">path_to_model_to_upload</span><span class="o">=</span><span class="n">path_to_retrained_model</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">checkpoint_weights</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"model_type"</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># Validate if we have the proper metadata, it has at least the parser model type</span>
+                <span class="c1"># if no other thing have been modified.</span>
+                <span class="n">error_text</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="s2">"You are not using the proper retrained checkpoint for Deepparse, since we also export other "</span>
+                    <span class="s2">"information's along with the model weights. "</span>
+                    <span class="s2">"When we retrain an AddressParser, by default, we create a "</span>
+                    <span class="s2">"checkpoint name 'retrained_modeltype_address_parser.ckpt'. "</span>
+                    <span class="s2">"Where 'modeltype' is the AddressParser model type (e.g. 'fasttext', 'bpemb'). "</span>
+                    <span class="s2">"The checkpoint name can also change if you give the retrained model a name. "</span>
+                    <span class="s2">"Be sure to use that checkpoint since it includes some metadata for the reloading. "</span>
+                    <span class="s2">"See AddressParser.retrain for more details."</span>
+                <span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">error_text</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">validate_if_new_seq2seq_params</span><span class="p">(</span><span class="n">checkpoint_weights</span><span class="p">):</span>
+                <span class="n">seq2seq_kwargs</span> <span class="o">=</span> <span class="n">checkpoint_weights</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"seq2seq_params"</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">validate_if_new_prediction_tags</span><span class="p">(</span><span class="n">checkpoint_weights</span><span class="p">):</span>
+                <span class="c1"># We load the new tags_to_idx</span>
+                <span class="n">tags_to_idx</span> <span class="o">=</span> <span class="n">checkpoint_weights</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"prediction_tags"</span><span class="p">)</span>
+                <span class="c1"># We change the FIELDS for the FormattedParsedAddress</span>
+                <span class="n">fields</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">tags_to_idx</span><span class="p">)</span>
+
+            <span class="c1"># In any case, we have given a new name to the parser using either the default or user-given name</span>
+            <span class="n">named_parser</span> <span class="o">=</span> <span class="n">checkpoint_weights</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"named_parser"</span><span class="p">)</span>
+
+            <span class="c1"># We "infer" the model type, thus we also had to handle the attention_mechanism bool</span>
+            <span class="n">model_type</span><span class="p">,</span> <span class="n">attention_mechanism</span> <span class="o">=</span> <span class="n">infer_retrained_model_type</span><span class="p">(</span>
+                <span class="n">checkpoint_weights</span><span class="p">,</span> <span class="n">attention_mechanism</span><span class="o">=</span><span class="n">attention_mechanism</span>
+            <span class="p">)</span>
+
+        <span class="n">formatted_parsed_address</span><span class="o">.</span><span class="n">FIELDS</span> <span class="o">=</span> <span class="n">fields</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tags_converter</span> <span class="o">=</span> <span class="n">TagsConverter</span><span class="p">(</span><span class="n">tags_to_idx</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">named_parser</span> <span class="o">=</span> <span class="n">named_parser</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model_type_formatted</span> <span class="o">=</span> <span class="n">handle_model_name</span><span class="p">(</span><span class="n">model_type</span><span class="p">,</span> <span class="n">attention_mechanism</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_setup_model</span><span class="p">(</span>
+            <span class="n">verbose</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">,</span>
+            <span class="n">path_to_retrained_model</span><span class="o">=</span><span class="n">path_to_retrained_model</span><span class="p">,</span>
+            <span class="n">prediction_layer_len</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tags_converter</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span>
+            <span class="n">attention_mechanism</span><span class="o">=</span><span class="n">attention_mechanism</span><span class="p">,</span>
+            <span class="n">seq2seq_kwargs</span><span class="o">=</span><span class="n">seq2seq_kwargs</span><span class="p">,</span>
+            <span class="n">cache_dir</span><span class="o">=</span><span class="n">cache_dir</span><span class="p">,</span>
+            <span class="n">offline</span><span class="o">=</span><span class="n">offline</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">named_parser</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">named_parser</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"PreTrained</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_model_type_formatted</span><span class="si">}</span><span class="s2">AddressParser"</span>
+
+    <span class="fm">__repr__</span> <span class="o">=</span> <span class="fm">__str__</span>  <span class="c1"># to call __str__ when list of address</span>
+
+<div class="viewcode-block" id="AddressParser.get_formatted_model_name">
+<a class="viewcode-back" href="../../../parser.html#deepparse.parser.AddressParser.get_formatted_model_name">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_formatted_model_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Return the model type formatted name. For example, if the model type is ``"fasttext"`` the formatted name is</span>
+<span class="sd">        ``"FastText"``.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model_type_formatted</span></div>
+
+
+<div class="viewcode-block" id="AddressParser.__call__">
+<a class="viewcode-back" href="../../../parser.html#deepparse.parser.AddressParser.__call__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">addresses_to_parse</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">DatasetContainer</span><span class="p">,</span>
+        <span class="n">with_prob</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
+        <span class="n">num_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">with_hyphen_split</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">pre_processors</span><span class="p">:</span> <span class="kc">None</span> <span class="o">|</span> <span class="n">List</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FormattedParsedAddress</span> <span class="o">|</span> <span class="n">List</span><span class="p">[</span><span class="n">FormattedParsedAddress</span><span class="p">]:</span>
+        <span class="c1"># pylint: disable=too-many-arguments</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Callable method to parse the components of an address or a list of address.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            addresses_to_parse (Union[list[str], str, ~deepparse.dataset_container.DatasetContainer]): The addresses to</span>
+<span class="sd">                be parsed, can be either a single address (when using str), a list of address or a DatasetContainer.</span>
+<span class="sd">                We apply some validation tests before parsing to validate its content if the data to parse is a string</span>
+<span class="sd">                or a list of strings. We apply the following basic criteria:</span>
+
+<span class="sd">                    - no addresses are ``None`` value,</span>
+<span class="sd">                    - no addresses are empty strings, and</span>
+<span class="sd">                    - no addresses are whitespace-only strings.</span>
+
+<span class="sd">                The addresses are processed in batches when using a list of addresses, allowing a faster process.</span>
+<span class="sd">                For example, using the FastText model, a single address takes around 0.0023 seconds to be parsed using a</span>
+<span class="sd">                batch of 1 (1 element at the time is processed). This time can be reduced to 0.00035 seconds per</span>
+<span class="sd">                address when using a batch of 128 (128 elements at the time are processed).</span>
+<span class="sd">            with_prob (bool): If true, return the probability of all the tags with the specified</span>
+<span class="sd">                rounding.</span>
+<span class="sd">            batch_size (int): The batch size (by default, ``32``).</span>
+<span class="sd">            num_workers (int): Number of workers for the data loader (default is ``0``, meaning the data</span>
+<span class="sd">                will be loaded in the main process).</span>
+<span class="sd">            with_hyphen_split (bool): Either or not, use the hyphen split whitespace replacing for countries that use</span>
+<span class="sd">                the hyphen split between the unit and the street number (e.g. Canada). For example, ``'3-305'`` will be</span>
+<span class="sd">                replaced as ``'3 305'`` for the parsing. Where ``'3'`` is the unit, and ``'305'`` is the street number.</span>
+<span class="sd">                We use a regular expression to replace alphanumerical characters separated by a hyphen at</span>
+<span class="sd">                the start of the string. We do so since some cities use hyphens in their names. The default</span>
+<span class="sd">                is ``False``. If True, it adds the :func:`~deepparse.pre_processing.address_cleaner.hyphen_cleaning`</span>
+<span class="sd">                pre-processor **at the end** of the pre-processor list to apply.</span>
+<span class="sd">            pre_processors (Union[None, List[Callable]]): A list of functions (callable) to apply pre-processing on</span>
+<span class="sd">                all the addresses to parse before parsing. See :ref:`pre_processor_label` for examples of</span>
+<span class="sd">                pre-processors. Since models were trained on lowercase data, during the parsing, we always apply a</span>
+<span class="sd">                lowercase pre-processor. If you pass a list of pre-processor, a lowercase pre-processor is</span>
+<span class="sd">                added **at the end** of the pre-processor list to apply. By default, None,</span>
+<span class="sd">                meaning we use the default setup, which is (in order) the coma removal pre-processor, lowercase,</span>
+<span class="sd">                double whitespace cleaning and trailing whitespace removal.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            Either a :class:`~FormattedParsedAddress` or a list of</span>
+<span class="sd">            :class:`~FormattedParsedAddress` when given more than one address.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            Since model was trained on lowercase data, during the parsing, we always apply a lowercase pre-processor.</span>
+
+<span class="sd">        Examples:</span>
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                address_parser = AddressParser(device=0)  # On GPU device 0</span>
+<span class="sd">                parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6")</span>
+
+<span class="sd">                # It also can be a list of addresses</span>
+<span class="sd">                parse_address = address_parser(["350 rue des Lilas Ouest Quebec city Quebec G1L 1B6",</span>
+<span class="sd">                                                "350 rue des Lilas Ouest Quebec city Quebec G1L 1B6"])</span>
+
+<span class="sd">                # It can also output the prob of the predictions</span>
+<span class="sd">                parse_address = address_parser("350 rue des Lilas Ouest Quebec city Quebec G1L 1B6",</span>
+<span class="sd">                                               with_prob=True)</span>
+
+<span class="sd">                # Print the parsed address</span>
+<span class="sd">                print(parsed_address)</span>
+
+<span class="sd">            Using a larger batch size</span>
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                address_parser = AddressParser(device=0) # On GPU device 0</span>
+<span class="sd">                parse_address = address_parser(a_large_list_dataset, batch_size=1024)</span>
+
+<span class="sd">                # You can also use more worker</span>
+<span class="sd">                parse_address = address_parser(a_large_list_dataset, batch_size=1024, num_workers=2)</span>
+
+
+<span class="sd">            Or using one of our dataset containers</span>
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                addresses_to_parse = CSVDatasetContainer("./a_path.csv", column_names=["address_column_name"],</span>
+<span class="sd">                                                         is_training_container=False)</span>
+<span class="sd">                address_parser(addresses_to_parse)</span>
+
+<span class="sd">            Using a user-define pre-processor</span>
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                def strip_parenthesis(address):</span>
+<span class="sd">                    return address.strip("(").strip(")")</span>
+
+<span class="sd">                address_parser(addresses_to_parse, pre_processors=[strip_parenthesis])</span>
+<span class="sd">                # It will also use the default lower case pre-processor.</span>
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model_os_validation</span><span class="p">(</span><span class="n">num_workers</span><span class="o">=</span><span class="n">num_workers</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">addresses_to_parse</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">addresses_to_parse</span> <span class="o">=</span> <span class="p">[</span><span class="n">addresses_to_parse</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">addresses_to_parse</span><span class="p">,</span> <span class="n">List</span><span class="p">):</span>
+            <span class="n">validate_data_to_parse</span><span class="p">(</span><span class="n">addresses_to_parse</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">addresses_to_parse</span><span class="p">,</span> <span class="n">DatasetContainer</span><span class="p">):</span>
+            <span class="n">addresses_to_parse</span> <span class="o">=</span> <span class="n">addresses_to_parse</span><span class="o">.</span><span class="n">data</span>
+
+        <span class="k">if</span> <span class="n">pre_processors</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Default pre_processing setup.</span>
+            <span class="n">pre_processors</span> <span class="o">=</span> <span class="p">[</span><span class="n">coma_cleaning</span><span class="p">,</span> <span class="n">lower_cleaning</span><span class="p">,</span> <span class="n">trailing_whitespace_cleaning</span><span class="p">,</span> <span class="n">double_whitespaces_cleaning</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># We add, at the end, a lower casing cleaning pre-processor. We build a new list rather than mutating</span>
+            <span class="c1"># the caller's list, otherwise reusing the same list across calls would accumulate duplicate</span>
+            <span class="c1"># pre-processors.</span>
+            <span class="n">pre_processors</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="n">pre_processors</span><span class="p">,</span> <span class="n">lower_cleaning</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">with_hyphen_split</span><span class="p">:</span>
+            <span class="n">pre_processors</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="n">pre_processors</span><span class="p">,</span> <span class="n">hyphen_cleaning</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">pre_processors</span> <span class="o">=</span> <span class="n">PreProcessorList</span><span class="p">(</span><span class="n">pre_processors</span><span class="p">)</span>
+        <span class="n">clean_addresses</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pre_processors</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">addresses_to_parse</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">addresses_to_parse</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">PREDICTION_TIME_PERFORMANCE_THRESHOLD</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"Vectorizing the address"</span><span class="p">)</span>
+
+        <span class="n">predict_data_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span>
+            <span class="n">clean_addresses</span><span class="p">,</span>
+            <span class="n">collate_fn</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_predict_pipeline</span><span class="p">,</span>
+            <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+            <span class="n">num_workers</span><span class="o">=</span><span class="n">num_workers</span><span class="p">,</span>
+            <span class="n">pin_memory</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pin_memory</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+            <span class="n">tags_predictions</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">tags_predictions_prob</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">predict_data_loader</span><span class="p">:</span>
+                <span class="n">tensor_prediction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="o">*</span><span class="n">load_tuple_to_device</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">))</span>
+                <span class="n">tags_predictions</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">tensor_prediction</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="mi">2</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+                <span class="n">tags_predictions_prob</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                    <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">tensor_prediction</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="mi">2</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+                <span class="p">)</span>
+
+            <span class="n">tagged_addresses_components</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fill_tagged_addresses_components</span><span class="p">(</span>
+                <span class="n">tags_predictions</span><span class="p">,</span>
+                <span class="n">tags_predictions_prob</span><span class="p">,</span>
+                <span class="n">addresses_to_parse</span><span class="p">,</span>
+                <span class="n">clean_addresses</span><span class="p">,</span>
+                <span class="n">with_prob</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">tagged_addresses_components</span></div>
+
+
+<div class="viewcode-block" id="AddressParser.retrain">
+<a class="viewcode-back" href="../../../parser.html#deepparse.parser.AddressParser.retrain">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">retrain</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">train_dataset_container</span><span class="p">:</span> <span class="n">DatasetContainer</span><span class="p">,</span>
+        <span class="n">val_dataset_container</span><span class="p">:</span> <span class="n">DatasetContainer</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">train_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.8</span><span class="p">,</span>
+        <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
+        <span class="n">epochs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="n">num_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">learning_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span>
+        <span class="n">callbacks</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span><span class="p">,</span>
+        <span class="n">logging_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"./checkpoints"</span><span class="p">,</span>
+        <span class="n">disable_tensorboard</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">prediction_tags</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">seq2seq_params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">layers_to_freeze</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">name_of_the_retrain_parser</span><span class="p">:</span> <span class="kc">None</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="p">:</span> <span class="kc">None</span> <span class="o">|</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
+        <span class="c1"># pylint: disable=too-many-arguments, too-many-locals, too-many-branches, too-many-statements</span>
+
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Method to retrain the address parser model using a dataset with the same tags. We train using</span>
+<span class="sd">        `experiment &lt;https://poutyne.org/experiment.html&gt;`_ from `poutyne &lt;https://poutyne.org/index.html&gt;`_</span>
+<span class="sd">        framework. The experiment module allows us to save checkpoints (``ckpt``, in a pickle format) and a log.tsv</span>
+<span class="sd">        where the best epochs can be found (the best epoch is used for the test). The retrained model file name are</span>
+<span class="sd">        formatted as ``retrained_{model_type}_address_parser.ckpt``. For example, if you retrain a FastText model,</span>
+<span class="sd">        the file name will be ``retrained_fasttext_address_parser.ckpt``. The retrained saved model included, in a</span>
+<span class="sd">        dictionary format, the model weights, the model type, if new ``prediction_tags`` were used, the new</span>
+<span class="sd">        prediction tags, and if new ``seq2seq_params`` were used, the new seq2seq parameters.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            train_dataset_container (~deepparse.dataset_container.DatasetContainer): The train dataset container of</span>
+<span class="sd">                the training data to use, such as any PyTorch Dataset</span>
+<span class="sd">                (:class:`~torch.utils.data.Dataset`) user-define class or one of our</span>
+<span class="sd">                DatasetContainer (:class:`~deepparse.dataset_container.PickleDatasetContainer`,</span>
+<span class="sd">                :class:`~deepparse.dataset_container.CSVDatasetContainer` or</span>
+<span class="sd">                :class:`~deepparse.dataset_container.ListDatasetContainer`). The training dataset is use in two ways:</span>
+
+<span class="sd">                    1. As-is if a validating dataset is provided (``val_dataset_container``).</span>
+<span class="sd">                    2. Split in a training and validation dataset if ``val_dataset_container`` is set to None.</span>
+
+<span class="sd">                Thus, it means that if ``val_dataset_container`` is set to the None default settings, we use the</span>
+<span class="sd">                ``train_ratio`` argument to split the training dataset into a train and val dataset. See examples for</span>
+<span class="sd">                more details.</span>
+<span class="sd">            val_dataset_container (Union[~deepparse.dataset_container.DatasetContainer, None]): The validation dataset</span>
+<span class="sd">                container to use for validating the model (by default, ``None``).</span>
+<span class="sd">            train_ratio (float): The ratio to use of the ``train_dataset_container`` for the training procedure.</span>
+<span class="sd">                The rest of the data is used for the validation (e.g. a training ratio of 0.8 mean an</span>
+<span class="sd">                80-20 train-valid split) (by default, ``0.8``). The argument is ignored if ``val_dataset_container`` is</span>
+<span class="sd">                not None.</span>
+<span class="sd">            batch_size (int): The size of the batch (by default, ``32``).</span>
+<span class="sd">            epochs (int): The number of training epochs (by default, ``5``).</span>
+<span class="sd">            num_workers (int): The number of workers to use for the data loader (by default, ``1`` worker).</span>
+<span class="sd">            learning_rate (float): The learning rate (LR) to use for training (default 0.01).</span>
+<span class="sd">            callbacks (Union[list, None]): List of callbacks to use during training.</span>
+<span class="sd">                See Poutyne `callback &lt;https://poutyne.org/callbacks.html#callback-class&gt;`_ for more information. By</span>
+<span class="sd">                default, we set no callback.</span>
+<span class="sd">            seed (int): The seed to use (default 42).</span>
+<span class="sd">            logging_path (str): The logging path for the checkpoints. Poutyne will use the best one and reload the</span>
+<span class="sd">                state if any checkpoints are there. Thus, an error will be raised if you change the model type.</span>
+<span class="sd">                For example,  you retrain a FastText model and then retrain a BPEmb in the same logging path directory.</span>
+<span class="sd">                The logging_path can also be a S3-like (Azure, AWS, Google) bucket URI string path</span>
+<span class="sd">                (e.g. ``"s3://path/to/aws/s3/bucket.ckpt"``). Or it can be a ``S3Path`` S3-like URI using `cloudpathlib`</span>
+<span class="sd">                to handle S3-like bucket. See `cloudpathlib &lt;https://cloudpathlib.drivendata.org/stable/&gt;`</span>
+<span class="sd">                for detail on supported S3 buckets provider and URI condition.</span>
+<span class="sd">                If the logging_path is a S3 bucket, we will only save the best checkpoint to the S3 Bucket at the end</span>
+<span class="sd">                of training.</span>
+<span class="sd">                By default, the path is ``./checkpoints``.</span>
+<span class="sd">            disable_tensorboard (bool): To disable Poutyne automatic Tensorboard monitoring. By default, we disable them</span>
+<span class="sd">                (true).</span>
+<span class="sd">            prediction_tags (Union[dict, None]): A dictionary where the keys are the address components</span>
+<span class="sd">                (e.g. street name) and the values are the components indices (from 0 to N + 1) to use during the</span>
+<span class="sd">                retraining of a model. The ``+ 1`` corresponds to the End Of Sequence (EOS) token that needs to be</span>
+<span class="sd">                included in the dictionary. We will use this dictionary's length for the prediction layer's output size.</span>
+<span class="sd">                We also save the dictionary to be used later on when you load the model. The default value is ``None``,</span>
+<span class="sd">                meaning we use our pretrained model prediction tags.</span>
+<span class="sd">            seq2seq_params (Union[dict, None]): A dictionary of seq2seq parameters to modify the seq2seq architecture</span>
+<span class="sd">                to train. Note that if you change the seq2seq parameters, a new model will be trained from scratch.</span>
+<span class="sd">                Parameters that can be modified are:</span>
+
+<span class="sd">                    - The ``input_size`` of the encoder (i.e. the size of the embedding). The default value is ``300``.</span>
+<span class="sd">                    - The size of the ``encoder_hidden_size`` of the encoder. The default value is ``1024``.</span>
+<span class="sd">                    - The number of ``encoder_num_layers`` of the encoder. The default value is ``1``.</span>
+<span class="sd">                    - The size of the ``decoder_hidden_size`` of the decoder. The default value is ``1024``.</span>
+<span class="sd">                    - The number of ``decoder_num_layers`` of the decoder. The default value is ``1``.</span>
+
+<span class="sd">                The default value is ``None``, meaning we use the default seq2seq architecture.</span>
+<span class="sd">            layers_to_freeze (Union[str, None]): Name of the portion of the seq2seq to freeze layers. Thus, it reduces</span>
+<span class="sd">                the number of parameters to learn. It Will be ignored if ``seq2seq_params`` is not ``None``.</span>
+<span class="sd">                A seq2seq is composed of three-part, an encoder, decoder, and prediction layer. The encoder is the</span>
+<span class="sd">                part that encodes the address into a more dense representation. The decoder is the part that decodes</span>
+<span class="sd">                a dense address representation. Finally, the prediction layer is a fully-connected with an output size</span>
+<span class="sd">                of the same length as the prediction tags. Available freezing settings are:</span>
+
+<span class="sd">                    - ``None``: No layers are frozen.</span>
+<span class="sd">                    - ``"encoder"``: To freeze the encoder part of the seq2seq.</span>
+<span class="sd">                    - ``"decoder"``: To freeze the decoder part of the seq2seq.</span>
+<span class="sd">                    - ``"prediction_layer"``: To freeze the last layer that predicts a tag class .</span>
+<span class="sd">                    - ``"seq2seq"``: To freeze the encoder and decoder but **not** the prediction layer.</span>
+
+<span class="sd">                The default value is ``None``, meaning we do not freeze any layers.</span>
+<span class="sd">            name_of_the_retrain_parser (Union[str, None]): Name to give to the retrained parser that will be used</span>
+<span class="sd">                when reloaded as the printed name, and to the saving file name (note that we will manually add</span>
+<span class="sd">                the extension ``".ckpt"`` to the name for the file name). By default, ``None``.</span>
+
+<span class="sd">                Default settings for the parser name will use the training settings for the name using the</span>
+<span class="sd">                following pattern:</span>
+
+<span class="sd">                    - the pretrained architecture (``'fasttext'`` or ``'bpemb'`` and if an attention mechanism is use),</span>
+<span class="sd">                    - if prediction_tags is not ``None``, the following tag: ``ModifiedPredictionTags``,</span>
+<span class="sd">                    - if seq2seq_params is not ``None``, the following tag: ``ModifiedSeq2SeqConfiguration``, and</span>
+<span class="sd">                    - if layers_to_freeze is not ``None``, the following tag: ``FreezedLayer{portion}``.</span>
+<span class="sd">            verbose (Union[None, bool]): To override the AddressParser verbosity for the test. When set to True or</span>
+<span class="sd">                False, it will override (but it does not change the AddressParser verbosity) the test verbosity.</span>
+<span class="sd">                If set to the default value ``None``, the AddressParser verbosity is used as the test verbosity.</span>
+
+
+<span class="sd">        Return:</span>
+<span class="sd">            A list of dictionaries with the best epoch stats (see `Experiment class</span>
+<span class="sd">            &lt;https://poutyne.org/experiment.html#poutyne.Experiment.train&gt;`_ for details). The pretrained is</span>
+<span class="sd">            saved using a default file name of using the name_of_the_retrain_parser. See the last note for</span>
+<span class="sd">            more details.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            We recommend using a learning rate scheduler procedure during retraining to reduce the chance</span>
+<span class="sd">            of losing too much of our learned weights, thus increasing retraining time. We</span>
+<span class="sd">            personally use the following ``poutyne.StepLR(step_size=1, gamma=0.1)``.</span>
+<span class="sd">            Also, starting learning rate should be relatively low (i.e. 0.01 or lower).</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            We use SGD optimizer, NLL loss and accuracy as a metric, the data is shuffled, and we use teacher forcing</span>
+<span class="sd">            during training (with a prob of 0.5) as in the `article &lt;https://arxiv.org/abs/2006.16152&gt;`_.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            Due to pymagnitude, we could not train using the Magnitude embeddings, meaning it's not possible to</span>
+<span class="sd">            train using the fasttext-light model. But, since we don't update the embeddings weights, one can retrain</span>
+<span class="sd">            using the fasttext model and later on use the weights with the fasttext-light.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            When retraining a model, Poutyne will create checkpoints. After the training, we use the best checkpoint</span>
+<span class="sd">            in a directory as the model to load. Thus, if you train two different models in the same directory,</span>
+<span class="sd">            the second retrain will not work due to model differences.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            The default settings for the file name to save the retrained model use the following pattern</span>
+<span class="sd">            "retrained_{model_type}_address_parser.ckpt" if name_of_the_retrain_parser is set to</span>
+<span class="sd">            ``None``. Otherwise, the file name to save the retrained model will correspond to</span>
+<span class="sd">            ``name_of_the_retrain_parser`` plus the file extension ``".ckpt"``.</span>
+
+<span class="sd">        Examples:</span>
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                address_parser = AddressParser(device=0) # On GPU device 0</span>
+<span class="sd">                data_path = "path_to_a_pickle_dataset.p"</span>
+
+<span class="sd">                container = PickleDatasetContainer(data_path)</span>
+
+<span class="sd">                # The validation dataset is created from the training dataset (container)</span>
+<span class="sd">                # 80% of the data is use for training and 20% as a validation dataset</span>
+<span class="sd">                address_parser.retrain(container, train_ratio=0.8, epochs=1, batch_size=128)</span>
+
+<span class="sd">            Using the freezing layer's parameters to freeze layers during training</span>
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                address_parser = AddressParser(device=0)</span>
+
+<span class="sd">                data_path = "path_to_a_csv_dataset.p"</span>
+<span class="sd">                container = CSVDatasetContainer(data_path)</span>
+
+<span class="sd">                val_data_path = "path_to_a_csv_val_dataset.p"</span>
+<span class="sd">                val_container = CSVDatasetContainer(val_data_path)</span>
+
+<span class="sd">                # We provide the training dataset (container) and the val dataset (val_container)</span>
+<span class="sd">                # Thus, the train_ratio argument is ignored, and we use the val_container instead</span>
+<span class="sd">                # as the validating dataset.</span>
+<span class="sd">                address_parser.retrain(container, val_container, epochs=5, batch_size=128,</span>
+<span class="sd">                                       layers_to_freeze="encoder")</span>
+
+<span class="sd">            Using learning rate scheduler callback.</span>
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                import poutyne</span>
+
+<span class="sd">                address_parser = AddressParser(device=0)</span>
+<span class="sd">                data_path = "path_to_a_csv_dataset.p"</span>
+
+<span class="sd">                container = CSVDatasetContainer(data_path)</span>
+
+<span class="sd">                lr_scheduler = poutyne.StepLR(step_size=1, gamma=0.1) # reduce LR by a factor of 10 each epoch</span>
+<span class="sd">                address_parser.retrain(container, train_ratio=0.8, epochs=5, batch_size=128, callbacks=[lr_scheduler])</span>
+
+<span class="sd">            Using your own prediction tags dictionary.</span>
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                address_components = {"ATag":0, "AnotherTag": 1, "EOS": 2}</span>
+
+<span class="sd">                address_parser = AddressParser(device=0) # On GPU device 0</span>
+<span class="sd">                data_path = "path_to_a_pickle_dataset.p"</span>
+
+<span class="sd">                container = PickleDatasetContainer(data_path)</span>
+
+<span class="sd">                address_parser.retrain(container, train_ratio=0.8, epochs=1, batch_size=128,</span>
+<span class="sd">                                       prediction_tags=address_components)</span>
+
+<span class="sd">            Using your own seq2seq parameters.</span>
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                seq2seq_params = {"encoder_hidden_size": 512, "decoder_hidden_size": 512}</span>
+
+<span class="sd">                address_parser = AddressParser(device=0) # On GPU device 0</span>
+<span class="sd">                data_path = "path_to_a_pickle_dataset.p"</span>
+
+<span class="sd">                container = PickleDatasetContainer(data_path)</span>
+
+<span class="sd">                address_parser.retrain(container, train_ratio=0.8, epochs=1, batch_size=128,</span>
+<span class="sd">                                       seq2seq_params=seq2seq_params)</span>
+
+
+<span class="sd">            Using your own seq2seq parameters and prediction tags dictionary.</span>
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                seq2seq_params = {"encoder_hidden_size": 512, "decoder_hidden_size": 512}</span>
+<span class="sd">                address_components = {"ATag":0, "AnotherTag": 1, "EOS": 2}</span>
+
+<span class="sd">                address_parser = AddressParser(device=0) # On GPU device 0</span>
+<span class="sd">                data_path = "path_to_a_pickle_dataset.p"</span>
+
+<span class="sd">                container = PickleDatasetContainer(data_path)</span>
+
+<span class="sd">                address_parser.retrain(container, train_ratio=0.8, epochs=1, batch_size=128,</span>
+<span class="sd">                                       seq2seq_params=seq2seq_params, prediction_tags=address_components)</span>
+
+<span class="sd">            Using a named retrain parser name.</span>
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                address_parser = AddressParser(device=0) # On GPU device 0</span>
+<span class="sd">                data_path = "path_to_a_pickle_dataset.p"</span>
+
+<span class="sd">                container = PickleDatasetContainer(data_path)</span>
+
+<span class="sd">                address_parser.retrain(container, train_ratio=0.8, epochs=1, batch_size=128,</span>
+<span class="sd">                    name_of_the_retrain_parser="MyParserName")</span>
+
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val_dataset_container</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">"The value of the second argument, val_dataset_container, is an int type, which is not an expected "</span>
+                <span class="s2">"type. Do you want to specify the train_ratio (e.g. 0.8)? Please note that we have changed the "</span>
+                <span class="s2">"interface and have added a new argument **before** the train_ratio argument. Specified the argument "</span>
+                <span class="s2">"using the train_ratio=0.8 to fix the error."</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_retrain_argumentation_validations</span><span class="p">(</span>
+            <span class="n">train_dataset_container</span><span class="p">,</span> <span class="n">val_dataset_container</span><span class="p">,</span> <span class="n">num_workers</span><span class="p">,</span> <span class="n">name_of_the_retrain_parser</span>
+        <span class="p">)</span>
+
+        <span class="c1"># We set the default output dim size and keep the parser settings, since new seq2seq params rebuild the model.</span>
+        <span class="n">model_factory_dict</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">"prediction_layer_len"</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span>
+            <span class="s2">"attention_mechanism"</span><span class="p">:</span> <span class="s2">"attention"</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="p">,</span>
+            <span class="s2">"cache_dir"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache_dir</span><span class="p">,</span>
+            <span class="s2">"offline"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_offline</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">prediction_tags</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Handle prediction tags</span>
+            <span class="k">if</span> <span class="s2">"EOS"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">prediction_tags</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"The prediction tags dictionary is missing the EOS tag."</span><span class="p">)</span>
+
+            <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="n">field</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">prediction_tags</span> <span class="k">if</span> <span class="n">field</span> <span class="o">!=</span> <span class="s2">"EOS"</span><span class="p">]</span>
+            <span class="n">formatted_parsed_address</span><span class="o">.</span><span class="n">FIELDS</span> <span class="o">=</span> <span class="n">fields</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">tags_converter</span> <span class="o">=</span> <span class="n">TagsConverter</span><span class="p">(</span><span class="n">prediction_tags</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">tags_converter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tags_converter</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">same_output_dim</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tags_converter</span><span class="o">.</span><span class="n">dim</span><span class="p">):</span>
+                <span class="c1"># Since we have changed the output layer dim, we need to handle the prediction layer dim</span>
+                <span class="n">new_dim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tags_converter</span><span class="o">.</span><span class="n">dim</span>
+                <span class="k">if</span> <span class="n">seq2seq_params</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">handle_new_output_dim</span><span class="p">(</span><span class="n">new_dim</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># We update the output dim size</span>
+                    <span class="n">model_factory_dict</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"prediction_layer_len"</span><span class="p">:</span> <span class="n">new_dim</span><span class="p">})</span>
+
+        <span class="k">if</span> <span class="n">seq2seq_params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Handle seq2seq params</span>
+            <span class="n">model_factory_dict</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"seq2seq_kwargs"</span><span class="p">:</span> <span class="n">seq2seq_params</span><span class="p">})</span>
+
+            <span class="c1"># We set verbose to false since the model is reloaded</span>
+            <span class="c1"># We set the flag to use the pretrained weights to false since we train new ones</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_setup_model</span><span class="p">(</span>
+                <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">path_to_retrained_model</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pre_trained_weights</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">model_factory_dict</span>
+            <span class="p">)</span>
+
+        <span class="n">callbacks</span> <span class="o">=</span> <span class="p">[]</span> <span class="k">if</span> <span class="n">callbacks</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">callbacks</span>
+        <span class="n">train_generator</span><span class="p">,</span> <span class="n">valid_generator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_training_data_generator</span><span class="p">(</span>
+            <span class="n">train_dataset_container</span><span class="p">,</span> <span class="n">val_dataset_container</span><span class="p">,</span> <span class="n">train_ratio</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">num_workers</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">layers_to_freeze</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">seq2seq_params</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># We ignore the layers to freeze if seq2seq_params is not None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_freeze_model_params</span><span class="p">(</span><span class="n">layers_to_freeze</span><span class="p">)</span>
+
+        <span class="n">optimizer</span> <span class="o">=</span> <span class="n">SGD</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">learning_rate</span><span class="p">)</span>
+
+        <span class="c1"># Poutyne handle model.train()</span>
+        <span class="n">exp</span> <span class="o">=</span> <span class="n">Experiment</span><span class="p">(</span>
+            <span class="n">logging_path</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
+            <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
+            <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span>
+            <span class="n">loss_function</span><span class="o">=</span><span class="n">nll_loss</span><span class="p">,</span>
+            <span class="n">batch_metrics</span><span class="o">=</span><span class="p">[</span><span class="n">accuracy</span><span class="p">],</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Handle the verbose overriding param</span>
+        <span class="k">if</span> <span class="n">verbose</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">verbose</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">valid_poutyne_version</span><span class="p">(</span><span class="n">min_major</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_minor</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
+                    <span class="s2">"You are using an older version of Poutyne that does not support proper error management."</span>
+                    <span class="s2">" Due to that, we cannot show retrain progress. To fix that, please update Poutyne to "</span>
+                    <span class="s2">"the newest version."</span>
+                <span class="p">)</span>
+            <span class="n">train_res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_retrain</span><span class="p">(</span>
+                <span class="n">experiment</span><span class="o">=</span><span class="n">exp</span><span class="p">,</span>
+                <span class="n">train_generator</span><span class="o">=</span><span class="n">train_generator</span><span class="p">,</span>
+                <span class="n">valid_generator</span><span class="o">=</span><span class="n">valid_generator</span><span class="p">,</span>
+                <span class="n">epochs</span><span class="o">=</span><span class="n">epochs</span><span class="p">,</span>
+                <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
+                <span class="n">callbacks</span><span class="o">=</span><span class="n">callbacks</span><span class="p">,</span>
+                <span class="n">disable_tensorboard</span><span class="o">=</span><span class="n">disable_tensorboard</span><span class="p">,</span>
+                <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">pretrained_parser_in_directory</span><span class="p">(</span><span class="n">logging_path</span><span class="p">):</span>
+                <span class="c1"># We might already have a checkpoint of a different configuration in the training directory.</span>
+                <span class="n">files_in_directory</span> <span class="o">=</span> <span class="n">get_files_in_directory</span><span class="p">(</span><span class="n">logging_path</span><span class="p">)</span>
+                <span class="n">retrained_address_parser_in_directory</span> <span class="o">=</span> <span class="n">get_address_parser_in_directory</span><span class="p">(</span><span class="n">files_in_directory</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span>
+                    <span class="s2">"_"</span>
+                <span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="n">retrained_address_parser_in_directory</span><span class="p">:</span>
+                    <span class="n">value_error_message</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">"You are currently retraining a different </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">get_formatted_model_name</span><span class="p">()</span><span class="si">}</span><span class="s2"> AddressParser "</span>
+                        <span class="sa">f</span><span class="s2">"configuration in the same directory as a previous retrained model. "</span>
+                        <span class="s2">"The configurations must be different (number of tag, seq2seq dimensions, etc.). "</span>
+                        <span class="s2">"The easiest thing to do is to change the saving directory to avoid colliding checkpoint."</span>
+                    <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">value_error_message</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">"You are currently training a </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">get_formatted_model_name</span><span class="p">()</span><span class="si">}</span><span class="s2"> in the directory "</span>
+                        <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">logging_path</span><span class="si">}</span><span class="s2"> where a different retrained "</span>
+                        <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">retrained_address_parser_in_directory</span><span class="si">}</span><span class="s2"> model is currently his. "</span>
+                        <span class="sa">f</span><span class="s2">"Thus, the loading of the model checkpoint is failing. Change the logging path "</span>
+                        <span class="sa">f</span><span class="s1">'"</span><span class="si">{</span><span class="n">logging_path</span><span class="si">}</span><span class="s1">" to something else to retrain the </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">get_formatted_model_name</span><span class="p">()</span><span class="si">}</span><span class="s1"> '</span>
+                        <span class="sa">f</span><span class="s1">'model.'</span>
+                    <span class="p">)</span>
+
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">value_error_message</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">error</span>
+            <span class="c1"># Otherwise the failure is a genuine training error; re-raise it instead of swallowing it.</span>
+            <span class="k">raise</span>
+        <span class="n">file_name</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">name_of_the_retrain_parser</span> <span class="o">+</span> <span class="s2">".ckpt"</span>
+            <span class="k">if</span> <span class="n">name_of_the_retrain_parser</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="k">else</span> <span class="sa">f</span><span class="s2">"retrained_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="si">}</span><span class="s2">_address_parser.ckpt"</span>
+        <span class="p">)</span>
+        <span class="n">file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">logging_path</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="s2">"Finetuned_"</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span>
+        <span class="n">torch_save</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">"address_tagger_model"</span><span class="p">:</span> <span class="n">exp</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span>
+            <span class="s2">"model_type"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="p">,</span>
+            <span class="s2">"version"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">seq2seq_params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Means we have changed the seq2seq params</span>
+            <span class="n">torch_save</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"seq2seq_params"</span><span class="p">:</span> <span class="n">seq2seq_params</span><span class="p">})</span>
+        <span class="k">if</span> <span class="n">prediction_tags</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1">#  Means we have changed the prediction tags</span>
+            <span class="n">torch_save</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"prediction_tags"</span><span class="p">:</span> <span class="n">prediction_tags</span><span class="p">})</span>
+
+        <span class="n">torch_save</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">"named_parser"</span><span class="p">:</span> <span class="p">(</span>
+                    <span class="n">name_of_the_retrain_parser</span>
+                    <span class="k">if</span> <span class="n">name_of_the_retrain_parser</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                    <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_formatted_named_parser_name</span><span class="p">(</span><span class="n">prediction_tags</span><span class="p">,</span> <span class="n">seq2seq_params</span><span class="p">,</span> <span class="n">layers_to_freeze</span><span class="p">)</span>
+                <span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">S3Path</span><span class="p">):</span>
+            <span class="c1"># To handle CloudPath path_to_model_weights</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">with</span> <span class="n">file_path</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">"wb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+                    <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">torch_save</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s2">"The file in the S3 bucket was not found."</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">error</span>
+
+        <span class="k">elif</span> <span class="s2">"s3://"</span> <span class="ow">in</span> <span class="n">file_path</span><span class="p">:</span>
+            <span class="n">file_path</span> <span class="o">=</span> <span class="n">CloudPath</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">with</span> <span class="n">file_path</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">"wb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+                    <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">torch_save</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s2">"The file in the S3 bucket was not found."</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">error</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">torch_save</span><span class="p">,</span> <span class="n">file_path</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s2">"s3"</span> <span class="ow">in</span> <span class="n">file_path</span> <span class="ow">or</span> <span class="s2">"//"</span> <span class="ow">in</span> <span class="n">file_path</span> <span class="ow">or</span> <span class="s2">":"</span> <span class="ow">in</span> <span class="n">file_path</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
+                        <span class="s2">"Are You trying to use an AWS S3 URI? If so path needs to start with s3://."</span>
+                    <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">error</span>
+        <span class="k">return</span> <span class="n">train_res</span></div>
+
+
+<div class="viewcode-block" id="AddressParser.test">
+<a class="viewcode-back" href="../../../parser.html#deepparse.parser.AddressParser.test">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">test_dataset_container</span><span class="p">:</span> <span class="n">DatasetContainer</span><span class="p">,</span>
+        <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
+        <span class="n">num_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">callbacks</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="p">:</span> <span class="kc">None</span> <span class="o">|</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+        <span class="c1"># pylint: disable=too-many-arguments, too-many-locals</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Method to test a retrained or a pretrained model using a dataset with the default tags. If you test a</span>
+<span class="sd">        retrained model with different prediction tags, we will use those tags.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            test_dataset_container (~deepparse.dataset_container.DatasetContainer):</span>
+<span class="sd">                The test dataset container of the data to use.</span>
+<span class="sd">            batch_size (int): The batch size (by default, ``32``).</span>
+<span class="sd">            num_workers (int): Number of workers to use for the data loader (by default, ``1`` worker).</span>
+<span class="sd">            callbacks (Union[list, None]): List of callbacks to use during training.</span>
+<span class="sd">                See Poutyne `callback &lt;https://poutyne.org/callbacks.html#callback-class&gt;`_ for more information.</span>
+<span class="sd">                By default, we set no callback.</span>
+<span class="sd">            seed (int): Seed to use (by default, ``42``).</span>
+<span class="sd">            verbose (Union[None, bool]): To override the AddressParser verbosity for the test. When set to True or</span>
+<span class="sd">                False, it will override (but it does not change the AddressParser verbosity) the test verbosity.</span>
+<span class="sd">                If set to the default value ``None``, the AddressParser verbosity is used as the test verbosity.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            A dictionary with the stats (see `Experiment class</span>
+<span class="sd">            &lt;https://poutyne.org/experiment.html#poutyne.Experiment.train&gt;`_ for details).</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            We use NLL loss and accuracy as in the `article &lt;https://arxiv.org/abs/2006.16152&gt;`_.</span>
+
+<span class="sd">        Examples:</span>
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                address_parser = AddressParser(device=0, verbose=True) # On GPU device 0</span>
+<span class="sd">                data_path = "path_to_a_pickle_test_dataset.p"</span>
+
+<span class="sd">                test_container = PickleDatasetContainer(data_path, is_training_container=False)</span>
+
+<span class="sd">                # We test the model on the data, and we override the test verbosity</span>
+<span class="sd">                address_parser.test(test_container, verbose=False)</span>
+
+<span class="sd">            You can also test your fine-tuned model</span>
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                address_components = {"ATag":0, "AnotherTag": 1, "EOS": 2}</span>
+
+<span class="sd">                address_parser = AddressParser(device=0) # On GPU device 0</span>
+
+<span class="sd">                # Train phase</span>
+<span class="sd">                data_path = "path_to_a_pickle_train_dataset.p"</span>
+
+<span class="sd">                train_container = PickleDatasetContainer(data_path)</span>
+
+<span class="sd">                address_parser.retrain(container, train_ratio=0.8, epochs=1, batch_size=128,</span>
+<span class="sd">                                       prediction_tags=address_components)</span>
+
+<span class="sd">                # Test phase</span>
+<span class="sd">                data_path = "path_to_a_pickle_test_dataset.p"</span>
+
+<span class="sd">                test_container = PickleDatasetContainer(data_path, is_training_container=False)</span>
+
+<span class="sd">                address_parser.test(test_container) # Test the retrained model</span>
+
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model_os_validation</span><span class="p">(</span><span class="n">num_workers</span><span class="o">=</span><span class="n">num_workers</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s2">"fasttext-light"</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">FastTextModelError</span><span class="p">(</span>
+                <span class="s2">"It's not possible to test a fasttext-light due to pymagnitude problem. "</span>
+                <span class="s2">"See the Retrain method documentation for more details."</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">test_dataset_container</span><span class="p">,</span> <span class="n">DatasetContainer</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">"The test_dataset_container has to be a DatasetContainer. "</span>
+                <span class="s2">"Read the docs at https://deepparse.org/ for more details."</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">test_dataset_container</span><span class="o">.</span><span class="n">is_a_train_container</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"The dataset container is not a train container."</span><span class="p">)</span>
+
+        <span class="n">callbacks</span> <span class="o">=</span> <span class="p">[]</span> <span class="k">if</span> <span class="n">callbacks</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">callbacks</span>
+
+        <span class="n">test_generator</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span>
+            <span class="n">test_dataset_container</span><span class="p">,</span>
+            <span class="n">collate_fn</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">process_for_training</span><span class="p">,</span> <span class="n">teacher_forcing</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+            <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+            <span class="n">num_workers</span><span class="o">=</span><span class="n">num_workers</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">exp</span> <span class="o">=</span> <span class="n">Experiment</span><span class="p">(</span>
+            <span class="s2">"./checkpoint"</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
+            <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
+            <span class="n">loss_function</span><span class="o">=</span><span class="n">nll_loss</span><span class="p">,</span>
+            <span class="n">batch_metrics</span><span class="o">=</span><span class="p">[</span><span class="n">accuracy</span><span class="p">],</span>
+            <span class="n">logging</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>  <span class="c1"># We set logging to false since we don't need it</span>
+
+        <span class="c1"># Handle the verbose overriding param</span>
+        <span class="k">if</span> <span class="n">verbose</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">verbose</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span>
+
+        <span class="c1"># Poutyne handle the no_grad context</span>
+        <span class="n">test_res</span> <span class="o">=</span> <span class="n">exp</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="n">test_generator</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="n">callbacks</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">test_res</span></div>
+
+
+<div class="viewcode-block" id="AddressParser.save_model_weights">
+<a class="viewcode-back" href="../../../parser.html#deepparse.parser.AddressParser.save_model_weights">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_model_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Method to save, in a Pickle format, the address parser model weights (PyTorch state dictionary).</span>
+
+<span class="sd">        file_path (Union[str, Path]): A complete file path with a pickle extension to save the model weights.</span>
+<span class="sd">            It can either be a string (e.g. 'path/to/save.p') or a path-like path (e.g. Path('path/to/save.p').</span>
+
+<span class="sd">        Examples:</span>
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                address_parser = AddressParser(device=0)</span>
+
+<span class="sd">                a_path = Path('some/path/to/save.p')</span>
+<span class="sd">                address_parser.save_address_parser_weights(a_path)</span>
+
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                address_parser = AddressParser(device=0)</span>
+
+<span class="sd">                a_path = 'some/path/to/save.p'</span>
+<span class="sd">                address_parser.save_address_parser_weights(a_path)</span>
+
+<span class="sd">        """</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span> <span class="n">file_path</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_fill_tagged_addresses_components</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">tags_predictions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]],</span>
+        <span class="n">tags_predictions_prob</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span>
+        <span class="n">addresses_to_parse</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">clean_addresses</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">with_prob</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FormattedParsedAddress</span> <span class="o">|</span> <span class="n">List</span><span class="p">[</span><span class="n">FormattedParsedAddress</span><span class="p">]:</span>
+        <span class="c1"># pylint: disable=too-many-arguments, too-many-locals</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Method to fill the mapping for every address between a address components and is associated predicted tag (or</span>
+<span class="sd">        tag and prob).</span>
+<span class="sd">        """</span>
+        <span class="n">tagged_addresses_components</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="p">(</span>
+            <span class="n">address_to_parse</span><span class="p">,</span>
+            <span class="n">clean_address</span><span class="p">,</span>
+            <span class="n">tags_prediction</span><span class="p">,</span>
+            <span class="n">tags_prediction_prob</span><span class="p">,</span>
+        <span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">addresses_to_parse</span><span class="p">,</span> <span class="n">clean_addresses</span><span class="p">,</span> <span class="n">tags_predictions</span><span class="p">,</span> <span class="n">tags_predictions_prob</span><span class="p">):</span>
+            <span class="n">tagged_address_components</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">word</span><span class="p">,</span> <span class="n">predicted_idx_tag</span><span class="p">,</span> <span class="n">tag_proba</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">clean_address</span><span class="o">.</span><span class="n">split</span><span class="p">(),</span> <span class="n">tags_prediction</span><span class="p">,</span> <span class="n">tags_prediction_prob</span><span class="p">):</span>
+                <span class="n">tag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tags_converter</span><span class="p">(</span><span class="n">predicted_idx_tag</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">with_prob</span><span class="p">:</span>
+                    <span class="n">tag</span> <span class="o">=</span> <span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">tag_proba</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rounding</span><span class="p">))</span>
+                <span class="n">tagged_address_components</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">word</span><span class="p">,</span> <span class="n">tag</span><span class="p">))</span>
+            <span class="n">tagged_addresses_components</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">FormattedParsedAddress</span><span class="p">({</span><span class="n">address_to_parse</span><span class="p">:</span> <span class="n">tagged_address_components</span><span class="p">}))</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tagged_addresses_components</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">tagged_addresses_components</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">tagged_addresses_components</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_process_device</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Function to process the device depending on the argument type.</span>
+
+<span class="sd">        Set the device as a torch device object.</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">device</span> <span class="o">==</span> <span class="s2">"cpu"</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">"cpu"</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pin_memory</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pin_memory</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="ow">and</span> <span class="n">device</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">"cuda"</span>
+        <span class="k">elif</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pin_memory</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="sa">r</span><span class="s2">"cuda:\d+"</span><span class="p">,</span> <span class="n">device</span><span class="o">.</span><span class="n">lower</span><span class="p">()):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"String value should follow the pattern 'cuda:[int]'."</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">device</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="sa">f</span><span class="s2">"cuda:</span><span class="si">{</span><span class="n">device</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Device should not be a negative number."</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Device should be a string, an int or a torch device."</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">"No CUDA device detected, device will be set to 'CPU'."</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">"cpu"</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pin_memory</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_training_data_generator</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">train_dataset_container</span><span class="p">:</span> <span class="n">DatasetContainer</span><span class="p">,</span>
+        <span class="n">val_dataset_container</span><span class="p">:</span> <span class="n">DatasetContainer</span><span class="p">,</span>
+        <span class="n">train_ratio</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">num_workers</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">:</span>
+        <span class="c1"># pylint: disable=too-many-arguments</span>
+
+        <span class="k">if</span> <span class="n">val_dataset_container</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">train_indices</span><span class="p">,</span> <span class="n">valid_indices</span> <span class="o">=</span> <span class="n">indices_splitting</span><span class="p">(</span>
+                <span class="n">num_data</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">train_dataset_container</span><span class="p">),</span> <span class="n">train_ratio</span><span class="o">=</span><span class="n">train_ratio</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span>
+            <span class="p">)</span>
+
+            <span class="n">train_dataset</span> <span class="o">=</span> <span class="n">Subset</span><span class="p">(</span><span class="n">train_dataset_container</span><span class="p">,</span> <span class="n">train_indices</span><span class="p">)</span>
+
+            <span class="n">valid_dataset</span> <span class="o">=</span> <span class="n">Subset</span><span class="p">(</span><span class="n">train_dataset_container</span><span class="p">,</span> <span class="n">valid_indices</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">train_dataset</span> <span class="o">=</span> <span class="n">train_dataset_container</span>
+            <span class="n">valid_dataset</span> <span class="o">=</span> <span class="n">val_dataset_container</span>
+
+        <span class="n">train_generator</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span>
+            <span class="n">train_dataset</span><span class="p">,</span>
+            <span class="n">collate_fn</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">process_for_training</span><span class="p">,</span> <span class="n">teacher_forcing</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+            <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+            <span class="n">num_workers</span><span class="o">=</span><span class="n">num_workers</span><span class="p">,</span>
+            <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">valid_generator</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span>
+            <span class="n">valid_dataset</span><span class="p">,</span>
+            <span class="n">collate_fn</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">process_for_training</span><span class="p">,</span> <span class="n">teacher_forcing</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+            <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+            <span class="n">num_workers</span><span class="o">=</span><span class="n">num_workers</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">train_generator</span><span class="p">,</span> <span class="n">valid_generator</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_setup_model</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">path_to_retrained_model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">pre_trained_weights</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">prediction_layer_len</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">9</span><span class="p">,</span>
+        <span class="n">attention_mechanism</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">seq2seq_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">cache_dir</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">offline</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># pylint: disable=too-many-arguments</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Model factory to create the vectorizer, the data converter and the pretrained model</span>
+<span class="sd">        """</span>
+        <span class="c1"># We switch the case where seq2seq_kwargs is None to an empty dict</span>
+        <span class="n">seq2seq_kwargs</span> <span class="o">=</span> <span class="n">seq2seq_kwargs</span> <span class="k">if</span> <span class="n">seq2seq_kwargs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">{}</span>
+
+        <span class="k">if</span> <span class="n">cache_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Set to default cache_path value</span>
+            <span class="n">cache_dir</span> <span class="o">=</span> <span class="n">CACHE_PATH</span>
+
+        <span class="n">model_factory</span> <span class="o">=</span> <span class="n">ModelFactory</span><span class="p">(</span><span class="n">ModelLoader</span><span class="p">(</span><span class="n">cache_dir</span><span class="o">=</span><span class="n">cache_dir</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">model_factory</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">model_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="p">,</span>
+            <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
+            <span class="n">output_size</span><span class="o">=</span><span class="n">prediction_layer_len</span><span class="p">,</span>
+            <span class="n">attention_mechanism</span><span class="o">=</span><span class="n">attention_mechanism</span><span class="p">,</span>
+            <span class="n">path_to_retrained_model</span><span class="o">=</span><span class="n">path_to_retrained_model</span><span class="p">,</span>
+            <span class="n">pre_trained_weights</span><span class="o">=</span><span class="n">pre_trained_weights</span><span class="p">,</span>
+            <span class="n">offline</span><span class="o">=</span><span class="n">offline</span><span class="p">,</span>
+            <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">seq2seq_kwargs</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">embeddings_model</span> <span class="o">=</span> <span class="n">EmbeddingsModelFactory</span><span class="p">()</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">embedding_model_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="p">,</span> <span class="n">cache_dir</span><span class="o">=</span><span class="n">cache_dir</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span>
+        <span class="p">)</span>
+        <span class="n">vectorizer</span> <span class="o">=</span> <span class="n">VectorizerFactory</span><span class="p">()</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">embeddings_model</span><span class="p">)</span>
+
+        <span class="n">padder</span> <span class="o">=</span> <span class="n">DataPadder</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">processor</span> <span class="o">=</span> <span class="n">DataProcessorFactory</span><span class="p">()</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">vectorizer</span><span class="p">,</span> <span class="n">padder</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tags_converter</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_predict_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Pipeline to process data in a data loader for prediction.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">process_for_inference</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_retrain</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">experiment</span><span class="p">:</span> <span class="n">Experiment</span><span class="p">,</span>
+        <span class="n">train_generator</span><span class="p">:</span> <span class="n">DatasetContainer</span><span class="p">,</span>
+        <span class="n">valid_generator</span><span class="p">:</span> <span class="n">DatasetContainer</span><span class="p">,</span>
+        <span class="n">epochs</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">callbacks</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Callable</span><span class="p">],</span>
+        <span class="n">disable_tensorboard</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="p">:</span> <span class="kc">None</span> <span class="o">|</span> <span class="nb">bool</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
+        <span class="c1"># pylint: disable=too-many-arguments</span>
+        <span class="n">train_res</span> <span class="o">=</span> <span class="n">experiment</span><span class="o">.</span><span class="n">train</span><span class="p">(</span>
+            <span class="n">train_generator</span><span class="p">,</span>
+            <span class="n">valid_generator</span><span class="o">=</span><span class="n">valid_generator</span><span class="p">,</span>
+            <span class="n">epochs</span><span class="o">=</span><span class="n">epochs</span><span class="p">,</span>
+            <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
+            <span class="n">callbacks</span><span class="o">=</span><span class="n">callbacks</span><span class="p">,</span>
+            <span class="n">disable_tensorboard</span><span class="o">=</span><span class="n">disable_tensorboard</span><span class="p">,</span>
+            <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">train_res</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_freeze_model_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layers_to_freeze</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">layers_to_freeze</span> <span class="o">=</span> <span class="n">layers_to_freeze</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">layers_to_freeze</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"encoder"</span><span class="p">,</span> <span class="s2">"decoder"</span><span class="p">,</span> <span class="s2">"prediction_layer"</span><span class="p">,</span> <span class="s2">"seq2seq"</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">layers_to_freeze</span><span class="si">}</span><span class="s2"> freezing setting is not supported. Value can be 'encoder', 'decoder', "</span>
+                <span class="sa">f</span><span class="s2">"'prediction_layer' and 'seq2seq'. See documentation for more details."</span>
+            <span class="p">)</span>
+        <span class="n">layer_exclude</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">layers_to_freeze</span> <span class="o">==</span> <span class="s2">"decoder"</span><span class="p">:</span>
+            <span class="n">layers_to_freeze</span> <span class="o">=</span> <span class="p">[</span><span class="n">layers_to_freeze</span> <span class="o">+</span> <span class="s2">"."</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s2">"bpemb"</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="p">:</span>
+                <span class="n">layers_to_freeze</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"embedding_network."</span><span class="p">)</span>
+            <span class="n">layer_exclude</span> <span class="o">=</span> <span class="s2">"decoder.linear."</span>
+        <span class="k">elif</span> <span class="n">layers_to_freeze</span> <span class="o">==</span> <span class="s2">"prediction_layer"</span><span class="p">:</span>
+            <span class="n">layers_to_freeze</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"decoder.linear."</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="s2">"seq2seq"</span> <span class="ow">in</span> <span class="n">layers_to_freeze</span><span class="p">:</span>
+            <span class="n">layers_to_freeze</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"encoder."</span><span class="p">,</span> <span class="s2">"decoder."</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s2">"bpemb"</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="p">:</span>
+                <span class="n">layers_to_freeze</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"embedding_network."</span><span class="p">)</span>
+            <span class="n">layer_exclude</span> <span class="o">=</span> <span class="s2">"decoder.linear."</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">layers_to_freeze</span> <span class="o">=</span> <span class="p">[</span><span class="n">layers_to_freeze</span> <span class="o">+</span> <span class="s2">"."</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">layer_name</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">named_parameters</span><span class="p">():</span>
+            <span class="c1"># If the layer name is in the layer list to freeze, we set the weights update to false</span>
+            <span class="c1"># except if the layer name is a layers exclude. Namely, the decoder.linear when we freeze the decoder,</span>
+            <span class="c1"># but we expect the final layer to be unfrozen.</span>
+            <span class="c1"># The layers_exclude is not None was added since the base case: "" not in layer_name is equal to False.</span>
+            <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">layer_to_freeze</span> <span class="k">for</span> <span class="n">layer_to_freeze</span> <span class="ow">in</span> <span class="n">layers_to_freeze</span> <span class="k">if</span> <span class="n">layer_to_freeze</span> <span class="ow">in</span> <span class="n">layer_name</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">layer_exclude</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="c1"># Meaning we don't have a layer to exclude from the layer to freeze.</span>
+                    <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">elif</span> <span class="n">layer_exclude</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">layer_name</span><span class="p">:</span>
+                    <span class="c1"># Meaning the layer is not in the layer to exclude from the layer to freeze.</span>
+                    <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="c1"># The implicit else mean the layer_name is in a layers to exclude BUT it is a layer to exclude from</span>
+                <span class="c1"># the freezing. Namely, the decoder.linear when we freeze the decoder, but we expect the final layer</span>
+                <span class="c1"># to be unfrozen.</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_formatted_named_parser_name</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">prediction_tags</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">seq2seq_params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">layers_to_freeze</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">prediction_tags_str</span> <span class="o">=</span> <span class="s2">"ModifiedPredictionTags"</span> <span class="k">if</span> <span class="n">prediction_tags</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">""</span>
+        <span class="n">seq2seq_params_str</span> <span class="o">=</span> <span class="s2">"ModifiedSeq2SeqConfiguration"</span> <span class="k">if</span> <span class="n">seq2seq_params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">""</span>
+        <span class="n">layers_to_freeze_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"FreezedLayer</span><span class="si">{</span><span class="n">layers_to_freeze</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span> <span class="k">if</span> <span class="n">layers_to_freeze</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">""</span>
+        <span class="n">parser_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model_type_formatted</span> <span class="o">+</span> <span class="n">prediction_tags_str</span> <span class="o">+</span> <span class="n">seq2seq_params_str</span> <span class="o">+</span> <span class="n">layers_to_freeze_str</span>
+        <span class="k">return</span> <span class="n">parser_name</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_retrain_argumentation_validations</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">train_dataset_container</span><span class="p">:</span> <span class="n">DatasetContainer</span><span class="p">,</span>
+        <span class="n">val_dataset_container</span><span class="p">:</span> <span class="n">DatasetContainer</span><span class="p">,</span>
+        <span class="n">num_workers</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">name_of_the_retrain_parser</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Arguments validation test for retrain methods.</span>
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model_os_validation</span><span class="p">(</span><span class="n">num_workers</span><span class="o">=</span><span class="n">num_workers</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s2">"fasttext-light"</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">FastTextModelError</span><span class="p">(</span>
+                <span class="s2">"It's not possible to retrain a fasttext-light due to pymagnitude problem. "</span>
+                <span class="s2">"See the Retrain method documentation for more details."</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">train_dataset_container</span><span class="p">,</span> <span class="n">DatasetContainer</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">"The train dataset container (train_dataset_container) has to be a DatasetContainer. "</span>
+                <span class="s2">"Read the docs at https://deepparse.org/ for more details."</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">train_dataset_container</span><span class="o">.</span><span class="n">is_a_train_container</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"The train dataset container (train_dataset_container) is not a trainable container."</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">val_dataset_container</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val_dataset_container</span><span class="p">,</span> <span class="n">DatasetContainer</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">"The val dataset container (val_dataset_container) has to be a DatasetContainer. "</span>
+                    <span class="s2">"Read the docs at https://deepparse.org/ for more details."</span>
+                <span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">val_dataset_container</span><span class="o">.</span><span class="n">is_a_train_container</span><span class="p">():</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"The val dataset container (val_dataset_container) is not a trainable container."</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">name_of_the_retrain_parser</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">name_of_the_retrain_parser</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"."</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">"The name_of_the_retrain_parser should NOT include a file extension or a dot-like filename style."</span>
+                <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_model_os_validation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_workers</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># The FastText embeddings reader and BPEmb are picklable, so they work with the 'spawn' start method of Windows</span>
+        <span class="c1"># and MacOS. Only the FastText Light (Magnitude) embeddings, backed by SQLite, still need the 'fork' one.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">!=</span> <span class="s2">"fasttext-light"</span> <span class="ow">or</span> <span class="n">num_workers</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"Windows"</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">FastTextModelError</span><span class="p">(</span>
+                <span class="s2">"On Windows system, we cannot use the FastText Light model with parallelism workers since "</span>
+                <span class="s2">"its Magnitude embeddings are not pickleable with the parallelism process use by Windows. "</span>
+                <span class="s2">"Thus, you need to set num_workers to 0 since 1 also means 'parallelism'."</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"Darwin"</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">torch</span><span class="o">.</span><span class="n">multiprocessing</span><span class="o">.</span><span class="n">set_start_method</span><span class="p">(</span><span class="s1">'fork'</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s1">'context has already been set'</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
+                    <span class="k">pass</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"There has been an issue with the multiprocessing context initialisation"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s2">"On MacOS system, we cannot use the FastText Light model with parallelism out-of-the-box since "</span>
+                <span class="s2">"its Magnitude embeddings are not pickleable with the parallelism process used by default by MacOS. "</span>
+                <span class="s2">"Thus, we have set it to the 'fork' (i.e. torch.multiprocessing.set_start_method('fork'))"</span>
+                <span class="s2">" to allow torch parallelism."</span><span class="p">,</span>
+                <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">,</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_same_model_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">"AddressParser"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">model_type</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2026, Marouane Yassine &amp; David Beauchemin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

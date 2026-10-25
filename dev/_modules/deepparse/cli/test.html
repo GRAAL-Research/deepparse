@@ -1,0 +1,282 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>deepparse.cli.test &mdash; deepparse 0.11.0.dev1+5715875 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=1b66cd3a"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/deepparse.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../get_started/get_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../parser.html">Parser</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pre_processor.html">Pre-Processors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dataset_container.html">Dataset Container</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../comparer.html">Comparer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli.html">CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">Parse Address With Our Out-Of-The-Box API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/parse_addresses.html">Parse Addresses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/parse_addresses_uri.html">Parse Addresses Using A URI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/parse_addresses_with_cli.html">Parse Addresses Using Our CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/retrained_model_parsing.html">Use a Retrained Model to Parse Addresses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/fine_tuning.html">Retrain a Pretrained Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/fine_tuning_uri.html">Retrain a Pretrained Model Using A URI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/fine_tuning_with_csv_dataset.html">Retrain a Pretrained Model Using a CSV Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_attention_model.html">Retrain an Attention Mechanism Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_with_new_seq2seq_params.html">Retrain With New Seq2Seq Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/single_country_retrain.html">Retrain an Address Parser for Single Country Uses</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Model training</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../training_guide.html">Training Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">deepparse</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">deepparse.cli.test</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for deepparse.cli.test</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..parser</span><span class="w"> </span><span class="kn">import</span> <span class="n">AddressParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.parser_arguments_adder</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">add_base_parsing_model_arg</span><span class="p">,</span>
+    <span class="n">add_batch_size_arg</span><span class="p">,</span>
+    <span class="n">add_cache_dir_arg</span><span class="p">,</span>
+    <span class="n">add_csv_column_names_arg</span><span class="p">,</span>
+    <span class="n">add_csv_column_separator_arg</span><span class="p">,</span>
+    <span class="n">add_device_arg</span><span class="p">,</span>
+    <span class="n">add_log_arg</span><span class="p">,</span>
+    <span class="n">add_num_workers_arg</span><span class="p">,</span>
+    <span class="n">add_path_to_retrained_model_arg</span><span class="p">,</span>
+    <span class="n">add_seed_arg</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.tools</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">attention_model_type_handling</span><span class="p">,</span>
+    <span class="n">data_container_factory</span><span class="p">,</span>
+    <span class="n">generate_export_path</span><span class="p">,</span>
+    <span class="n">replace_path_extension</span><span class="p">,</span>
+    <span class="n">wrap</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="main">
+<a class="viewcode-back" href="../../../cli.html#deepparse.cli.test.main">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="c1"># pylint: disable=too-many-locals, too-many-branches</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    CLI function to rapidly test an address parser on test data using the same argument as the</span>
+<span class="sd">    :meth:`~AddressParser.test` method (with the same default values) except for the callbacks.</span>
+<span class="sd">    The results will be logged in a CSV file next to the test dataset.</span>
+
+
+<span class="sd">    Examples of usage:</span>
+
+<span class="sd">    .. code-block:: sh</span>
+
+<span class="sd">        test fasttext ./test_dataset_path.csv</span>
+
+<span class="sd">    Modifying testing parameters</span>
+
+<span class="sd">    .. code-block:: sh</span>
+
+<span class="sd">        test bpemb ./test_dataset_path.csv --batch_size 128 --logging_path "./logging_test"</span>
+
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">args</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+    <span class="n">parsed_args</span> <span class="o">=</span> <span class="n">get_args</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+
+    <span class="n">test_dataset_path</span> <span class="o">=</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">test_dataset_path</span>
+
+    <span class="n">testing_data</span> <span class="o">=</span> <span class="n">data_container_factory</span><span class="p">(</span>
+        <span class="n">dataset_path</span><span class="o">=</span><span class="n">test_dataset_path</span><span class="p">,</span>
+        <span class="n">trainable_dataset</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">csv_column_separator</span><span class="o">=</span><span class="n">parsed_args</span><span class="o">.</span><span class="n">csv_column_separator</span><span class="p">,</span>
+        <span class="n">csv_column_names</span><span class="o">=</span><span class="n">parsed_args</span><span class="o">.</span><span class="n">csv_column_names</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">device</span> <span class="o">=</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">device</span>
+
+    <span class="k">if</span> <span class="s2">"cpu"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">device</span><span class="p">:</span>
+        <span class="n">device</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+    <span class="n">parser_args</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"device"</span><span class="p">:</span> <span class="n">device</span><span class="p">,</span> <span class="s2">"cache_dir"</span><span class="p">:</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">cache_dir</span><span class="p">}</span>
+
+    <span class="n">path_to_retrained_model</span> <span class="o">=</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">path_to_retrained_model</span>
+    <span class="k">if</span> <span class="n">path_to_retrained_model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">parser_args</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"path_to_retrained_model"</span><span class="p">:</span> <span class="n">path_to_retrained_model</span><span class="p">})</span>
+
+    <span class="n">base_parsing_model</span> <span class="o">=</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">base_parsing_model</span>
+    <span class="n">parser_args_update_args</span> <span class="o">=</span> <span class="n">attention_model_type_handling</span><span class="p">(</span><span class="n">base_parsing_model</span><span class="p">)</span>
+    <span class="n">parser_args</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">parser_args_update_args</span><span class="p">)</span>
+
+    <span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="o">**</span><span class="n">parser_args</span><span class="p">)</span>
+
+    <span class="n">batch_size</span> <span class="o">=</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">batch_size</span>
+    <span class="n">num_workers</span> <span class="o">=</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">num_workers</span>
+    <span class="n">seed</span> <span class="o">=</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">seed</span>
+    <span class="n">test_arguments</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">"batch_size"</span><span class="p">:</span> <span class="n">batch_size</span><span class="p">,</span>
+        <span class="s2">"num_workers"</span><span class="p">:</span> <span class="n">num_workers</span><span class="p">,</span>
+        <span class="s2">"seed"</span><span class="p">:</span> <span class="n">seed</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="n">results_export_path</span> <span class="o">=</span> <span class="n">generate_export_path</span><span class="p">(</span><span class="n">test_dataset_path</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">address_parser</span><span class="si">}</span><span class="s2">_testing.tsv"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">log</span><span class="p">:</span>
+        <span class="n">logging_export_path</span> <span class="o">=</span> <span class="n">replace_path_extension</span><span class="p">(</span><span class="n">results_export_path</span><span class="p">,</span> <span class="s2">".log"</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span>
+            <span class="n">filename</span><span class="o">=</span><span class="n">logging_export_path</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">"</span><span class="si">%(asctime)s</span><span class="s2"> : </span><span class="si">%(levelname)s</span><span class="s2"> : </span><span class="si">%(message)s</span><span class="s2">"</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span>
+        <span class="p">)</span>
+
+        <span class="n">text_to_log</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Testing results on dataset file </span><span class="si">{</span><span class="n">test_dataset_path</span><span class="si">}</span><span class="s2"> using the parser </span><span class="si">{</span><span class="n">address_parser</span><span class="si">}</span><span class="s2">."</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">text_to_log</span><span class="p">)</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="n">address_parser</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="n">test_dataset_container</span><span class="o">=</span><span class="n">testing_data</span><span class="p">,</span> <span class="o">**</span><span class="n">test_arguments</span><span class="p">)</span>
+
+    <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">results_export_path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">"</span><span class="se">\t</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">parsed_args</span><span class="o">.</span><span class="n">log</span><span class="p">:</span>
+        <span class="n">text_to_log</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"Testing on the dataset file </span><span class="si">{</span><span class="n">test_dataset_path</span><span class="si">}</span><span class="s2"> is finished. The results are logged in "</span>
+            <span class="sa">f</span><span class="s2">"the CSV file at </span><span class="si">{</span><span class="n">results_export_path</span><span class="si">}</span><span class="s2">."</span>
+        <span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">text_to_log</span><span class="p">)</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_parser</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Return ArgumentParser for the CLI."""</span>
+
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">RawTextHelpFormatter</span><span class="p">)</span>
+
+    <span class="n">add_base_parsing_model_arg</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"test_dataset_path"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="n">wrap</span><span class="p">(</span><span class="s2">"The path to the dataset file in a pickle (.p, .pickle or .pckl) or CSV format."</span><span class="p">),</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">add_path_to_retrained_model_arg</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
+
+    <span class="n">add_batch_size_arg</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
+
+    <span class="n">add_num_workers_arg</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
+
+    <span class="n">add_seed_arg</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
+
+    <span class="n">add_device_arg</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
+
+    <span class="n">add_csv_column_names_arg</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
+
+    <span class="n">add_csv_column_separator_arg</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
+
+    <span class="n">add_log_arg</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
+
+    <span class="n">add_cache_dir_arg</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">parser</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_args</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
+<span class="w">    </span><span class="sd">"""Parse arguments passed in from shell."""</span>
+    <span class="k">return</span> <span class="n">get_parser</span><span class="p">()</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2026, Marouane Yassine &amp; David Beauchemin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

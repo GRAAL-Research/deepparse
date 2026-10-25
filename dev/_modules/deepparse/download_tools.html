@@ -1,0 +1,537 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>deepparse.download_tools &mdash; deepparse 0.11.0.dev1+5715875 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=1b66cd3a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/deepparse.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install/installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/get_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../parser.html">Parser</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../pre_processor.html">Pre-Processors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dataset_container.html">Dataset Container</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../comparer.html">Comparer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cli.html">CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">Parse Address With Our Out-Of-The-Box API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/parse_addresses.html">Parse Addresses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/parse_addresses_uri.html">Parse Addresses Using A URI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/parse_addresses_with_cli.html">Parse Addresses Using Our CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/retrained_model_parsing.html">Use a Retrained Model to Parse Addresses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/fine_tuning.html">Retrain a Pretrained Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/fine_tuning_uri.html">Retrain a Pretrained Model Using A URI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/fine_tuning_with_csv_dataset.html">Retrain a Pretrained Model Using a CSV Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/retrain_attention_model.html">Retrain an Attention Mechanism Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/retrain_with_new_seq2seq_params.html">Retrain With New Seq2Seq Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/single_country_retrain.html">Retrain an Address Parser for Single Country Uses</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Model training</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../training_guide.html">Training Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">deepparse</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">deepparse.download_tools</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for deepparse.download_tools</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">gzip</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">importlib.util</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">urllib.request</span><span class="w"> </span><span class="kn">import</span> <span class="n">urlopen</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow.parquet</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pq</span>
+
+    <span class="n">PYARROW_AVAILABLE</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">pq</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">PYARROW_AVAILABLE</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">huggingface_hub</span><span class="w"> </span><span class="kn">import</span> <span class="n">HfFileSystem</span><span class="p">,</span> <span class="n">hf_hub_download</span><span class="p">,</span> <span class="n">snapshot_download</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">transformers.utils.hub</span><span class="w"> </span><span class="kn">import</span> <span class="n">cached_file</span><span class="p">,</span> <span class="n">extract_commit_hash</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">transformers.utils.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">disable_progress_bar</span><span class="p">,</span> <span class="n">enable_progress_bar</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.bpemb_url_bug_fix</span><span class="w"> </span><span class="kn">import</span> <span class="n">BPEmbBaseURLWrapperBugFix</span>
+
+<span class="c1"># Kept for backward compatibility: Deepparse no longer needs the fasttext package to load the FastText embeddings.</span>
+<span class="n">FASTTEXT_AVAILABLE</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">find_spec</span><span class="p">(</span><span class="s2">"fasttext"</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="n">CACHE_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s2">"~"</span><span class="p">),</span> <span class="s2">".cache"</span><span class="p">,</span> <span class="s2">"deepparse"</span><span class="p">)</span>
+
+<span class="c1"># Status code starting in the 4xx are client error status code.</span>
+<span class="c1"># That is Deepparse, server problem (e.g. Deepparse server is offline).</span>
+<span class="n">HTTP_CLIENT_ERROR_STATUS_CODE</span> <span class="o">=</span> <span class="mi">400</span>
+<span class="c1"># Status code starting in the 5xx are the next range status code.</span>
+<span class="n">NEXT_RANGE_STATUS_CODE</span> <span class="o">=</span> <span class="mi">500</span>
+
+<span class="n">MODEL_MAPPING_CHOICES</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"fasttext"</span><span class="p">:</span> <span class="s2">"fasttext"</span><span class="p">,</span>
+    <span class="s2">"fasttext-attention"</span><span class="p">:</span> <span class="s2">"fasttext_attention"</span><span class="p">,</span>
+    <span class="s2">"fasttext-light"</span><span class="p">:</span> <span class="s2">"fasttext"</span><span class="p">,</span>
+    <span class="s2">"bpemb"</span><span class="p">:</span> <span class="s2">"bpemb"</span><span class="p">,</span>
+    <span class="s2">"bpemb-attention"</span><span class="p">:</span> <span class="s2">"bpemb_attention"</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">MODEL_REPO_IDS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"bpemb"</span><span class="p">:</span> <span class="s2">"deepparse/bpemb-base"</span><span class="p">,</span>
+    <span class="s2">"bpemb_attention"</span><span class="p">:</span> <span class="s2">"deepparse/bpemb-attention"</span><span class="p">,</span>
+    <span class="s2">"fasttext"</span><span class="p">:</span> <span class="s2">"deepparse/fasttext-base"</span><span class="p">,</span>
+    <span class="s2">"fasttext_attention"</span><span class="p">:</span> <span class="s2">"deepparse/fasttext-attention"</span><span class="p">,</span>
+    <span class="s2">"fasttext-light"</span><span class="p">:</span> <span class="s2">"deepparse/fasttext-base"</span><span class="p">,</span>
+    <span class="s2">"fasttext-light_attention"</span><span class="p">:</span> <span class="s2">"deepparse/fasttext-attention"</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">WORLDWIDE_ADDRESSES_REPO_ID</span> <span class="o">=</span> <span class="s2">"deepparse/worldwide-addresses"</span>
+
+<span class="c1"># The worldwide-addresses dataset tags that are not deepparse tags. The words tagged with a removed tag are removed</span>
+<span class="c1"># from the address.</span>
+<span class="n">WORLDWIDE_ADDRESSES_TAGS_MAPPING</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"Suburb"</span><span class="p">:</span> <span class="s2">"Municipality"</span><span class="p">,</span> <span class="s2">"District"</span><span class="p">:</span> <span class="s2">"Municipality"</span><span class="p">}</span>
+<span class="n">WORLDWIDE_ADDRESSES_REMOVED_TAGS</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"County"</span><span class="p">,</span> <span class="s2">"Country"</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">download_fasttext_magnitude_embeddings</span><span class="p">(</span><span class="n">cache_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">offline</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Function to download the magnitude pretrained FastText model.</span>
+
+<span class="sd">    Return the full path to the FastText embeddings.</span>
+<span class="sd">    """</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">local_embeddings_file_path</span> <span class="o">=</span> <span class="n">cached_file</span><span class="p">(</span>
+            <span class="s2">"deepparse/fasttext-base"</span><span class="p">,</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s2">"fasttext.magnitude"</span><span class="p">,</span>
+            <span class="n">revision</span><span class="o">=</span><span class="s2">"light-embeddings"</span><span class="p">,</span>
+            <span class="n">local_files_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">cache_dir</span><span class="o">=</span><span class="n">cache_dir</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="s2">"The FastText pretrained word embeddings will be downloaded in magnitude format (3.5 GO), "</span>
+                <span class="s2">"this process will take several minutes."</span>
+            <span class="p">)</span>
+
+        <span class="n">local_embeddings_file_path</span> <span class="o">=</span> <span class="n">hf_hub_download</span><span class="p">(</span>
+            <span class="s2">"deepparse/fasttext-base"</span><span class="p">,</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s2">"fasttext.magnitude"</span><span class="p">,</span>
+            <span class="n">revision</span><span class="o">=</span><span class="s2">"light-embeddings"</span><span class="p">,</span>
+            <span class="n">cache_dir</span><span class="o">=</span><span class="n">cache_dir</span><span class="p">,</span>
+            <span class="n">local_files_only</span><span class="o">=</span><span class="n">offline</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">local_embeddings_file_path</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">download_weights</span><span class="p">(</span><span class="n">model_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">saving_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">offline</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Function to download the pretrained weights of one of our pre-trained base models.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        model_type (str): The network pretrained weights to load.</span>
+<span class="sd">        saving_dir: The path to the saving directory.</span>
+<span class="sd">        verbose (bool): Either or not to be verbose during the download of a model. The default value is ``True``.</span>
+<span class="sd">        offline (bool): Whether the model is an offline or an online.</span>
+<span class="sd">    Return:</span>
+<span class="sd">        The model rep id (str) which can be used with hugging face's `from_pretrained` method.</span>
+<span class="sd">    """</span>
+    <span class="n">repo_id</span> <span class="o">=</span> <span class="n">MODEL_REPO_IDS</span><span class="p">[</span><span class="n">model_type</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">offline</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s2">"The offline parameter is set to False, so if a "</span>
+                <span class="sa">f</span><span class="s2">"new pre-trained `</span><span class="si">{</span><span class="n">model_type</span><span class="si">}</span><span class="s2">` model is available it will "</span>
+                <span class="s2">"automatically be downloaded."</span><span class="p">,</span>
+                <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Disabling progress bar since it shows up even when no files are up to date which can get confusing</span>
+        <span class="n">disable_progress_bar</span><span class="p">()</span>
+
+        <span class="n">snapshot_download</span><span class="p">(</span><span class="n">repo_id</span><span class="p">,</span> <span class="n">cache_dir</span><span class="o">=</span><span class="n">saving_dir</span><span class="p">,</span> <span class="n">local_files_only</span><span class="o">=</span><span class="n">offline</span><span class="p">)</span>
+
+        <span class="c1"># Re-enabling progress bar</span>
+        <span class="n">enable_progress_bar</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">repo_id</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">load_version</span><span class="p">(</span><span class="n">model_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">cache_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Method to load the local hashed version of the model as an attribute.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        model_type (str): The network pretrained weights to load.</span>
+<span class="sd">        cache_dir (str): The path to the cached directory to use for downloading (and loading) the</span>
+<span class="sd">            model weights.</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">        The hash of the model which corresponds to the hash of the latest commit in the local revision.</span>
+<span class="sd">    """</span>
+    <span class="n">repo_id</span> <span class="o">=</span> <span class="n">MODEL_REPO_IDS</span><span class="p">[</span><span class="n">model_type</span><span class="p">]</span>
+
+    <span class="n">config_file</span> <span class="o">=</span> <span class="n">cached_file</span><span class="p">(</span><span class="n">repo_id</span><span class="p">,</span> <span class="s2">"config.json"</span><span class="p">,</span> <span class="n">local_files_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cache_dir</span><span class="o">=</span><span class="n">cache_dir</span><span class="p">)</span>
+
+    <span class="n">version</span> <span class="o">=</span> <span class="n">extract_commit_hash</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">version</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">download_models</span><span class="p">(</span><span class="n">saving_cache_path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Function to download all the pretrained models.  It will download all the model's checkpoints and version files.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        saving_cache_path: The path to the saving cache directory for the specified model.</span>
+<span class="sd">    """</span>
+    <span class="k">for</span> <span class="n">model_type</span> <span class="ow">in</span> <span class="n">MODEL_MAPPING_CHOICES</span><span class="p">:</span>
+        <span class="n">download_model</span><span class="p">(</span><span class="n">model_type</span><span class="p">,</span> <span class="n">saving_cache_path</span><span class="o">=</span><span class="n">saving_cache_path</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">download_model</span><span class="p">(</span>
+    <span class="n">model_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">saving_cache_path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Function to download a pretrained model. It will download its corresponding checkpoint and version file.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        model_type: The model type (i.e. ``fasttext`` or ``bpemb-attention``).</span>
+<span class="sd">        saving_cache_path: The path to the saving cache directory for the specified model.</span>
+<span class="sd">    """</span>
+
+    <span class="k">if</span> <span class="n">saving_cache_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># We use the default cache path '~/.cache/deepparse'.</span>
+        <span class="n">saving_cache_path</span> <span class="o">=</span> <span class="n">CACHE_PATH</span>
+
+    <span class="k">if</span> <span class="s2">"fasttext"</span> <span class="ow">in</span> <span class="n">model_type</span> <span class="ow">and</span> <span class="s2">"fasttext-light"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">model_type</span><span class="p">:</span>
+        <span class="n">download_fasttext_embeddings</span><span class="p">(</span><span class="n">cache_dir</span><span class="o">=</span><span class="n">saving_cache_path</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">"fasttext-light"</span><span class="p">:</span>
+        <span class="n">download_fasttext_magnitude_embeddings</span><span class="p">(</span><span class="n">cache_dir</span><span class="o">=</span><span class="n">saving_cache_path</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="s2">"bpemb"</span> <span class="ow">in</span> <span class="n">model_type</span><span class="p">:</span>
+        <span class="n">BPEmbBaseURLWrapperBugFix</span><span class="p">(</span>
+            <span class="n">lang</span><span class="o">=</span><span class="s2">"multi"</span><span class="p">,</span> <span class="n">vs</span><span class="o">=</span><span class="mi">100000</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">cache_dir</span><span class="o">=</span><span class="n">saving_cache_path</span>
+        <span class="p">)</span>  <span class="c1"># The class manages the download of the pretrained words embedding</span>
+
+    <span class="n">model_type</span> <span class="o">=</span> <span class="n">MODEL_MAPPING_CHOICES</span><span class="p">[</span><span class="n">model_type</span><span class="p">]</span>
+
+    <span class="n">download_weights</span><span class="p">(</span><span class="n">model_type</span><span class="p">,</span> <span class="n">saving_cache_path</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">offline</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="download_worldwide_addresses_sample">
+<a class="viewcode-back" href="../../dataset_container.html#deepparse.download_tools.download_worldwide_addresses_sample">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">download_worldwide_addresses_sample</span><span class="p">(</span><span class="n">country_code</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"ca"</span><span class="p">,</span> <span class="n">num_samples</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Function to download a small sample of tagged addresses of one country from the `worldwide-addresses</span>
+<span class="sd">    &lt;https://huggingface.co/datasets/deepparse/worldwide-addresses&gt;`_ HuggingFace dataset and convert it to the</span>
+<span class="sd">    deepparse tag space. It is meant to give small, ready-to-use datasets for examples and quick experiments.</span>
+
+<span class="sd">    Only the needed part of the country's last parquet file is read (the beginning of each country's data mostly</span>
+<span class="sd">    holds postal-code-only addresses, while the end holds complete street addresses). The tags are mapped to the</span>
+<span class="sd">    deepparse tags as follows: ``Suburb`` and ``District`` become ``Municipality``, and the words tagged ``County``</span>
+<span class="sd">    or ``Country`` are removed from the address. The addresses left empty by this removal are dropped.</span>
+
+<span class="sd">    It requires the ``pyarrow`` package (``pip install pyarrow`` or ``pip install deepparse[all]``).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        country_code (str): The `ISO 3166-1 alpha-2 &lt;https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2&gt;`_ code of the</span>
+<span class="sd">            country to download (e.g. ``"ca"`` or ``"us"``). The default value is ``"ca"``.</span>
+<span class="sd">        num_samples (int): The maximum number of tagged addresses to return. The default value is ``1000``.</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">        A list of tuples ``(address, tags)`` where the address is a string and the tags a list of deepparse tags, one</span>
+<span class="sd">        per whitespace-separated word. The list can be used as is with a</span>
+<span class="sd">        :class:`~deepparse.dataset_container.ListDatasetContainer`.</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">PYARROW_AVAILABLE</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
+            <span class="s2">"The 'pyarrow' package is needed to read the worldwide-addresses dataset. Install it with "</span>
+            <span class="s2">"'pip install pyarrow' or 'pip install deepparse[all]'."</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">num_samples</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"The number of samples must be a positive integer, got </span><span class="si">{</span><span class="n">num_samples</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
+
+    <span class="n">country_code</span> <span class="o">=</span> <span class="n">country_code</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">file_system</span> <span class="o">=</span> <span class="n">HfFileSystem</span><span class="p">()</span>
+    <span class="n">chunk_paths</span> <span class="o">=</span> <span class="n">file_system</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="sa">f</span><span class="s2">"datasets/</span><span class="si">{</span><span class="n">WORLDWIDE_ADDRESSES_REPO_ID</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">country_code</span><span class="si">}</span><span class="s2">/chunk-*.parquet"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">chunk_paths</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"No data found for the country code '</span><span class="si">{</span><span class="n">country_code</span><span class="si">}</span><span class="s2">' in the </span><span class="si">{</span><span class="n">WORLDWIDE_ADDRESSES_REPO_ID</span><span class="si">}</span><span class="s2"> dataset. "</span>
+            <span class="s2">"Use an ISO 3166-1 alpha-2 country code (e.g. 'ca')."</span>
+        <span class="p">)</span>
+    <span class="n">last_chunk_path</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">chunk_paths</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">path</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s2">"chunk-"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"."</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]))</span>
+
+    <span class="n">samples</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">with</span> <span class="n">file_system</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">last_chunk_path</span><span class="p">,</span> <span class="s2">"rb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">parquet_file</span><span class="p">:</span>
+        <span class="n">parquet_reader</span> <span class="o">=</span> <span class="n">pq</span><span class="o">.</span><span class="n">ParquetFile</span><span class="p">(</span><span class="n">parquet_file</span><span class="p">)</span>
+        <span class="c1"># We read the row groups from the end of the file until we have enough samples.</span>
+        <span class="k">for</span> <span class="n">row_group_index</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">parquet_reader</span><span class="o">.</span><span class="n">num_row_groups</span><span class="p">)):</span>
+            <span class="n">row_group</span> <span class="o">=</span> <span class="n">parquet_reader</span><span class="o">.</span><span class="n">read_row_group</span><span class="p">(</span><span class="n">row_group_index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"Address"</span><span class="p">,</span> <span class="s2">"Tags"</span><span class="p">])</span>
+            <span class="n">row_group_samples</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">address</span><span class="p">,</span> <span class="n">tags</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">row_group</span><span class="o">.</span><span class="n">column</span><span class="p">(</span><span class="s2">"Address"</span><span class="p">)</span><span class="o">.</span><span class="n">to_pylist</span><span class="p">(),</span> <span class="n">row_group</span><span class="o">.</span><span class="n">column</span><span class="p">(</span><span class="s2">"Tags"</span><span class="p">)</span><span class="o">.</span><span class="n">to_pylist</span><span class="p">()):</span>
+                <span class="n">sample</span> <span class="o">=</span> <span class="n">_convert_to_deepparse_tags</span><span class="p">(</span><span class="n">address</span><span class="p">,</span> <span class="n">tags</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">sample</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">row_group_samples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+            <span class="n">samples</span> <span class="o">=</span> <span class="n">row_group_samples</span> <span class="o">+</span> <span class="n">samples</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">num_samples</span><span class="p">:</span>
+                <span class="k">break</span>
+
+    <span class="k">return</span> <span class="n">samples</span><span class="p">[</span><span class="o">-</span><span class="n">num_samples</span><span class="p">:]</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_convert_to_deepparse_tags</span><span class="p">(</span><span class="n">address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">tags</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="c1"># Map a worldwide-addresses sample to the deepparse tags. Return None if no word is left in the address.</span>
+    <span class="n">kept_words</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">kept_tags</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">word</span><span class="p">,</span> <span class="n">tag</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">address</span><span class="o">.</span><span class="n">split</span><span class="p">(),</span> <span class="n">tags</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">WORLDWIDE_ADDRESSES_REMOVED_TAGS</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">kept_words</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
+        <span class="n">kept_tags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">WORLDWIDE_ADDRESSES_TAGS_MAPPING</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">tag</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">kept_words</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="s2">" "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">kept_words</span><span class="p">),</span> <span class="n">kept_tags</span>
+
+
+<span class="c1"># pylint: disable=pointless-string-statement</span>
+<span class="n">FASTTEXT_COPYRIGHT_MIT_LICENSE</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">The code below was copied from the FastText project, and has been modified for the purpose of this package.</span>
+
+<span class="s2">COPYRIGHT</span>
+
+<span class="s2">All contributions from the https://github.com/facebookresearch/fastText authors.</span>
+<span class="s2">Copyright (c) 2016 - August 13 2020</span>
+<span class="s2">All rights reserved.</span>
+
+<span class="s2">Each contributor holds copyright over their respective contributions. The project versioning (Git)</span>
+<span class="s2">records all such contribution source information.</span>
+
+<span class="s2">LICENSE</span>
+
+<span class="s2">The MIT License (MIT)</span>
+
+<span class="s2">Permission is hereby granted, free of charge, to any person obtaining a copy of this software and</span>
+<span class="s2">associated documentation files (the "Software"), to deal in the Software without restriction,</span>
+<span class="s2">including without limitation the rights to use, copy, modify, merge, publish, distribute,</span>
+<span class="s2">sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is</span>
+<span class="s2">furnished to do so, subject to the following conditions:</span>
+
+<span class="s2">The above copyright notice and this permission notice shall be included in all copies or substantial</span>
+<span class="s2">portions of the Software.</span>
+
+<span class="s2">THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT</span>
+<span class="s2">NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND</span>
+<span class="s2">NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES</span>
+<span class="s2">OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN</span>
+<span class="s2">CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</span>
+<span class="s2">"""</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">download_fasttext_embeddings</span><span class="p">(</span><span class="n">cache_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">offline</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Simpler version of the download_model function from FastText to download pretrained common-crawl</span>
+<span class="sd">    vectors from FastText's website https://fasttext.cc/docs/en/crawl-vectors.html and save it in the</span>
+<span class="sd">    saving directory (saving_dir).</span>
+
+<span class="sd">    Return the full path to the FastText embeddings.</span>
+<span class="sd">    """</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">cache_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">file_name</span> <span class="o">=</span> <span class="s2">"cc.fr.300.bin"</span>
+    <span class="n">gz_file_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">.gz"</span>
+
+    <span class="n">file_name_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cache_dir</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">file_name_path</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">offline</span><span class="p">:</span>
+        <span class="n">saving_file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cache_dir</span><span class="p">,</span> <span class="n">gz_file_name</span><span class="p">)</span>
+
+        <span class="n">download_gz_model</span><span class="p">(</span><span class="n">gz_file_name</span><span class="p">,</span> <span class="n">saving_file_path</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">gzip</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cache_dir</span><span class="p">,</span> <span class="n">gz_file_name</span><span class="p">),</span> <span class="s2">"rb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cache_dir</span><span class="p">,</span> <span class="n">file_name</span><span class="p">),</span> <span class="s2">"wb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f_out</span><span class="p">:</span>
+                <span class="n">shutil</span><span class="o">.</span><span class="n">copyfileobj</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">f_out</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cache_dir</span><span class="p">,</span> <span class="n">gz_file_name</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">file_name_path</span>  <span class="c1"># return the full path to the FastText embeddings</span>
+
+
+<span class="c1"># Now use a saving path and don't return a bool</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">download_gz_model</span><span class="p">(</span><span class="n">gz_file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">saving_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Simpler version of the _download_gz_model function from FastText to download pretrained common-crawl</span>
+<span class="sd">    vectors from FastText's website https://fasttext.cc/docs/en/crawl-vectors.html and save it in the</span>
+<span class="sd">    saving directory (saving_path).</span>
+<span class="sd">    """</span>
+
+    <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/</span><span class="si">{</span><span class="n">gz_file_name</span><span class="si">}</span><span class="s2">"</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="s2">"The FastText pretrained word embeddings will be downloaded (6.8 GO), "</span>
+            <span class="s2">"this process will take several minutes."</span>
+        <span class="p">)</span>
+    <span class="n">_download_file</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">saving_path</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+
+
+<span class="c1"># No modification, we just need to call our _print_progress function</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_download_file</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">write_file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="mi">13</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Downloading </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+
+    <span class="n">response</span> <span class="o">=</span> <span class="n">urlopen</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>  <span class="c1"># pylint: disable=consider-using-with</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">"getheader"</span><span class="p">):</span>
+        <span class="n">file_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">getheader</span><span class="p">(</span><span class="s2">"Content-Length"</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+        <span class="n">file_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">info</span><span class="p">()</span><span class="o">.</span><span class="n">getheader</span><span class="p">(</span><span class="s2">"Content-Length"</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+    <span class="n">downloaded</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">download_file_name</span> <span class="o">=</span> <span class="n">write_file_name</span> <span class="o">+</span> <span class="s2">".part"</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">download_file_name</span><span class="p">,</span> <span class="s2">"wb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">chunk</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">chunk_size</span><span class="p">)</span>
+            <span class="n">downloaded</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">chunk</span><span class="p">:</span>
+                <span class="k">break</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="n">_print_progress</span><span class="p">(</span><span class="n">downloaded</span><span class="p">,</span> <span class="n">file_size</span><span class="p">)</span>
+
+    <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">download_file_name</span><span class="p">,</span> <span class="n">write_file_name</span><span class="p">)</span>
+
+
+<span class="c1"># Better print formatting for some shell that don't update properly.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_print_progress</span><span class="p">(</span><span class="n">downloaded_bytes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">total_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">percent</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">downloaded_bytes</span><span class="p">)</span> <span class="o">/</span> <span class="n">total_size</span>
+    <span class="n">bar_size</span> <span class="o">=</span> <span class="mi">50</span>
+    <span class="n">progress_bar</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">percent</span> <span class="o">*</span> <span class="n">bar_size</span><span class="p">)</span>
+    <span class="n">percent</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">percent</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">bar_print</span> <span class="o">=</span> <span class="s2">"="</span> <span class="o">*</span> <span class="n">progress_bar</span> <span class="o">+</span> <span class="s2">"&gt;"</span> <span class="o">+</span> <span class="s2">" "</span> <span class="o">*</span> <span class="p">(</span><span class="n">bar_size</span> <span class="o">-</span> <span class="n">progress_bar</span><span class="p">)</span>
+    <span class="n">update</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="se">\r</span><span class="s2">(</span><span class="si">{</span><span class="n">percent</span><span class="si">:</span><span class="s2">0.2f</span><span class="si">}</span><span class="s2">%) [</span><span class="si">{</span><span class="n">bar_print</span><span class="si">}</span><span class="s2">]"</span>
+
+    <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">update</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">downloaded_bytes</span> <span class="o">&gt;=</span> <span class="n">total_size</span><span class="p">:</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">load_fasttext_embeddings</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Function to load fastText ``.bin`` embeddings.</span>
+
+<span class="sd">    .. deprecated::</span>
+<span class="sd">        Use :class:`~deepparse.embeddings_models.FastTextBinReader` instead. This function is kept for backward</span>
+<span class="sd">        compatibility and returns a ``FastTextBinReader``, which has the same ``model[word]`` and</span>
+<span class="sd">        ``get_dimension()`` interface as the former ``fasttext`` model object.</span>
+<span class="sd">    """</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+        <span class="s2">"load_fasttext_embeddings is deprecated and will be removed in a future release, "</span>
+        <span class="s2">"use deepparse.embeddings_models.FastTextBinReader instead."</span><span class="p">,</span>
+        <span class="n">category</span><span class="o">=</span><span class="ne">DeprecationWarning</span><span class="p">,</span>
+        <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="c1"># Imported here since the embeddings_models package imports this module.</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.embeddings_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">FastTextBinReader</span>  <span class="c1"># pylint: disable=import-outside-toplevel</span>
+
+    <span class="k">return</span> <span class="n">FastTextBinReader</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2026, Marouane Yassine &amp; David Beauchemin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

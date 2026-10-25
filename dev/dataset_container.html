@@ -1,0 +1,409 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dataset Container &mdash; deepparse 0.11.0.dev1+5715875 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=1b66cd3a"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Comparer" href="comparer.html" />
+    <link rel="prev" title="Pre-Processors" href="pre_processor.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+              <img src="_static/deepparse.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install/installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="get_started/get_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="parser.html">Parser</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pre_processor.html">Pre-Processors</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Dataset Container</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#interface">Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#deepparse.dataset_container.DatasetContainer"><code class="docutils literal notranslate"><span class="pre">DatasetContainer</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#implementations">Implementations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#deepparse.dataset_container.PickleDatasetContainer"><code class="docutils literal notranslate"><span class="pre">PickleDatasetContainer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#deepparse.dataset_container.CSVDatasetContainer"><code class="docutils literal notranslate"><span class="pre">CSVDatasetContainer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#deepparse.dataset_container.ListDatasetContainer"><code class="docutils literal notranslate"><span class="pre">ListDatasetContainer</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dataset-validation-steps">Dataset Validation Steps</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#deepparse.data_validation.data_validation.validate_if_any_empty"><code class="docutils literal notranslate"><span class="pre">validate_if_any_empty()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#deepparse.data_validation.data_validation.validate_if_any_whitespace_only"><code class="docutils literal notranslate"><span class="pre">validate_if_any_whitespace_only()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#deepparse.data_validation.data_validation.validate_if_any_none"><code class="docutils literal notranslate"><span class="pre">validate_if_any_none()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#sample-data">Sample Data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#deepparse.download_tools.download_worldwide_addresses_sample"><code class="docutils literal notranslate"><span class="pre">download_worldwide_addresses_sample()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="comparer.html">Comparer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">Parse Address With Our Out-Of-The-Box API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/parse_addresses.html">Parse Addresses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/parse_addresses_uri.html">Parse Addresses Using A URI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/parse_addresses_with_cli.html">Parse Addresses Using Our CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/retrained_model_parsing.html">Use a Retrained Model to Parse Addresses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/fine_tuning.html">Retrain a Pretrained Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/fine_tuning_uri.html">Retrain a Pretrained Model Using A URI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/fine_tuning_with_csv_dataset.html">Retrain a Pretrained Model Using a CSV Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/retrain_attention_model.html">Retrain an Attention Mechanism Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/retrain_with_new_seq2seq_params.html">Retrain With New Seq2Seq Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/single_country_retrain.html">Retrain an Address Parser for Single Country Uses</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Model training</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="training_guide.html">Training Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">deepparse</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Dataset Container</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/dataset_container.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>You are reading the documentation of the development version of deepparse (0.11.0.dev1+5715875), built from the
+<code class="docutils literal notranslate"><span class="pre">dev</span></code> branch. It may describe unreleased features. See the <a class="reference external" href="https://deepparse.org/">stable documentation</a>
+for the latest release.</p>
+</div>
+<section id="dataset-container">
+<span id="id1"></span><h1>Dataset Container<a class="headerlink" href="#dataset-container" title="Link to this heading"></a></h1>
+<section id="interface">
+<h2>Interface<a class="headerlink" href="#interface" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="deepparse.dataset_container.DatasetContainer">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">deepparse.dataset_container.</span></span><span class="sig-name descname"><span class="pre">DatasetContainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">is_training_container</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_cleaning_pre_processing_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.10/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Callable" title="(in Python v3.10)"><span class="pre">Callable</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deepparse/dataset_container/dataset_container.html#DatasetContainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.dataset_container.DatasetContainer" title="Link to this definition"></a></dt>
+<dd><p>Interface for the dataset. This interface defines most of the methods that the dataset needs to define.
+If you define another dataset container, the init must define the attribute data.</p>
+<p>We also recommend using the <code class="docutils literal notranslate"><span class="pre">validate_dataset</span></code> method in your init to validate some characteristics of your
+dataset.</p>
+<p>For a training container, it validates the following:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>no address is a <code class="docutils literal notranslate"><span class="pre">None</span></code> value,</p></li>
+<li><p>no address is empty,</p></li>
+<li><p>no address is composed of only whitespace,</p></li>
+<li><p>no address includes consecutive whitespace (e.g. “An  address”),</p></li>
+<li><p>no tags list is empty, if data is a list of tuple (<code class="docutils literal notranslate"><span class="pre">[('an</span> <span class="pre">address',</span> <span class="pre">['a_tag',</span> <span class="pre">'another_tag']),</span> <span class="pre">...]</span></code>), and</p></li>
+<li><p>if the addresses (whitespace-split) are the same length as their respective tags list.</p></li>
+</ul>
+</div></blockquote>
+<p>While for a predict container (unknown prediction tag), it validates the following:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>no address is a <code class="docutils literal notranslate"><span class="pre">None</span></code> value,</p></li>
+<li><p>no address is empty,</p></li>
+<li><p>no address is composed of only whitespace, and</p></li>
+<li><p>no address includes consecutive whitespace (e.g. “An  address”).</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>is_training_container</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Either or not, the dataset container is a training container. This will determine
+the dataset validation test we apply to the dataset. That is, a predict dataset doesn’t include tags.
+The default value is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+<li><p><strong>data_cleaning_pre_processing_fn</strong> (<em>Callable</em>) – Function to apply as data clea ning pre-processing step after
+loading the data, but before applying the validation steps. The default value is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="implementations">
+<h2>Implementations<a class="headerlink" href="#implementations" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="deepparse.dataset_container.PickleDatasetContainer">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">deepparse.dataset_container.</span></span><span class="sig-name descname"><span class="pre">PickleDatasetContainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_training_container</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_cleaning_pre_processing_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.10/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Callable" title="(in Python v3.10)"><span class="pre">Callable</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deepparse/dataset_container/dataset_container.html#PickleDatasetContainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.dataset_container.PickleDatasetContainer" title="Link to this definition"></a></dt>
+<dd><p>Pickle dataset container that imports a list of addresses in pickle format and does some validation on it.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This container uses Python’s <code class="docutils literal notranslate"><span class="pre">pickle</span></code> to load the dataset. Unpickling executes arbitrary code, so
+only load pickle files you created yourself or fully trust. Never load a pickle file from an untrusted
+or third-party source.</p>
+</div>
+<p>The dataset needs to be a list of tuples where the first element of each tuple is the address (a string),
+and the second is a list of the expected tag to predict (e.g. <code class="docutils literal notranslate"><span class="pre">[('an</span> <span class="pre">address',</span> <span class="pre">['a_tag',</span> <span class="pre">'another_tag']),</span> <span class="pre">...]</span></code>).
+The length of the tags needs to be the same as the length of the address when the whitespace-split is used.</p>
+<p>For a training container, the validation tests applied on the dataset are the following:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>no address is a <code class="docutils literal notranslate"><span class="pre">None</span></code> value,</p></li>
+<li><p>no address is empty,</p></li>
+<li><p>no address is composed of only whitespace,</p></li>
+<li><p>no address includes consecutive whitespace (e.g. “An  address”),</p></li>
+<li><p>no tags list is empty, if data is a list of tuple (<code class="docutils literal notranslate"><span class="pre">[('an</span> <span class="pre">address',</span> <span class="pre">['a_tag',</span> <span class="pre">'another_tag']),</span> <span class="pre">...]</span></code>), and</p></li>
+<li><p>if the addresses (whitespace-split) are the same length as their respective tags list.</p></li>
+</ul>
+</div></blockquote>
+<p>While for a predict container (unknown prediction tag), the validation tests applied on the dataset are the
+following:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>no address is a <code class="docutils literal notranslate"><span class="pre">None</span></code> value,</p></li>
+<li><p>no address is empty,</p></li>
+<li><p>no address is composed of only whitespace, and</p></li>
+<li><p>no address includes consecutive whitespace (e.g. “An  address”).</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The path to the pickle dataset file.</p></li>
+<li><p><strong>is_training_container</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Either or not, the dataset container is a training container. This will determine
+the dataset validation test we apply to the dataset. That is, a predict dataset doesn’t include tags.
+The default value is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+<li><p><strong>data_cleaning_pre_processing_fn</strong> (<em>Callable</em>) – Function to apply as data clea ning pre-processing step after
+loading the data, but before applying the validation steps. The default value is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="deepparse.dataset_container.CSVDatasetContainer">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">deepparse.dataset_container.</span></span><span class="sig-name descname"><span class="pre">CSVDatasetContainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.List" title="(in Python v3.10)"><span class="pre">List</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_training_container</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">separator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'\t'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag_seperator_reformat_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.10/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Callable" title="(in Python v3.10)"><span class="pre">Callable</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csv_reader_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.10/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Dict" title="(in Python v3.10)"><span class="pre">Dict</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_cleaning_pre_processing_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.10/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Callable" title="(in Python v3.10)"><span class="pre">Callable</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deepparse/dataset_container/dataset_container.html#CSVDatasetContainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.dataset_container.CSVDatasetContainer" title="Link to this definition"></a></dt>
+<dd><p>CSV dataset container that imports a CSV of addresses. If the dataset is a predict one, it must have at least
+one column with some addresses. If the dataset is a training one (with prediction tags), it must have at
+least two columns, one with some addresses and another with a list of tags for each address.</p>
+<p>After loading the CSV dataset, some tests will be applied depending on its type.</p>
+<p>For a training container, the validation tests applied on the dataset are the following:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>no address is a <code class="docutils literal notranslate"><span class="pre">None</span></code> value,</p></li>
+<li><p>no address is empty,</p></li>
+<li><p>no address is composed of only whitespace,</p></li>
+<li><p>no address includes consecutive whitespace (e.g. “An  address”),</p></li>
+<li><p>no tags list is empty, if data is a list of tuple (<code class="docutils literal notranslate"><span class="pre">[('an</span> <span class="pre">address',</span> <span class="pre">['a_tag',</span> <span class="pre">'another_tag']),</span> <span class="pre">...]</span></code>), and</p></li>
+<li><p>if the addresses (whitespace-split) are the same length as their respective tags list.</p></li>
+</ul>
+</div></blockquote>
+<p>While for a predict container (unknown prediction tag), the validation tests applied on the dataset are the
+following:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>no address is a <code class="docutils literal notranslate"><span class="pre">None</span></code> value,</p></li>
+<li><p>no address is empty,</p></li>
+<li><p>no address is composed of only whitespace, and</p></li>
+<li><p>no address includes consecutive whitespace (e.g. “An  address”).</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The path to the CSV dataset file.</p></li>
+<li><p><strong>column_names</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – A column name list to extract the dataset element.
+If the dataset container is a “predict” one, the list must be of exactly one element
+(i.e. the address column). On the other hand, if the dataset container is a “training” one, the list must be
+of exactly two elements: addresses and tags.</p></li>
+<li><p><strong>is_training_container</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Either or not, the dataset container is a training container. This will determine
+the dataset validation test we apply to the dataset. That is, a predict dataset doesn’t include tags.
+The default value is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+<li><p><strong>separator</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The CSV columns separator to use. By default, <code class="docutils literal notranslate"><span class="pre">&quot;\t&quot;</span></code>.</p></li>
+<li><p><strong>tag_seperator_reformat_fn</strong> (<em>Callable</em><em>, </em><em>optional</em>) – A function to parse a tags string and return a list of
+address tags. For example, if the tag column is a former Python list saved with pandas, the characters <code class="docutils literal notranslate"><span class="pre">]</span></code>
+, <code class="docutils literal notranslate"><span class="pre">]</span></code> and <code class="docutils literal notranslate"><span class="pre">'</span></code> will be included as the tags’ element. Thus, a parsing function will take a string as is
+parameter and output a python list. The default function processes it as a former Python list.
+That is, it removes the <code class="docutils literal notranslate"><span class="pre">[],</span></code> characters and splits the sequence at each comma (<code class="docutils literal notranslate"><span class="pre">&quot;,&quot;</span></code>).</p></li>
+<li><p><strong>csv_reader_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em>, </em><em>optional</em>) – Keyword arguments to pass to pandas <code class="docutils literal notranslate"><span class="pre">read_csv</span></code> use internally. By default,
+the <code class="docutils literal notranslate"><span class="pre">data_path</span></code> is passed along with our default <code class="docutils literal notranslate"><span class="pre">sep</span></code> value ( <code class="docutils literal notranslate"><span class="pre">&quot;\t&quot;</span></code>) and the <code class="docutils literal notranslate"><span class="pre">&quot;utf-8&quot;</span></code> encoding
+format. However, this can be overridden by using this argument again.</p></li>
+<li><p><strong>data_cleaning_pre_processing_fn</strong> (<em>Callable</em>) – Function to apply as data clea ning pre-processing step after
+loading the data, but before applying the validation steps. The default value is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="deepparse.dataset_container.ListDatasetContainer">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">deepparse.dataset_container.</span></span><span class="sig-name descname"><span class="pre">ListDatasetContainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.List" title="(in Python v3.10)"><span class="pre">List</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_training_container</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_cleaning_pre_processing_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.10/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Callable" title="(in Python v3.10)"><span class="pre">Callable</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deepparse/dataset_container/dataset_container.html#ListDatasetContainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.dataset_container.ListDatasetContainer" title="Link to this definition"></a></dt>
+<dd><p>List dataset container that loads a list dataset into a DatasetContainer class. It also validates the dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – The dataset in a list format. The list format (if a train or test container) is
+identical as the <a class="reference internal" href="#deepparse.dataset_container.PickleDatasetContainer" title="deepparse.dataset_container.PickleDatasetContainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">PickleDatasetContainer</span></code></a>.</p></li>
+<li><p><strong>is_training_container</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Either or not, the dataset container is a training container. This will determine
+the dataset validation test we apply to the dataset. That is, a predict dataset doesn’t include tags.
+The default value is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+<li><p><strong>data_cleaning_pre_processing_fn</strong> (<em>Callable</em>) – Function to apply as data clea ning pre-processing step after
+loading the data, but before applying the validation steps. The default value is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="dataset-validation-steps">
+<h2>Dataset Validation Steps<a class="headerlink" href="#dataset-validation-steps" title="Link to this heading"></a></h2>
+<p>We also applied data validations to all data containers using the following three functions.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="deepparse.data_validation.data_validation.validate_if_any_empty">
+<span class="sig-prename descclassname"><span class="pre">deepparse.data_validation.data_validation.</span></span><span class="sig-name descname"><span class="pre">validate_if_any_empty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string_elements</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.List" title="(in Python v3.10)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/deepparse/data_validation/data_validation.html#validate_if_any_empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.data_validation.data_validation.validate_if_any_empty" title="Link to this definition"></a></dt>
+<dd><p>Return <code class="docutils literal notranslate"><span class="pre">True</span></code> if one of the string elements is empty. For example, the second element in the following list is
+an empty address: <code class="docutils literal notranslate"><span class="pre">[&quot;An</span> <span class="pre">address&quot;,</span> <span class="pre">&quot;&quot;,</span> <span class="pre">&quot;Another</span> <span class="pre">address&quot;]</span></code>. Thus, it will return <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>string_elements</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – A list of strings to validate.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deepparse.data_validation.data_validation.validate_if_any_whitespace_only">
+<span class="sig-prename descclassname"><span class="pre">deepparse.data_validation.data_validation.</span></span><span class="sig-name descname"><span class="pre">validate_if_any_whitespace_only</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string_elements</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.List" title="(in Python v3.10)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/deepparse/data_validation/data_validation.html#validate_if_any_whitespace_only"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.data_validation.data_validation.validate_if_any_whitespace_only" title="Link to this definition"></a></dt>
+<dd><p>Return <code class="docutils literal notranslate"><span class="pre">True</span></code> if one of the string elements is only whitespace. For example, the second element in the
+following list is only whitespace: <code class="docutils literal notranslate"><span class="pre">[&quot;An</span> <span class="pre">address&quot;,</span> <span class="pre">&quot;</span> <span class="pre">&quot;,</span> <span class="pre">&quot;Another</span> <span class="pre">address&quot;]</span></code>. Thus, it will return <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>string_elements</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – A list of strings to validate.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deepparse.data_validation.data_validation.validate_if_any_none">
+<span class="sig-prename descclassname"><span class="pre">deepparse.data_validation.data_validation.</span></span><span class="sig-name descname"><span class="pre">validate_if_any_none</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string_elements</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.List" title="(in Python v3.10)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/deepparse/data_validation/data_validation.html#validate_if_any_none"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.data_validation.data_validation.validate_if_any_none" title="Link to this definition"></a></dt>
+<dd><p>Return <code class="docutils literal notranslate"><span class="pre">True</span></code> if one string element is a <code class="docutils literal notranslate"><span class="pre">None</span></code> value. For example, the second element in the following
+list is a <code class="docutils literal notranslate"><span class="pre">None</span></code> value: <code class="docutils literal notranslate"><span class="pre">[&quot;An</span> <span class="pre">address&quot;,</span> <span class="pre">None,</span> <span class="pre">&quot;Another</span> <span class="pre">address&quot;]</span></code>. Thus, it will return <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>string_elements</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – A list of strings to validate.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="sample-data">
+<h2>Sample Data<a class="headerlink" href="#sample-data" title="Link to this heading"></a></h2>
+<p>A small sample of tagged addresses of one country can be downloaded from the
+<a class="reference external" href="https://huggingface.co/datasets/deepparse/worldwide-addresses">worldwide-addresses dataset</a> and used with a
+<a class="reference internal" href="#deepparse.dataset_container.ListDatasetContainer" title="deepparse.dataset_container.ListDatasetContainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ListDatasetContainer</span></code></a>.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="deepparse.download_tools.download_worldwide_addresses_sample">
+<span class="sig-prename descclassname"><span class="pre">deepparse.download_tools.</span></span><span class="sig-name descname"><span class="pre">download_worldwide_addresses_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">country_code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'ca'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_samples</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1000</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.List" title="(in Python v3.10)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Tuple" title="(in Python v3.10)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.List" title="(in Python v3.10)"><span class="pre">List</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/deepparse/download_tools.html#download_worldwide_addresses_sample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.download_tools.download_worldwide_addresses_sample" title="Link to this definition"></a></dt>
+<dd><p>Function to download a small sample of tagged addresses of one country from the <a class="reference external" href="https://huggingface.co/datasets/deepparse/worldwide-addresses">worldwide-addresses</a> HuggingFace dataset and convert it to the
+deepparse tag space. It is meant to give small, ready-to-use datasets for examples and quick experiments.</p>
+<p>Only the needed part of the country’s last parquet file is read (the beginning of each country’s data mostly
+holds postal-code-only addresses, while the end holds complete street addresses). The tags are mapped to the
+deepparse tags as follows: <code class="docutils literal notranslate"><span class="pre">Suburb</span></code> and <code class="docutils literal notranslate"><span class="pre">District</span></code> become <code class="docutils literal notranslate"><span class="pre">Municipality</span></code>, and the words tagged <code class="docutils literal notranslate"><span class="pre">County</span></code>
+or <code class="docutils literal notranslate"><span class="pre">Country</span></code> are removed from the address. The addresses left empty by this removal are dropped.</p>
+<p>It requires the <code class="docutils literal notranslate"><span class="pre">pyarrow</span></code> package (<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">pyarrow</span></code> or <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">deepparse[all]</span></code>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>country_code</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The <a class="reference external" href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a> code of the
+country to download (e.g. <code class="docutils literal notranslate"><span class="pre">&quot;ca&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;us&quot;</span></code>). The default value is <code class="docutils literal notranslate"><span class="pre">&quot;ca&quot;</span></code>.</p></li>
+<li><p><strong>num_samples</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The maximum number of tagged addresses to return. The default value is <code class="docutils literal notranslate"><span class="pre">1000</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of tuples <code class="docutils literal notranslate"><span class="pre">(address,</span> <span class="pre">tags)</span></code> where the address is a string and the tags a list of deepparse tags, one
+per whitespace-separated word. The list can be used as is with a
+<a class="reference internal" href="#deepparse.dataset_container.ListDatasetContainer" title="deepparse.dataset_container.ListDatasetContainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ListDatasetContainer</span></code></a>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="pre_processor.html" class="btn btn-neutral float-left" title="Pre-Processors" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="comparer.html" class="btn btn-neutral float-right" title="Comparer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2026, Marouane Yassine &amp; David Beauchemin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

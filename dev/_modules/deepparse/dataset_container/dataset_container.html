@@ -1,0 +1,524 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>deepparse.dataset_container.dataset_container &mdash; deepparse 0.11.0.dev1+5715875 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=1b66cd3a"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/deepparse.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../get_started/get_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../parser.html">Parser</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pre_processor.html">Pre-Processors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dataset_container.html">Dataset Container</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../comparer.html">Comparer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli.html">CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">Parse Address With Our Out-Of-The-Box API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/parse_addresses.html">Parse Addresses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/parse_addresses_uri.html">Parse Addresses Using A URI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/parse_addresses_with_cli.html">Parse Addresses Using Our CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/retrained_model_parsing.html">Use a Retrained Model to Parse Addresses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/fine_tuning.html">Retrain a Pretrained Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/fine_tuning_uri.html">Retrain a Pretrained Model Using A URI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/fine_tuning_with_csv_dataset.html">Retrain a Pretrained Model Using a CSV Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_attention_model.html">Retrain an Attention Mechanism Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/retrain_with_new_seq2seq_params.html">Retrain With New Seq2Seq Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/single_country_retrain.html">Retrain an Address Parser for Single Country Uses</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Model training</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../training_guide.html">Training Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">deepparse</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">deepparse.dataset_container.dataset_container</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for deepparse.dataset_container.dataset_container</h1><div class="highlight"><pre>
+<span></span><span class="c1"># pylint: disable=too-many-arguments</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pickle</span><span class="w"> </span><span class="kn">import</span> <span class="n">load</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.utils.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dataset</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..data_validation</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">validate_if_any_empty</span><span class="p">,</span>
+    <span class="n">validate_if_any_multiple_consecutive_whitespace</span><span class="p">,</span>
+    <span class="n">validate_if_any_newline_character</span><span class="p">,</span>
+    <span class="n">validate_if_any_none</span><span class="p">,</span>
+    <span class="n">validate_if_any_whitespace_only</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..errors.data_error</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">former_python_list</span><span class="p">,</span> <span class="n">validate_column_names</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="DatasetContainer">
+<a class="viewcode-back" href="../../../dataset_container.html#deepparse.dataset_container.DatasetContainer">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">DatasetContainer</span><span class="p">(</span><span class="n">Dataset</span><span class="p">,</span> <span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Interface for the dataset. This interface defines most of the methods that the dataset needs to define.</span>
+<span class="sd">    If you define another dataset container, the init must define the attribute data.</span>
+
+<span class="sd">    We also recommend using the ``validate_dataset`` method in your init to validate some characteristics of your</span>
+<span class="sd">    dataset.</span>
+
+<span class="sd">    For a training container, it validates the following:</span>
+
+<span class="sd">        - no address is a ``None`` value,</span>
+<span class="sd">        - no address is empty,</span>
+<span class="sd">        - no address is composed of only whitespace,</span>
+<span class="sd">        - no address includes consecutive whitespace (e.g. "An  address"),</span>
+<span class="sd">        - no tags list is empty, if data is a list of tuple (``[('an address', ['a_tag', 'another_tag']), ...]``), and</span>
+<span class="sd">        - if the addresses (whitespace-split) are the same length as their respective tags list.</span>
+
+<span class="sd">    While for a predict container (unknown prediction tag), it validates the following:</span>
+
+<span class="sd">        - no address is a ``None`` value,</span>
+<span class="sd">        - no address is empty,</span>
+<span class="sd">        - no address is composed of only whitespace, and</span>
+<span class="sd">        - no address includes consecutive whitespace (e.g. "An  address").</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        is_training_container (bool): Either or not, the dataset container is a training container. This will determine</span>
+<span class="sd">            the dataset validation test we apply to the dataset. That is, a predict dataset doesn't include tags.</span>
+<span class="sd">            The default value is ``True``.</span>
+<span class="sd">        data_cleaning_pre_processing_fn (Callable): Function to apply as data clea ning pre-processing step after</span>
+<span class="sd">            loading the data, but before applying the validation steps. The default value is ``None``.</span>
+<span class="sd">    """</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">is_training_container</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">data_cleaning_pre_processing_fn</span><span class="p">:</span> <span class="kc">None</span> <span class="o">|</span> <span class="n">Callable</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        The method to init the class. It needs to be defined by the child's class.</span>
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_training_container</span> <span class="o">=</span> <span class="n">is_training_container</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_cleaning_pre_processing_fn</span> <span class="o">=</span> <span class="n">data_cleaning_pre_processing_fn</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">slice</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">]]]</span> <span class="o">|</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        If the DatasetContainer is a "predict" one:</span>
+
+<span class="sd">            - it can be a list of string items (e.g. a list of addresses (str)), or</span>
+<span class="sd">            - it can be a unique string item (e.g. one address).</span>
+
+<span class="sd">        If the DatasetContainer is a "training" one:</span>
+
+<span class="sd">            - it can be a list of tuple (str, list) items, namely a list of parsed examples (e.g. an address with</span>
+<span class="sd">                the tags), or</span>
+<span class="sd">            - it can be a tuple (str, list) item.</span>
+
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="nb">slice</span><span class="p">):</span>
+            <span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">idx</span><span class="o">.</span><span class="n">indices</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">)]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_a_train_container</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_training_container</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_is_a_list</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"The dataset is not a list."</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_training_container</span><span class="p">:</span>
+            <span class="n">data_to_validate</span> <span class="o">=</span> <span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data_to_validate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span>
+
+        <span class="k">if</span> <span class="n">validate_if_any_none</span><span class="p">(</span><span class="n">string_elements</span><span class="o">=</span><span class="n">data_to_validate</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">DataError</span><span class="p">(</span><span class="s2">"Some addresses data points are 'None' value."</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_training_container</span><span class="p">:</span>
+            <span class="c1"># Not done in previous similar if since none test not applied</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_training_validation</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">validate_if_any_empty</span><span class="p">(</span><span class="n">string_elements</span><span class="o">=</span><span class="n">data_to_validate</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">DataError</span><span class="p">(</span><span class="s2">"Some addresses data points are empty."</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">validate_if_any_whitespace_only</span><span class="p">(</span><span class="n">string_elements</span><span class="o">=</span><span class="n">data_to_validate</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">DataError</span><span class="p">(</span><span class="s2">"Some addresses only include whitespace thus cannot be parsed."</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">validate_if_any_multiple_consecutive_whitespace</span><span class="p">(</span><span class="n">string_elements</span><span class="o">=</span><span class="n">data_to_validate</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">DataError</span><span class="p">(</span>
+                <span class="s2">"Some addresses include consecutive whitespaces (i.e. 'An  address') thus cannot be properly parsed."</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">validate_if_any_newline_character</span><span class="p">(</span><span class="n">string_elements</span><span class="o">=</span><span class="n">data_to_validate</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">DataError</span><span class="p">(</span><span class="s2">"Some addresses include newline characters (i.e. '</span><span class="se">\n</span><span class="s2">') thus cannot be properly parsed."</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_data_is_a_list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_training_validation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_is_list_of_tuple</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s2">"The pickled dataset data are not in a tuple format. Data"</span>
+                <span class="s2">"is expected to be a list of tuples where the first element is"</span>
+                <span class="s2">"the address, and the second is the address tag."</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_empty_tags</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="n">DataError</span><span class="p">(</span><span class="s2">"Some tags data points are empty."</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_tags_is_same_len_then_address</span><span class="p">():</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">"Some addresses (whitespace-split) and the associated tags are not the same length. "</span>
+                <span class="s2">"If you use a CSVDatasetContainer, consider using the tag_seperator_reformat_fn argument."</span>
+                <span class="s2">"Here is the report of those cases where len differ to help you out:</span><span class="se">\n</span><span class="s2">"</span>
+                <span class="s2">"</span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_data_tags_not_the_same_len_diff</span><span class="p">(),</span>
+            <span class="p">)</span>
+            <span class="k">raise</span> <span class="n">DataError</span><span class="p">(</span>
+                <span class="s2">"Some addresses (whitespace-split) and the tags associated with them are not the same length."</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_data_is_list_of_tuple</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Return true only if every element in the dataset is a tuple.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_empty_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Return true if one of the tag sets is empty.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_data_tags_is_same_len_then_address</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Return true if all the data tags are the same len as the address split at each whitespace.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">" "</span><span class="p">))</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_data_tags_not_the_same_len_diff</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">diff_indexes</span> <span class="o">=</span> <span class="p">[</span><span class="n">index</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">" "</span><span class="p">))</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span>
+        <span class="n">report</span> <span class="o">=</span> <span class="s2">""</span>
+        <span class="k">for</span> <span class="n">diff_index</span> <span class="ow">in</span> <span class="n">diff_indexes</span><span class="p">:</span>
+            <span class="n">report</span> <span class="o">+=</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"The data point (with index: </span><span class="si">{</span><span class="n">diff_index</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">diff_index</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="se">\n\t</span><span class="s2">Len of the address: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">diff_index</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">' '</span><span class="p">))</span><span class="si">}</span><span class="s2">"</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="se">\n\t</span><span class="s2">Len of the tags: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">diff_index</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">report</span></div>
+
+
+
+<div class="viewcode-block" id="PickleDatasetContainer">
+<a class="viewcode-back" href="../../../dataset_container.html#deepparse.dataset_container.PickleDatasetContainer">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PickleDatasetContainer</span><span class="p">(</span><span class="n">DatasetContainer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Pickle dataset container that imports a list of addresses in pickle format and does some validation on it.</span>
+
+<span class="sd">    .. warning::</span>
+<span class="sd">        This container uses Python's ``pickle`` to load the dataset. Unpickling executes arbitrary code, so</span>
+<span class="sd">        only load pickle files you created yourself or fully trust. Never load a pickle file from an untrusted</span>
+<span class="sd">        or third-party source.</span>
+
+<span class="sd">    The dataset needs to be a list of tuples where the first element of each tuple is the address (a string),</span>
+<span class="sd">    and the second is a list of the expected tag to predict (e.g. ``[('an address', ['a_tag', 'another_tag']), ...]``).</span>
+<span class="sd">    The length of the tags needs to be the same as the length of the address when the whitespace-split is used.</span>
+
+<span class="sd">    For a training container, the validation tests applied on the dataset are the following:</span>
+
+<span class="sd">        - no address is a ``None`` value,</span>
+<span class="sd">        - no address is empty,</span>
+<span class="sd">        - no address is composed of only whitespace,</span>
+<span class="sd">        - no address includes consecutive whitespace (e.g. "An  address"),</span>
+<span class="sd">        - no tags list is empty, if data is a list of tuple (``[('an address', ['a_tag', 'another_tag']), ...]``), and</span>
+<span class="sd">        - if the addresses (whitespace-split) are the same length as their respective tags list.</span>
+
+<span class="sd">    While for a predict container (unknown prediction tag), the validation tests applied on the dataset are the</span>
+<span class="sd">    following:</span>
+
+<span class="sd">        - no address is a ``None`` value,</span>
+<span class="sd">        - no address is empty,</span>
+<span class="sd">        - no address is composed of only whitespace, and</span>
+<span class="sd">        - no address includes consecutive whitespace (e.g. "An  address").</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data_path (str): The path to the pickle dataset file.</span>
+<span class="sd">        is_training_container (bool): Either or not, the dataset container is a training container. This will determine</span>
+<span class="sd">            the dataset validation test we apply to the dataset. That is, a predict dataset doesn't include tags.</span>
+<span class="sd">            The default value is ``True``.</span>
+<span class="sd">        data_cleaning_pre_processing_fn (Callable): Function to apply as data clea ning pre-processing step after</span>
+<span class="sd">            loading the data, but before applying the validation steps. The default value is ``None``.</span>
+
+<span class="sd">    """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">is_training_container</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">data_cleaning_pre_processing_fn</span><span class="p">:</span> <span class="kc">None</span> <span class="o">|</span> <span class="n">Callable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">is_training_container</span><span class="o">=</span><span class="n">is_training_container</span><span class="p">,</span> <span class="n">data_cleaning_pre_processing_fn</span><span class="o">=</span><span class="n">data_cleaning_pre_processing_fn</span>
+        <span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="s2">"rb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_training_container</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_test_predict_container_is_list_of_tuple</span><span class="p">():</span>
+                <span class="k">raise</span> <span class="n">DataError</span><span class="p">(</span>
+                    <span class="s2">"The data is a list of tuples, but the dataset container is a predict container. "</span>
+                    <span class="s2">"Predict container should contain only a list of addresses."</span>
+                <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_cleaning_pre_processing_fn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_cleaning_pre_processing_fn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_dataset</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_test_predict_container_is_list_of_tuple</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">any</span><span class="p">((</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="CSVDatasetContainer">
+<a class="viewcode-back" href="../../../dataset_container.html#deepparse.dataset_container.CSVDatasetContainer">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">CSVDatasetContainer</span><span class="p">(</span><span class="n">DatasetContainer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    CSV dataset container that imports a CSV of addresses. If the dataset is a predict one, it must have at least</span>
+<span class="sd">    one column with some addresses. If the dataset is a training one (with prediction tags), it must have at</span>
+<span class="sd">    least two columns, one with some addresses and another with a list of tags for each address.</span>
+
+<span class="sd">    After loading the CSV dataset, some tests will be applied depending on its type.</span>
+
+<span class="sd">    For a training container, the validation tests applied on the dataset are the following:</span>
+
+<span class="sd">        - no address is a ``None`` value,</span>
+<span class="sd">        - no address is empty,</span>
+<span class="sd">        - no address is composed of only whitespace,</span>
+<span class="sd">        - no address includes consecutive whitespace (e.g. "An  address"),</span>
+<span class="sd">        - no tags list is empty, if data is a list of tuple (``[('an address', ['a_tag', 'another_tag']), ...]``), and</span>
+<span class="sd">        - if the addresses (whitespace-split) are the same length as their respective tags list.</span>
+
+<span class="sd">    While for a predict container (unknown prediction tag), the validation tests applied on the dataset are the</span>
+<span class="sd">    following:</span>
+
+<span class="sd">        - no address is a ``None`` value,</span>
+<span class="sd">        - no address is empty,</span>
+<span class="sd">        - no address is composed of only whitespace, and</span>
+<span class="sd">        - no address includes consecutive whitespace (e.g. "An  address").</span>
+
+<span class="sd">    Args:</span>
+
+<span class="sd">        data_path (str): The path to the CSV dataset file.</span>
+<span class="sd">        column_names (list): A column name list to extract the dataset element.</span>
+<span class="sd">            If the dataset container is a "predict" one, the list must be of exactly one element</span>
+<span class="sd">            (i.e. the address column). On the other hand, if the dataset container is a "training" one, the list must be</span>
+<span class="sd">            of exactly two elements: addresses and tags.</span>
+<span class="sd">        is_training_container (bool): Either or not, the dataset container is a training container. This will determine</span>
+<span class="sd">            the dataset validation test we apply to the dataset. That is, a predict dataset doesn't include tags.</span>
+<span class="sd">            The default value is ``True``.</span>
+<span class="sd">        separator (str): The CSV columns separator to use. By default, ``"\\t"``.</span>
+<span class="sd">        tag_seperator_reformat_fn (Callable, optional): A function to parse a tags string and return a list of</span>
+<span class="sd">            address tags. For example, if the tag column is a former Python list saved with pandas, the characters ``]``</span>
+<span class="sd">            , ``]`` and ``'`` will be included as the tags' element. Thus, a parsing function will take a string as is</span>
+<span class="sd">            parameter and output a python list. The default function processes it as a former Python list.</span>
+<span class="sd">            That is, it removes the ``[],`` characters and splits the sequence at each comma (``","``).</span>
+<span class="sd">        csv_reader_kwargs (dict, optional): Keyword arguments to pass to pandas ``read_csv`` use internally. By default,</span>
+<span class="sd">            the ``data_path`` is passed along with our default ``sep`` value ( ``"\\t"``) and the ``"utf-8"`` encoding</span>
+<span class="sd">            format. However, this can be overridden by using this argument again.</span>
+<span class="sd">        data_cleaning_pre_processing_fn (Callable): Function to apply as data clea ning pre-processing step after</span>
+<span class="sd">            loading the data, but before applying the validation steps. The default value is ``None``.</span>
+<span class="sd">    """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">column_names</span><span class="p">:</span> <span class="n">List</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">is_training_container</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">separator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"</span><span class="se">\t</span><span class="s2">"</span><span class="p">,</span>
+        <span class="n">tag_seperator_reformat_fn</span><span class="p">:</span> <span class="kc">None</span> <span class="o">|</span> <span class="n">Callable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">csv_reader_kwargs</span><span class="p">:</span> <span class="kc">None</span> <span class="o">|</span> <span class="n">Dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">data_cleaning_pre_processing_fn</span><span class="p">:</span> <span class="kc">None</span> <span class="o">|</span> <span class="n">Callable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">is_training_container</span><span class="o">=</span><span class="n">is_training_container</span><span class="p">,</span> <span class="n">data_cleaning_pre_processing_fn</span><span class="o">=</span><span class="n">data_cleaning_pre_processing_fn</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">is_training_container</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">column_names</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">"When the dataset is a training container, the column names should be a list of column names."</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">column_names</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"When the dataset is a training container, two column names must be provided."</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># It means it is a predict container</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">column_names</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="c1"># We transform the str into a list to assess its length</span>
+                <span class="n">column_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">column_names</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">column_names</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"When the dataset is a predict container, one column name must be provided."</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">validate_column_names</span><span class="p">(</span><span class="n">column_names</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"A column name is an empty string or whitespace only."</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">csv_reader_kwargs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">csv_reader_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">csv_reader_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">"filepath_or_buffer"</span><span class="p">:</span> <span class="n">data_path</span><span class="p">,</span>
+            <span class="s2">"sep"</span><span class="p">:</span> <span class="n">separator</span><span class="p">,</span>
+            <span class="s2">"encoding"</span><span class="p">:</span> <span class="s2">"utf-8"</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">csv_reader_kwargs</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="n">tag_seperator_reformat_fn</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">tag_seperator_reformat_fn</span> <span class="o">=</span> <span class="n">former_python_list</span>
+
+        <span class="k">if</span> <span class="n">is_training_container</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="p">(</span><span class="n">data_point</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">tag_seperator_reformat_fn</span><span class="p">(</span><span class="n">data_point</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+                <span class="k">for</span> <span class="n">data_point</span> <span class="ow">in</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="o">**</span><span class="n">csv_reader_kwargs</span><span class="p">)[</span><span class="n">column_names</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+            <span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">data_point</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">data_point</span> <span class="ow">in</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="o">**</span><span class="n">csv_reader_kwargs</span><span class="p">)[</span><span class="n">column_names</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_cleaning_pre_processing_fn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_cleaning_pre_processing_fn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_dataset</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="ListDatasetContainer">
+<a class="viewcode-back" href="../../../dataset_container.html#deepparse.dataset_container.ListDatasetContainer">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ListDatasetContainer</span><span class="p">(</span><span class="n">DatasetContainer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    List dataset container that loads a list dataset into a DatasetContainer class. It also validates the dataset.</span>
+
+<span class="sd">    Args:</span>
+
+<span class="sd">        data (list): The dataset in a list format. The list format (if a train or test container) is</span>
+<span class="sd">            identical as the :class:`~deepparse.dataset_container.PickleDatasetContainer`.</span>
+<span class="sd">        is_training_container (bool): Either or not, the dataset container is a training container. This will determine</span>
+<span class="sd">            the dataset validation test we apply to the dataset. That is, a predict dataset doesn't include tags.</span>
+<span class="sd">            The default value is ``True``.</span>
+<span class="sd">        data_cleaning_pre_processing_fn (Callable): Function to apply as data clea ning pre-processing step after</span>
+<span class="sd">            loading the data, but before applying the validation steps. The default value is ``None``.</span>
+<span class="sd">    """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span>
+        <span class="n">is_training_container</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">data_cleaning_pre_processing_fn</span><span class="p">:</span> <span class="kc">None</span> <span class="o">|</span> <span class="n">Callable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">is_training_container</span><span class="o">=</span><span class="n">is_training_container</span><span class="p">,</span> <span class="n">data_cleaning_pre_processing_fn</span><span class="o">=</span><span class="n">data_cleaning_pre_processing_fn</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_cleaning_pre_processing_fn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_cleaning_pre_processing_fn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_dataset</span><span class="p">()</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2026, Marouane Yassine &amp; David Beauchemin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

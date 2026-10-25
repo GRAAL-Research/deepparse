@@ -512,8 +512,9 @@
   `get_word_vector` and `get_dimension` interface), and `BPEmbBaseURLWrapperBugFix` keeps the `bpemb` defaults and
   its `embed`, `encode`, `encode_ids`, `vectors` and `dim` API (not the gensim `emb` attribute).
 - Add three Model2Vec models (#328): `model2vec-8m`, `model2vec-32m` and `model2vec-multilingual`, based on the
-  `minishlab/potion-*` static embeddings, plus the `tiny` alias for `model2vec-8m`. They need from ~30 MB to ~500 MB
-  of RAM for the embeddings, compared to the ~7 GB fastText embeddings file. Install them with
+  `minishlab/potion-*` static embeddings, plus the `tiny` alias for `model2vec-8m`. Their embeddings take 59 MB,
+  249 MB and 1 GB on disk, compared to 6.8 GB for fastText, and the parser takes ~1.0 GB, ~1.2 GB and ~2.8 GB of RAM
+  at peak (CPU, whole process). Install them with
   `pip install deepparse[model2vec]`.
   They were trained on the `deepparse/worldwide-addresses` HF dataset (20 countries, 100,000 clean and 50,000
   incomplete addresses per country), where `Suburb` and `District` are mapped to `Municipality` and `County` and

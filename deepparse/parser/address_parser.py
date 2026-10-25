@@ -90,7 +90,8 @@ class AddressParser:
             - ``"fasttext-light"`` (need ~2 GB of RAM to be used, but slower than fasttext version),
             - ``"bpemb"`` (need ~2 GB of RAM to be used),
             - ``"model2vec-8m"``, ``"model2vec-32m"`` and ``"model2vec-multilingual"`` (Model2Vec static
-              embeddings, need from ~30 MB to ~500 MB of RAM, require ``pip install deepparse[model2vec]``),
+              embeddings, need ~1 GB, ~1.2 GB and ~2.8 GB of RAM to be used, require
+              ``pip install deepparse[model2vec]``),
             - ``"tiny"`` (the smallest and quickest model) (equivalent to ``"model2vec-8m"``),
             - ``"fastest"`` (quicker to process one address) (equivalent to ``"fasttext"``),
             - ``"lightest"`` (the one using the less RAM and GPU usage) (equivalent to ``"fasttext-light"``),

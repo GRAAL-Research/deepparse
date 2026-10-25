@@ -138,6 +138,35 @@ class DecoderTest(TestCase):
         self.assertAlmostEqual(attention_weights[0, 0].sum().item(), 1.0, places=5)
         self.assertAlmostEqual(attention_weights[1, 0].sum().item(), 1.0, places=5)
 
+    def test_givenAHiddenSizeOtherThan1024_whenAttForward_thenAttentionLayersUseThatHiddenSize(self):
+        # The attention layers were always built with a hidden size of 1024, so any other size crashed in forward.
+        a_hidden_size = 256
+        decoder = Decoder(
+            self.input_size_dim,
+            a_hidden_size,
+            self.num_layers,
+            self.output_size,
+            attention_mechanism=True,
+        )
+
+        batch_size = 2
+        sequence_length = 3
+        encoder_outputs = torch.ones(batch_size, sequence_length, a_hidden_size)
+        hidden = (
+            torch.ones(self.num_layers, batch_size, a_hidden_size),
+            torch.ones(self.num_layers, batch_size, a_hidden_size),
+        )
+        to_predict = torch.ones(1, batch_size, self.input_size_dim)
+
+        output_prob, _, attention_weights = decoder.forward(to_predict, hidden, encoder_outputs, [3, 2])
+
+        self.assertEqual(
+            (a_hidden_size, a_hidden_size), tuple(decoder.linear_attention_mechanism_encoder_outputs.weight.shape)
+        )
+        self.assertEqual((1, a_hidden_size), tuple(decoder.weights.shape))
+        self.assertEqual((batch_size, self.output_size), tuple(output_prob.shape))
+        self.assertEqual((batch_size, 1, sequence_length), tuple(attention_weights.shape))
+
     def test_whenDecoderNotAttForward_thenReturnAttWeightsToNone(self):
         with patch("deepparse.network.nn.LSTM") as lstm_mock:
             output_mock = MagicMock()

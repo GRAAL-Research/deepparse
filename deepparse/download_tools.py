@@ -5,7 +5,7 @@ import shutil
 import sys
 import warnings
 from pathlib import Path
-from typing import Dict
+from typing import Dict, List, Tuple
 from urllib.request import urlopen
 
 try:
@@ -16,7 +16,15 @@ except ImportError:
     _FastText = None
     FASTTEXT_AVAILABLE = False
 
-from huggingface_hub import hf_hub_download, snapshot_download
+try:
+    import pyarrow.parquet as pq
+
+    PYARROW_AVAILABLE = True
+except ImportError:
+    pq = None
+    PYARROW_AVAILABLE = False
+
+from huggingface_hub import HfFileSystem, hf_hub_download, snapshot_download
 from transformers.utils.hub import cached_file, extract_commit_hash
 from transformers.utils.logging import disable_progress_bar, enable_progress_bar
 
@@ -48,6 +56,13 @@ MODEL_REPO_IDS = {
     "fasttext-light": "deepparse/fasttext-base",
     "fasttext-light_attention": "deepparse/fasttext-attention",
 }
+
+WORLDWIDE_ADDRESSES_REPO_ID = "deepparse/worldwide-addresses"
+
+# The worldwide-addresses dataset tags that are not deepparse tags. The words tagged with a removed tag are removed
+# from the address.
+WORLDWIDE_ADDRESSES_TAGS_MAPPING: Dict[str, str] = {"Suburb": "Municipality", "District": "Municipality"}
+WORLDWIDE_ADDRESSES_REMOVED_TAGS = ("County", "Country")
 
 
 def download_fasttext_magnitude_embeddings(cache_dir: str, verbose: bool = True, offline: bool = False) -> str:
@@ -176,6 +191,79 @@ def download_model(
     model_type = MODEL_MAPPING_CHOICES[model_type]
 
     download_weights(model_type, saving_cache_path, verbose=True, offline=False)
+
+
+def download_worldwide_addresses_sample(country_code: str = "ca", num_samples: int = 1000) -> List[Tuple[str, List]]:
+    """
+    Function to download a small sample of tagged addresses of one country from the `worldwide-addresses
+    <https://huggingface.co/datasets/deepparse/worldwide-addresses>`_ HuggingFace dataset and convert it to the
+    deepparse tag space. It is meant to give small, ready-to-use datasets for examples and quick experiments.
+
+    Only the needed part of the country's last parquet file is read (the beginning of each country's data mostly
+    holds postal-code-only addresses, while the end holds complete street addresses). The tags are mapped to the
+    deepparse tags as follows: ``Suburb`` and ``District`` become ``Municipality``, and the words tagged ``County``
+    or ``Country`` are removed from the address. The addresses left empty by this removal are dropped.
+
+    It requires the ``pyarrow`` package (``pip install pyarrow`` or ``pip install deepparse[all]``).
+
+    Args:
+        country_code (str): The `ISO 3166-1 alpha-2 <https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2>`_ code of the
+            country to download (e.g. ``"ca"`` or ``"us"``). The default value is ``"ca"``.
+        num_samples (int): The maximum number of tagged addresses to return. The default value is ``1000``.
+
+    Return:
+        A list of tuples ``(address, tags)`` where the address is a string and the tags a list of deepparse tags, one
+        per whitespace-separated word. The list can be used as is with a
+        :class:`~deepparse.dataset_container.ListDatasetContainer`.
+    """
+    if not PYARROW_AVAILABLE:
+        raise ImportError(
+            "The 'pyarrow' package is needed to read the worldwide-addresses dataset. Install it with "
+            "'pip install pyarrow' or 'pip install deepparse[all]'."
+        )
+    if num_samples <= 0:
+        raise ValueError(f"The number of samples must be a positive integer, got {num_samples}.")
+
+    country_code = country_code.lower()
+    file_system = HfFileSystem()
+    chunk_paths = file_system.glob(f"datasets/{WORLDWIDE_ADDRESSES_REPO_ID}/{country_code}/chunk-*.parquet")
+    if not chunk_paths:
+        raise ValueError(
+            f"No data found for the country code '{country_code}' in the {WORLDWIDE_ADDRESSES_REPO_ID} dataset. "
+            "Use an ISO 3166-1 alpha-2 country code (e.g. 'ca')."
+        )
+    last_chunk_path = max(chunk_paths, key=lambda path: int(path.rsplit("chunk-", 1)[1].split(".", 1)[0]))
+
+    samples: List[Tuple[str, List]] = []
+    with file_system.open(last_chunk_path, "rb") as parquet_file:
+        parquet_reader = pq.ParquetFile(parquet_file)
+        # We read the row groups from the end of the file until we have enough samples.
+        for row_group_index in reversed(range(parquet_reader.num_row_groups)):
+            row_group = parquet_reader.read_row_group(row_group_index, columns=["Address", "Tags"])
+            row_group_samples = []
+            for address, tags in zip(row_group.column("Address").to_pylist(), row_group.column("Tags").to_pylist()):
+                sample = _convert_to_deepparse_tags(address, tags)
+                if sample is not None:
+                    row_group_samples.append(sample)
+            samples = row_group_samples + samples
+            if len(samples) >= num_samples:
+                break
+
+    return samples[-num_samples:]
+
+
+def _convert_to_deepparse_tags(address: str, tags: List[str]) -> Tuple[str, List] | None:
+    # Map a worldwide-addresses sample to the deepparse tags. Return None if no word is left in the address.
+    kept_words = []
+    kept_tags = []
+    for word, tag in zip(address.split(), tags):
+        if tag in WORLDWIDE_ADDRESSES_REMOVED_TAGS:
+            continue
+        kept_words.append(word)
+        kept_tags.append(WORLDWIDE_ADDRESSES_TAGS_MAPPING.get(tag, tag))
+    if not kept_words:
+        return None
+    return " ".join(kept_words), kept_tags
 
 
 # pylint: disable=pointless-string-statement

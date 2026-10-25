@@ -23,12 +23,24 @@ except ImportError:
     _FastText = None
     FASTTEXT_AVAILABLE = False
 
+try:
+    import pyarrow as pa
+    import pyarrow.parquet as pq
+
+    PYARROW_AVAILABLE = True
+except ImportError:
+    pa = None
+    pq = None
+    PYARROW_AVAILABLE = False
+
+from deepparse.dataset_container import ListDatasetContainer
 from deepparse.download_tools import (
     _print_progress,
     download_fasttext_embeddings,
     download_fasttext_magnitude_embeddings,
     download_model,
     download_models,
+    download_worldwide_addresses_sample,
     load_fasttext_embeddings,
 )
 from tests.base_capture_output import CaptureOutputTestCase
@@ -476,6 +488,137 @@ class DownloadModelTests(TestCase):
 
                 downloader.assert_called()
                 downloader.assert_any_call(self.a_bpemb_model_type, self.fake_cache_dir, verbose=True, offline=False)
+
+
+@unittest.skipUnless(PYARROW_AVAILABLE, "The pyarrow package is needed to build the parquet fixtures.")
+class DownloadWorldwideAddressesSampleTests(TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.temp_dir_obj = TemporaryDirectory()
+        cls.a_country_code = "ca"
+        cls.a_dataset_dir = f"datasets/deepparse/worldwide-addresses/{cls.a_country_code}"
+
+        # The first chunks only hold postal codes, as the beginning of the real dataset.
+        a_postal_code_chunk_rows = [("G1V 0A6 Canada", ["PostalCode", "PostalCode", "Country"])]
+        # The last chunk (chunk-10 and not chunk-2, since the order is numeric) holds the street addresses.
+        a_last_chunk_rows = [
+            ("350 rue des Lilas Quebec", ["StreetNumber", "StreetName", "StreetName", "StreetName", "Municipality"]),
+            ("Canada", ["Country"]),
+            ("12 Main St Vanier Ottawa", ["StreetNumber", "StreetName", "StreetName", "Suburb", "Municipality"]),
+            (
+                "1 King Rd Kingston Frontenac County Canada",
+                ["StreetNumber", "StreetName", "StreetName", "Municipality", "County", "County", "Country"],
+            ),
+            (
+                "5 Elm St Downtown Halifax NS",
+                ["StreetNumber", "StreetName", "StreetName", "District", "Municipality", "Province"],
+            ),
+        ]
+        cls.chunk_files = {
+            "chunk-0.parquet": a_postal_code_chunk_rows,
+            "chunk-10.parquet": a_last_chunk_rows,
+            "chunk-2.parquet": a_postal_code_chunk_rows,
+        }
+        for file_name, rows in cls.chunk_files.items():
+            table = pa.table(
+                {
+                    "Address": [address for address, _ in rows],
+                    "Tags": [tags for _, tags in rows],
+                    "Language": ["eng"] * len(rows),
+                }
+            )
+            # A row group size of 2 gives many row groups to test the reading from the end of the file.
+            pq.write_table(table, os.path.join(cls.temp_dir_obj.name, file_name), row_group_size=2)
+
+        # The "Canada" sample is dropped since it is empty once the Country words are removed.
+        cls.expected_samples = [
+            ("350 rue des Lilas Quebec", ["StreetNumber", "StreetName", "StreetName", "StreetName", "Municipality"]),
+            ("12 Main St Vanier Ottawa", ["StreetNumber", "StreetName", "StreetName", "Municipality", "Municipality"]),
+            ("1 King Rd Kingston", ["StreetNumber", "StreetName", "StreetName", "Municipality"]),
+            (
+                "5 Elm St Downtown Halifax NS",
+                ["StreetNumber", "StreetName", "StreetName", "Municipality", "Municipality", "Province"],
+            ),
+        ]
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        cls.temp_dir_obj.cleanup()
+
+    def _open_local_chunk(self, path, mode):
+        return open(os.path.join(self.temp_dir_obj.name, os.path.basename(path)), mode)
+
+    def _mock_file_system(self, hf_file_system_mock):
+        file_system = hf_file_system_mock.return_value
+        file_system.glob.return_value = [f"{self.a_dataset_dir}/{file_name}" for file_name in self.chunk_files]
+        file_system.open.side_effect = self._open_local_chunk
+        return file_system
+
+    @patch("deepparse.download_tools.HfFileSystem")
+    def test_givenACountryCode_whenDownloadSample_thenReadTheLastChunkOfTheCountry(self, hf_file_system_mock):
+        file_system = self._mock_file_system(hf_file_system_mock)
+
+        download_worldwide_addresses_sample(self.a_country_code.upper(), num_samples=2)
+
+        file_system.glob.assert_called_once_with(f"{self.a_dataset_dir}/chunk-*.parquet")
+        file_system.open.assert_called_once_with(f"{self.a_dataset_dir}/chunk-10.parquet", "rb")
+
+    @patch("deepparse.download_tools.HfFileSystem")
+    def test_givenEnoughData_whenDownloadSample_thenReturnTheLastMappedSamples(self, hf_file_system_mock):
+        self._mock_file_system(hf_file_system_mock)
+
+        actual = download_worldwide_addresses_sample(self.a_country_code, num_samples=3)
+
+        self.assertEqual(self.expected_samples[-3:], actual)
+
+    @patch("deepparse.download_tools.HfFileSystem")
+    def test_givenNotEnoughData_whenDownloadSample_thenReturnAllTheMappedSamples(self, hf_file_system_mock):
+        self._mock_file_system(hf_file_system_mock)
+
+        actual = download_worldwide_addresses_sample(self.a_country_code, num_samples=100)
+
+        self.assertEqual(self.expected_samples, actual)
+
+    @patch("deepparse.download_tools.HfFileSystem")
+    def test_givenSamples_whenDownloadSample_thenOnlyDeepparseTagsAreReturned(self, hf_file_system_mock):
+        self._mock_file_system(hf_file_system_mock)
+
+        actual = download_worldwide_addresses_sample(self.a_country_code, num_samples=100)
+
+        deepparse_tags = {"StreetNumber", "StreetName", "Unit", "Municipality", "Province", "PostalCode", "Orientation"}
+        for address, tags in actual:
+            self.assertEqual(len(address.split()), len(tags))
+            self.assertTrue(set(tags).issubset(deepparse_tags))
+
+    @patch("deepparse.download_tools.HfFileSystem")
+    def test_givenSamples_whenDownloadSample_thenUsableByAListDatasetContainer(self, hf_file_system_mock):
+        self._mock_file_system(hf_file_system_mock)
+
+        container = ListDatasetContainer(download_worldwide_addresses_sample(self.a_country_code, num_samples=100))
+
+        self.assertEqual(len(self.expected_samples), len(container))
+
+    @patch("deepparse.download_tools.HfFileSystem")
+    def test_givenAnUnknownCountryCode_whenDownloadSample_thenRaiseValueError(self, hf_file_system_mock):
+        hf_file_system_mock.return_value.glob.return_value = []
+
+        with self.assertRaises(ValueError):
+            download_worldwide_addresses_sample("zz")
+
+    @patch("deepparse.download_tools.HfFileSystem")
+    def test_givenANonPositiveNumberOfSamples_whenDownloadSample_thenRaiseValueError(self, hf_file_system_mock):
+        with self.assertRaises(ValueError):
+            download_worldwide_addresses_sample(self.a_country_code, num_samples=0)
+
+        hf_file_system_mock.assert_not_called()
+
+    @patch("deepparse.download_tools.HfFileSystem")
+    def test_givenPyarrowNotInstalled_whenDownloadSample_thenRaiseImportError(self, hf_file_system_mock):
+        with patch("deepparse.download_tools.PYARROW_AVAILABLE", False):
+            with self.assertRaises(ImportError):
+                download_worldwide_addresses_sample(self.a_country_code)
+
+        hf_file_system_mock.assert_not_called()
 
 
 if __name__ == "__main__":

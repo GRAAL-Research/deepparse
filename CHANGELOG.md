@@ -484,3 +484,9 @@
 - Cache the downloaded models between CI runs and pass an optional `HF_TOKEN` to the test steps.
 - Add a "Client Libraries" section to the README and the Sphinx API documentation pointing to the community
   Go HTTP client (`adamdecaf/deepparse-go`) for the out-of-the-box FastAPI parser.
+- Fix the examples (#328): they called `download_from_public_repository`, removed in 0.9.14, to download sample data
+  from the former `graal.ift.ulaval.ca` server, which is down. Add `download_worldwide_addresses_sample` to download
+  a small sample of one country from the `deepparse/worldwide-addresses` HuggingFace dataset, mapped to the deepparse
+  tags (`Suburb` and `District` become `Municipality`, the `County` and `Country` words are removed). The examples,
+  their documentation pages and the dataset links in the README and the documentation now use it. `pyarrow` is
+  added to the `all` extra.

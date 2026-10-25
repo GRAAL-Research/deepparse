@@ -8,30 +8,25 @@ Retrain a Pretrained Model Using A URI
 
     import poutyne
 
-    from deepparse import download_from_public_repository
-    from deepparse.dataset_container import PickleDatasetContainer
+    from deepparse import download_worldwide_addresses_sample
+    from deepparse.dataset_container import ListDatasetContainer
     from deepparse.parser import AddressParser
 
 
-First, let's download the train and test data from the public repository.
+First, let's download a small sample of Canadian addresses from the
+`worldwide-addresses dataset <https://huggingface.co/datasets/deepparse/worldwide-addresses>`_. The dataset tags are
+already mapped to the deepparse tags. We use the first 1,000 addresses for training and the last 200 for testing.
 
 .. code-block:: python
 
-    saving_dir = "./data"
-    file_extension = "p"
-    training_dataset_name = "sample_incomplete_data"
-    test_dataset_name = "test_sample_data"
-    download_from_public_repository(training_dataset_name, saving_dir, file_extension=file_extension)
-    download_from_public_repository(test_dataset_name, saving_dir, file_extension=file_extension)
+    addresses = download_worldwide_addresses_sample(country_code="ca", num_samples=1200)
 
 Now let's create a training and test container.
 
 .. code-block:: python
 
-    training_container = PickleDatasetContainer(os.path.join(saving_dir,
-                                                             training_dataset_name + "." + file_extension))
-    test_container = PickleDatasetContainer(os.path.join(saving_dir,
-                                                         test_dataset_name + "." + file_extension))
+    training_container = ListDatasetContainer(addresses[:1000])
+    test_container = ListDatasetContainer(addresses[1000:])
 
 We will retrain the ``FastText`` version of our pretrained model.
 

@@ -494,3 +494,8 @@
   word vectors computed like fastText `getWordVector`), as a first step to drop `gensim` and `fasttext-wheel` and
   support Python 3.14 (#255). It is not used by `FastTextEmbeddingsModel` yet. The tests now build their fake `.bin`
   files with a minimal writer instead of gensim, and an equivalence test compares the reader with gensim and fastText.
+- Fix `models_evaluation/evaluate_model.py`: it passed `logging_path` and `checkpoint` to `AddressParser.test`,
+  which no longer accepts them, and loaded the tagged test data as a prediction container. The model to evaluate is
+  now loaded with `path_to_retrained_model`. Add `models_evaluation/evaluate_model_on_test_set.py` to evaluate a
+  pretrained or retrained model on one or more test pickles, such as the `test.p` built from the
+  `deepparse/worldwide-addresses` dataset, without the former per-country test directories.

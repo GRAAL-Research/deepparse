@@ -494,3 +494,12 @@
   word vectors computed like fastText `getWordVector`), as a first step to drop `gensim` and `fasttext-wheel` and
   support Python 3.14 (#255). It is not used by `FastTextEmbeddingsModel` yet. The tests now build their fake `.bin`
   files with a minimal writer instead of gensim, and an equivalence test compares the reader with gensim and fastText.
+- Drop the `gensim`, `fasttext-wheel` and `bpemb` dependencies and support Python 3.14 (#255). `gensim` is in
+  maintenance mode and has no Python 3.14 wheel. `FastTextEmbeddingsModel` now reads the `.bin` embeddings with
+  `FastTextBinReader` on every OS and Python version (same vectors as fastText, memory-mapped instead of ~8-10 GB of
+  RAM). The BPEmb embeddings are loaded with a minimal reimplementation using `sentencepiece` (same vectors as the
+  `bpemb` package, same cache layout, so existing caches are reused). Backward compatibility: the pretrained and
+  retrained models give the same predictions, the `fasttext` extra is kept (empty), `FASTTEXT_AVAILABLE` is kept,
+  `load_fasttext_embeddings` is deprecated and returns a `FastTextBinReader` (same `model[word]`,
+  `get_word_vector` and `get_dimension` interface), and `BPEmbBaseURLWrapperBugFix` keeps the `bpemb` defaults and
+  its `embed`, `encode`, `encode_ids`, `vectors` and `dim` API (not the gensim `emb` attribute).

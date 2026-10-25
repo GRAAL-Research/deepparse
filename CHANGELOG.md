@@ -514,3 +514,6 @@
 - Allow data loading workers (`num_workers` > 0) with the FastText models on Windows and MacOS: the FastText
   embeddings reader is picklable, so it works with the `spawn` start method. The restriction (error on Windows, `fork`
   start method on MacOS) is kept for the FastText Light (Magnitude) model only.
+- Document the memory and loading time gains of the gensim removal (#335), measured on CPU: the FastText parser takes
+  ~1.3 GB of RAM at peak and loads in ~4 s, compared to ~8.4 GB (13.2 GB at peak) and ~42 s with gensim; the BPEmb
+  embeddings load in ~0.2 s instead of ~0.9 s and take ~0.14 GB instead of ~0.26 GB.

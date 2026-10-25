@@ -522,3 +522,18 @@
   a "development version" banner with the dev version number and a link to the stable docs (set with the
   `DEEPPARSE_DOCS_VERSION=dev` environment variable), and the stable home page links to the dev docs. The stable
   deployment now keeps the `dev/` folder of `gh-pages`, and both deployments share a concurrency group.
+- Delimit the public API before 1.0.0, without breaking change. The `deepparse` top-level package and its
+  `bpemb_url_bug_fix`, `download_tools`, `validations` and `weights_tools` modules now have an explicit `__all__`, so
+  `from deepparse import *` only imports the public API. Every name reachable as `deepparse.<name>` in 0.11.0 is
+  still reachable, including the standard library and third-party modules, typing aliases and internal helpers
+  re-exported by accident (e.g. `deepparse.os` or `deepparse.weights_init`), which are not in `__all__`. A unit test
+  freezes the public API.
+- Rename `BPEmbBaseURLWrapperBugFix` (`deepparse/bpemb_url_bug_fix.py`) to `BPEmbLoader` (`deepparse/bpemb_loader.py`),
+  since it is no longer a URL bug-fix wrapper but a gensim-free BPEmb loader. `BPEmbBaseURLWrapperBugFix` is kept as a
+  deprecated subclass of `BPEmbLoader`, importable from `deepparse` and `deepparse.bpemb_url_bug_fix`, that emits a
+  `DeprecationWarning` and will be removed in 1.0.0.
+- `load_fasttext_embeddings` and `FASTTEXT_AVAILABLE` are deprecated and will be removed in 1.0.0; the
+  `load_fasttext_embeddings` warning now says so and points to `deepparse.embeddings_models.FastTextBinReader`.
+- Use GB instead of GO in the documentation, docstrings and log messages.
+- Document the versioning and deprecation policy (semantic versioning, deprecated APIs kept at least until the next
+  major version) and the APIs slated for removal in 1.0.0.

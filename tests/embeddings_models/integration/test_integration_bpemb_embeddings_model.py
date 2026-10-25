@@ -9,7 +9,7 @@ from unittest import skipIf
 
 from torch.utils.data import DataLoader
 
-from deepparse.bpemb_url_bug_fix import BPEmbBaseURLWrapperBugFix
+from deepparse.bpemb_loader import BPEmbLoader
 from deepparse.embeddings_models import BPEmbEmbeddingsModel
 from tests.base_file_exist import FileCreationTestCase
 from tests.embeddings_models.integration.tools import MockedDataTransform
@@ -36,13 +36,13 @@ class BPEmbEmbeddingsModelIntegrationTest(AddressParserRetrainTestCase, FileCrea
     def test_givenAWindowsOS_whenBPEmbModelInit_thenLoadWithProperFunction(self):
         model = BPEmbEmbeddingsModel(self.fake_cache_path, verbose=self.verbose)
 
-        self.assertIsInstance(model.model, BPEmbBaseURLWrapperBugFix)
+        self.assertIsInstance(model.model, BPEmbLoader)
 
     @skipIf(platform.system() == "Windows", "Integration test not on Windows env.")
     def test_givenANotWindowsOS_whenBPEmbModelInit_thenLoadWithProperFunction(self):
         model = BPEmbEmbeddingsModel(self.fake_cache_path, verbose=self.verbose)
 
-        self.assertIsInstance(model.model, BPEmbBaseURLWrapperBugFix)
+        self.assertIsInstance(model.model, BPEmbLoader)
 
     @skipIf(platform.system() != "Windows", "Integration test on Windows env.")
     def test_givenAWindowsOS_whenBPEmbModelCollateFnInDataLoader_thenWorkProperly(self):

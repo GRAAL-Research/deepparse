@@ -86,9 +86,9 @@ class AddressParser:
     Args:
         model_type (str): The network name to use, can be either:
 
-            - ``"fasttext"`` (need ~1.3 GO of RAM to be used, since its embeddings are memory-mapped),
-            - ``"fasttext-light"`` (need ~2 GO of RAM to be used, but slower than fasttext version),
-            - ``"bpemb"`` (need ~2 GO of RAM to be used),
+            - ``"fasttext"`` (need ~1.3 GB of RAM to be used, since its embeddings are memory-mapped),
+            - ``"fasttext-light"`` (need ~2 GB of RAM to be used, but slower than fasttext version),
+            - ``"bpemb"`` (need ~2 GB of RAM to be used),
             - ``"fastest"`` (quicker to process one address) (equivalent to ``"fasttext"``),
             - ``"lightest"`` (the one using the less RAM and GPU usage) (equivalent to ``"fasttext-light"``),
             - ``"best"`` (the best accuracy performance) (equivalent to ``"bpemb"``).
@@ -129,8 +129,8 @@ class AddressParser:
 
     Note:
         For both networks, we will download the pretrained weights and embeddings in the ``.cache`` directory
-        for the root user. The pretrained weights take at most 44 MB. The FastText embeddings take 6.8 GO,
-        the FastText-light (``"fasttext-light"``) embeddings take 3.3 GO and bpemb take 116 MB (in ``".cache/bpemb"``).
+        for the root user. The pretrained weights take at most 44 MB. The FastText embeddings take 6.8 GB,
+        the FastText-light (``"fasttext-light"``) embeddings take 3.3 GB and bpemb take 116 MB (in ``".cache/bpemb"``).
 
         Also, one can download all the dependencies of our pretrained model using our CLI
         (e.g. download_model fasttext) before sending it to a node without access to Internet.
@@ -145,7 +145,7 @@ class AddressParser:
         The FastText embeddings are read with our own reader of the ``.bin`` format, which gives the same vectors
         as the ``fasttext`` package on every supported Python version, without ``fasttext`` nor ``gensim``. The
         embeddings matrix is memory-mapped, so it loads in a few seconds and only the rows used are kept in RAM: the
-        FastText parser takes ~1.3 GO of RAM and loads in ~4 seconds, compared to ~8.4 GO (13.2 GO at peak) and ~42
+        FastText parser takes ~1.3 GB of RAM and loads in ~4 seconds, compared to ~8.4 GB (13.2 GB at peak) and ~42
         seconds with the former ``gensim`` loading.
 
     Note:

@@ -21,9 +21,33 @@ from huggingface_hub import HfFileSystem, hf_hub_download, snapshot_download
 from transformers.utils.hub import cached_file, extract_commit_hash
 from transformers.utils.logging import disable_progress_bar, enable_progress_bar
 
-from .bpemb_url_bug_fix import BPEmbBaseURLWrapperBugFix
+from .bpemb_loader import BPEmbLoader
 
-# Kept for backward compatibility: Deepparse no longer needs the fasttext package to load the FastText embeddings.
+__all__ = [
+    "CACHE_PATH",
+    "FASTTEXT_AVAILABLE",
+    "FASTTEXT_COPYRIGHT_MIT_LICENSE",
+    "HTTP_CLIENT_ERROR_STATUS_CODE",
+    "MODEL_MAPPING_CHOICES",
+    "MODEL_REPO_IDS",
+    "NEXT_RANGE_STATUS_CODE",
+    "PYARROW_AVAILABLE",
+    "WORLDWIDE_ADDRESSES_REMOVED_TAGS",
+    "WORLDWIDE_ADDRESSES_REPO_ID",
+    "WORLDWIDE_ADDRESSES_TAGS_MAPPING",
+    "download_fasttext_embeddings",
+    "download_fasttext_magnitude_embeddings",
+    "download_gz_model",
+    "download_model",
+    "download_models",
+    "download_weights",
+    "download_worldwide_addresses_sample",
+    "load_fasttext_embeddings",
+    "load_version",
+]
+
+# Deprecated, kept for backward compatibility and will be removed in 1.0.0: Deepparse no longer needs the fasttext
+# package to load the FastText embeddings (see deepparse.embeddings_models.FastTextBinReader).
 FASTTEXT_AVAILABLE = importlib.util.find_spec("fasttext") is not None
 
 logger = logging.getLogger(__name__)
@@ -79,7 +103,7 @@ def download_fasttext_magnitude_embeddings(cache_dir: str, verbose: bool = True,
     except OSError:
         if verbose:
             logger.info(
-                "The FastText pretrained word embeddings will be downloaded in magnitude format (3.5 GO), "
+                "The FastText pretrained word embeddings will be downloaded in magnitude format (3.5 GB), "
                 "this process will take several minutes."
             )
 
@@ -180,7 +204,7 @@ def download_model(
     elif model_type == "fasttext-light":
         download_fasttext_magnitude_embeddings(cache_dir=saving_cache_path)
     elif "bpemb" in model_type:
-        BPEmbBaseURLWrapperBugFix(
+        BPEmbLoader(
             lang="multi", vs=100000, dim=300, cache_dir=saving_cache_path
         )  # The class manages the download of the pretrained words embedding
 
@@ -333,7 +357,7 @@ def download_gz_model(gz_file_name: str, saving_path: str, verbose: bool = True)
     url = f"https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/{gz_file_name}"
     if verbose:
         logger.info(
-            "The FastText pretrained word embeddings will be downloaded (6.8 GO), "
+            "The FastText pretrained word embeddings will be downloaded (6.8 GB), "
             "this process will take several minutes."
         )
     _download_file(url, saving_path, verbose=verbose)
@@ -384,13 +408,13 @@ def load_fasttext_embeddings(path: str):
     """
     Function to load fastText ``.bin`` embeddings.
 
-    .. deprecated::
-        Use :class:`~deepparse.embeddings_models.FastTextBinReader` instead. This function is kept for backward
-        compatibility and returns a ``FastTextBinReader``, which has the same ``model[word]`` and
-        ``get_dimension()`` interface as the former ``fasttext`` model object.
+    .. deprecated:: 0.12.0
+        Use :class:`~deepparse.embeddings_models.FastTextBinReader` instead. This function will be removed in 1.0.0.
+        It is kept for backward compatibility and returns a ``FastTextBinReader``, which has the same
+        ``model[word]`` and ``get_dimension()`` interface as the former ``fasttext`` model object.
     """
     warnings.warn(
-        "load_fasttext_embeddings is deprecated and will be removed in a future release, "
+        "load_fasttext_embeddings is deprecated and will be removed in 1.0.0, "
         "use deepparse.embeddings_models.FastTextBinReader instead.",
         category=DeprecationWarning,
         stacklevel=2,

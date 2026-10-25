@@ -35,7 +35,7 @@ class Decoder(nn.Module):
             # Since layer also has attention mechanism
             self.hidden_size = hidden_size
             input_size = input_size + hidden_size
-            self._attention_mechanism_set_up()
+            self._attention_mechanism_set_up(hidden_size=hidden_size)
         self.softmax = nn.LogSoftmax(dim=1)
         self.lstm = nn.LSTM(input_size, hidden_size, num_layers=num_layers)
         self.lstm.apply(weights_init)

@@ -494,6 +494,9 @@
   word vectors computed like fastText `getWordVector`), as a first step to drop `gensim` and `fasttext-wheel` and
   support Python 3.14 (#255). It is not used by `FastTextEmbeddingsModel` yet. The tests now build their fake `.bin`
   files with a minimal writer instead of gensim, and an equivalence test compares the reader with gensim and fastText.
+- Fix the attention decoder with a hidden size other than 1024: the attention layers were always built with a hidden
+  size of 1024, so retraining or training an attention model with `seq2seq_params` changing the decoder hidden size
+  crashed with a shape mismatch. The published attention models (1024) are not affected.
 - Drop the `gensim`, `fasttext-wheel` and `bpemb` dependencies and support Python 3.14 (#255). `gensim` is in
   maintenance mode and has no Python 3.14 wheel. `FastTextEmbeddingsModel` now reads the `.bin` embeddings with
   `FastTextBinReader` on every OS and Python version (same vectors as fastText, memory-mapped instead of ~8-10 GB of

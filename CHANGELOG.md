@@ -514,3 +514,8 @@
 - Allow data loading workers (`num_workers` > 0) with the FastText models on Windows and MacOS: the FastText
   embeddings reader is picklable, so it works with the `spawn` start method. The restriction (error on Windows, `fork`
   start method on MacOS) is kept for the FastText Light (Magnitude) model only.
+- Publish versioned documentation: the stable release stays at https://deepparse.org/ and the `dev` branch is
+  published at https://deepparse.org/dev/ on every push to `dev` (new `deploy-dev.yml` workflow). The dev pages show
+  a "development version" banner with the dev version number and a link to the stable docs (set with the
+  `DEEPPARSE_DOCS_VERSION=dev` environment variable), and the stable home page links to the dev docs. The stable
+  deployment now keeps the `dev/` folder of `gh-pages`, and both deployments share a concurrency group.

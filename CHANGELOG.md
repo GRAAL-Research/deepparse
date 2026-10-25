@@ -514,3 +514,10 @@
 - Allow data loading workers (`num_workers` > 0) with the FastText models on Windows and MacOS: the FastText
   embeddings reader is picklable, so it works with the `spawn` start method. The restriction (error on Windows, `fork`
   start method on MacOS) is kept for the FastText Light (Magnitude) model only.
+- Documentation: add the API pages of the embeddings models (`embeddings_models`, including `FastTextBinReader`), the
+  models download functions (`download_tools`, which now hosts `download_worldwide_addresses_sample`) and the errors
+  (`errors`), and a "Choose a Model" page comparing the pretrained models (disk size, RAM, speed, multilingual
+  coverage) with the figures already in the documentation. The per-country results tables move from the landing
+  page to a "Pretrained Models Results" page, and the landing page gets a quick example. Fix the docstrings that
+  broke the rendering (`BPEmbEmbeddingsModel`, `MagnitudeEmbeddingsModel`, `EmbeddingsModelFactory.create`,
+  `load_fasttext_embeddings`).

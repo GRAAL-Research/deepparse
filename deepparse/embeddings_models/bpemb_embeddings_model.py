@@ -21,7 +21,7 @@ class BPEmbEmbeddingsModel(EmbeddingsModel):
     <https://www.aclweb.org/anthology/L18-1473/>`_. The arguments are the same as the
     `BPEmb class <https://github.com/bheinzerling/bpemb/blob/master/bpemb/bpemb.py>`_
 
-    Params:
+    Args:
         cache_dir (str): Path to the cache directory to the embeddings' bin vector and the model.
         verbose (bool): Whether or not to make the loading of the embeddings verbose.
     """

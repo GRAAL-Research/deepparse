@@ -528,6 +528,8 @@
   still reachable, including the standard library and third-party modules, typing aliases and internal helpers
   re-exported by accident (e.g. `deepparse.os` or `deepparse.weights_init`), which are not in `__all__`. A unit test
   freezes the public API.
+  The standard library and third-party modules that 0.11.0 re-exported by accident (e.g. `deepparse.os`,
+  `deepparse.torch`) are no longer reachable from `deepparse`, and `from deepparse import *` only imports `__all__`.
 - Rename `BPEmbBaseURLWrapperBugFix` (`deepparse/bpemb_url_bug_fix.py`) to `BPEmbLoader` (`deepparse/bpemb_loader.py`),
   since it is no longer a URL bug-fix wrapper but a gensim-free BPEmb loader. `BPEmbBaseURLWrapperBugFix` is kept as a
   deprecated subclass of `BPEmbLoader`, importable from `deepparse` and `deepparse.bpemb_url_bug_fix`, that emits a

@@ -64,6 +64,10 @@ The following APIs are deprecated and will be removed in 1.0.0:
   ``deepparse.embeddings_models.FastTextBinReader``, which it already returns.
 - ``deepparse.FASTTEXT_AVAILABLE`` (deprecated in 0.12.0): Deepparse no longer needs the ``fasttext`` package to load
   the FastText embeddings, so this flag is no longer used.
-- The standard library and third-party modules, typing aliases and internal helpers that are reachable as
-  ``deepparse.<name>`` by accident (e.g. ``deepparse.os`` or ``deepparse.weights_init``) but are not in
-  ``deepparse.__all__``. They are not part of the public API: import them from their own module instead.
+- The internal helpers and constants that are reachable as ``deepparse.<name>`` but are not in
+  ``deepparse.__all__`` (e.g. ``deepparse.weights_init`` or ``deepparse.MODEL_REPO_IDS``). They are not part of the
+  public API: import them from their own module instead.
+
+Since 0.12.0, the standard library and third-party modules that the wildcard imports of ``deepparse`` re-exported by
+accident (e.g. ``deepparse.os``, ``deepparse.torch`` or ``deepparse.np``) are no longer reachable from ``deepparse``,
+and ``from deepparse import *`` only imports the names of ``deepparse.__all__``.

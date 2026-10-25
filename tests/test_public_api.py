@@ -30,35 +30,24 @@ EXPECTED_PUBLIC_API = [
     "load_fasttext_embeddings",
 ]
 
-# Every public name reachable as deepparse.<name> in 0.11.0, before the public API was delimited with __all__. They
-# must all stay reachable until 1.0.0, even the ones that are not in __all__.
+# Every deepparse name (helpers, constants and submodules) reachable as deepparse.<name> in 0.11.0, before the public
+# API was delimited with __all__. They must all stay reachable until 1.0.0, even the ones that are not in __all__.
 NAMES_REACHABLE_IN_0_11_0 = [
     "BPEmbBaseURLWrapperBugFix",
     "CACHE_PATH",
-    "CloudPath",
     "DataError",
-    "Dict",
     "FASTTEXT_AVAILABLE",
     "FASTTEXT_COPYRIGHT_MIT_LICENSE",
     "HTTP_CLIENT_ERROR_STATUS_CODE",
-    "HfFileSystem",
-    "List",
     "MODEL_MAPPING_CHOICES",
     "MODEL_REPO_IDS",
     "NEXT_RANGE_STATUS_CODE",
-    "OrderedDict",
     "PYARROW_AVAILABLE",
-    "Path",
-    "S3Path",
-    "Tuple",
-    "Union",
     "WORLDWIDE_ADDRESSES_REMOVED_TAGS",
     "WORLDWIDE_ADDRESSES_REPO_ID",
     "WORLDWIDE_ADDRESSES_TAGS_MAPPING",
     "bpemb_url_bug_fix",
-    "cached_file",
     "data_validation",
-    "disable_progress_bar",
     "download_fasttext_embeddings",
     "download_fasttext_magnitude_embeddings",
     "download_gz_model",
@@ -67,18 +56,43 @@ NAMES_REACHABLE_IN_0_11_0 = [
     "download_tools",
     "download_weights",
     "download_worldwide_addresses_sample",
-    "enable_progress_bar",
     "errors",
-    "extract_commit_hash",
     "extract_package_version",
-    "gzip",
     "handle_weights_upload",
-    "hf_hub_download",
-    "importlib",
-    "init",
     "load_fasttext_embeddings",
     "load_version",
     "load_word2vec_binary_vectors",
+    "valid_poutyne_version",
+    "validate_data_to_parse",
+    "validate_if_any_empty",
+    "validate_if_any_none",
+    "validate_if_any_whitespace_only",
+    "validations",
+    "version",
+    "weights_init",
+    "weights_tools",
+]
+
+# Standard library and third-party modules and objects that 0.11.0 re-exported by accident through the wildcard
+# imports. They were never part of the API and are no longer reachable from deepparse.
+ACCIDENTAL_REEXPORTS_DROPPED_IN_0_12_0 = [
+    "CloudPath",
+    "Dict",
+    "HfFileSystem",
+    "List",
+    "OrderedDict",
+    "Path",
+    "S3Path",
+    "Tuple",
+    "Union",
+    "cached_file",
+    "disable_progress_bar",
+    "enable_progress_bar",
+    "extract_commit_hash",
+    "gzip",
+    "hf_hub_download",
+    "importlib",
+    "init",
     "logger",
     "logging",
     "nn",
@@ -96,16 +110,7 @@ NAMES_REACHABLE_IN_0_11_0 = [
     "tempfile",
     "torch",
     "urlopen",
-    "valid_poutyne_version",
-    "validate_data_to_parse",
-    "validate_if_any_empty",
-    "validate_if_any_none",
-    "validate_if_any_whitespace_only",
-    "validations",
-    "version",
     "warnings",
-    "weights_init",
-    "weights_tools",
 ]
 
 
@@ -123,6 +128,11 @@ class PublicAPITest(TestCase):
         for name in NAMES_REACHABLE_IN_0_11_0:
             with self.subTest(name=name):
                 self.assertTrue(hasattr(deepparse, name))
+
+    def test_theAccidentalReexportsOf0110AreNoLongerAttributes(self):
+        for name in ACCIDENTAL_REEXPORTS_DROPPED_IN_0_12_0:
+            with self.subTest(name=name):
+                self.assertFalse(hasattr(deepparse, name))
 
     def test_whenWildcardImport_thenImportExactlyTheAll(self):
         namespace: dict = {}

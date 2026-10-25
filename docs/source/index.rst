@@ -11,7 +11,7 @@
 .. raw:: html
 
     <center>
-    <a href="https://github.com/GRAAL-Research/deepparse-address-data">
+    <a href="https://huggingface.co/datasets/deepparse/worldwide-addresses">
         <img src="https://img.shields.io/badge/Download%20Dataset-blue?style=for-the-badge&logo=download" alt="No message"/></a>
     </center>
 
@@ -47,7 +47,7 @@ We evaluate our models on two forms of address data
 - **clean data** which refers to addresses containing elements from four categories, namely a street name, a municipality, a province and a postal code,
 - **incomplete data** which is made up of addresses missing at least one category amongst the aforementioned ones.
 
-You can get our dataset `here <https://github.com/GRAAL-Research/deepparse-address-data>`_.
+You can get our dataset on the HuggingFace Hub `here <https://huggingface.co/datasets/deepparse/worldwide-addresses>`_ (one configuration per country). The data protocol is described in the `deepparse-address-data <https://github.com/GRAAL-Research/deepparse-address-data>`_ repository.
 
 Clean Data
 **********

@@ -21,7 +21,7 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7010740.svg)](https://doi.org/10.5281/zenodo.7010740)
 [![Hugging Face Download](https://img.shields.io/badge/Hugging%20Face-FFD21E?logo=huggingface&logoColor=000)](https://huggingface.co/deepparse)
 
-[![Download](https://img.shields.io/badge/Download%20Dataset-blue?style=for-the-badge&logo=download)](https://github.com/GRAAL-Research/deepparse-address-data)
+[![Download](https://img.shields.io/badge/Download%20Dataset-blue?style=for-the-badge&logo=download)](https://huggingface.co/datasets/deepparse/worldwide-addresses)
 </div>
 
 ## Here is Deepparse.
@@ -50,7 +50,8 @@ We evaluate our models on two forms of address data
   municipality, a province and a postal code,
 - **incomplete data** which is made up of addresses missing at least one category amongst the aforementioned ones.
 
-You can get our dataset [here](https://github.com/GRAAL-Research/deepparse-address-data).
+You can get our dataset on the HuggingFace Hub [here](https://huggingface.co/datasets/deepparse/worldwide-addresses) (one configuration per country). The data protocol is
+described in the [deepparse-address-data](https://github.com/GRAAL-Research/deepparse-address-data) repository.
 
 #### Clean Data
 

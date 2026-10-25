@@ -1,32 +1,27 @@
-# pylint: skip-file
-###################
-"""
-IMPORTANT:
-THE EXAMPLE IN THIS FILE IS CURRENTLY NOT FUNCTIONAL
-BECAUSE THE `download_from_public_repository` FUNCTION
-NO LONGER EXISTS. WE HAD TO MAKE A QUICK RELEASE TO
-REMEDIATE AN ISSUE IN OUR PREVIOUS STORAGE SOLUTION.
-THIS WILL BE FIXED IN A FUTURE RELEASE.
-
-IN THE MEAN TIME IF YOU NEED ANY CLARIFICATION
-REGARDING THE PACKAGE PLEASE FEEL FREE TO OPEN AN ISSUE.
-"""
-
 import os
 
+import pandas as pd
 import poutyne
 
-from deepparse import download_from_public_repository
+from deepparse import download_worldwide_addresses_sample
 from deepparse.dataset_container import CSVDatasetContainer
 from deepparse.parser import AddressParser
 
-# First, let's download the train and test data from the public repository but using a CSV format dataset.
+# First, let's download a small sample of Canadian addresses from the worldwide-addresses dataset
+# (https://huggingface.co/datasets/deepparse/worldwide-addresses). The dataset tags are already mapped to the
+# deepparse tags. We use the first 1,000 addresses for training and the last 200 for testing.
+addresses = download_worldwide_addresses_sample(country_code="ca", num_samples=1200)
+
+# Let's save the train and test data in a CSV format dataset: one column for the addresses and one for the tags.
 saving_dir = "./data"
 file_extension = "csv"
 training_dataset_name = "sample_incomplete_data"
 test_dataset_name = "test_sample_data"
-download_from_public_repository(training_dataset_name, saving_dir, file_extension=file_extension)
-download_from_public_repository(test_dataset_name, saving_dir, file_extension=file_extension)
+os.makedirs(saving_dir, exist_ok=True)
+for dataset_name, dataset in ((training_dataset_name, addresses[:1000]), (test_dataset_name, addresses[1000:])):
+    pd.DataFrame(dataset, columns=["Address", "Tags"]).to_csv(
+        os.path.join(saving_dir, dataset_name + "." + file_extension), index=False
+    )
 
 # Now let's create a training and test container.
 training_container = CSVDatasetContainer(

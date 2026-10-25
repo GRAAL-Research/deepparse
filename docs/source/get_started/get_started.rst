@@ -156,3 +156,25 @@ the ``fasttext`` package. It does not need ``fasttext`` nor ``gensim``, so the F
 every supported Python version. The embeddings matrix is memory-mapped: it loads in a few seconds and the data
 loading workers share its memory.
 
+.. list-table::
+        :header-rows: 1
+
+        *   - FastText parser (CPU)
+            - Former loading (``gensim``)
+            - Memory-mapped reader (after 0.11.0)
+        *   - Loading time
+            - ~42 s
+            - ~4 s
+        *   - RAM after loading
+            - ~8.4 GB
+            - ~1.2 GB
+        *   - Peak RAM
+            - ~13.2 GB
+            - ~1.3 GB
+
+The RAM is the whole process (Torch and the model included), measured while parsing 10,000 addresses (Linux, Python
+3.12, CPU).
+
+The BPEmb embeddings, which are much smaller, are also loaded without ``gensim`` after version 0.11.0: they load in
+~0.2 s instead of ~0.9 s and take ~0.14 GB of RAM instead of ~0.26 GB.
+

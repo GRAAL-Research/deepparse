@@ -1,0 +1,30 @@
+name: Docs link check
+
+on:
+  schedule:
+    # Every Monday at 06:00 UTC.
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+jobs:
+  linkcheck:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Install dependencies
+        run: |
+          pip install -e .[all] -r docs/requirements.txt
+      - name: Check the documentation links
+        run: |
+          sphinx-build -b linkcheck docs/source docs/_build/linkcheck
+      - name: Upload the link check report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: linkcheck-report
+          path: docs/_build/linkcheck/output.txt

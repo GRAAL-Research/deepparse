@@ -432,6 +432,11 @@ pip install 'deepparse[all]' # for ZSH terminal
 pip install -U git+https://github.com/GRAAL-Research/deepparse.git@dev
 ```
 
+Deepparse follows [semantic versioning](https://semver.org/): deprecated APIs emit a `DeprecationWarning` and are
+kept at least until the next major version. See the
+[Versioning section](https://deepparse.org/install/installation.html#versioning) of the documentation for the APIs
+deprecated and slated for removal in 1.0.0.
+
 ------------------
 
 ## Cite

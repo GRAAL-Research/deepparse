@@ -21,7 +21,7 @@ class BPEmbEmbeddingsModelTest(TestCase):
 
     def test_whenInstantiatedWithPath_thenShouldLoadBPEmbModel(self):
         with patch(
-            "deepparse.embeddings_models.bpemb_embeddings_model.BPEmbBaseURLWrapperBugFix",
+            "deepparse.embeddings_models.bpemb_embeddings_model.BPEmbLoader",
             return_value=self.model,
         ) as loader:
             _ = BPEmbEmbeddingsModel(self.a_path, verbose=False)
@@ -31,7 +31,7 @@ class BPEmbEmbeddingsModelTest(TestCase):
     def test_whenInstantiatedAndDownloadSucceeds_thenSSLVerificationIsNotDisabled(self):
         # The default path must download with SSL verification ON: no_ssl_verification must not be entered.
         with patch(
-            "deepparse.embeddings_models.bpemb_embeddings_model.BPEmbBaseURLWrapperBugFix",
+            "deepparse.embeddings_models.bpemb_embeddings_model.BPEmbLoader",
             return_value=self.model,
         ):
             with patch("deepparse.embeddings_models.bpemb_embeddings_model.no_ssl_verification") as no_ssl_mock:
@@ -42,7 +42,7 @@ class BPEmbEmbeddingsModelTest(TestCase):
     def test_whenDownloadRaisesSSLError_thenFailsafeRetriesWithoutSSLVerification(self):
         # Failsafe: on an SSL error, retry once inside no_ssl_verification and still return a working model.
         with patch(
-            "deepparse.embeddings_models.bpemb_embeddings_model.BPEmbBaseURLWrapperBugFix",
+            "deepparse.embeddings_models.bpemb_embeddings_model.BPEmbLoader",
             side_effect=[requests.exceptions.SSLError("broken certificate"), self.model],
         ) as loader:
             with patch("deepparse.embeddings_models.bpemb_embeddings_model.no_ssl_verification") as no_ssl_mock:
@@ -54,7 +54,7 @@ class BPEmbEmbeddingsModelTest(TestCase):
 
     def test_whenCalledToEmbed_thenShouldCallLoadedModel(self):
         with patch(
-            "deepparse.embeddings_models.bpemb_embeddings_model.BPEmbBaseURLWrapperBugFix",
+            "deepparse.embeddings_models.bpemb_embeddings_model.BPEmbLoader",
             return_value=self.model,
         ):
             embeddings_model = BPEmbEmbeddingsModel(self.a_path, verbose=False)
@@ -65,7 +65,7 @@ class BPEmbEmbeddingsModelTest(TestCase):
 
     def test_givenADimOf9_whenAskDimProperty_thenReturnProperDim(self):
         with patch(
-            "deepparse.embeddings_models.bpemb_embeddings_model.BPEmbBaseURLWrapperBugFix",
+            "deepparse.embeddings_models.bpemb_embeddings_model.BPEmbLoader",
             return_value=self.model,
         ):
             embeddings_model = BPEmbEmbeddingsModel(self.a_path, verbose=False)

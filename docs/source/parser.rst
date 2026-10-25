@@ -14,7 +14,7 @@ tags of any address.
 
 For now, we offer only two pretrained models, FastText and BPEmb. The first one relies on
 `fastText <https://fasttext.cc/>`__ French pretrained embeddings to parse the address, and the second use
-the `byte-pair multilingual subword <https://nlp.h-its.org/bpemb/>`_ pretrained embeddings. In both cases,
+the `byte-pair multilingual subword <https://bpemb.h-its.org/>`_ pretrained embeddings. In both cases,
 the architecture and performances are similar; our results are available in this
 `article <https://arxiv.org/abs/2006.16152>`_.
 
@@ -42,12 +42,12 @@ are a little bit lower for the trained country (around ~2%) but are similar for 
             - Mean time of execution (batch of more than 1) (s)
         *   - fastText [1]_
             - ~1
-            - ~8
+            - ~1.3
             - ~0.0023
             - ~0.0004
         *   - fastTextAttention
             - ~1.1
-            - ~8
+            - ~1.3
             - ~0.0043
             - ~0.0007
         *   - fastText-light
@@ -71,7 +71,7 @@ are a little bit lower for the trained country (around ~2%) but are similar for 
             - N/A
             - ~0.00004
 
-.. [1] Note that on Windows, we use the Gensim FastText models with ~10 GO with similar performance.
+.. [1] RAM measured in October 2026 (Linux, Python 3.12, Torch 2.14, CPU) with the memory-mapped FastText reader: ~1.3 GB at peak for the whole process (Torch and the model included) while parsing 10,000 addresses, and a loading time of ~4 s. With the former loading (``gensim``, up to version 0.11.0), the same parser took ~8.4 GB of RAM (13.2 GB at peak during the loading) and ~42 s to load. The execution times are from the March 2023 experiment.
 
 
 .. list-table::
@@ -82,11 +82,11 @@ are a little bit lower for the trained country (around ~2%) but are similar for 
             - Mean time of execution (batch of 1) (s)
             - Mean time of execution (batch of more than 1) (s)
         *   - fastText [2]_
-            - ~8
+            - ~1.3
             - ~0.0128
             - ~0.0026
         *   - fastTextAttention
-            - ~8
+            - ~1.3
             - ~0.0230
             - ~0.0057
         *   - fastText-light
@@ -106,7 +106,7 @@ are a little bit lower for the trained country (around ~2%) but are similar for 
             - N/A
             - ~0.00004
 
-.. [2] Note that on Windows, we use the Gensim FastText models that use ~10 GO with similar performance.
+.. [2] RAM measured in October 2026 (Linux, Python 3.12, Torch 2.14, CPU) with the memory-mapped FastText reader: ~1.3 GB at peak for the whole process (Torch and the model included) while parsing 10,000 addresses, and a loading time of ~4 s. With the former loading (``gensim``, up to version 0.11.0), the same parser took ~8.4 GB of RAM (13.2 GB at peak during the loading) and ~42 s to load. The execution times are from the March 2023 experiment.
 
 Thus, the more addresses there are, the faster each address can be processed. You can also improve performance by using more
 workers for the data loader created with your data within the call. But note that this performance improvement is not linear.

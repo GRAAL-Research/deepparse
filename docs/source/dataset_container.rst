@@ -39,6 +39,5 @@ Sample Data
 
 A small sample of tagged addresses of one country can be downloaded from the
 `worldwide-addresses dataset <https://huggingface.co/datasets/deepparse/worldwide-addresses>`_ and used with a
-:class:`~deepparse.dataset_container.ListDatasetContainer`.
-
-.. autofunction:: deepparse.download_tools.download_worldwide_addresses_sample
+:class:`~deepparse.dataset_container.ListDatasetContainer` with
+:func:`~deepparse.download_tools.download_worldwide_addresses_sample`, documented in the :ref:`download_tools` page.

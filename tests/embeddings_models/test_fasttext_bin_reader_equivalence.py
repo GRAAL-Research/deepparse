@@ -136,7 +136,7 @@ class FastTextBinReaderFastTextEquivalenceTest(ReaderEquivalenceTestCase):
 class FastTextBinReaderRealEmbeddingsEquivalenceTest(ReaderEquivalenceTestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        # We do not download the embeddings (~7 GO); the test only runs if they are already in the cache.
+        # We do not download the embeddings (~7 GB); the test only runs if they are already in the cache.
         cls.a_model_path = os.path.join(CACHE_PATH, "cc.fr.300.bin")
         cls.reader = FastTextBinReader(cls.a_model_path)
         cls.gensim_vectors = load_facebook_vectors(cls.a_model_path)

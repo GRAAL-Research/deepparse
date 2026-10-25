@@ -16,14 +16,14 @@ class EmbeddingsModelFactory:
     def create(self, embedding_model_type: str, cache_dir: str, verbose: bool = True) -> EmbeddingsModel:
         """
         Embeddings model creation method.
+
         Args:
-            embedding_model_type (str): the type of the embeddings model to create. Valid options:
-                - bpemb
-                - fasttext
-                - fasttext_magnitude
-                - model2vec-8m, model2vec-32m and model2vec-multilingual
+            embedding_model_type (str): the type of the embeddings model to create. Valid options are ``"bpemb"``,
+                ``"fasttext"``, ``"fasttext-light"`` (the Magnitude embeddings), ``"model2vec-8m"``, ``"model2vec-32m"``
+                and ``"model2vec-multilingual"``.
             cache_dir (str): Path to the cache directory where the embeddings model exists or is to be downloaded.
             verbose (bool): Whether or not to make the loading of the embeddings verbose.
+
         Return:
             An :class:`~EmbeddingsModel`
         """

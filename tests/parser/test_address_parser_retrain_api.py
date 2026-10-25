@@ -363,35 +363,6 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         with self.assertRaises(FastTextModelError):
             self.address_parser_retrain_call()
 
-    @patch("deepparse.parser.address_parser.system")
-    @patch("deepparse.parser.address_parser.ModelFactory")
-    @patch("deepparse.parser.address_parser.EmbeddingsModelFactory")
-    @patch("deepparse.parser.address_parser.VectorizerFactory")
-    @patch("deepparse.parser.address_parser.DataProcessorFactory")
-    @patch("deepparse.parser.address_parser.DataPadder")
-    def test_givenAFastTextLikeModelOnWindowsOS_whenRetrainWithNumWorkersGT0_thenReRaiseError(
-        self,
-        data_padder_mock,
-        data_processor_factory_mock,
-        vectorizer_factory_mock,
-        embeddings_factory_mock,
-        model_factory_mock,
-        system_mock,
-    ):
-        model_factory_mock().create.return_value = self.model_mock, self.a_model_version
-
-        system_mock.return_value = "Windows"
-
-        self.address_parser = AddressParser(
-            model_type=self.a_fastest_model_type,
-            device=self.a_device,
-            verbose=self.verbose,
-        )
-
-        num_workers_gt_0 = 1
-        with self.assertRaises(FastTextModelError):
-            self.address_parser_retrain_call(num_workers=num_workers_gt_0)
-
     @patch("deepparse.parser.address_parser.torch.save")
     @patch("deepparse.parser.address_parser.DataLoader")
     @patch("deepparse.parser.address_parser.Experiment")
@@ -1770,27 +1741,6 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
                     epochs=1,
                     prediction_tags=self.incorrect_address_components,
                     num_workers=0,
-                )
-
-    @skipIf(platform.system() != "Windows", "Integration test on Windows env.")
-    @patch("deepparse.parser.address_parser.EmbeddingsModelFactory")
-    @patch("deepparse.parser.address_parser.VectorizerFactory")
-    @patch("deepparse.parser.address_parser.DataProcessorFactory")
-    def test_givenAFasttextModelTypeOnWindows_whenInstantiatingParserWithNumWorkerGT0_thenRaiseError(
-        self, data_processor_factory_mock, vectorizer_factory_mock, embeddings_model_factory_mock
-    ):
-        num_workers_gt_0 = 1
-        with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
-            model_factory_mock().create.return_value = self.model_mock, self.a_model_version
-
-            address_parser = AddressParser(
-                model_type=self.a_fasttext_model_type,
-                device=self.a_device,
-                verbose=self.verbose,
-            )
-            with self.assertRaises(FastTextModelError):
-                address_parser.retrain(
-                    MagicMock(), train_ratio=0.8, batch_size=1, epochs=1, num_workers=num_workers_gt_0
                 )
 
     def test_givenAnyModelWith_whenPathToTrainLeadToWrongCheckpoint_thenRaiseError(self):

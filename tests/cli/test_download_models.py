@@ -38,7 +38,7 @@ class DownloadModelsTests(TestCase):
     @patch("deepparse.download_tools.download_model2vec_embeddings")
     @patch("deepparse.download_tools.download_fasttext_embeddings")
     @patch("deepparse.download_tools.download_fasttext_magnitude_embeddings")
-    @patch("deepparse.download_tools.BPEmbBaseURLWrapperBugFix")
+    @patch("deepparse.download_tools.BPEmbLoader")
     def test_givenADownloadAllModels_whenModelsAreNotLocal_thenDownloadAllModels(
         self,
         BPEmb_mock,

@@ -300,7 +300,7 @@
 - Add Python 3.11.
 - Add pre-processor when parsing addresses.
 - Add `pin_memory=True` when using a CUDA device to increase performance as suggested
-  by [Torch documentation](https://pytorch.org/tutorials/recipes/recipes/tuning_guide.html).
+  by [Torch documentation](https://docs.pytorch.org/tutorials/recipes/recipes/tuning_guide.html).
 - Add `torch.no_grad()` context manager in `__call__()` to increase performance.
 - Reduce memory swap between CPU and GPU by instantiating Tensor directly on the GPU device.
 - Improve some warnings' clarity (i.e., category and message).
@@ -310,7 +310,7 @@
   and [Torch 2.0 does not support Python 3.7](https://dev-discuss.pytorch.org/t/dropping-support-for-cuda-11-6-and-python-3-7-from-pytorch-2-0-release/1021).
 - Improve error handling with wrong checkpoint loading in AddressParser retrain_path use.
 - Add `torch.compile` integration to improve performance (Torch 1.x still supported) with `mode="reduce-overhead"` as
-  suggested in the [documentation](https://pytorch.org/tutorials//intermediate/torch_compile_tutorial.html). It
+  suggested in the [documentation](https://docs.pytorch.org/tutorials/intermediate/torch_compile_tutorial.html). It
   increases the performance by about 1/100.
 
 ## 0.9.7
@@ -494,6 +494,11 @@
   word vectors computed like fastText `getWordVector`), as a first step to drop `gensim` and `fasttext-wheel` and
   support Python 3.14 (#255). It is not used by `FastTextEmbeddingsModel` yet. The tests now build their fake `.bin`
   files with a minimal writer instead of gensim, and an equivalence test compares the reader with gensim and fastText.
+- Fix `models_evaluation/evaluate_model.py`: it passed `logging_path` and `checkpoint` to `AddressParser.test`,
+  which no longer accepts them, and loaded the tagged test data as a prediction container. The model to evaluate is
+  now loaded with `path_to_retrained_model`. Add `models_evaluation/evaluate_model_on_test_set.py` to evaluate a
+  pretrained or retrained model on one or more test pickles, such as the `test.p` built from the
+  `deepparse/worldwide-addresses` dataset, without the former per-country test directories.
 - Fix the attention decoder with a hidden size other than 1024: the attention layers were always built with a hidden
   size of 1024, so retraining or training an attention model with `seq2seq_params` changing the decoder hidden size
   crashed with a shape mismatch. The published attention models (1024) are not affected.
@@ -517,3 +522,43 @@
 - Only download the files Model2Vec loads, skipping the ONNX export.
 - A model type without published weights is now randomly initialized with a warning instead of failing, so it can
   be retrained from scratch.
+- Allow data loading workers (`num_workers` > 0) with the FastText models on Windows and MacOS: the FastText
+  embeddings reader is picklable, so it works with the `spawn` start method. The restriction (error on Windows, `fork`
+  start method on MacOS) is kept for the FastText Light (Magnitude) model only.
+- Documentation: add the API pages of the embeddings models (`embeddings_models`, including `FastTextBinReader`), the
+  models download functions (`download_tools`, which now hosts `download_worldwide_addresses_sample`) and the errors
+  (`errors`), and a "Choose a Model" page comparing the pretrained models (disk size, RAM, speed, multilingual
+  coverage) with the figures already in the documentation. The per-country results tables move from the landing
+  page to a "Pretrained Models Results" page, and the landing page gets a quick example. Fix the docstrings that
+  broke the rendering (`BPEmbEmbeddingsModel`, `MagnitudeEmbeddingsModel`, `EmbeddingsModelFactory.create`,
+  `load_fasttext_embeddings`).
+- Modernize the documentation: the `furo` theme (light and dark modes) replaces `sphinx_rtd_theme`, a copy button
+  is added to the code blocks (`sphinx-copybutton`, prompts excluded), and a Changelog page renders this file
+  (`myst-parser`). The `all` extra and `docs/requirements.txt` are updated accordingly. Clean the Sphinx
+  configuration (unused LaTeX, Texinfo, man and HTML Help settings and extensions removed, intersphinx URLs updated).
+- The documentation CI now builds once (Python 3.13) with warnings and broken references as errors (`-W -n`), and a
+  weekly workflow checks the documentation links. Fix the docstring warnings and the redirected links.
+- Document the memory and loading time gains of the gensim removal (#335), measured on CPU: the FastText parser takes
+  ~1.3 GB of RAM at peak and loads in ~4 s, compared to ~8.4 GB (13.2 GB at peak) and ~42 s with gensim; the BPEmb
+  embeddings load in ~0.2 s instead of ~0.9 s and take ~0.14 GB instead of ~0.26 GB.
+- Publish versioned documentation: the stable release stays at https://deepparse.org/ and the `dev` branch is
+  published at https://deepparse.org/dev/ on every push to `dev` (new `deploy-dev.yml` workflow). The dev pages show
+  a "development version" banner with the dev version number and a link to the stable docs (set with the
+  `DEEPPARSE_DOCS_VERSION=dev` environment variable), and the stable home page links to the dev docs. The stable
+  deployment now keeps the `dev/` folder of `gh-pages`, and both deployments share a concurrency group.
+- Delimit the public API before 1.0.0, without breaking change. The `deepparse` top-level package and its
+  `bpemb_url_bug_fix`, `download_tools`, `validations` and `weights_tools` modules now have an explicit `__all__`, so
+  `from deepparse import *` only imports the public API. The deepparse helpers reachable as `deepparse.<name>` in
+  0.11.0 are still reachable (e.g. `deepparse.weights_init`), even if they are not in `__all__`. A unit test freezes
+  the public API.
+  The standard library and third-party modules that 0.11.0 re-exported by accident (e.g. `deepparse.os`,
+  `deepparse.torch`) are no longer reachable from `deepparse`, and `from deepparse import *` only imports `__all__`.
+- Rename `BPEmbBaseURLWrapperBugFix` (`deepparse/bpemb_url_bug_fix.py`) to `BPEmbLoader` (`deepparse/bpemb_loader.py`),
+  since it is no longer a URL bug-fix wrapper but a gensim-free BPEmb loader. `BPEmbBaseURLWrapperBugFix` is kept as a
+  deprecated subclass of `BPEmbLoader`, importable from `deepparse` and `deepparse.bpemb_url_bug_fix`, that emits a
+  `DeprecationWarning` and will be removed in 1.0.0.
+- `load_fasttext_embeddings` and `FASTTEXT_AVAILABLE` are deprecated and will be removed in 1.0.0; the
+  `load_fasttext_embeddings` warning now says so and points to `deepparse.embeddings_models.FastTextBinReader`.
+- Use GB instead of GO in the documentation, docstrings and log messages.
+- Document the versioning and deprecation policy (semantic versioning, deprecated APIs kept at least until the next
+  major version) and the APIs slated for removal in 1.0.0.

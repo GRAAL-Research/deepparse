@@ -8,7 +8,7 @@ Deepparse is available for Python 3.10, Python 3.11, Python 3.12, Python 3.13 an
 
 .. note::
    We do not recommend installation as a root user on your system Python.
-   Please setup a virtual environment, *e.g.*, via `Anaconda or Miniconda <https://conda.io/projects/conda/en/latest/user-guide/install>`_, or create a `Docker image <https://www.docker.com/>`_.
+   Please setup a virtual environment, *e.g.*, via `Anaconda or Miniconda <https://docs.conda.io/projects/conda/en/latest/user-guide/install/>`_, or create a `Docker image <https://www.docker.com/>`_.
 
 Quick Start
 -----------

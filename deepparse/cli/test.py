@@ -30,7 +30,7 @@ def main(args=None) -> None:
     # pylint: disable=too-many-locals, too-many-branches
     """
     CLI function to rapidly test an address parser on test data using the same argument as the
-    :meth:`~AddressParser.test` method (with the same default values) except for the callbacks.
+    :meth:`~deepparse.parser.AddressParser.test` method (with the same default values) except for the callbacks.
     The results will be logged in a CSV file next to the test dataset.
 
 

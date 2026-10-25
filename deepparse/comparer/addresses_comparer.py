@@ -45,14 +45,14 @@ class AddressesComparer:
 
         Args:
             addresses_tags_to_compare (Union[List[tuple], List[List[tuple]]]): list of tuples that contain
-            the tags for the address components from the source. Can compare multiple parsings if passed as a
-            list of tuples.
+                the tags for the address components from the source. Can compare multiple parsings if passed as a
+                list of tuples.
             with_prob (Union[None, bool]): An option flag to either or not include probabilities in the comparison
                 report. The probabilities are not compared but only included in the report. The default value is
                 ``None``, which means not taking into account.
 
         Return:
-            Either a :class:`~FormattedComparedAddressesTags` or a list of :class:`~FormattedComparedAddressTags`
+            Either a :class:`~FormattedComparedAddressesTags` or a list of :class:`~FormattedComparedAddressesTags`
             when there is more than one comparison to make.
 
         Examples:

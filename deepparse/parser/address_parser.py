@@ -247,6 +247,9 @@ class AddressParser:
 
         self.rounding = rounding
         self.verbose = verbose
+        # Kept to rebuild the model with the same settings when retraining with new seq2seq params.
+        self._cache_dir = cache_dir
+        self._offline = offline
 
         named_parser = None
 
@@ -742,7 +745,13 @@ class AddressParser:
             train_dataset_container, val_dataset_container, num_workers, name_of_the_retrain_parser
         )
 
-        model_factory_dict = {"prediction_layer_len": 9}  # We set the default output dim size
+        # We set the default output dim size and keep the parser settings, since new seq2seq params rebuild the model.
+        model_factory_dict = {
+            "prediction_layer_len": 9,
+            "attention_mechanism": "attention" in self.model_type,
+            "cache_dir": self._cache_dir,
+            "offline": self._offline,
+        }
 
         if prediction_tags is not None:
             # Handle prediction tags

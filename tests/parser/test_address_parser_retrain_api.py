@@ -592,6 +592,47 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
     @patch("deepparse.parser.address_parser.VectorizerFactory")
     @patch("deepparse.parser.address_parser.DataProcessorFactory")
     @patch("deepparse.parser.address_parser.DataPadder")
+    def test_givenAnAttentionModel_whenRetrainWithNewParams_thenKeepAttentionCacheDirAndOffline(
+        self,
+        data_padder_mock,
+        data_processor_factory_mock,
+        vectorizer_factory_mock,
+        embeddings_factory_mock,
+        model_factory_mock,
+        optimizer_mock,
+        experiment_mock,
+        data_loader_mock,
+        torch_save_mock,
+    ):
+        model_factory_mock().create.return_value = self.model_mock, self.a_model_version
+        a_cache_dir = os.path.join(self.temp_dir_obj.name, "a_cache")
+
+        self.address_parser = AddressParser(
+            model_type=self.a_fasttext_model_type,
+            attention_mechanism=True,
+            device=self.a_device,
+            verbose=self.verbose,
+            cache_dir=a_cache_dir,
+            offline=True,
+        )
+        setup_model_mock = MagicMock()
+        self.address_parser._setup_model = setup_model_mock
+        self.address_parser_retrain_call(seq2seq_params=self.seq2seq_params)
+
+        _, setup_model_kwargs = setup_model_mock.call_args
+        self.assertTrue(setup_model_kwargs["attention_mechanism"])
+        self.assertEqual(a_cache_dir, setup_model_kwargs["cache_dir"])
+        self.assertTrue(setup_model_kwargs["offline"])
+
+    @patch("deepparse.parser.address_parser.torch.save")
+    @patch("deepparse.parser.address_parser.DataLoader")
+    @patch("deepparse.parser.address_parser.Experiment")
+    @patch("deepparse.parser.address_parser.SGD")
+    @patch("deepparse.parser.address_parser.ModelFactory")
+    @patch("deepparse.parser.address_parser.EmbeddingsModelFactory")
+    @patch("deepparse.parser.address_parser.VectorizerFactory")
+    @patch("deepparse.parser.address_parser.DataProcessorFactory")
+    @patch("deepparse.parser.address_parser.DataPadder")
     def test_givenAFasttextModel_whenRetrainWithNewParams_thenSaveNewParamsDict(
         self,
         data_padder_mock,

@@ -1,5 +1,6 @@
 import math
 import os
+import re
 from typing import List, OrderedDict, Tuple
 
 import numpy as np
@@ -78,14 +79,9 @@ def handle_model_name(model_type: str, attention_mechanism: bool) -> Tuple[str, 
             raise ValueError(
                 f"Model-type {model_type} requires attention mechanism. Set attention_mechanism flag to True."
             )
-        # To handle the presence of attention in the model name.
-        # We handle two cases: modelattention and model_attention.
-        # To do so, we first remove the attention for both case, and
-        # second we handle the trailing possible underscore for the
-        # second case.
-        model_type = model_type.replace("attention", "")
-        model_type = model_type.replace("_", "")
-        model_type = model_type.replace("-", "")
+        # We only strip the attention suffix and its separator (modelattention, model_attention or
+        # model-attention) to keep the hyphen of names such as fasttext-light.
+        model_type = re.sub(r"[_-]?attention$", "", model_type)
 
     if model_type in ("lightest", "fasttext-light"):
         model_type = "fasttext-light"  # We change name to 'fasttext-light' since lightest = fasttext-light

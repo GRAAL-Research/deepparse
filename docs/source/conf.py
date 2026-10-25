@@ -191,3 +191,35 @@ autodoc_default_options = {"member-order": "bysource"}
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
+
+# -- Versioned documentation -------------------------------------------------
+
+# The stable release is published at https://deepparse.org/ and the ``dev`` branch at https://deepparse.org/dev/.
+# The dev deployment workflow sets DEEPPARSE_DOCS_VERSION=dev, which adds a "development version" banner on every
+# page and the ``dev_docs`` tag (used with ``.. only::`` in the pages). Any other value builds the stable docs.
+stable_docs_url = "https://deepparse.org/"
+dev_docs_url = "https://deepparse.org/dev/"
+is_dev_docs = os.getenv("DEEPPARSE_DOCS_VERSION", "stable").strip().lower() == "dev"
+
+if is_dev_docs:
+    tags.add("dev_docs")  # pylint: disable=undefined-variable # noqa: F821 (injected by Sphinx)
+
+    if html_theme == "furo":
+        # Furo shows the announcement as a bar on top of every page.
+        html_theme_options = {
+            **html_theme_options,
+            "announcement": (
+                f"You are reading the documentation of the development version of deepparse ({release}). "
+                f'See the <a href="{stable_docs_url}">stable documentation</a> for the latest release.'
+            ),
+        }
+    else:
+        # Theme-agnostic fallback (e.g. sphinx_rtd_theme): a warning admonition on top of every page.
+        rst_prolog = f"""
+.. warning::
+
+   You are reading the documentation of the development version of deepparse ({release}), built from the
+   ``dev`` branch. It may describe unreleased features. See the `stable documentation <{stable_docs_url}>`__
+   for the latest release.
+
+"""

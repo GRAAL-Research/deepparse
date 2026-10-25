@@ -521,3 +521,8 @@
   page to a "Pretrained Models Results" page, and the landing page gets a quick example. Fix the docstrings that
   broke the rendering (`BPEmbEmbeddingsModel`, `MagnitudeEmbeddingsModel`, `EmbeddingsModelFactory.create`,
   `load_fasttext_embeddings`).
+- Publish versioned documentation: the stable release stays at https://deepparse.org/ and the `dev` branch is
+  published at https://deepparse.org/dev/ on every push to `dev` (new `deploy-dev.yml` workflow). The dev pages show
+  a "development version" banner with the dev version number and a link to the stable docs (set with the
+  `DEEPPARSE_DOCS_VERSION=dev` environment variable), and the stable home page links to the dev docs. The stable
+  deployment now keeps the `dev/` folder of `gh-pages`, and both deployments share a concurrency group.

@@ -32,6 +32,11 @@ Use deepparse to
 
 Deepparse is compatible with the **latest version of PyTorch** and  **Python >= 3.10, <= 3.14**.
 
+.. only:: not dev_docs
+
+   This documentation covers the latest stable release. The documentation of the development version (``dev``
+   branch) is available at `deepparse.org/dev <https://deepparse.org/dev/>`__.
+
 Quick Example
 =============
 

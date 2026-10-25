@@ -300,7 +300,7 @@
 - Add Python 3.11.
 - Add pre-processor when parsing addresses.
 - Add `pin_memory=True` when using a CUDA device to increase performance as suggested
-  by [Torch documentation](https://pytorch.org/tutorials/recipes/recipes/tuning_guide.html).
+  by [Torch documentation](https://docs.pytorch.org/tutorials/recipes/recipes/tuning_guide.html).
 - Add `torch.no_grad()` context manager in `__call__()` to increase performance.
 - Reduce memory swap between CPU and GPU by instantiating Tensor directly on the GPU device.
 - Improve some warnings' clarity (i.e., category and message).
@@ -310,7 +310,7 @@
   and [Torch 2.0 does not support Python 3.7](https://dev-discuss.pytorch.org/t/dropping-support-for-cuda-11-6-and-python-3-7-from-pytorch-2-0-release/1021).
 - Improve error handling with wrong checkpoint loading in AddressParser retrain_path use.
 - Add `torch.compile` integration to improve performance (Torch 1.x still supported) with `mode="reduce-overhead"` as
-  suggested in the [documentation](https://pytorch.org/tutorials//intermediate/torch_compile_tutorial.html). It
+  suggested in the [documentation](https://docs.pytorch.org/tutorials/intermediate/torch_compile_tutorial.html). It
   increases the performance by about 1/100.
 
 ## 0.9.7
@@ -521,6 +521,12 @@
   page to a "Pretrained Models Results" page, and the landing page gets a quick example. Fix the docstrings that
   broke the rendering (`BPEmbEmbeddingsModel`, `MagnitudeEmbeddingsModel`, `EmbeddingsModelFactory.create`,
   `load_fasttext_embeddings`).
+- Modernize the documentation: the `furo` theme (light and dark modes) replaces `sphinx_rtd_theme`, a copy button
+  is added to the code blocks (`sphinx-copybutton`, prompts excluded), and a Changelog page renders this file
+  (`myst-parser`). The `all` extra and `docs/requirements.txt` are updated accordingly. Clean the Sphinx
+  configuration (unused LaTeX, Texinfo, man and HTML Help settings and extensions removed, intersphinx URLs updated).
+- The documentation CI now builds once (Python 3.13) with warnings and broken references as errors (`-W -n`), and a
+  weekly workflow checks the documentation links. Fix the docstring warnings and the redirected links.
 - Document the memory and loading time gains of the gensim removal (#335), measured on CPU: the FastText parser takes
   ~1.3 GB of RAM at peak and loads in ~4 s, compared to ~8.4 GB (13.2 GB at peak) and ~42 s with gensim; the BPEmb
   embeddings load in ~0.2 s instead of ~0.9 s and take ~0.14 GB instead of ~0.26 GB.

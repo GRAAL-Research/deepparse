@@ -58,13 +58,13 @@ Resources and Speed
             - Time per address, GPU (batch of 1 / more than 1) (s)
         *   - fastText
             - 6.8 GO
-            - ~8 [#former_loader]_
+            - ~1.3 [#memory_mapped]_
             - ~1
             - ~0.0128 / ~0.0026
             - ~0.0023 / ~0.0004
         *   - fastTextAttention
             - 6.8 GO
-            - ~8 [#former_loader]_
+            - ~1.3 [#memory_mapped]_
             - ~1.1
             - ~0.0230 / ~0.0057
             - ~0.0043 / ~0.0007
@@ -95,9 +95,10 @@ Sources:
   (Linux, Python 3.11, Torch 2.0 and CUDA 11.7, ~183,000 addresses, March 21, 2023). The attention mechanism takes
   about 100 MB more on GPU.
 
-.. [#former_loader] Measured with the former ``fasttext`` loader. The FastText embeddings are now read by the
-   memory-mapped :class:`~deepparse.embeddings_models.FastTextBinReader`, so only the rows used are loaded in RAM,
-   on every OS (see :doc:`embeddings_models`).
+.. [#memory_mapped] Measured in October 2026 (Linux, Python 3.12, Torch 2.14, CPU) with the memory-mapped
+   :class:`~deepparse.embeddings_models.FastTextBinReader`: ~1.3 GB at peak for the whole process while parsing 10,000
+   addresses, on every OS (see :doc:`embeddings_models`). With the former ``gensim`` loader (up to version 0.11.0), the
+   same parser took ~8.4 GB (13.2 GB at peak during the loading).
 
 Accuracy and Multilingual Coverage
 ----------------------------------

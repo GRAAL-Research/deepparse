@@ -517,3 +517,8 @@
 - Document the memory and loading time gains of the gensim removal (#335), measured on CPU: the FastText parser takes
   ~1.3 GB of RAM at peak and loads in ~4 s, compared to ~8.4 GB (13.2 GB at peak) and ~42 s with gensim; the BPEmb
   embeddings load in ~0.2 s instead of ~0.9 s and take ~0.14 GB instead of ~0.26 GB.
+- Publish versioned documentation: the stable release stays at https://deepparse.org/ and the `dev` branch is
+  published at https://deepparse.org/dev/ on every push to `dev` (new `deploy-dev.yml` workflow). The dev pages show
+  a "development version" banner with the dev version number and a link to the stable docs (set with the
+  `DEEPPARSE_DOCS_VERSION=dev` environment variable), and the stable home page links to the dev docs. The stable
+  deployment now keeps the `dev/` folder of `gh-pages`, and both deployments share a concurrency group.

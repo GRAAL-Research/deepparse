@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>deepparse.parser.address_parser &mdash; deepparse 0.11.0.dev1+5715875 documentation</title>
+  <title>deepparse.parser.address_parser &mdash; deepparse 0.11.0.dev1+26382cd documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=1b66cd3a"></script>
+      <script src="../../../_static/documentation_options.js?v=09112da1"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -191,7 +191,7 @@
 <span class="sd">    Args:</span>
 <span class="sd">        model_type (str): The network name to use, can be either:</span>
 
-<span class="sd">            - ``"fasttext"`` (need ~9 GO of RAM to be used),</span>
+<span class="sd">            - ``"fasttext"`` (need ~1.3 GO of RAM to be used, since its embeddings are memory-mapped),</span>
 <span class="sd">            - ``"fasttext-light"`` (need ~2 GO of RAM to be used, but slower than fasttext version),</span>
 <span class="sd">            - ``"bpemb"`` (need ~2 GO of RAM to be used),</span>
 <span class="sd">            - ``"fastest"`` (quicker to process one address) (equivalent to ``"fasttext"``),</span>
@@ -249,7 +249,9 @@
 <span class="sd">    Note:</span>
 <span class="sd">        The FastText embeddings are read with our own reader of the ``.bin`` format, which gives the same vectors</span>
 <span class="sd">        as the ``fasttext`` package on every supported Python version, without ``fasttext`` nor ``gensim``. The</span>
-<span class="sd">        embeddings matrix is memory-mapped, so it loads in a few seconds and only the rows used are kept in RAM.</span>
+<span class="sd">        embeddings matrix is memory-mapped, so it loads in a few seconds and only the rows used are kept in RAM: the</span>
+<span class="sd">        FastText parser takes ~1.3 GO of RAM and loads in ~4 seconds, compared to ~8.4 GO (13.2 GO at peak) and ~42</span>
+<span class="sd">        seconds with the former ``gensim`` loading.</span>
 
 <span class="sd">    Note:</span>
 <span class="sd">        You may observe a 100% CPU load the first time you call the fasttext-light model. We</span>

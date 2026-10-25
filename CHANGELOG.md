@@ -490,3 +490,7 @@
   tags (`Suburb` and `District` become `Municipality`, the `County` and `Country` words are removed). The examples,
   their documentation pages and the dataset links in the README and the documentation now use it. `pyarrow` is
   added to the `all` extra.
+- Add `FastTextBinReader`, a pure numpy reader of the Facebook fastText `.bin` format (memory-mapped input matrix,
+  word vectors computed like fastText `getWordVector`), as a first step to drop `gensim` and `fasttext-wheel` and
+  support Python 3.14 (#255). It is not used by `FastTextEmbeddingsModel` yet. The tests now build their fake `.bin`
+  files with a minimal writer instead of gensim, and an equivalence test compares the reader with gensim and fastText.

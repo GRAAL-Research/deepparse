@@ -7,10 +7,7 @@ from tempfile import TemporaryDirectory
 from unittest import skipIf
 from unittest.mock import patch
 
-from gensim.models import FastText
-from gensim.models._fasttext_bin import save
 from gensim.models.fasttext import FastTextKeyedVectors
-from gensim.test.utils import common_texts
 
 try:
     from fasttext.FastText import _FastText
@@ -23,6 +20,7 @@ from torch.utils.data import DataLoader
 
 from deepparse.embeddings_models import FastTextEmbeddingsModel
 from tests.embeddings_models.integration.tools import MockedDataTransform
+from tests.fixtures.fasttext_bin_writer import create_tiny_fasttext_bin
 from tests.parser.integration.base_retrain import AddressParserRetrainTestCase
 
 
@@ -37,10 +35,7 @@ class FastTextEmbeddingsModelIntegrationTest(AddressParserRetrainTestCase):
         cls.temp_dir_obj = TemporaryDirectory()
         cls.a_fasttext_model_path = os.path.join(cls.temp_dir_obj.name, cls.file_name)
 
-        model = FastText(vector_size=4, window=3, min_count=1)
-        model.build_vocab(corpus_iterable=common_texts)
-        model.train(corpus_iterable=common_texts, total_examples=len(common_texts), epochs=1)
-        save(model, cls.a_fasttext_model_path, {"lr_update_rate": 100, "word_ngrams": 1}, "utf-8")
+        create_tiny_fasttext_bin(cls.a_fasttext_model_path)
 
         cls.verbose = False
 

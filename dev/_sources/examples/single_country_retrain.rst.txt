@@ -5,8 +5,8 @@ Retrain an Address Parser for Single Country Uses
 *************************************************
 
 .. note::
-    - See the notebook `here <https://github.com/GRAAL-Research/deepparse/blob/master/examples/single_country_retrain.ipynb>`_
-    - Run in `Google Colab <https://colab.research.google.com/github/GRAAL-Research/deepparse/blob/master/examples/single_country_retrain.ipynb>`_
+    - See the notebook `here <https://github.com/GRAAL-Research/deepparse/blob/main/examples/single_country_retrain.ipynb>`_
+    - Run in `Google Colab <https://colab.research.google.com/github/GRAAL-Research/deepparse/blob/main/examples/single_country_retrain.ipynb>`_
 
 .. code-block:: python
 

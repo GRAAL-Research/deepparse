@@ -1,0 +1,1054 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="./">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="prev" title="Training Guide" href="training_guide.html">
+        <link rel="prefetch" href="_static/deepparse.png" as="image">
+
+    <link rel="shortcut icon" href="_static/favicon.png"><!-- Generated with Sphinx 9.2.0 and Furo 2025.12.19 -->
+        <title>Changelog - deepparse 0.11.0.dev1+10bcd43</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+<div class="announcement">
+  <aside class="announcement-content">
+     You are reading the documentation of the development version of deepparse (0.11.0.dev1+10bcd43). See the <a href="https://deepparse.org/">stable documentation</a> for the latest release. 
+  </aside>
+</div>
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">deepparse 0.11.0.dev1+10bcd43</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="_static/deepparse.png" alt="Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install/installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="get_started/get_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="parser.html">Parser</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pre_processor.html">Pre-Processors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dataset_container.html">Dataset Container</a></li>
+<li class="toctree-l1"><a class="reference internal" href="comparer.html">Comparer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">Parse Address With Our Out-Of-The-Box API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/parse_addresses.html">Parse Addresses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/parse_addresses_uri.html">Parse Addresses Using A URI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/parse_addresses_with_cli.html">Parse Addresses Using Our CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/retrained_model_parsing.html">Use a Retrained Model to Parse Addresses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/fine_tuning.html">Retrain a Pretrained Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/fine_tuning_uri.html">Retrain a Pretrained Model Using A URI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/fine_tuning_with_csv_dataset.html">Retrain a Pretrained Model Using a CSV Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/retrain_attention_model.html">Retrain an Attention Mechanism Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/retrain_with_new_prediction_tags.html">Retrain With New Prediction Tags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/retrain_with_new_seq2seq_params.html">Retrain With New Seq2Seq Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/single_country_retrain.html">Retrain an Address Parser for Single Country Uses</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Model training</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="training_guide.html">Training Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project</span></p>
+<ul class="current">
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Changelog</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="https://github.com/GRAAL-Research/deepparse/blob/main/docs/source/changelog.md?plain=true" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div><div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/GRAAL-Research/deepparse/edit/main/docs/source/changelog.md" rel="edit" title="Edit this page">
+    <svg><use href="#svg-pencil"></use></svg>
+    <span class="visually-hidden">Edit this page</span>
+  </a>
+</div><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="changelog">
+<h1>Changelog<a class="headerlink" href="#changelog" title="Link to this heading">¶</a></h1>
+<p>From the newest to the oldest version.</p>
+<section id="dev">
+<h2>dev<a class="headerlink" href="#dev" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Stop the unit tests from downloading the pre-trained models: instantiating an <code class="docutils literal notranslate"><span class="pre">AddressParser</span></code> reached the
+HuggingFace Hub, so concurrent CI jobs hit the anonymous rate limit (HTTP 429) and 21 tests failed for
+reasons unrelated to the code. The model factory is now mocked in <code class="docutils literal notranslate"><span class="pre">AddressParserTest.setUp</span></code>.</p></li>
+<li><p>Restrict the tests workflow <code class="docutils literal notranslate"><span class="pre">push</span></code> trigger to <code class="docutils literal notranslate"><span class="pre">main</span></code>, <code class="docutils literal notranslate"><span class="pre">dev</span></code> and <code class="docutils literal notranslate"><span class="pre">stable</span></code>, so a branch with an open pull
+request no longer runs the whole matrix twice.</p></li>
+<li><p>Cache the downloaded models between CI runs and pass an optional <code class="docutils literal notranslate"><span class="pre">HF_TOKEN</span></code> to the test steps.</p></li>
+<li><p>Add a “Client Libraries” section to the README and the Sphinx API documentation pointing to the community
+Go HTTP client (<code class="docutils literal notranslate"><span class="pre">adamdecaf/deepparse-go</span></code>) for the out-of-the-box FastAPI parser.</p></li>
+<li><p>Fix the examples (#328): they called <code class="docutils literal notranslate"><span class="pre">download_from_public_repository</span></code>, removed in 0.9.14, to download sample data
+from the former <code class="docutils literal notranslate"><span class="pre">graal.ift.ulaval.ca</span></code> server, which is down. Add <code class="docutils literal notranslate"><span class="pre">download_worldwide_addresses_sample</span></code> to download
+a small sample of one country from the <code class="docutils literal notranslate"><span class="pre">deepparse/worldwide-addresses</span></code> HuggingFace dataset, mapped to the deepparse
+tags (<code class="docutils literal notranslate"><span class="pre">Suburb</span></code> and <code class="docutils literal notranslate"><span class="pre">District</span></code> become <code class="docutils literal notranslate"><span class="pre">Municipality</span></code>, the <code class="docutils literal notranslate"><span class="pre">County</span></code> and <code class="docutils literal notranslate"><span class="pre">Country</span></code> words are removed). The examples,
+their documentation pages and the dataset links in the README and the documentation now use it. <code class="docutils literal notranslate"><span class="pre">pyarrow</span></code> is
+added to the <code class="docutils literal notranslate"><span class="pre">all</span></code> extra.</p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">FastTextBinReader</span></code>, a pure numpy reader of the Facebook fastText <code class="docutils literal notranslate"><span class="pre">.bin</span></code> format (memory-mapped input matrix,
+word vectors computed like fastText <code class="docutils literal notranslate"><span class="pre">getWordVector</span></code>), as a first step to drop <code class="docutils literal notranslate"><span class="pre">gensim</span></code> and <code class="docutils literal notranslate"><span class="pre">fasttext-wheel</span></code> and
+support Python 3.14 (#255). It is not used by <code class="docutils literal notranslate"><span class="pre">FastTextEmbeddingsModel</span></code> yet. The tests now build their fake <code class="docutils literal notranslate"><span class="pre">.bin</span></code>
+files with a minimal writer instead of gensim, and an equivalence test compares the reader with gensim and fastText.</p></li>
+<li><p>Fix <code class="docutils literal notranslate"><span class="pre">models_evaluation/evaluate_model.py</span></code>: it passed <code class="docutils literal notranslate"><span class="pre">logging_path</span></code> and <code class="docutils literal notranslate"><span class="pre">checkpoint</span></code> to <code class="docutils literal notranslate"><span class="pre">AddressParser.test</span></code>,
+which no longer accepts them, and loaded the tagged test data as a prediction container. The model to evaluate is
+now loaded with <code class="docutils literal notranslate"><span class="pre">path_to_retrained_model</span></code>. Add <code class="docutils literal notranslate"><span class="pre">models_evaluation/evaluate_model_on_test_set.py</span></code> to evaluate a
+pretrained or retrained model on one or more test pickles, such as the <code class="docutils literal notranslate"><span class="pre">test.p</span></code> built from the
+<code class="docutils literal notranslate"><span class="pre">deepparse/worldwide-addresses</span></code> dataset, without the former per-country test directories.</p></li>
+<li><p>Fix the attention decoder with a hidden size other than 1024: the attention layers were always built with a hidden
+size of 1024, so retraining or training an attention model with <code class="docutils literal notranslate"><span class="pre">seq2seq_params</span></code> changing the decoder hidden size
+crashed with a shape mismatch. The published attention models (1024) are not affected.</p></li>
+<li><p>Drop the <code class="docutils literal notranslate"><span class="pre">gensim</span></code>, <code class="docutils literal notranslate"><span class="pre">fasttext-wheel</span></code> and <code class="docutils literal notranslate"><span class="pre">bpemb</span></code> dependencies and support Python 3.14 (#255). <code class="docutils literal notranslate"><span class="pre">gensim</span></code> is in
+maintenance mode and has no Python 3.14 wheel. <code class="docutils literal notranslate"><span class="pre">FastTextEmbeddingsModel</span></code> now reads the <code class="docutils literal notranslate"><span class="pre">.bin</span></code> embeddings with
+<code class="docutils literal notranslate"><span class="pre">FastTextBinReader</span></code> on every OS and Python version (same vectors as fastText, memory-mapped instead of ~8-10 GB of
+RAM). The BPEmb embeddings are loaded with a minimal reimplementation using <code class="docutils literal notranslate"><span class="pre">sentencepiece</span></code> (same vectors as the
+<code class="docutils literal notranslate"><span class="pre">bpemb</span></code> package, same cache layout, so existing caches are reused). Backward compatibility: the pretrained and
+retrained models give the same predictions, the <code class="docutils literal notranslate"><span class="pre">fasttext</span></code> extra is kept (empty), <code class="docutils literal notranslate"><span class="pre">FASTTEXT_AVAILABLE</span></code> is kept,
+<code class="docutils literal notranslate"><span class="pre">load_fasttext_embeddings</span></code> is deprecated and returns a <code class="docutils literal notranslate"><span class="pre">FastTextBinReader</span></code> (same <code class="docutils literal notranslate"><span class="pre">model[word]</span></code>,
+<code class="docutils literal notranslate"><span class="pre">get_word_vector</span></code> and <code class="docutils literal notranslate"><span class="pre">get_dimension</span></code> interface), and <code class="docutils literal notranslate"><span class="pre">BPEmbBaseURLWrapperBugFix</span></code> keeps the <code class="docutils literal notranslate"><span class="pre">bpemb</span></code> defaults and
+its <code class="docutils literal notranslate"><span class="pre">embed</span></code>, <code class="docutils literal notranslate"><span class="pre">encode</span></code>, <code class="docutils literal notranslate"><span class="pre">encode_ids</span></code>, <code class="docutils literal notranslate"><span class="pre">vectors</span></code> and <code class="docutils literal notranslate"><span class="pre">dim</span></code> API (not the gensim <code class="docutils literal notranslate"><span class="pre">emb</span></code> attribute).</p></li>
+<li><p>Allow data loading workers (<code class="docutils literal notranslate"><span class="pre">num_workers</span></code> &gt; 0) with the FastText models on Windows and MacOS: the FastText
+embeddings reader is picklable, so it works with the <code class="docutils literal notranslate"><span class="pre">spawn</span></code> start method. The restriction (error on Windows, <code class="docutils literal notranslate"><span class="pre">fork</span></code>
+start method on MacOS) is kept for the FastText Light (Magnitude) model only.</p></li>
+<li><p>Modernize the documentation: the <code class="docutils literal notranslate"><span class="pre">furo</span></code> theme (light and dark modes) replaces <code class="docutils literal notranslate"><span class="pre">sphinx_rtd_theme</span></code>, a copy button
+is added to the code blocks (<code class="docutils literal notranslate"><span class="pre">sphinx-copybutton</span></code>, prompts excluded), and a Changelog page renders this file
+(<code class="docutils literal notranslate"><span class="pre">myst-parser</span></code>). The <code class="docutils literal notranslate"><span class="pre">all</span></code> extra and <code class="docutils literal notranslate"><span class="pre">docs/requirements.txt</span></code> are updated accordingly. Clean the Sphinx
+configuration (unused LaTeX, Texinfo, man and HTML Help settings and extensions removed, intersphinx URLs updated).</p></li>
+<li><p>The documentation CI now builds once (Python 3.13) with warnings and broken references as errors (<code class="docutils literal notranslate"><span class="pre">-W</span> <span class="pre">-n</span></code>), and a
+weekly workflow checks the documentation links. Fix the docstring warnings and the redirected links.</p></li>
+<li><p>Document the memory and loading time gains of the gensim removal (#335), measured on CPU: the FastText parser takes
+~1.3 GB of RAM at peak and loads in ~4 s, compared to ~8.4 GB (13.2 GB at peak) and ~42 s with gensim; the BPEmb
+embeddings load in ~0.2 s instead of ~0.9 s and take ~0.14 GB instead of ~0.26 GB.</p></li>
+<li><p>Publish versioned documentation: the stable release stays at https://deepparse.org/ and the <code class="docutils literal notranslate"><span class="pre">dev</span></code> branch is
+published at https://deepparse.org/dev/ on every push to <code class="docutils literal notranslate"><span class="pre">dev</span></code> (new <code class="docutils literal notranslate"><span class="pre">deploy-dev.yml</span></code> workflow). The dev pages show
+a “development version” banner with the dev version number and a link to the stable docs (set with the
+<code class="docutils literal notranslate"><span class="pre">DEEPPARSE_DOCS_VERSION=dev</span></code> environment variable), and the stable home page links to the dev docs. The stable
+deployment now keeps the <code class="docutils literal notranslate"><span class="pre">dev/</span></code> folder of <code class="docutils literal notranslate"><span class="pre">gh-pages</span></code>, and both deployments share a concurrency group.</p></li>
+</ul>
+</section>
+<section id="id1">
+<h2>0.11.0<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Replace <code class="docutils literal notranslate"><span class="pre">print()</span></code> calls with <code class="docutils literal notranslate"><span class="pre">logging</span></code> across the codebase for proper log-level control.</p></li>
+<li><p>Replace <code class="docutils literal notranslate"><span class="pre">Union[X,</span> <span class="pre">None]</span></code> type hints with PEP 604 <code class="docutils literal notranslate"><span class="pre">X</span> <span class="pre">|</span> <span class="pre">None</span></code> pipe syntax (Python 3.10+).</p></li>
+<li><p>Fix CLI <code class="docutils literal notranslate"><span class="pre">retrain</span></code> command silently ignoring the <code class="docutils literal notranslate"><span class="pre">--prediction_tags</span></code> argument.</p></li>
+<li><p>Remove dead code in CLI <code class="docutils literal notranslate"><span class="pre">retrain</span></code> (<code class="docutils literal notranslate"><span class="pre">parser_args.update</span></code> on unused dict) and simplify <code class="docutils literal notranslate"><span class="pre">handle_prediction_tags()</span></code>.</p></li>
+<li><p>Fix training dataset validation not flagging a partially empty tag set: <code class="docutils literal notranslate"><span class="pre">_empty_tags</span></code> used <code class="docutils literal notranslate"><span class="pre">all</span></code> instead of
+<code class="docutils literal notranslate"><span class="pre">any</span></code>, so a single empty tag list (e.g. <code class="docutils literal notranslate"><span class="pre">(&quot;an</span> <span class="pre">address&quot;,</span> <span class="pre">[])</span></code>) was masked and reported through the generic
+length-mismatch error instead of the clearer “Some tags data points are empty.” error.</p></li>
+<li><p>Fix <code class="docutils literal notranslate"><span class="pre">extract_package_version</span></code> reading <code class="docutils literal notranslate"><span class="pre">package.version.__version__</span></code>, which no longer exists in Poutyne &gt;= 1.18
+and broke <code class="docutils literal notranslate"><span class="pre">retrain</span></code> with an <code class="docutils literal notranslate"><span class="pre">AttributeError</span></code>. It now reads the standard <code class="docutils literal notranslate"><span class="pre">package.__version__</span></code>.</p></li>
+<li><p>Fix the fine-tuned weights loader (<code class="docutils literal notranslate"><span class="pre">ModelLoader.load_weights</span></code>) always returning <code class="docutils literal notranslate"><span class="pre">None</span></code> as the model version:
+the version was read from the inner state dict instead of the checkpoint metadata.</p></li>
+<li><p>Fix <code class="docutils literal notranslate"><span class="pre">retrain</span></code> silently swallowing a genuine training <code class="docutils literal notranslate"><span class="pre">RuntimeError</span></code> (it inspected the current working directory
+instead of the logging path); the error is now re-raised when there is no checkpoint collision.</p></li>
+<li><p>Fix the parser mutating a caller-provided <code class="docutils literal notranslate"><span class="pre">pre_processors</span></code> list, which accumulated duplicate pre-processors
+when the same list was reused across calls.</p></li>
+<li><p>Fix CLI export-format detection matching the extension as a substring anywhere in the file name
+(e.g. <code class="docutils literal notranslate"><span class="pre">report.pdf</span></code> treated as pickle); it now checks the real file extension.</p></li>
+<li><p>Fix CLI attention-model handling using <code class="docutils literal notranslate"><span class="pre">str.strip(&quot;attention&quot;)</span></code> (a character set) to drop the <code class="docutils literal notranslate"><span class="pre">-attention</span></code>
+suffix; it now uses <code class="docutils literal notranslate"><span class="pre">removesuffix(&quot;-attention&quot;)</span></code>.</p></li>
+<li><p>Remove a no-op <code class="docutils literal notranslate"><span class="pre">self.model.state_dict()</span></code> call in <code class="docutils literal notranslate"><span class="pre">save_address_parser_weights</span></code>.</p></li>
+<li><p>Fix the REST API returning HTTP 500 instead of the documented 422 for an empty address list or an unknown
+parsing model: <code class="docutils literal notranslate"><span class="pre">format_parsed_addresses</span></code> (used as a FastAPI dependency) raised <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> instead of
+<code class="docutils literal notranslate"><span class="pre">HTTPException</span></code>.</p></li>
+<li><p>Fix <code class="docutils literal notranslate"><span class="pre">DataPadder.pad_subword_embeddings_sequences</span></code> mutating the caller’s decomposition-length lists in place.</p></li>
+<li><p>Replace a <code class="docutils literal notranslate"><span class="pre">except</span> <span class="pre">BaseException</span></code> (which also swallowed <code class="docutils literal notranslate"><span class="pre">KeyboardInterrupt</span></code>/<code class="docutils literal notranslate"><span class="pre">SystemExit</span></code>) with <code class="docutils literal notranslate"><span class="pre">except</span> <span class="pre">Exception</span></code>
+when closing HTTP adapters in the BPEmb embeddings model.</p></li>
+<li><p>Fix a missing space in the <code class="docutils literal notranslate"><span class="pre">DataProcessorFactory</span></code> “unsupported vectorizer” error message.</p></li>
+<li><p><strong>Breaking change (REST API)</strong>: the <code class="docutils literal notranslate"><span class="pre">parse</span></code> endpoint now returns <code class="docutils literal notranslate"><span class="pre">parsed_addresses</span></code> as a list of
+<code class="docutils literal notranslate"><span class="pre">{raw:</span> <span class="pre">parsed}</span></code> objects instead of a single object keyed on the raw address. The previous format silently
+collapsed duplicate input addresses (and lost their order); the list preserves every input.</p></li>
+<li><p>Fix the attention decoder building its length mask on CPU, which raised a device-mismatch error when running
+an attention model on GPU. The mask now follows the model’s device.</p></li>
+<li><p>Security: load model checkpoints with <code class="docutils literal notranslate"><span class="pre">torch.load(...,</span> <span class="pre">weights_only=True)</span></code> so a maliciously crafted
+checkpoint (e.g. an untrusted <code class="docutils literal notranslate"><span class="pre">path_to_retrained_model</span></code>) cannot execute arbitrary code during unpickling.</p></li>
+<li><p>Security: download the BPEmb embeddings with SSL verification enabled by default. Verification is now only
+disabled as a failsafe (with a warning) if an SSL error occurs, instead of unconditionally. The previous
+behaviour exposed the download to man-in-the-middle tampering.</p></li>
+<li><p>Security: document that <code class="docutils literal notranslate"><span class="pre">PickleDatasetContainer</span></code> must only be used with trusted pickle files, since
+unpickling executes arbitrary code.</p></li>
+<li><p>Security (REST API): reject requests with more than <code class="docutils literal notranslate"><span class="pre">MAX_ADDRESSES_PER_REQUEST</span></code> addresses (default 1024,
+env-overridable) with HTTP 413, to prevent resource-exhaustion denial of service.</p></li>
+<li><p>Security (Sentry): default <code class="docutils literal notranslate"><span class="pre">traces</span></code>/<code class="docutils literal notranslate"><span class="pre">profiles</span></code> sample rates to 0.1 (env-overridable via
+<code class="docutils literal notranslate"><span class="pre">SENTRY_TRACES_SAMPLE_RATE</span></code>/<code class="docutils literal notranslate"><span class="pre">SENTRY_PROFILES_SAMPLE_RATE</span></code>), never capture request bodies, and disable PII
+sending, since parsed addresses are personal data.</p></li>
+<li><p>Security (Docker): run the app image as a non-root user and pin the base images by digest.</p></li>
+<li><p>Add an architecture test suite (ArchUnitPython) under <code class="docutils literal notranslate"><span class="pre">tests/architecture/</span></code> that freezes the package layering
+and forbids import cycles between packages.</p></li>
+<li><p>Add a <code class="docutils literal notranslate"><span class="pre">pip-audit</span></code> CI workflow to scan dependencies for known vulnerabilities, running on both <code class="docutils literal notranslate"><span class="pre">main</span></code> and <code class="docutils literal notranslate"><span class="pre">dev</span></code>.</p></li>
+<li><p>Fix the CI test suite failing because <code class="docutils literal notranslate"><span class="pre">transformers</span></code> lazily imports <code class="docutils literal notranslate"><span class="pre">torchvision</span></code>.</p></li>
+<li><p>Fix the greetings workflow failing on every PR.</p></li>
+<li><p>Fix the broken Zenodo DOI badge URL in the README.</p></li>
+<li><p>Bump <code class="docutils literal notranslate"><span class="pre">fastapi</span></code> from 0.134.0 to 0.141.1.</p></li>
+<li><p>Bump <code class="docutils literal notranslate"><span class="pre">docker/build-push-action</span></code> from 6.19.2 to 7.3.0.</p></li>
+<li><p>Bump <code class="docutils literal notranslate"><span class="pre">docker/metadata-action</span></code> from 5.10.0 to 6.2.0.</p></li>
+<li><p>Bump <code class="docutils literal notranslate"><span class="pre">docker/login-action</span></code> from 2.1.0 to 4.6.0.</p></li>
+<li><p>Bump <code class="docutils literal notranslate"><span class="pre">actions/checkout</span></code> from 4 to 7.</p></li>
+<li><p>Bump <code class="docutils literal notranslate"><span class="pre">actions/setup-python</span></code> from 6 to 7.</p></li>
+<li><p>Bump <code class="docutils literal notranslate"><span class="pre">actions/stale</span></code> from 7 to 11.</p></li>
+<li><p>Bump <code class="docutils literal notranslate"><span class="pre">github/codeql-action</span></code> from 4 to 4.37.9.</p></li>
+<li><p>Update <code class="docutils literal notranslate"><span class="pre">sentry-sdk</span></code> requirement from &gt;=2.0.0 to &gt;=2.68.1.</p></li>
+<li><p>Update <code class="docutils literal notranslate"><span class="pre">gensim</span></code> requirement from &gt;=4.3.3 to &gt;=4.4.0.</p></li>
+<li><p>Update <code class="docutils literal notranslate"><span class="pre">sphinx</span></code> requirement from &gt;=7.4.0 to &gt;=8.1.3.</p></li>
+<li><p>Update <code class="docutils literal notranslate"><span class="pre">sphinx-rtd-theme</span></code> requirement from &gt;=3.0.0 to &gt;=3.1.0.</p></li>
+<li><p>Update <code class="docutils literal notranslate"><span class="pre">colorama</span></code> requirement from &gt;=0.4.3 to &gt;=0.4.6.</p></li>
+</ul>
+</section>
+<section id="id2">
+<h2>0.10.0<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Breaking change</strong>: Drop Python 3.8 and 3.9 support. Minimum required version is now Python 3.10.</p></li>
+<li><p>Add Python 3.12 support.</p></li>
+<li><p>Add compatibility with Intel GPUs and other Torch acceleration devices.</p></li>
+<li><p>Remove <code class="docutils literal notranslate"><span class="pre">numpy&lt;2.0.0</span></code> version cap to support NumPy 2.x.</p></li>
+<li><p>Bump pinned dependency versions for Python 3.12+ compatibility (unpin <code class="docutils literal notranslate"><span class="pre">uvicorn</span></code>, <code class="docutils literal notranslate"><span class="pre">python-decouple</span></code>, <code class="docutils literal notranslate"><span class="pre">pylint-django</span></code>, <code class="docutils literal notranslate"><span class="pre">pre-commit</span></code>, <code class="docutils literal notranslate"><span class="pre">pycountry</span></code>).</p></li>
+<li><p>Update CI/CD workflows, documentation, and package setup for Python 3.12.</p></li>
+<li><p>Fix outdated model download URLs from <code class="docutils literal notranslate"><span class="pre">graal.ift.ulaval.ca</span></code> to HuggingFace Hub.</p></li>
+<li><p>Remove unused <code class="docutils literal notranslate"><span class="pre">BASE_URL</span></code> constant.</p></li>
+<li><p>Add missing parameterized type hints across the codebase (<code class="docutils literal notranslate"><span class="pre">List[str]</span></code>, <code class="docutils literal notranslate"><span class="pre">Dict[str,</span> <span class="pre">int]</span></code>, <code class="docutils literal notranslate"><span class="pre">List[Callable]</span></code>, etc.).</p></li>
+<li><p>Add missing return type annotations to multiple functions and methods.</p></li>
+<li><p>Add Python 3.13 support.</p></li>
+<li><p>Make <code class="docutils literal notranslate"><span class="pre">fasttext-wheel</span></code> an optional dependency. On Python 3.13+ (or when <code class="docutils literal notranslate"><span class="pre">fasttext</span></code> is not installed), Deepparse
+automatically falls back to Gensim’s <code class="docutils literal notranslate"><span class="pre">load_facebook_vectors</span></code> to load FastText embeddings. Install with
+<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">deepparse[fasttext]</span></code> for native FastText support on Python 3.10–3.12.</p></li>
+<li><p>Fix <code class="docutils literal notranslate"><span class="pre">FastTextEmbeddingsModel.dim</span></code> property to use <code class="docutils literal notranslate"><span class="pre">vector_size</span></code> when using the Gensim fallback.</p></li>
+<li><p>Fix Python version in <code class="docutils literal notranslate"><span class="pre">deploy.yml</span></code> and <code class="docutils literal notranslate"><span class="pre">python-publish.yml</span></code> workflows (was set to non-existent 3.14).</p></li>
+<li><p>Update GitHub Actions to latest major versions (<code class="docutils literal notranslate"><span class="pre">checkout&#64;v4</span></code>, <code class="docutils literal notranslate"><span class="pre">setup-python&#64;v5</span></code>, <code class="docutils literal notranslate"><span class="pre">codeql-action&#64;v3</span></code>, <code class="docutils literal notranslate"><span class="pre">gh-pages&#64;v4</span></code>).</p></li>
+<li><p>Fix Dependabot target branch from non-existent <code class="docutils literal notranslate"><span class="pre">develop</span></code> to <code class="docutils literal notranslate"><span class="pre">dev</span></code>.</p></li>
+<li><p>Remove dead code: unused <code class="docutils literal notranslate"><span class="pre">attention_output</span></code> tensor allocation in <code class="docutils literal notranslate"><span class="pre">Seq2SeqModel._decoder_step</span></code>.</p></li>
+<li><p>Fix <code class="docutils literal notranslate"><span class="pre">download_fasttext_magnitude_embeddings</span></code> always re-downloading even when cached.</p></li>
+<li><p>Replace <code class="docutils literal notranslate"><span class="pre">assert</span></code> statements with <code class="docutils literal notranslate"><span class="pre">HTTPException</span></code> in FastAPI app for proper error handling.</p></li>
+<li><p>Change default logging level from <code class="docutils literal notranslate"><span class="pre">DEBUG</span></code> to <code class="docutils literal notranslate"><span class="pre">WARNING</span></code> in app module.</p></li>
+<li><p>Remove unnecessary <code class="docutils literal notranslate"><span class="pre">pybind11</span></code> from build-system requirements.</p></li>
+<li><p>Remove obsolete “temporary fix for torch 1.6” comments in encoder, decoder and embedding network.</p></li>
+<li><p>Remove deprecated <code class="docutils literal notranslate"><span class="pre">version</span></code> key from <code class="docutils literal notranslate"><span class="pre">docker-compose.yml</span></code>.</p></li>
+<li><p>Fix mixed f-string/<code class="docutils literal notranslate"><span class="pre">%</span></code>-formatting in download progress bar.</p></li>
+<li><p>Update Dockerfile base images to PyTorch 2.5.1 / CUDA 12.4 and Python 3.13.</p></li>
+<li><p>Migrate PyPI publish workflow from deprecated <code class="docutils literal notranslate"><span class="pre">setup.py</span> <span class="pre">sdist</span> <span class="pre">bdist_wheel</span></code> to <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">build</span></code>.</p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">MANIFEST.in</span></code> to ensure <code class="docutils literal notranslate"><span class="pre">version.txt</span></code> and <code class="docutils literal notranslate"><span class="pre">README.md</span></code> are included in source distributions.</p></li>
+<li><p>Restrict docs workflow to only build on <code class="docutils literal notranslate"><span class="pre">main</span></code>, <code class="docutils literal notranslate"><span class="pre">dev</span></code>, and <code class="docutils literal notranslate"><span class="pre">stable</span></code> branches.</p></li>
+<li><p>Bump <code class="docutils literal notranslate"><span class="pre">actions/setup-python</span></code> from v5 to v6.</p></li>
+<li><p>Bump <code class="docutils literal notranslate"><span class="pre">docker/metadata-action</span></code> from 4.3.0 to 5.10.0.</p></li>
+<li><p>Bump <code class="docutils literal notranslate"><span class="pre">docker/build-push-action</span></code> from 4.0.0 to 6.19.2.</p></li>
+<li><p>Bump <code class="docutils literal notranslate"><span class="pre">github/codeql-action</span></code> from v3 to v4.</p></li>
+<li><p>Bump <code class="docutils literal notranslate"><span class="pre">actions/first-interaction</span></code> from v1 to v3.</p></li>
+<li><p>Bump <code class="docutils literal notranslate"><span class="pre">fastapi[all]</span></code> from 0.109.1 to 0.134.0.</p></li>
+</ul>
+</section>
+<section id="id3">
+<h2>0.9.14<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Switch model weights hosting to hugging face</p></li>
+</ul>
+</section>
+<section id="id4">
+<h2>0.9.13<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Update Gensim version in setup to allow for the installation of recent Scipy versions.</p></li>
+</ul>
+</section>
+<section id="id5">
+<h2>0.9.12<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Bug-fix the call to the BPEmb class instead of the BPEmbBaseURLWrapperBugFix to fix the download URL in <code class="docutils literal notranslate"><span class="pre">download_models</span></code>.</p></li>
+</ul>
+</section>
+<section id="id6">
+<h2>0.9.11<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Fix Sentry version error in Docker Image.</p></li>
+</ul>
+</section>
+<section id="id7">
+<h2>0.9.10<a class="headerlink" href="#id7" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Fix and improve documentation.</p></li>
+<li><p>Remove fixed dependencies version.</p></li>
+<li><p>Fix app errors.</p></li>
+<li><p>Add data validation for 1) multiple consecutive whitespace and 2) newline.</p></li>
+<li><p>Fixes some errors in tests.</p></li>
+<li><p>Add an argument to the <code class="docutils literal notranslate"><span class="pre">DatasetContainer</span></code> interface to use a pre-processing data cleaning function before validation.</p></li>
+<li><p>Hot-fix the issue with the BPEmb base URL download problem. See <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/issues/221">issue 221</a>.</p></li>
+<li><p>Fix the NumPy version due to a major release with breaking changes.</p></li>
+<li><p>Fix the SciPy version due to breaking change with Gensim.</p></li>
+<li><p>Fix circular import in the API app.</p></li>
+<li><p>Fix deprecated <code class="docutils literal notranslate"><span class="pre">max_request_body_size</span></code> in Sentry.</p></li>
+</ul>
+</section>
+<section id="id8">
+<h2>0.9.9<a class="headerlink" href="#id8" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Add version to Seq2Seq and AddressParser.</p></li>
+<li><p>Add a Deepparse as an API using FastAPI.</p></li>
+<li><p>Add a Dockerfile and a <code class="docutils literal notranslate"><span class="pre">docker-compose.yml</span></code> to build a Docker container for the API.</p></li>
+<li><p>Bug-fix the default pre-processors that did not all apply but only the last one.</p></li>
+</ul>
+</section>
+<section id="id9">
+<h2>0.9.8<a class="headerlink" href="#id9" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Hot-fix wheel install (See <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/issues/196">issue 196</a>).</p></li>
+<li><p>Starting now, we also include model weights release in the GitHub release.</p></li>
+</ul>
+</section>
+<section id="id10">
+<h2>0.9.7<a class="headerlink" href="#id10" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>New models release with more meta-data.</p></li>
+<li><p>Add a feature to use an AddressParser from a URI.</p></li>
+<li><p>Add a feature to upload the trained model to a URI.</p></li>
+<li><p>Add an example of how to use URI for parsing from and uploading to.</p></li>
+<li><p>Improve error handling of <code class="docutils literal notranslate"><span class="pre">path_to_retrain_model</span></code>.</p></li>
+<li><p>Bug-fix pre-processor error.</p></li>
+<li><p>Add verbose override and improve verbosity handling in retraining.</p></li>
+<li><p>Bug-fix the broken FastText installation using <code class="docutils literal notranslate"><span class="pre">fasttext-wheel</span></code> instead of <code class="docutils literal notranslate"><span class="pre">fasttext</span></code> (
+see <a class="reference external" href="https://github.com/facebookresearch/fastText/issues/512#issuecomment-1534519551">here</a>
+and <a class="reference external" href="https://github.com/facebookresearch/fastText/pull/1292">here</a>).</p></li>
+</ul>
+</section>
+<section id="id11">
+<h2>0.9.6<a class="headerlink" href="#id11" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Add Python 3.11.</p></li>
+<li><p>Add pre-processor when parsing addresses.</p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">pin_memory=True</span></code> when using a CUDA device to increase performance as suggested
+by <a class="reference external" href="https://docs.pytorch.org/tutorials/recipes/recipes/tuning_guide.html">Torch documentation</a>.</p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">torch.no_grad()</span></code> context manager in <code class="docutils literal notranslate"><span class="pre">__call__()</span></code> to increase performance.</p></li>
+<li><p>Reduce memory swap between CPU and GPU by instantiating Tensor directly on the GPU device.</p></li>
+<li><p>Improve some warnings’ clarity (i.e., category and message).</p></li>
+<li><p>Bug-fix MacOS multiprocessing. It was impossible to use in multiprocess since we were not testing whether Torch
+multiprocess was set properly. Now, we set it properly and raise a warning instead of an error.</p></li>
+<li><p>Drop Python 3.7 support since newer Python versions are faster
+and <a class="reference external" href="https://dev-discuss.pytorch.org/t/dropping-support-for-cuda-11-6-and-python-3-7-from-pytorch-2-0-release/1021">Torch 2.0 does not support Python 3.7</a>.</p></li>
+<li><p>Improve error handling with wrong checkpoint loading in AddressParser retrain_path use.</p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">torch.compile</span></code> integration to improve performance (Torch 1.x still supported) with <code class="docutils literal notranslate"><span class="pre">mode=&quot;reduce-overhead&quot;</span></code> as
+suggested in the <a class="reference external" href="https://docs.pytorch.org/tutorials/intermediate/torch_compile_tutorial.html">documentation</a>. It
+increases the performance by about 1/100.</p></li>
+</ul>
+</section>
+<section id="id12">
+<h2>0.9.5<a class="headerlink" href="#id12" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Fixed tags converter bug with the data processor.</p></li>
+</ul>
+</section>
+<section id="id13">
+<h2>0.9.4<a class="headerlink" href="#id13" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Improve codebase.</p></li>
+</ul>
+</section>
+<section id="id14">
+<h2>0.9.3<a class="headerlink" href="#id14" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Improve error handling.</p></li>
+<li><p>Bug-fix FastText error is not handled in the test API.</p></li>
+<li><p>Add a feature to allow new_prediction_tags to retrain CLI.</p></li>
+</ul>
+</section>
+<section id="id15">
+<h2>0.9.2<a class="headerlink" href="#id15" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Improve Deepparse server error handling and error output.</p></li>
+<li><p>Remove deprecated argument <code class="docutils literal notranslate"><span class="pre">saving_dir</span></code> in <code class="docutils literal notranslate"><span class="pre">download_fasttext_magnitude_embeddings</span></code>
+and <code class="docutils literal notranslate"><span class="pre">download_fasttext_embeddings</span></code> functions.</p></li>
+<li><p>Add offline argument to remove verification of the latest version.</p></li>
+<li><p>Bug-fix cache handling in the download model.</p></li>
+<li><p>Add the <code class="docutils literal notranslate"><span class="pre">download_models</span></code> CLI function.</p></li>
+<li><p><a class="reference external" href="https://github.com/GRAAL-Research/deepparse/issues/156">Temporary hot-fix BPEmb SSL certificate error</a>.</p></li>
+</ul>
+</section>
+<section id="id16">
+<h2>0.9.1<a class="headerlink" href="#id16" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Hot-fix cli.download_model attention model bug</p></li>
+</ul>
+</section>
+<section id="id17">
+<h2>0.9<a class="headerlink" href="#id17" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">save_model_weights</span></code> method to <code class="docutils literal notranslate"><span class="pre">AddressParser</span></code> to save model weights (PyTorch state dictionary)</p></li>
+<li><p>Improve CI</p></li>
+<li><p>Added verbose flag for the test to activate or deactivate the test verbosity (it overrides the AddressParser verbosity)</p></li>
+<li><p>Add Docker image</p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">val_dataset</span></code> to retrain API to allow the use of a specific val dataset for training</p></li>
+<li><p>Remove the deprecated <code class="docutils literal notranslate"><span class="pre">download_from_url</span></code> function</p></li>
+<li><p>Remove the deprecated <code class="docutils literal notranslate"><span class="pre">dataset_container</span></code> argument</p></li>
+<li><p>Fixed errors and docs</p></li>
+<li><p>Added the UK retrain example</p></li>
+</ul>
+</section>
+<section id="id18">
+<h2>0.8.3<a class="headerlink" href="#id18" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Add Zenodo DOI</p></li>
+</ul>
+</section>
+<section id="id19">
+<h2>0.8.2<a class="headerlink" href="#id19" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Bug-fix retrain attention model naming parsing</p></li>
+<li><p>Improve error handling when not a DatasetContainer is used in retraining and testing API</p></li>
+</ul>
+</section>
+<section id="id20">
+<h2>0.8.1<a class="headerlink" href="#id20" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Refactored function <code class="docutils literal notranslate"><span class="pre">download_from_url</span></code> to <code class="docutils literal notranslate"><span class="pre">download_from_public_repository</span></code>.</p></li>
+<li><p>Add error management when retraining a FastText-like model on Windows with several workers (<code class="docutils literal notranslate"><span class="pre">num_workers</span></code>) greater
+than 0.</p></li>
+<li><p>Improve dev tooling</p></li>
+<li><p>Improve CI</p></li>
+<li><p>Improve code coverage and pylint</p></li>
+<li><p>Add Codacy</p></li>
+</ul>
+</section>
+<section id="id21">
+<h2>0.8<a class="headerlink" href="#id21" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Improve SEO</p></li>
+<li><p>Add cache_dir arg in all CLI functions</p></li>
+<li><p>Improve handling of HTTP errors in models version verification</p></li>
+<li><p>Improve doc</p></li>
+<li><p>Add a note for parsing data cleaning (i.e. lowercase, commas removal, and hyphen replacing).</p></li>
+<li><p>Add hyphen parsing cleaning step (with a bool flag to activate or not) to improve some country address parsing (
+see <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/issues/137">issue 137</a>).</p></li>
+<li><p>Add ListDatasetContainer for the Python list dataset.</p></li>
+</ul>
+</section>
+<section id="id22">
+<h2>0.7.6<a class="headerlink" href="#id22" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Re-release version 0.7.5 into 0.7.6 due to manipulation error and change in PyPi (now delete does not delete
+release).</p></li>
+</ul>
+</section>
+<section id="id23">
+<h2>0.7.5<a class="headerlink" href="#id23" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Bug-fix Poutyne version handling that causes a print error when a version is 1.11 when retraining</p></li>
+<li><p>Add the option to create a named retrain the parsing model using, by default, the architecture setting or using the
+user-given name</p></li>
+<li><p>Hot-fix missing raise for DataError validation of address to parse when address is tuple</p></li>
+<li><p>Bug-fix handling of string column name for CSVDatasetContainer that raised ValueError</p></li>
+<li><p>Improve parse CLI documentation and fix errors in documentation stating JSON format is supported as input data</p></li>
+<li><p>Add batch_size to parse CLI</p></li>
+<li><p>Add minimum version to Gensim 4.0.0.</p></li>
+<li><p>Add a new CLI function, retrain, to retrain from the command line</p></li>
+<li><p>Improve doc</p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">cache_dir</span></code> to the BPEmb embedding model and to <code class="docutils literal notranslate"><span class="pre">AddressParser</span></code> to change the embeddings cache directory and
+models weights cache directory</p></li>
+<li><p>Change the <code class="docutils literal notranslate"><span class="pre">saving_dir</span></code> argument of <code class="docutils literal notranslate"><span class="pre">download_fastext_embeddings</span></code> and <code class="docutils literal notranslate"><span class="pre">download_fasttext_magnitude_embeddings</span></code>
+function
+to <code class="docutils literal notranslate"><span class="pre">cache_dir</span></code>. <code class="docutils literal notranslate"><span class="pre">saving_dir</span></code> is now deprecated and will be removed in version 0.8.</p></li>
+<li><p>Add a new CLI function, test, to test from the command line</p></li>
+</ul>
+</section>
+<section id="id24">
+<h2>0.7.4<a class="headerlink" href="#id24" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Improve parsed address print</p></li>
+<li><p>Bug-fix #124: comma-separated list without whitespace in CSVDatasetContainer</p></li>
+<li><p>Add a report when addresses to parse and tags list len differ</p></li>
+<li><p>Add an example of how to fine-tune using our CSVDatasetContainer</p></li>
+<li><p>Improve data validation for data to parse</p></li>
+</ul>
+</section>
+<section id="id25">
+<h2>0.7.3<a class="headerlink" href="#id25" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Add freeze layer parameters to freeze layers during retraining</p></li>
+</ul>
+</section>
+<section id="id26">
+<h2>0.7.2<a class="headerlink" href="#id26" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Added JSON output support</p></li>
+<li><p>Add logging output of parse CLI function</p></li>
+<li><p>Hot-fix Poutyne version handling</p></li>
+</ul>
+</section>
+<section id="id27">
+<h2>0.7.1<a class="headerlink" href="#id27" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Hot-fix for missing dependency</p></li>
+<li><p>Fixed bug with poutyne version handling</p></li>
+</ul>
+</section>
+<section id="id28">
+<h2>0.7<a class="headerlink" href="#id28" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Improved CLI</p></li>
+<li><p>Fixed bug in CLI export dataset</p></li>
+<li><p>Improved the documentation of the CLI</p></li>
+</ul>
+</section>
+<section id="id29">
+<h2>0.6.7<a class="headerlink" href="#id29" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Fixed errors in data validation</p></li>
+<li><p>Improved documentation over data validation</p></li>
+<li><p>Bug-fix data slicing error with data containers</p></li>
+<li><p>Add an example of how to use a retrained model</p></li>
+</ul>
+</section>
+<section id="id30">
+<h2>0.6.6<a class="headerlink" href="#id30" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Fixed errors in code examples</p></li>
+<li><p>Improved documentation of download_from_url</p></li>
+<li><p>Improve error management of retraining and test</p></li>
+</ul>
+</section>
+<section id="id31">
+<h2>0.6.5<a class="headerlink" href="#id31" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Improve error handling of empty data and whitespace-only data.</p></li>
+<li><p>Parsing now includes two validations on the data quality (not empty and not whitespace only)</p></li>
+<li><p>DataContainer now includes data quality test (not empty, not whitespace only, tags not empty, tags the same length as an
+address and data is a list of tuples)</p></li>
+<li><p>New CSVDatasetContainer</p></li>
+<li><p>DataContainer can now be used to predict using a flag.</p></li>
+<li><p>Add a CLI to parse addresses from the command line.</p></li>
+</ul>
+</section>
+<section id="id32">
+<h2>0.6.4<a class="headerlink" href="#id32" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Bug-fix reloading of retraining attention model (PR #110)</p></li>
+<li><p>Improve error handling</p></li>
+<li><p>Improve doc</p></li>
+</ul>
+</section>
+<section id="id33">
+<h2>0.6.3<a class="headerlink" href="#id33" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Fixed the printing capture to raise the error with Poutyne as of version 1.8. We keep the previous approach for
+compatibility with the previous Poutyne version.</p></li>
+<li><p>Added a flag to disable or not use Tensorboard during retraining.</p></li>
+</ul>
+</section>
+<section id="id34">
+<h2>0.6.2<a class="headerlink" href="#id34" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Improved (slightly) data padding method code speed as per PyTorch list or array to the Tensor recommendation.</p></li>
+<li><p>Improved documentation for RuntimeError due to retraining FastText and BPEmb model in the same directory.</p></li>
+<li><p>Added error handling RuntimeError when retraining.</p></li>
+</ul>
+</section>
+<section id="id35">
+<h2>0.6.1<a class="headerlink" href="#id35" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Completed EOS bug fix</p></li>
+</ul>
+</section>
+<section id="id36">
+<h2>0.6<a class="headerlink" href="#id36" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Added Attention mechanism models</p></li>
+<li><p>Fixed EOS bug</p></li>
+</ul>
+</section>
+<section id="id37">
+<h2>0.5.1<a class="headerlink" href="#id37" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Fixed address_comparer hint typing error</p></li>
+<li><p>Fixed some docs errors</p></li>
+<li><p>Retrain and test now have more default parameters</p></li>
+<li><p>Various small code and test improvements</p></li>
+</ul>
+</section>
+<section id="id38">
+<h2>0.5<a class="headerlink" href="#id38" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Added Python 3.9</p></li>
+<li><p>Added feature to allow a more flexible way to retrain</p></li>
+<li><p>Added a feature to allow retraining of a new seq2seq architecture</p></li>
+<li><p>Fixed prediction tags bug when parsing with new tags after retraining</p></li>
+</ul>
+</section>
+<section id="id39">
+<h2>0.4.4<a class="headerlink" href="#id39" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Fixed import error.</p></li>
+</ul>
+</section>
+<section id="id40">
+<h2>0.4.3<a class="headerlink" href="#id40" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Fixed typos in one of the file names.</p></li>
+<li><p>Added tools to compare addresses (tagged or not).</p></li>
+<li><p>Fixed some test errors.</p></li>
+</ul>
+</section>
+<section id="id41">
+<h2>0.4.2<a class="headerlink" href="#id41" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">__eq__</span></code> method to <code class="docutils literal notranslate"><span class="pre">FormattedParsedAddress</span></code>.</p></li>
+<li><p>Improved device management.</p></li>
+<li><p>Improved testing.</p></li>
+</ul>
+</section>
+<section id="id42">
+<h2>0.4.1<a class="headerlink" href="#id42" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Added method to specify the format of address components of a <code class="docutils literal notranslate"><span class="pre">FormattedParsedAddress.</span></code> Formatting can specify the
+field separator, the field to be capitalized, and the field to be upper case.</p></li>
+</ul>
+</section>
+<section id="id43">
+<h2>0.4<a class="headerlink" href="#id43" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Added a verbose flag to the training and a test based on the <strong>init</strong> of the address parser.</p></li>
+<li><p>Added a feature to retrain our models with a prediction tags dictionary that is different from the default one.</p></li>
+<li><p>Added in-documentation code examples.</p></li>
+<li><p>Added code examples.</p></li>
+<li><p>Small improvement of model implementation.</p></li>
+</ul>
+</section>
+<section id="id44">
+<h2>0.3.6<a class="headerlink" href="#id44" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Added a method for dictionary conversion of parsed addresses for simpler <code class="docutils literal notranslate"><span class="pre">Pandas</span></code> integration.</p></li>
+<li><p>Added examples for parsing addresses and how to convert them into a DataFrame.</p></li>
+<li><p>Fixed error with the download module.</p></li>
+</ul>
+</section>
+<section id="id45">
+<h2>0.3.5<a class="headerlink" href="#id45" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Added a verbose flag to the training and test based on the <strong>init</strong> of the address parser.</p></li>
+<li><p><strong>Breaking change</strong> Since <a class="reference external" href="https://github.com/scipy/scipy/releases/tag/v1.6.0">SciPy 1.6</a> is released on Python <code class="docutils literal notranslate"><span class="pre">3.7+</span></code>
+, we don’t support Python <code class="docutils literal notranslate"><span class="pre">3.6</span></code>.</p></li>
+<li><p>Added management for Windows where the FastText model cannot be pickled. We use the Gensim fasttext model on Windows,
+which takes more RAM.</p></li>
+</ul>
+</section>
+<section id="id46">
+<h2>0.3.4<a class="headerlink" href="#id46" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Fixed a bug when using a batched address. Since we were sorting the address during the forward pass, the output
+prediction tags were not aligned with the supposed parsed address. We have removed the sorting, and now the results
+are more aligned with our research.</p></li>
+</ul>
+</section>
+<section id="id47">
+<h2>0.3.3<a class="headerlink" href="#id47" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>We have improved the loading of data during prediction. We now use a data loader.</p></li>
+<li><p>Updated the performance table of models with the data loader approach.</p></li>
+<li><p>Fixed missing import in the parser module.</p></li>
+<li><p>Bug fix of the <code class="docutils literal notranslate"><span class="pre">max_len</span></code> for the predictions</p></li>
+</ul>
+</section>
+<section id="id48">
+<h2>0.3<a class="headerlink" href="#id48" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Added Libpostal time in the doc</p></li>
+<li><p>Documentation improvement</p></li>
+<li><p>Added new model evaluation to doc</p></li>
+<li><p>Release new models</p></li>
+</ul>
+</section>
+<section id="id49">
+<h2>0.2.3<a class="headerlink" href="#id49" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Improved documentation</p></li>
+</ul>
+</section>
+<section id="id50">
+<h2>0.2.2<a class="headerlink" href="#id50" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Fixed error with experiment and verbosity as logging trigger on or off</p></li>
+</ul>
+</section>
+<section id="id51">
+<h2>0.2.1<a class="headerlink" href="#id51" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Fixed README</p></li>
+</ul>
+</section>
+<section id="id52">
+<h2>0.2<a class="headerlink" href="#id52" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Added FastText light model using pymagnitude-light</p></li>
+<li><p>Added fine-tuning API to allow fine-tuning of our models (retrain)</p></li>
+<li><p>Added a method to test models (test)</p></li>
+<li><p>Added metric, loss and dataset container to facilitate fine-tuning training</p></li>
+<li><p>Added an example of fine-tuning</p></li>
+<li><p>Added way to load retrain model when instantiation of AddressParser</p></li>
+</ul>
+</section>
+<section id="id53">
+<h2>0.1.3.1<a class="headerlink" href="#id53" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Added a verbose flag to trigger more messages during embedding loading</p></li>
+<li><p>Added a verbose flag in model/embeddings download</p></li>
+</ul>
+</section>
+<section id="id54">
+<h2>0.1.3<a class="headerlink" href="#id54" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Added “contributing to”</p></li>
+<li><p>Added fix for comma problem (#56)</p></li>
+<li><p>Added content in Address Parser documentation for tags definition</p></li>
+<li><p>Fixed Pylint bug with PyTorch 1.6</p></li>
+<li><p>Fixed <code class="docutils literal notranslate"><span class="pre">pack_padded</span></code> CPU error with PyTorch’s new release</p></li>
+</ul>
+</section>
+<section id="id55">
+<h2>0.1.2<a class="headerlink" href="#id55" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Modification of assets URL</p></li>
+<li><p>Bug-fix dictionary use</p></li>
+<li><p>Fixed logo</p></li>
+<li><p>Fixed typo deepParse -&gt; deepparse</p></li>
+<li><p>Fixed authors in the setup</p></li>
+</ul>
+</section>
+<section id="beta-0-1">
+<h2>Beta (0.1)<a class="headerlink" href="#beta-0-1" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Initial release of the pretrained models</p></li>
+<li><p>Beta version of the API</p></li>
+</ul>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          <a class="prev-page" href="training_guide.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Training Guide</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2020-2026, Marouane Yassine &amp; David Beauchemin
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Changelog</a><ul>
+<li><a class="reference internal" href="#dev">dev</a></li>
+<li><a class="reference internal" href="#id1">0.11.0</a></li>
+<li><a class="reference internal" href="#id2">0.10.0</a></li>
+<li><a class="reference internal" href="#id3">0.9.14</a></li>
+<li><a class="reference internal" href="#id4">0.9.13</a></li>
+<li><a class="reference internal" href="#id5">0.9.12</a></li>
+<li><a class="reference internal" href="#id6">0.9.11</a></li>
+<li><a class="reference internal" href="#id7">0.9.10</a></li>
+<li><a class="reference internal" href="#id8">0.9.9</a></li>
+<li><a class="reference internal" href="#id9">0.9.8</a></li>
+<li><a class="reference internal" href="#id10">0.9.7</a></li>
+<li><a class="reference internal" href="#id11">0.9.6</a></li>
+<li><a class="reference internal" href="#id12">0.9.5</a></li>
+<li><a class="reference internal" href="#id13">0.9.4</a></li>
+<li><a class="reference internal" href="#id14">0.9.3</a></li>
+<li><a class="reference internal" href="#id15">0.9.2</a></li>
+<li><a class="reference internal" href="#id16">0.9.1</a></li>
+<li><a class="reference internal" href="#id17">0.9</a></li>
+<li><a class="reference internal" href="#id18">0.8.3</a></li>
+<li><a class="reference internal" href="#id19">0.8.2</a></li>
+<li><a class="reference internal" href="#id20">0.8.1</a></li>
+<li><a class="reference internal" href="#id21">0.8</a></li>
+<li><a class="reference internal" href="#id22">0.7.6</a></li>
+<li><a class="reference internal" href="#id23">0.7.5</a></li>
+<li><a class="reference internal" href="#id24">0.7.4</a></li>
+<li><a class="reference internal" href="#id25">0.7.3</a></li>
+<li><a class="reference internal" href="#id26">0.7.2</a></li>
+<li><a class="reference internal" href="#id27">0.7.1</a></li>
+<li><a class="reference internal" href="#id28">0.7</a></li>
+<li><a class="reference internal" href="#id29">0.6.7</a></li>
+<li><a class="reference internal" href="#id30">0.6.6</a></li>
+<li><a class="reference internal" href="#id31">0.6.5</a></li>
+<li><a class="reference internal" href="#id32">0.6.4</a></li>
+<li><a class="reference internal" href="#id33">0.6.3</a></li>
+<li><a class="reference internal" href="#id34">0.6.2</a></li>
+<li><a class="reference internal" href="#id35">0.6.1</a></li>
+<li><a class="reference internal" href="#id36">0.6</a></li>
+<li><a class="reference internal" href="#id37">0.5.1</a></li>
+<li><a class="reference internal" href="#id38">0.5</a></li>
+<li><a class="reference internal" href="#id39">0.4.4</a></li>
+<li><a class="reference internal" href="#id40">0.4.3</a></li>
+<li><a class="reference internal" href="#id41">0.4.2</a></li>
+<li><a class="reference internal" href="#id42">0.4.1</a></li>
+<li><a class="reference internal" href="#id43">0.4</a></li>
+<li><a class="reference internal" href="#id44">0.3.6</a></li>
+<li><a class="reference internal" href="#id45">0.3.5</a></li>
+<li><a class="reference internal" href="#id46">0.3.4</a></li>
+<li><a class="reference internal" href="#id47">0.3.3</a></li>
+<li><a class="reference internal" href="#id48">0.3</a></li>
+<li><a class="reference internal" href="#id49">0.2.3</a></li>
+<li><a class="reference internal" href="#id50">0.2.2</a></li>
+<li><a class="reference internal" href="#id51">0.2.1</a></li>
+<li><a class="reference internal" href="#id52">0.2</a></li>
+<li><a class="reference internal" href="#id53">0.1.3.1</a></li>
+<li><a class="reference internal" href="#id54">0.1.3</a></li>
+<li><a class="reference internal" href="#id55">0.1.2</a></li>
+<li><a class="reference internal" href="#beta-0-1">Beta (0.1)</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="_static/documentation_options.js?v=ae0e478b"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/scripts/furo.js?v=46bd48cc"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=fc97db16"></script>
+    </body>
+</html>

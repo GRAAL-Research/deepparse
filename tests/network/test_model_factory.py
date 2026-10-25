@@ -1,7 +1,7 @@
 import unittest
 import warnings
 from unittest import TestCase
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 
 from deepparse.network import BPEmbSeq2SeqModel, FastTextSeq2SeqModel, Model2VecSeq2SeqModel, ModelFactory
 
@@ -51,9 +51,10 @@ class ModelFactoryTest(TestCase):
         self.assertEqual(300, model.encoder.lstm.input_size)
 
     def test_givenAModelTypeWithoutPublishedWeights_whenCreatingPreTrainedModel_thenWarnAndDoNotDownload(self):
-        with warnings.catch_warnings(record=True) as caught_warnings:
-            warnings.simplefilter("always")
-            _, version = self.factory.create("model2vec-8m", self.a_device, pre_trained_weights=True)
+        with patch.dict("deepparse.network.model_factory.MODEL_REPO_IDS", clear=True):
+            with warnings.catch_warnings(record=True) as caught_warnings:
+                warnings.simplefilter("always")
+                _, version = self.factory.create("model2vec-8m", self.a_device, pre_trained_weights=True)
 
         self.assertTrue(any("no pre-trained weights" in str(warning.message) for warning in caught_warnings))
 

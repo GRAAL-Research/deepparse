@@ -57,6 +57,12 @@ MODEL_REPO_IDS = {
     "fasttext_attention": "deepparse/fasttext-attention",
     "fasttext-light": "deepparse/fasttext-base",
     "fasttext-light_attention": "deepparse/fasttext-attention",
+    "model2vec-8m": "deepparse/model2vec-8m-base",
+    "model2vec-8m_attention": "deepparse/model2vec-8m-attention",
+    "model2vec-32m": "deepparse/model2vec-32m-base",
+    "model2vec-32m_attention": "deepparse/model2vec-32m-attention",
+    "model2vec-multilingual": "deepparse/model2vec-multilingual-base",
+    "model2vec-multilingual_attention": "deepparse/model2vec-multilingual-attention",
 }
 
 WORLDWIDE_ADDRESSES_REPO_ID = "deepparse/worldwide-addresses"

@@ -99,11 +99,11 @@ class AddressParser:
         attention_mechanism (bool): Whether to use the model with an attention mechanism. The model will use an
             attention mechanism that takes an extra 100 MB on GPU usage (see the documentation for more statistics).
             The default value is ``False``.
-        device (Union[int, str, torch.torch.device]): The device to use can be either:
+        device (Union[int, str, torch.device]): The device to use can be either:
 
             - a ``GPU`` index in int format (e.g. ``0``),
             - a complete device name in a string format (e.g. ``"cuda:0"``),
-            - a :class:`~torch.torch.device` object,
+            - a :class:`~torch.device` object,
             - ``"cpu"`` for a  ``CPU`` use.
 
             The default value is ``0``, witch is a GPU device with the index ``0`` if it exists. Otherwise,

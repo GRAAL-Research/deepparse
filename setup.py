@@ -113,7 +113,9 @@ def main():
                 "pytest-xdist[psutil]",
                 "tensorboard>=2.14",
                 "sphinx>=7.4.0",  # documentation requirements
-                "sphinx_rtd_theme>=3.0.0",
+                "furo>=2024.8.6",
+                "sphinx-copybutton>=0.5.2",
+                "myst-parser>=4.0.0",
             ],
         },
     )

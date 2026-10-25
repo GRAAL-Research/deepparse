@@ -644,6 +644,12 @@ Deepparse is LGPLv3 licensed, as found in the `LICENSE file <https://github.com/
 
   training_guide
 
+.. toctree::
+  :maxdepth: 1
+  :caption: Project
+
+  changelog
+
 Indices and Tables
 ==================
 

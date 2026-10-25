@@ -1,4 +1,5 @@
 import gzip
+import importlib.util
 import logging
 import os
 import shutil
@@ -7,14 +8,6 @@ import warnings
 from pathlib import Path
 from typing import Dict, List, Tuple
 from urllib.request import urlopen
-
-try:
-    from fasttext.FastText import _FastText
-
-    FASTTEXT_AVAILABLE = True
-except ImportError:
-    _FastText = None
-    FASTTEXT_AVAILABLE = False
 
 try:
     import pyarrow.parquet as pq
@@ -29,6 +22,9 @@ from transformers.utils.hub import cached_file, extract_commit_hash
 from transformers.utils.logging import disable_progress_bar, enable_progress_bar
 
 from .bpemb_url_bug_fix import BPEmbBaseURLWrapperBugFix
+
+# Kept for backward compatibility: Deepparse no longer needs the fasttext package to load the FastText embeddings.
+FASTTEXT_AVAILABLE = importlib.util.find_spec("fasttext") is not None
 
 logger = logging.getLogger(__name__)
 
@@ -384,19 +380,22 @@ def _print_progress(downloaded_bytes: int, total_size: int) -> None:
         sys.stdout.write("\n")
 
 
-# The difference with the original code is the removal of the print warning.
 def load_fasttext_embeddings(path: str):
     """
-    Wrapper to load a model given a filepath and return a model object.
+    Function to load fastText ``.bin`` embeddings.
 
-    If the ``fasttext`` package is not installed (e.g. on Python 3.13+), a
-    :class:`~ImportError` is raised. In that case, the caller should fall
-    back to ``gensim.models.fasttext.load_facebook_vectors``.
+    .. deprecated::
+        Use :class:`~deepparse.embeddings_models.FastTextBinReader` instead. This function is kept for backward
+        compatibility and returns a ``FastTextBinReader``, which has the same ``model[word]`` and
+        ``get_dimension()`` interface as the former ``fasttext`` model object.
     """
-    if not FASTTEXT_AVAILABLE:
-        raise ImportError(
-            "The 'fasttext' package is not installed. Install it with "
-            "'pip install fasttext-wheel' or use the gensim fallback "
-            "(automatic on Python 3.13+ and Windows)."
-        )
-    return _FastText(model_path=path)
+    warnings.warn(
+        "load_fasttext_embeddings is deprecated and will be removed in a future release, "
+        "use deepparse.embeddings_models.FastTextBinReader instead.",
+        category=DeprecationWarning,
+        stacklevel=2,
+    )
+    # Imported here since the embeddings_models package imports this module.
+    from .embeddings_models import FastTextBinReader  # pylint: disable=import-outside-toplevel
+
+    return FastTextBinReader(path)

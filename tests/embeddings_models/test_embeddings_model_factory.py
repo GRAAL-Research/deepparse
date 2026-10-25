@@ -34,10 +34,9 @@ class EmbeddingsModelFactoryTest(TestCase):
         self.assertIsInstance(embeddings_model, BPEmbEmbeddingsModel)
 
     @patch("deepparse.embeddings_models.embeddings_model_factory.download_fasttext_embeddings")
-    @patch("deepparse.load_fasttext_embeddings")
-    @patch("deepparse.embeddings_models.fasttext_embeddings_model.load_facebook_vectors")
+    @patch("deepparse.embeddings_models.fasttext_embeddings_model.FastTextBinReader")
     def test_givenAFasttextEmbeddingsModelType_whenCreatingEmbeddingsModel_thenShouldReturnCorrectEmbeddingsModel(
-        self, facebook_vectors_load_mock, fasttext_load_mock, download_mock
+        self, reader_mock, download_mock
     ):
         embeddings_model = self.embeddings_model_factory.create(self.a_fasttext_embeddings_model_type, self.a_cache_dir)
 

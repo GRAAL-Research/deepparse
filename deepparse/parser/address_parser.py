@@ -86,7 +86,7 @@ class AddressParser:
     Args:
         model_type (str): The network name to use, can be either:
 
-            - ``"fasttext"`` (need ~9 GO of RAM to be used),
+            - ``"fasttext"`` (need ~1.3 GO of RAM to be used, since its embeddings are memory-mapped),
             - ``"fasttext-light"`` (need ~2 GO of RAM to be used, but slower than fasttext version),
             - ``"bpemb"`` (need ~2 GO of RAM to be used),
             - ``"fastest"`` (quicker to process one address) (equivalent to ``"fasttext"``),
@@ -144,7 +144,9 @@ class AddressParser:
     Note:
         The FastText embeddings are read with our own reader of the ``.bin`` format, which gives the same vectors
         as the ``fasttext`` package on every supported Python version, without ``fasttext`` nor ``gensim``. The
-        embeddings matrix is memory-mapped, so it loads in a few seconds and only the rows used are kept in RAM.
+        embeddings matrix is memory-mapped, so it loads in a few seconds and only the rows used are kept in RAM: the
+        FastText parser takes ~1.3 GO of RAM and loads in ~4 seconds, compared to ~8.4 GO (13.2 GO at peak) and ~42
+        seconds with the former ``gensim`` loading.
 
     Note:
         You may observe a 100% CPU load the first time you call the fasttext-light model. We

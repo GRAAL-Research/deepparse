@@ -520,6 +520,9 @@
   configuration (unused LaTeX, Texinfo, man and HTML Help settings and extensions removed, intersphinx URLs updated).
 - The documentation CI now builds once (Python 3.13) with warnings and broken references as errors (`-W -n`), and a
   weekly workflow checks the documentation links. Fix the docstring warnings and the redirected links.
+- Document the memory and loading time gains of the gensim removal (#335), measured on CPU: the FastText parser takes
+  ~1.3 GB of RAM at peak and loads in ~4 s, compared to ~8.4 GB (13.2 GB at peak) and ~42 s with gensim; the BPEmb
+  embeddings load in ~0.2 s instead of ~0.9 s and take ~0.14 GB instead of ~0.26 GB.
 - Publish versioned documentation: the stable release stays at https://deepparse.org/ and the `dev` branch is
   published at https://deepparse.org/dev/ on every push to `dev` (new `deploy-dev.yml` workflow). The dev pages show
   a "development version" banner with the dev version number and a link to the stable docs (set with the

@@ -53,7 +53,7 @@ language = "en"
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
+exclude_patterns = ["_build", "_generated", "Thumbs.db", ".DS_Store"]
 
 # Third-party targets that have no Sphinx inventory, ignored by the nitpicky mode (-n).
 nitpick_ignore = [
@@ -132,6 +132,16 @@ if is_dev_docs:
 
 # myst-parser: generate anchors for the Markdown headings (e.g. the changelog versions).
 myst_heading_anchors = 2
+
+# The root CHANGELOG.md lists the versions from the oldest to the newest (new entries are appended under "## dev").
+# The changelog page shows them from the newest to the oldest, so we generate a reversed copy at each build.
+_changelog_source = os.path.join(os.path.dirname(__file__), "..", "..", "CHANGELOG.md")
+_changelog_reversed = os.path.join(os.path.dirname(__file__), "_generated", "changelog_newest_first.md")
+with open(_changelog_source, encoding="utf-8") as _changelog_file:
+    _changelog_sections = ("\n" + _changelog_file.read()).split("\n## ")[1:]
+os.makedirs(os.path.dirname(_changelog_reversed), exist_ok=True)
+with open(_changelog_reversed, "w", encoding="utf-8") as _changelog_file:
+    _changelog_file.write("\n".join("## " + section.strip() + "\n" for section in reversed(_changelog_sections)))
 
 # -- Linkcheck ---------------------------------------------------------------
 

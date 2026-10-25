@@ -19,10 +19,9 @@ from deepparse.vectorizer import (
 class VectorizerFactoryTest(TestCase):
     @classmethod
     @patch("deepparse.embeddings_models.bpemb_embeddings_model.BPEmbBaseURLWrapperBugFix")
-    @patch("deepparse.load_fasttext_embeddings")
-    @patch("deepparse.embeddings_models.fasttext_embeddings_model.load_facebook_vectors")
+    @patch("deepparse.embeddings_models.fasttext_embeddings_model.FastTextBinReader")
     @patch("deepparse.embeddings_models.magnitude_embeddings_model.Magnitude")
-    def setUpClass(cls, magnitude_mock, facebook_vectors_load_mock, fasttext_load_mock, bpemb_mock):
+    def setUpClass(cls, magnitude_mock, reader_mock, bpemb_mock):
         a_cache_dir = "~/.cache/deepparse"
         cls.a_bpemb_embeddings_model = BPEmbEmbeddingsModel(a_cache_dir)
 

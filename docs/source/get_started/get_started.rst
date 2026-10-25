@@ -148,20 +148,11 @@ Or you can use our CLI to download our pretrained models directly using:
 
 .. _fasttext-python-313:
 
-Note on FastText Models and Python 3.13+
-*****************************************
+Note on FastText Models
+***********************
 
-The ``fasttext`` C++ library has not been updated for Python 3.13+, so the ``fasttext-wheel`` package cannot be
-installed on these versions. Deepparse automatically falls back to using
-`Gensim <https://radimrehurek.com/gensim/>`__ to load FastText embeddings when the ``fasttext`` package is not
-available.
-
-This fallback uses slightly more RAM (~10 GO vs ~8 GO) and takes longer to load, but is **functionally equivalent**.
-The BPEmb and Magnitude (FastText Light) models are **not affected** by this limitation.
-
-If you are using Python 3.10–3.12, you can install ``fasttext-wheel`` for optimal performance:
-
-.. code-block:: sh
-
-    pip install deepparse[fasttext]
+Deepparse reads the FastText embeddings with its own reader of the ``.bin`` format, which gives the same vectors as
+the ``fasttext`` package. It does not need ``fasttext`` nor ``gensim``, so the FastText models work the same way on
+every supported Python version. The embeddings matrix is memory-mapped: it loads in a few seconds and the data
+loading workers share its memory.
 

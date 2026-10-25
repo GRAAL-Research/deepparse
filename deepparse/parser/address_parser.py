@@ -142,18 +142,9 @@ class AddressParser:
             - `FastText Light <https://huggingface.co/deepparse/fasttext-base/tree/light-embeddings>`_.
 
     Note:
-        Since Windows uses ``spawn`` instead of ``fork`` during multiprocess (for the data loading pre-processing
-        ``num_worker`` > 0) we use the Gensim model, which takes more RAM (~10 GO) than the Fasttext one (~8 GO).
-        It also takes a longer time to load. See here the
-        `issue <https://github.com/GRAAL-Research/deepparse/issues/89>`_.
-
-    Note:
-        On Python 3.13+, the ``fasttext`` native library is not available because the underlying C++ code
-        has not been updated for newer Python versions. Deepparse automatically falls back to using Gensim to load
-        FastText embeddings. This fallback uses more RAM (~10 GO vs ~8 GO) and is slower to load, but is
-        functionally equivalent. You can install ``fasttext-wheel`` manually with
-        ``pip install deepparse[fasttext]`` if a compatible version becomes available.
-        BPEmb and FastText Light (Magnitude) models are not affected.
+        The FastText embeddings are read with our own reader of the ``.bin`` format, which gives the same vectors
+        as the ``fasttext`` package on every supported Python version, without ``fasttext`` nor ``gensim``. The
+        embeddings matrix is memory-mapped, so it loads in a few seconds and only the rows used are kept in RAM.
 
     Note:
         You may observe a 100% CPU load the first time you call the fasttext-light model. We

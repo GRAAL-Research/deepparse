@@ -11,10 +11,6 @@ from tempfile import TemporaryDirectory
 from unittest import TestCase
 from unittest.mock import call, mock_open, patch
 
-from gensim.models import FastText
-from gensim.models._fasttext_bin import save
-from gensim.test.utils import common_texts
-
 try:
     from fasttext.FastText import _FastText
 
@@ -44,6 +40,7 @@ from deepparse.download_tools import (
     load_fasttext_embeddings,
 )
 from tests.base_capture_output import CaptureOutputTestCase
+from tests.fixtures.fasttext_bin_writer import create_tiny_fasttext_bin
 from tests.tools import create_file
 
 
@@ -62,10 +59,7 @@ class FastTextToolsTests(CaptureOutputTestCase):
 
         cls.a_fake_embeddings_path = os.path.join(cls.temp_dir_obj.name, "fake_embeddings_cc.fr.300.bin")
 
-        model = FastText(vector_size=4, window=3, min_count=1)
-        model.build_vocab(corpus_iterable=common_texts)
-        model.train(corpus_iterable=common_texts, total_examples=len(common_texts), epochs=1)
-        save(model, cls.a_fake_embeddings_path, {"lr_update_rate": 100, "word_ngrams": 1}, "utf-8")
+        create_tiny_fasttext_bin(cls.a_fake_embeddings_path)
 
     @classmethod
     def tearDownClass(cls) -> None:

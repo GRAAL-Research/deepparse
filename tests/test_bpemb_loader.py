@@ -6,6 +6,7 @@ import os
 import pickle
 import tarfile
 import unittest
+import warnings
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest import TestCase
@@ -15,7 +16,9 @@ import numpy as np
 import requests
 import sentencepiece
 
-from deepparse.bpemb_url_bug_fix import BPEmbBaseURLWrapperBugFix, load_word2vec_binary_vectors
+import deepparse
+from deepparse.bpemb_loader import BPEmbLoader, load_word2vec_binary_vectors
+from deepparse.bpemb_url_bug_fix import BPEmbBaseURLWrapperBugFix
 
 A_CORPUS = [
     "350 rue des lilas ouest quebec city quebec g0l 0b0",
@@ -69,7 +72,7 @@ class LoadWord2VecBinaryVectorsTest(TestCase):
         np.testing.assert_array_equal(self.vectors, actual)
 
 
-class BPEmbBaseURLWrapperBugFixTest(TestCase):
+class BPEmbLoaderTest(TestCase):
     @classmethod
     def setUpClass(cls):
         cls.temp_dir_obj = TemporaryDirectory()
@@ -113,9 +116,9 @@ class BPEmbBaseURLWrapperBugFixTest(TestCase):
         payloads = {self.model_url: self.model_bytes, self.embeddings_url: self.archive_bytes}
         return a_response(payloads[url])
 
-    def create_bpemb(self, dim: int = 4) -> BPEmbBaseURLWrapperBugFix:
-        with patch("deepparse.bpemb_url_bug_fix.requests.get", side_effect=self.fake_get) as get_mock:
-            bpemb = BPEmbBaseURLWrapperBugFix(lang="multi", vs=self.vs, dim=dim, cache_dir=self.cache_dir)
+    def create_bpemb(self, dim: int = 4) -> BPEmbLoader:
+        with patch("deepparse.bpemb_loader.requests.get", side_effect=self.fake_get) as get_mock:
+            bpemb = BPEmbLoader(lang="multi", vs=self.vs, dim=dim, cache_dir=self.cache_dir)
         self.get_mock = get_mock
         return bpemb
 
@@ -147,20 +150,20 @@ class BPEmbBaseURLWrapperBugFixTest(TestCase):
         (multi_dir / "multi.wiki.bpe.vs40.d4.w2v.bin").rename(multi_dir / "multi.wiki.bpe.vs40.d300.w2v.bin")
 
         with self.assertRaises(ValueError):
-            BPEmbBaseURLWrapperBugFix(lang="multi", vs=self.vs, dim=300, cache_dir=self.cache_dir)
+            BPEmbLoader(lang="multi", vs=self.vs, dim=300, cache_dir=self.cache_dir)
 
     def test_givenAnHTTPError_whenInit_thenRaiseAndDoNotCacheAPartialFile(self):
         response = a_response(b"")
         response.raise_for_status.side_effect = requests.exceptions.HTTPError("404")
 
-        with patch("deepparse.bpemb_url_bug_fix.requests.get", return_value=response):
+        with patch("deepparse.bpemb_loader.requests.get", return_value=response):
             with self.assertRaises(requests.exceptions.HTTPError):
-                BPEmbBaseURLWrapperBugFix(lang="multi", vs=self.vs, dim=self.dim, cache_dir=self.cache_dir)
+                BPEmbLoader(lang="multi", vs=self.vs, dim=self.dim, cache_dir=self.cache_dir)
 
         self.assertFalse((self.cache_dir / "multi" / "multi.wiki.bpe.vs40.model").exists())
 
     def test_whenPreprocess_thenLowercaseAndReplaceDigitsByZero(self):
-        self.assertEqual("000 rue des lilas g0l 0b0", BPEmbBaseURLWrapperBugFix.preprocess("359 Rue des LILAS G1L 1B6"))
+        self.assertEqual("000 rue des lilas g0l 0b0", BPEmbLoader.preprocess("359 Rue des LILAS G1L 1B6"))
 
     def test_whenEmbed_thenReturnTheVectorsOfTheSubwordIdsOfThePreprocessedText(self):
         bpemb = self.create_bpemb()
@@ -188,6 +191,54 @@ class BPEmbBaseURLWrapperBugFixTest(TestCase):
 
         np.testing.assert_array_equal(bpemb.embed(a_text), unpickled_bpemb.embed(a_text))
         self.assertNotIn("spm", bpemb.__getstate__())
+
+    def create_deprecated_alias(self) -> BPEmbBaseURLWrapperBugFix:
+        with patch("deepparse.bpemb_loader.requests.get", side_effect=self.fake_get):
+            return BPEmbBaseURLWrapperBugFix(lang="multi", vs=self.vs, dim=self.dim, cache_dir=self.cache_dir)
+
+    def test_whenInitTheDeprecatedAlias_thenWarnItWillBeRemovedIn100(self):
+        with warnings.catch_warnings(record=True) as caught_warnings:
+            warnings.simplefilter("always")
+            self.create_deprecated_alias()
+
+        deprecation_warnings = [warning for warning in caught_warnings if warning.category is DeprecationWarning]
+        self.assertEqual(1, len(deprecation_warnings))
+        self.assertIn("BPEmbLoader", str(deprecation_warnings[0].message))
+        self.assertIn("1.0.0", str(deprecation_warnings[0].message))
+        self.assertEqual(__file__, deprecation_warnings[0].filename)
+
+    def test_whenInitBPEmbLoader_thenDoNotWarn(self):
+        with warnings.catch_warnings():
+            warnings.simplefilter("error", DeprecationWarning)
+            self.create_bpemb()
+
+    def test_whenInitTheDeprecatedAlias_thenItIsABPEmbLoaderThatEmbedsTheSame(self):
+        a_text = "350 rue des Lilas Ouest"
+        bpemb = self.create_bpemb()
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", DeprecationWarning)
+            deprecated_bpemb = self.create_deprecated_alias()
+
+        self.assertIsInstance(deprecated_bpemb, BPEmbLoader)
+        np.testing.assert_array_equal(bpemb.embed(a_text), deprecated_bpemb.embed(a_text))
+
+    def test_whenPickleTheDeprecatedAlias_thenUnpickleTheSameClassWithoutWarning(self):
+        a_text = "350 rue des Lilas Ouest"
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", DeprecationWarning)
+            deprecated_bpemb = self.create_deprecated_alias()
+
+        with warnings.catch_warnings():
+            warnings.simplefilter("error", DeprecationWarning)
+            unpickled_bpemb = pickle.loads(pickle.dumps(deprecated_bpemb))
+
+        self.assertIs(BPEmbBaseURLWrapperBugFix, type(unpickled_bpemb))
+        np.testing.assert_array_equal(deprecated_bpemb.embed(a_text), unpickled_bpemb.embed(a_text))
+
+    def test_theDeprecatedAliasIsStillImportableFromTheTopLevelPackage(self):
+        self.assertIs(BPEmbBaseURLWrapperBugFix, deepparse.BPEmbBaseURLWrapperBugFix)
+        self.assertIs(BPEmbLoader, deepparse.BPEmbLoader)
+        self.assertIs(load_word2vec_binary_vectors, deepparse.bpemb_url_bug_fix.load_word2vec_binary_vectors)
 
 
 if __name__ == "__main__":

@@ -9,7 +9,7 @@ import requests
 from numpy import ndarray
 from urllib3.exceptions import InsecureRequestWarning
 
-from ..bpemb_url_bug_fix import BPEmbBaseURLWrapperBugFix
+from ..bpemb_loader import BPEmbLoader
 from .embeddings_model import EmbeddingsModel
 
 logger = logging.getLogger(__name__)
@@ -34,10 +34,10 @@ class BPEmbEmbeddingsModel(EmbeddingsModel):
             warnings.filterwarnings("ignore")
             self.model = self._load_bpemb_model(cache_dir)
 
-    def _load_bpemb_model(self, cache_dir: str) -> BPEmbBaseURLWrapperBugFix:
+    def _load_bpemb_model(self, cache_dir: str) -> BPEmbLoader:
         """
         Download (if needed) and load the BPEmb model. We download with SSL verification enabled. The BPEmb
-        host (set by :class:`BPEmbBaseURLWrapperBugFix`) currently has a valid certificate, but it has broken
+        host (set by :class:`BPEmbLoader`) currently has a valid certificate, but it has broken
         before (`bpemb issue 63 <https://github.com/bheinzerling/bpemb/issues/63>`_). As a failsafe, and only
         if an SSL error occurs, we retry once with verification disabled while warning loudly, so a transient
         upstream certificate problem does not break Deepparse outright.
@@ -46,7 +46,7 @@ class BPEmbEmbeddingsModel(EmbeddingsModel):
         """
         model_kwargs = {"lang": "multi", "vs": 100000, "dim": 300, "cache_dir": Path(cache_dir)}
         try:
-            return BPEmbBaseURLWrapperBugFix(**model_kwargs)
+            return BPEmbLoader(**model_kwargs)
         except (requests.exceptions.SSLError, ssl.SSLError) as ssl_error:
             logger.warning(
                 "SSL verification failed while downloading the BPEmb embeddings. Retrying once without SSL "
@@ -55,7 +55,7 @@ class BPEmbEmbeddingsModel(EmbeddingsModel):
                 ssl_error,
             )
             with no_ssl_verification():
-                return BPEmbBaseURLWrapperBugFix(**model_kwargs)
+                return BPEmbLoader(**model_kwargs)
 
     def __call__(self, word: str) -> ndarray:
         """

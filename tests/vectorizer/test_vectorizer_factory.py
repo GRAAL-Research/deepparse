@@ -18,7 +18,7 @@ from deepparse.vectorizer import (
 
 class VectorizerFactoryTest(TestCase):
     @classmethod
-    @patch("deepparse.embeddings_models.bpemb_embeddings_model.BPEmbBaseURLWrapperBugFix")
+    @patch("deepparse.embeddings_models.bpemb_embeddings_model.BPEmbLoader")
     @patch("deepparse.embeddings_models.fasttext_embeddings_model.FastTextBinReader")
     @patch("deepparse.embeddings_models.magnitude_embeddings_model.Magnitude")
     def setUpClass(cls, magnitude_mock, reader_mock, bpemb_mock):

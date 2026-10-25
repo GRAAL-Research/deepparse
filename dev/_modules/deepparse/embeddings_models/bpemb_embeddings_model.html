@@ -6,7 +6,7 @@
         <link rel="prefetch" href="../../../_static/deepparse.png" as="image">
 
     <link rel="shortcut icon" href="../../../_static/favicon.png"><!-- Generated with Sphinx 9.2.0 and Furo 2025.12.19 -->
-        <title>deepparse.embeddings_models.bpemb_embeddings_model - deepparse 0.11.0.dev1+a8a3e5b</title>
+        <title>deepparse.embeddings_models.bpemb_embeddings_model - deepparse 0.11.0.dev1+96a5000</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -154,7 +154,7 @@
 
 <div class="announcement">
   <aside class="announcement-content">
-     You are reading the documentation of the development version of deepparse (0.11.0.dev1+a8a3e5b). See the <a href="https://deepparse.org/">stable documentation</a> for the latest release. 
+     You are reading the documentation of the development version of deepparse (0.11.0.dev1+96a5000). See the <a href="https://deepparse.org/">stable documentation</a> for the latest release. 
   </aside>
 </div>
 
@@ -166,7 +166,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../../index.html"><div class="brand">deepparse 0.11.0.dev1+a8a3e5b</div></a>
+      <a href="../../../index.html"><div class="brand">deepparse 0.11.0.dev1+96a5000</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -284,7 +284,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">ndarray</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">urllib3.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">InsecureRequestWarning</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">..bpemb_url_bug_fix</span><span class="w"> </span><span class="kn">import</span> <span class="n">BPEmbBaseURLWrapperBugFix</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..bpemb_loader</span><span class="w"> </span><span class="kn">import</span> <span class="n">BPEmbLoader</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.embeddings_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">EmbeddingsModel</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -311,10 +311,10 @@
             <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">"ignore"</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_bpemb_model</span><span class="p">(</span><span class="n">cache_dir</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_load_bpemb_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cache_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BPEmbBaseURLWrapperBugFix</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_load_bpemb_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cache_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BPEmbLoader</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Download (if needed) and load the BPEmb model. We download with SSL verification enabled. The BPEmb</span>
-<span class="sd">        host (set by :class:`BPEmbBaseURLWrapperBugFix`) currently has a valid certificate, but it has broken</span>
+<span class="sd">        host (set by :class:`BPEmbLoader`) currently has a valid certificate, but it has broken</span>
 <span class="sd">        before (`bpemb issue 63 &lt;https://github.com/bheinzerling/bpemb/issues/63&gt;`_). As a failsafe, and only</span>
 <span class="sd">        if an SSL error occurs, we retry once with verification disabled while warning loudly, so a transient</span>
 <span class="sd">        upstream certificate problem does not break Deepparse outright.</span>
@@ -323,7 +323,7 @@
 <span class="sd">        """</span>
         <span class="n">model_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"lang"</span><span class="p">:</span> <span class="s2">"multi"</span><span class="p">,</span> <span class="s2">"vs"</span><span class="p">:</span> <span class="mi">100000</span><span class="p">,</span> <span class="s2">"dim"</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span> <span class="s2">"cache_dir"</span><span class="p">:</span> <span class="n">Path</span><span class="p">(</span><span class="n">cache_dir</span><span class="p">)}</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">BPEmbBaseURLWrapperBugFix</span><span class="p">(</span><span class="o">**</span><span class="n">model_kwargs</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">BPEmbLoader</span><span class="p">(</span><span class="o">**</span><span class="n">model_kwargs</span><span class="p">)</span>
         <span class="k">except</span> <span class="p">(</span><span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">SSLError</span><span class="p">,</span> <span class="n">ssl</span><span class="o">.</span><span class="n">SSLError</span><span class="p">)</span> <span class="k">as</span> <span class="n">ssl_error</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
                 <span class="s2">"SSL verification failed while downloading the BPEmb embeddings. Retrying once without SSL "</span>
@@ -332,7 +332,7 @@
                 <span class="n">ssl_error</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="k">with</span> <span class="n">no_ssl_verification</span><span class="p">():</span>
-                <span class="k">return</span> <span class="n">BPEmbBaseURLWrapperBugFix</span><span class="p">(</span><span class="o">**</span><span class="n">model_kwargs</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">BPEmbLoader</span><span class="p">(</span><span class="o">**</span><span class="n">model_kwargs</span><span class="p">)</span>
 
 <div class="viewcode-block" id="BPEmbEmbeddingsModel.__call__">
 <a class="viewcode-back" href="../../../embeddings_models.html#deepparse.embeddings_models.BPEmbEmbeddingsModel.__call__">[docs]</a>
@@ -421,7 +421,7 @@
       
     </aside>
   </div>
-</div><script src="../../../_static/documentation_options.js?v=ea802f35"></script>
+</div><script src="../../../_static/documentation_options.js?v=fcb5478e"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/scripts/furo.js?v=46bd48cc"></script>

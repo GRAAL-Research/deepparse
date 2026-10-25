@@ -6,7 +6,7 @@
         <link rel="prefetch" href="../../../_static/deepparse.png" as="image">
 
     <link rel="shortcut icon" href="../../../_static/favicon.png"><!-- Generated with Sphinx 9.2.0 and Furo 2025.12.19 -->
-        <title>deepparse.parser.address_parser - deepparse 0.11.0.dev1+a8a3e5b</title>
+        <title>deepparse.parser.address_parser - deepparse 0.11.0.dev1+96a5000</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -154,7 +154,7 @@
 
 <div class="announcement">
   <aside class="announcement-content">
-     You are reading the documentation of the development version of deepparse (0.11.0.dev1+a8a3e5b). See the <a href="https://deepparse.org/">stable documentation</a> for the latest release. 
+     You are reading the documentation of the development version of deepparse (0.11.0.dev1+96a5000). See the <a href="https://deepparse.org/">stable documentation</a> for the latest release. 
   </aside>
 </div>
 
@@ -166,7 +166,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../../index.html"><div class="brand">deepparse 0.11.0.dev1+a8a3e5b</div></a>
+      <a href="../../../index.html"><div class="brand">deepparse 0.11.0.dev1+96a5000</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -363,9 +363,9 @@
 <span class="sd">    Args:</span>
 <span class="sd">        model_type (str): The network name to use, can be either:</span>
 
-<span class="sd">            - ``"fasttext"`` (need ~1.3 GO of RAM to be used, since its embeddings are memory-mapped),</span>
-<span class="sd">            - ``"fasttext-light"`` (need ~2 GO of RAM to be used, but slower than fasttext version),</span>
-<span class="sd">            - ``"bpemb"`` (need ~2 GO of RAM to be used),</span>
+<span class="sd">            - ``"fasttext"`` (need ~1.3 GB of RAM to be used, since its embeddings are memory-mapped),</span>
+<span class="sd">            - ``"fasttext-light"`` (need ~2 GB of RAM to be used, but slower than fasttext version),</span>
+<span class="sd">            - ``"bpemb"`` (need ~2 GB of RAM to be used),</span>
 <span class="sd">            - ``"fastest"`` (quicker to process one address) (equivalent to ``"fasttext"``),</span>
 <span class="sd">            - ``"lightest"`` (the one using the less RAM and GPU usage) (equivalent to ``"fasttext-light"``),</span>
 <span class="sd">            - ``"best"`` (the best accuracy performance) (equivalent to ``"bpemb"``).</span>
@@ -406,8 +406,8 @@
 
 <span class="sd">    Note:</span>
 <span class="sd">        For both networks, we will download the pretrained weights and embeddings in the ``.cache`` directory</span>
-<span class="sd">        for the root user. The pretrained weights take at most 44 MB. The FastText embeddings take 6.8 GO,</span>
-<span class="sd">        the FastText-light (``"fasttext-light"``) embeddings take 3.3 GO and bpemb take 116 MB (in ``".cache/bpemb"``).</span>
+<span class="sd">        for the root user. The pretrained weights take at most 44 MB. The FastText embeddings take 6.8 GB,</span>
+<span class="sd">        the FastText-light (``"fasttext-light"``) embeddings take 3.3 GB and bpemb take 116 MB (in ``".cache/bpemb"``).</span>
 
 <span class="sd">        Also, one can download all the dependencies of our pretrained model using our CLI</span>
 <span class="sd">        (e.g. download_model fasttext) before sending it to a node without access to Internet.</span>
@@ -422,7 +422,7 @@
 <span class="sd">        The FastText embeddings are read with our own reader of the ``.bin`` format, which gives the same vectors</span>
 <span class="sd">        as the ``fasttext`` package on every supported Python version, without ``fasttext`` nor ``gensim``. The</span>
 <span class="sd">        embeddings matrix is memory-mapped, so it loads in a few seconds and only the rows used are kept in RAM: the</span>
-<span class="sd">        FastText parser takes ~1.3 GO of RAM and loads in ~4 seconds, compared to ~8.4 GO (13.2 GO at peak) and ~42</span>
+<span class="sd">        FastText parser takes ~1.3 GB of RAM and loads in ~4 seconds, compared to ~8.4 GB (13.2 GB at peak) and ~42</span>
 <span class="sd">        seconds with the former ``gensim`` loading.</span>
 
 <span class="sd">    Note:</span>
@@ -1669,7 +1669,7 @@
       
     </aside>
   </div>
-</div><script src="../../../_static/documentation_options.js?v=ea802f35"></script>
+</div><script src="../../../_static/documentation_options.js?v=fcb5478e"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/scripts/furo.js?v=46bd48cc"></script>

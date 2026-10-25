@@ -7,7 +7,7 @@
         <link rel="prefetch" href="_static/deepparse.png" as="image">
 
     <link rel="shortcut icon" href="_static/favicon.png"><!-- Generated with Sphinx 9.2.0 and Furo 2025.12.19 -->
-        <title>Changelog - deepparse 0.11.0.dev1+a8a3e5b</title>
+        <title>Changelog - deepparse 0.11.0.dev1+96a5000</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -155,7 +155,7 @@
 
 <div class="announcement">
   <aside class="announcement-content">
-     You are reading the documentation of the development version of deepparse (0.11.0.dev1+a8a3e5b). See the <a href="https://deepparse.org/">stable documentation</a> for the latest release. 
+     You are reading the documentation of the development version of deepparse (0.11.0.dev1+96a5000). See the <a href="https://deepparse.org/">stable documentation</a> for the latest release. 
   </aside>
 </div>
 
@@ -167,7 +167,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">deepparse 0.11.0.dev1+a8a3e5b</div></a>
+      <a href="index.html"><div class="brand">deepparse 0.11.0.dev1+96a5000</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -348,6 +348,23 @@ published at https://deepparse.org/dev/ on every push to <code class="docutils l
 a “development version” banner with the dev version number and a link to the stable docs (set with the
 <code class="docutils literal notranslate"><span class="pre">DEEPPARSE_DOCS_VERSION=dev</span></code> environment variable), and the stable home page links to the dev docs. The stable
 deployment now keeps the <code class="docutils literal notranslate"><span class="pre">dev/</span></code> folder of <code class="docutils literal notranslate"><span class="pre">gh-pages</span></code>, and both deployments share a concurrency group.</p></li>
+<li><p>Delimit the public API before 1.0.0, without breaking change. The <code class="docutils literal notranslate"><span class="pre">deepparse</span></code> top-level package and its
+<code class="docutils literal notranslate"><span class="pre">bpemb_url_bug_fix</span></code>, <code class="docutils literal notranslate"><span class="pre">download_tools</span></code>, <code class="docutils literal notranslate"><span class="pre">validations</span></code> and <code class="docutils literal notranslate"><span class="pre">weights_tools</span></code> modules now have an explicit <code class="docutils literal notranslate"><span class="pre">__all__</span></code>, so
+<code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">deepparse</span> <span class="pre">import</span> <span class="pre">*</span></code> only imports the public API. Every name reachable as <code class="docutils literal notranslate"><span class="pre">deepparse.&lt;name&gt;</span></code> in 0.11.0 is
+still reachable, including the standard library and third-party modules, typing aliases and internal helpers
+re-exported by accident (e.g. <code class="docutils literal notranslate"><span class="pre">deepparse.os</span></code> or <code class="docutils literal notranslate"><span class="pre">deepparse.weights_init</span></code>), which are not in <code class="docutils literal notranslate"><span class="pre">__all__</span></code>. A unit test
+freezes the public API.
+The standard library and third-party modules that 0.11.0 re-exported by accident (e.g. <code class="docutils literal notranslate"><span class="pre">deepparse.os</span></code>,
+<code class="docutils literal notranslate"><span class="pre">deepparse.torch</span></code>) are no longer reachable from <code class="docutils literal notranslate"><span class="pre">deepparse</span></code>, and <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">deepparse</span> <span class="pre">import</span> <span class="pre">*</span></code> only imports <code class="docutils literal notranslate"><span class="pre">__all__</span></code>.</p></li>
+<li><p>Rename <code class="docutils literal notranslate"><span class="pre">BPEmbBaseURLWrapperBugFix</span></code> (<code class="docutils literal notranslate"><span class="pre">deepparse/bpemb_url_bug_fix.py</span></code>) to <code class="docutils literal notranslate"><span class="pre">BPEmbLoader</span></code> (<code class="docutils literal notranslate"><span class="pre">deepparse/bpemb_loader.py</span></code>),
+since it is no longer a URL bug-fix wrapper but a gensim-free BPEmb loader. <code class="docutils literal notranslate"><span class="pre">BPEmbBaseURLWrapperBugFix</span></code> is kept as a
+deprecated subclass of <code class="docutils literal notranslate"><span class="pre">BPEmbLoader</span></code>, importable from <code class="docutils literal notranslate"><span class="pre">deepparse</span></code> and <code class="docutils literal notranslate"><span class="pre">deepparse.bpemb_url_bug_fix</span></code>, that emits a
+<code class="docutils literal notranslate"><span class="pre">DeprecationWarning</span></code> and will be removed in 1.0.0.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">load_fasttext_embeddings</span></code> and <code class="docutils literal notranslate"><span class="pre">FASTTEXT_AVAILABLE</span></code> are deprecated and will be removed in 1.0.0; the
+<code class="docutils literal notranslate"><span class="pre">load_fasttext_embeddings</span></code> warning now says so and points to <code class="docutils literal notranslate"><span class="pre">deepparse.embeddings_models.FastTextBinReader</span></code>.</p></li>
+<li><p>Use GB instead of GO in the documentation, docstrings and log messages.</p></li>
+<li><p>Document the versioning and deprecation policy (semantic versioning, deprecated APIs kept at least until the next
+major version) and the APIs slated for removal in 1.0.0.</p></li>
 </ul>
 </section>
 <section id="id1">
@@ -1056,7 +1073,7 @@ are more aligned with our research.</p></li>
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=ea802f35"></script>
+</div><script src="_static/documentation_options.js?v=fcb5478e"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/scripts/furo.js?v=46bd48cc"></script>

@@ -7,7 +7,7 @@
         <link rel="prefetch" href="../_static/deepparse.png" as="image">
 
     <link rel="shortcut icon" href="../_static/favicon.png"><!-- Generated with Sphinx 9.2.0 and Furo 2025.12.19 -->
-        <title>Installation - deepparse 0.11.0.dev1+a8a3e5b</title>
+        <title>Installation - deepparse 0.11.0.dev1+96a5000</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -155,7 +155,7 @@
 
 <div class="announcement">
   <aside class="announcement-content">
-     You are reading the documentation of the development version of deepparse (0.11.0.dev1+a8a3e5b). See the <a href="https://deepparse.org/">stable documentation</a> for the latest release. 
+     You are reading the documentation of the development version of deepparse (0.11.0.dev1+96a5000). See the <a href="https://deepparse.org/">stable documentation</a> for the latest release. 
   </aside>
 </div>
 
@@ -167,7 +167,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../index.html"><div class="brand">deepparse 0.11.0.dev1+a8a3e5b</div></a>
+      <a href="../index.html"><div class="brand">deepparse 0.11.0.dev1+96a5000</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -467,6 +467,30 @@ Please setup a virtual environment, <em>e.g.</em>, via <a class="reference exter
 </li>
 </ul>
 </section>
+<section id="versioning">
+<h2>Versioning<a class="headerlink" href="#versioning" title="Link to this heading">¶</a></h2>
+<p>Deepparse follows <a class="reference external" href="https://semver.org/">semantic versioning</a>: given a version <code class="docutils literal notranslate"><span class="pre">MAJOR.MINOR.PATCH</span></code>, a patch
+release only fixes bugs, a minor release adds features in a backward compatible way, and only a major release can
+remove or change a public API in a backward incompatible way.</p>
+<p>The public API is made of the documented classes and functions and, for the <code class="docutils literal notranslate"><span class="pre">deepparse</span></code> top-level package, of the
+names listed in <code class="docutils literal notranslate"><span class="pre">deepparse.__all__</span></code>. Deprecated APIs emit a <code class="docutils literal notranslate"><span class="pre">DeprecationWarning</span></code> and are kept at least until the
+next major version.</p>
+<p>The following APIs are deprecated and will be removed in 1.0.0:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">deepparse.BPEmbBaseURLWrapperBugFix</span></code> and the <code class="docutils literal notranslate"><span class="pre">deepparse.bpemb_url_bug_fix</span></code> module (deprecated in 0.12.0): use
+<code class="docutils literal notranslate"><span class="pre">deepparse.BPEmbLoader</span></code> (<code class="docutils literal notranslate"><span class="pre">deepparse.bpemb_loader</span></code> module), which has the same arguments and behaviour.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">deepparse.load_fasttext_embeddings</span></code> (deprecated in 0.12.0): use
+<code class="docutils literal notranslate"><span class="pre">deepparse.embeddings_models.FastTextBinReader</span></code>, which it already returns.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">deepparse.FASTTEXT_AVAILABLE</span></code> (deprecated in 0.12.0): Deepparse no longer needs the <code class="docutils literal notranslate"><span class="pre">fasttext</span></code> package to load
+the FastText embeddings, so this flag is no longer used.</p></li>
+<li><p>The internal helpers and constants that are reachable as <code class="docutils literal notranslate"><span class="pre">deepparse.&lt;name&gt;</span></code> but are not in
+<code class="docutils literal notranslate"><span class="pre">deepparse.__all__</span></code> (e.g. <code class="docutils literal notranslate"><span class="pre">deepparse.weights_init</span></code> or <code class="docutils literal notranslate"><span class="pre">deepparse.MODEL_REPO_IDS</span></code>). They are not part of the
+public API: import them from their own module instead.</p></li>
+</ul>
+<p>Since 0.12.0, the standard library and third-party modules that the wildcard imports of <code class="docutils literal notranslate"><span class="pre">deepparse</span></code> re-exported by
+accident (e.g. <code class="docutils literal notranslate"><span class="pre">deepparse.os</span></code>, <code class="docutils literal notranslate"><span class="pre">deepparse.torch</span></code> or <code class="docutils literal notranslate"><span class="pre">deepparse.np</span></code>) are no longer reachable from <code class="docutils literal notranslate"><span class="pre">deepparse</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">deepparse</span> <span class="pre">import</span> <span class="pre">*</span></code> only imports the names of <code class="docutils literal notranslate"><span class="pre">deepparse.__all__</span></code>.</p>
+</section>
 </section>
 
         </article>
@@ -527,6 +551,7 @@ Please setup a virtual environment, <em>e.g.</em>, via <a class="reference exter
 <li><a class="reference internal" href="#">Installation</a><ul>
 <li><a class="reference internal" href="#quick-start">Quick Start</a></li>
 <li><a class="reference internal" href="#id1">Installation</a></li>
+<li><a class="reference internal" href="#versioning">Versioning</a></li>
 </ul>
 </li>
 </ul>
@@ -538,7 +563,7 @@ Please setup a virtual environment, <em>e.g.</em>, via <a class="reference exter
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=ea802f35"></script>
+</div><script src="../_static/documentation_options.js?v=fcb5478e"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

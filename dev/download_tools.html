@@ -7,7 +7,7 @@
         <link rel="prefetch" href="_static/deepparse.png" as="image">
 
     <link rel="shortcut icon" href="_static/favicon.png"><!-- Generated with Sphinx 9.2.0 and Furo 2025.12.19 -->
-        <title>Models Download - deepparse 0.11.0.dev1+a8a3e5b</title>
+        <title>Models Download - deepparse 0.11.0.dev1+96a5000</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -155,7 +155,7 @@
 
 <div class="announcement">
   <aside class="announcement-content">
-     You are reading the documentation of the development version of deepparse (0.11.0.dev1+a8a3e5b). See the <a href="https://deepparse.org/">stable documentation</a> for the latest release. 
+     You are reading the documentation of the development version of deepparse (0.11.0.dev1+96a5000). See the <a href="https://deepparse.org/">stable documentation</a> for the latest release. 
   </aside>
 </div>
 
@@ -167,7 +167,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">deepparse 0.11.0.dev1+a8a3e5b</div></a>
+      <a href="index.html"><div class="brand">deepparse 0.11.0.dev1+96a5000</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -358,11 +358,10 @@ saving directory (saving_dir).</p>
 <dt class="sig sig-object py" id="deepparse.download_tools.load_fasttext_embeddings">
 <span class="sig-prename descclassname"><span class="pre">deepparse.download_tools.</span></span><span class="sig-name descname"><span class="pre">load_fasttext_embeddings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deepparse/download_tools.html#load_fasttext_embeddings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.download_tools.load_fasttext_embeddings" title="Link to this definition">¶</a></dt>
 <dd><p>Function to load fastText <code class="docutils literal notranslate"><span class="pre">.bin</span></code> embeddings.</p>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>Deprecated, use <a class="reference internal" href="embeddings_models.html#deepparse.embeddings_models.FastTextBinReader" title="deepparse.embeddings_models.FastTextBinReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">FastTextBinReader</span></code></a> instead. This function is kept for
-backward compatibility and returns a <code class="docutils literal notranslate"><span class="pre">FastTextBinReader</span></code>, which has the same <code class="docutils literal notranslate"><span class="pre">model[word]</span></code> and
-<code class="docutils literal notranslate"><span class="pre">get_dimension()</span></code> interface as the former <code class="docutils literal notranslate"><span class="pre">fasttext</span></code> model object.</p>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 0.12.0: </span>Use <a class="reference internal" href="embeddings_models.html#deepparse.embeddings_models.FastTextBinReader" title="deepparse.embeddings_models.FastTextBinReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">FastTextBinReader</span></code></a> instead. This function will be removed in 1.0.0.
+It is kept for backward compatibility and returns a <code class="docutils literal notranslate"><span class="pre">FastTextBinReader</span></code>, which has the same
+<code class="docutils literal notranslate"><span class="pre">model[word]</span></code> and <code class="docutils literal notranslate"><span class="pre">get_dimension()</span></code> interface as the former <code class="docutils literal notranslate"><span class="pre">fasttext</span></code> model object.</p>
 </div>
 </dd></dl>
 
@@ -484,7 +483,7 @@ per whitespace-separated word. The list can be used as is with a
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=ea802f35"></script>
+</div><script src="_static/documentation_options.js?v=fcb5478e"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/scripts/furo.js?v=46bd48cc"></script>

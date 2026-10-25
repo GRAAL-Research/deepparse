@@ -7,7 +7,7 @@
         <link rel="prefetch" href="_static/deepparse.png" as="image">
 
     <link rel="shortcut icon" href="_static/favicon.png"><!-- Generated with Sphinx 9.2.0 and Furo 2025.12.19 -->
-        <title>Parser - deepparse 0.11.0.dev1+a8a3e5b</title>
+        <title>Parser - deepparse 0.11.0.dev1+96a5000</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -155,7 +155,7 @@
 
 <div class="announcement">
   <aside class="announcement-content">
-     You are reading the documentation of the development version of deepparse (0.11.0.dev1+a8a3e5b). See the <a href="https://deepparse.org/">stable documentation</a> for the latest release. 
+     You are reading the documentation of the development version of deepparse (0.11.0.dev1+96a5000). See the <a href="https://deepparse.org/">stable documentation</a> for the latest release. 
   </aside>
 </div>
 
@@ -167,7 +167,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">deepparse 0.11.0.dev1+a8a3e5b</div></a>
+      <a href="index.html"><div class="brand">deepparse 0.11.0.dev1+96a5000</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -443,9 +443,9 @@ networks either with FastText or BPEmb. The default prediction tags are the foll
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>model_type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – <p>The network name to use, can be either:</p>
 <ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">&quot;fasttext&quot;</span></code> (need ~1.3 GO of RAM to be used, since its embeddings are memory-mapped),</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">&quot;fasttext-light&quot;</span></code> (need ~2 GO of RAM to be used, but slower than fasttext version),</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">&quot;bpemb&quot;</span></code> (need ~2 GO of RAM to be used),</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;fasttext&quot;</span></code> (need ~1.3 GB of RAM to be used, since its embeddings are memory-mapped),</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;fasttext-light&quot;</span></code> (need ~2 GB of RAM to be used, but slower than fasttext version),</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;bpemb&quot;</span></code> (need ~2 GB of RAM to be used),</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;fastest&quot;</span></code> (quicker to process one address) (equivalent to <code class="docutils literal notranslate"><span class="pre">&quot;fasttext&quot;</span></code>),</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;lightest&quot;</span></code> (the one using the less RAM and GPU usage) (equivalent to <code class="docutils literal notranslate"><span class="pre">&quot;fasttext-light&quot;</span></code>),</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;best&quot;</span></code> (the best accuracy performance) (equivalent to <code class="docutils literal notranslate"><span class="pre">&quot;bpemb&quot;</span></code>).</p></li>
@@ -491,8 +491,8 @@ The default value is``False`` (not an offline parsing model).</p></li>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>For both networks, we will download the pretrained weights and embeddings in the <code class="docutils literal notranslate"><span class="pre">.cache</span></code> directory
-for the root user. The pretrained weights take at most 44 MB. The FastText embeddings take 6.8 GO,
-the FastText-light (<code class="docutils literal notranslate"><span class="pre">&quot;fasttext-light&quot;</span></code>) embeddings take 3.3 GO and bpemb take 116 MB (in <code class="docutils literal notranslate"><span class="pre">&quot;.cache/bpemb&quot;</span></code>).</p>
+for the root user. The pretrained weights take at most 44 MB. The FastText embeddings take 6.8 GB,
+the FastText-light (<code class="docutils literal notranslate"><span class="pre">&quot;fasttext-light&quot;</span></code>) embeddings take 3.3 GB and bpemb take 116 MB (in <code class="docutils literal notranslate"><span class="pre">&quot;.cache/bpemb&quot;</span></code>).</p>
 <p>Also, one can download all the dependencies of our pretrained model using our CLI
 (e.g. download_model fasttext) before sending it to a node without access to Internet.</p>
 <p>Here are the URLs to download our pretrained models directly</p>
@@ -509,7 +509,7 @@ the FastText-light (<code class="docutils literal notranslate"><span class="pre"
 <p>The FastText embeddings are read with our own reader of the <code class="docutils literal notranslate"><span class="pre">.bin</span></code> format, which gives the same vectors
 as the <code class="docutils literal notranslate"><span class="pre">fasttext</span></code> package on every supported Python version, without <code class="docutils literal notranslate"><span class="pre">fasttext</span></code> nor <code class="docutils literal notranslate"><span class="pre">gensim</span></code>. The
 embeddings matrix is memory-mapped, so it loads in a few seconds and only the rows used are kept in RAM: the
-FastText parser takes ~1.3 GO of RAM and loads in ~4 seconds, compared to ~8.4 GO (13.2 GO at peak) and ~42
+FastText parser takes ~1.3 GB of RAM and loads in ~4 seconds, compared to ~8.4 GB (13.2 GB at peak) and ~42
 seconds with the former <code class="docutils literal notranslate"><span class="pre">gensim</span></code> loading.</p>
 </div>
 <div class="admonition note">
@@ -1264,7 +1264,7 @@ is the tag.</p>
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=ea802f35"></script>
+</div><script src="_static/documentation_options.js?v=fcb5478e"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/scripts/furo.js?v=46bd48cc"></script>

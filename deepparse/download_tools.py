@@ -42,6 +42,12 @@ MODEL_MAPPING_CHOICES: Dict[str, str] = {
     "fasttext-light": "fasttext",
     "bpemb": "bpemb",
     "bpemb-attention": "bpemb_attention",
+    "model2vec-8m": "model2vec-8m",
+    "model2vec-8m-attention": "model2vec-8m_attention",
+    "model2vec-32m": "model2vec-32m",
+    "model2vec-32m-attention": "model2vec-32m_attention",
+    "model2vec-multilingual": "model2vec-multilingual",
+    "model2vec-multilingual-attention": "model2vec-multilingual_attention",
 }
 
 MODEL_REPO_IDS = {
@@ -59,6 +65,48 @@ WORLDWIDE_ADDRESSES_REPO_ID = "deepparse/worldwide-addresses"
 # from the address.
 WORLDWIDE_ADDRESSES_TAGS_MAPPING: Dict[str, str] = {"Suburb": "Municipality", "District": "Municipality"}
 WORLDWIDE_ADDRESSES_REMOVED_TAGS = ("County", "Country")
+
+# Model2Vec model types with their Hugging Face embeddings repository and embeddings dimension.
+MODEL2VEC_MODELS: Dict[str, Tuple[str, int]] = {
+    "model2vec-8m": ("minishlab/potion-base-8M", 256),
+    "model2vec-32m": ("minishlab/potion-base-32M", 512),
+    "model2vec-multilingual": ("minishlab/potion-multilingual-128M", 256),
+}
+
+
+def get_model2vec_model_type(model_type: str) -> str:
+    """
+    Function to get the Model2Vec base model type (e.g. ``model2vec-8m``) of a model type that can include the
+    attention suffix (e.g. ``model2vec-8m_attention``).
+    """
+    for model2vec_model_type in MODEL2VEC_MODELS:
+        if model_type.startswith(model2vec_model_type):
+            return model2vec_model_type
+    raise ValueError(f"{model_type} is not a Model2Vec model type. Valid ones are {list(MODEL2VEC_MODELS)}.")
+
+
+def download_model2vec_embeddings(
+    model_type: str, cache_dir: str, verbose: bool = True, offline: bool = False
+) -> Tuple[str, int]:
+    """
+    Function to download the Model2Vec embeddings of a model2vec model type.
+
+    Return the local path to the Model2Vec embeddings and the embeddings dimension.
+    """
+    repo_id, dim = MODEL2VEC_MODELS[get_model2vec_model_type(model_type)]
+
+    if verbose and not offline:
+        logger.info("Downloading the Model2Vec embeddings %s.", repo_id)
+
+    # We only download the files Model2Vec loads to skip the ONNX export, which doubles the download size.
+    local_embeddings_path = snapshot_download(
+        repo_id,
+        cache_dir=cache_dir,
+        local_files_only=offline,
+        allow_patterns=["config.json", "model.safetensors", "tokenizer.json"],
+    )
+
+    return local_embeddings_path, dim
 
 
 def download_fasttext_magnitude_embeddings(cache_dir: str, verbose: bool = True, offline: bool = False) -> str:
@@ -183,6 +231,8 @@ def download_model(
         BPEmbBaseURLWrapperBugFix(
             lang="multi", vs=100000, dim=300, cache_dir=saving_cache_path
         )  # The class manages the download of the pretrained words embedding
+    elif "model2vec" in model_type:
+        download_model2vec_embeddings(model_type, cache_dir=saving_cache_path)
 
     model_type = MODEL_MAPPING_CHOICES[model_type]
 

@@ -8,7 +8,6 @@ from unittest.mock import MagicMock, call, patch
 
 import torch
 
-from deepparse.errors import FastTextModelError
 from deepparse.metrics import accuracy, nll_loss
 from deepparse.parser import AddressParser
 from tests.parser.base import AddressParserPredictTestCase
@@ -203,7 +202,7 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
     @patch("deepparse.parser.address_parser.VectorizerFactory")
     @patch("deepparse.parser.address_parser.DataProcessorFactory")
     @patch("deepparse.parser.address_parser.DataPadder")
-    def test_givenAFasttextModelOnWindows_whenTestVerboseWithNumWorkerGT0_thenRaiseError(
+    def test_givenAFasttextModelOnWindows_whenTestVerboseWithNumWorkerGT0_thenTestOccur(
         self,
         data_padder_mock,
         data_processor_factory_mock,
@@ -221,8 +220,10 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
             model_type=self.a_fasttext_model_type, device=self.a_device, verbose=verbose
         )
         a_num_worker_gt_0 = 1
-        with self.assertRaises(FastTextModelError):
-            self.address_parser_test_call(num_workers=a_num_worker_gt_0)
+        # The FastText embeddings reader is picklable, so the 'spawn' workers of Windows can be used.
+        self.address_parser_test_call(num_workers=a_num_worker_gt_0)
+
+        experiment_mock.assert_called()
 
     @patch("deepparse.parser.address_parser.DataLoader")
     @patch("deepparse.parser.address_parser.Experiment")

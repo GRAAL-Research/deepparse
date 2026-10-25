@@ -11,7 +11,7 @@
         <link rel="prefetch" href="_static/deepparse.png" as="image">
 
     <link rel="shortcut icon" href="_static/favicon.png"><!-- Generated with Sphinx 9.2.0 and Furo 2025.12.19 -->
-        <title>deepparse 0.11.0.dev1+10bcd43</title>
+        <title>deepparse 0.11.0.dev1+a8a3e5b</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -159,7 +159,7 @@
 
 <div class="announcement">
   <aside class="announcement-content">
-     You are reading the documentation of the development version of deepparse (0.11.0.dev1+10bcd43). See the <a href="https://deepparse.org/">stable documentation</a> for the latest release. 
+     You are reading the documentation of the development version of deepparse (0.11.0.dev1+a8a3e5b). See the <a href="https://deepparse.org/">stable documentation</a> for the latest release. 
   </aside>
 </div>
 
@@ -171,7 +171,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="#"><div class="brand">deepparse 0.11.0.dev1+10bcd43</div></a>
+      <a href="#"><div class="brand">deepparse 0.11.0.dev1+a8a3e5b</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -209,6 +209,8 @@
 <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="get_started/get_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="choose_model.html">Choose a Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="results.html">Pretrained Models Results</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul>
@@ -216,6 +218,9 @@
 <li class="toctree-l1"><a class="reference internal" href="pre_processor.html">Pre-Processors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dataset_container.html">Dataset Container</a></li>
 <li class="toctree-l1"><a class="reference internal" href="comparer.html">Comparer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="embeddings_models.html">Embeddings Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="download_tools.html">Models Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="errors.html">Errors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cli.html">CLI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">Parse Address With Our Out-Of-The-Box API</a></li>
 </ul>
@@ -300,610 +305,28 @@
 </ul>
 <p>Deepparse is compatible with the <strong>latest version of PyTorch</strong> and  <strong>Python &gt;= 3.10, &lt;= 3.14</strong>.</p>
 </section>
-<section id="countries-and-results">
-<h1>Countries and Results<a class="headerlink" href="#countries-and-results" title="Link to this heading">¶</a></h1>
-<p>We evaluate our models on two forms of address data</p>
+<section id="quick-example">
+<h1>Quick Example<a class="headerlink" href="#quick-example" title="Link to this heading">¶</a></h1>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">deepparse.parser</span><span class="w"> </span><span class="kn">import</span> <span class="n">AddressParser</span>
+
+<span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span><span class="n">model_type</span><span class="o">=</span><span class="s2">"bpemb"</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># you can parse one address</span>
+<span class="n">parsed_address</span> <span class="o">=</span> <span class="n">address_parser</span><span class="p">(</span><span class="s2">"350 rue des Lilas Ouest Québec Québec G1L 1B6"</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>See <a class="reference internal" href="install/installation.html"><span class="doc">Installation</span></a> to install Deepparse and <a class="reference internal" href="get_started/get_started.html"><span class="doc">Getting Started</span></a> for a complete tour.</p>
+</section>
+<section id="where-to-go-next">
+<h1>Where to Go Next<a class="headerlink" href="#where-to-go-next" title="Link to this heading">¶</a></h1>
 <ul class="simple">
-<li><p><strong>clean data</strong> which refers to addresses containing elements from four categories, namely a street name, a municipality, a province and a postal code,</p></li>
-<li><p><strong>incomplete data</strong> which is made up of addresses missing at least one category amongst the aforementioned ones.</p></li>
+<li><p><a class="reference internal" href="choose_model.html"><span class="doc">Choose a Model</span></a>: compare the pretrained models (memory, disk, speed, multilingual coverage) to pick one.</p></li>
+<li><p><a class="reference internal" href="results.html"><span class="doc">Pretrained Models Results</span></a>: the accuracy of our pretrained models on 20 training countries and 41 zero-shot countries,
+with clean and incomplete data.</p></li>
+<li><p><a class="reference internal" href="parser.html"><span class="doc">Parser</span></a>: the <a class="reference internal" href="parser.html#deepparse.parser.AddressParser" title="deepparse.parser.AddressParser"><code class="xref py py-class docutils literal notranslate"><span class="pre">AddressParser</span></code></a> API, with the memory usage and inference time
+benchmarks.</p></li>
+<li><p><a class="reference internal" href="training_guide.html"><span class="doc">Training Guide</span></a> and the examples: retrain a model on your own data.</p></li>
 </ul>
-<p>You can get our dataset on the HuggingFace Hub <a class="reference external" href="https://huggingface.co/datasets/deepparse/worldwide-addresses">here</a> (one configuration per country). The data protocol is described in the <a class="reference external" href="https://github.com/GRAAL-Research/deepparse-address-data">deepparse-address-data</a> repository.</p>
-<section id="clean-data">
-<h2>Clean Data<a class="headerlink" href="#clean-data" title="Link to this heading">¶</a></h2>
-<p>The following table presents the accuracy on the 20 countries (using clean data) we used during training for both our models.
-Attention mechanisms improve performance by around 0.5% for all countries.</p>
-<div class="table-wrapper docutils container">
-<table class="docutils align-default">
-<thead>
-<tr class="row-odd"><th class="head"><p>Country</p></th>
-<th class="head"><p>FastText (%)</p></th>
-<th class="head"><p>BPEmb (%)</p></th>
-<th class="head"><p>Country</p></th>
-<th class="head"><p>FastText (%)</p></th>
-<th class="head"><p>BPEmb (%)</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>Norway</p></td>
-<td><p>99.06</p></td>
-<td><p>98.3</p></td>
-<td><p>Austria</p></td>
-<td><p>99.21</p></td>
-<td><p>97.82</p></td>
-</tr>
-<tr class="row-odd"><td><p>Italy</p></td>
-<td><p>99.65</p></td>
-<td><p>98.93</p></td>
-<td><p>Mexico</p></td>
-<td><p>99.49</p></td>
-<td><p>98.9</p></td>
-</tr>
-<tr class="row-even"><td><p>United Kingdom</p></td>
-<td><p>99.58</p></td>
-<td><p>97.62</p></td>
-<td><p>Switzerland</p></td>
-<td><p>98.9</p></td>
-<td><p>98.38</p></td>
-</tr>
-<tr class="row-odd"><td><p>Germany</p></td>
-<td><p>99.72</p></td>
-<td><p>99.4</p></td>
-<td><p>Denmark</p></td>
-<td><p>99.71</p></td>
-<td><p>99.55</p></td>
-</tr>
-<tr class="row-even"><td><p>France</p></td>
-<td><p>99.6</p></td>
-<td><p>98.18</p></td>
-<td><p>Brazil</p></td>
-<td><p>99.31</p></td>
-<td><p>97.69</p></td>
-</tr>
-<tr class="row-odd"><td><p>Netherlands</p></td>
-<td><p>99.47</p></td>
-<td><p>99.54</p></td>
-<td><p>Australia</p></td>
-<td><p>99.68</p></td>
-<td><p>98.44</p></td>
-</tr>
-<tr class="row-even"><td><p>Poland</p></td>
-<td><p>99.64</p></td>
-<td><p>99.52</p></td>
-<td><p>Czechia</p></td>
-<td><p>99.48</p></td>
-<td><p>99.03</p></td>
-</tr>
-<tr class="row-odd"><td><p>United States</p></td>
-<td><p>99.56</p></td>
-<td><p>97.69</p></td>
-<td><p>Canada</p></td>
-<td><p>99.76</p></td>
-<td><p>99.03</p></td>
-</tr>
-<tr class="row-even"><td><p>South Korea</p></td>
-<td><p>99.97</p></td>
-<td><p>99.99</p></td>
-<td><p>Russia</p></td>
-<td><p>98.9</p></td>
-<td><p>96.97</p></td>
-</tr>
-<tr class="row-odd"><td><p>Spain</p></td>
-<td><p>99.73</p></td>
-<td><p>99.4</p></td>
-<td><p>Finland</p></td>
-<td><p>99.77</p></td>
-<td><p>99.76</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>We have also made a zero-shot evaluation of our models using clean data from 41 other countries; the results are shown in the next table.</p>
-<div class="table-wrapper docutils container">
-<table class="docutils align-default">
-<thead>
-<tr class="row-odd"><th class="head"><p>Country</p></th>
-<th class="head"><p>FastText (%)</p></th>
-<th class="head"><p>BPEmb (%)</p></th>
-<th class="head"><p>Country</p></th>
-<th class="head"><p>FastText (%)</p></th>
-<th class="head"><p>BPEmb (%)</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>Latvia</p></td>
-<td><p>89.29</p></td>
-<td><p>68.31</p></td>
-<td><p>Faroe Islands</p></td>
-<td><p>71.22</p></td>
-<td><p>64.74</p></td>
-</tr>
-<tr class="row-odd"><td><p>Colombia</p></td>
-<td><p>85.96</p></td>
-<td><p>68.09</p></td>
-<td><p>Singapore</p></td>
-<td><p>86.03</p></td>
-<td><p>67.19</p></td>
-</tr>
-<tr class="row-even"><td><p>Réunion</p></td>
-<td><p>84.3</p></td>
-<td><p>78.65</p></td>
-<td><p>Indonesia</p></td>
-<td><p>62.38</p></td>
-<td><p>63.04</p></td>
-</tr>
-<tr class="row-odd"><td><p>Japan</p></td>
-<td><p>36.26</p></td>
-<td><p>34.97</p></td>
-<td><p>Portugal</p></td>
-<td><p>93.09</p></td>
-<td><p>72.01</p></td>
-</tr>
-<tr class="row-even"><td><p>Algeria</p></td>
-<td><p>86.32</p></td>
-<td><p>70.59</p></td>
-<td><p>Belgium</p></td>
-<td><p>93.14</p></td>
-<td><p>86.06</p></td>
-</tr>
-<tr class="row-odd"><td><p>Malaysia</p></td>
-<td><p>83.14</p></td>
-<td><p>89.64</p></td>
-<td><p>Ukraine</p></td>
-<td><p>93.34</p></td>
-<td><p>89.42</p></td>
-</tr>
-<tr class="row-even"><td><p>Estonia</p></td>
-<td><p>87.62</p></td>
-<td><p>70.08</p></td>
-<td><p>Bangladesh</p></td>
-<td><p>72.28</p></td>
-<td><p>65.63</p></td>
-</tr>
-<tr class="row-odd"><td><p>Slovenia</p></td>
-<td><p>89.01</p></td>
-<td><p>83.96</p></td>
-<td><p>Hungary</p></td>
-<td><p>51.52</p></td>
-<td><p>37.87</p></td>
-</tr>
-<tr class="row-even"><td><p>Bermuda</p></td>
-<td><p>83.19</p></td>
-<td><p>59.16</p></td>
-<td><p>Romania</p></td>
-<td><p>90.04</p></td>
-<td><p>82.9</p></td>
-</tr>
-<tr class="row-odd"><td><p>Philippines</p></td>
-<td><p>63.91</p></td>
-<td><p>57.36</p></td>
-<td><p>Belarus</p></td>
-<td><p>93.25</p></td>
-<td><p>78.59</p></td>
-</tr>
-<tr class="row-even"><td><p>Bosnia</p></td>
-<td><p>88.54</p></td>
-<td><p>67.46</p></td>
-<td><p>Moldova</p></td>
-<td><p>89.22</p></td>
-<td><p>57.48</p></td>
-</tr>
-<tr class="row-odd"><td><p>Lithuania</p></td>
-<td><p>93.28</p></td>
-<td><p>69.97</p></td>
-<td><p>Paraguay</p></td>
-<td><p>96.02</p></td>
-<td><p>87.07</p></td>
-</tr>
-<tr class="row-even"><td><p>Croatia</p></td>
-<td><p>95.8</p></td>
-<td><p>81.76</p></td>
-<td><p>Argentina</p></td>
-<td><p>81.68</p></td>
-<td><p>71.2</p></td>
-</tr>
-<tr class="row-odd"><td><p>Ireland</p></td>
-<td><p>80.16</p></td>
-<td><p>54.44</p></td>
-<td><p>Kazakhstan</p></td>
-<td><p>89.04</p></td>
-<td><p>76.13</p></td>
-</tr>
-<tr class="row-even"><td><p>Greece</p></td>
-<td><p>87.08</p></td>
-<td><p>38.95</p></td>
-<td><p>Bulgaria</p></td>
-<td><p>91.16</p></td>
-<td><p>65.76</p></td>
-</tr>
-<tr class="row-odd"><td><p>Serbia</p></td>
-<td><p>92.87</p></td>
-<td><p>76.79</p></td>
-<td><p>New Caledonia</p></td>
-<td><p>94.45</p></td>
-<td><p>94.46</p></td>
-</tr>
-<tr class="row-even"><td><p>Sweden</p></td>
-<td><p>73.13</p></td>
-<td><p>86.85</p></td>
-<td><p>Venezuela</p></td>
-<td><p>79.23</p></td>
-<td><p>70.88</p></td>
-</tr>
-<tr class="row-odd"><td><p>New Zealand</p></td>
-<td><p>91.25</p></td>
-<td><p>75.57</p></td>
-<td><p>Iceland</p></td>
-<td><p>83.7</p></td>
-<td><p>77.09</p></td>
-</tr>
-<tr class="row-even"><td><p>India</p></td>
-<td><p>70.3</p></td>
-<td><p>63.68</p></td>
-<td><p>Uzbekistan</p></td>
-<td><p>85.85</p></td>
-<td><p>70.1</p></td>
-</tr>
-<tr class="row-odd"><td><p>Cyprus</p></td>
-<td><p>89.64</p></td>
-<td><p>89.47</p></td>
-<td><p>Slovakia</p></td>
-<td><p>78.34</p></td>
-<td><p>68.96</p></td>
-</tr>
-<tr class="row-even"><td><p>South Africa</p></td>
-<td><p>95.68</p></td>
-<td><p>74.829</p></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>Moreover, we also tested the performance when using attention mechanism to further improve zero-shot performance on
-those countries; the result are shown in the next table.</p>
-<div class="table-wrapper docutils container">
-<table class="docutils align-default">
-<thead>
-<tr class="row-odd"><th class="head"><p>Country</p></th>
-<th class="head"><p>FastText (%)</p></th>
-<th class="head"><p>FastTextAtt (%)</p></th>
-<th class="head"><p>BPEmb (%)</p></th>
-<th class="head"><p>BPEmbAtt (%)</p></th>
-<th class="head"><p>Country</p></th>
-<th class="head"><p>FastText (%)</p></th>
-<th class="head"><p>FastTextAtt (%)</p></th>
-<th class="head"><p>BPEmb (%)</p></th>
-<th class="head"><p>BPEmbAtt (%)</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>Ireland</p></td>
-<td><p>80.16</p></td>
-<td><p>89.11</p></td>
-<td><p>54.44</p></td>
-<td><p>81.84</p></td>
-<td><p>Serbia</p></td>
-<td><p>92.87</p></td>
-<td><p>95.88</p></td>
-<td><p>76.79</p></td>
-<td><p>91.4</p></td>
-</tr>
-<tr class="row-odd"><td><p>Uzbekistan</p></td>
-<td><p>85.85</p></td>
-<td><p>87.24</p></td>
-<td><p>70.1</p></td>
-<td><p>76.71</p></td>
-<td><p>Ukraine</p></td>
-<td><p>93.34</p></td>
-<td><p>94.58</p></td>
-<td><p>89.42</p></td>
-<td><p>92.65</p></td>
-</tr>
-<tr class="row-even"><td><p>South Africa</p></td>
-<td><p>95.68</p></td>
-<td><p>97.25</p></td>
-<td><p>74.82</p></td>
-<td><p>97.95</p></td>
-<td><p>Paraguay</p></td>
-<td><p>96.02</p></td>
-<td><p>97.08</p></td>
-<td><p>87.07</p></td>
-<td><p>97.36</p></td>
-</tr>
-<tr class="row-odd"><td><p>Greece</p></td>
-<td><p>87.08</p></td>
-<td><p>86.04</p></td>
-<td><p>38.95</p></td>
-<td><p>58.79</p></td>
-<td><p>Algeria</p></td>
-<td><p>86.32</p></td>
-<td><p>87.3</p></td>
-<td><p>70.59</p></td>
-<td><p>84.56</p></td>
-</tr>
-<tr class="row-even"><td><p>Belarus</p></td>
-<td><p>93.25</p></td>
-<td><p>97.4</p></td>
-<td><p>78.59</p></td>
-<td><p>97.49</p></td>
-<td><p>Sweden</p></td>
-<td><p>73.13</p></td>
-<td><p>89.24</p></td>
-<td><p>86.85</p></td>
-<td><p>93.53</p></td>
-</tr>
-<tr class="row-odd"><td><p>Portugal</p></td>
-<td><p>93.09</p></td>
-<td><p>94.92</p></td>
-<td><p>72.01</p></td>
-<td><p>93.76</p></td>
-<td><p>Hungary</p></td>
-<td><p>51.52</p></td>
-<td><p>51.08</p></td>
-<td><p>37.87</p></td>
-<td><p>24.48</p></td>
-</tr>
-<tr class="row-even"><td><p>Iceland</p></td>
-<td><p>83.7</p></td>
-<td><p>96.54</p></td>
-<td><p>77.09</p></td>
-<td><p>96.63</p></td>
-<td><p>Colombia</p></td>
-<td><p>85.96</p></td>
-<td><p>90.08</p></td>
-<td><p>68.09</p></td>
-<td><p>88.52</p></td>
-</tr>
-<tr class="row-odd"><td><p>Latvia</p></td>
-<td><p>89.29</p></td>
-<td><p>93.14</p></td>
-<td><p>68.31</p></td>
-<td><p>73.79</p></td>
-<td><p>Malaysia</p></td>
-<td><p>83.14</p></td>
-<td><p>74.62</p></td>
-<td><p>89.64</p></td>
-<td><p>91.14</p></td>
-</tr>
-<tr class="row-even"><td><p>Bosnia</p></td>
-<td><p>88.54</p></td>
-<td><p>87.27</p></td>
-<td><p>67.46</p></td>
-<td><p>89.02</p></td>
-<td><p>India</p></td>
-<td><p>70.3</p></td>
-<td><p>75.31</p></td>
-<td><p>63.68</p></td>
-<td><p>80.56</p></td>
-</tr>
-<tr class="row-odd"><td><p>Réunion</p></td>
-<td><p>84.3</p></td>
-<td><p>97.74</p></td>
-<td><p>78.65</p></td>
-<td><p>94.27</p></td>
-<td><p>Croatia</p></td>
-<td><p>95.8</p></td>
-<td><p>95.32</p></td>
-<td><p>81.76</p></td>
-<td><p>85.99</p></td>
-</tr>
-<tr class="row-even"><td><p>Estonia</p></td>
-<td><p>87.62</p></td>
-<td><p>88.2</p></td>
-<td><p>70.08</p></td>
-<td><p>77.32</p></td>
-<td><p>New Caledonia</p></td>
-<td><p>94.45</p></td>
-<td><p>99.61</p></td>
-<td><p>94.46</p></td>
-<td><p>99.77</p></td>
-</tr>
-<tr class="row-odd"><td><p>Japan</p></td>
-<td><p>36.26</p></td>
-<td><p>46.91</p></td>
-<td><p>34.97</p></td>
-<td><p>49.48</p></td>
-<td><p>New Zealand</p></td>
-<td><p>91.25</p></td>
-<td><p>97.0</p></td>
-<td><p>75.57</p></td>
-<td><p>95.7</p></td>
-</tr>
-<tr class="row-even"><td><p>Singapore</p></td>
-<td><p>86.03</p></td>
-<td><p>89.92</p></td>
-<td><p>67.19</p></td>
-<td><p>88.17</p></td>
-<td><p>Romania</p></td>
-<td><p>90.04</p></td>
-<td><p>95.38</p></td>
-<td><p>82.9</p></td>
-<td><p>93.41</p></td>
-</tr>
-<tr class="row-odd"><td><p>Bangladesh</p></td>
-<td><p>72.28</p></td>
-<td><p>78.21</p></td>
-<td><p>65.63</p></td>
-<td><p>77.09</p></td>
-<td><p>Slovakia</p></td>
-<td><p>78.34</p></td>
-<td><p>82.29</p></td>
-<td><p>68.96</p></td>
-<td><p>96.0</p></td>
-</tr>
-<tr class="row-even"><td><p>Argentina</p></td>
-<td><p>81.68</p></td>
-<td><p>88.59</p></td>
-<td><p>71.2</p></td>
-<td><p>86.8</p></td>
-<td><p>Kazakhstan</p></td>
-<td><p>89.04</p></td>
-<td><p>92.37</p></td>
-<td><p>76.13</p></td>
-<td><p>96.08</p></td>
-</tr>
-<tr class="row-odd"><td><p>Venezuela</p></td>
-<td><p>79.23</p></td>
-<td><p>95.47</p></td>
-<td><p>70.88</p></td>
-<td><p>96.38</p></td>
-<td><p>Indonesia</p></td>
-<td><p>62.38</p></td>
-<td><p>66.87</p></td>
-<td><p>63.04</p></td>
-<td><p>71.17</p></td>
-</tr>
-<tr class="row-even"><td><p>Bulgaria</p></td>
-<td><p>91.16</p></td>
-<td><p>91.73</p></td>
-<td><p>65.76</p></td>
-<td><p>93.28</p></td>
-<td><p>Cyprus</p></td>
-<td><p>89.64</p></td>
-<td><p>97.44</p></td>
-<td><p>89.47</p></td>
-<td><p>98.01</p></td>
-</tr>
-<tr class="row-odd"><td><p>Bermuda</p></td>
-<td><p>83.19</p></td>
-<td><p>93.25</p></td>
-<td><p>59.16</p></td>
-<td><p>93.8</p></td>
-<td><p>Moldova</p></td>
-<td><p>89.22</p></td>
-<td><p>92.07</p></td>
-<td><p>57.48</p></td>
-<td><p>89.08</p></td>
-</tr>
-<tr class="row-even"><td><p>Slovenia</p></td>
-<td><p>89.01</p></td>
-<td><p>95.08</p></td>
-<td><p>83.96</p></td>
-<td><p>96.73</p></td>
-<td><p>Lithuania</p></td>
-<td><p>93.28</p></td>
-<td><p>87.74</p></td>
-<td><p>69.97</p></td>
-<td><p>78.67</p></td>
-</tr>
-<tr class="row-odd"><td><p>Philippines</p></td>
-<td><p>63.91</p></td>
-<td><p>81.94</p></td>
-<td><p>57.36</p></td>
-<td><p>83.42</p></td>
-<td><p>Belgium</p></td>
-<td><p>93.14</p></td>
-<td><p>90.72</p></td>
-<td><p>86.06</p></td>
-<td><p>89.85</p></td>
-</tr>
-<tr class="row-even"><td><p>Faroe Islands</p></td>
-<td><p>71.22</p></td>
-<td><p>73.23</p></td>
-<td><p>64.74</p></td>
-<td><p>85.39</p></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-</div>
-</section>
-<section id="incomplete-data">
-<h2>Incomplete Data<a class="headerlink" href="#incomplete-data" title="Link to this heading">¶</a></h2>
-<p>The following table presents the accuracy on the 20 countries we used during training for both our models but for
-incomplete data. We didn’t test on the other 41 countries since we did not train on them and therefore do not expect
-to achieve an interesting performance. Attention mechanisms improve performance by around 0.5% for all countries.</p>
-<div class="table-wrapper docutils container">
-<table class="docutils align-default">
-<thead>
-<tr class="row-odd"><th class="head"><p>Country</p></th>
-<th class="head"><p>FastText (%)</p></th>
-<th class="head"><p>BPEmb (%)</p></th>
-<th class="head"><p>Country</p></th>
-<th class="head"><p>FastText (%)</p></th>
-<th class="head"><p>BPEmb (%)</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>Norway</p></td>
-<td><p>99.52</p></td>
-<td><p>99.75</p></td>
-<td><p>Austria</p></td>
-<td><p>99.55</p></td>
-<td><p>98.94</p></td>
-</tr>
-<tr class="row-odd"><td><p>Italy</p></td>
-<td><p>99.16</p></td>
-<td><p>98.88</p></td>
-<td><p>Mexico</p></td>
-<td><p>97.24</p></td>
-<td><p>95.93</p></td>
-</tr>
-<tr class="row-even"><td><p>United Kingdom</p></td>
-<td><p>97.85</p></td>
-<td><p>95.2</p></td>
-<td><p>Switzerland</p></td>
-<td><p>99.2</p></td>
-<td><p>99.47</p></td>
-</tr>
-<tr class="row-odd"><td><p>Germany</p></td>
-<td><p>99.41</p></td>
-<td><p>99.38</p></td>
-<td><p>Denmark</p></td>
-<td><p>97.86</p></td>
-<td><p>97.9</p></td>
-</tr>
-<tr class="row-even"><td><p>France</p></td>
-<td><p>99.51</p></td>
-<td><p>98.49</p></td>
-<td><p>Brazil</p></td>
-<td><p>98.96</p></td>
-<td><p>97.12</p></td>
-</tr>
-<tr class="row-odd"><td><p>Netherlands</p></td>
-<td><p>98.74</p></td>
-<td><p>99.46</p></td>
-<td><p>Australia</p></td>
-<td><p>99.34</p></td>
-<td><p>98.7</p></td>
-</tr>
-<tr class="row-even"><td><p>Poland</p></td>
-<td><p>99.43</p></td>
-<td><p>99.41</p></td>
-<td><p>Czechia</p></td>
-<td><p>98.78</p></td>
-<td><p>98.88</p></td>
-</tr>
-<tr class="row-odd"><td><p>United States</p></td>
-<td><p>98.49</p></td>
-<td><p>96.5</p></td>
-<td><p>Canada</p></td>
-<td><p>98.96</p></td>
-<td><p>96.98</p></td>
-</tr>
-<tr class="row-even"><td><p>South Korea</p></td>
-<td><p>91.1</p></td>
-<td><p>99.89</p></td>
-<td><p>Russia</p></td>
-<td><p>97.18</p></td>
-<td><p>96.01</p></td>
-</tr>
-<tr class="row-odd"><td><p>Spain</p></td>
-<td><p>99.07</p></td>
-<td><p>98.35</p></td>
-<td><p>Finland</p></td>
-<td><p>99.04</p></td>
-<td><p>99.52</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-</section>
 </section>
 <section id="cite">
 <h1>Cite<a class="headerlink" href="#cite" title="Link to this heading">¶</a></h1>
@@ -945,6 +368,8 @@ details on this matter.</p>
 <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="get_started/get_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="choose_model.html">Choose a Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="results.html">Pretrained Models Results</a></li>
 </ul>
 </div>
 <div class="toctree-wrapper compound">
@@ -954,6 +379,9 @@ details on this matter.</p>
 <li class="toctree-l1"><a class="reference internal" href="pre_processor.html">Pre-Processors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dataset_container.html">Dataset Container</a></li>
 <li class="toctree-l1"><a class="reference internal" href="comparer.html">Comparer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="embeddings_models.html">Embeddings Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="download_tools.html">Models Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="errors.html">Errors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cli.html">CLI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">Parse Address With Our Out-Of-The-Box API</a></li>
 </ul>
@@ -1034,7 +462,7 @@ details on this matter.</p>
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=ae0e478b"></script>
+</div><script src="_static/documentation_options.js?v=ea802f35"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/scripts/furo.js?v=46bd48cc"></script>

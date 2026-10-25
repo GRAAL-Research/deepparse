@@ -7,7 +7,7 @@
         <link rel="prefetch" href="_static/deepparse.png" as="image">
 
     <link rel="shortcut icon" href="_static/favicon.png"><!-- Generated with Sphinx 9.2.0 and Furo 2025.12.19 -->
-        <title>Changelog - deepparse 0.11.0.dev1+10bcd43</title>
+        <title>Changelog - deepparse 0.11.0.dev1+a8a3e5b</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -155,7 +155,7 @@
 
 <div class="announcement">
   <aside class="announcement-content">
-     You are reading the documentation of the development version of deepparse (0.11.0.dev1+10bcd43). See the <a href="https://deepparse.org/">stable documentation</a> for the latest release. 
+     You are reading the documentation of the development version of deepparse (0.11.0.dev1+a8a3e5b). See the <a href="https://deepparse.org/">stable documentation</a> for the latest release. 
   </aside>
 </div>
 
@@ -167,7 +167,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">deepparse 0.11.0.dev1+10bcd43</div></a>
+      <a href="index.html"><div class="brand">deepparse 0.11.0.dev1+a8a3e5b</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -205,6 +205,8 @@
 <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="get_started/get_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="choose_model.html">Choose a Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="results.html">Pretrained Models Results</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul>
@@ -212,6 +214,9 @@
 <li class="toctree-l1"><a class="reference internal" href="pre_processor.html">Pre-Processors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dataset_container.html">Dataset Container</a></li>
 <li class="toctree-l1"><a class="reference internal" href="comparer.html">Comparer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="embeddings_models.html">Embeddings Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="download_tools.html">Models Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="errors.html">Errors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cli.html">CLI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">Parse Address With Our Out-Of-The-Box API</a></li>
 </ul>
@@ -322,6 +327,13 @@ its <code class="docutils literal notranslate"><span class="pre">embed</span></c
 <li><p>Allow data loading workers (<code class="docutils literal notranslate"><span class="pre">num_workers</span></code> &gt; 0) with the FastText models on Windows and MacOS: the FastText
 embeddings reader is picklable, so it works with the <code class="docutils literal notranslate"><span class="pre">spawn</span></code> start method. The restriction (error on Windows, <code class="docutils literal notranslate"><span class="pre">fork</span></code>
 start method on MacOS) is kept for the FastText Light (Magnitude) model only.</p></li>
+<li><p>Documentation: add the API pages of the embeddings models (<code class="docutils literal notranslate"><span class="pre">embeddings_models</span></code>, including <code class="docutils literal notranslate"><span class="pre">FastTextBinReader</span></code>), the
+models download functions (<code class="docutils literal notranslate"><span class="pre">download_tools</span></code>, which now hosts <code class="docutils literal notranslate"><span class="pre">download_worldwide_addresses_sample</span></code>) and the errors
+(<code class="docutils literal notranslate"><span class="pre">errors</span></code>), and a “Choose a Model” page comparing the pretrained models (disk size, RAM, speed, multilingual
+coverage) with the figures already in the documentation. The per-country results tables move from the landing
+page to a “Pretrained Models Results” page, and the landing page gets a quick example. Fix the docstrings that
+broke the rendering (<code class="docutils literal notranslate"><span class="pre">BPEmbEmbeddingsModel</span></code>, <code class="docutils literal notranslate"><span class="pre">MagnitudeEmbeddingsModel</span></code>, <code class="docutils literal notranslate"><span class="pre">EmbeddingsModelFactory.create</span></code>,
+<code class="docutils literal notranslate"><span class="pre">load_fasttext_embeddings</span></code>).</p></li>
 <li><p>Modernize the documentation: the <code class="docutils literal notranslate"><span class="pre">furo</span></code> theme (light and dark modes) replaces <code class="docutils literal notranslate"><span class="pre">sphinx_rtd_theme</span></code>, a copy button
 is added to the code blocks (<code class="docutils literal notranslate"><span class="pre">sphinx-copybutton</span></code>, prompts excluded), and a Changelog page renders this file
 (<code class="docutils literal notranslate"><span class="pre">myst-parser</span></code>). The <code class="docutils literal notranslate"><span class="pre">all</span></code> extra and <code class="docutils literal notranslate"><span class="pre">docs/requirements.txt</span></code> are updated accordingly. Clean the Sphinx
@@ -1044,7 +1056,7 @@ are more aligned with our research.</p></li>
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=ae0e478b"></script>
+</div><script src="_static/documentation_options.js?v=ea802f35"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/scripts/furo.js?v=46bd48cc"></script>

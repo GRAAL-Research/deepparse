@@ -7,7 +7,7 @@
         <link rel="prefetch" href="_static/deepparse.png" as="image">
 
     <link rel="shortcut icon" href="_static/favicon.png"><!-- Generated with Sphinx 9.2.0 and Furo 2025.12.19 -->
-        <title>Dataset Container - deepparse 0.11.0.dev1+10bcd43</title>
+        <title>Dataset Container - deepparse 0.11.0.dev1+a8a3e5b</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -155,7 +155,7 @@
 
 <div class="announcement">
   <aside class="announcement-content">
-     You are reading the documentation of the development version of deepparse (0.11.0.dev1+10bcd43). See the <a href="https://deepparse.org/">stable documentation</a> for the latest release. 
+     You are reading the documentation of the development version of deepparse (0.11.0.dev1+a8a3e5b). See the <a href="https://deepparse.org/">stable documentation</a> for the latest release. 
   </aside>
 </div>
 
@@ -167,7 +167,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">deepparse 0.11.0.dev1+10bcd43</div></a>
+      <a href="index.html"><div class="brand">deepparse 0.11.0.dev1+a8a3e5b</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -205,6 +205,8 @@
 <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="get_started/get_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="choose_model.html">Choose a Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="results.html">Pretrained Models Results</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul class="current">
@@ -212,6 +214,9 @@
 <li class="toctree-l1"><a class="reference internal" href="pre_processor.html">Pre-Processors</a></li>
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Dataset Container</a></li>
 <li class="toctree-l1"><a class="reference internal" href="comparer.html">Comparer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="embeddings_models.html">Embeddings Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="download_tools.html">Models Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="errors.html">Errors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cli.html">CLI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">Parse Address With Our Out-Of-The-Box API</a></li>
 </ul>
@@ -492,33 +497,8 @@ list is a <code class="docutils literal notranslate"><span class="pre">None</spa
 <h2>Sample Data<a class="headerlink" href="#sample-data" title="Link to this heading">¶</a></h2>
 <p>A small sample of tagged addresses of one country can be downloaded from the
 <a class="reference external" href="https://huggingface.co/datasets/deepparse/worldwide-addresses">worldwide-addresses dataset</a> and used with a
-<a class="reference internal" href="#deepparse.dataset_container.ListDatasetContainer" title="deepparse.dataset_container.ListDatasetContainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ListDatasetContainer</span></code></a>.</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="deepparse.download_tools.download_worldwide_addresses_sample">
-<span class="sig-prename descclassname"><span class="pre">deepparse.download_tools.</span></span><span class="sig-name descname"><span class="pre">download_worldwide_addresses_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">country_code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'ca'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_samples</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1000</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.15)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.15)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.15)"><span class="pre">List</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/deepparse/download_tools.html#download_worldwide_addresses_sample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deepparse.download_tools.download_worldwide_addresses_sample" title="Link to this definition">¶</a></dt>
-<dd><p>Function to download a small sample of tagged addresses of one country from the <a class="reference external" href="https://huggingface.co/datasets/deepparse/worldwide-addresses">worldwide-addresses</a> HuggingFace dataset and convert it to the
-deepparse tag space. It is meant to give small, ready-to-use datasets for examples and quick experiments.</p>
-<p>Only the needed part of the country’s last parquet file is read (the beginning of each country’s data mostly
-holds postal-code-only addresses, while the end holds complete street addresses). The tags are mapped to the
-deepparse tags as follows: <code class="docutils literal notranslate"><span class="pre">Suburb</span></code> and <code class="docutils literal notranslate"><span class="pre">District</span></code> become <code class="docutils literal notranslate"><span class="pre">Municipality</span></code>, and the words tagged <code class="docutils literal notranslate"><span class="pre">County</span></code>
-or <code class="docutils literal notranslate"><span class="pre">Country</span></code> are removed from the address. The addresses left empty by this removal are dropped.</p>
-<p>It requires the <code class="docutils literal notranslate"><span class="pre">pyarrow</span></code> package (<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">pyarrow</span></code> or <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">deepparse[all]</span></code>).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>country_code</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – The <a class="reference external" href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a> code of the
-country to download (e.g. <code class="docutils literal notranslate"><span class="pre">&quot;ca&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;us&quot;</span></code>). The default value is <code class="docutils literal notranslate"><span class="pre">&quot;ca&quot;</span></code>.</p></li>
-<li><p><strong>num_samples</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – The maximum number of tagged addresses to return. The default value is <code class="docutils literal notranslate"><span class="pre">1000</span></code>.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A list of tuples <code class="docutils literal notranslate"><span class="pre">(address,</span> <span class="pre">tags)</span></code> where the address is a string and the tags a list of deepparse tags, one
-per whitespace-separated word. The list can be used as is with a
-<a class="reference internal" href="#deepparse.dataset_container.ListDatasetContainer" title="deepparse.dataset_container.ListDatasetContainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ListDatasetContainer</span></code></a>.</p>
-</dd>
-</dl>
-</dd></dl>
-
+<a class="reference internal" href="#deepparse.dataset_container.ListDatasetContainer" title="deepparse.dataset_container.ListDatasetContainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ListDatasetContainer</span></code></a> with
+<a class="reference internal" href="download_tools.html#deepparse.download_tools.download_worldwide_addresses_sample" title="deepparse.download_tools.download_worldwide_addresses_sample"><code class="xref py py-func docutils literal notranslate"><span class="pre">download_worldwide_addresses_sample()</span></code></a>, documented in the <a class="reference internal" href="download_tools.html#download-tools"><span class="std std-ref">Models Download</span></a> page.</p>
 </section>
 </section>
 
@@ -594,10 +574,7 @@ per whitespace-separated word. The list can be used as is with a
 <li><a class="reference internal" href="#deepparse.data_validation.data_validation.validate_if_any_none"><code class="docutils literal notranslate"><span class="pre">validate_if_any_none()</span></code></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#sample-data">Sample Data</a><ul>
-<li><a class="reference internal" href="#deepparse.download_tools.download_worldwide_addresses_sample"><code class="docutils literal notranslate"><span class="pre">download_worldwide_addresses_sample()</span></code></a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#sample-data">Sample Data</a></li>
 </ul>
 </li>
 </ul>
@@ -609,7 +586,7 @@ per whitespace-separated word. The list can be used as is with a
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=ae0e478b"></script>
+</div><script src="_static/documentation_options.js?v=ea802f35"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/scripts/furo.js?v=46bd48cc"></script>

@@ -6,7 +6,7 @@
         <link rel="prefetch" href="../../_static/deepparse.png" as="image">
 
     <link rel="shortcut icon" href="../../_static/favicon.png"><!-- Generated with Sphinx 9.2.0 and Furo 2025.12.19 -->
-        <title>deepparse.download_tools - deepparse 0.11.0.dev1+10bcd43</title>
+        <title>deepparse.download_tools - deepparse 0.11.0.dev1+a8a3e5b</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -154,7 +154,7 @@
 
 <div class="announcement">
   <aside class="announcement-content">
-     You are reading the documentation of the development version of deepparse (0.11.0.dev1+10bcd43). See the <a href="https://deepparse.org/">stable documentation</a> for the latest release. 
+     You are reading the documentation of the development version of deepparse (0.11.0.dev1+a8a3e5b). See the <a href="https://deepparse.org/">stable documentation</a> for the latest release. 
   </aside>
 </div>
 
@@ -166,7 +166,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../index.html"><div class="brand">deepparse 0.11.0.dev1+10bcd43</div></a>
+      <a href="../../index.html"><div class="brand">deepparse 0.11.0.dev1+a8a3e5b</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -204,6 +204,8 @@
 <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../get_started/get_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../choose_model.html">Choose a Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../results.html">Pretrained Models Results</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul>
@@ -211,6 +213,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../../pre_processor.html">Pre-Processors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../dataset_container.html">Dataset Container</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../comparer.html">Comparer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../embeddings_models.html">Embeddings Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../download_tools.html">Models Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../errors.html">Errors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../cli.html">CLI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../api.html">Parse Address With Our Out-Of-The-Box API</a></li>
 </ul>
@@ -331,6 +336,8 @@
 <span class="n">WORLDWIDE_ADDRESSES_REMOVED_TAGS</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"County"</span><span class="p">,</span> <span class="s2">"Country"</span><span class="p">)</span>
 
 
+<div class="viewcode-block" id="download_fasttext_magnitude_embeddings">
+<a class="viewcode-back" href="../../download_tools.html#deepparse.download_tools.download_fasttext_magnitude_embeddings">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">download_fasttext_magnitude_embeddings</span><span class="p">(</span><span class="n">cache_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">offline</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Function to download the magnitude pretrained FastText model.</span>
@@ -361,9 +368,12 @@
             <span class="n">local_files_only</span><span class="o">=</span><span class="n">offline</span><span class="p">,</span>
         <span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">local_embeddings_file_path</span>
+    <span class="k">return</span> <span class="n">local_embeddings_file_path</span></div>
 
 
+
+<div class="viewcode-block" id="download_weights">
+<a class="viewcode-back" href="../../download_tools.html#deepparse.download_tools.download_weights">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">download_weights</span><span class="p">(</span><span class="n">model_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">saving_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">offline</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Function to download the pretrained weights of one of our pre-trained base models.</span>
@@ -394,7 +404,8 @@
         <span class="c1"># Re-enabling progress bar</span>
         <span class="n">enable_progress_bar</span><span class="p">()</span>
 
-    <span class="k">return</span> <span class="n">repo_id</span>
+    <span class="k">return</span> <span class="n">repo_id</span></div>
+
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">load_version</span><span class="p">(</span><span class="n">model_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">cache_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -418,6 +429,8 @@
     <span class="k">return</span> <span class="n">version</span>
 
 
+<div class="viewcode-block" id="download_models">
+<a class="viewcode-back" href="../../download_tools.html#deepparse.download_tools.download_models">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">download_models</span><span class="p">(</span><span class="n">saving_cache_path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Function to download all the pretrained models.  It will download all the model's checkpoints and version files.</span>
@@ -426,9 +439,12 @@
 <span class="sd">        saving_cache_path: The path to the saving cache directory for the specified model.</span>
 <span class="sd">    """</span>
     <span class="k">for</span> <span class="n">model_type</span> <span class="ow">in</span> <span class="n">MODEL_MAPPING_CHOICES</span><span class="p">:</span>
-        <span class="n">download_model</span><span class="p">(</span><span class="n">model_type</span><span class="p">,</span> <span class="n">saving_cache_path</span><span class="o">=</span><span class="n">saving_cache_path</span><span class="p">)</span>
+        <span class="n">download_model</span><span class="p">(</span><span class="n">model_type</span><span class="p">,</span> <span class="n">saving_cache_path</span><span class="o">=</span><span class="n">saving_cache_path</span><span class="p">)</span></div>
 
 
+
+<div class="viewcode-block" id="download_model">
+<a class="viewcode-back" href="../../download_tools.html#deepparse.download_tools.download_model">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">download_model</span><span class="p">(</span>
     <span class="n">model_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">saving_cache_path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -456,11 +472,12 @@
 
     <span class="n">model_type</span> <span class="o">=</span> <span class="n">MODEL_MAPPING_CHOICES</span><span class="p">[</span><span class="n">model_type</span><span class="p">]</span>
 
-    <span class="n">download_weights</span><span class="p">(</span><span class="n">model_type</span><span class="p">,</span> <span class="n">saving_cache_path</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">offline</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">download_weights</span><span class="p">(</span><span class="n">model_type</span><span class="p">,</span> <span class="n">saving_cache_path</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">offline</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="download_worldwide_addresses_sample">
-<a class="viewcode-back" href="../../dataset_container.html#deepparse.download_tools.download_worldwide_addresses_sample">[docs]</a>
+<a class="viewcode-back" href="../../download_tools.html#deepparse.download_tools.download_worldwide_addresses_sample">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">download_worldwide_addresses_sample</span><span class="p">(</span><span class="n">country_code</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"ca"</span><span class="p">,</span> <span class="n">num_samples</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Function to download a small sample of tagged addresses of one country from the `worldwide-addresses</span>
@@ -569,6 +586,8 @@
 <span class="s2">"""</span>
 
 
+<div class="viewcode-block" id="download_fasttext_embeddings">
+<a class="viewcode-back" href="../../download_tools.html#deepparse.download_tools.download_fasttext_embeddings">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">download_fasttext_embeddings</span><span class="p">(</span><span class="n">cache_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">offline</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Simpler version of the download_model function from FastText to download pretrained common-crawl</span>
@@ -592,7 +611,8 @@
                 <span class="n">shutil</span><span class="o">.</span><span class="n">copyfileobj</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">f_out</span><span class="p">)</span>
         <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cache_dir</span><span class="p">,</span> <span class="n">gz_file_name</span><span class="p">))</span>
 
-    <span class="k">return</span> <span class="n">file_name_path</span>  <span class="c1"># return the full path to the FastText embeddings</span>
+    <span class="k">return</span> <span class="n">file_name_path</span>  <span class="c1"># return the full path to the FastText embeddings</span></div>
+
 
 
 <span class="c1"># Now use a saving path and don't return a bool</span>
@@ -653,13 +673,15 @@
         <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
 
 
+<div class="viewcode-block" id="load_fasttext_embeddings">
+<a class="viewcode-back" href="../../download_tools.html#deepparse.download_tools.load_fasttext_embeddings">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">load_fasttext_embeddings</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Function to load fastText ``.bin`` embeddings.</span>
 
-<span class="sd">    .. deprecated::</span>
-<span class="sd">        Use :class:`~deepparse.embeddings_models.FastTextBinReader` instead. This function is kept for backward</span>
-<span class="sd">        compatibility and returns a ``FastTextBinReader``, which has the same ``model[word]`` and</span>
+<span class="sd">    Warning:</span>
+<span class="sd">        Deprecated, use :class:`~deepparse.embeddings_models.FastTextBinReader` instead. This function is kept for</span>
+<span class="sd">        backward compatibility and returns a ``FastTextBinReader``, which has the same ``model[word]`` and</span>
 <span class="sd">        ``get_dimension()`` interface as the former ``fasttext`` model object.</span>
 <span class="sd">    """</span>
     <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
@@ -671,7 +693,8 @@
     <span class="c1"># Imported here since the embeddings_models package imports this module.</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">.embeddings_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">FastTextBinReader</span>  <span class="c1"># pylint: disable=import-outside-toplevel</span>
 
-    <span class="k">return</span> <span class="n">FastTextBinReader</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">FastTextBinReader</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></div>
+
 </pre></div>
         </article>
       </div>
@@ -704,7 +727,7 @@
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=ae0e478b"></script>
+</div><script src="../../_static/documentation_options.js?v=ea802f35"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>

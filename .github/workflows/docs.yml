@@ -13,20 +13,19 @@ on:
 jobs:
   docs:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [ "3.10", "3.11", "3.12", "3.13", "3.14" ]
 
     steps:
       - uses: actions/checkout@v7
-      - name: Set up Python ${{ matrix.python-version }}
+      - name: Set up Python 3.13
         uses: actions/setup-python@v7
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: "3.13"
       - name: Install dependencies
         run: |
-          pip install -e .[all]
-      - name: Building doc
+          pip install -e .[all] -r docs/requirements.txt
+      - name: Building doc (warnings and broken references are errors)
+        env:
+          SPHINXOPTS: "-W --keep-going -n"
         run: |
           cd docs
           ./rebuild_html_doc.sh

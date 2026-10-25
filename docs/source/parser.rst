@@ -14,7 +14,7 @@ tags of any address.
 
 For now, we offer only two pretrained models, FastText and BPEmb. The first one relies on
 `fastText <https://fasttext.cc/>`__ French pretrained embeddings to parse the address, and the second use
-the `byte-pair multilingual subword <https://nlp.h-its.org/bpemb/>`_ pretrained embeddings. In both cases,
+the `byte-pair multilingual subword <https://bpemb.h-its.org/>`_ pretrained embeddings. In both cases,
 the architecture and performances are similar; our results are available in this
 `article <https://arxiv.org/abs/2006.16152>`_.
 

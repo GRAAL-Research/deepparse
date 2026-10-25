@@ -326,6 +326,14 @@ class ToolsTests(PretrainedWeightsBase):
         actual_model_type, _ = handle_model_name(retrain_model_type, attention_mechanism=True)
         self.assertEqual(expected_model_type, actual_model_type)
 
+    def test_givenRetrainedFastTextLightAttentionModelType_whenHandleModelName_thenKeepTheHyphen(self):
+        # A retrained fasttext-light attention model saves its model_type as "fasttext-light_attention".
+        for model_type in ("fasttext-light_attention", "fasttext-light-attention", "lightest_attention"):
+            actual_model_type, actual_formatted_name = handle_model_name(model_type, attention_mechanism=True)
+
+            self.assertEqual("fasttext-light_attention", actual_model_type)
+            self.assertEqual("FastTextLightAttention", actual_formatted_name)
+
     def test_givenModelTypes_whenHandleThem_then_ReturnProperFormattedModelType(self):
         # "Normal" Fasttext setup
         model_types = ["fasttext", "fastest"]

@@ -626,6 +626,8 @@ class DownloadWorldwideAddressesSampleTests(TestCase):
                 download_worldwide_addresses_sample(self.a_country_code)
 
         hf_file_system_mock.assert_not_called()
+
+
 class Model2VecDownloadToolsTests(TestCase):
     def test_givenModel2VecModelTypes_whenGettingTheBaseModelType_thenRemoveTheAttentionSuffix(self):
         self.assertEqual("model2vec-8m", get_model2vec_model_type("model2vec-8m"))

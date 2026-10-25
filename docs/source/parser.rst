@@ -71,7 +71,7 @@ are a little bit lower for the trained country (around ~2%) but are similar for 
             - N/A
             - ~0.00004
 
-.. [1] RAM measured in October 2026 (Linux, Python 3.12, Torch 2.14, CPU) with the memory-mapped FastText reader: ~1.3 GB at peak for the whole process (Torch and the model included) while parsing 10,000 addresses, and a loading time of ~4 s. With the former loading (``gensim``, before version 0.11), the same parser took ~8.4 GB of RAM (13.2 GB at peak during the loading) and ~42 s to load. The execution times are from the March 2023 experiment.
+.. [1] RAM measured in October 2026 (Linux, Python 3.12, Torch 2.14, CPU) with the memory-mapped FastText reader: ~1.3 GB at peak for the whole process (Torch and the model included) while parsing 10,000 addresses, and a loading time of ~4 s. With the former loading (``gensim``, up to version 0.11.0), the same parser took ~8.4 GB of RAM (13.2 GB at peak during the loading) and ~42 s to load. The execution times are from the March 2023 experiment.
 
 
 .. list-table::
@@ -106,7 +106,7 @@ are a little bit lower for the trained country (around ~2%) but are similar for 
             - N/A
             - ~0.00004
 
-.. [2] RAM measured in October 2026 (Linux, Python 3.12, Torch 2.14, CPU) with the memory-mapped FastText reader: ~1.3 GB at peak for the whole process (Torch and the model included) while parsing 10,000 addresses, and a loading time of ~4 s. With the former loading (``gensim``, before version 0.11), the same parser took ~8.4 GB of RAM (13.2 GB at peak during the loading) and ~42 s to load. The execution times are from the March 2023 experiment.
+.. [2] RAM measured in October 2026 (Linux, Python 3.12, Torch 2.14, CPU) with the memory-mapped FastText reader: ~1.3 GB at peak for the whole process (Torch and the model included) while parsing 10,000 addresses, and a loading time of ~4 s. With the former loading (``gensim``, up to version 0.11.0), the same parser took ~8.4 GB of RAM (13.2 GB at peak during the loading) and ~42 s to load. The execution times are from the March 2023 experiment.
 
 Thus, the more addresses there are, the faster each address can be processed. You can also improve performance by using more
 workers for the data loader created with your data within the call. But note that this performance improvement is not linear.

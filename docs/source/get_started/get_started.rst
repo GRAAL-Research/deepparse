@@ -161,7 +161,7 @@ loading workers share its memory.
 
         *   - FastText parser (CPU)
             - Former loading (``gensim``)
-            - Memory-mapped reader (since 0.11)
+            - Memory-mapped reader (after 0.11.0)
         *   - Loading time
             - ~42 s
             - ~4 s
@@ -175,6 +175,6 @@ loading workers share its memory.
 The RAM is the whole process (Torch and the model included), measured while parsing 10,000 addresses (Linux, Python
 3.12, CPU).
 
-The BPEmb embeddings, which are much smaller, are also loaded without ``gensim`` since version 0.11: they load in
+The BPEmb embeddings, which are much smaller, are also loaded without ``gensim`` after version 0.11.0: they load in
 ~0.2 s instead of ~0.9 s and take ~0.14 GB of RAM instead of ~0.26 GB.
 

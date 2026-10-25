@@ -383,6 +383,12 @@ Deepparse handles model downloads when you use it, but you can also pre-download
 - [FastTextAttention](https://huggingface.co/deepparse/fasttext-attention),
 - [BPEmb](https://huggingface.co/deepparse/bpemb-base),
 - [BPEmbAttention](https://huggingface.co/deepparse/bpemb-attention),
+- [Model2Vec 8M](https://huggingface.co/deepparse/model2vec-8m-base) (alias `tiny`),
+  [Model2Vec 8M Attention](https://huggingface.co/deepparse/model2vec-8m-attention),
+- [Model2Vec 32M](https://huggingface.co/deepparse/model2vec-32m-base),
+  [Model2Vec 32M Attention](https://huggingface.co/deepparse/model2vec-32m-attention),
+- [Model2Vec Multilingual](https://huggingface.co/deepparse/model2vec-multilingual-base),
+  [Model2Vec Multilingual Attention](https://huggingface.co/deepparse/model2vec-multilingual-attention),
 - [FastText Light](https://huggingface.co/deepparse/fasttext-base/tree/light-embeddings) (
   using [Magnitude Light](https://github.com/davebulaval/magnitude-light)).
 

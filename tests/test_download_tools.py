@@ -7,17 +7,10 @@
 import gzip
 import os
 import unittest
+import warnings
 from tempfile import TemporaryDirectory
 from unittest import TestCase
 from unittest.mock import call, mock_open, patch
-
-try:
-    from fasttext.FastText import _FastText
-
-    FASTTEXT_AVAILABLE = True
-except ImportError:
-    _FastText = None
-    FASTTEXT_AVAILABLE = False
 
 try:
     import pyarrow as pa
@@ -30,6 +23,7 @@ except ImportError:
     PYARROW_AVAILABLE = False
 
 from deepparse.dataset_container import ListDatasetContainer
+from deepparse.embeddings_models import FastTextBinReader
 from deepparse.download_tools import (
     _print_progress,
     download_fasttext_embeddings,
@@ -247,11 +241,18 @@ class FastTextToolsTests(CaptureOutputTestCase):
         expected = "(100.00%) [==================================================>]"
         self.assertIn(expected, actual)
 
-    @unittest.skipUnless(FASTTEXT_AVAILABLE, "fasttext is not installed")
-    def test_givenAFasttextEmbeddingsToLoad_whenLoad_thenLoadProperly(self):
-        embeddings = load_fasttext_embeddings(self.a_fake_embeddings_path)
+    def test_givenAFasttextEmbeddingsToLoad_whenLoad_thenLoadWithTheBinReaderAndWarn(self):
+        with warnings.catch_warnings(record=True) as caught_warnings:
+            warnings.simplefilter("always")
+            embeddings = load_fasttext_embeddings(self.a_fake_embeddings_path)
 
-        self.assertIsInstance(embeddings, _FastText)
+        self.assertIsInstance(embeddings, FastTextBinReader)
+        self.assertTrue(any(issubclass(warning.category, DeprecationWarning) for warning in caught_warnings))
+
+    def test_whenImportFasttextAvailable_thenStillExposedForBackwardCompatibility(self):
+        from deepparse import FASTTEXT_AVAILABLE  # pylint: disable=import-outside-toplevel
+
+        self.assertIsInstance(FASTTEXT_AVAILABLE, bool)
 
 
 class DownloadModelsTests(TestCase):

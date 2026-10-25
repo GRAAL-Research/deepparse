@@ -40,7 +40,7 @@ Use deepparse to
 
 Read the documentation at [deepparse.org](https://deepparse.org).
 
-Deepparse is compatible with the __latest version of PyTorch__ and  __Python >= 3.10, <= 3.13__.
+Deepparse is compatible with the __latest version of PyTorch__ and  __Python >= 3.10, <= 3.14__.
 
 ### Countries and Results
 
@@ -419,17 +419,6 @@ pip install 'deepparse[app]' # for ZSH terminal
 pip install deepparse[all]  # for bash terminal
 pip install 'deepparse[all]' # for ZSH terminal
 ```
-
-- **Install the stable version of Deepparse with native FastText support (requires Python 3.10–3.12):**
-
-```sh
-pip install deepparse[fasttext]  # for bash terminal
-pip install 'deepparse[fasttext]' # for ZSH terminal
-```
-
-> **Note:** On Python 3.13+, the `fasttext-wheel` package cannot be compiled. Deepparse automatically
-> uses Gensim as a fallback to load FastText embeddings, which uses slightly more RAM (~10 GO vs ~8 GO).
-> BPEmb and FastText Light (Magnitude) models are not affected.
 
 - **Install the latest development version of Deepparse:**
 

@@ -37,7 +37,7 @@ class FastTextEmbeddingsModelIntegrationTest(AddressParserRetrainTestCase):
 
         self.assertIsInstance(model.model, FastTextBinReader)
 
-    def assert_collate_fn_works_in_data_loader(self, num_workers: int) -> None:
+    def assert_collate_fn_works_in_data_loader(self, num_workers: int, multiprocessing_context=None) -> None:
         model = FastTextEmbeddingsModel(self.a_fasttext_model_path, verbose=self.verbose)
         data_transform = MockedDataTransform(model)
 
@@ -46,6 +46,7 @@ class FastTextEmbeddingsModelIntegrationTest(AddressParserRetrainTestCase):
             collate_fn=data_transform.collate_fn,
             batch_size=32,
             num_workers=num_workers,
+            multiprocessing_context=multiprocessing_context,
         )
         dataset = []
         for data in data_loader:
@@ -57,3 +58,7 @@ class FastTextEmbeddingsModelIntegrationTest(AddressParserRetrainTestCase):
 
     def test_whenFasttextModelCollateFnInDataLoaderNumWorkers2_thenWorkProperly(self):
         self.assert_collate_fn_works_in_data_loader(num_workers=2)
+
+    def test_whenFasttextModelCollateFnInDataLoaderWithSpawnWorkers_thenWorkProperly(self):
+        # Windows and MacOS start the workers with 'spawn', which pickles the embeddings model.
+        self.assert_collate_fn_works_in_data_loader(num_workers=2, multiprocessing_context="spawn")

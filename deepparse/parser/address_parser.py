@@ -1311,14 +1311,19 @@ class AddressParser:
                 )
 
     def _model_os_validation(self, num_workers: int) -> None:
-        if system() == "Windows" and "fasttext" in self.model_type and num_workers > 0:
+        # The FastText embeddings reader and BPEmb are picklable, so they work with the 'spawn' start method of Windows
+        # and MacOS. Only the FastText Light (Magnitude) embeddings, backed by SQLite, still need the 'fork' one.
+        if self.model_type != "fasttext-light" or num_workers == 0:
+            return
+
+        if system() == "Windows":
             raise FastTextModelError(
-                "On Windows system, we cannot use FastText-like models with parallelism workers since "
-                "FastText objects are not pickleable with the parallelism process use by Windows. "
+                "On Windows system, we cannot use the FastText Light model with parallelism workers since "
+                "its Magnitude embeddings are not pickleable with the parallelism process use by Windows. "
                 "Thus, you need to set num_workers to 0 since 1 also means 'parallelism'."
             )
 
-        if system() == "Darwin" and "fasttext" in self.model_type and num_workers > 0:
+        if system() == "Darwin":
             try:
                 torch.multiprocessing.set_start_method('fork')
             except RuntimeError as e:
@@ -1328,8 +1333,8 @@ class AddressParser:
                     raise RuntimeError("There has been an issue with the multiprocessing context initialisation") from e
 
             warnings.warn(
-                "On MacOS system, we cannot use FastText-like models with parallelism out-of-the-box since "
-                "FastText objects are not pickleable with the parallelism process used by default by MacOS. "
+                "On MacOS system, we cannot use the FastText Light model with parallelism out-of-the-box since "
+                "its Magnitude embeddings are not pickleable with the parallelism process used by default by MacOS. "
                 "Thus, we have set it to the 'fork' (i.e. torch.multiprocessing.set_start_method('fork'))"
                 " to allow torch parallelism.",
                 category=UserWarning,

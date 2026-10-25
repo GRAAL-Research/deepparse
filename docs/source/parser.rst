@@ -71,7 +71,7 @@ are a little bit lower for the trained country (around ~2%) but are similar for 
             - N/A
             - ~0.00004
 
-.. [1] Note that on Windows, we use the Gensim FastText models with ~10 GO with similar performance.
+.. [1] Measured with the former ``fasttext`` loader. The embeddings are now memory-mapped, so only the rows used are loaded in RAM, on every OS.
 
 
 .. list-table::
@@ -106,7 +106,7 @@ are a little bit lower for the trained country (around ~2%) but are similar for 
             - N/A
             - ~0.00004
 
-.. [2] Note that on Windows, we use the Gensim FastText models that use ~10 GO with similar performance.
+.. [2] Measured with the former ``fasttext`` loader. The embeddings are now memory-mapped, so only the rows used are loaded in RAM, on every OS.
 
 Thus, the more addresses there are, the faster each address can be processed. You can also improve performance by using more
 workers for the data loader created with your data within the call. But note that this performance improvement is not linear.

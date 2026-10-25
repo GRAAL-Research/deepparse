@@ -511,3 +511,6 @@
   `load_fasttext_embeddings` is deprecated and returns a `FastTextBinReader` (same `model[word]`,
   `get_word_vector` and `get_dimension` interface), and `BPEmbBaseURLWrapperBugFix` keeps the `bpemb` defaults and
   its `embed`, `encode`, `encode_ids`, `vectors` and `dim` API (not the gensim `emb` attribute).
+- Allow data loading workers (`num_workers` > 0) with the FastText models on Windows and MacOS: the FastText
+  embeddings reader is picklable, so it works with the `spawn` start method. The restriction (error on Windows, `fork`
+  start method on MacOS) is kept for the FastText Light (Magnitude) model only.

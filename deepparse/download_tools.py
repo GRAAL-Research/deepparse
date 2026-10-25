@@ -384,9 +384,9 @@ def load_fasttext_embeddings(path: str):
     """
     Function to load fastText ``.bin`` embeddings.
 
-    .. deprecated::
-        Use :class:`~deepparse.embeddings_models.FastTextBinReader` instead. This function is kept for backward
-        compatibility and returns a ``FastTextBinReader``, which has the same ``model[word]`` and
+    Warning:
+        Deprecated, use :class:`~deepparse.embeddings_models.FastTextBinReader` instead. This function is kept for
+        backward compatibility and returns a ``FastTextBinReader``, which has the same ``model[word]`` and
         ``get_dimension()`` interface as the former ``fasttext`` model object.
     """
     warnings.warn(

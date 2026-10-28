@@ -74,13 +74,13 @@ Resources and Speed
             - ~1
             - ~0.0170 / ~0.0030
             - ~0.0028 / ~0.0037
-        *   - BPEmb
+        *   - BPEmb [#bpemb_gpu]_
             - 116 MB
             - ~1
             - ~1
             - ~0.0179 / ~0.0044
             - ~0.0055 / ~0.0015
-        *   - BPEmbAttention
+        *   - BPEmbAttention [#bpemb_gpu]_
             - 116 MB
             - ~1
             - ~1.1
@@ -99,6 +99,13 @@ Sources:
    :class:`~deepparse.embeddings_models.FastTextBinReader`: ~1.3 GB at peak for the whole process while parsing 10,000
    addresses, on every OS (see :doc:`embeddings_models`). With the former ``gensim`` loader (up to version 0.11.0), the
    same parser took ~8.4 GB (13.2 GB at peak during the loading).
+
+.. [#bpemb_gpu] On GPU, the BPEmb models parse batches of addresses about twice as fast after version 0.11.0,
+   since their embedding network runs the sub-word LSTM on all the words of a batch in one call. Measured in October
+   2026 (RTX 6000 Ada, Torch 2.6, batches of 256): 3,000 addresses are parsed in ~1.0-1.3 s instead of ~2.4-2.6 s,
+   with or without attention, with the same predictions. The times of the table are from the March 2023 experiment.
+   On CPU, the time is unchanged.
+
 
 Accuracy and Multilingual Coverage
 ----------------------------------

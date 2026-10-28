@@ -7,7 +7,7 @@
         <link rel="prefetch" href="_static/deepparse.png" as="image">
 
     <link rel="shortcut icon" href="_static/favicon.png"><!-- Generated with Sphinx 9.2.0 and Furo 2025.12.19 -->
-        <title>Choose a Model - deepparse 0.11.0.dev1+96a5000</title>
+        <title>Choose a Model - deepparse 0.11.0.dev1+7d68884</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -155,7 +155,7 @@
 
 <div class="announcement">
   <aside class="announcement-content">
-     You are reading the documentation of the development version of deepparse (0.11.0.dev1+96a5000). See the <a href="https://deepparse.org/">stable documentation</a> for the latest release. 
+     You are reading the documentation of the development version of deepparse (0.11.0.dev1+7d68884). See the <a href="https://deepparse.org/">stable documentation</a> for the latest release. 
   </aside>
 </div>
 
@@ -167,7 +167,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">deepparse 0.11.0.dev1+96a5000</div></a>
+      <a href="index.html"><div class="brand">deepparse 0.11.0.dev1+7d68884</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -373,14 +373,14 @@ parser (case-insensitive).</p>
 <td><p>~0.0170 / ~0.0030</p></td>
 <td><p>~0.0028 / ~0.0037</p></td>
 </tr>
-<tr class="row-odd"><td><p>BPEmb</p></td>
+<tr class="row-odd"><td><p>BPEmb <a class="footnote-reference brackets" href="#bpemb-gpu" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a></p></td>
 <td><p>116 MB</p></td>
 <td><p>~1</p></td>
 <td><p>~1</p></td>
 <td><p>~0.0179 / ~0.0044</p></td>
 <td><p>~0.0055 / ~0.0015</p></td>
 </tr>
-<tr class="row-even"><td><p>BPEmbAttention</p></td>
+<tr class="row-even"><td><p>BPEmbAttention <a class="footnote-reference brackets" href="#bpemb-gpu" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a></p></td>
 <td><p>116 MB</p></td>
 <td><p>~1</p></td>
 <td><p>~1.1</p></td>
@@ -406,6 +406,15 @@ about 100 MB more on GPU.</p></li>
 <a class="reference internal" href="embeddings_models.html#deepparse.embeddings_models.FastTextBinReader" title="deepparse.embeddings_models.FastTextBinReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">FastTextBinReader</span></code></a>: ~1.3 GB at peak for the whole process while parsing 10,000
 addresses, on every OS (see <a class="reference internal" href="embeddings_models.html"><span class="doc">Embeddings Models</span></a>). With the former <code class="docutils literal notranslate"><span class="pre">gensim</span></code> loader (up to version 0.11.0), the
 same parser took ~8.4 GB (13.2 GB at peak during the loading).</p>
+</aside>
+<aside class="footnote brackets" id="bpemb-gpu" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id3">1</a>,<a role="doc-backlink" href="#id4">2</a>)</span>
+<p>On GPU, the BPEmb models parse batches of addresses about twice as fast after version 0.11.0,
+since their embedding network runs the sub-word LSTM on all the words of a batch in one call. Measured in October
+2026 (RTX 6000 Ada, Torch 2.6, batches of 256): 3,000 addresses are parsed in ~1.0-1.3 s instead of ~2.4-2.6 s,
+with or without attention, with the same predictions. The times of the table are from the March 2023 experiment.
+On CPU, the time is unchanged.</p>
 </aside>
 </aside>
 </section>
@@ -515,7 +524,7 @@ Windows (see <a class="reference internal" href="errors.html#deepparse.errors.Fa
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=fcb5478e"></script>
+</div><script src="_static/documentation_options.js?v=500d4e81"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/scripts/furo.js?v=46bd48cc"></script>

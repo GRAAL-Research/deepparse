@@ -1,9 +1,10 @@
-from .. import download_fasttext_embeddings, download_fasttext_magnitude_embeddings
+from .. import download_fasttext_embeddings, download_fasttext_magnitude_embeddings, download_model2vec_embeddings
 from . import (
     BPEmbEmbeddingsModel,
     EmbeddingsModel,
     FastTextEmbeddingsModel,
     MagnitudeEmbeddingsModel,
+    Model2VecEmbeddingsModel,
 )
 
 
@@ -18,7 +19,8 @@ class EmbeddingsModelFactory:
 
         Args:
             embedding_model_type (str): the type of the embeddings model to create. Valid options are ``"bpemb"``,
-                ``"fasttext"`` and ``"fasttext-light"`` (the Magnitude embeddings).
+                ``"fasttext"``, ``"fasttext-light"`` (the Magnitude embeddings), ``"model2vec-8m"``, ``"model2vec-32m"``
+                and ``"model2vec-multilingual"``.
             cache_dir (str): Path to the cache directory where the embeddings model exists or is to be downloaded.
             verbose (bool): Whether or not to make the loading of the embeddings verbose.
 
@@ -38,9 +40,16 @@ class EmbeddingsModelFactory:
 
                 embeddings_model = FastTextEmbeddingsModel(file_name, verbose=verbose)
 
+        elif "model2vec" in embedding_model_type:
+            embeddings_path, _ = download_model2vec_embeddings(
+                embedding_model_type, cache_dir=cache_dir, verbose=verbose
+            )
+
+            embeddings_model = Model2VecEmbeddingsModel(embeddings_path, verbose=verbose)
+
         else:
             raise NotImplementedError(f"""
             The {embedding_model_type} embeddings model does not exist.
-            Existing embeddings models are: bpemb, fasttext and fasttext_magnitude""")
+            Existing embeddings models are: bpemb, fasttext, fasttext_magnitude and model2vec""")
 
         return embeddings_model

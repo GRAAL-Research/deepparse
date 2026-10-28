@@ -1,17 +1,19 @@
 # pylint: disable=unused-argument, arguments-differ
 import unittest
 from unittest import TestCase
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 from deepparse.embeddings_models import (
     BPEmbEmbeddingsModel,
     FastTextEmbeddingsModel,
     MagnitudeEmbeddingsModel,
+    Model2VecEmbeddingsModel,
 )
 from deepparse.vectorizer import (
     BPEmbVectorizer,
     FastTextVectorizer,
     MagnitudeVectorizer,
+    Model2VecVectorizer,
     VectorizerFactory,
 )
 
@@ -49,6 +51,11 @@ class VectorizerFactoryTest(TestCase):
         vectorizer = self.vectorizer_factory.create(self.a_magnitude_embeddings_model)
 
         self.assertIsInstance(vectorizer, MagnitudeVectorizer)
+
+    def test_givenAModel2VecEmbeddingsModel_whenCreatingVectorizer_thenShouldReturnProperVectorizer(self):
+        vectorizer = self.vectorizer_factory.create(MagicMock(spec=Model2VecEmbeddingsModel))
+
+        self.assertIsInstance(vectorizer, Model2VecVectorizer)
 
     def test_givenAUnsupportedEmbeddingsModel_whenCreatingVectorizer_thenShouldRaiseError(self):
         with self.assertRaises(NotImplementedError):

@@ -91,10 +91,18 @@ def main():
             "colorama": "colorama",
             # Kept empty for backward compatibility: the FastText embeddings no longer need the fasttext package.
             "fasttext": [],
-            "app": ["fastapi[all]>=0.109.1", "uvicorn>=0.22.0", "sentry-sdk[fastapi]>=2.0.0", "python-decouple>=3.8"],
+            "model2vec": ["model2vec"],
+            "app": [
+                "fastapi[all]>=0.109.1",
+                "uvicorn>=0.22.0",
+                "sentry-sdk[fastapi]>=2.0.0",
+                "python-decouple>=3.8",
+                "model2vec",
+            ],
             "all": [
                 "colorama",  # colorama
                 "pyarrow",  # worldwide-addresses dataset sample download (examples)
+                "model2vec",  # model2vec embeddings
                 "fastapi[all]>=0.109.1",  # app requirements
                 "uvicorn>=0.22.0",
                 "sentry-sdk[fastapi]>=2.0.0",

@@ -63,6 +63,21 @@ class AddressParserPredictCPUTest(AddressParserPredictBase):
         parse_address = self.a_model(self.an_address_to_parse)
         self.assert_properly_parse(parse_address)
 
+    def test_givenAAddress_whenParseModel2Vec_thenParseAddress(self):
+        for model_type in ("tiny", "model2vec-32m", "model2vec-multilingual"):
+            for attention_mechanism in (False, True):
+                with self.subTest(model_type=model_type, attention_mechanism=attention_mechanism):
+                    config = {
+                        "model_type": model_type,
+                        "attention_mechanism": attention_mechanism,
+                        "device": self.device,
+                        "verbose": False,
+                    }
+                    self.setup_model_with_config(config)
+
+                    parse_address = self.a_model(self.an_address_to_parse)
+                    self.assert_properly_parse(parse_address)
+
     def test_givenAAddress_whenParseBPEmb_thenParseAddress(self):
         config = {"model_type": "bpemb", "device": self.device, "verbose": False}
         self.setup_model_with_config(config)

@@ -92,6 +92,13 @@ def handle_model_name(model_type: str, attention_mechanism: bool) -> Tuple[str, 
     elif model_type in ("best", "bpemb"):
         model_type = "bpemb"  # We change name to bpemb since best = bpemb
         formatted_name = "BPEmb"
+    elif model_type in ("tiny", "model2vec-8m"):
+        model_type = "model2vec-8m"  # We change name to model2vec-8m since tiny = model2vec-8m
+        formatted_name = "Model2Vec8M"
+    elif model_type == "model2vec-32m":
+        formatted_name = "Model2Vec32M"
+    elif model_type == "model2vec-multilingual":
+        formatted_name = "Model2VecMultilingual"
     else:
         raise ValueError(
             f"Could not handle {model_type}. Read the docs at https://deepparse.org/ for possible model types."

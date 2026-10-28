@@ -511,6 +511,18 @@
   `load_fasttext_embeddings` is deprecated and returns a `FastTextBinReader` (same `model[word]`,
   `get_word_vector` and `get_dimension` interface), and `BPEmbBaseURLWrapperBugFix` keeps the `bpemb` defaults and
   its `embed`, `encode`, `encode_ids`, `vectors` and `dim` API (not the gensim `emb` attribute).
+- Add three Model2Vec models (#328): `model2vec-8m`, `model2vec-32m` and `model2vec-multilingual`, based on the
+  `minishlab/potion-*` static embeddings, plus the `tiny` alias for `model2vec-8m`. Their embeddings take 59 MB,
+  249 MB and 1 GB on disk, compared to 6.8 GB for fastText, and the parser takes ~1.0 GB, ~1.2 GB and ~2.8 GB of RAM
+  at peak (CPU, whole process). Install them with
+  `pip install deepparse[model2vec]`.
+  They were trained on the `deepparse/worldwide-addresses` HF dataset (20 countries, 100,000 clean and 50,000
+  incomplete addresses per country), where `Suburb` and `District` are mapped to `Municipality` and `County` and
+  `Country` words are removed. Since the source data has no `Orientation` nor `GeneralDelivery` tags, these models
+  never predict them, and South Korea has almost only incomplete addresses.
+- Only download the files Model2Vec loads, skipping the ONNX export.
+- A model type without published weights is now randomly initialized with a warning instead of failing, so it can
+  be retrained from scratch.
 - Allow data loading workers (`num_workers` > 0) with the FastText models on Windows and MacOS: the FastText
   embeddings reader is picklable, so it works with the `spawn` start method. The restriction (error on Windows, `fork`
   start method on MacOS) is kept for the FastText Light (Magnitude) model only.
@@ -537,10 +549,9 @@
   deployment now keeps the `dev/` folder of `gh-pages`, and both deployments share a concurrency group.
 - Delimit the public API before 1.0.0, without breaking change. The `deepparse` top-level package and its
   `bpemb_url_bug_fix`, `download_tools`, `validations` and `weights_tools` modules now have an explicit `__all__`, so
-  `from deepparse import *` only imports the public API. Every name reachable as `deepparse.<name>` in 0.11.0 is
-  still reachable, including the standard library and third-party modules, typing aliases and internal helpers
-  re-exported by accident (e.g. `deepparse.os` or `deepparse.weights_init`), which are not in `__all__`. A unit test
-  freezes the public API.
+  `from deepparse import *` only imports the public API. The deepparse helpers reachable as `deepparse.<name>` in
+  0.11.0 are still reachable (e.g. `deepparse.weights_init`), even if they are not in `__all__`. A unit test freezes
+  the public API.
   The standard library and third-party modules that 0.11.0 re-exported by accident (e.g. `deepparse.os`,
   `deepparse.torch`) are no longer reachable from `deepparse`, and `from deepparse import *` only imports `__all__`.
 - Rename `BPEmbBaseURLWrapperBugFix` (`deepparse/bpemb_url_bug_fix.py`) to `BPEmbLoader` (`deepparse/bpemb_loader.py`),

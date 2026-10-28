@@ -57,19 +57,19 @@ Resources and Speed
             - Time per address, CPU (batch of 1 / more than 1) (s)
             - Time per address, GPU (batch of 1 / more than 1) (s)
         *   - fastText
-            - 6.8 GO
+            - 6.8 GB
             - ~1.3 [#memory_mapped]_
             - ~1
             - ~0.0128 / ~0.0026
             - ~0.0023 / ~0.0004
         *   - fastTextAttention
-            - 6.8 GO
+            - 6.8 GB
             - ~1.3 [#memory_mapped]_
             - ~1.1
             - ~0.0230 / ~0.0057
             - ~0.0043 / ~0.0007
         *   - fastText-light
-            - 3.3 GO
+            - 3.3 GB
             - ~1
             - ~1
             - ~0.0170 / ~0.0030
@@ -89,8 +89,8 @@ Resources and Speed
 
 Sources:
 
-- Embeddings on disk: the note of :class:`~deepparse.parser.AddressParser` (the FastText embeddings take 6.8 GO, the
-  FastText-light embeddings 3.3 GO and BPEmb 116 MB). The pretrained weights take at most 44 MB in addition.
+- Embeddings on disk: the note of :class:`~deepparse.parser.AddressParser` (the FastText embeddings take 6.8 GB, the
+  FastText-light embeddings 3.3 GB and BPEmb 116 MB). The pretrained weights take at most 44 MB in addition.
 - RAM, GPU memory and time per address: the "Memory Usage and Time Performance" tables of the :doc:`parser` page
   (Linux, Python 3.11, Torch 2.0 and CUDA 11.7, ~183,000 addresses, March 21, 2023). The attention mechanism takes
   about 100 MB more on GPU.
@@ -126,7 +126,7 @@ When to Use Each Model
 ----------------------
 
 - **You parse addresses from the 20 training countries and want the quickest model**: ``"fasttext"`` (``"fastest"``).
-  Its embeddings take the most disk space (6.8 GO).
+  Its embeddings take the most disk space (6.8 GB).
 - **You parse addresses from other countries (zero-shot)**: prefer a model with an attention mechanism
   (``"fasttext-attention"`` or ``"bpemb-attention"``) and check the country in the zero-shot tables of
   :doc:`results`, since the accuracy varies a lot between countries.

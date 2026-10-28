@@ -53,54 +53,40 @@ class EmbeddingNetwork(nn.Module):
         Callable method to aggregate the byte-pair embeddings from decomposed words.
 
         Args:
-            to_predict (~torch.Tensor): The address to extract the embedding on.
-            decomposition_lengths (tuple[list]) : The decomposition lengths of the address components.
+            to_predict (~torch.Tensor): The address to extract the embedding on, of shape (batch size, number of
+                words, number of sub-words of the longest word, embeddings dimension).
+            decomposition_lengths (tuple[list]) : The decomposition lengths of the address components (the number of
+                sub-words of each word, at least ``1`` for the padding words).
 
         Return:
             The embedded address vector tensor.
         """
-        device = to_predict.device
-        batch_size = to_predict.size(0)
+        batch_size, sequence_length, max_decomposition_length, embeddings_dimension = to_predict.size()
 
-        embeddings = torch.zeros(
-            to_predict.size(1), to_predict.size(0), int(to_predict.size(3) / self.maxpool_kernel_size), device=device
+        # Each word of each address is an independent sequence of sub-words for the LSTM, so all the words of the
+        # batch go through the LSTM in a single call (one call per word position, with Python loops, made the BPEmb
+        # models CPU-bound).
+        words = to_predict.reshape(batch_size * sequence_length, max_decomposition_length, embeddings_dimension).float()
+        words_lengths = torch.tensor(
+            [length for address_lengths in decomposition_lengths for length in address_lengths[:sequence_length]],
+            dtype=torch.int64,
         )
 
-        to_predict = to_predict.transpose(0, 1).float()
+        packed_sequence = pack_padded_sequence(words, words_lengths, batch_first=True, enforce_sorted=False)
+        packed_output, _ = self.model(packed_sequence)
 
-        for i in range(to_predict.size(0)):
-            lengths = []
+        # Pad packed the output to take the output of the last sub-word of each word.
+        padded_output, padded_output_lengths = pad_packed_sequence(packed_output, batch_first=True)
+        words_indices = torch.arange(padded_output.size(0), device=padded_output.device)
+        word_context = padded_output[words_indices, padded_output_lengths.to(padded_output.device) - 1]
 
-            # Reorder decomposition, could use a transpose but take a LOT (like a LOT) of memory
-            for decomposition_length in decomposition_lengths:
-                lengths.append(decomposition_length[i])
+        # Projection layer from dim 600 to 300.
+        projection_output = self.projection_layer(word_context)
 
-            packed_sequence = pack_padded_sequence(
-                to_predict[i],
-                lengths,
-                batch_first=True,
-                enforce_sorted=False,
-            )
+        if self.maxpooling_layer is not None:
+            projection_output = self._max_pool(projection_output)
 
-            packed_output, _ = self.model(packed_sequence)
-
-            # Pad packed the output to be applied later on in the projection layer.
-            padded_output, padded_output_lengths = pad_packed_sequence(packed_output, batch_first=True)
-
-            # Filling the embedding by IDX.
-            word_context = torch.zeros(padded_output.size(0), padded_output.size(2), device=device)
-            for j in range(batch_size):
-                word_context[j] = padded_output[j, padded_output_lengths[j] - 1, :]
-
-            # Projection layer from dim 600 to 300.
-            projection_output = self.projection_layer(word_context)
-
-            if self.maxpooling_layer is not None:
-                projection_output = self._max_pool(projection_output)
-
-            embeddings[i] = projection_output
-
-        return embeddings.transpose(0, 1)
+        return projection_output.view(batch_size, sequence_length, -1)
 
     def _max_pool(self, projection_output: torch.Tensor) -> torch.Tensor:
         """

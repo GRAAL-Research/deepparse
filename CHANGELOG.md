@@ -556,4 +556,6 @@
   single call instead of one call per word position with a Python loop over the batch. A training step of the
   embedding network goes from ~3.9 s to ~0.05 s (batch of 2,048 addresses, RTX 6000 Ada), which made BPEmb training
   CPU-bound (~1-3 h per epoch on 2.9 M addresses). The outputs and gradients are the same (tested against the former
-  loop), and the pretrained BPEmb models give the same predictions.
+  loop), and the pretrained BPEmb models give the same predictions. GPU inference by batches is about twice as fast
+  (3,000 addresses in ~1.0-1.3 s instead of ~2.4-2.6 s, batches of 256), and the CPU inference time is unchanged; the
+  Parser and Choose a Model pages say so.

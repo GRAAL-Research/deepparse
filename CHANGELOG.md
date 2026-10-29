@@ -559,3 +559,9 @@
   loop), and the pretrained BPEmb models give the same predictions. GPU inference by batches is about twice as fast
   (3,000 addresses in ~1.0-1.3 s instead of ~2.4-2.6 s, batches of 256), and the CPU inference time is unchanged; the
   Parser and Choose a Model pages say so.
+- Keep the GPU memory of the BPEmb embedding network at its former level: running the sub-word LSTM on all the words of
+  a batch in a single call (previous entry) doubled the GPU memory peak of a training step (5.1 GiB instead of 2.6 GiB,
+  batch of 1,024 addresses), and BPEmb training ran out of memory. The network is back to one LSTM call per word
+  position and only drops the Python loop over the addresses of the batch: same memory as before, a training step
+  still ~35-80 times faster (~0.03-0.07 s instead of ~2.6 s), and GPU inference ~1.8 times faster (3,000 addresses in
+  ~0.9-1.1 s instead of ~1.6-2.0 s). Same outputs and predictions as the former implementation.

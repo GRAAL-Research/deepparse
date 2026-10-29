@@ -5,7 +5,7 @@ from typing import List, Tuple
 
 import torch
 from torch import nn
-from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
+from torch.nn.utils.rnn import pack_padded_sequence
 
 
 class EmbeddingNetwork(nn.Module):
@@ -61,27 +61,33 @@ class EmbeddingNetwork(nn.Module):
         Return:
             The embedded address vector tensor.
         """
-        batch_size, sequence_length, max_decomposition_length, embeddings_dimension = to_predict.size()
+        batch_size, sequence_length, _, _ = to_predict.size()
+        to_predict = to_predict.transpose(0, 1).float()
 
-        # Each word of each address is an independent sequence of sub-words for the LSTM, so all the words of the
-        # batch go through the LSTM in a single call (one call per word position, with Python loops, made the BPEmb
-        # models CPU-bound).
-        words = to_predict.reshape(batch_size * sequence_length, max_decomposition_length, embeddings_dimension).float()
-        words_lengths = torch.tensor(
-            [length for address_lengths in decomposition_lengths for length in address_lengths[:sequence_length]],
-            dtype=torch.int64,
-        )
+        # One LSTM call per word position, over the words of all the addresses at that position. Running all the words
+        # of the batch in a single call is faster but doubles the GPU memory peak.
+        words_context = []
+        for word_index in range(sequence_length):
+            lengths = torch.tensor(
+                [address_lengths[word_index] for address_lengths in decomposition_lengths], dtype=torch.int64
+            )
+            packed_sequence = pack_padded_sequence(
+                to_predict[word_index], lengths, batch_first=True, enforce_sorted=False
+            )
+            packed_output, _ = self.model(packed_sequence)
 
-        packed_sequence = pack_padded_sequence(words, words_lengths, batch_first=True, enforce_sorted=False)
-        packed_output, _ = self.model(packed_sequence)
-
-        # Pad packed the output to take the output of the last sub-word of each word.
-        padded_output, padded_output_lengths = pad_packed_sequence(packed_output, batch_first=True)
-        words_indices = torch.arange(padded_output.size(0), device=padded_output.device)
-        word_context = padded_output[words_indices, padded_output_lengths.to(padded_output.device) - 1]
+            # The output of the last sub-word of each word, read in the packed output: the data of a time step starts at
+            # the sum of the batch sizes of the previous steps, then follows the sorted order of the sequences.
+            time_steps_offsets = torch.cumsum(packed_output.batch_sizes, dim=0) - packed_output.batch_sizes
+            last_sub_word_indices = (
+                time_steps_offsets[lengths - 1].to(packed_output.data.device) + packed_output.unsorted_indices
+            )
+            words_context.append(packed_output.data[last_sub_word_indices])
 
         # Projection layer from dim 600 to 300.
-        projection_output = self.projection_layer(word_context)
+        projection_output = self.projection_layer(
+            torch.stack(words_context, dim=1).view(batch_size * sequence_length, -1)
+        )
 
         if self.maxpooling_layer is not None:
             projection_output = self._max_pool(projection_output)

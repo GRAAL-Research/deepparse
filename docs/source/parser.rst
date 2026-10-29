@@ -73,7 +73,7 @@ are a little bit lower for the trained country (around ~2%) but are similar for 
 
 .. [1] RAM measured in October 2026 (Linux, Python 3.12, Torch 2.14, CPU) with the memory-mapped FastText reader: ~1.3 GB at peak for the whole process (Torch and the model included) while parsing 10,000 addresses, and a loading time of ~4 s. With the former loading (``gensim``, up to version 0.11.0), the same parser took ~8.4 GB of RAM (13.2 GB at peak during the loading) and ~42 s to load. The execution times are from the March 2023 experiment.
 
-.. [3] On GPU, the BPEmb models parse batches of addresses about twice as fast after version 0.11.0, since their embedding network runs the sub-word LSTM on all the words of a batch in one call. Measured in October 2026 (RTX 6000 Ada, Torch 2.6, batches of 256): 3,000 addresses are parsed in ~1.0-1.3 s instead of ~2.4-2.6 s, with or without attention, with the same predictions. The times of the table are from the March 2023 experiment. On CPU, the time is unchanged.
+.. [3] On GPU, the BPEmb models parse batches of addresses about 1.8 times as fast after version 0.11.0, since their embedding network no longer loops over the addresses of a batch in Python. Measured in October 2026 (RTX 6000 Ada, Torch 2.6, batches of 256): 3,000 addresses are parsed in ~0.9-1.1 s instead of ~1.6-2.0 s, with or without attention, with the same predictions and the same GPU memory. The times of the table are from the March 2023 experiment. On CPU, the time is unchanged.
 
 
 .. list-table::

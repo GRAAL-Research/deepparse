@@ -135,6 +135,19 @@ class EmbeddingNetworkForwardTest(TestCase):
                 network(self.to_predict, self.decomposition_lengths),
             )
 
+    def test_whenForward_thenOneLSTMCallPerWordPosition(self):
+        # Running all the words of the batch in a single LSTM call doubles the GPU memory peak (measured on GPU), so
+        # the network keeps one call per word position.
+        network = EmbeddingNetwork(self.embeddings_dimension, 6, self.embeddings_dimension)
+        calls = []
+        network.model.register_forward_hook(lambda module, inputs, output: calls.append(inputs[0].batch_sizes[0]))
+
+        with torch.no_grad():
+            network(self.to_predict, self.decomposition_lengths)
+
+        self.assertEqual(self.to_predict.size(1), len(calls))
+        self.assertTrue(all(batch_size == self.to_predict.size(0) for batch_size in calls))
+
     def test_whenBackward_thenSameGradientsAsPerWordLoop(self):
         network = EmbeddingNetwork(self.embeddings_dimension, 6, self.embeddings_dimension)
 

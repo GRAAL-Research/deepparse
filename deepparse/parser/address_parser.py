@@ -18,7 +18,7 @@ from poutyne.framework import Experiment
 from torch.optim import SGD
 from torch.utils.data import DataLoader, Subset
 
-from .. import validate_data_to_parse
+from ..validations import validate_data_to_parse
 from ..converter import DataPadder, DataProcessorFactory, TagsConverter
 from ..dataset_container import DatasetContainer
 from ..download_tools import CACHE_PATH

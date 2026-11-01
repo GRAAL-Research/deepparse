@@ -594,3 +594,8 @@
   loop), and the pretrained BPEmb models give the same predictions. GPU inference by batches is about twice as fast
   (3,000 addresses in ~1.0-1.3 s instead of ~2.4-2.6 s, batches of 256), and the CPU inference time is unchanged; the
   Parser and Choose a Model pages say so.
+- Remove the APIs deprecated before 1.0.0: `BPEmbBaseURLWrapperBugFix` and the `deepparse.bpemb_url_bug_fix` module
+  (use `deepparse.BPEmbLoader`), `load_fasttext_embeddings` (use `deepparse.embeddings_models.FastTextBinReader`) and
+  `FASTTEXT_AVAILABLE`, and the internal helpers and constants reachable as `deepparse.<name>` but not in
+  `deepparse.__all__` (e.g. `deepparse.weights_init`, `deepparse.MODEL_REPO_IDS`): import them from their own module
+  (e.g. `deepparse.weights_tools`, `deepparse.download_tools`).

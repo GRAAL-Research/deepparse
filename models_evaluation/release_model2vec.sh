@@ -7,6 +7,8 @@
 # 2. Export the selected models to the Hugging Face Hub format, with their model cards.
 # 3. Check them end to end (load, same predictions as their checkpoints, retrain and reload), without network.
 # 4. Write the Results tables of the documentation in OUTPUT_DIR (to copy in docs/source).
+# 5. Measure the speed and the memory of the models (CPU and GPU 0) on the fake Hub cache, if SPEED_TEST=1 (run it on
+#    an idle machine: the timings of a loaded machine are not representative).
 #
 # Set ALLOW_INCOMPLETE=1 to preview the release on an unfinished grid.
 #
@@ -15,7 +17,7 @@
 set -euo pipefail
 
 if [ "$#" -ne 4 ]; then
-  sed -n '2,14p' "$0"
+  sed -n '2,16p' "$0"
   exit 2
 fi
 CHECKPOINTS_DIR=$1
@@ -33,9 +35,17 @@ rm -rf "$OUTPUT_DIR/hub_export"
 python -m models_evaluation.export_model_to_hub "$OUTPUT_DIR/selection.json" --output_dir "$OUTPUT_DIR/hub_export"
 
 echo "== 3. End-to-end check"
+rm -rf "$OUTPUT_DIR/hub_cache"
 python -m models_evaluation.check_exported_models "$OUTPUT_DIR/selection.json" "$OUTPUT_DIR/hub_export" \
-  "$CACHE_DIR" "$TEST_PATH"
+  "$CACHE_DIR" "$TEST_PATH" --keep_cache "$OUTPUT_DIR/hub_cache"
 
 echo "== 4. Documentation tables"
 ls "$OUTPUT_DIR"/model2vec_*.inc
+if [ "${SPEED_TEST:-0}" = "1" ]; then
+  echo "== 5. Speed and memory"
+  (cd "$OUTPUT_DIR" && python -m models_evaluation.speed_test_evaluation --model_types model2vec-8m model2vec-32m \
+    model2vec-multilingual --devices 0 cpu --cache_dir "$(pwd)/hub_cache" --offline)
+  ls "$OUTPUT_DIR"/results/speed_test_results
+fi
+
 echo "Ready to review: $OUTPUT_DIR (copy the .inc files to docs/source, then push with --push)."

@@ -106,8 +106,10 @@ def main(args: argparse.Namespace) -> None:
     sample = random.sample(test_data, args.num_addresses)
 
     with tempfile.TemporaryDirectory() as temp_dir:
-        cache_dir, work_dir = Path(temp_dir) / "cache", Path(temp_dir) / "work"
-        cache_dir.mkdir()
+        # The cache is kept with --keep_cache, e.g. to measure the speed of the models before the push.
+        cache_dir = Path(args.keep_cache) if args.keep_cache else Path(temp_dir) / "cache"
+        work_dir = Path(temp_dir) / "work"
+        cache_dir.mkdir(parents=True)
         build_fake_hub_cache(selection, Path(args.export_dir), Path(args.cache_dir), cache_dir)
         failed = False
         for selected in selection:
@@ -125,4 +127,5 @@ if __name__ == "__main__":
     parser.add_argument("cache_dir", type=str, help="A deepparse cache holding the Model2Vec embeddings.")
     parser.add_argument("test_path", type=str, help="The test pickle to sample the addresses from.")
     parser.add_argument("--num_addresses", type=int, default=2000)
+    parser.add_argument("--keep_cache", type=str, default=None, help="Build the fake Hub cache in this new directory.")
     main(parser.parse_args())

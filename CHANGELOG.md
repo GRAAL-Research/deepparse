@@ -533,7 +533,9 @@
 - Add `models_evaluation/check_exported_models.py`, which checks the exported models end to end without network (load
   from a Hugging Face cache layout, same predictions as the retrained checkpoints, retrain and reload), and
   `models_evaluation/release_model2vec.sh`, which chains the selection, the export, this check and the documentation
-  tables in one command, without pushing.
+  tables in one command, without pushing (and the speed test with `SPEED_TEST=1`).
+- The speed test (`models_evaluation/speed_test_evaluation.py`) takes a `--cache_dir` and `--offline`, to measure
+  models from a given cache (e.g. before they are pushed), and reports the GPU memory peak.
 - Add `models_evaluation/retrain_grid_model.py`, the resumable training script of one run of the grid (hidden sizes,
   attention and seeds) behind the released Model2Vec models, with `--print_grid` to list its 200 runs.
 - Only download the files Model2Vec loads, skipping the ONNX export.

@@ -520,6 +520,13 @@
   incomplete addresses per country), where `Suburb` and `District` are mapped to `Municipality` and `County` and
   `Country` words are removed. Since the source data has no `Orientation` nor `GeneralDelivery` tags, these models
   never predict them, and South Korea has almost only incomplete addresses.
+  Each released model is the best of a grid of four hidden sizes (128, 256, 512 and 1024) and five seeds, selected on
+  the validation loss relative to the seed (the seed also draws the validation split), never on the test split. The
+  Results page gives their test accuracy and the whole grid, and each Hugging Face repository has a model card.
+- Add `models_evaluation/select_best_model.py`, which selects the released configuration and seed of each model from a
+  grid of retraining runs and generates the Results tables, and `models_evaluation/export_model_to_hub.py`, which
+  exports the selected checkpoints to the Hugging Face Hub format (`config.json`, `model.safetensors` and a model card),
+  checks that they reload with the same weights and only pushes them with `--push`.
 - Only download the files Model2Vec loads, skipping the ONNX export.
 - A model type without published weights is now randomly initialized with a warning instead of failing, so it can
   be retrained from scratch.

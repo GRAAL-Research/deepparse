@@ -867,8 +867,8 @@ class AddressParser:
             # Means we have changed the seq2seq params
             torch_save.update({"seq2seq_params": seq2seq_params})
         elif (model_seq2seq_params := self._non_default_seq2seq_params()) is not None:
-            # A pretrained model can have a non-default architecture (e.g. the hidden size of a Model2Vec model). We save
-            # it so the retrained model is reloaded with the same architecture.
+            # A pretrained model can have a non-default architecture (e.g. the hidden size of a Model2Vec model).
+            # We save it so the retrained model is reloaded with the same architecture.
             torch_save.update({"seq2seq_params": model_seq2seq_params})
         if prediction_tags is not None:
             #  Means we have changed the prediction tags

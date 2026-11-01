@@ -527,6 +527,9 @@
   grid of retraining runs and generates the Results tables, and `models_evaluation/export_model_to_hub.py`, which
   exports the selected checkpoints to the Hugging Face Hub format (`config.json`, `model.safetensors` and a model card),
   checks that they reload with the same weights and only pushes them with `--push`.
+- Save the architecture (hidden sizes and number of layers) of a retrained model whose pretrained architecture is not
+  the default one, even without `seq2seq_params`: retraining a pretrained Model2Vec model with a hidden size other than
+  1,024 (e.g. 512) and reloading it failed with a size mismatch, since the model was rebuilt with the default size.
 - Add `models_evaluation/retrain_grid_model.py`, the resumable training script of one run of the grid (hidden sizes,
   attention and seeds) behind the released Model2Vec models, with `--print_grid` to list its 200 runs.
 - Only download the files Model2Vec loads, skipping the ONNX export.

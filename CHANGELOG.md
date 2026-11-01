@@ -527,6 +527,8 @@
   grid of retraining runs and generates the Results tables, and `models_evaluation/export_model_to_hub.py`, which
   exports the selected checkpoints to the Hugging Face Hub format (`config.json`, `model.safetensors` and a model card),
   checks that they reload with the same weights and only pushes them with `--push`.
+- Add `models_evaluation/retrain_grid_model.py`, the resumable training script of one run of the grid (hidden sizes,
+  attention and seeds) behind the released Model2Vec models, with `--print_grid` to list its 200 runs.
 - Only download the files Model2Vec loads, skipping the ONNX export.
 - A model type without published weights is now randomly initialized with a warning instead of failing, so it can
   be retrained from scratch.

@@ -17,7 +17,7 @@
 <a href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg"></a>
 
 [![pr welcome](https://img.shields.io/badge/PR-Welcome-%23FF8300.svg?)](https://img.shields.io/badge/PR-Welcome-%23FF8300.svg?)
-[![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](http://www.gnu.org/licenses/lgpl-3.0)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7010740.svg)](https://doi.org/10.5281/zenodo.7010740)
 [![Hugging Face Download](https://img.shields.io/badge/Hugging%20Face-FFD21E?logo=huggingface&logoColor=000)](https://huggingface.co/deepparse)
 
@@ -481,7 +481,7 @@ pytest tests/architecture --override-ini addopts=""
 
 ## License
 
-Deepparse is LGPLv3 licensed, as found in
+Deepparse is MIT licensed, as found in
 the [LICENSE file](https://github.com/GRAAL-Research/deepparse/blob/main/LICENSE).
 
 ------------------

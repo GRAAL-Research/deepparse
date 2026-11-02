@@ -20,6 +20,7 @@ EXPECTED_PUBLIC_API = [
     "download_fasttext_embeddings",
     "download_fasttext_magnitude_embeddings",
     "download_model",
+    "download_model2vec_embeddings",
     "download_models",
     "download_weights",
     "download_worldwide_addresses_sample",

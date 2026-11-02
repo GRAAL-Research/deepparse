@@ -8,6 +8,7 @@ from deepparse.embeddings_models import (
     EmbeddingsModelFactory,
     FastTextEmbeddingsModel,
     MagnitudeEmbeddingsModel,
+    Model2VecEmbeddingsModel,
 )
 
 
@@ -52,6 +53,20 @@ class EmbeddingsModelFactoryTest(TestCase):
         )
 
         self.assertIsInstance(embeddings_model, MagnitudeEmbeddingsModel)
+
+    @patch(
+        "deepparse.embeddings_models.embeddings_model_factory.download_model2vec_embeddings",
+        return_value=("a/path", 256),
+    )
+    @patch("model2vec.StaticModel.from_pretrained")
+    def test_givenAModel2VecEmbeddingsModelType_whenCreatingEmbeddingsModel_thenShouldReturnCorrectEmbeddingsModel(
+        self, load_mock, download_mock
+    ):
+        embeddings_model = self.embeddings_model_factory.create("model2vec-8m_attention", self.a_cache_dir)
+
+        self.assertIsInstance(embeddings_model, Model2VecEmbeddingsModel)
+        download_mock.assert_called_once_with("model2vec-8m_attention", cache_dir=self.a_cache_dir, verbose=True)
+        load_mock.assert_called_once_with("a/path")
 
     def test_givenAnInvalidEmbeddingsModelType_whenCreatingEmbeddingsModel_thenShouldRaiseError(self):
         with self.assertRaises(NotImplementedError):

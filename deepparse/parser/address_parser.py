@@ -89,6 +89,10 @@ class AddressParser:
             - ``"fasttext"`` (need ~1.3 GB of RAM to be used, since its embeddings are memory-mapped),
             - ``"fasttext-light"`` (need ~2 GB of RAM to be used, but slower than fasttext version),
             - ``"bpemb"`` (need ~2 GB of RAM to be used),
+            - ``"model2vec-8m"``, ``"model2vec-32m"`` and ``"model2vec-multilingual"`` (Model2Vec static
+              embeddings, need ~1 GB, ~1.2 GB and ~2.8 GB of RAM to be used, require
+              ``pip install deepparse[model2vec]``),
+            - ``"tiny"`` (the smallest and quickest model) (equivalent to ``"model2vec-8m"``),
             - ``"fastest"`` (quicker to process one address) (equivalent to ``"fasttext"``),
             - ``"lightest"`` (the one using the less RAM and GPU usage) (equivalent to ``"fasttext-light"``),
             - ``"best"`` (the best accuracy performance) (equivalent to ``"bpemb"``).
@@ -862,6 +866,10 @@ class AddressParser:
         if seq2seq_params is not None:
             # Means we have changed the seq2seq params
             torch_save.update({"seq2seq_params": seq2seq_params})
+        elif (model_seq2seq_params := self._non_default_seq2seq_params()) is not None:
+            # A pretrained model can have a non-default architecture (e.g. the hidden size of a Model2Vec model).
+            # We save it so the retrained model is reloaded with the same architecture.
+            torch_save.update({"seq2seq_params": model_seq2seq_params})
         if prediction_tags is not None:
             #  Means we have changed the prediction tags
             torch_save.update({"prediction_tags": prediction_tags})
@@ -1217,6 +1225,25 @@ class AddressParser:
             verbose=verbose,
         )
         return train_res
+
+    def _non_default_seq2seq_params(self) -> Dict[str, int] | None:
+        """
+        The seq2seq params of the current model if its architecture differs from the default one (hidden sizes of
+        ``1024`` and one layer), otherwise ``None``.
+        """
+        seq2seq_params = {
+            "encoder_hidden_size": self.model.encoder.lstm.hidden_size,
+            "encoder_num_layers": self.model.encoder.lstm.num_layers,
+            "decoder_hidden_size": self.model.decoder.lstm.hidden_size,
+            "decoder_num_layers": self.model.decoder.lstm.num_layers,
+        }
+        default_seq2seq_params = {
+            "encoder_hidden_size": 1024,
+            "encoder_num_layers": 1,
+            "decoder_hidden_size": 1024,
+            "decoder_num_layers": 1,
+        }
+        return None if seq2seq_params == default_seq2seq_params else seq2seq_params
 
     def _freeze_model_params(self, layers_to_freeze: str) -> None:
         layers_to_freeze = layers_to_freeze.lower()

@@ -57,7 +57,9 @@ def parse(parsing_model: str, addresses: List[Address], resp: dict = Depends(for
 
     Args:
     - **parsing_model** (str, path parameter): The parsing model to use for address parsing.
-      Available choices: fasttext, fasttext-attention, fasttext-light, bpemb, bpemb-attention
+      Available choices: fasttext, fasttext-attention, fasttext-light, bpemb, bpemb-attention, model2vec-8m,
+      model2vec-8m-attention, model2vec-32m, model2vec-32m-attention, model2vec-multilingual,
+      model2vec-multilingual-attention
     - **addresses** (List[Address], request body): List of addresses to parse.
 
     Returns:

@@ -29,8 +29,10 @@ from deepparse.download_tools import (
     download_fasttext_embeddings,
     download_fasttext_magnitude_embeddings,
     download_model,
+    download_model2vec_embeddings,
     download_models,
     download_worldwide_addresses_sample,
+    get_model2vec_model_type,
     load_fasttext_embeddings,
 )
 from tests.base_capture_output import CaptureOutputTestCase
@@ -268,12 +270,19 @@ class DownloadModelsTests(TestCase):
             "fasttext-light": "fasttext",
             "bpemb": "bpemb",
             "bpemb-attention": "bpemb_attention",
+            "model2vec-8m": "model2vec-8m",
+            "model2vec-8m-attention": "model2vec-8m_attention",
+            "model2vec-32m": "model2vec-32m",
+            "model2vec-32m-attention": "model2vec-32m_attention",
+            "model2vec-multilingual": "model2vec-multilingual",
+            "model2vec-multilingual-attention": "model2vec-multilingual_attention",
         }
 
     def tearDown(self) -> None:
         self.temp_dir_obj.cleanup()
 
     @patch("deepparse.download_tools.download_weights")
+    @patch("deepparse.download_tools.download_model2vec_embeddings")
     @patch("deepparse.download_tools.download_fasttext_embeddings")
     @patch("deepparse.download_tools.download_fasttext_magnitude_embeddings")
     @patch("deepparse.download_tools.BPEmbLoader")
@@ -282,6 +291,7 @@ class DownloadModelsTests(TestCase):
         BPEmb_mock,
         download_fasttext_magnitude_embeddings_mock,
         download_fasttext_embeddings_mock,
+        download_model2vec_embeddings_mock,
         weights_download_mock,
     ):
         download_models(saving_cache_path=self.fake_cache_dir)
@@ -295,9 +305,11 @@ class DownloadModelsTests(TestCase):
         BPEmb_mock.assert_called()
         BPEmb_mock.assert_called_with(lang="multi", vs=100000, dim=300, cache_dir=self.fake_cache_dir)
 
+        self.assertEqual(6, download_model2vec_embeddings_mock.call_count)
+
         weights_download_mock.assert_called()
 
-        expected_call_count = 5
+        expected_call_count = len(self.models_type_mapping)
         actual_call_count = weights_download_mock.call_count
         self.assertEqual(expected_call_count, actual_call_count)
 
@@ -617,6 +629,39 @@ class DownloadWorldwideAddressesSampleTests(TestCase):
                 download_worldwide_addresses_sample(self.a_country_code)
 
         hf_file_system_mock.assert_not_called()
+
+
+class Model2VecDownloadToolsTests(TestCase):
+    def test_givenModel2VecModelTypes_whenGettingTheBaseModelType_thenRemoveTheAttentionSuffix(self):
+        self.assertEqual("model2vec-8m", get_model2vec_model_type("model2vec-8m"))
+        self.assertEqual("model2vec-32m", get_model2vec_model_type("model2vec-32m_attention"))
+        self.assertEqual("model2vec-multilingual", get_model2vec_model_type("model2vec-multilingual-attention"))
+
+    def test_givenANonModel2VecModelType_whenGettingTheBaseModelType_thenRaiseError(self):
+        with self.assertRaises(ValueError):
+            get_model2vec_model_type("fasttext")
+
+    @patch("deepparse.download_tools.snapshot_download", return_value="a/local/path")
+    def test_givenAModel2VecModelType_whenDownloading_thenOnlyDownloadTheFilesModel2VecLoads(self, snapshot_mock):
+        path, dim = download_model2vec_embeddings("model2vec-32m_attention", cache_dir="a_cache", verbose=False)
+
+        self.assertEqual(("a/local/path", 512), (path, dim))
+        snapshot_mock.assert_called_once_with(
+            "minishlab/potion-base-32M",
+            cache_dir="a_cache",
+            local_files_only=False,
+            allow_patterns=["config.json", "model.safetensors", "tokenizer.json"],
+        )
+
+    @patch("deepparse.download_tools.download_weights")
+    @patch("deepparse.download_tools.download_model2vec_embeddings")
+    def test_givenAModel2VecDownload_whenDownloadingTheModel_thenDownloadTheModel2VecEmbeddings(
+        self, embeddings_download_mock, weights_download_mock
+    ):
+        download_model("model2vec-8m-attention", "a_cache")
+
+        embeddings_download_mock.assert_called_once_with("model2vec-8m-attention", cache_dir="a_cache")
+        weights_download_mock.assert_called_once_with("model2vec-8m_attention", "a_cache", verbose=True, offline=False)
 
 
 if __name__ == "__main__":

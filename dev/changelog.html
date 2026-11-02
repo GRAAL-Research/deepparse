@@ -7,7 +7,7 @@
         <link rel="prefetch" href="_static/deepparse.png" as="image">
 
     <link rel="shortcut icon" href="_static/favicon.png"><!-- Generated with Sphinx 9.2.0 and Furo 2025.12.19 -->
-        <title>Changelog - deepparse 0.11.0.dev1+9d8941b</title>
+        <title>Changelog - deepparse 0.11.0.dev1+4c9c74e</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -155,7 +155,7 @@
 
 <div class="announcement">
   <aside class="announcement-content">
-     You are reading the documentation of the development version of deepparse (0.11.0.dev1+9d8941b). See the <a href="https://deepparse.org/">stable documentation</a> for the latest release. 
+     You are reading the documentation of the development version of deepparse (0.11.0.dev1+4c9c74e). See the <a href="https://deepparse.org/">stable documentation</a> for the latest release. 
   </aside>
 </div>
 
@@ -167,7 +167,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">deepparse 0.11.0.dev1+9d8941b</div></a>
+      <a href="index.html"><div class="brand">deepparse 0.11.0.dev1+4c9c74e</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -330,6 +330,36 @@ retrained models give the same predictions, the <code class="docutils literal no
 <code class="docutils literal notranslate"><span class="pre">load_fasttext_embeddings</span></code> is deprecated and returns a <code class="docutils literal notranslate"><span class="pre">FastTextBinReader</span></code> (same <code class="docutils literal notranslate"><span class="pre">model[word]</span></code>,
 <code class="docutils literal notranslate"><span class="pre">get_word_vector</span></code> and <code class="docutils literal notranslate"><span class="pre">get_dimension</span></code> interface), and <code class="docutils literal notranslate"><span class="pre">BPEmbBaseURLWrapperBugFix</span></code> keeps the <code class="docutils literal notranslate"><span class="pre">bpemb</span></code> defaults and
 its <code class="docutils literal notranslate"><span class="pre">embed</span></code>, <code class="docutils literal notranslate"><span class="pre">encode</span></code>, <code class="docutils literal notranslate"><span class="pre">encode_ids</span></code>, <code class="docutils literal notranslate"><span class="pre">vectors</span></code> and <code class="docutils literal notranslate"><span class="pre">dim</span></code> API (not the gensim <code class="docutils literal notranslate"><span class="pre">emb</span></code> attribute).</p></li>
+<li><p>Add three Model2Vec models (#328): <code class="docutils literal notranslate"><span class="pre">model2vec-8m</span></code>, <code class="docutils literal notranslate"><span class="pre">model2vec-32m</span></code> and <code class="docutils literal notranslate"><span class="pre">model2vec-multilingual</span></code>, based on the
+<code class="docutils literal notranslate"><span class="pre">minishlab/potion-*</span></code> static embeddings, plus the <code class="docutils literal notranslate"><span class="pre">tiny</span></code> alias for <code class="docutils literal notranslate"><span class="pre">model2vec-8m</span></code>. Their embeddings take 59 MB,
+249 MB and 1 GB on disk, compared to 6.8 GB for fastText, and the parser takes ~1.0 GB, ~1.2 GB and ~2.8 GB of RAM
+at peak (CPU, whole process). Install them with
+<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">deepparse[model2vec]</span></code>.
+They were trained on the <code class="docutils literal notranslate"><span class="pre">deepparse/worldwide-addresses</span></code> HF dataset (20 countries, 100,000 clean and 50,000
+incomplete addresses per country), where <code class="docutils literal notranslate"><span class="pre">Suburb</span></code> and <code class="docutils literal notranslate"><span class="pre">District</span></code> are mapped to <code class="docutils literal notranslate"><span class="pre">Municipality</span></code> and <code class="docutils literal notranslate"><span class="pre">County</span></code> and
+<code class="docutils literal notranslate"><span class="pre">Country</span></code> words are removed. Since the source data has no <code class="docutils literal notranslate"><span class="pre">Orientation</span></code> nor <code class="docutils literal notranslate"><span class="pre">GeneralDelivery</span></code> tags, these models
+never predict them, and South Korea has almost only incomplete addresses.
+Each released model is the best of a grid of four hidden sizes (128, 256, 512 and 1024) and five seeds, selected on
+the validation loss relative to the seed (the seed also draws the validation split), never on the test split. The
+Results page gives their test accuracy and the whole grid, and each Hugging Face repository has a model card.</p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">models_evaluation/select_best_model.py</span></code>, which selects the released configuration and seed of each model from a
+grid of retraining runs and generates the Results tables, and <code class="docutils literal notranslate"><span class="pre">models_evaluation/export_model_to_hub.py</span></code>, which
+exports the selected checkpoints to the Hugging Face Hub format (<code class="docutils literal notranslate"><span class="pre">config.json</span></code>, <code class="docutils literal notranslate"><span class="pre">model.safetensors</span></code> and a model card),
+checks that they reload with the same weights and only pushes them with <code class="docutils literal notranslate"><span class="pre">--push</span></code>.</p></li>
+<li><p>Save the architecture (hidden sizes and number of layers) of a retrained model whose pretrained architecture is not
+the default one, even without <code class="docutils literal notranslate"><span class="pre">seq2seq_params</span></code>: retraining a pretrained Model2Vec model with a hidden size other than
+1,024 (e.g. 512) and reloading it failed with a size mismatch, since the model was rebuilt with the default size.</p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">models_evaluation/check_exported_models.py</span></code>, which checks the exported models end to end without network (load
+from a Hugging Face cache layout, same predictions as the retrained checkpoints, retrain and reload), and
+<code class="docutils literal notranslate"><span class="pre">models_evaluation/release_model2vec.sh</span></code>, which chains the selection, the export, this check and the documentation
+tables in one command, without pushing (and the speed test with <code class="docutils literal notranslate"><span class="pre">SPEED_TEST=1</span></code>).</p></li>
+<li><p>The speed test (<code class="docutils literal notranslate"><span class="pre">models_evaluation/speed_test_evaluation.py</span></code>) takes a <code class="docutils literal notranslate"><span class="pre">--cache_dir</span></code> and <code class="docutils literal notranslate"><span class="pre">--offline</span></code>, to measure
+models from a given cache (e.g. before they are pushed), and reports the GPU memory peak.</p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">models_evaluation/retrain_grid_model.py</span></code>, the resumable training script of one run of the grid (hidden sizes,
+attention and seeds) behind the released Model2Vec models, with <code class="docutils literal notranslate"><span class="pre">--print_grid</span></code> to list its 200 runs.</p></li>
+<li><p>Only download the files Model2Vec loads, skipping the ONNX export.</p></li>
+<li><p>A model type without published weights is now randomly initialized with a warning instead of failing, so it can
+be retrained from scratch.</p></li>
 <li><p>Allow data loading workers (<code class="docutils literal notranslate"><span class="pre">num_workers</span></code> &gt; 0) with the FastText models on Windows and MacOS: the FastText
 embeddings reader is picklable, so it works with the <code class="docutils literal notranslate"><span class="pre">spawn</span></code> start method. The restriction (error on Windows, <code class="docutils literal notranslate"><span class="pre">fork</span></code>
 start method on MacOS) is kept for the FastText Light (Magnitude) model only.</p></li>
@@ -356,10 +386,9 @@ a “development version” banner with the dev version number and a link to the
 deployment now keeps the <code class="docutils literal notranslate"><span class="pre">dev/</span></code> folder of <code class="docutils literal notranslate"><span class="pre">gh-pages</span></code>, and both deployments share a concurrency group.</p></li>
 <li><p>Delimit the public API before 1.0.0, without breaking change. The <code class="docutils literal notranslate"><span class="pre">deepparse</span></code> top-level package and its
 <code class="docutils literal notranslate"><span class="pre">bpemb_url_bug_fix</span></code>, <code class="docutils literal notranslate"><span class="pre">download_tools</span></code>, <code class="docutils literal notranslate"><span class="pre">validations</span></code> and <code class="docutils literal notranslate"><span class="pre">weights_tools</span></code> modules now have an explicit <code class="docutils literal notranslate"><span class="pre">__all__</span></code>, so
-<code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">deepparse</span> <span class="pre">import</span> <span class="pre">*</span></code> only imports the public API. Every name reachable as <code class="docutils literal notranslate"><span class="pre">deepparse.&lt;name&gt;</span></code> in 0.11.0 is
-still reachable, including the standard library and third-party modules, typing aliases and internal helpers
-re-exported by accident (e.g. <code class="docutils literal notranslate"><span class="pre">deepparse.os</span></code> or <code class="docutils literal notranslate"><span class="pre">deepparse.weights_init</span></code>), which are not in <code class="docutils literal notranslate"><span class="pre">__all__</span></code>. A unit test
-freezes the public API.
+<code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">deepparse</span> <span class="pre">import</span> <span class="pre">*</span></code> only imports the public API. The deepparse helpers reachable as <code class="docutils literal notranslate"><span class="pre">deepparse.&lt;name&gt;</span></code> in
+0.11.0 are still reachable (e.g. <code class="docutils literal notranslate"><span class="pre">deepparse.weights_init</span></code>), even if they are not in <code class="docutils literal notranslate"><span class="pre">__all__</span></code>. A unit test freezes
+the public API.
 The standard library and third-party modules that 0.11.0 re-exported by accident (e.g. <code class="docutils literal notranslate"><span class="pre">deepparse.os</span></code>,
 <code class="docutils literal notranslate"><span class="pre">deepparse.torch</span></code>) are no longer reachable from <code class="docutils literal notranslate"><span class="pre">deepparse</span></code>, and <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">deepparse</span> <span class="pre">import</span> <span class="pre">*</span></code> only imports <code class="docutils literal notranslate"><span class="pre">__all__</span></code>.</p></li>
 <li><p>Rename <code class="docutils literal notranslate"><span class="pre">BPEmbBaseURLWrapperBugFix</span></code> (<code class="docutils literal notranslate"><span class="pre">deepparse/bpemb_url_bug_fix.py</span></code>) to <code class="docutils literal notranslate"><span class="pre">BPEmbLoader</span></code> (<code class="docutils literal notranslate"><span class="pre">deepparse/bpemb_loader.py</span></code>),
@@ -1086,7 +1115,7 @@ are more aligned with our research.</p></li>
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=7a8a8f56"></script>
+</div><script src="_static/documentation_options.js?v=65dcdbe2"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/scripts/furo.js?v=46bd48cc"></script>

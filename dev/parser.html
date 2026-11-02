@@ -7,7 +7,7 @@
         <link rel="prefetch" href="_static/deepparse.png" as="image">
 
     <link rel="shortcut icon" href="_static/favicon.png"><!-- Generated with Sphinx 9.2.0 and Furo 2025.12.19 -->
-        <title>Parser - deepparse 0.11.0.dev1+9d8941b</title>
+        <title>Parser - deepparse 0.11.0.dev1+4c9c74e</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -155,7 +155,7 @@
 
 <div class="announcement">
   <aside class="announcement-content">
-     You are reading the documentation of the development version of deepparse (0.11.0.dev1+9d8941b). See the <a href="https://deepparse.org/">stable documentation</a> for the latest release. 
+     You are reading the documentation of the development version of deepparse (0.11.0.dev1+4c9c74e). See the <a href="https://deepparse.org/">stable documentation</a> for the latest release. 
   </aside>
 </div>
 
@@ -167,7 +167,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">deepparse 0.11.0.dev1+9d8941b</div></a>
+      <a href="index.html"><div class="brand">deepparse 0.11.0.dev1+4c9c74e</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -451,6 +451,10 @@ networks either with FastText or BPEmb. The default prediction tags are the foll
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;fasttext&quot;</span></code> (need ~1.3 GB of RAM to be used, since its embeddings are memory-mapped),</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;fasttext-light&quot;</span></code> (need ~2 GB of RAM to be used, but slower than fasttext version),</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;bpemb&quot;</span></code> (need ~2 GB of RAM to be used),</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;model2vec-8m&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;model2vec-32m&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;model2vec-multilingual&quot;</span></code> (Model2Vec static
+embeddings, need ~1 GB, ~1.2 GB and ~2.8 GB of RAM to be used, require
+<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">deepparse[model2vec]</span></code>),</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;tiny&quot;</span></code> (the smallest and quickest model) (equivalent to <code class="docutils literal notranslate"><span class="pre">&quot;model2vec-8m&quot;</span></code>),</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;fastest&quot;</span></code> (quicker to process one address) (equivalent to <code class="docutils literal notranslate"><span class="pre">&quot;fasttext&quot;</span></code>),</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;lightest&quot;</span></code> (the one using the less RAM and GPU usage) (equivalent to <code class="docutils literal notranslate"><span class="pre">&quot;fasttext-light&quot;</span></code>),</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;best&quot;</span></code> (the best accuracy performance) (equivalent to <code class="docutils literal notranslate"><span class="pre">&quot;bpemb&quot;</span></code>).</p></li>
@@ -1269,7 +1273,7 @@ is the tag.</p>
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=7a8a8f56"></script>
+</div><script src="_static/documentation_options.js?v=65dcdbe2"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/scripts/furo.js?v=46bd48cc"></script>

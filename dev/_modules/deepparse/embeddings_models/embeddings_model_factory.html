@@ -6,7 +6,7 @@
         <link rel="prefetch" href="../../../_static/deepparse.png" as="image">
 
     <link rel="shortcut icon" href="../../../_static/favicon.png"><!-- Generated with Sphinx 9.2.0 and Furo 2025.12.19 -->
-        <title>deepparse.embeddings_models.embeddings_model_factory - deepparse 0.11.0.dev1+9d8941b</title>
+        <title>deepparse.embeddings_models.embeddings_model_factory - deepparse 0.11.0.dev1+4c9c74e</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -154,7 +154,7 @@
 
 <div class="announcement">
   <aside class="announcement-content">
-     You are reading the documentation of the development version of deepparse (0.11.0.dev1+9d8941b). See the <a href="https://deepparse.org/">stable documentation</a> for the latest release. 
+     You are reading the documentation of the development version of deepparse (0.11.0.dev1+4c9c74e). See the <a href="https://deepparse.org/">stable documentation</a> for the latest release. 
   </aside>
 </div>
 
@@ -166,7 +166,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../../index.html"><div class="brand">deepparse 0.11.0.dev1+9d8941b</div></a>
+      <a href="../../../index.html"><div class="brand">deepparse 0.11.0.dev1+4c9c74e</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -273,12 +273,13 @@
         </div>
         <article role="main" id="furo-main-content">
           <h1>Source code for deepparse.embeddings_models.embeddings_model_factory</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">..</span><span class="w"> </span><span class="kn">import</span> <span class="n">download_fasttext_embeddings</span><span class="p">,</span> <span class="n">download_fasttext_magnitude_embeddings</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">..</span><span class="w"> </span><span class="kn">import</span> <span class="n">download_fasttext_embeddings</span><span class="p">,</span> <span class="n">download_fasttext_magnitude_embeddings</span><span class="p">,</span> <span class="n">download_model2vec_embeddings</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">BPEmbEmbeddingsModel</span><span class="p">,</span>
     <span class="n">EmbeddingsModel</span><span class="p">,</span>
     <span class="n">FastTextEmbeddingsModel</span><span class="p">,</span>
     <span class="n">MagnitudeEmbeddingsModel</span><span class="p">,</span>
+    <span class="n">Model2VecEmbeddingsModel</span><span class="p">,</span>
 <span class="p">)</span>
 
 
@@ -297,7 +298,8 @@
 
 <span class="sd">        Args:</span>
 <span class="sd">            embedding_model_type (str): the type of the embeddings model to create. Valid options are ``"bpemb"``,</span>
-<span class="sd">                ``"fasttext"`` and ``"fasttext-light"`` (the Magnitude embeddings).</span>
+<span class="sd">                ``"fasttext"``, ``"fasttext-light"`` (the Magnitude embeddings), ``"model2vec-8m"``, ``"model2vec-32m"``</span>
+<span class="sd">                and ``"model2vec-multilingual"``.</span>
 <span class="sd">            cache_dir (str): Path to the cache directory where the embeddings model exists or is to be downloaded.</span>
 <span class="sd">            verbose (bool): Whether or not to make the loading of the embeddings verbose.</span>
 
@@ -317,10 +319,17 @@
 
                 <span class="n">embeddings_model</span> <span class="o">=</span> <span class="n">FastTextEmbeddingsModel</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
 
+        <span class="k">elif</span> <span class="s2">"model2vec"</span> <span class="ow">in</span> <span class="n">embedding_model_type</span><span class="p">:</span>
+            <span class="n">embeddings_path</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">download_model2vec_embeddings</span><span class="p">(</span>
+                <span class="n">embedding_model_type</span><span class="p">,</span> <span class="n">cache_dir</span><span class="o">=</span><span class="n">cache_dir</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span>
+            <span class="p">)</span>
+
+            <span class="n">embeddings_model</span> <span class="o">=</span> <span class="n">Model2VecEmbeddingsModel</span><span class="p">(</span><span class="n">embeddings_path</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"""</span>
 <span class="s2">            The </span><span class="si">{</span><span class="n">embedding_model_type</span><span class="si">}</span><span class="s2"> embeddings model does not exist.</span>
-<span class="s2">            Existing embeddings models are: bpemb, fasttext and fasttext_magnitude"""</span><span class="p">)</span>
+<span class="s2">            Existing embeddings models are: bpemb, fasttext, fasttext_magnitude and model2vec"""</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">embeddings_model</span></div>
 </div>
@@ -357,7 +366,7 @@
       
     </aside>
   </div>
-</div><script src="../../../_static/documentation_options.js?v=7a8a8f56"></script>
+</div><script src="../../../_static/documentation_options.js?v=65dcdbe2"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/scripts/furo.js?v=46bd48cc"></script>

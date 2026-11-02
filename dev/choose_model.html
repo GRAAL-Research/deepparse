@@ -7,7 +7,7 @@
         <link rel="prefetch" href="_static/deepparse.png" as="image">
 
     <link rel="shortcut icon" href="_static/favicon.png"><!-- Generated with Sphinx 9.2.0 and Furo 2025.12.19 -->
-        <title>Choose a Model - deepparse 0.11.0.dev1+9d8941b</title>
+        <title>Choose a Model - deepparse 0.11.0.dev1+4c9c74e</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -155,7 +155,7 @@
 
 <div class="announcement">
   <aside class="announcement-content">
-     You are reading the documentation of the development version of deepparse (0.11.0.dev1+9d8941b). See the <a href="https://deepparse.org/">stable documentation</a> for the latest release. 
+     You are reading the documentation of the development version of deepparse (0.11.0.dev1+4c9c74e). See the <a href="https://deepparse.org/">stable documentation</a> for the latest release. 
   </aside>
 </div>
 
@@ -167,7 +167,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">deepparse 0.11.0.dev1+9d8941b</div></a>
+      <a href="index.html"><div class="brand">deepparse 0.11.0.dev1+4c9c74e</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -285,8 +285,8 @@
         <article role="main" id="furo-main-content">
           <section id="choose-a-model">
 <span id="choose-model"></span><h1>Choose a Model<a class="headerlink" href="#choose-a-model" title="Link to this heading">¶</a></h1>
-<p>Deepparse offers pretrained models built on two embeddings, FastText and BPEmb, each with or without an attention
-mechanism, plus a lighter FastText version. You select one with the <code class="docutils literal notranslate"><span class="pre">model_type</span></code> (and <code class="docutils literal notranslate"><span class="pre">attention_mechanism</span></code>)
+<p>Deepparse offers pretrained models built on three embeddings, FastText, BPEmb and Model2Vec, each with or without an
+attention mechanism, plus a lighter FastText version. You select one with the <code class="docutils literal notranslate"><span class="pre">model_type</span></code> (and <code class="docutils literal notranslate"><span class="pre">attention_mechanism</span></code>)
 argument of <a class="reference internal" href="parser.html#deepparse.parser.AddressParser" title="deepparse.parser.AddressParser"><code class="xref py py-class docutils literal notranslate"><span class="pre">AddressParser</span></code></a>. All the figures below come from this documentation; their
 source is given under each table.</p>
 <section id="model-types">
@@ -332,6 +332,26 @@ performance.</p></td>
 <td><p>The <code class="docutils literal notranslate"><span class="pre">&quot;bpemb&quot;</span></code> model with an attention mechanism. Requires <code class="docutils literal notranslate"><span class="pre">attention_mechanism=True</span></code> (same model as
 <code class="docutils literal notranslate"><span class="pre">model_type=&quot;bpemb&quot;,</span> <span class="pre">attention_mechanism=True</span></code>).</p></td>
 </tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">&quot;model2vec-8m&quot;</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;tiny&quot;</span></code></p></td>
+<td><p>Seq2Seq model using the <a class="reference external" href="https://github.com/MinishLab/model2vec">Model2Vec</a>
+<a class="reference external" href="https://huggingface.co/minishlab/potion-base-8M">potion-base-8M</a> static embeddings (256 dimensions).
+The <code class="docutils literal notranslate"><span class="pre">&quot;tiny&quot;</span></code> alias is the smallest model. Requires <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">deepparse[model2vec]</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">&quot;model2vec-32m&quot;</span></code></p></td>
+<td></td>
+<td><p>Seq2Seq model using the <a class="reference external" href="https://huggingface.co/minishlab/potion-base-32M">potion-base-32M</a> static
+embeddings (512 dimensions).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">&quot;model2vec-multilingual&quot;</span></code></p></td>
+<td></td>
+<td><p>Seq2Seq model using the <a class="reference external" href="https://huggingface.co/minishlab/potion-multilingual-128M">potion-multilingual-128M</a> multilingual static embeddings (256
+dimensions).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">&quot;model2vec-8m-attention&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;model2vec-32m-attention&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;model2vec-multilingual-attention&quot;</span></code></p></td>
+<td></td>
+<td><p>The Model2Vec models with an attention mechanism. Require <code class="docutils literal notranslate"><span class="pre">attention_mechanism=True</span></code>.</p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -353,21 +373,21 @@ parser (case-insensitive).</p>
 </thead>
 <tbody>
 <tr class="row-even"><td><p>fastText</p></td>
-<td><p>6.8 GO</p></td>
+<td><p>6.8 GB</p></td>
 <td><p>~1.3 <a class="footnote-reference brackets" href="#memory-mapped" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a></p></td>
 <td><p>~1</p></td>
 <td><p>~0.0128 / ~0.0026</p></td>
 <td><p>~0.0023 / ~0.0004</p></td>
 </tr>
 <tr class="row-odd"><td><p>fastTextAttention</p></td>
-<td><p>6.8 GO</p></td>
+<td><p>6.8 GB</p></td>
 <td><p>~1.3 <a class="footnote-reference brackets" href="#memory-mapped" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a></p></td>
 <td><p>~1.1</p></td>
 <td><p>~0.0230 / ~0.0057</p></td>
 <td><p>~0.0043 / ~0.0007</p></td>
 </tr>
 <tr class="row-even"><td><p>fastText-light</p></td>
-<td><p>3.3 GO</p></td>
+<td><p>3.3 GB</p></td>
 <td><p>~1</p></td>
 <td><p>~1</p></td>
 <td><p>~0.0170 / ~0.0030</p></td>
@@ -387,13 +407,34 @@ parser (case-insensitive).</p>
 <td><p>~0.0286 / ~0.0075</p></td>
 <td><p>~0.0081 / ~0.0019</p></td>
 </tr>
+<tr class="row-odd"><td><p>Model2Vec 8M <a class="footnote-reference brackets" href="#model2vec-resources" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a></p></td>
+<td><p>59 MB</p></td>
+<td><p>~1.0</p></td>
+<td><p>not measured</p></td>
+<td><p>not measured</p></td>
+<td><p>not measured</p></td>
+</tr>
+<tr class="row-even"><td><p>Model2Vec 32M <a class="footnote-reference brackets" href="#model2vec-resources" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a></p></td>
+<td><p>249 MB</p></td>
+<td><p>~1.2</p></td>
+<td><p>not measured</p></td>
+<td><p>not measured</p></td>
+<td><p>not measured</p></td>
+</tr>
+<tr class="row-odd"><td><p>Model2Vec Multilingual <a class="footnote-reference brackets" href="#model2vec-resources" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a></p></td>
+<td><p>1 GB</p></td>
+<td><p>~2.8</p></td>
+<td><p>not measured</p></td>
+<td><p>not measured</p></td>
+<td><p>not measured</p></td>
+</tr>
 </tbody>
 </table>
 </div>
 <p>Sources:</p>
 <ul class="simple">
-<li><p>Embeddings on disk: the note of <a class="reference internal" href="parser.html#deepparse.parser.AddressParser" title="deepparse.parser.AddressParser"><code class="xref py py-class docutils literal notranslate"><span class="pre">AddressParser</span></code></a> (the FastText embeddings take 6.8 GO, the
-FastText-light embeddings 3.3 GO and BPEmb 116 MB). The pretrained weights take at most 44 MB in addition.</p></li>
+<li><p>Embeddings on disk: the note of <a class="reference internal" href="parser.html#deepparse.parser.AddressParser" title="deepparse.parser.AddressParser"><code class="xref py py-class docutils literal notranslate"><span class="pre">AddressParser</span></code></a> (the FastText embeddings take 6.8 GB, the
+FastText-light embeddings 3.3 GB and BPEmb 116 MB). The pretrained weights take at most 44 MB in addition.</p></li>
 <li><p>RAM, GPU memory and time per address: the “Memory Usage and Time Performance” tables of the <a class="reference internal" href="parser.html"><span class="doc">Parser</span></a> page
 (Linux, Python 3.11, Torch 2.0 and CUDA 11.7, ~183,000 addresses, March 21, 2023). The attention mechanism takes
 about 100 MB more on GPU.</p></li>
@@ -416,6 +457,13 @@ since their embedding network runs the sub-word LSTM on all the words of a batch
 with or without attention, with the same predictions. The times of the table are from the March 2023 experiment.
 On CPU, the time is unchanged.</p>
 </aside>
+<aside class="footnote brackets" id="model2vec-resources" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id5">1</a>,<a role="doc-backlink" href="#id6">2</a>,<a role="doc-backlink" href="#id7">3</a>)</span>
+<p>The Model2Vec embeddings on disk and the RAM at peak of the whole process (CPU), measured in
+October 2026. The pretrained weights take 5 to 65 MB in addition, depending on the hidden size of the model (see
+<a class="reference internal" href="results.html"><span class="doc">Pretrained Models Results</span></a>). Their GPU memory and inference time are not measured yet.</p>
+</aside>
 </aside>
 </section>
 <section id="accuracy-and-multilingual-coverage">
@@ -429,6 +477,12 @@ reaches 98.9% to 99.97% accuracy (see <a class="reference internal" href="result
 countries (clean data), it reaches 96.97% to 99.99% accuracy (see <a class="reference internal" href="results.html"><span class="doc">Pretrained Models Results</span></a>).</p></li>
 <li><p><strong>Attention mechanism</strong>: it improves the accuracy by around 0.5% on the training countries, and it further improves
 the zero-shot accuracy on most of the 41 other countries (see the attention table of <a class="reference internal" href="results.html"><span class="doc">Pretrained Models Results</span></a>).</p></li>
+<li><p><strong>Model2Vec</strong> uses static embeddings distilled from sentence transformers, so it needs neither a sub-word network
+nor large embeddings. Unlike the FastText and BPEmb models, the Model2Vec models were trained on the
+<a class="reference external" href="https://huggingface.co/datasets/deepparse/worldwide-addresses">worldwide-addresses</a> data, with clean and
+incomplete addresses of the same 20 countries, and their hidden size was selected on the validation split (see the
+Model2Vec section of <a class="reference internal" href="results.html"><span class="doc">Pretrained Models Results</span></a> for their test accuracy). Since this data has no <code class="docutils literal notranslate"><span class="pre">Orientation</span></code> nor
+<code class="docutils literal notranslate"><span class="pre">GeneralDelivery</span></code> tags, they never predict these two tags (the street orientation is part of the <code class="docutils literal notranslate"><span class="pre">StreetName</span></code>).</p></li>
 <li><p><strong>FastText Light</strong>: on average, its results are about 2% lower on the training countries, but similar on the
 zero-shot countries (see the <a class="reference internal" href="parser.html"><span class="doc">Parser</span></a> page and our <a class="reference external" href="https://arxiv.org/abs/2006.16152">article</a>).</p></li>
 </ul>
@@ -437,12 +491,15 @@ zero-shot countries (see the <a class="reference internal" href="parser.html"><s
 <h2>When to Use Each Model<a class="headerlink" href="#when-to-use-each-model" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p><strong>You parse addresses from the 20 training countries and want the quickest model</strong>: <code class="docutils literal notranslate"><span class="pre">&quot;fasttext&quot;</span></code> (<code class="docutils literal notranslate"><span class="pre">&quot;fastest&quot;</span></code>).
-Its embeddings take the most disk space (6.8 GO).</p></li>
+Its embeddings take the most disk space (6.8 GB).</p></li>
 <li><p><strong>You parse addresses from other countries (zero-shot)</strong>: prefer a model with an attention mechanism
 (<code class="docutils literal notranslate"><span class="pre">&quot;fasttext-attention&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;bpemb-attention&quot;</span></code>) and check the country in the zero-shot tables of
 <a class="reference internal" href="results.html"><span class="doc">Pretrained Models Results</span></a>, since the accuracy varies a lot between countries.</p></li>
 <li><p><strong>Disk space is limited</strong> (e.g. a container image or a small node): <code class="docutils literal notranslate"><span class="pre">&quot;bpemb&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;bpemb-attention&quot;</span></code>, whose
 embeddings take 116 MB.</p></li>
+<li><p><strong>Disk space and RAM are very limited</strong> (e.g. a serverless function or an edge device): <code class="docutils literal notranslate"><span class="pre">&quot;model2vec-8m&quot;</span></code>
+(<code class="docutils literal notranslate"><span class="pre">&quot;tiny&quot;</span></code>), whose embeddings take 59 MB, or <code class="docutils literal notranslate"><span class="pre">&quot;model2vec-32m&quot;</span></code> (249 MB). Note that they never predict the
+<code class="docutils literal notranslate"><span class="pre">Orientation</span></code> and <code class="docutils literal notranslate"><span class="pre">GeneralDelivery</span></code> tags.</p></li>
 <li><p><strong>You want the default model</strong>: <code class="docutils literal notranslate"><span class="pre">&quot;bpemb&quot;</span></code> (<code class="docutils literal notranslate"><span class="pre">&quot;best&quot;</span></code>).</p></li>
 <li><p><strong>You want the FastText model with a lower memory footprint</strong>: <code class="docutils literal notranslate"><span class="pre">&quot;fasttext-light&quot;</span></code> (<code class="docutils literal notranslate"><span class="pre">&quot;lightest&quot;</span></code>). Note that a
 FastText Light model cannot be retrained nor tested, and cannot use data loading workers (<code class="docutils literal notranslate"><span class="pre">num_workers</span></code> &gt; 0) on
@@ -524,7 +581,7 @@ Windows (see <a class="reference internal" href="errors.html#deepparse.errors.Fa
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=7a8a8f56"></script>
+</div><script src="_static/documentation_options.js?v=65dcdbe2"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/scripts/furo.js?v=46bd48cc"></script>

@@ -7,7 +7,7 @@
         <link rel="prefetch" href="_static/deepparse.png" as="image">
 
     <link rel="shortcut icon" href="_static/favicon.png"><!-- Generated with Sphinx 9.2.0 and Furo 2025.12.19 -->
-        <title>Pretrained Models Results - deepparse 0.11.0.dev1+9d8941b</title>
+        <title>Pretrained Models Results - deepparse 0.11.0.dev1+4c9c74e</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -155,7 +155,7 @@
 
 <div class="announcement">
   <aside class="announcement-content">
-     You are reading the documentation of the development version of deepparse (0.11.0.dev1+9d8941b). See the <a href="https://deepparse.org/">stable documentation</a> for the latest release. 
+     You are reading the documentation of the development version of deepparse (0.11.0.dev1+4c9c74e). See the <a href="https://deepparse.org/">stable documentation</a> for the latest release. 
   </aside>
 </div>
 
@@ -167,7 +167,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">deepparse 0.11.0.dev1+9d8941b</div></a>
+      <a href="index.html"><div class="brand">deepparse 0.11.0.dev1+4c9c74e</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -894,6 +894,271 @@ to achieve an interesting performance. Attention mechanisms improve performance 
 </table>
 </div>
 </section>
+<section id="model2vec-models">
+<h2>Model2Vec Models<a class="headerlink" href="#model2vec-models" title="Link to this heading">¶</a></h2>
+<p>The Model2Vec models were trained in October 2026 on the
+<a class="reference external" href="https://huggingface.co/datasets/deepparse/worldwide-addresses">worldwide-addresses</a> data of the same 20 countries
+(100,000 clean and 50,000 incomplete addresses per country), 90% for training and 10% for validation, and tested on a
+separate test split of the same data (260,000 addresses). The accuracy is the per-word tag accuracy on this test split,
+so it is not comparable to the per-country accuracy of the tables above.</p>
+<p>We trained each model with four hidden sizes (128, 256, 512 and 1024), with and without attention, with five seeds
+each. The released model of each type is the hidden size with the lowest mean validation loss over the seeds, then
+the seed with the lowest validation loss, both relative to the mean validation loss of the seed (the seed also draws
+the validation split). The test accuracy is only reported, never used for the selection.</p>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Model</p></th>
+<th class="head"><p>Hidden size</p></th>
+<th class="head"><p>Test accuracy of the released model (%)</p></th>
+<th class="head"><p>Test accuracy, mean ± std over the seeds (%)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">model2vec-32m</span></code></p></td>
+<td><p>1024</p></td>
+<td><p>98.73</p></td>
+<td><p>98.04 ± 0.50 (5 seeds)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">model2vec-32m-attention</span></code></p></td>
+<td><p>1024</p></td>
+<td><p>98.42</p></td>
+<td><p>97.89 ± 0.58 (5 seeds)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">model2vec-8m</span></code></p></td>
+<td><p>1024</p></td>
+<td><p>97.95</p></td>
+<td><p>97.78 ± 0.32 (5 seeds)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">model2vec-8m-attention</span></code></p></td>
+<td><p>256</p></td>
+<td><p>98.17</p></td>
+<td><p>97.99 ± 0.29 (5 seeds)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">model2vec-multilingual</span></code></p></td>
+<td><p>1024</p></td>
+<td><p>98.51</p></td>
+<td><p>97.74 ± 0.72 (5 seeds)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">model2vec-multilingual-attention</span></code></p></td>
+<td><p>1024</p></td>
+<td><p>98.59</p></td>
+<td><p>97.73 ± 1.04 (5 seeds)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The whole grid (mean ± standard deviation over the seeds; the released configurations are in bold):</p>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Model</p></th>
+<th class="head"><p>Hidden size</p></th>
+<th class="head"><p>Seeds</p></th>
+<th class="head"><p>Relative validation loss</p></th>
+<th class="head"><p>Validation loss</p></th>
+<th class="head"><p>Validation accuracy (%)</p></th>
+<th class="head"><p>Test accuracy (%)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">model2vec-32m</span></code></p></td>
+<td><p>128</p></td>
+<td><p>5</p></td>
+<td><p>1.044 ± 0.235</p></td>
+<td><p>1.429 ± 0.581</p></td>
+<td><p>97.46 ± 0.78</p></td>
+<td><p>97.11 ± 0.86</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">model2vec-32m</span></code></p></td>
+<td><p>256</p></td>
+<td><p>5</p></td>
+<td><p>0.957 ± 0.110</p></td>
+<td><p>1.280 ± 0.409</p></td>
+<td><p>97.82 ± 0.38</p></td>
+<td><p>97.51 ± 0.41</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">model2vec-32m</span></code></p></td>
+<td><p>512</p></td>
+<td><p>5</p></td>
+<td><p>0.890 ± 0.077</p></td>
+<td><p>1.169 ± 0.345</p></td>
+<td><p>98.06 ± 0.49</p></td>
+<td><p>97.75 ± 0.56</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">model2vec-32m</span></code></p></td>
+<td><p><strong>1024</strong></p></td>
+<td><p><strong>5</strong></p></td>
+<td><p><strong>0.844 ± 0.147</strong></p></td>
+<td><p><strong>1.168 ± 0.472</strong></p></td>
+<td><p><strong>98.31 ± 0.44</strong></p></td>
+<td><p><strong>98.04 ± 0.50</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">model2vec-32m-attention</span></code></p></td>
+<td><p>128</p></td>
+<td><p>5</p></td>
+<td><p>1.029 ± 0.170</p></td>
+<td><p>1.351 ± 0.437</p></td>
+<td><p>97.97 ± 0.37</p></td>
+<td><p>97.66 ± 0.42</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">model2vec-32m-attention</span></code></p></td>
+<td><p>256</p></td>
+<td><p>5</p></td>
+<td><p>0.960 ± 0.115</p></td>
+<td><p>1.279 ± 0.486</p></td>
+<td><p>97.93 ± 0.51</p></td>
+<td><p>97.61 ± 0.54</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">model2vec-32m-attention</span></code></p></td>
+<td><p>512</p></td>
+<td><p>5</p></td>
+<td><p>1.090 ± 0.152</p></td>
+<td><p>1.436 ± 0.446</p></td>
+<td><p>97.53 ± 0.37</p></td>
+<td><p>97.17 ± 0.41</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">model2vec-32m-attention</span></code></p></td>
+<td><p><strong>1024</strong></p></td>
+<td><p><strong>5</strong></p></td>
+<td><p><strong>0.929 ± 0.078</strong></p></td>
+<td><p><strong>1.227 ± 0.394</strong></p></td>
+<td><p><strong>98.17 ± 0.54</strong></p></td>
+<td><p><strong>97.89 ± 0.58</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">model2vec-8m</span></code></p></td>
+<td><p>128</p></td>
+<td><p>5</p></td>
+<td><p>1.240 ± 0.278</p></td>
+<td><p>1.564 ± 0.293</p></td>
+<td><p>97.12 ± 0.47</p></td>
+<td><p>96.75 ± 0.52</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">model2vec-8m</span></code></p></td>
+<td><p>256</p></td>
+<td><p>5</p></td>
+<td><p>1.037 ± 0.077</p></td>
+<td><p>1.359 ± 0.364</p></td>
+<td><p>97.72 ± 0.16</p></td>
+<td><p>97.40 ± 0.15</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">model2vec-8m</span></code></p></td>
+<td><p>512</p></td>
+<td><p>5</p></td>
+<td><p>0.929 ± 0.263</p></td>
+<td><p>1.264 ± 0.577</p></td>
+<td><p>97.79 ± 0.72</p></td>
+<td><p>97.44 ± 0.83</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">model2vec-8m</span></code></p></td>
+<td><p><strong>1024</strong></p></td>
+<td><p><strong>5</strong></p></td>
+<td><p><strong>0.908 ± 0.257</strong></p></td>
+<td><p><strong>1.146 ± 0.320</strong></p></td>
+<td><p><strong>98.09 ± 0.29</strong></p></td>
+<td><p><strong>97.78 ± 0.32</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">model2vec-8m-attention</span></code></p></td>
+<td><p>128</p></td>
+<td><p>5</p></td>
+<td><p>0.939 ± 0.323</p></td>
+<td><p>1.186 ± 0.423</p></td>
+<td><p>97.66 ± 0.75</p></td>
+<td><p>97.29 ± 0.82</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">model2vec-8m-attention</span></code></p></td>
+<td><p><strong>256</strong></p></td>
+<td><p><strong>5</strong></p></td>
+<td><p><strong>0.810 ± 0.066</strong></p></td>
+<td><p><strong>1.064 ± 0.304</strong></p></td>
+<td><p><strong>98.26 ± 0.26</strong></p></td>
+<td><p><strong>97.99 ± 0.29</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">model2vec-8m-attention</span></code></p></td>
+<td><p>512</p></td>
+<td><p>5</p></td>
+<td><p>1.145 ± 0.467</p></td>
+<td><p>1.553 ± 0.757</p></td>
+<td><p>97.25 ± 1.35</p></td>
+<td><p>96.91 ± 1.41</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">model2vec-8m-attention</span></code></p></td>
+<td><p>1024</p></td>
+<td><p>5</p></td>
+<td><p>1.163 ± 0.341</p></td>
+<td><p>1.441 ± 0.238</p></td>
+<td><p>97.71 ± 0.33</p></td>
+<td><p>97.37 ± 0.37</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">model2vec-multilingual</span></code></p></td>
+<td><p>128</p></td>
+<td><p>5</p></td>
+<td><p>1.067 ± 0.184</p></td>
+<td><p>1.400 ± 0.501</p></td>
+<td><p>97.72 ± 0.34</p></td>
+<td><p>97.40 ± 0.37</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">model2vec-multilingual</span></code></p></td>
+<td><p>256</p></td>
+<td><p>5</p></td>
+<td><p>1.051 ± 0.174</p></td>
+<td><p>1.457 ± 0.628</p></td>
+<td><p>97.75 ± 0.59</p></td>
+<td><p>97.42 ± 0.66</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">model2vec-multilingual</span></code></p></td>
+<td><p>512</p></td>
+<td><p>5</p></td>
+<td><p>1.157 ± 0.203</p></td>
+<td><p>1.598 ± 0.680</p></td>
+<td><p>97.75 ± 0.46</p></td>
+<td><p>97.40 ± 0.48</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">model2vec-multilingual</span></code></p></td>
+<td><p><strong>1024</strong></p></td>
+<td><p><strong>5</strong></p></td>
+<td><p><strong>0.953 ± 0.207</strong></p></td>
+<td><p><strong>1.315 ± 0.539</strong></p></td>
+<td><p><strong>98.06 ± 0.63</strong></p></td>
+<td><p><strong>97.74 ± 0.72</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">model2vec-multilingual-attention</span></code></p></td>
+<td><p>128</p></td>
+<td><p>5</p></td>
+<td><p>0.990 ± 0.246</p></td>
+<td><p>1.298 ± 0.533</p></td>
+<td><p>97.79 ± 0.90</p></td>
+<td><p>97.44 ± 0.96</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">model2vec-multilingual-attention</span></code></p></td>
+<td><p>256</p></td>
+<td><p>5</p></td>
+<td><p>1.046 ± 0.165</p></td>
+<td><p>1.451 ± 0.641</p></td>
+<td><p>97.74 ± 0.79</p></td>
+<td><p>97.39 ± 0.89</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">model2vec-multilingual-attention</span></code></p></td>
+<td><p>512</p></td>
+<td><p>5</p></td>
+<td><p>0.913 ± 0.287</p></td>
+<td><p>1.301 ± 0.671</p></td>
+<td><p>97.82 ± 0.75</p></td>
+<td><p>97.49 ± 0.83</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">model2vec-multilingual-attention</span></code></p></td>
+<td><p><strong>1024</strong></p></td>
+<td><p><strong>5</strong></p></td>
+<td><p><strong>0.907 ± 0.233</strong></p></td>
+<td><p><strong>1.261 ± 0.633</strong></p></td>
+<td><p><strong>98.06 ± 0.91</strong></p></td>
+<td><p><strong>97.73 ± 1.04</strong></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The tables are generated by <code class="docutils literal notranslate"><span class="pre">models_evaluation/select_best_model.py</span></code>.</p>
+</section>
 </section>
 
         </article>
@@ -954,6 +1219,7 @@ to achieve an interesting performance. Attention mechanisms improve performance 
 <li><a class="reference internal" href="#">Pretrained Models Results</a><ul>
 <li><a class="reference internal" href="#clean-data">Clean Data</a></li>
 <li><a class="reference internal" href="#incomplete-data">Incomplete Data</a></li>
+<li><a class="reference internal" href="#model2vec-models">Model2Vec Models</a></li>
 </ul>
 </li>
 </ul>
@@ -965,7 +1231,7 @@ to achieve an interesting performance. Attention mechanisms improve performance 
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=7a8a8f56"></script>
+</div><script src="_static/documentation_options.js?v=65dcdbe2"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/scripts/furo.js?v=46bd48cc"></script>

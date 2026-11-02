@@ -476,6 +476,9 @@
 
 ## dev
 
+- Relicense Deepparse from the LGPLv3 to the MIT license, with the agreement of its contributors (`LICENSE`,
+  `setup.py` metadata and classifier, README, documentation and contributing guide). The pretrained models on the
+  Hugging Face Hub are also under the MIT license.
 - Stop the unit tests from downloading the pre-trained models: instantiating an `AddressParser` reached the
   HuggingFace Hub, so concurrent CI jobs hit the anonymous rate limit (HTTP 429) and 21 tests failed for
   reasons unrelated to the code. The model factory is now mocked in `AddressParserTest.setUp`.

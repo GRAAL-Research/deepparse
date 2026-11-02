@@ -39,6 +39,8 @@ def main(args):
                     encoding="utf-8",
                 ) as file:
                     if device != "cpu":
+                        # The CUDA context must exist before resetting its statistics.
+                        torch.cuda.init()
                         torch.cuda.reset_peak_memory_stats(device)
                     for batch_size in [1, 2, 4, 8, 16, 32, 64, 128, 256, 512]:
                         address_parser = AddressParser(

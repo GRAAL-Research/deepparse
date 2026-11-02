@@ -5,7 +5,7 @@ import sys
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from difflib import SequenceMatcher
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List, Tuple
 
 from ..parser import FormattedParsedAddress
 
@@ -78,13 +78,13 @@ class FormattedComparedAddresses(ABC):
 
         return is_identical
 
-    def comparison_report(self, nb_delimiters: Union[int, None] = None) -> None:
+    def comparison_report(self, nb_delimiters: int | None = None) -> None:
         """
         Print a formatted comparison report of the two addresses.
         """
         sys.stdout.writelines(self._comparison_report(nb_delimiters))
 
-    def _comparison_report(self, nb_delimiters: Union[int, None]) -> str:
+    def _comparison_report(self, nb_delimiters: int | None) -> str:
         """
         Builds a comparison_report with delimiters to make the comparison's beginning and end easier to spot.
         """
@@ -222,14 +222,14 @@ class FormattedComparedAddresses(ABC):
         return formatted_str
 
     def _bool_address_tags_are_the_same(
-        self, parsed_addresses: Union[List[List[tuple]], List[tuple]]
+        self, parsed_addresses: List[List[tuple]] | List[tuple]
     ) -> List[Tuple[str, bool]]:
         """
         Compare the components between two addresses and put the differences in a dictionary where the keys are the
         names of the addresses components, and the values are the values of the addresses component.
 
         Args:
-            parsed_addresses (Union[List[List[tuple]], List[tuple]]): Contains the tags and the
+            parsed_addresses (List[List[tuple]] | List[tuple]): Contains the tags and the
             address components' names for the parsed addresses.
 
         Return:

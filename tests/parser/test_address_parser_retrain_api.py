@@ -55,8 +55,15 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         self.saving_template_path = os.path.join(self.a_logging_path, "retrained_{}_address_parser.ckpt")
 
         self.model_mock = MagicMock()
+        # The default architecture of the pretrained models (hidden sizes of 1024 and one layer).
+        self.set_model_mock_architecture(hidden_size=1024)
 
         self.a_model_version = "a_version"
+
+    def set_model_mock_architecture(self, hidden_size: int) -> None:
+        for lstm in (self.model_mock.encoder.lstm, self.model_mock.decoder.lstm):
+            lstm.hidden_size = hidden_size
+            lstm.num_layers = 1
 
     def populate_directory(self):
         create_file(
@@ -300,6 +307,43 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         except RuntimeError as actual_error_message:
             self.assertEqual(actual_error_message.args[0], expect_error_message)
 
+    @patch("deepparse.parser.address_parser.torch.save")
+    @patch(
+        "deepparse.parser.address_parser.Experiment",
+        **{"return_value.train.side_effect": RuntimeError("Error during training")},
+    )
+    @patch("deepparse.parser.address_parser.SGD")
+    @patch("deepparse.parser.address_parser.ModelFactory")
+    @patch("deepparse.parser.address_parser.EmbeddingsModelFactory")
+    @patch("deepparse.parser.address_parser.VectorizerFactory")
+    @patch("deepparse.parser.address_parser.DataProcessorFactory")
+    @patch("deepparse.parser.address_parser.DataPadder")
+    def test_givenNoCheckpointInLoggingPath_whenRetrainRaisesRuntimeError_thenReRaiseInsteadOfSwallowing(
+        self,
+        data_padder_mock,
+        data_processor_factory_mock,
+        vectorizer_factory_mock,
+        embeddings_factory_mock,
+        model_factory_mock,
+        optimizer_mock,
+        experiment_mock,
+        torch_save_mock,
+    ):
+        # The logging path holds no previous checkpoint, so there is no configuration collision. A genuine
+        # training RuntimeError must be re-raised, not silently swallowed. (The previous implementation
+        # inspected the current working directory instead of the logging path and swallowed the error when
+        # the cwd happened to be non-empty.) We do NOT populate the directory and do NOT mock os.listdir.
+        model_factory_mock().create.return_value = self.model_mock, self.a_model_version
+
+        self.address_parser = AddressParser(
+            model_type=self.a_best_model_type,
+            device=self.a_device,
+            verbose=self.verbose,
+        )
+
+        with self.assertRaises(RuntimeError):
+            self.address_parser_retrain_call()
+
     @patch("deepparse.parser.address_parser.Experiment")
     @patch("deepparse.parser.address_parser.ModelFactory")
     @patch("deepparse.parser.address_parser.EmbeddingsModelFactory")
@@ -325,35 +369,6 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
 
         with self.assertRaises(FastTextModelError):
             self.address_parser_retrain_call()
-
-    @patch("deepparse.parser.address_parser.system")
-    @patch("deepparse.parser.address_parser.ModelFactory")
-    @patch("deepparse.parser.address_parser.EmbeddingsModelFactory")
-    @patch("deepparse.parser.address_parser.VectorizerFactory")
-    @patch("deepparse.parser.address_parser.DataProcessorFactory")
-    @patch("deepparse.parser.address_parser.DataPadder")
-    def test_givenAFastTextLikeModelOnWindowsOS_whenRetrainWithNumWorkersGT0_thenReRaiseError(
-        self,
-        data_padder_mock,
-        data_processor_factory_mock,
-        vectorizer_factory_mock,
-        embeddings_factory_mock,
-        model_factory_mock,
-        system_mock,
-    ):
-        model_factory_mock().create.return_value = self.model_mock, self.a_model_version
-
-        system_mock.return_value = "Windows"
-
-        self.address_parser = AddressParser(
-            model_type=self.a_fastest_model_type,
-            device=self.a_device,
-            verbose=self.verbose,
-        )
-
-        num_workers_gt_0 = 1
-        with self.assertRaises(FastTextModelError):
-            self.address_parser_retrain_call(num_workers=num_workers_gt_0)
 
     @patch("deepparse.parser.address_parser.torch.save")
     @patch("deepparse.parser.address_parser.DataLoader")
@@ -545,6 +560,47 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         self.address_parser_retrain_call(seq2seq_params=self.seq2seq_params)
 
         model_factory_mock.assert_called()
+
+    @patch("deepparse.parser.address_parser.torch.save")
+    @patch("deepparse.parser.address_parser.DataLoader")
+    @patch("deepparse.parser.address_parser.Experiment")
+    @patch("deepparse.parser.address_parser.SGD")
+    @patch("deepparse.parser.address_parser.ModelFactory")
+    @patch("deepparse.parser.address_parser.EmbeddingsModelFactory")
+    @patch("deepparse.parser.address_parser.VectorizerFactory")
+    @patch("deepparse.parser.address_parser.DataProcessorFactory")
+    @patch("deepparse.parser.address_parser.DataPadder")
+    def test_givenAnAttentionModel_whenRetrainWithNewParams_thenKeepAttentionCacheDirAndOffline(
+        self,
+        data_padder_mock,
+        data_processor_factory_mock,
+        vectorizer_factory_mock,
+        embeddings_factory_mock,
+        model_factory_mock,
+        optimizer_mock,
+        experiment_mock,
+        data_loader_mock,
+        torch_save_mock,
+    ):
+        model_factory_mock().create.return_value = self.model_mock, self.a_model_version
+        a_cache_dir = os.path.join(self.temp_dir_obj.name, "a_cache")
+
+        self.address_parser = AddressParser(
+            model_type=self.a_fasttext_model_type,
+            attention_mechanism=True,
+            device=self.a_device,
+            verbose=self.verbose,
+            cache_dir=a_cache_dir,
+            offline=True,
+        )
+        setup_model_mock = MagicMock()
+        self.address_parser._setup_model = setup_model_mock
+        self.address_parser_retrain_call(seq2seq_params=self.seq2seq_params)
+
+        _, setup_model_kwargs = setup_model_mock.call_args
+        self.assertTrue(setup_model_kwargs["attention_mechanism"])
+        self.assertEqual(a_cache_dir, setup_model_kwargs["cache_dir"])
+        self.assertTrue(setup_model_kwargs["offline"])
 
     @patch("deepparse.parser.address_parser.torch.save")
     @patch("deepparse.parser.address_parser.DataLoader")
@@ -1694,27 +1750,6 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
                     num_workers=0,
                 )
 
-    @skipIf(platform.system() != "Windows", "Integration test on Windows env.")
-    @patch("deepparse.parser.address_parser.EmbeddingsModelFactory")
-    @patch("deepparse.parser.address_parser.VectorizerFactory")
-    @patch("deepparse.parser.address_parser.DataProcessorFactory")
-    def test_givenAFasttextModelTypeOnWindows_whenInstantiatingParserWithNumWorkerGT0_thenRaiseError(
-        self, data_processor_factory_mock, vectorizer_factory_mock, embeddings_model_factory_mock
-    ):
-        num_workers_gt_0 = 1
-        with patch("deepparse.parser.address_parser.ModelFactory") as model_factory_mock:
-            model_factory_mock().create.return_value = self.model_mock, self.a_model_version
-
-            address_parser = AddressParser(
-                model_type=self.a_fasttext_model_type,
-                device=self.a_device,
-                verbose=self.verbose,
-            )
-            with self.assertRaises(FastTextModelError):
-                address_parser.retrain(
-                    MagicMock(), train_ratio=0.8, batch_size=1, epochs=1, num_workers=num_workers_gt_0
-                )
-
     def test_givenAnyModelWith_whenPathToTrainLeadToWrongCheckpoint_thenRaiseError(self):
         a_path_to_retrained_model_with_missing_metadata = os.path.join(self.a_logging_path, "a_checkpoint.ckpt")
         create_fake_checkpoint(path=a_path_to_retrained_model_with_missing_metadata, with_metadata=False)
@@ -1725,6 +1760,47 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
                 device=self.a_device,
                 path_to_retrained_model=a_path_to_retrained_model_with_missing_metadata,
             )
+
+    @patch("deepparse.parser.address_parser.torch.save")
+    @patch("deepparse.parser.address_parser.DataLoader")
+    @patch("deepparse.parser.address_parser.Experiment")
+    @patch("deepparse.parser.address_parser.SGD")
+    @patch("deepparse.parser.address_parser.ModelFactory")
+    @patch("deepparse.parser.address_parser.EmbeddingsModelFactory")
+    @patch("deepparse.parser.address_parser.VectorizerFactory")
+    @patch("deepparse.parser.address_parser.DataProcessorFactory")
+    @patch("deepparse.parser.address_parser.DataPadder")
+    def test_givenAPretrainedModelWithANonDefaultArchitecture_whenRetrain_thenSaveItsSeq2SeqParams(
+        self,
+        data_padder_mock,
+        data_processor_factory_mock,
+        vectorizer_factory_mock,
+        embeddings_factory_mock,
+        model_factory_mock,
+        optimizer_mock,
+        experiment_mock,
+        data_loader_mock,
+        torch_save_mock,
+    ):
+        # E.g. a pretrained Model2Vec model with a hidden size of 512: without its seq2seq params, the retrained model
+        # would be reloaded with the default hidden size of 1024 and fail.
+        self.set_model_mock_architecture(hidden_size=512)
+        model_factory_mock().create.return_value = self.model_mock, self.a_model_version
+
+        self.address_parser = AddressParser(
+            model_type=self.a_fasttext_model_type,
+            device=self.a_device,
+            verbose=self.verbose,
+        )
+        self.address_parser_retrain_call()
+
+        saved_checkpoint = torch_save_mock.call_args[0][0]
+        self.assertEqual(
+            {"encoder_hidden_size": 512, "encoder_num_layers": 1, "decoder_hidden_size": 512, "decoder_num_layers": 1},
+            saved_checkpoint["seq2seq_params"],
+        )
+        # The name of the parser is not changed: only the user-given seq2seq params name a modified configuration.
+        self.assertEqual("FastText", saved_checkpoint["named_parser"])
 
 
 if __name__ == "__main__":

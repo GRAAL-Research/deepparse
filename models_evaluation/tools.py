@@ -142,15 +142,9 @@ def test_on_country_data(address_parser: AddressParser, file: str, directory_pat
     print(f"Testing on test files {country}")
 
     test_file_path = os.path.join(directory_path, file)
-    test_container = PickleDatasetContainer(test_file_path, is_training_container=False)
+    test_container = PickleDatasetContainer(test_file_path)
 
-    results = address_parser.test(
-        test_container,
-        batch_size=args.batch_size,
-        num_workers=4,
-        logging_path=f"./checkpoints/{args.model_type}",
-        checkpoint=args.model_path,
-    )
+    results = address_parser.test(test_container, batch_size=args.batch_size, num_workers=4)
     return results, country
 
 

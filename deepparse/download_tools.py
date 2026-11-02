@@ -1,25 +1,54 @@
 import gzip
+import logging
 import os
 import shutil
 import sys
 import warnings
 from pathlib import Path
-from typing import Dict, Union
+from typing import Dict, List, Tuple
 from urllib.request import urlopen
 
 try:
-    from fasttext.FastText import _FastText
+    import pyarrow.parquet as pq
 
-    FASTTEXT_AVAILABLE = True
+    PYARROW_AVAILABLE = True
 except ImportError:
-    _FastText = None
-    FASTTEXT_AVAILABLE = False
+    pq = None
+    PYARROW_AVAILABLE = False
 
-from huggingface_hub import hf_hub_download, snapshot_download
+from huggingface_hub import HfFileSystem, hf_hub_download, snapshot_download
 from transformers.utils.hub import cached_file, extract_commit_hash
 from transformers.utils.logging import disable_progress_bar, enable_progress_bar
 
-from .bpemb_url_bug_fix import BPEmbBaseURLWrapperBugFix
+from .bpemb_loader import BPEmbLoader
+
+__all__ = [
+    "CACHE_PATH",
+    "FASTTEXT_COPYRIGHT_MIT_LICENSE",
+    "HTTP_CLIENT_ERROR_STATUS_CODE",
+    "MODEL2VEC_MODELS",
+    "MODEL_MAPPING_CHOICES",
+    "MODEL_REPO_IDS",
+    "NEXT_RANGE_STATUS_CODE",
+    "PYARROW_AVAILABLE",
+    "WORLDWIDE_ADDRESSES_REMOVED_TAGS",
+    "WORLDWIDE_ADDRESSES_REPO_ID",
+    "WORLDWIDE_ADDRESSES_TAGS_MAPPING",
+    "download_fasttext_embeddings",
+    "download_fasttext_magnitude_embeddings",
+    "download_gz_model",
+    "download_model",
+    "download_model2vec_embeddings",
+    "download_models",
+    "download_weights",
+    "download_worldwide_addresses_sample",
+    "get_model2vec_model_type",
+    "load_version",
+]
+
+# Deprecated, kept for backward compatibility and will be removed in 1.0.0: Deepparse no longer needs the fasttext
+# package to load the FastText embeddings (see deepparse.embeddings_models.FastTextBinReader).
+logger = logging.getLogger(__name__)
 
 CACHE_PATH = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
 
@@ -35,6 +64,12 @@ MODEL_MAPPING_CHOICES: Dict[str, str] = {
     "fasttext-light": "fasttext",
     "bpemb": "bpemb",
     "bpemb-attention": "bpemb_attention",
+    "model2vec-8m": "model2vec-8m",
+    "model2vec-8m-attention": "model2vec-8m_attention",
+    "model2vec-32m": "model2vec-32m",
+    "model2vec-32m-attention": "model2vec-32m_attention",
+    "model2vec-multilingual": "model2vec-multilingual",
+    "model2vec-multilingual-attention": "model2vec-multilingual_attention",
 }
 
 MODEL_REPO_IDS = {
@@ -44,7 +79,62 @@ MODEL_REPO_IDS = {
     "fasttext_attention": "deepparse/fasttext-attention",
     "fasttext-light": "deepparse/fasttext-base",
     "fasttext-light_attention": "deepparse/fasttext-attention",
+    "model2vec-8m": "deepparse/model2vec-8m-base",
+    "model2vec-8m_attention": "deepparse/model2vec-8m-attention",
+    "model2vec-32m": "deepparse/model2vec-32m-base",
+    "model2vec-32m_attention": "deepparse/model2vec-32m-attention",
+    "model2vec-multilingual": "deepparse/model2vec-multilingual-base",
+    "model2vec-multilingual_attention": "deepparse/model2vec-multilingual-attention",
 }
+
+WORLDWIDE_ADDRESSES_REPO_ID = "deepparse/worldwide-addresses"
+
+# The worldwide-addresses dataset tags that are not deepparse tags. The words tagged with a removed tag are removed
+# from the address.
+WORLDWIDE_ADDRESSES_TAGS_MAPPING: Dict[str, str] = {"Suburb": "Municipality", "District": "Municipality"}
+WORLDWIDE_ADDRESSES_REMOVED_TAGS = ("County", "Country")
+
+# Model2Vec model types with their Hugging Face embeddings repository and embeddings dimension.
+MODEL2VEC_MODELS: Dict[str, Tuple[str, int]] = {
+    "model2vec-8m": ("minishlab/potion-base-8M", 256),
+    "model2vec-32m": ("minishlab/potion-base-32M", 512),
+    "model2vec-multilingual": ("minishlab/potion-multilingual-128M", 256),
+}
+
+
+def get_model2vec_model_type(model_type: str) -> str:
+    """
+    Function to get the Model2Vec base model type (e.g. ``model2vec-8m``) of a model type that can include the
+    attention suffix (e.g. ``model2vec-8m_attention``).
+    """
+    for model2vec_model_type in MODEL2VEC_MODELS:
+        if model_type.startswith(model2vec_model_type):
+            return model2vec_model_type
+    raise ValueError(f"{model_type} is not a Model2Vec model type. Valid ones are {list(MODEL2VEC_MODELS)}.")
+
+
+def download_model2vec_embeddings(
+    model_type: str, cache_dir: str, verbose: bool = True, offline: bool = False
+) -> Tuple[str, int]:
+    """
+    Function to download the Model2Vec embeddings of a model2vec model type.
+
+    Return the local path to the Model2Vec embeddings and the embeddings dimension.
+    """
+    repo_id, dim = MODEL2VEC_MODELS[get_model2vec_model_type(model_type)]
+
+    if verbose and not offline:
+        logger.info("Downloading the Model2Vec embeddings %s.", repo_id)
+
+    # We only download the files Model2Vec loads to skip the ONNX export, which doubles the download size.
+    local_embeddings_path = snapshot_download(
+        repo_id,
+        cache_dir=cache_dir,
+        local_files_only=offline,
+        allow_patterns=["config.json", "model.safetensors", "tokenizer.json"],
+    )
+
+    return local_embeddings_path, dim
 
 
 def download_fasttext_magnitude_embeddings(cache_dir: str, verbose: bool = True, offline: bool = False) -> str:
@@ -64,8 +154,8 @@ def download_fasttext_magnitude_embeddings(cache_dir: str, verbose: bool = True,
         )
     except OSError:
         if verbose:
-            print(
-                "The FastText pretrained word embeddings will be downloaded in magnitude format (3.5 GO), "
+            logger.info(
+                "The FastText pretrained word embeddings will be downloaded in magnitude format (3.5 GB), "
                 "this process will take several minutes."
             )
 
@@ -134,7 +224,7 @@ def load_version(model_type: str, cache_dir: str) -> str:
     return version
 
 
-def download_models(saving_cache_path: Union[Path, None] = None) -> None:
+def download_models(saving_cache_path: Path | None = None) -> None:
     """
     Function to download all the pretrained models.  It will download all the model's checkpoints and version files.
 
@@ -147,7 +237,7 @@ def download_models(saving_cache_path: Union[Path, None] = None) -> None:
 
 def download_model(
     model_type: str,
-    saving_cache_path: Union[Path, None] = None,
+    saving_cache_path: Path | None = None,
 ) -> None:
     """
     Function to download a pretrained model. It will download its corresponding checkpoint and version file.
@@ -166,13 +256,88 @@ def download_model(
     elif model_type == "fasttext-light":
         download_fasttext_magnitude_embeddings(cache_dir=saving_cache_path)
     elif "bpemb" in model_type:
-        BPEmbBaseURLWrapperBugFix(
+        BPEmbLoader(
             lang="multi", vs=100000, dim=300, cache_dir=saving_cache_path
         )  # The class manages the download of the pretrained words embedding
+    elif "model2vec" in model_type:
+        download_model2vec_embeddings(model_type, cache_dir=saving_cache_path)
 
     model_type = MODEL_MAPPING_CHOICES[model_type]
 
     download_weights(model_type, saving_cache_path, verbose=True, offline=False)
+
+
+def download_worldwide_addresses_sample(country_code: str = "ca", num_samples: int = 1000) -> List[Tuple[str, List]]:
+    """
+    Function to download a small sample of tagged addresses of one country from the `worldwide-addresses
+    <https://huggingface.co/datasets/deepparse/worldwide-addresses>`_ HuggingFace dataset and convert it to the
+    deepparse tag space. It is meant to give small, ready-to-use datasets for examples and quick experiments.
+
+    Only the needed part of the country's last parquet file is read (the beginning of each country's data mostly
+    holds postal-code-only addresses, while the end holds complete street addresses). The tags are mapped to the
+    deepparse tags as follows: ``Suburb`` and ``District`` become ``Municipality``, and the words tagged ``County``
+    or ``Country`` are removed from the address. The addresses left empty by this removal are dropped.
+
+    It requires the ``pyarrow`` package (``pip install pyarrow`` or ``pip install deepparse[all]``).
+
+    Args:
+        country_code (str): The `ISO 3166-1 alpha-2 <https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2>`_ code of the
+            country to download (e.g. ``"ca"`` or ``"us"``). The default value is ``"ca"``.
+        num_samples (int): The maximum number of tagged addresses to return. The default value is ``1000``.
+
+    Return:
+        A list of tuples ``(address, tags)`` where the address is a string and the tags a list of deepparse tags, one
+        per whitespace-separated word. The list can be used as is with a
+        :class:`~deepparse.dataset_container.ListDatasetContainer`.
+    """
+    if not PYARROW_AVAILABLE:
+        raise ImportError(
+            "The 'pyarrow' package is needed to read the worldwide-addresses dataset. Install it with "
+            "'pip install pyarrow' or 'pip install deepparse[all]'."
+        )
+    if num_samples <= 0:
+        raise ValueError(f"The number of samples must be a positive integer, got {num_samples}.")
+
+    country_code = country_code.lower()
+    file_system = HfFileSystem()
+    chunk_paths = file_system.glob(f"datasets/{WORLDWIDE_ADDRESSES_REPO_ID}/{country_code}/chunk-*.parquet")
+    if not chunk_paths:
+        raise ValueError(
+            f"No data found for the country code '{country_code}' in the {WORLDWIDE_ADDRESSES_REPO_ID} dataset. "
+            "Use an ISO 3166-1 alpha-2 country code (e.g. 'ca')."
+        )
+    last_chunk_path = max(chunk_paths, key=lambda path: int(path.rsplit("chunk-", 1)[1].split(".", 1)[0]))
+
+    samples: List[Tuple[str, List]] = []
+    with file_system.open(last_chunk_path, "rb") as parquet_file:
+        parquet_reader = pq.ParquetFile(parquet_file)
+        # We read the row groups from the end of the file until we have enough samples.
+        for row_group_index in reversed(range(parquet_reader.num_row_groups)):
+            row_group = parquet_reader.read_row_group(row_group_index, columns=["Address", "Tags"])
+            row_group_samples = []
+            for address, tags in zip(row_group.column("Address").to_pylist(), row_group.column("Tags").to_pylist()):
+                sample = _convert_to_deepparse_tags(address, tags)
+                if sample is not None:
+                    row_group_samples.append(sample)
+            samples = row_group_samples + samples
+            if len(samples) >= num_samples:
+                break
+
+    return samples[-num_samples:]
+
+
+def _convert_to_deepparse_tags(address: str, tags: List[str]) -> Tuple[str, List] | None:
+    # Map a worldwide-addresses sample to the deepparse tags. Return None if no word is left in the address.
+    kept_words = []
+    kept_tags = []
+    for word, tag in zip(address.split(), tags):
+        if tag in WORLDWIDE_ADDRESSES_REMOVED_TAGS:
+            continue
+        kept_words.append(word)
+        kept_tags.append(WORLDWIDE_ADDRESSES_TAGS_MAPPING.get(tag, tag))
+    if not kept_words:
+        return None
+    return " ".join(kept_words), kept_tags
 
 
 # pylint: disable=pointless-string-statement
@@ -245,8 +410,8 @@ def download_gz_model(gz_file_name: str, saving_path: str, verbose: bool = True)
 
     url = f"https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/{gz_file_name}"
     if verbose:
-        print(
-            "The FastText pretrained word embeddings will be downloaded (6.8 GO), "
+        logger.info(
+            "The FastText pretrained word embeddings will be downloaded (6.8 GB), "
             "this process will take several minutes."
         )
     _download_file(url, saving_path, verbose=verbose)
@@ -255,7 +420,7 @@ def download_gz_model(gz_file_name: str, saving_path: str, verbose: bool = True)
 # No modification, we just need to call our _print_progress function
 def _download_file(url: str, write_file_name: str, chunk_size: int = 2**13, verbose: bool = True) -> None:
     if verbose:
-        print(f"Downloading {url}")
+        logger.info("Downloading %s", url)
 
     response = urlopen(url)  # pylint: disable=consider-using-with
     if hasattr(response, "getheader"):
@@ -291,21 +456,3 @@ def _print_progress(downloaded_bytes: int, total_size: int) -> None:
 
     if downloaded_bytes >= total_size:
         sys.stdout.write("\n")
-
-
-# The difference with the original code is the removal of the print warning.
-def load_fasttext_embeddings(path: str):
-    """
-    Wrapper to load a model given a filepath and return a model object.
-
-    If the ``fasttext`` package is not installed (e.g. on Python 3.13+), a
-    :class:`~ImportError` is raised. In that case, the caller should fall
-    back to ``gensim.models.fasttext.load_facebook_vectors``.
-    """
-    if not FASTTEXT_AVAILABLE:
-        raise ImportError(
-            "The 'fasttext' package is not installed. Install it with "
-            "'pip install fasttext-wheel' or use the gensim fallback "
-            "(automatic on Python 3.13+ and Windows)."
-        )
-    return _FastText(model_path=path)

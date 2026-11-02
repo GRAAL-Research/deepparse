@@ -1,7 +1,8 @@
 # pylint: disable=too-many-arguments
+import logging
 from abc import ABC, abstractmethod
 from pickle import load
-from typing import Callable, Dict, List, Tuple, Union
+from typing import Callable, Dict, List, Tuple
 
 import pandas as pd
 from torch.utils.data import Dataset
@@ -15,6 +16,8 @@ from ..data_validation import (
 )
 from ..errors.data_error import DataError
 from .tools import former_python_list, validate_column_names
+
+logger = logging.getLogger(__name__)
 
 
 class DatasetContainer(Dataset, ABC):
@@ -45,13 +48,13 @@ class DatasetContainer(Dataset, ABC):
         is_training_container (bool): Either or not, the dataset container is a training container. This will determine
             the dataset validation test we apply to the dataset. That is, a predict dataset doesn't include tags.
             The default value is ``True``.
-        data_cleaning_pre_processing_fn (Callable): Function to apply as data clea ning pre-processing step after
+        data_cleaning_pre_processing_fn (Callable): Function to apply as data cleaning pre-processing step after
             loading the data, but before applying the validation steps. The default value is ``None``.
     """
 
     @abstractmethod
     def __init__(
-        self, is_training_container: bool = True, data_cleaning_pre_processing_fn: Union[None, Callable] = None
+        self, is_training_container: bool = True, data_cleaning_pre_processing_fn: None | Callable = None
     ) -> None:
         """
         The method to init the class. It needs to be defined by the child's class.
@@ -63,9 +66,7 @@ class DatasetContainer(Dataset, ABC):
     def __len__(self) -> int:
         return len(self.data)
 
-    def __getitem__(
-        self, idx: Union[int, slice]
-    ) -> Union[List[str], str, List[List[Tuple[str, List]]], Tuple[str, List]]:
+    def __getitem__(self, idx: int | slice) -> List[str] | str | List[List[Tuple[str, List]]] | Tuple[str, List]:
         """
         If the DatasetContainer is a "predict" one:
 
@@ -134,11 +135,12 @@ class DatasetContainer(Dataset, ABC):
             raise DataError("Some tags data points are empty.")
 
         if not self._data_tags_is_same_len_then_address():
-            print(
-                f"Some addresses (whitespace-split) and the associated tags are not the same length. "
-                f"If you use a CSVDatasetContainer, consider using the tag_seperator_reformat_fn argument."
-                f"Here is the report of those cases where len differ to help you out:\n"
-                f"{self._data_tags_not_the_same_len_diff()}"
+            logger.warning(
+                "Some addresses (whitespace-split) and the associated tags are not the same length. "
+                "If you use a CSVDatasetContainer, consider using the tag_seperator_reformat_fn argument."
+                "Here is the report of those cases where len differ to help you out:\n"
+                "%s",
+                self._data_tags_not_the_same_len_diff(),
             )
             raise DataError(
                 "Some addresses (whitespace-split) and the tags associated with them are not the same length."
@@ -146,7 +148,7 @@ class DatasetContainer(Dataset, ABC):
 
     def _data_is_list_of_tuple(self) -> bool:
         """
-        Return true if one of the elements in the dataset is not a tuple.
+        Return true only if every element in the dataset is a tuple.
         """
         return all(isinstance(data, tuple) for data in self.data)
 
@@ -154,7 +156,7 @@ class DatasetContainer(Dataset, ABC):
         """
         Return true if one of the tag sets is empty.
         """
-        return all(len(data[1]) == 0 for data in self.data)
+        return any(len(data[1]) == 0 for data in self.data)
 
     def _data_tags_is_same_len_then_address(self) -> bool:
         """
@@ -177,6 +179,11 @@ class DatasetContainer(Dataset, ABC):
 class PickleDatasetContainer(DatasetContainer):
     """
     Pickle dataset container that imports a list of addresses in pickle format and does some validation on it.
+
+    .. warning::
+        This container uses Python's ``pickle`` to load the dataset. Unpickling executes arbitrary code, so
+        only load pickle files you created yourself or fully trust. Never load a pickle file from an untrusted
+        or third-party source.
 
     The dataset needs to be a list of tuples where the first element of each tuple is the address (a string),
     and the second is a list of the expected tag to predict (e.g. ``[('an address', ['a_tag', 'another_tag']), ...]``).
@@ -204,7 +211,7 @@ class PickleDatasetContainer(DatasetContainer):
         is_training_container (bool): Either or not, the dataset container is a training container. This will determine
             the dataset validation test we apply to the dataset. That is, a predict dataset doesn't include tags.
             The default value is ``True``.
-        data_cleaning_pre_processing_fn (Callable): Function to apply as data clea ning pre-processing step after
+        data_cleaning_pre_processing_fn (Callable): Function to apply as data cleaning pre-processing step after
             loading the data, but before applying the validation steps. The default value is ``None``.
 
     """
@@ -213,7 +220,7 @@ class PickleDatasetContainer(DatasetContainer):
         self,
         data_path: str,
         is_training_container: bool = True,
-        data_cleaning_pre_processing_fn: Union[None, Callable] = None,
+        data_cleaning_pre_processing_fn: None | Callable = None,
     ) -> None:
         super().__init__(
             is_training_container=is_training_container, data_cleaning_pre_processing_fn=data_cleaning_pre_processing_fn
@@ -272,27 +279,27 @@ class CSVDatasetContainer(DatasetContainer):
             the dataset validation test we apply to the dataset. That is, a predict dataset doesn't include tags.
             The default value is ``True``.
         separator (str): The CSV columns separator to use. By default, ``"\\t"``.
-        tag_seperator_reformat_fn (Callable, optional): A function to parse a tags string and return a list of
+        tag_seperator_reformat_fn (Callable): A function to parse a tags string and return a list of
             address tags. For example, if the tag column is a former Python list saved with pandas, the characters ``]``
             , ``]`` and ``'`` will be included as the tags' element. Thus, a parsing function will take a string as is
             parameter and output a python list. The default function processes it as a former Python list.
             That is, it removes the ``[],`` characters and splits the sequence at each comma (``","``).
-        csv_reader_kwargs (dict, optional): Keyword arguments to pass to pandas ``read_csv`` use internally. By default,
+        csv_reader_kwargs (dict): Keyword arguments to pass to pandas ``read_csv`` use internally. By default,
             the ``data_path`` is passed along with our default ``sep`` value ( ``"\\t"``) and the ``"utf-8"`` encoding
             format. However, this can be overridden by using this argument again.
-        data_cleaning_pre_processing_fn (Callable): Function to apply as data clea ning pre-processing step after
+        data_cleaning_pre_processing_fn (Callable): Function to apply as data cleaning pre-processing step after
             loading the data, but before applying the validation steps. The default value is ``None``.
     """
 
     def __init__(
         self,
         data_path: str,
-        column_names: Union[List, str],
+        column_names: List | str,
         is_training_container: bool = True,
         separator: str = "\t",
-        tag_seperator_reformat_fn: Union[None, Callable] = None,
-        csv_reader_kwargs: Union[None, Dict] = None,
-        data_cleaning_pre_processing_fn: Union[None, Callable] = None,
+        tag_seperator_reformat_fn: None | Callable = None,
+        csv_reader_kwargs: None | Dict = None,
+        data_cleaning_pre_processing_fn: None | Callable = None,
     ) -> None:
         super().__init__(
             is_training_container=is_training_container, data_cleaning_pre_processing_fn=data_cleaning_pre_processing_fn
@@ -351,7 +358,7 @@ class ListDatasetContainer(DatasetContainer):
         is_training_container (bool): Either or not, the dataset container is a training container. This will determine
             the dataset validation test we apply to the dataset. That is, a predict dataset doesn't include tags.
             The default value is ``True``.
-        data_cleaning_pre_processing_fn (Callable): Function to apply as data clea ning pre-processing step after
+        data_cleaning_pre_processing_fn (Callable): Function to apply as data cleaning pre-processing step after
             loading the data, but before applying the validation steps. The default value is ``None``.
     """
 
@@ -359,7 +366,7 @@ class ListDatasetContainer(DatasetContainer):
         self,
         data: List,
         is_training_container: bool = True,
-        data_cleaning_pre_processing_fn: Union[None, Callable] = None,
+        data_cleaning_pre_processing_fn: None | Callable = None,
     ) -> None:
         super().__init__(
             is_training_container=is_training_container, data_cleaning_pre_processing_fn=data_cleaning_pre_processing_fn

@@ -50,18 +50,19 @@ def main():
         author_email="marouane.yassine.1@ulaval.ca, david.beauchemin.5@ulaval.ca",
         url="https://deepparse.org/",
         download_url="https://github.com/GRAAL-Research/deepparse/archive/v" + version + ".zip",
-        license="LGPLv3",
+        license="MIT",
         classifiers=[
             "Development Status :: 5 - Production/Stable",
             "Intended Audience :: Developers",
             "Intended Audience :: Education",
             "Intended Audience :: Science/Research",
-            "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
+            "License :: OSI Approved :: MIT License",
             "Programming Language :: Python :: 3",
             "Programming Language :: Python :: 3.10",
             "Programming Language :: Python :: 3.11",
             "Programming Language :: Python :: 3.12",
             "Programming Language :: Python :: 3.13",
+            "Programming Language :: Python :: 3.14",
             "Topic :: Software Development :: Libraries",
             "Topic :: Software Development :: Libraries :: Python Modules",
             "Topic :: Scientific/Engineering",
@@ -71,9 +72,8 @@ def main():
         install_requires=[
             "numpy",
             "torch",
-            "bpemb",
+            "sentencepiece",
             "scipy",
-            "gensim>=4.3.3",
             "requests",
             "pymagnitude-light",
             "poutyne",
@@ -89,10 +89,20 @@ def main():
         long_description_content_type="text/markdown",
         extras_require={
             "colorama": "colorama",
-            "fasttext": ["fasttext-wheel"],
-            "app": ["fastapi[all]>=0.109.1", "uvicorn>=0.22.0", "sentry-sdk[fastapi]>=2.0.0", "python-decouple>=3.8"],
+            # Kept empty for backward compatibility: the FastText embeddings no longer need the fasttext package.
+            "fasttext": [],
+            "model2vec": ["model2vec"],
+            "app": [
+                "fastapi[all]>=0.109.1",
+                "uvicorn>=0.22.0",
+                "sentry-sdk[fastapi]>=2.0.0",
+                "python-decouple>=3.8",
+                "model2vec",
+            ],
             "all": [
                 "colorama",  # colorama
+                "pyarrow",  # worldwide-addresses dataset sample download (examples)
+                "model2vec",  # model2vec embeddings
                 "fastapi[all]>=0.109.1",  # app requirements
                 "uvicorn>=0.22.0",
                 "sentry-sdk[fastapi]>=2.0.0",
@@ -102,6 +112,7 @@ def main():
                 "pylint-django[with_django]>=2.7.0",
                 "pre-commit>=4.0.0",
                 "pycountry>=22.3.5",  # tests requirements
+                "archunitpython",  # architecture tests requirements
                 "pytest",
                 "pytest-asyncio",
                 "pytest_cov",
@@ -110,7 +121,9 @@ def main():
                 "pytest-xdist[psutil]",
                 "tensorboard>=2.14",
                 "sphinx>=7.4.0",  # documentation requirements
-                "sphinx_rtd_theme>=3.0.0",
+                "furo>=2024.8.6",
+                "sphinx-copybutton>=0.5.2",
+                "myst-parser>=4.0.0",
             ],
         },
     )

@@ -46,27 +46,24 @@ def parse_retrained_arguments(parsed_args) -> Dict:
     return parsed_retain_arguments
 
 
-def handle_prediction_tags(parsed_args):
-    dict_parsed_args = vars(parsed_args)
-    path = dict_parsed_args.get("prediction_tags")
-
-    tags_dict_arguments = {"prediction_tags": None}  # Default case
-
-    if path is not None:
-        with open(path, "r", encoding="UTF-8") as file:
-            prediction_tags = json.load(file)
-            if "EOS" not in prediction_tags.keys():
-                raise ValueError("The prediction tags dictionary is missing the EOS tag.")
-            tags_dict_arguments.update({"prediction_tags": prediction_tags})
-    return tags_dict_arguments
+def handle_prediction_tags(parsed_args) -> dict | None:
+    path = vars(parsed_args).get("prediction_tags")
+    if path is None:
+        return None
+    with open(path, "r", encoding="UTF-8") as file:
+        prediction_tags = json.load(file)
+    if "EOS" not in prediction_tags:
+        raise ValueError("The prediction tags dictionary is missing the EOS tag.")
+    return prediction_tags
 
 
 def main(args=None) -> None:
     # pylint: disable=too-many-locals, too-many-branches
     """
     CLI function to easily retrain an address parser and save it. One can retrain a base pretrained model
-    using most of the arguments as the :meth:`~AddressParser.retrain` method. By default, all the parameters have
-    the same default value as the :meth:`~AddressParser.retrain` method. The supported parameters are the following:
+    using most of the arguments as the :meth:`~deepparse.parser.AddressParser.retrain` method. By default, all the
+    parameters have the same default value as the :meth:`~deepparse.parser.AddressParser.retrain` method. The
+    supported parameters are the following:
 
     - ``train_ratio``,
     - ``batch_size``,
@@ -131,13 +128,14 @@ def main(args=None) -> None:
 
     address_parser = AddressParser(**parser_args)
 
-    new_tags_parser_args_update_args = handle_prediction_tags(parsed_args)
-    parser_args.update(**new_tags_parser_args_update_args)
-
+    prediction_tags = handle_prediction_tags(parsed_args)
     parsed_retain_arguments = parse_retrained_arguments(parsed_args)
 
     address_parser.retrain(
-        train_dataset_container=training_data, val_dataset_container=val_data, **parsed_retain_arguments
+        train_dataset_container=training_data,
+        val_dataset_container=val_data,
+        prediction_tags=prediction_tags,
+        **parsed_retain_arguments,
     )
 
 

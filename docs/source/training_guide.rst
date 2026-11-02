@@ -24,7 +24,7 @@ architecture, or your dataset's tag structure, differs from ours; Deepparse's re
 In practice, our models were trained on 20 countries. They demonstrated very accurate results on all of them, so we advise you to use our models without retraining unless you wish to predict
 different tags (e.g., StreetNumber, ...). Also, suppose you want to retrain
 our models to perform better on countries outside of the 20 used in the original training set. In that case, you can look
-at `our dataset <https://github.com/GRAAL-Research/deepparse-address-data>`__ which includes an additional 41 countries used only for testing.
+at `our dataset <https://huggingface.co/datasets/deepparse/worldwide-addresses>`__ which includes addresses from 240 countries.
 
 There are two main concerns to keep in mind when fine-tuning a model: the model's convergence (i.e., its ability actually to learn from the new data)
 and the possibility of ``catastrophic forgetting`` (i.e., losing the model's previous knowledge after training on the new data).

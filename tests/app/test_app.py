@@ -169,7 +169,7 @@ def test_format_parsed_addresses():
     parsed_address_1 = formatted_parsed_address_1.to_dict()
     parsed_address_2 = formatted_parsed_address_2.to_dict()
 
-    expected_parsed_addresses = {raw_address_1: parsed_address_1, raw_address_2: parsed_address_2}
+    expected_parsed_addresses = [{raw_address_1: parsed_address_1}, {raw_address_2: parsed_address_2}]
 
     expected_response = {"model_type": model_type, "parsed_addresses": expected_parsed_addresses, "version": version}
 
@@ -214,9 +214,9 @@ def test_format_parsed_addresses__one_address():
     # Assertions or checks on the response
     parsed_address = formatted_parsed_address.to_dict()
 
-    expected_parsed_address = {
-        raw_address_1: parsed_address,
-    }
+    expected_parsed_address = [
+        {raw_address_1: parsed_address},
+    ]
 
     expected_response = {"model_type": model_type, "parsed_addresses": expected_parsed_address, "version": version}
 

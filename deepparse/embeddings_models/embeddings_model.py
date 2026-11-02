@@ -1,6 +1,9 @@
+import logging
 from abc import ABC, abstractmethod
 
 from numpy import ndarray
+
+logger = logging.getLogger(__name__)
 
 
 class EmbeddingsModel(ABC):
@@ -11,7 +14,7 @@ class EmbeddingsModel(ABC):
     def __init__(self, verbose: bool = True) -> None:
         self.model = None
         if verbose:
-            print("Loading the embeddings model")
+            logger.info("Loading the embeddings model")
 
     @abstractmethod
     def __call__(self, words: str) -> ndarray:

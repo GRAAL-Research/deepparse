@@ -203,6 +203,23 @@ class DataPadderTest(TestCase):
 
         self.assertEqual(decomposition_lengths, self.a_non_padded_subword_embedding_batch_decomposition_length_list)
 
+    def test_givenASequencesBatch_whenPaddingSubwordEmbeddings_thenDoesNotMutateInputDecompositionLengths(self):
+        # Padding must not mutate the caller's decomposition-length lists in place. The second ([2, 2]) and
+        # third ([3]) are shorter than the longest sequence (3) and would be padded; the originals must stay
+        # untouched.
+        sequences_batch = [
+            (
+                [[[1, 1], [1, 1], [-1, -1]], [[1, 1], [1, 1], [1, 1]], [[1, 1], [-1, -1], [-1, -1]]],
+                [2, 3, 1],
+            ),
+            ([[[1, 1], [1, 1], [-1, -1]], [[1, 1], [1, 1], [-1, -1]]], [2, 2]),
+            ([[[1, 1], [1, 1], [1, 1]]], [3]),
+        ]
+
+        self.padder.pad_subword_embeddings_sequences(sequences_batch)
+
+        self.assertEqual([decomposition for _, decomposition in sequences_batch], [[2, 3, 1], [2, 2], [3]])
+
     def test_givenASequencesBatch_whenPaddingSubwordEmbeddings_thenShouldReturnBatchAsTensor(self):
         padded_sequences, _, _ = self.padder.pad_subword_embeddings_sequences(
             self.a_non_padded_subword_embedding_sequences_batch

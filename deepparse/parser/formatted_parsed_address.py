@@ -1,4 +1,4 @@
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List, Tuple
 
 FIELDS = [
     "StreetNumber",
@@ -102,10 +102,10 @@ class FormattedParsedAddress:
 
     def format_address(
         self,
-        fields: Union[List, None] = None,
-        capitalize_fields: Union[List[str], None] = None,
-        upper_case_fields: Union[List[str], None] = None,
-        field_separator: Union[str, None] = None,
+        fields: List | None = None,
+        capitalize_fields: List[str] | None = None,
+        upper_case_fields: List[str] | None = None,
+        field_separator: str | None = None,
     ) -> str:
         """
         Method to format the address components in a specific order. We also filter the empty components (None).
@@ -170,7 +170,7 @@ class FormattedParsedAddress:
 
         return formatted_parsed_address.strip(field_separator)  # To remove last field separator
 
-    def to_dict(self, fields: Union[List, None] = None) -> dict:
+    def to_dict(self, fields: List | None = None) -> dict:
         """
         Method to convert a parsed address into a dictionary where the keys are the address components, and the values
         are the value of those components. For example, the parsed address ``<StreetNumber> 305 <StreetName>
@@ -190,7 +190,7 @@ class FormattedParsedAddress:
             fields = FIELDS
         return {field: getattr(self, field) for field in fields}
 
-    def to_list_of_tuples(self, fields: Union[List, None] = None) -> List[tuple]:
+    def to_list_of_tuples(self, fields: List | None = None) -> List[tuple]:
         """
         Method to convert a parsed address into a list of tuples where the first element of the tuples
         is the value of the components, and the second value is the name of the components.

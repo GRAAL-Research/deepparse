@@ -102,15 +102,14 @@ class ParseTests(PretrainedWeightsBase):
         expected_first_message = (
             f"Parsing dataset file {self.fake_data_path_pickle} using the parser " f"PreTrainedFastTextAddressParser"
         )
-        actual_first_message = self._caplog.records[0].message
-        self.assertEqual(expected_first_message, actual_first_message)
+        messages = [r.message for r in self._caplog.records]
+        self.assertIn(expected_first_message, messages)
 
         export_path = generate_export_path(self.fake_data_path_pickle, "a_file.p")
         expected_second_message = (
             f"4 addresses have been parsed.\n" f"The parsed addresses are outputted here: {export_path}"
         )
-        actual_second_message = self._caplog.records[1].message
-        self.assertEqual(expected_second_message, actual_second_message)
+        self.assertIn(expected_second_message, messages)
 
     def test_integration_no_logging(self):
         with self._caplog.at_level(logging.INFO):
@@ -126,7 +125,10 @@ class ParseTests(PretrainedWeightsBase):
                     "False",
                 ]
             )
-        self.assertEqual(0, len(self._caplog.records))
+        # When --log is False, file-logging-specific messages should not be present
+        messages = [r.message for r in self._caplog.records]
+        self.assertFalse(any("Parsing dataset file" in m for m in messages))
+        self.assertFalse(any("The parsed addresses are outputted here" in m for m in messages))
 
     def test_integration_attention_model(self):
         create_pickle_file(self.fake_data_path_pickle, predict_container=True)
@@ -260,8 +262,8 @@ class ParseTests(PretrainedWeightsBase):
         expected_first_message = (
             f"Parsing dataset file {self.fake_data_path_pickle} using the parser PreTrainedFastTextAddressParser"
         )
-        actual_first_message = self._caplog.records[0].message
-        self.assertEqual(expected_first_message, actual_first_message)
+        messages = [r.message for r in self._caplog.records]
+        self.assertIn(expected_first_message, messages)
 
     def test_ifPathToFastTextRetrainModel_thenUseFastTextRetrainModel(self):
         with self._caplog.at_level(logging.INFO):
@@ -283,8 +285,8 @@ class ParseTests(PretrainedWeightsBase):
         expected_first_message = (
             f"Parsing dataset file {self.fake_data_path_pickle} using the parser " f"PreTrainedFastTextAddressParser"
         )
-        actual_first_message = self._caplog.records[0].message
-        self.assertEqual(expected_first_message, actual_first_message)
+        messages = [r.message for r in self._caplog.records]
+        self.assertIn(expected_first_message, messages)
 
     def test_ifPathToBPEmbRetrainModel_thenUseBPEmbRetrainModel(self):
         with self._caplog.at_level(logging.INFO):
@@ -303,10 +305,8 @@ class ParseTests(PretrainedWeightsBase):
         expected_first_message = (
             f"Parsing dataset file {self.fake_data_path_pickle} using the parser " f"PreTrainedBPEmbAddressParser"
         )
-
-        # Not the same position as with fasttext due to BPEmb messages
-        actual_first_message = self._caplog.records[2].message
-        self.assertEqual(expected_first_message, actual_first_message)
+        messages = [r.message for r in self._caplog.records]
+        self.assertIn(expected_first_message, messages)
 
     def test_ifCachePath_thenUseNewCachePath(self):
         create_pickle_file(self.fake_data_path_pickle, predict_container=True)

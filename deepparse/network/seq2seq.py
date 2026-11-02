@@ -1,7 +1,7 @@
 # pylint: disable=too-many-arguments
 import random
 from abc import ABC
-from typing import List, Tuple, Union
+from typing import List, Tuple
 
 import torch
 from huggingface_hub import PyTorchModelHubMixin
@@ -105,7 +105,7 @@ class Seq2SeqModel(ABC, nn.Module, PyTorchModelHubMixin):
         decoder_input: torch.Tensor,
         decoder_hidden: tuple,
         encoder_outputs: torch.Tensor,
-        target: Union[torch.LongTensor, None],
+        target: torch.LongTensor | None,
         lengths: List,
         batch_size: int,
     ) -> torch.Tensor:

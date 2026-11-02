@@ -28,6 +28,8 @@ from .tools import (
     wrap,
 )
 
+logger = logging.getLogger(__name__)
+
 
 def main(args=None) -> None:
     # pylint: disable=too-many-locals, too-many-branches
@@ -108,7 +110,7 @@ def main(args=None) -> None:
 
     export_fn(parsed_address)
 
-    print(f"{len(addresses_to_parse)} addresses have been parsed.")
+    logger.info("%d addresses have been parsed.", len(addresses_to_parse))
 
     if parsed_args.log:
         text_to_log = (

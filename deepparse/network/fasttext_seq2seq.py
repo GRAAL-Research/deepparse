@@ -1,6 +1,6 @@
 # pylint: disable=too-many-arguments, duplicate-code, too-many-locals
 
-from typing import List, Union
+from typing import List
 
 import torch
 
@@ -47,7 +47,7 @@ class FastTextSeq2SeqModel(Seq2SeqModel):
         self,
         to_predict: torch.Tensor,
         lengths: List,
-        target: Union[torch.LongTensor, None] = None,
+        target: torch.LongTensor | None = None,
     ) -> torch.Tensor:
         """
         Callable method as per PyTorch forward method to get tags prediction over the components of

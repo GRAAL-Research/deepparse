@@ -2,7 +2,7 @@
 
 from unittest import TestCase
 
-from deepparse import (
+from deepparse.validations import (
     validate_if_any_empty,
     validate_if_any_none,
     validate_if_any_whitespace_only,

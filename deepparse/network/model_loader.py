@@ -58,13 +58,12 @@ class ModelLoader:
             representing the model's version.
 
         """
-        all_layers_params = handle_weights_upload(path_to_model_to_upload=path_to_model_torch_archive, device=device)
+        checkpoint_weights = handle_weights_upload(path_to_model_to_upload=path_to_model_torch_archive, device=device)
 
-        # All the time, our torch archive includes meta-data along with the model weights.
-        all_layers_params = all_layers_params.get("address_tagger_model")
+        # All the time, our torch archive includes meta-data along with the model weights. We read the version
+        # from the full checkpoint before extracting the state dict (the state dict itself has no "version" key).
+        version = checkpoint_weights.get("version")
 
-        model.load_state_dict(all_layers_params)
-
-        version = all_layers_params.get("version")
+        model.load_state_dict(checkpoint_weights.get("address_tagger_model"))
 
         return model, version

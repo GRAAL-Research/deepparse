@@ -12,6 +12,7 @@
 
 import os
 import unittest
+import warnings
 from tempfile import TemporaryDirectory
 from unittest import skipIf
 from unittest.mock import MagicMock, patch
@@ -106,6 +107,15 @@ class AddressParserTest(AddressParserPredictTestCase):
 
         self.embeddings_model_mock = MagicMock()
 
+        # Instantiating an AddressParser downloads the pre-trained weights from the HuggingFace Hub. The unit
+        # tests must not reach the network: concurrent CI jobs hit the Hub's anonymous rate limit (HTTP 429),
+        # which fails the suite for reasons unrelated to the code. The tests that assert on the model factory
+        # patch it themselves, and their patch takes precedence over this one.
+        model_factory_patcher = patch("deepparse.parser.address_parser.ModelFactory")
+        model_factory_mock = model_factory_patcher.start()
+        model_factory_mock.return_value.create.return_value = (self.model_mock, self.a_model_version)
+        self.addCleanup(model_factory_patcher.stop)
+
     def assert_equal_not_ordered(self, actual, expected_elements):
         for expected in expected_elements:
             self.assertIn(expected, actual)
@@ -148,12 +158,14 @@ class AddressParserTest(AddressParserPredictTestCase):
             with patch("deepparse.parser.address_parser.VectorizerFactory") as _:
                 with patch("deepparse.parser.address_parser.DataProcessorFactory") as _:
                     cuda_mock.is_available.return_value = False
-                    with self.assertWarns(UserWarning):
+                    with warnings.catch_warnings(record=True) as w:
+                        warnings.simplefilter("always")
                         address_parser = AddressParser(
                             model_type=self.a_best_model_type.capitalize(),
                             # we use BPEmb for simplicity
                             device=self.a_gpu_device,
                         )
+                    self.assertTrue(any(issubclass(x.category, UserWarning) for x in w))
         actual = address_parser.device
         expected = self.a_cpu_torch_device
         self.assertEqual(actual, expected)
@@ -180,11 +192,13 @@ class AddressParserTest(AddressParserPredictTestCase):
             with patch("deepparse.parser.address_parser.VectorizerFactory") as _:
                 with patch("deepparse.parser.address_parser.DataProcessorFactory") as _:
                     cuda_mock.is_available.return_value = False
-                    with self.assertWarns(UserWarning):
+                    with warnings.catch_warnings(record=True) as w:
+                        warnings.simplefilter("always")
                         address_parser = AddressParser(
                             model_type=self.a_best_model_type.capitalize(),
                             device="cuda:0",
                         )
+                    self.assertTrue(any(issubclass(x.category, UserWarning) for x in w))
         self.assertEqual(address_parser.device, self.a_cpu_torch_device)
 
     @skipIf(os.environ["TEST_LEVEL"] == "unit", "Cannot run test without a proper GPU or RAM.")

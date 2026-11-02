@@ -152,11 +152,16 @@ class DataPadder:
         padded_sequences_vectors = self._pad_tensors(sequences_vectors)
 
         longest_sequence_length = max(lengths)
+        # We build new lists rather than mutating the caller's decomposition-length lists in place, so the
+        # original sequences are left untouched (padding must not have side effects on the input batch).
+        padded_decomposition_lengths = []
         for decomposition_length in decomp_len:
-            if len(decomposition_length) < longest_sequence_length:
-                decomposition_length.extend([1] * (longest_sequence_length - len(decomposition_length)))
+            padded_length = list(decomposition_length)
+            if len(padded_length) < longest_sequence_length:
+                padded_length.extend([1] * (longest_sequence_length - len(padded_length)))
+            padded_decomposition_lengths.append(padded_length)
 
-        return padded_sequences_vectors, list(decomp_len), list(lengths)
+        return padded_sequences_vectors, padded_decomposition_lengths, list(lengths)
 
     def pad_targets(self, target_batch: List) -> torch.Tensor:
         """

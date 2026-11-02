@@ -148,20 +148,33 @@ Or you can use our CLI to download our pretrained models directly using:
 
 .. _fasttext-python-313:
 
-Note on FastText Models and Python 3.13+
-*****************************************
+Note on FastText Models
+***********************
 
-The ``fasttext`` C++ library has not been updated for Python 3.13+, so the ``fasttext-wheel`` package cannot be
-installed on these versions. Deepparse automatically falls back to using
-`Gensim <https://radimrehurek.com/gensim/>`__ to load FastText embeddings when the ``fasttext`` package is not
-available.
+Deepparse reads the FastText embeddings with its own reader of the ``.bin`` format, which gives the same vectors as
+the ``fasttext`` package. It does not need ``fasttext`` nor ``gensim``, so the FastText models work the same way on
+every supported Python version. The embeddings matrix is memory-mapped: it loads in a few seconds and the data
+loading workers share its memory.
 
-This fallback uses slightly more RAM (~10 GO vs ~8 GO) and takes longer to load, but is **functionally equivalent**.
-The BPEmb and Magnitude (FastText Light) models are **not affected** by this limitation.
+.. list-table::
+        :header-rows: 1
 
-If you are using Python 3.10–3.12, you can install ``fasttext-wheel`` for optimal performance:
+        *   - FastText parser (CPU)
+            - Former loading (``gensim``)
+            - Memory-mapped reader (after 0.11.0)
+        *   - Loading time
+            - ~42 s
+            - ~4 s
+        *   - RAM after loading
+            - ~8.4 GB
+            - ~1.2 GB
+        *   - Peak RAM
+            - ~13.2 GB
+            - ~1.3 GB
 
-.. code-block:: sh
+The RAM is the whole process (Torch and the model included), measured while parsing 10,000 addresses (Linux, Python
+3.12, CPU).
 
-    pip install deepparse[fasttext]
+The BPEmb embeddings, which are much smaller, are also loaded without ``gensim`` after version 0.11.0: they load in
+~0.2 s instead of ~0.9 s and take ~0.14 GB of RAM instead of ~0.26 GB.
 

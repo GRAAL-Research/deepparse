@@ -4,11 +4,11 @@
 Installation
 ============
 
-Deepparse is available for Python 3.10, Python 3.11, Python 3.12 and Python 3.13.
+Deepparse is available for Python 3.10, Python 3.11, Python 3.12, Python 3.13 and Python 3.14.
 
 .. note::
    We do not recommend installation as a root user on your system Python.
-   Please setup a virtual environment, *e.g.*, via `Anaconda or Miniconda <https://conda.io/projects/conda/en/latest/user-guide/install>`_, or create a `Docker image <https://www.docker.com/>`_.
+   Please setup a virtual environment, *e.g.*, via `Anaconda or Miniconda <https://docs.conda.io/projects/conda/en/latest/user-guide/install/>`_, or create a `Docker image <https://www.docker.com/>`_.
 
 Quick Start
 -----------
@@ -39,18 +39,34 @@ Before installing deepparse, you must have the latest version of `PyTorch <https
 
    pip install "deepparse[all]"
 
-- **Install the stable version of Deepparse with native FastText support (requires Python 3.10–3.12):**
-
-  .. code-block:: sh
-
-   pip install "deepparse[fasttext]"
-
-.. note::
-   On Python 3.13, the ``fasttext-wheel`` package cannot be compiled. Deepparse will automatically fall
-   back to Gensim to load FastText embeddings. See :ref:`fasttext-python-313` for details.
-
 - **Install the latest development version of Deepparse:**
 
   .. code-block:: sh
 
     pip install -U git+https://github.com/GRAAL-Research/deepparse.git@dev
+
+Versioning
+----------
+
+Deepparse follows `semantic versioning <https://semver.org/>`_: given a version ``MAJOR.MINOR.PATCH``, a patch
+release only fixes bugs, a minor release adds features in a backward compatible way, and only a major release can
+remove or change a public API in a backward incompatible way.
+
+The public API is made of the documented classes and functions and, for the ``deepparse`` top-level package, of the
+names listed in ``deepparse.__all__``. Deprecated APIs emit a ``DeprecationWarning`` and are kept at least until the
+next major version.
+
+The following APIs were removed in 1.0.0:
+
+- ``deepparse.BPEmbBaseURLWrapperBugFix`` and the ``deepparse.bpemb_url_bug_fix`` module: use
+  ``deepparse.BPEmbLoader`` (``deepparse.bpemb_loader`` module), which has the same arguments and behaviour.
+- ``deepparse.load_fasttext_embeddings``: use ``deepparse.embeddings_models.FastTextBinReader``.
+- ``deepparse.FASTTEXT_AVAILABLE``: Deepparse no longer needs the ``fasttext`` package to load the FastText
+  embeddings.
+- The internal helpers and constants that were reachable as ``deepparse.<name>`` but are not in
+  ``deepparse.__all__`` (e.g. ``deepparse.weights_init`` or ``deepparse.MODEL_REPO_IDS``): import them from their own
+  module instead (e.g. ``deepparse.weights_tools.weights_init`` or ``deepparse.download_tools.MODEL_REPO_IDS``).
+
+Since 1.0.0, the standard library and third-party modules that the wildcard imports of ``deepparse`` re-exported by
+accident (e.g. ``deepparse.os``, ``deepparse.torch`` or ``deepparse.np``) are no longer reachable from ``deepparse``,
+and ``from deepparse import *`` only imports the names of ``deepparse.__all__``.

@@ -6,7 +6,7 @@
         <link rel="prefetch" href="../../_static/deepparse.png" as="image">
 
     <link rel="shortcut icon" href="../../_static/favicon.png"><!-- Generated with Sphinx 9.2.0 and Furo 2025.12.19 -->
-        <title>deepparse.download_tools - deepparse 0.11.0.dev1+4c9c74e</title>
+        <title>deepparse.download_tools - deepparse 1.0.0.dev1+672275d</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -154,7 +154,7 @@
 
 <div class="announcement">
   <aside class="announcement-content">
-     You are reading the documentation of the development version of deepparse (0.11.0.dev1+4c9c74e). See the <a href="https://deepparse.org/">stable documentation</a> for the latest release. 
+     You are reading the documentation of the development version of deepparse (1.0.0.dev1+672275d). See the <a href="https://deepparse.org/">stable documentation</a> for the latest release. 
   </aside>
 </div>
 
@@ -166,7 +166,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../index.html"><div class="brand">deepparse 0.11.0.dev1+4c9c74e</div></a>
+      <a href="../../index.html"><div class="brand">deepparse 1.0.0.dev1+672275d</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -274,7 +274,6 @@
         <article role="main" id="furo-main-content">
           <h1>Source code for deepparse.download_tools</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span><span class="w"> </span><span class="nn">gzip</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">importlib.util</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
@@ -300,7 +299,6 @@
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s2">"CACHE_PATH"</span><span class="p">,</span>
-    <span class="s2">"FASTTEXT_AVAILABLE"</span><span class="p">,</span>
     <span class="s2">"FASTTEXT_COPYRIGHT_MIT_LICENSE"</span><span class="p">,</span>
     <span class="s2">"HTTP_CLIENT_ERROR_STATUS_CODE"</span><span class="p">,</span>
     <span class="s2">"MODEL2VEC_MODELS"</span><span class="p">,</span>
@@ -320,14 +318,11 @@
     <span class="s2">"download_weights"</span><span class="p">,</span>
     <span class="s2">"download_worldwide_addresses_sample"</span><span class="p">,</span>
     <span class="s2">"get_model2vec_model_type"</span><span class="p">,</span>
-    <span class="s2">"load_fasttext_embeddings"</span><span class="p">,</span>
     <span class="s2">"load_version"</span><span class="p">,</span>
 <span class="p">]</span>
 
 <span class="c1"># Deprecated, kept for backward compatibility and will be removed in 1.0.0: Deepparse no longer needs the fasttext</span>
 <span class="c1"># package to load the FastText embeddings (see deepparse.embeddings_models.FastTextBinReader).</span>
-<span class="n">FASTTEXT_AVAILABLE</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">find_spec</span><span class="p">(</span><span class="s2">"fasttext"</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 <span class="n">CACHE_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s2">"~"</span><span class="p">),</span> <span class="s2">".cache"</span><span class="p">,</span> <span class="s2">"deepparse"</span><span class="p">)</span>
@@ -754,30 +749,6 @@
 
     <span class="k">if</span> <span class="n">downloaded_bytes</span> <span class="o">&gt;=</span> <span class="n">total_size</span><span class="p">:</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
-
-
-<div class="viewcode-block" id="load_fasttext_embeddings">
-<a class="viewcode-back" href="../../download_tools.html#deepparse.download_tools.load_fasttext_embeddings">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">load_fasttext_embeddings</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Function to load fastText ``.bin`` embeddings.</span>
-
-<span class="sd">    .. deprecated:: 0.12.0</span>
-<span class="sd">        Use :class:`~deepparse.embeddings_models.FastTextBinReader` instead. This function will be removed in 1.0.0.</span>
-<span class="sd">        It is kept for backward compatibility and returns a ``FastTextBinReader``, which has the same</span>
-<span class="sd">        ``model[word]`` and ``get_dimension()`` interface as the former ``fasttext`` model object.</span>
-<span class="sd">    """</span>
-    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-        <span class="s2">"load_fasttext_embeddings is deprecated and will be removed in 1.0.0, "</span>
-        <span class="s2">"use deepparse.embeddings_models.FastTextBinReader instead."</span><span class="p">,</span>
-        <span class="n">category</span><span class="o">=</span><span class="ne">DeprecationWarning</span><span class="p">,</span>
-        <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="c1"># Imported here since the embeddings_models package imports this module.</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">.embeddings_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">FastTextBinReader</span>  <span class="c1"># pylint: disable=import-outside-toplevel</span>
-
-    <span class="k">return</span> <span class="n">FastTextBinReader</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></div>
-
 </pre></div>
         </article>
       </div>
@@ -810,7 +781,7 @@
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=65dcdbe2"></script>
+</div><script src="../../_static/documentation_options.js?v=87976c15"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>

@@ -106,21 +106,21 @@ Resources and Speed
         *   - Model2Vec 8M [#model2vec_resources]_
             - 59 MB
             - ~1.0
-            - not measured
-            - not measured
-            - not measured
+            - ~0.2
+            - ~0.0095 / ~0.0016
+            - ~0.0035 / ~0.0006
         *   - Model2Vec 32M [#model2vec_resources]_
             - 249 MB
             - ~1.2
-            - not measured
-            - not measured
-            - not measured
+            - ~0.3
+            - ~0.0098 / ~0.0017
+            - ~0.0035 / ~0.0007
         *   - Model2Vec Multilingual [#model2vec_resources]_
             - 1 GB
             - ~2.8
-            - not measured
-            - not measured
-            - not measured
+            - ~0.2
+            - ~0.0097 / ~0.0017
+            - ~0.0035 / ~0.0007
 
 Sources:
 
@@ -143,7 +143,12 @@ Sources:
 
 .. [#model2vec_resources] The Model2Vec embeddings on disk and the RAM at peak of the whole process (CPU), measured in
    October 2026. The pretrained weights take 5 to 65 MB in addition, depending on the hidden size of the model (see
-   :doc:`results`). Their GPU memory and inference time are not measured yet.
+   :doc:`results`). The GPU memory (peak allocated by PyTorch) and the time per address are those of the released
+   models without attention, measured in November 2026 (Linux, Python 3.11, Torch 2.6, RTX 6000 Ada GPU and
+   Threadripper PRO 5975WX CPU, 10,000 addresses, batches of 1 to 512 addresses). With attention, the 32M and
+   Multilingual models (hidden size 1024) take ~0.3 GB on GPU and ~0.016 / ~0.003 s per address on CPU and
+   ~0.0056 / ~0.0010 s on GPU, and the 8M model (hidden size 256) ~0.1 GB on GPU and ~0.0056 / ~0.0011 s per address
+   on CPU and ~0.0055 / ~0.0009 s on GPU.
 
 
 Accuracy and Multilingual Coverage

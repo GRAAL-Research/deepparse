@@ -7,7 +7,7 @@
         <link rel="prefetch" href="_static/deepparse.png" as="image">
 
     <link rel="shortcut icon" href="_static/favicon.png"><!-- Generated with Sphinx 9.2.0 and Furo 2025.12.19 -->
-        <title>Changelog - deepparse 0.11.0.dev1+4c9c74e</title>
+        <title>Changelog - deepparse 1.0.0.dev1+672275d</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -155,7 +155,7 @@
 
 <div class="announcement">
   <aside class="announcement-content">
-     You are reading the documentation of the development version of deepparse (0.11.0.dev1+4c9c74e). See the <a href="https://deepparse.org/">stable documentation</a> for the latest release. 
+     You are reading the documentation of the development version of deepparse (1.0.0.dev1+672275d). See the <a href="https://deepparse.org/">stable documentation</a> for the latest release. 
   </aside>
 </div>
 
@@ -167,7 +167,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">deepparse 0.11.0.dev1+4c9c74e</div></a>
+      <a href="index.html"><div class="brand">deepparse 1.0.0.dev1+672275d</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -286,8 +286,8 @@
           <section id="changelog">
 <h1>Changelog<a class="headerlink" href="#changelog" title="Link to this heading">¶</a></h1>
 <p>From the newest to the oldest version.</p>
-<section id="dev">
-<h2>dev<a class="headerlink" href="#dev" title="Link to this heading">¶</a></h2>
+<section id="id1">
+<h2>1.0.0<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Relicense Deepparse from the LGPLv3 to the MIT license, with the agreement of its contributors (<code class="docutils literal notranslate"><span class="pre">LICENSE</span></code>,
 <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> metadata and classifier, README, documentation and contributing guide). The pretrained models on the
@@ -407,10 +407,17 @@ CPU-bound (~1-3 h per epoch on 2.9 M addresses). The outputs and gradients are t
 loop), and the pretrained BPEmb models give the same predictions. GPU inference by batches is about twice as fast
 (3,000 addresses in ~1.0-1.3 s instead of ~2.4-2.6 s, batches of 256), and the CPU inference time is unchanged; the
 Parser and Choose a Model pages say so.</p></li>
+<li><p>Report the measured GPU memory and time per address of the released Model2Vec models in the model guide, and fix
+the speed test, which reset the CUDA peak memory statistics before the CUDA context existed.</p></li>
+<li><p>Remove the APIs deprecated before 1.0.0: <code class="docutils literal notranslate"><span class="pre">BPEmbBaseURLWrapperBugFix</span></code> and the <code class="docutils literal notranslate"><span class="pre">deepparse.bpemb_url_bug_fix</span></code> module
+(use <code class="docutils literal notranslate"><span class="pre">deepparse.BPEmbLoader</span></code>), <code class="docutils literal notranslate"><span class="pre">load_fasttext_embeddings</span></code> (use <code class="docutils literal notranslate"><span class="pre">deepparse.embeddings_models.FastTextBinReader</span></code>) and
+<code class="docutils literal notranslate"><span class="pre">FASTTEXT_AVAILABLE</span></code>, and the internal helpers and constants reachable as <code class="docutils literal notranslate"><span class="pre">deepparse.&lt;name&gt;</span></code> but not in
+<code class="docutils literal notranslate"><span class="pre">deepparse.__all__</span></code> (e.g. <code class="docutils literal notranslate"><span class="pre">deepparse.weights_init</span></code>, <code class="docutils literal notranslate"><span class="pre">deepparse.MODEL_REPO_IDS</span></code>): import them from their own module
+(e.g. <code class="docutils literal notranslate"><span class="pre">deepparse.weights_tools</span></code>, <code class="docutils literal notranslate"><span class="pre">deepparse.download_tools</span></code>).</p></li>
 </ul>
 </section>
-<section id="id1">
-<h2>0.11.0<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
+<section id="id2">
+<h2>0.11.0<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Replace <code class="docutils literal notranslate"><span class="pre">print()</span></code> calls with <code class="docutils literal notranslate"><span class="pre">logging</span></code> across the codebase for proper log-level control.</p></li>
 <li><p>Replace <code class="docutils literal notranslate"><span class="pre">Union[X,</span> <span class="pre">None]</span></code> type hints with PEP 604 <code class="docutils literal notranslate"><span class="pre">X</span> <span class="pre">|</span> <span class="pre">None</span></code> pipe syntax (Python 3.10+).</p></li>
@@ -478,8 +485,8 @@ and forbids import cycles between packages.</p></li>
 <li><p>Update <code class="docutils literal notranslate"><span class="pre">colorama</span></code> requirement from &gt;=0.4.3 to &gt;=0.4.6.</p></li>
 </ul>
 </section>
-<section id="id2">
-<h2>0.10.0<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
+<section id="id3">
+<h2>0.10.0<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p><strong>Breaking change</strong>: Drop Python 3.8 and 3.9 support. Minimum required version is now Python 3.10.</p></li>
 <li><p>Add Python 3.12 support.</p></li>
@@ -519,32 +526,32 @@ automatically falls back to Gensim’s <code class="docutils literal notranslate
 <li><p>Bump <code class="docutils literal notranslate"><span class="pre">fastapi[all]</span></code> from 0.109.1 to 0.134.0.</p></li>
 </ul>
 </section>
-<section id="id3">
-<h2>0.9.14<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h2>
+<section id="id4">
+<h2>0.9.14<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Switch model weights hosting to hugging face</p></li>
 </ul>
 </section>
-<section id="id4">
-<h2>0.9.13<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h2>
+<section id="id5">
+<h2>0.9.13<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Update Gensim version in setup to allow for the installation of recent Scipy versions.</p></li>
 </ul>
 </section>
-<section id="id5">
-<h2>0.9.12<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h2>
+<section id="id6">
+<h2>0.9.12<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Bug-fix the call to the BPEmb class instead of the BPEmbBaseURLWrapperBugFix to fix the download URL in <code class="docutils literal notranslate"><span class="pre">download_models</span></code>.</p></li>
 </ul>
 </section>
-<section id="id6">
-<h2>0.9.11<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h2>
+<section id="id7">
+<h2>0.9.11<a class="headerlink" href="#id7" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Fix Sentry version error in Docker Image.</p></li>
 </ul>
 </section>
-<section id="id7">
-<h2>0.9.10<a class="headerlink" href="#id7" title="Link to this heading">¶</a></h2>
+<section id="id8">
+<h2>0.9.10<a class="headerlink" href="#id8" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Fix and improve documentation.</p></li>
 <li><p>Remove fixed dependencies version.</p></li>
@@ -559,8 +566,8 @@ automatically falls back to Gensim’s <code class="docutils literal notranslate
 <li><p>Fix deprecated <code class="docutils literal notranslate"><span class="pre">max_request_body_size</span></code> in Sentry.</p></li>
 </ul>
 </section>
-<section id="id8">
-<h2>0.9.9<a class="headerlink" href="#id8" title="Link to this heading">¶</a></h2>
+<section id="id9">
+<h2>0.9.9<a class="headerlink" href="#id9" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Add version to Seq2Seq and AddressParser.</p></li>
 <li><p>Add a Deepparse as an API using FastAPI.</p></li>
@@ -568,15 +575,15 @@ automatically falls back to Gensim’s <code class="docutils literal notranslate
 <li><p>Bug-fix the default pre-processors that did not all apply but only the last one.</p></li>
 </ul>
 </section>
-<section id="id9">
-<h2>0.9.8<a class="headerlink" href="#id9" title="Link to this heading">¶</a></h2>
+<section id="id10">
+<h2>0.9.8<a class="headerlink" href="#id10" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Hot-fix wheel install (See <a class="reference external" href="https://github.com/GRAAL-Research/deepparse/issues/196">issue 196</a>).</p></li>
 <li><p>Starting now, we also include model weights release in the GitHub release.</p></li>
 </ul>
 </section>
-<section id="id10">
-<h2>0.9.7<a class="headerlink" href="#id10" title="Link to this heading">¶</a></h2>
+<section id="id11">
+<h2>0.9.7<a class="headerlink" href="#id11" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>New models release with more meta-data.</p></li>
 <li><p>Add a feature to use an AddressParser from a URI.</p></li>
@@ -590,8 +597,8 @@ see <a class="reference external" href="https://github.com/facebookresearch/fast
 and <a class="reference external" href="https://github.com/facebookresearch/fastText/pull/1292">here</a>).</p></li>
 </ul>
 </section>
-<section id="id11">
-<h2>0.9.6<a class="headerlink" href="#id11" title="Link to this heading">¶</a></h2>
+<section id="id12">
+<h2>0.9.6<a class="headerlink" href="#id12" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Add Python 3.11.</p></li>
 <li><p>Add pre-processor when parsing addresses.</p></li>
@@ -610,28 +617,28 @@ suggested in the <a class="reference external" href="https://docs.pytorch.org/tu
 increases the performance by about 1/100.</p></li>
 </ul>
 </section>
-<section id="id12">
-<h2>0.9.5<a class="headerlink" href="#id12" title="Link to this heading">¶</a></h2>
+<section id="id13">
+<h2>0.9.5<a class="headerlink" href="#id13" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Fixed tags converter bug with the data processor.</p></li>
 </ul>
 </section>
-<section id="id13">
-<h2>0.9.4<a class="headerlink" href="#id13" title="Link to this heading">¶</a></h2>
+<section id="id14">
+<h2>0.9.4<a class="headerlink" href="#id14" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Improve codebase.</p></li>
 </ul>
 </section>
-<section id="id14">
-<h2>0.9.3<a class="headerlink" href="#id14" title="Link to this heading">¶</a></h2>
+<section id="id15">
+<h2>0.9.3<a class="headerlink" href="#id15" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Improve error handling.</p></li>
 <li><p>Bug-fix FastText error is not handled in the test API.</p></li>
 <li><p>Add a feature to allow new_prediction_tags to retrain CLI.</p></li>
 </ul>
 </section>
-<section id="id15">
-<h2>0.9.2<a class="headerlink" href="#id15" title="Link to this heading">¶</a></h2>
+<section id="id16">
+<h2>0.9.2<a class="headerlink" href="#id16" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Improve Deepparse server error handling and error output.</p></li>
 <li><p>Remove deprecated argument <code class="docutils literal notranslate"><span class="pre">saving_dir</span></code> in <code class="docutils literal notranslate"><span class="pre">download_fasttext_magnitude_embeddings</span></code>
@@ -642,14 +649,14 @@ and <code class="docutils literal notranslate"><span class="pre">download_fastte
 <li><p><a class="reference external" href="https://github.com/GRAAL-Research/deepparse/issues/156">Temporary hot-fix BPEmb SSL certificate error</a>.</p></li>
 </ul>
 </section>
-<section id="id16">
-<h2>0.9.1<a class="headerlink" href="#id16" title="Link to this heading">¶</a></h2>
+<section id="id17">
+<h2>0.9.1<a class="headerlink" href="#id17" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Hot-fix cli.download_model attention model bug</p></li>
 </ul>
 </section>
-<section id="id17">
-<h2>0.9<a class="headerlink" href="#id17" title="Link to this heading">¶</a></h2>
+<section id="id18">
+<h2>0.9<a class="headerlink" href="#id18" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Add <code class="docutils literal notranslate"><span class="pre">save_model_weights</span></code> method to <code class="docutils literal notranslate"><span class="pre">AddressParser</span></code> to save model weights (PyTorch state dictionary)</p></li>
 <li><p>Improve CI</p></li>
@@ -662,21 +669,21 @@ and <code class="docutils literal notranslate"><span class="pre">download_fastte
 <li><p>Added the UK retrain example</p></li>
 </ul>
 </section>
-<section id="id18">
-<h2>0.8.3<a class="headerlink" href="#id18" title="Link to this heading">¶</a></h2>
+<section id="id19">
+<h2>0.8.3<a class="headerlink" href="#id19" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Add Zenodo DOI</p></li>
 </ul>
 </section>
-<section id="id19">
-<h2>0.8.2<a class="headerlink" href="#id19" title="Link to this heading">¶</a></h2>
+<section id="id20">
+<h2>0.8.2<a class="headerlink" href="#id20" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Bug-fix retrain attention model naming parsing</p></li>
 <li><p>Improve error handling when not a DatasetContainer is used in retraining and testing API</p></li>
 </ul>
 </section>
-<section id="id20">
-<h2>0.8.1<a class="headerlink" href="#id20" title="Link to this heading">¶</a></h2>
+<section id="id21">
+<h2>0.8.1<a class="headerlink" href="#id21" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Refactored function <code class="docutils literal notranslate"><span class="pre">download_from_url</span></code> to <code class="docutils literal notranslate"><span class="pre">download_from_public_repository</span></code>.</p></li>
 <li><p>Add error management when retraining a FastText-like model on Windows with several workers (<code class="docutils literal notranslate"><span class="pre">num_workers</span></code>) greater
@@ -687,8 +694,8 @@ than 0.</p></li>
 <li><p>Add Codacy</p></li>
 </ul>
 </section>
-<section id="id21">
-<h2>0.8<a class="headerlink" href="#id21" title="Link to this heading">¶</a></h2>
+<section id="id22">
+<h2>0.8<a class="headerlink" href="#id22" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Improve SEO</p></li>
 <li><p>Add cache_dir arg in all CLI functions</p></li>
@@ -700,15 +707,15 @@ see <a class="reference external" href="https://github.com/GRAAL-Research/deeppa
 <li><p>Add ListDatasetContainer for the Python list dataset.</p></li>
 </ul>
 </section>
-<section id="id22">
-<h2>0.7.6<a class="headerlink" href="#id22" title="Link to this heading">¶</a></h2>
+<section id="id23">
+<h2>0.7.6<a class="headerlink" href="#id23" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Re-release version 0.7.5 into 0.7.6 due to manipulation error and change in PyPi (now delete does not delete
 release).</p></li>
 </ul>
 </section>
-<section id="id23">
-<h2>0.7.5<a class="headerlink" href="#id23" title="Link to this heading">¶</a></h2>
+<section id="id24">
+<h2>0.7.5<a class="headerlink" href="#id24" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Bug-fix Poutyne version handling that causes a print error when a version is 1.11 when retraining</p></li>
 <li><p>Add the option to create a named retrain the parsing model using, by default, the architecture setting or using the
@@ -728,8 +735,8 @@ to <code class="docutils literal notranslate"><span class="pre">cache_dir</span>
 <li><p>Add a new CLI function, test, to test from the command line</p></li>
 </ul>
 </section>
-<section id="id24">
-<h2>0.7.4<a class="headerlink" href="#id24" title="Link to this heading">¶</a></h2>
+<section id="id25">
+<h2>0.7.4<a class="headerlink" href="#id25" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Improve parsed address print</p></li>
 <li><p>Bug-fix #124: comma-separated list without whitespace in CSVDatasetContainer</p></li>
@@ -738,37 +745,37 @@ to <code class="docutils literal notranslate"><span class="pre">cache_dir</span>
 <li><p>Improve data validation for data to parse</p></li>
 </ul>
 </section>
-<section id="id25">
-<h2>0.7.3<a class="headerlink" href="#id25" title="Link to this heading">¶</a></h2>
+<section id="id26">
+<h2>0.7.3<a class="headerlink" href="#id26" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Add freeze layer parameters to freeze layers during retraining</p></li>
 </ul>
 </section>
-<section id="id26">
-<h2>0.7.2<a class="headerlink" href="#id26" title="Link to this heading">¶</a></h2>
+<section id="id27">
+<h2>0.7.2<a class="headerlink" href="#id27" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Added JSON output support</p></li>
 <li><p>Add logging output of parse CLI function</p></li>
 <li><p>Hot-fix Poutyne version handling</p></li>
 </ul>
 </section>
-<section id="id27">
-<h2>0.7.1<a class="headerlink" href="#id27" title="Link to this heading">¶</a></h2>
+<section id="id28">
+<h2>0.7.1<a class="headerlink" href="#id28" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Hot-fix for missing dependency</p></li>
 <li><p>Fixed bug with poutyne version handling</p></li>
 </ul>
 </section>
-<section id="id28">
-<h2>0.7<a class="headerlink" href="#id28" title="Link to this heading">¶</a></h2>
+<section id="id29">
+<h2>0.7<a class="headerlink" href="#id29" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Improved CLI</p></li>
 <li><p>Fixed bug in CLI export dataset</p></li>
 <li><p>Improved the documentation of the CLI</p></li>
 </ul>
 </section>
-<section id="id29">
-<h2>0.6.7<a class="headerlink" href="#id29" title="Link to this heading">¶</a></h2>
+<section id="id30">
+<h2>0.6.7<a class="headerlink" href="#id30" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Fixed errors in data validation</p></li>
 <li><p>Improved documentation over data validation</p></li>
@@ -776,16 +783,16 @@ to <code class="docutils literal notranslate"><span class="pre">cache_dir</span>
 <li><p>Add an example of how to use a retrained model</p></li>
 </ul>
 </section>
-<section id="id30">
-<h2>0.6.6<a class="headerlink" href="#id30" title="Link to this heading">¶</a></h2>
+<section id="id31">
+<h2>0.6.6<a class="headerlink" href="#id31" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Fixed errors in code examples</p></li>
 <li><p>Improved documentation of download_from_url</p></li>
 <li><p>Improve error management of retraining and test</p></li>
 </ul>
 </section>
-<section id="id31">
-<h2>0.6.5<a class="headerlink" href="#id31" title="Link to this heading">¶</a></h2>
+<section id="id32">
+<h2>0.6.5<a class="headerlink" href="#id32" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Improve error handling of empty data and whitespace-only data.</p></li>
 <li><p>Parsing now includes two validations on the data quality (not empty and not whitespace only)</p></li>
@@ -796,45 +803,45 @@ address and data is a list of tuples)</p></li>
 <li><p>Add a CLI to parse addresses from the command line.</p></li>
 </ul>
 </section>
-<section id="id32">
-<h2>0.6.4<a class="headerlink" href="#id32" title="Link to this heading">¶</a></h2>
+<section id="id33">
+<h2>0.6.4<a class="headerlink" href="#id33" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Bug-fix reloading of retraining attention model (PR #110)</p></li>
 <li><p>Improve error handling</p></li>
 <li><p>Improve doc</p></li>
 </ul>
 </section>
-<section id="id33">
-<h2>0.6.3<a class="headerlink" href="#id33" title="Link to this heading">¶</a></h2>
+<section id="id34">
+<h2>0.6.3<a class="headerlink" href="#id34" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Fixed the printing capture to raise the error with Poutyne as of version 1.8. We keep the previous approach for
 compatibility with the previous Poutyne version.</p></li>
 <li><p>Added a flag to disable or not use Tensorboard during retraining.</p></li>
 </ul>
 </section>
-<section id="id34">
-<h2>0.6.2<a class="headerlink" href="#id34" title="Link to this heading">¶</a></h2>
+<section id="id35">
+<h2>0.6.2<a class="headerlink" href="#id35" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Improved (slightly) data padding method code speed as per PyTorch list or array to the Tensor recommendation.</p></li>
 <li><p>Improved documentation for RuntimeError due to retraining FastText and BPEmb model in the same directory.</p></li>
 <li><p>Added error handling RuntimeError when retraining.</p></li>
 </ul>
 </section>
-<section id="id35">
-<h2>0.6.1<a class="headerlink" href="#id35" title="Link to this heading">¶</a></h2>
+<section id="id36">
+<h2>0.6.1<a class="headerlink" href="#id36" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Completed EOS bug fix</p></li>
 </ul>
 </section>
-<section id="id36">
-<h2>0.6<a class="headerlink" href="#id36" title="Link to this heading">¶</a></h2>
+<section id="id37">
+<h2>0.6<a class="headerlink" href="#id37" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Added Attention mechanism models</p></li>
 <li><p>Fixed EOS bug</p></li>
 </ul>
 </section>
-<section id="id37">
-<h2>0.5.1<a class="headerlink" href="#id37" title="Link to this heading">¶</a></h2>
+<section id="id38">
+<h2>0.5.1<a class="headerlink" href="#id38" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Fixed address_comparer hint typing error</p></li>
 <li><p>Fixed some docs errors</p></li>
@@ -842,8 +849,8 @@ compatibility with the previous Poutyne version.</p></li>
 <li><p>Various small code and test improvements</p></li>
 </ul>
 </section>
-<section id="id38">
-<h2>0.5<a class="headerlink" href="#id38" title="Link to this heading">¶</a></h2>
+<section id="id39">
+<h2>0.5<a class="headerlink" href="#id39" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Added Python 3.9</p></li>
 <li><p>Added feature to allow a more flexible way to retrain</p></li>
@@ -851,37 +858,37 @@ compatibility with the previous Poutyne version.</p></li>
 <li><p>Fixed prediction tags bug when parsing with new tags after retraining</p></li>
 </ul>
 </section>
-<section id="id39">
-<h2>0.4.4<a class="headerlink" href="#id39" title="Link to this heading">¶</a></h2>
+<section id="id40">
+<h2>0.4.4<a class="headerlink" href="#id40" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Fixed import error.</p></li>
 </ul>
 </section>
-<section id="id40">
-<h2>0.4.3<a class="headerlink" href="#id40" title="Link to this heading">¶</a></h2>
+<section id="id41">
+<h2>0.4.3<a class="headerlink" href="#id41" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Fixed typos in one of the file names.</p></li>
 <li><p>Added tools to compare addresses (tagged or not).</p></li>
 <li><p>Fixed some test errors.</p></li>
 </ul>
 </section>
-<section id="id41">
-<h2>0.4.2<a class="headerlink" href="#id41" title="Link to this heading">¶</a></h2>
+<section id="id42">
+<h2>0.4.2<a class="headerlink" href="#id42" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Added <code class="docutils literal notranslate"><span class="pre">__eq__</span></code> method to <code class="docutils literal notranslate"><span class="pre">FormattedParsedAddress</span></code>.</p></li>
 <li><p>Improved device management.</p></li>
 <li><p>Improved testing.</p></li>
 </ul>
 </section>
-<section id="id42">
-<h2>0.4.1<a class="headerlink" href="#id42" title="Link to this heading">¶</a></h2>
+<section id="id43">
+<h2>0.4.1<a class="headerlink" href="#id43" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Added method to specify the format of address components of a <code class="docutils literal notranslate"><span class="pre">FormattedParsedAddress.</span></code> Formatting can specify the
 field separator, the field to be capitalized, and the field to be upper case.</p></li>
 </ul>
 </section>
-<section id="id43">
-<h2>0.4<a class="headerlink" href="#id43" title="Link to this heading">¶</a></h2>
+<section id="id44">
+<h2>0.4<a class="headerlink" href="#id44" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Added a verbose flag to the training and a test based on the <strong>init</strong> of the address parser.</p></li>
 <li><p>Added a feature to retrain our models with a prediction tags dictionary that is different from the default one.</p></li>
@@ -890,16 +897,16 @@ field separator, the field to be capitalized, and the field to be upper case.</p
 <li><p>Small improvement of model implementation.</p></li>
 </ul>
 </section>
-<section id="id44">
-<h2>0.3.6<a class="headerlink" href="#id44" title="Link to this heading">¶</a></h2>
+<section id="id45">
+<h2>0.3.6<a class="headerlink" href="#id45" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Added a method for dictionary conversion of parsed addresses for simpler <code class="docutils literal notranslate"><span class="pre">Pandas</span></code> integration.</p></li>
 <li><p>Added examples for parsing addresses and how to convert them into a DataFrame.</p></li>
 <li><p>Fixed error with the download module.</p></li>
 </ul>
 </section>
-<section id="id45">
-<h2>0.3.5<a class="headerlink" href="#id45" title="Link to this heading">¶</a></h2>
+<section id="id46">
+<h2>0.3.5<a class="headerlink" href="#id46" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Added a verbose flag to the training and test based on the <strong>init</strong> of the address parser.</p></li>
 <li><p><strong>Breaking change</strong> Since <a class="reference external" href="https://github.com/scipy/scipy/releases/tag/v1.6.0">SciPy 1.6</a> is released on Python <code class="docutils literal notranslate"><span class="pre">3.7+</span></code>
@@ -908,16 +915,16 @@ field separator, the field to be capitalized, and the field to be upper case.</p
 which takes more RAM.</p></li>
 </ul>
 </section>
-<section id="id46">
-<h2>0.3.4<a class="headerlink" href="#id46" title="Link to this heading">¶</a></h2>
+<section id="id47">
+<h2>0.3.4<a class="headerlink" href="#id47" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Fixed a bug when using a batched address. Since we were sorting the address during the forward pass, the output
 prediction tags were not aligned with the supposed parsed address. We have removed the sorting, and now the results
 are more aligned with our research.</p></li>
 </ul>
 </section>
-<section id="id47">
-<h2>0.3.3<a class="headerlink" href="#id47" title="Link to this heading">¶</a></h2>
+<section id="id48">
+<h2>0.3.3<a class="headerlink" href="#id48" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>We have improved the loading of data during prediction. We now use a data loader.</p></li>
 <li><p>Updated the performance table of models with the data loader approach.</p></li>
@@ -925,8 +932,8 @@ are more aligned with our research.</p></li>
 <li><p>Bug fix of the <code class="docutils literal notranslate"><span class="pre">max_len</span></code> for the predictions</p></li>
 </ul>
 </section>
-<section id="id48">
-<h2>0.3<a class="headerlink" href="#id48" title="Link to this heading">¶</a></h2>
+<section id="id49">
+<h2>0.3<a class="headerlink" href="#id49" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Added Libpostal time in the doc</p></li>
 <li><p>Documentation improvement</p></li>
@@ -934,26 +941,26 @@ are more aligned with our research.</p></li>
 <li><p>Release new models</p></li>
 </ul>
 </section>
-<section id="id49">
-<h2>0.2.3<a class="headerlink" href="#id49" title="Link to this heading">¶</a></h2>
+<section id="id50">
+<h2>0.2.3<a class="headerlink" href="#id50" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Improved documentation</p></li>
 </ul>
 </section>
-<section id="id50">
-<h2>0.2.2<a class="headerlink" href="#id50" title="Link to this heading">¶</a></h2>
+<section id="id51">
+<h2>0.2.2<a class="headerlink" href="#id51" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Fixed error with experiment and verbosity as logging trigger on or off</p></li>
 </ul>
 </section>
-<section id="id51">
-<h2>0.2.1<a class="headerlink" href="#id51" title="Link to this heading">¶</a></h2>
+<section id="id52">
+<h2>0.2.1<a class="headerlink" href="#id52" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Fixed README</p></li>
 </ul>
 </section>
-<section id="id52">
-<h2>0.2<a class="headerlink" href="#id52" title="Link to this heading">¶</a></h2>
+<section id="id53">
+<h2>0.2<a class="headerlink" href="#id53" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Added FastText light model using pymagnitude-light</p></li>
 <li><p>Added fine-tuning API to allow fine-tuning of our models (retrain)</p></li>
@@ -963,15 +970,15 @@ are more aligned with our research.</p></li>
 <li><p>Added way to load retrain model when instantiation of AddressParser</p></li>
 </ul>
 </section>
-<section id="id53">
-<h2>0.1.3.1<a class="headerlink" href="#id53" title="Link to this heading">¶</a></h2>
+<section id="id54">
+<h2>0.1.3.1<a class="headerlink" href="#id54" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Added a verbose flag to trigger more messages during embedding loading</p></li>
 <li><p>Added a verbose flag in model/embeddings download</p></li>
 </ul>
 </section>
-<section id="id54">
-<h2>0.1.3<a class="headerlink" href="#id54" title="Link to this heading">¶</a></h2>
+<section id="id55">
+<h2>0.1.3<a class="headerlink" href="#id55" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Added “contributing to”</p></li>
 <li><p>Added fix for comma problem (#56)</p></li>
@@ -980,8 +987,8 @@ are more aligned with our research.</p></li>
 <li><p>Fixed <code class="docutils literal notranslate"><span class="pre">pack_padded</span></code> CPU error with PyTorch’s new release</p></li>
 </ul>
 </section>
-<section id="id55">
-<h2>0.1.2<a class="headerlink" href="#id55" title="Link to this heading">¶</a></h2>
+<section id="id56">
+<h2>0.1.2<a class="headerlink" href="#id56" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Modification of assets URL</p></li>
 <li><p>Bug-fix dictionary use</p></li>
@@ -1047,62 +1054,62 @@ are more aligned with our research.</p></li>
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Changelog</a><ul>
-<li><a class="reference internal" href="#dev">dev</a></li>
-<li><a class="reference internal" href="#id1">0.11.0</a></li>
-<li><a class="reference internal" href="#id2">0.10.0</a></li>
-<li><a class="reference internal" href="#id3">0.9.14</a></li>
-<li><a class="reference internal" href="#id4">0.9.13</a></li>
-<li><a class="reference internal" href="#id5">0.9.12</a></li>
-<li><a class="reference internal" href="#id6">0.9.11</a></li>
-<li><a class="reference internal" href="#id7">0.9.10</a></li>
-<li><a class="reference internal" href="#id8">0.9.9</a></li>
-<li><a class="reference internal" href="#id9">0.9.8</a></li>
-<li><a class="reference internal" href="#id10">0.9.7</a></li>
-<li><a class="reference internal" href="#id11">0.9.6</a></li>
-<li><a class="reference internal" href="#id12">0.9.5</a></li>
-<li><a class="reference internal" href="#id13">0.9.4</a></li>
-<li><a class="reference internal" href="#id14">0.9.3</a></li>
-<li><a class="reference internal" href="#id15">0.9.2</a></li>
-<li><a class="reference internal" href="#id16">0.9.1</a></li>
-<li><a class="reference internal" href="#id17">0.9</a></li>
-<li><a class="reference internal" href="#id18">0.8.3</a></li>
-<li><a class="reference internal" href="#id19">0.8.2</a></li>
-<li><a class="reference internal" href="#id20">0.8.1</a></li>
-<li><a class="reference internal" href="#id21">0.8</a></li>
-<li><a class="reference internal" href="#id22">0.7.6</a></li>
-<li><a class="reference internal" href="#id23">0.7.5</a></li>
-<li><a class="reference internal" href="#id24">0.7.4</a></li>
-<li><a class="reference internal" href="#id25">0.7.3</a></li>
-<li><a class="reference internal" href="#id26">0.7.2</a></li>
-<li><a class="reference internal" href="#id27">0.7.1</a></li>
-<li><a class="reference internal" href="#id28">0.7</a></li>
-<li><a class="reference internal" href="#id29">0.6.7</a></li>
-<li><a class="reference internal" href="#id30">0.6.6</a></li>
-<li><a class="reference internal" href="#id31">0.6.5</a></li>
-<li><a class="reference internal" href="#id32">0.6.4</a></li>
-<li><a class="reference internal" href="#id33">0.6.3</a></li>
-<li><a class="reference internal" href="#id34">0.6.2</a></li>
-<li><a class="reference internal" href="#id35">0.6.1</a></li>
-<li><a class="reference internal" href="#id36">0.6</a></li>
-<li><a class="reference internal" href="#id37">0.5.1</a></li>
-<li><a class="reference internal" href="#id38">0.5</a></li>
-<li><a class="reference internal" href="#id39">0.4.4</a></li>
-<li><a class="reference internal" href="#id40">0.4.3</a></li>
-<li><a class="reference internal" href="#id41">0.4.2</a></li>
-<li><a class="reference internal" href="#id42">0.4.1</a></li>
-<li><a class="reference internal" href="#id43">0.4</a></li>
-<li><a class="reference internal" href="#id44">0.3.6</a></li>
-<li><a class="reference internal" href="#id45">0.3.5</a></li>
-<li><a class="reference internal" href="#id46">0.3.4</a></li>
-<li><a class="reference internal" href="#id47">0.3.3</a></li>
-<li><a class="reference internal" href="#id48">0.3</a></li>
-<li><a class="reference internal" href="#id49">0.2.3</a></li>
-<li><a class="reference internal" href="#id50">0.2.2</a></li>
-<li><a class="reference internal" href="#id51">0.2.1</a></li>
-<li><a class="reference internal" href="#id52">0.2</a></li>
-<li><a class="reference internal" href="#id53">0.1.3.1</a></li>
-<li><a class="reference internal" href="#id54">0.1.3</a></li>
-<li><a class="reference internal" href="#id55">0.1.2</a></li>
+<li><a class="reference internal" href="#id1">1.0.0</a></li>
+<li><a class="reference internal" href="#id2">0.11.0</a></li>
+<li><a class="reference internal" href="#id3">0.10.0</a></li>
+<li><a class="reference internal" href="#id4">0.9.14</a></li>
+<li><a class="reference internal" href="#id5">0.9.13</a></li>
+<li><a class="reference internal" href="#id6">0.9.12</a></li>
+<li><a class="reference internal" href="#id7">0.9.11</a></li>
+<li><a class="reference internal" href="#id8">0.9.10</a></li>
+<li><a class="reference internal" href="#id9">0.9.9</a></li>
+<li><a class="reference internal" href="#id10">0.9.8</a></li>
+<li><a class="reference internal" href="#id11">0.9.7</a></li>
+<li><a class="reference internal" href="#id12">0.9.6</a></li>
+<li><a class="reference internal" href="#id13">0.9.5</a></li>
+<li><a class="reference internal" href="#id14">0.9.4</a></li>
+<li><a class="reference internal" href="#id15">0.9.3</a></li>
+<li><a class="reference internal" href="#id16">0.9.2</a></li>
+<li><a class="reference internal" href="#id17">0.9.1</a></li>
+<li><a class="reference internal" href="#id18">0.9</a></li>
+<li><a class="reference internal" href="#id19">0.8.3</a></li>
+<li><a class="reference internal" href="#id20">0.8.2</a></li>
+<li><a class="reference internal" href="#id21">0.8.1</a></li>
+<li><a class="reference internal" href="#id22">0.8</a></li>
+<li><a class="reference internal" href="#id23">0.7.6</a></li>
+<li><a class="reference internal" href="#id24">0.7.5</a></li>
+<li><a class="reference internal" href="#id25">0.7.4</a></li>
+<li><a class="reference internal" href="#id26">0.7.3</a></li>
+<li><a class="reference internal" href="#id27">0.7.2</a></li>
+<li><a class="reference internal" href="#id28">0.7.1</a></li>
+<li><a class="reference internal" href="#id29">0.7</a></li>
+<li><a class="reference internal" href="#id30">0.6.7</a></li>
+<li><a class="reference internal" href="#id31">0.6.6</a></li>
+<li><a class="reference internal" href="#id32">0.6.5</a></li>
+<li><a class="reference internal" href="#id33">0.6.4</a></li>
+<li><a class="reference internal" href="#id34">0.6.3</a></li>
+<li><a class="reference internal" href="#id35">0.6.2</a></li>
+<li><a class="reference internal" href="#id36">0.6.1</a></li>
+<li><a class="reference internal" href="#id37">0.6</a></li>
+<li><a class="reference internal" href="#id38">0.5.1</a></li>
+<li><a class="reference internal" href="#id39">0.5</a></li>
+<li><a class="reference internal" href="#id40">0.4.4</a></li>
+<li><a class="reference internal" href="#id41">0.4.3</a></li>
+<li><a class="reference internal" href="#id42">0.4.2</a></li>
+<li><a class="reference internal" href="#id43">0.4.1</a></li>
+<li><a class="reference internal" href="#id44">0.4</a></li>
+<li><a class="reference internal" href="#id45">0.3.6</a></li>
+<li><a class="reference internal" href="#id46">0.3.5</a></li>
+<li><a class="reference internal" href="#id47">0.3.4</a></li>
+<li><a class="reference internal" href="#id48">0.3.3</a></li>
+<li><a class="reference internal" href="#id49">0.3</a></li>
+<li><a class="reference internal" href="#id50">0.2.3</a></li>
+<li><a class="reference internal" href="#id51">0.2.2</a></li>
+<li><a class="reference internal" href="#id52">0.2.1</a></li>
+<li><a class="reference internal" href="#id53">0.2</a></li>
+<li><a class="reference internal" href="#id54">0.1.3.1</a></li>
+<li><a class="reference internal" href="#id55">0.1.3</a></li>
+<li><a class="reference internal" href="#id56">0.1.2</a></li>
 <li><a class="reference internal" href="#beta-0-1">Beta (0.1)</a></li>
 </ul>
 </li>
@@ -1115,7 +1122,7 @@ are more aligned with our research.</p></li>
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=65dcdbe2"></script>
+</div><script src="_static/documentation_options.js?v=87976c15"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/scripts/furo.js?v=46bd48cc"></script>

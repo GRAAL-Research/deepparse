@@ -11,7 +11,12 @@ We evaluate our models on two forms of address data
 - **clean data** which refers to addresses containing elements from four categories, namely a street name, a municipality, a province and a postal code,
 - **incomplete data** which is made up of addresses missing at least one category amongst the aforementioned ones.
 
-You can get our dataset on the HuggingFace Hub `here <https://huggingface.co/datasets/deepparse/worldwide-addresses>`_ (one configuration per country). The data protocol is described in the `deepparse-address-data <https://github.com/GRAAL-Research/deepparse-address-data>`_ repository.
+The FastText and BPEmb results below come from the 2020 dataset described in the
+`deepparse-address-data <https://github.com/GRAAL-Research/deepparse-address-data>`_ repository (data protocol and
+scripts). Its archive, formerly hosted on a GRAAL server, is no longer available for download. Our current address
+data is the `worldwide-addresses <https://huggingface.co/datasets/deepparse/worldwide-addresses>`_ dataset on the
+HuggingFace Hub (one configuration per country), also built from the libpostal data; it has no ``Orientation`` nor
+``GeneralDelivery`` tags.
 
 Clean Data
 **********

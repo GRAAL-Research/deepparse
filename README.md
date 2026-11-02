@@ -17,7 +17,7 @@
 <a href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg"></a>
 
 [![pr welcome](https://img.shields.io/badge/PR-Welcome-%23FF8300.svg?)](https://img.shields.io/badge/PR-Welcome-%23FF8300.svg?)
-[![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](http://www.gnu.org/licenses/lgpl-3.0)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7010740.svg)](https://doi.org/10.5281/zenodo.7010740)
 [![Hugging Face Download](https://img.shields.io/badge/Hugging%20Face-FFD21E?logo=huggingface&logoColor=000)](https://huggingface.co/deepparse)
 
@@ -50,8 +50,12 @@ We evaluate our models on two forms of address data
   municipality, a province and a postal code,
 - **incomplete data** which is made up of addresses missing at least one category amongst the aforementioned ones.
 
-You can get our dataset on the HuggingFace Hub [here](https://huggingface.co/datasets/deepparse/worldwide-addresses) (one configuration per country). The data protocol is
-described in the [deepparse-address-data](https://github.com/GRAAL-Research/deepparse-address-data) repository.
+The FastText and BPEmb results below come from the 2020 dataset described in the
+[deepparse-address-data](https://github.com/GRAAL-Research/deepparse-address-data) repository (data protocol and
+scripts). Its archive, formerly hosted on a GRAAL server, is no longer available for download. Our current address
+data is the [worldwide-addresses](https://huggingface.co/datasets/deepparse/worldwide-addresses) dataset on the
+HuggingFace Hub (one configuration per country), also built from the libpostal data; it has no `Orientation` nor
+`GeneralDelivery` tags.
 
 #### Clean Data
 
@@ -487,7 +491,7 @@ pytest tests/architecture --override-ini addopts=""
 
 ## License
 
-Deepparse is LGPLv3 licensed, as found in
+Deepparse is MIT licensed, as found in
 the [LICENSE file](https://github.com/GRAAL-Research/deepparse/blob/main/LICENSE).
 
 ------------------

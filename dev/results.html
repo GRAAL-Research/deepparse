@@ -7,7 +7,7 @@
         <link rel="prefetch" href="_static/deepparse.png" as="image">
 
     <link rel="shortcut icon" href="_static/favicon.png"><!-- Generated with Sphinx 9.2.0 and Furo 2025.12.19 -->
-        <title>Pretrained Models Results - deepparse 0.11.0.dev1+4d81679</title>
+        <title>Pretrained Models Results - deepparse 0.11.0.dev1+9d8941b</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -155,7 +155,7 @@
 
 <div class="announcement">
   <aside class="announcement-content">
-     You are reading the documentation of the development version of deepparse (0.11.0.dev1+4d81679). See the <a href="https://deepparse.org/">stable documentation</a> for the latest release. 
+     You are reading the documentation of the development version of deepparse (0.11.0.dev1+9d8941b). See the <a href="https://deepparse.org/">stable documentation</a> for the latest release. 
   </aside>
 </div>
 
@@ -167,7 +167,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">deepparse 0.11.0.dev1+4d81679</div></a>
+      <a href="index.html"><div class="brand">deepparse 0.11.0.dev1+9d8941b</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -292,7 +292,12 @@ model are reported in the <a class="reference internal" href="parser.html"><span
 <li><p><strong>clean data</strong> which refers to addresses containing elements from four categories, namely a street name, a municipality, a province and a postal code,</p></li>
 <li><p><strong>incomplete data</strong> which is made up of addresses missing at least one category amongst the aforementioned ones.</p></li>
 </ul>
-<p>You can get our dataset on the HuggingFace Hub <a class="reference external" href="https://huggingface.co/datasets/deepparse/worldwide-addresses">here</a> (one configuration per country). The data protocol is described in the <a class="reference external" href="https://github.com/GRAAL-Research/deepparse-address-data">deepparse-address-data</a> repository.</p>
+<p>The FastText and BPEmb results below come from the 2020 dataset described in the
+<a class="reference external" href="https://github.com/GRAAL-Research/deepparse-address-data">deepparse-address-data</a> repository (data protocol and
+scripts). Its archive, formerly hosted on a GRAAL server, is no longer available for download. Our current address
+data is the <a class="reference external" href="https://huggingface.co/datasets/deepparse/worldwide-addresses">worldwide-addresses</a> dataset on the
+HuggingFace Hub (one configuration per country), also built from the libpostal data; it has no <code class="docutils literal notranslate"><span class="pre">Orientation</span></code> nor
+<code class="docutils literal notranslate"><span class="pre">GeneralDelivery</span></code> tags.</p>
 <section id="clean-data">
 <h2>Clean Data<a class="headerlink" href="#clean-data" title="Link to this heading">¶</a></h2>
 <p>The following table presents the accuracy on the 20 countries (using clean data) we used during training for both our models.
@@ -960,7 +965,7 @@ to achieve an interesting performance. Attention mechanisms improve performance 
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=c91d4029"></script>
+</div><script src="_static/documentation_options.js?v=7a8a8f56"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/scripts/furo.js?v=46bd48cc"></script>

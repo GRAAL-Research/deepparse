@@ -7,7 +7,7 @@
         <link rel="prefetch" href="_static/deepparse.png" as="image">
 
     <link rel="shortcut icon" href="_static/favicon.png"><!-- Generated with Sphinx 9.2.0 and Furo 2025.12.19 -->
-        <title>Changelog - deepparse 0.11.0.dev1+4d81679</title>
+        <title>Changelog - deepparse 0.11.0.dev1+9d8941b</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -155,7 +155,7 @@
 
 <div class="announcement">
   <aside class="announcement-content">
-     You are reading the documentation of the development version of deepparse (0.11.0.dev1+4d81679). See the <a href="https://deepparse.org/">stable documentation</a> for the latest release. 
+     You are reading the documentation of the development version of deepparse (0.11.0.dev1+9d8941b). See the <a href="https://deepparse.org/">stable documentation</a> for the latest release. 
   </aside>
 </div>
 
@@ -167,7 +167,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">deepparse 0.11.0.dev1+4d81679</div></a>
+      <a href="index.html"><div class="brand">deepparse 0.11.0.dev1+9d8941b</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -292,6 +292,9 @@
 <li><p>Relicense Deepparse from the LGPLv3 to the MIT license, with the agreement of its contributors (<code class="docutils literal notranslate"><span class="pre">LICENSE</span></code>,
 <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> metadata and classifier, README, documentation and contributing guide). The pretrained models on the
 Hugging Face Hub are also under the MIT license.</p></li>
+<li><p>Say in the README and the Results page that the per-country FastText and BPEmb results come from the 2020
+dataset of the <code class="docutils literal notranslate"><span class="pre">deepparse-address-data</span></code> repository, whose archive is no longer available for download, and that the
+current <code class="docutils literal notranslate"><span class="pre">worldwide-addresses</span></code> dataset has no <code class="docutils literal notranslate"><span class="pre">Orientation</span></code> nor <code class="docutils literal notranslate"><span class="pre">GeneralDelivery</span></code> tags.</p></li>
 <li><p>Stop the unit tests from downloading the pre-trained models: instantiating an <code class="docutils literal notranslate"><span class="pre">AddressParser</span></code> reached the
 HuggingFace Hub, so concurrent CI jobs hit the anonymous rate limit (HTTP 429) and 21 tests failed for
 reasons unrelated to the code. The model factory is now mocked in <code class="docutils literal notranslate"><span class="pre">AddressParserTest.setUp</span></code>.</p></li>
@@ -1083,7 +1086,7 @@ are more aligned with our research.</p></li>
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=c91d4029"></script>
+</div><script src="_static/documentation_options.js?v=7a8a8f56"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/scripts/furo.js?v=46bd48cc"></script>

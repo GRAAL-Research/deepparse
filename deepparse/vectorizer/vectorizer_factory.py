@@ -3,8 +3,9 @@ from ..embeddings_models import (
     EmbeddingsModel,
     FastTextEmbeddingsModel,
     MagnitudeEmbeddingsModel,
+    Model2VecEmbeddingsModel,
 )
-from . import BPEmbVectorizer, FastTextVectorizer, MagnitudeVectorizer, Vectorizer
+from . import BPEmbVectorizer, FastTextVectorizer, MagnitudeVectorizer, Model2VecVectorizer, Vectorizer
 
 
 class VectorizerFactory:
@@ -29,10 +30,14 @@ class VectorizerFactory:
         elif isinstance(embeddings_model, MagnitudeEmbeddingsModel):
             vectorizer = MagnitudeVectorizer(embeddings_model)
 
+        elif isinstance(embeddings_model, Model2VecEmbeddingsModel):
+            vectorizer = Model2VecVectorizer(embeddings_model)
+
         else:
             raise NotImplementedError("""
             There's no vectorizer corresponding to the embeddings model type provided.
-            Supported embedding models are: BPEmbEmbeddingsModel, FastTextEmbeddingsModel and MagnitudeEmbeddingsModel.
+            Supported embedding models are: BPEmbEmbeddingsModel, FastTextEmbeddingsModel, MagnitudeEmbeddingsModel
+            and Model2VecEmbeddingsModel.
             """)
 
         return vectorizer

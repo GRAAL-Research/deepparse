@@ -326,6 +326,25 @@ class ToolsTests(PretrainedWeightsBase):
         actual_model_type, _ = handle_model_name(retrain_model_type, attention_mechanism=True)
         self.assertEqual(expected_model_type, actual_model_type)
 
+    def test_givenModel2VecModelTypes_whenHandleModelName_thenReturnProperModelTypeAndFormattedName(self):
+        expected = {
+            "tiny": ("model2vec-8m", "Model2Vec8M"),
+            "model2vec-8m": ("model2vec-8m", "Model2Vec8M"),
+            "model2vec-32m": ("model2vec-32m", "Model2Vec32M"),
+            "model2vec-multilingual": ("model2vec-multilingual", "Model2VecMultilingual"),
+        }
+        for model_type, (expected_model_type, expected_formatted_name) in expected.items():
+            with self.subTest(model_type=model_type):
+                self.assertEqual(
+                    (expected_model_type, expected_formatted_name),
+                    handle_model_name(model_type, attention_mechanism=False),
+                )
+                # A retrained model2vec attention model saves its model_type as "model2vec-8m_attention".
+                self.assertEqual(
+                    (expected_model_type + "_attention", expected_formatted_name + "Attention"),
+                    handle_model_name(expected_model_type + "_attention", attention_mechanism=True),
+                )
+
     def test_givenRetrainedFastTextLightAttentionModelType_whenHandleModelName_thenKeepTheHyphen(self):
         # A retrained fasttext-light attention model saves its model_type as "fasttext-light_attention".
         for model_type in ("fasttext-light_attention", "fasttext-light-attention", "lightest_attention"):

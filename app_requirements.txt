@@ -3,3 +3,4 @@ uvicorn
 sentry-sdk[fastapi]>=2.70.0
 python-decouple
 pydantic
+model2vec

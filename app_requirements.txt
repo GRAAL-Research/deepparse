@@ -1,6 +1,6 @@
 fastapi[all]==0.141.1
 uvicorn
-sentry-sdk[fastapi]>=2.70.0
+sentry-sdk[fastapi]>=2.73.0
 python-decouple
 pydantic
 model2vec

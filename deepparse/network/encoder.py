@@ -4,7 +4,7 @@ import torch
 from torch import nn
 from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 
-from .. import weights_init
+from ..weights_tools import weights_init
 
 
 class Encoder(nn.Module):

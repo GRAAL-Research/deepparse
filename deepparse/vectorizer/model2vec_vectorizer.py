@@ -1,6 +1,6 @@
 from typing import List
 
-from .. import validate_data_to_parse
+from ..validations import validate_data_to_parse
 from .vectorizer import Vectorizer
 
 

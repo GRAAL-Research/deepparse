@@ -8,7 +8,7 @@ import unittest
 from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
-from deepparse import (
+from deepparse.validations import (
     DataError,
     extract_package_version,
     valid_poutyne_version,

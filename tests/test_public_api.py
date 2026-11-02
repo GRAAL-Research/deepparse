@@ -25,22 +25,16 @@ EXPECTED_PUBLIC_API = [
     "download_weights",
     "download_worldwide_addresses_sample",
     "load_version",
-    # Deprecated, will be removed in 1.0.0.
-    "BPEmbBaseURLWrapperBugFix",
-    "FASTTEXT_AVAILABLE",
-    "load_fasttext_embeddings",
 ]
 
-# Every deepparse name (helpers, constants and submodules) reachable as deepparse.<name> in 0.11.0, before the public
-# API was delimited with __all__. They must all stay reachable until 1.0.0, even the ones that are not in __all__.
-NAMES_REACHABLE_IN_0_11_0 = [
+# The deprecated APIs and the internal helpers and constants that were reachable as deepparse.<name> in 0.11.0 (before
+# the public API was delimited with __all__) and were removed in 1.0.0. Import the helpers from their own module.
+NAMES_REMOVED_IN_1_0_0 = [
     "BPEmbBaseURLWrapperBugFix",
-    "CACHE_PATH",
     "DataError",
     "FASTTEXT_AVAILABLE",
     "FASTTEXT_COPYRIGHT_MIT_LICENSE",
     "HTTP_CLIENT_ERROR_STATUS_CODE",
-    "MODEL_MAPPING_CHOICES",
     "MODEL_REPO_IDS",
     "NEXT_RANGE_STATUS_CODE",
     "PYARROW_AVAILABLE",
@@ -48,31 +42,21 @@ NAMES_REACHABLE_IN_0_11_0 = [
     "WORLDWIDE_ADDRESSES_REPO_ID",
     "WORLDWIDE_ADDRESSES_TAGS_MAPPING",
     "bpemb_url_bug_fix",
-    "data_validation",
-    "download_fasttext_embeddings",
-    "download_fasttext_magnitude_embeddings",
     "download_gz_model",
-    "download_model",
-    "download_models",
-    "download_tools",
-    "download_weights",
-    "download_worldwide_addresses_sample",
-    "errors",
     "extract_package_version",
     "handle_weights_upload",
     "load_fasttext_embeddings",
-    "load_version",
     "load_word2vec_binary_vectors",
     "valid_poutyne_version",
     "validate_data_to_parse",
     "validate_if_any_empty",
     "validate_if_any_none",
     "validate_if_any_whitespace_only",
-    "validations",
-    "version",
     "weights_init",
-    "weights_tools",
 ]
+
+# The submodules of deepparse stay reachable as deepparse.<name>.
+SUBMODULES = ["bpemb_loader", "data_validation", "download_tools", "errors", "validations", "version", "weights_tools"]
 
 # Standard library and third-party modules and objects that 0.11.0 re-exported by accident through the wildcard
 # imports. They were never part of the API and are no longer reachable from deepparse.
@@ -125,8 +109,13 @@ class PublicAPITest(TestCase):
             with self.subTest(name=name):
                 self.assertTrue(hasattr(deepparse, name))
 
-    def test_everyNameReachableIn0110IsStillAnAttribute(self):
-        for name in NAMES_REACHABLE_IN_0_11_0:
+    def test_theNamesRemovedIn100AreNoLongerAttributes(self):
+        for name in NAMES_REMOVED_IN_1_0_0:
+            with self.subTest(name=name):
+                self.assertFalse(hasattr(deepparse, name))
+
+    def test_theSubmodulesAreStillAttributes(self):
+        for name in SUBMODULES:
             with self.subTest(name=name):
                 self.assertTrue(hasattr(deepparse, name))
 

@@ -30,8 +30,6 @@ Embeddings
 
 .. autofunction:: download_fasttext_magnitude_embeddings
 
-.. autofunction:: load_fasttext_embeddings
-
 Sample Data
 -----------
 

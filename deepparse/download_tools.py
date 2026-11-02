@@ -1,5 +1,4 @@
 import gzip
-import importlib.util
 import logging
 import os
 import shutil
@@ -25,7 +24,6 @@ from .bpemb_loader import BPEmbLoader
 
 __all__ = [
     "CACHE_PATH",
-    "FASTTEXT_AVAILABLE",
     "FASTTEXT_COPYRIGHT_MIT_LICENSE",
     "HTTP_CLIENT_ERROR_STATUS_CODE",
     "MODEL2VEC_MODELS",
@@ -45,14 +43,11 @@ __all__ = [
     "download_weights",
     "download_worldwide_addresses_sample",
     "get_model2vec_model_type",
-    "load_fasttext_embeddings",
     "load_version",
 ]
 
 # Deprecated, kept for backward compatibility and will be removed in 1.0.0: Deepparse no longer needs the fasttext
 # package to load the FastText embeddings (see deepparse.embeddings_models.FastTextBinReader).
-FASTTEXT_AVAILABLE = importlib.util.find_spec("fasttext") is not None
-
 logger = logging.getLogger(__name__)
 
 CACHE_PATH = os.path.join(os.path.expanduser("~"), ".cache", "deepparse")
@@ -461,24 +456,3 @@ def _print_progress(downloaded_bytes: int, total_size: int) -> None:
 
     if downloaded_bytes >= total_size:
         sys.stdout.write("\n")
-
-
-def load_fasttext_embeddings(path: str):
-    """
-    Function to load fastText ``.bin`` embeddings.
-
-    .. deprecated:: 0.12.0
-        Use :class:`~deepparse.embeddings_models.FastTextBinReader` instead. This function will be removed in 1.0.0.
-        It is kept for backward compatibility and returns a ``FastTextBinReader``, which has the same
-        ``model[word]`` and ``get_dimension()`` interface as the former ``fasttext`` model object.
-    """
-    warnings.warn(
-        "load_fasttext_embeddings is deprecated and will be removed in 1.0.0, "
-        "use deepparse.embeddings_models.FastTextBinReader instead.",
-        category=DeprecationWarning,
-        stacklevel=2,
-    )
-    # Imported here since the embeddings_models package imports this module.
-    from .embeddings_models import FastTextBinReader  # pylint: disable=import-outside-toplevel
-
-    return FastTextBinReader(path)

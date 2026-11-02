@@ -1,9 +1,11 @@
 # pylint: disable=too-many-arguments, too-many-positional-arguments
+import warnings
 from typing import Dict, Tuple
 
 import torch
 
-from . import BPEmbSeq2SeqModel, FastTextSeq2SeqModel, Seq2SeqModel
+from ..download_tools import MODEL2VEC_MODELS, MODEL_REPO_IDS, get_model2vec_model_type
+from . import BPEmbSeq2SeqModel, FastTextSeq2SeqModel, Model2VecSeq2SeqModel, Seq2SeqModel
 from .model_loader import ModelLoader
 
 
@@ -34,6 +36,7 @@ class ModelFactory:
             model_type (str): the type of the model to create. Valid options:
                 - fasttext
                 - bpemb
+                - model2vec-8m, model2vec-32m and model2vec-multilingual
             device (~torch.device): The device to use for the prediction.
             output_size (int): The size of the prediction layers (i.e. the number of tags to predict). The default
                 value is ``9``.
@@ -64,16 +67,34 @@ class ModelFactory:
                 **seq2seq_kwargs,
             )
 
+        elif "model2vec" in model_type:
+            # The encoder input size is the Model2Vec embeddings dimension, unless a retrained model overrides it.
+            seq2seq_kwargs.setdefault("input_size", MODEL2VEC_MODELS[get_model2vec_model_type(model_type)][1])
+            model = Model2VecSeq2SeqModel(
+                output_size=output_size,
+                attention_mechanism=attention_mechanism,
+                **seq2seq_kwargs,
+            )
+
         else:
             raise NotImplementedError(f"""
-                    There is no {model_type} network implemented. model_type should be either "fasttext" or "bpemb".
+                    There is no {model_type} network implemented. model_type should be either "fasttext", "bpemb"
+                    or "model2vec".
             """)
 
         if path_to_retrained_model:
             model, version = self.model_loader.load_weights(model, path_to_retrained_model, device)
 
-        elif pre_trained_weights:
+        elif pre_trained_weights and model_type in MODEL_REPO_IDS:
             model, version = self.model_loader.load_pre_trained_model(model, model_type, offline, verbose)
+
+        elif pre_trained_weights:
+            warnings.warn(
+                f"There are no pre-trained weights for the {model_type} model yet. The model is randomly "
+                "initialized and needs to be retrained before use.",
+                category=UserWarning,
+            )
+            version = ""
 
         else:
             version = ""

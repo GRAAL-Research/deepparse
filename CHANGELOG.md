@@ -474,8 +474,14 @@
 - Update `sphinx-rtd-theme` requirement from >=3.0.0 to >=3.1.0.
 - Update `colorama` requirement from >=0.4.3 to >=0.4.6.
 
-## dev
+## 1.0.0
 
+- Relicense Deepparse from the LGPLv3 to the MIT license, with the agreement of its contributors (`LICENSE`,
+  `setup.py` metadata and classifier, README, documentation and contributing guide). The pretrained models on the
+  Hugging Face Hub are also under the MIT license.
+- Say in the README and the Results page that the per-country FastText and BPEmb results come from the 2020
+  dataset of the `deepparse-address-data` repository, whose archive is no longer available for download, and that the
+  current `worldwide-addresses` dataset has no `Orientation` nor `GeneralDelivery` tags.
 - Stop the unit tests from downloading the pre-trained models: instantiating an `AddressParser` reached the
   HuggingFace Hub, so concurrent CI jobs hit the anonymous rate limit (HTTP 429) and 21 tests failed for
   reasons unrelated to the code. The model factory is now mocked in `AddressParserTest.setUp`.
@@ -511,6 +517,36 @@
   `load_fasttext_embeddings` is deprecated and returns a `FastTextBinReader` (same `model[word]`,
   `get_word_vector` and `get_dimension` interface), and `BPEmbBaseURLWrapperBugFix` keeps the `bpemb` defaults and
   its `embed`, `encode`, `encode_ids`, `vectors` and `dim` API (not the gensim `emb` attribute).
+- Add three Model2Vec models (#328): `model2vec-8m`, `model2vec-32m` and `model2vec-multilingual`, based on the
+  `minishlab/potion-*` static embeddings, plus the `tiny` alias for `model2vec-8m`. Their embeddings take 59 MB,
+  249 MB and 1 GB on disk, compared to 6.8 GB for fastText, and the parser takes ~1.0 GB, ~1.2 GB and ~2.8 GB of RAM
+  at peak (CPU, whole process). Install them with
+  `pip install deepparse[model2vec]`.
+  They were trained on the `deepparse/worldwide-addresses` HF dataset (20 countries, 100,000 clean and 50,000
+  incomplete addresses per country), where `Suburb` and `District` are mapped to `Municipality` and `County` and
+  `Country` words are removed. Since the source data has no `Orientation` nor `GeneralDelivery` tags, these models
+  never predict them, and South Korea has almost only incomplete addresses.
+  Each released model is the best of a grid of four hidden sizes (128, 256, 512 and 1024) and five seeds, selected on
+  the validation loss relative to the seed (the seed also draws the validation split), never on the test split. The
+  Results page gives their test accuracy and the whole grid, and each Hugging Face repository has a model card.
+- Add `models_evaluation/select_best_model.py`, which selects the released configuration and seed of each model from a
+  grid of retraining runs and generates the Results tables, and `models_evaluation/export_model_to_hub.py`, which
+  exports the selected checkpoints to the Hugging Face Hub format (`config.json`, `model.safetensors` and a model card),
+  checks that they reload with the same weights and only pushes them with `--push`.
+- Save the architecture (hidden sizes and number of layers) of a retrained model whose pretrained architecture is not
+  the default one, even without `seq2seq_params`: retraining a pretrained Model2Vec model with a hidden size other than
+  1,024 (e.g. 512) and reloading it failed with a size mismatch, since the model was rebuilt with the default size.
+- Add `models_evaluation/check_exported_models.py`, which checks the exported models end to end without network (load
+  from a Hugging Face cache layout, same predictions as the retrained checkpoints, retrain and reload), and
+  `models_evaluation/release_model2vec.sh`, which chains the selection, the export, this check and the documentation
+  tables in one command, without pushing (and the speed test with `SPEED_TEST=1`).
+- The speed test (`models_evaluation/speed_test_evaluation.py`) takes a `--cache_dir` and `--offline`, to measure
+  models from a given cache (e.g. before they are pushed), and reports the GPU memory peak.
+- Add `models_evaluation/retrain_grid_model.py`, the resumable training script of one run of the grid (hidden sizes,
+  attention and seeds) behind the released Model2Vec models, with `--print_grid` to list its 200 runs.
+- Only download the files Model2Vec loads, skipping the ONNX export.
+- A model type without published weights is now randomly initialized with a warning instead of failing, so it can
+  be retrained from scratch.
 - Allow data loading workers (`num_workers` > 0) with the FastText models on Windows and MacOS: the FastText
   embeddings reader is picklable, so it works with the `spawn` start method. The restriction (error on Windows, `fork`
   start method on MacOS) is kept for the FastText Light (Magnitude) model only.
@@ -537,10 +573,9 @@
   deployment now keeps the `dev/` folder of `gh-pages`, and both deployments share a concurrency group.
 - Delimit the public API before 1.0.0, without breaking change. The `deepparse` top-level package and its
   `bpemb_url_bug_fix`, `download_tools`, `validations` and `weights_tools` modules now have an explicit `__all__`, so
-  `from deepparse import *` only imports the public API. Every name reachable as `deepparse.<name>` in 0.11.0 is
-  still reachable, including the standard library and third-party modules, typing aliases and internal helpers
-  re-exported by accident (e.g. `deepparse.os` or `deepparse.weights_init`), which are not in `__all__`. A unit test
-  freezes the public API.
+  `from deepparse import *` only imports the public API. The deepparse helpers reachable as `deepparse.<name>` in
+  0.11.0 are still reachable (e.g. `deepparse.weights_init`), even if they are not in `__all__`. A unit test freezes
+  the public API.
   The standard library and third-party modules that 0.11.0 re-exported by accident (e.g. `deepparse.os`,
   `deepparse.torch`) are no longer reachable from `deepparse`, and `from deepparse import *` only imports `__all__`.
 - Rename `BPEmbBaseURLWrapperBugFix` (`deepparse/bpemb_url_bug_fix.py`) to `BPEmbLoader` (`deepparse/bpemb_loader.py`),
@@ -559,3 +594,10 @@
   loop), and the pretrained BPEmb models give the same predictions. GPU inference by batches is about twice as fast
   (3,000 addresses in ~1.0-1.3 s instead of ~2.4-2.6 s, batches of 256), and the CPU inference time is unchanged; the
   Parser and Choose a Model pages say so.
+- Report the measured GPU memory and time per address of the released Model2Vec models in the model guide, and fix
+  the speed test, which reset the CUDA peak memory statistics before the CUDA context existed.
+- Remove the APIs deprecated before 1.0.0: `BPEmbBaseURLWrapperBugFix` and the `deepparse.bpemb_url_bug_fix` module
+  (use `deepparse.BPEmbLoader`), `load_fasttext_embeddings` (use `deepparse.embeddings_models.FastTextBinReader`) and
+  `FASTTEXT_AVAILABLE`, and the internal helpers and constants reachable as `deepparse.<name>` but not in
+  `deepparse.__all__` (e.g. `deepparse.weights_init`, `deepparse.MODEL_REPO_IDS`): import them from their own module
+  (e.g. `deepparse.weights_tools`, `deepparse.download_tools`).

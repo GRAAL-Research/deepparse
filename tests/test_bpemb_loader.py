@@ -6,7 +6,6 @@ import os
 import pickle
 import tarfile
 import unittest
-import warnings
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest import TestCase
@@ -18,7 +17,6 @@ import sentencepiece
 
 import deepparse
 from deepparse.bpemb_loader import BPEmbLoader, load_word2vec_binary_vectors
-from deepparse.bpemb_url_bug_fix import BPEmbBaseURLWrapperBugFix
 
 A_CORPUS = [
     "350 rue des lilas ouest quebec city quebec g0l 0b0",
@@ -192,53 +190,9 @@ class BPEmbLoaderTest(TestCase):
         np.testing.assert_array_equal(bpemb.embed(a_text), unpickled_bpemb.embed(a_text))
         self.assertNotIn("spm", bpemb.__getstate__())
 
-    def create_deprecated_alias(self) -> BPEmbBaseURLWrapperBugFix:
-        with patch("deepparse.bpemb_loader.requests.get", side_effect=self.fake_get):
-            return BPEmbBaseURLWrapperBugFix(lang="multi", vs=self.vs, dim=self.dim, cache_dir=self.cache_dir)
-
-    def test_whenInitTheDeprecatedAlias_thenWarnItWillBeRemovedIn100(self):
-        with warnings.catch_warnings(record=True) as caught_warnings:
-            warnings.simplefilter("always")
-            self.create_deprecated_alias()
-
-        deprecation_warnings = [warning for warning in caught_warnings if warning.category is DeprecationWarning]
-        self.assertEqual(1, len(deprecation_warnings))
-        self.assertIn("BPEmbLoader", str(deprecation_warnings[0].message))
-        self.assertIn("1.0.0", str(deprecation_warnings[0].message))
-        self.assertEqual(__file__, deprecation_warnings[0].filename)
-
-    def test_whenInitBPEmbLoader_thenDoNotWarn(self):
-        with warnings.catch_warnings():
-            warnings.simplefilter("error", DeprecationWarning)
-            self.create_bpemb()
-
-    def test_whenInitTheDeprecatedAlias_thenItIsABPEmbLoaderThatEmbedsTheSame(self):
-        a_text = "350 rue des Lilas Ouest"
-        bpemb = self.create_bpemb()
-        with warnings.catch_warnings():
-            warnings.simplefilter("ignore", DeprecationWarning)
-            deprecated_bpemb = self.create_deprecated_alias()
-
-        self.assertIsInstance(deprecated_bpemb, BPEmbLoader)
-        np.testing.assert_array_equal(bpemb.embed(a_text), deprecated_bpemb.embed(a_text))
-
-    def test_whenPickleTheDeprecatedAlias_thenUnpickleTheSameClassWithoutWarning(self):
-        a_text = "350 rue des Lilas Ouest"
-        with warnings.catch_warnings():
-            warnings.simplefilter("ignore", DeprecationWarning)
-            deprecated_bpemb = self.create_deprecated_alias()
-
-        with warnings.catch_warnings():
-            warnings.simplefilter("error", DeprecationWarning)
-            unpickled_bpemb = pickle.loads(pickle.dumps(deprecated_bpemb))
-
-        self.assertIs(BPEmbBaseURLWrapperBugFix, type(unpickled_bpemb))
-        np.testing.assert_array_equal(deprecated_bpemb.embed(a_text), unpickled_bpemb.embed(a_text))
-
-    def test_theDeprecatedAliasIsStillImportableFromTheTopLevelPackage(self):
-        self.assertIs(BPEmbBaseURLWrapperBugFix, deepparse.BPEmbBaseURLWrapperBugFix)
+    def test_theLoaderIsImportableFromTheTopLevelPackage(self):
         self.assertIs(BPEmbLoader, deepparse.BPEmbLoader)
-        self.assertIs(load_word2vec_binary_vectors, deepparse.bpemb_url_bug_fix.load_word2vec_binary_vectors)
+        self.assertIs(load_word2vec_binary_vectors, deepparse.bpemb_loader.load_word2vec_binary_vectors)
 
 
 if __name__ == "__main__":

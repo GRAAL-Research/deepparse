@@ -23,12 +23,19 @@ class DownloadModelsTests(TestCase):
             "fasttext-light": "fasttext",
             "bpemb": "bpemb",
             "bpemb-attention": "bpemb_attention",
+            "model2vec-8m": "model2vec-8m",
+            "model2vec-8m-attention": "model2vec-8m_attention",
+            "model2vec-32m": "model2vec-32m",
+            "model2vec-32m-attention": "model2vec-32m_attention",
+            "model2vec-multilingual": "model2vec-multilingual",
+            "model2vec-multilingual-attention": "model2vec-multilingual_attention",
         }
 
     def tearDown(self) -> None:
         self.temp_dir_obj.cleanup()
 
     @patch("deepparse.download_tools.download_weights")
+    @patch("deepparse.download_tools.download_model2vec_embeddings")
     @patch("deepparse.download_tools.download_fasttext_embeddings")
     @patch("deepparse.download_tools.download_fasttext_magnitude_embeddings")
     @patch("deepparse.download_tools.BPEmbLoader")
@@ -37,6 +44,7 @@ class DownloadModelsTests(TestCase):
         BPEmb_mock,
         download_fasttext_magnitude_embeddings_mock,
         download_fasttext_embeddings_mock,
+        download_model2vec_embeddings_mock,
         weights_download_mock,
     ):
         download_models_cli_main(["--saving_cache_dir", self.fake_cache_dir])
@@ -50,9 +58,11 @@ class DownloadModelsTests(TestCase):
         BPEmb_mock.assert_called()
         BPEmb_mock.assert_called_with(lang="multi", vs=100000, dim=300, cache_dir=self.fake_cache_dir)
 
+        self.assertEqual(6, download_model2vec_embeddings_mock.call_count)
+
         weights_download_mock.assert_called()
 
-        expected_call_count = 5
+        expected_call_count = len(self.models_type_mapping)
         actual_call_count = weights_download_mock.call_count
         self.assertEqual(expected_call_count, actual_call_count)
 

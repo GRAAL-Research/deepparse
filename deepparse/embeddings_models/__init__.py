@@ -5,4 +5,5 @@ from .embeddings_model import *
 from .fasttext_bin_reader import *
 from .fasttext_embeddings_model import *
 from .magnitude_embeddings_model import *
+from .model2vec_embeddings_model import *
 from .embeddings_model_factory import *

@@ -2,7 +2,7 @@ from typing import List
 
 from numpy import ndarray
 
-from .. import validate_data_to_parse
+from ..validations import validate_data_to_parse
 from .vectorizer import Vectorizer
 
 

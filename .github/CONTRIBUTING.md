@@ -23,10 +23,10 @@ Pull requests are the best way to propose changes to the codebase. We actively w
 5. Make sure your code lints.
 6. Submit that pull request!
 
-## Any contributions you make will be under the LGPLv3 Software License
+## Any contributions you make will be under the MIT Software License
 
 In short, when you submit code changes, your submissions are understood to be under the
-same [LGPLv3 License](https://choosealicense.com/licenses/lgpl-3.0/) that covers the project. Feel free to contact the
+same [MIT License](https://choosealicense.com/licenses/mit/) that covers the project. Feel free to contact the
 maintainers if that's a concern.
 
 ## Write bug reports with detail, background, and sample code
@@ -186,7 +186,7 @@ python -m http.server -d _build/html/
 
 ## License
 
-By contributing, you agree that your contributions will be licensed under its LGPLv3 License.
+By contributing, you agree that your contributions will be licensed under its MIT License.
 
 ## References
 

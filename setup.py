@@ -50,13 +50,13 @@ def main():
         author_email="marouane.yassine.1@ulaval.ca, david.beauchemin.5@ulaval.ca",
         url="https://deepparse.org/",
         download_url="https://github.com/GRAAL-Research/deepparse/archive/v" + version + ".zip",
-        license="LGPLv3",
+        license="MIT",
         classifiers=[
             "Development Status :: 5 - Production/Stable",
             "Intended Audience :: Developers",
             "Intended Audience :: Education",
             "Intended Audience :: Science/Research",
-            "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
+            "License :: OSI Approved :: MIT License",
             "Programming Language :: Python :: 3",
             "Programming Language :: Python :: 3.10",
             "Programming Language :: Python :: 3.11",
@@ -91,10 +91,18 @@ def main():
             "colorama": "colorama",
             # Kept empty for backward compatibility: the FastText embeddings no longer need the fasttext package.
             "fasttext": [],
-            "app": ["fastapi[all]>=0.109.1", "uvicorn>=0.22.0", "sentry-sdk[fastapi]>=2.0.0", "python-decouple>=3.8"],
+            "model2vec": ["model2vec"],
+            "app": [
+                "fastapi[all]>=0.109.1",
+                "uvicorn>=0.22.0",
+                "sentry-sdk[fastapi]>=2.0.0",
+                "python-decouple>=3.8",
+                "model2vec",
+            ],
             "all": [
                 "colorama",  # colorama
                 "pyarrow",  # worldwide-addresses dataset sample download (examples)
+                "model2vec",  # model2vec embeddings
                 "fastapi[all]>=0.109.1",  # app requirements
                 "uvicorn>=0.22.0",
                 "sentry-sdk[fastapi]>=2.0.0",

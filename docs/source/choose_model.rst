@@ -142,7 +142,7 @@ Sources:
    On CPU, the time is unchanged.
 
 .. [#model2vec_resources] The Model2Vec embeddings on disk and the RAM at peak of the whole process (CPU), measured in
-   October 2026. The pretrained weights take 5 to 38 MB in addition, depending on the hidden size of the model (see
+   October 2026. The pretrained weights take 5 to 65 MB in addition, depending on the hidden size of the model (see
    :doc:`results`). Their GPU memory and inference time are not measured yet.
 
 

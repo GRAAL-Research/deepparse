@@ -6,13 +6,13 @@
             - Test accuracy of the released model (%)
             - Test accuracy, mean ± std over the seeds (%)
         *   - ``model2vec-32m``
-            - 512
-            - 98.13
-            - 97.75 ± 0.56 (5 seeds)
+            - 1024
+            - 98.73
+            - 98.04 ± 0.50 (5 seeds)
         *   - ``model2vec-32m-attention``
             - 1024
             - 98.42
-            - 97.72 ± 0.72 (3 seeds)
+            - 97.89 ± 0.58 (5 seeds)
         *   - ``model2vec-8m``
             - 1024
             - 97.95
@@ -23,9 +23,9 @@
             - 97.99 ± 0.29 (5 seeds)
         *   - ``model2vec-multilingual``
             - 1024
-            - 97.65
-            - 97.55 ± 0.66 (4 seeds)
+            - 98.51
+            - 97.74 ± 0.72 (5 seeds)
         *   - ``model2vec-multilingual-attention``
-            - 512
-            - 98.87
-            - 97.49 ± 0.83 (5 seeds)
+            - 1024
+            - 98.59
+            - 97.73 ± 1.04 (5 seeds)

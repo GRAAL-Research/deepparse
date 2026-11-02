@@ -8,24 +8,23 @@ Parse Addresses
 
     import pandas as pd
 
-    from deepparse import download_from_public_repository
-    from deepparse.dataset_container import PickleDatasetContainer
+    from deepparse import download_worldwide_addresses_sample
+    from deepparse.dataset_container import ListDatasetContainer
     from deepparse.parser import AddressParser
 
-Here is an example on how to parse multiple addresses. First, let's download the train and test data from the public repository.
+Here is an example on how to parse multiple addresses. First, let's download a small sample of Canadian addresses from the
+`worldwide-addresses dataset <https://huggingface.co/datasets/deepparse/worldwide-addresses>`_. We only keep the
+addresses (not the tags).
 
 .. code-block:: python
 
-    saving_dir = "./data"
-    file_extension = "p"
-    test_dataset_name = "predict"
-    download_from_public_repository(test_dataset_name, saving_dir, file_extension=file_extension)
+    addresses = [address for address, _ in download_worldwide_addresses_sample(country_code="ca", num_samples=300)]
 
 Now let's load the dataset using one of our dataset container
 
 .. code-block:: python
 
-    addresses_to_parse = PickleDatasetContainer("./data/predict.p", is_training_container=False)
+    addresses_to_parse = ListDatasetContainer(addresses, is_training_container=False)
 
 Let's use the ``BPEmb`` model on a GPU.
 
@@ -35,7 +34,7 @@ Let's use the ``BPEmb`` model on a GPU.
 
 .. code-block:: python
 
-    parsed_addresses = address_parser(test_data[0:300])
+    parsed_addresses = address_parser(addresses_to_parse[0:300])
 
     # Print one of the parsed address
     print(parsed_addresses[0])

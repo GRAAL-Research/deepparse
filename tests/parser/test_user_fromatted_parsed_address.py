@@ -105,7 +105,7 @@ class UserFormattedParsedAddressTest(FormattedParsedAddressBase):
             self.parsed_address.format_address(upper_case_fields=["not_a_field"])
 
     def test_whenEqualParsedAddress_then__eq__ReturnTrue(self):
-        self.assertTrue(self.parsed_address == self.parsed_address)
+        self.assertTrue(self.parsed_address == FormattedParsedAddress(self.a_address))
 
     def test_whenNotEqualParsedAddressNotSameElements_then__eq__ReturnFalse(self):
         a_different_address_str = "3 test road unit west city province postal_code delivery"

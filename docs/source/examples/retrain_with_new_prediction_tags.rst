@@ -10,29 +10,29 @@ Retrain With New Prediction Tags
 
     import poutyne
 
-    from deepparse import download_from_public_repository
-    from deepparse.dataset_container import PickleDatasetContainer
+    from deepparse import download_worldwide_addresses_sample
+    from deepparse.dataset_container import ListDatasetContainer
     from deepparse.parser import AddressParser
 
-First, let's download the train and test data with the new tags, ``"new tags"``, from the public repository.
+First, let's download a small sample of Canadian addresses from the
+`worldwide-addresses dataset <https://huggingface.co/datasets/deepparse/worldwide-addresses>`_ and map its tags to our
+new tags, ``"new tags"``: ``"ATag"`` for the street part of the address (street number, street name and unit) and
+``"AnotherTag"`` for the rest. We use the first 1,000 addresses for training and the last 200 for testing.
 
 .. code-block:: python
 
-    saving_dir = "./data"
-    file_extension = "p"
-    training_dataset_name = "sample_incomplete_data_new_prediction_tags"
-    test_dataset_name = "test_sample_data_new_prediction_tags"
-    download_from_public_repository(training_dataset_name, saving_dir, file_extension=file_extension)
-    download_from_public_repository(test_dataset_name, saving_dir, file_extension=file_extension)
+    street_tags = ("StreetNumber", "StreetName", "Unit")
+    addresses = [
+        (address, ["ATag" if tag in street_tags else "AnotherTag" for tag in tags])
+        for address, tags in download_worldwide_addresses_sample(country_code="ca", num_samples=1200)
+    ]
 
-Now, let's create a training and test container.
+Now let's create a training and test container.
 
 .. code-block:: python
 
-    training_container = PickleDatasetContainer(os.path.join(saving_dir,
-                                                             training_dataset_name + "." + file_extension))
-    test_container = PickleDatasetContainer(os.path.join(saving_dir,
-                                                         test_dataset_name + "." + file_extension))
+    training_container = ListDatasetContainer(addresses[:1000])
+    test_container = ListDatasetContainer(addresses[1000:])
 
 We will retrain the ``FastText`` version of our pretrained model.
 

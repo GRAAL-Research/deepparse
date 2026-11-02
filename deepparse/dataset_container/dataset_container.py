@@ -48,7 +48,7 @@ class DatasetContainer(Dataset, ABC):
         is_training_container (bool): Either or not, the dataset container is a training container. This will determine
             the dataset validation test we apply to the dataset. That is, a predict dataset doesn't include tags.
             The default value is ``True``.
-        data_cleaning_pre_processing_fn (Callable): Function to apply as data clea ning pre-processing step after
+        data_cleaning_pre_processing_fn (Callable): Function to apply as data cleaning pre-processing step after
             loading the data, but before applying the validation steps. The default value is ``None``.
     """
 
@@ -211,7 +211,7 @@ class PickleDatasetContainer(DatasetContainer):
         is_training_container (bool): Either or not, the dataset container is a training container. This will determine
             the dataset validation test we apply to the dataset. That is, a predict dataset doesn't include tags.
             The default value is ``True``.
-        data_cleaning_pre_processing_fn (Callable): Function to apply as data clea ning pre-processing step after
+        data_cleaning_pre_processing_fn (Callable): Function to apply as data cleaning pre-processing step after
             loading the data, but before applying the validation steps. The default value is ``None``.
 
     """
@@ -279,15 +279,15 @@ class CSVDatasetContainer(DatasetContainer):
             the dataset validation test we apply to the dataset. That is, a predict dataset doesn't include tags.
             The default value is ``True``.
         separator (str): The CSV columns separator to use. By default, ``"\\t"``.
-        tag_seperator_reformat_fn (Callable, optional): A function to parse a tags string and return a list of
+        tag_seperator_reformat_fn (Callable): A function to parse a tags string and return a list of
             address tags. For example, if the tag column is a former Python list saved with pandas, the characters ``]``
             , ``]`` and ``'`` will be included as the tags' element. Thus, a parsing function will take a string as is
             parameter and output a python list. The default function processes it as a former Python list.
             That is, it removes the ``[],`` characters and splits the sequence at each comma (``","``).
-        csv_reader_kwargs (dict, optional): Keyword arguments to pass to pandas ``read_csv`` use internally. By default,
+        csv_reader_kwargs (dict): Keyword arguments to pass to pandas ``read_csv`` use internally. By default,
             the ``data_path`` is passed along with our default ``sep`` value ( ``"\\t"``) and the ``"utf-8"`` encoding
             format. However, this can be overridden by using this argument again.
-        data_cleaning_pre_processing_fn (Callable): Function to apply as data clea ning pre-processing step after
+        data_cleaning_pre_processing_fn (Callable): Function to apply as data cleaning pre-processing step after
             loading the data, but before applying the validation steps. The default value is ``None``.
     """
 
@@ -358,7 +358,7 @@ class ListDatasetContainer(DatasetContainer):
         is_training_container (bool): Either or not, the dataset container is a training container. This will determine
             the dataset validation test we apply to the dataset. That is, a predict dataset doesn't include tags.
             The default value is ``True``.
-        data_cleaning_pre_processing_fn (Callable): Function to apply as data clea ning pre-processing step after
+        data_cleaning_pre_processing_fn (Callable): Function to apply as data cleaning pre-processing step after
             loading the data, but before applying the validation steps. The default value is ``None``.
     """
 

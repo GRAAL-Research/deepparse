@@ -18,7 +18,7 @@ from poutyne.framework import Experiment
 from torch.optim import SGD
 from torch.utils.data import DataLoader, Subset
 
-from .. import validate_data_to_parse
+from ..validations import validate_data_to_parse
 from ..converter import DataPadder, DataProcessorFactory, TagsConverter
 from ..dataset_container import DatasetContainer
 from ..download_tools import CACHE_PATH
@@ -86,9 +86,13 @@ class AddressParser:
     Args:
         model_type (str): The network name to use, can be either:
 
-            - ``"fasttext"`` (need ~9 GO of RAM to be used),
-            - ``"fasttext-light"`` (need ~2 GO of RAM to be used, but slower than fasttext version),
-            - ``"bpemb"`` (need ~2 GO of RAM to be used),
+            - ``"fasttext"`` (need ~1.3 GB of RAM to be used, since its embeddings are memory-mapped),
+            - ``"fasttext-light"`` (need ~2 GB of RAM to be used, but slower than fasttext version),
+            - ``"bpemb"`` (need ~2 GB of RAM to be used),
+            - ``"model2vec-8m"``, ``"model2vec-32m"`` and ``"model2vec-multilingual"`` (Model2Vec static
+              embeddings, need ~1 GB, ~1.2 GB and ~2.8 GB of RAM to be used, require
+              ``pip install deepparse[model2vec]``),
+            - ``"tiny"`` (the smallest and quickest model) (equivalent to ``"model2vec-8m"``),
             - ``"fastest"`` (quicker to process one address) (equivalent to ``"fasttext"``),
             - ``"lightest"`` (the one using the less RAM and GPU usage) (equivalent to ``"fasttext-light"``),
             - ``"best"`` (the best accuracy performance) (equivalent to ``"bpemb"``).
@@ -99,11 +103,11 @@ class AddressParser:
         attention_mechanism (bool): Whether to use the model with an attention mechanism. The model will use an
             attention mechanism that takes an extra 100 MB on GPU usage (see the documentation for more statistics).
             The default value is ``False``.
-        device (Union[int, str, torch.torch.device]): The device to use can be either:
+        device (Union[int, str, torch.device]): The device to use can be either:
 
             - a ``GPU`` index in int format (e.g. ``0``),
             - a complete device name in a string format (e.g. ``"cuda:0"``),
-            - a :class:`~torch.torch.device` object,
+            - a :class:`~torch.device` object,
             - ``"cpu"`` for a  ``CPU`` use.
 
             The default value is ``0``, witch is a GPU device with the index ``0`` if it exists. Otherwise,
@@ -129,8 +133,8 @@ class AddressParser:
 
     Note:
         For both networks, we will download the pretrained weights and embeddings in the ``.cache`` directory
-        for the root user. The pretrained weights take at most 44 MB. The FastText embeddings take 6.8 GO,
-        the FastText-light (``"fasttext-light"``) embeddings take 3.3 GO and bpemb take 116 MB (in ``".cache/bpemb"``).
+        for the root user. The pretrained weights take at most 44 MB. The FastText embeddings take 6.8 GB,
+        the FastText-light (``"fasttext-light"``) embeddings take 3.3 GB and bpemb take 116 MB (in ``".cache/bpemb"``).
 
         Also, one can download all the dependencies of our pretrained model using our CLI
         (e.g. download_model fasttext) before sending it to a node without access to Internet.
@@ -142,18 +146,11 @@ class AddressParser:
             - `FastText Light <https://huggingface.co/deepparse/fasttext-base/tree/light-embeddings>`_.
 
     Note:
-        Since Windows uses ``spawn`` instead of ``fork`` during multiprocess (for the data loading pre-processing
-        ``num_worker`` > 0) we use the Gensim model, which takes more RAM (~10 GO) than the Fasttext one (~8 GO).
-        It also takes a longer time to load. See here the
-        `issue <https://github.com/GRAAL-Research/deepparse/issues/89>`_.
-
-    Note:
-        On Python 3.13+, the ``fasttext`` native library is not available because the underlying C++ code
-        has not been updated for newer Python versions. Deepparse automatically falls back to using Gensim to load
-        FastText embeddings. This fallback uses more RAM (~10 GO vs ~8 GO) and is slower to load, but is
-        functionally equivalent. You can install ``fasttext-wheel`` manually with
-        ``pip install deepparse[fasttext]`` if a compatible version becomes available.
-        BPEmb and FastText Light (Magnitude) models are not affected.
+        The FastText embeddings are read with our own reader of the ``.bin`` format, which gives the same vectors
+        as the ``fasttext`` package on every supported Python version, without ``fasttext`` nor ``gensim``. The
+        embeddings matrix is memory-mapped, so it loads in a few seconds and only the rows used are kept in RAM: the
+        FastText parser takes ~1.3 GB of RAM and loads in ~4 seconds, compared to ~8.4 GB (13.2 GB at peak) and ~42
+        seconds with the former ``gensim`` loading.
 
     Note:
         You may observe a 100% CPU load the first time you call the fasttext-light model. We
@@ -247,6 +244,9 @@ class AddressParser:
 
         self.rounding = rounding
         self.verbose = verbose
+        # Kept to rebuild the model with the same settings when retraining with new seq2seq params.
+        self._cache_dir = cache_dir
+        self._offline = offline
 
         named_parser = None
 
@@ -742,7 +742,13 @@ class AddressParser:
             train_dataset_container, val_dataset_container, num_workers, name_of_the_retrain_parser
         )
 
-        model_factory_dict = {"prediction_layer_len": 9}  # We set the default output dim size
+        # We set the default output dim size and keep the parser settings, since new seq2seq params rebuild the model.
+        model_factory_dict = {
+            "prediction_layer_len": 9,
+            "attention_mechanism": "attention" in self.model_type,
+            "cache_dir": self._cache_dir,
+            "offline": self._offline,
+        }
 
         if prediction_tags is not None:
             # Handle prediction tags
@@ -860,6 +866,10 @@ class AddressParser:
         if seq2seq_params is not None:
             # Means we have changed the seq2seq params
             torch_save.update({"seq2seq_params": seq2seq_params})
+        elif (model_seq2seq_params := self._non_default_seq2seq_params()) is not None:
+            # A pretrained model can have a non-default architecture (e.g. the hidden size of a Model2Vec model).
+            # We save it so the retrained model is reloaded with the same architecture.
+            torch_save.update({"seq2seq_params": model_seq2seq_params})
         if prediction_tags is not None:
             #  Means we have changed the prediction tags
             torch_save.update({"prediction_tags": prediction_tags})
@@ -1216,6 +1226,25 @@ class AddressParser:
         )
         return train_res
 
+    def _non_default_seq2seq_params(self) -> Dict[str, int] | None:
+        """
+        The seq2seq params of the current model if its architecture differs from the default one (hidden sizes of
+        ``1024`` and one layer), otherwise ``None``.
+        """
+        seq2seq_params = {
+            "encoder_hidden_size": self.model.encoder.lstm.hidden_size,
+            "encoder_num_layers": self.model.encoder.lstm.num_layers,
+            "decoder_hidden_size": self.model.decoder.lstm.hidden_size,
+            "decoder_num_layers": self.model.decoder.lstm.num_layers,
+        }
+        default_seq2seq_params = {
+            "encoder_hidden_size": 1024,
+            "encoder_num_layers": 1,
+            "decoder_hidden_size": 1024,
+            "decoder_num_layers": 1,
+        }
+        return None if seq2seq_params == default_seq2seq_params else seq2seq_params
+
     def _freeze_model_params(self, layers_to_freeze: str) -> None:
         layers_to_freeze = layers_to_freeze.lower()
         if layers_to_freeze not in ("encoder", "decoder", "prediction_layer", "seq2seq"):
@@ -1311,14 +1340,19 @@ class AddressParser:
                 )
 
     def _model_os_validation(self, num_workers: int) -> None:
-        if system() == "Windows" and "fasttext" in self.model_type and num_workers > 0:
+        # The FastText embeddings reader and BPEmb are picklable, so they work with the 'spawn' start method of Windows
+        # and MacOS. Only the FastText Light (Magnitude) embeddings, backed by SQLite, still need the 'fork' one.
+        if self.model_type != "fasttext-light" or num_workers == 0:
+            return
+
+        if system() == "Windows":
             raise FastTextModelError(
-                "On Windows system, we cannot use FastText-like models with parallelism workers since "
-                "FastText objects are not pickleable with the parallelism process use by Windows. "
+                "On Windows system, we cannot use the FastText Light model with parallelism workers since "
+                "its Magnitude embeddings are not pickleable with the parallelism process use by Windows. "
                 "Thus, you need to set num_workers to 0 since 1 also means 'parallelism'."
             )
 
-        if system() == "Darwin" and "fasttext" in self.model_type and num_workers > 0:
+        if system() == "Darwin":
             try:
                 torch.multiprocessing.set_start_method('fork')
             except RuntimeError as e:
@@ -1328,8 +1362,8 @@ class AddressParser:
                     raise RuntimeError("There has been an issue with the multiprocessing context initialisation") from e
 
             warnings.warn(
-                "On MacOS system, we cannot use FastText-like models with parallelism out-of-the-box since "
-                "FastText objects are not pickleable with the parallelism process used by default by MacOS. "
+                "On MacOS system, we cannot use the FastText Light model with parallelism out-of-the-box since "
+                "its Magnitude embeddings are not pickleable with the parallelism process used by default by MacOS. "
                 "Thus, we have set it to the 'fork' (i.e. torch.multiprocessing.set_start_method('fork'))"
                 " to allow torch parallelism.",
                 category=UserWarning,

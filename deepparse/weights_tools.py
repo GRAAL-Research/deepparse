@@ -5,6 +5,8 @@ from cloudpathlib import CloudPath, S3Path
 from torch import nn
 from torch.nn import init
 
+__all__ = ["handle_weights_upload", "weights_init"]
+
 
 def weights_init(m: nn.Module) -> None:
     """

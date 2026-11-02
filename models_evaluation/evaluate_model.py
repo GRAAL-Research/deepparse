@@ -17,7 +17,7 @@ def main(args):
     saving_dir = os.path.join(".", "models_evaluation", "results", results_type)
     os.makedirs(saving_dir, exist_ok=True)
 
-    address_parser = AddressParser(model_type=args.model_type, device=0)
+    address_parser = AddressParser(model_type=args.model_type, device=0, path_to_retrained_model=args.model_path)
     directory_path = args.test_directory
     test_files = os.listdir(directory_path)
     training_test_results = {}

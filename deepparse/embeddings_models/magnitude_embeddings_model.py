@@ -7,10 +7,10 @@ class MagnitudeEmbeddingsModel(EmbeddingsModel):
     """
     FastText embeddings network from `Enriching Word Vectors with Subword Information
     <https://arxiv.org/abs/1607.04606>`_ using the magnitude mapping
-    (<https://github.com/plasticityai/magnitude>`_), which reduces the memory footprint.
+    (`Magnitude <https://github.com/plasticityai/magnitude>`_), which reduces the memory footprint.
 
     Args:
-        embeddings_path (str): Path to the bin embeddings vector (.bin).
+        embeddings_path (str): Path to the Magnitude embeddings vector (.magnitude).
         verbose (bool): Either or not to make the loading of the embeddings verbose.
     """
 

@@ -1,38 +1,36 @@
+import argparse
 import os.path
 
 from memory_profiler import profile
-from postal.parser import parse_address
+from postal.parser import parse_address  # pylint: disable=import-error
 
-from deepparse import download_from_public_repository
-from deepparse.dataset_container import PickleDatasetContainer
+from models_evaluation.speed_test_dataset import DEFAULT_NUM_ADDRESSES, build_speed_test_dataset
 from models_evaluation.timer.timer import Timer
 
-download_from_public_repository("speed_test_dataset", "./data", "p")
-
-address_container = PickleDatasetContainer("./data/speed_test_dataset.p")
-addresses, tags = zip(*address_container)
-
 speed_test_directory = "results/speed_test_results"
-os.makedirs(speed_test_directory, exist_ok=True)
 
 
 @profile
-def process_fn():
+def process_fn(addresses):
     for address in addresses:
         parse_address(address)
 
 
-if __name__ == '__main__':
+def main(args):
+    addresses = [address for address, _ in build_speed_test_dataset(num_addresses=args.num_addresses)]
+    os.makedirs(speed_test_directory, exist_ok=True)
+
     timer = Timer()
     with timer:
-        process_fn()
+        process_fn(addresses)
 
     with open(
         os.path.join(
             speed_test_directory,
-            f"speed_test_results_with_libpostal.txt",
+            "speed_test_results_with_libpostal.txt",
         ),
         "w",
+        encoding="utf-8",
     ) as file:
         print(
             "Temps moyen pour porcess avec Libpostal :",
@@ -43,3 +41,17 @@ if __name__ == '__main__':
             "Temps moyen pour porcess avec Libpostal :",
             timer.elapsed_time / len(addresses),
         )
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument(
+        "--num_addresses",
+        type=int,
+        default=DEFAULT_NUM_ADDRESSES,
+        help="Number of addresses of the speed test dataset (use a small value, e.g. 200, for a quick run).",
+    )
+    args_parser = parser.parse_args()
+
+    main(args_parser)

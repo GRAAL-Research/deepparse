@@ -9,6 +9,8 @@ from .data_validation import (
 )
 from .errors.data_error import DataError
 
+__all__ = ["extract_package_version", "valid_poutyne_version", "validate_data_to_parse"]
+
 
 def extract_package_version(package) -> str:
     """

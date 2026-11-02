@@ -1,12 +1,11 @@
 torch
-bpemb
+sentencepiece
 numpy
 scipy
 requests
 pymagnitude-light
 colorama>=0.4.6
 poutyne
-gensim>=4.4.0
 pandas
 urllib3
 cloudpathlib[s3, gs, azure]

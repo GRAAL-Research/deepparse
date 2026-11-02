@@ -1,0 +1,50 @@
+name: Deployment (dev documentation)
+
+# Publishes the documentation of the dev branch in the dev/ folder of the gh-pages branch
+# (https://deepparse.org/dev/). The stable documentation at the root is never touched.
+
+on:
+  push:
+    branches:
+      - dev
+
+permissions:
+  contents: write
+
+# Shared with deploy.yml so the two deployments never push to gh-pages at the same time.
+concurrency:
+  group: gh-pages-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy-dev:
+    if: github.repository == 'GRAAL-Research/deepparse'
+    runs-on: ubuntu-latest
+    env:
+      # Not a release build: the version is X.Y.Z.dev1+<sha>. The docs show a "development version" banner.
+      DEEPPARSE_DOCS_VERSION: dev
+
+    steps:
+      - uses: actions/checkout@v7
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Install dependencies
+        run: |
+          pip install -e '.[all]' -r docs/requirements.txt
+      - name: Building doc
+        run: |
+          cd docs
+          ./rebuild_html_doc.sh
+          cd ..
+      - name: Remove the CNAME file
+        # GitHub Pages only reads the CNAME at the root of gh-pages (published by the stable deployment).
+        run: rm -f docs/_build/html/CNAME
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/_build/html/
+          # Only the dev/ folder is cleaned and replaced; the root (stable docs, CNAME, .nojekyll) is kept.
+          destination_dir: dev

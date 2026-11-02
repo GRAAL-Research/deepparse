@@ -17,11 +17,11 @@
 <a href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg"></a>
 
 [![pr welcome](https://img.shields.io/badge/PR-Welcome-%23FF8300.svg?)](https://img.shields.io/badge/PR-Welcome-%23FF8300.svg?)
-[![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](http://www.gnu.org/licenses/lgpl-3.0)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7010740.svg)](https://doi.org/10.5281/zenodo.7010740)
 [![Hugging Face Download](https://img.shields.io/badge/Hugging%20Face-FFD21E?logo=huggingface&logoColor=000)](https://huggingface.co/deepparse)
 
-[![Download](https://img.shields.io/badge/Download%20Dataset-blue?style=for-the-badge&logo=download)](https://github.com/GRAAL-Research/deepparse-address-data)
+[![Download](https://img.shields.io/badge/Download%20Dataset-blue?style=for-the-badge&logo=download)](https://huggingface.co/datasets/deepparse/worldwide-addresses)
 </div>
 
 ## Here is Deepparse.
@@ -40,7 +40,7 @@ Use deepparse to
 
 Read the documentation at [deepparse.org](https://deepparse.org).
 
-Deepparse is compatible with the __latest version of PyTorch__ and  __Python >= 3.10, <= 3.13__.
+Deepparse is compatible with the __latest version of PyTorch__ and  __Python >= 3.10, <= 3.14__.
 
 ### Countries and Results
 
@@ -50,7 +50,12 @@ We evaluate our models on two forms of address data
   municipality, a province and a postal code,
 - **incomplete data** which is made up of addresses missing at least one category amongst the aforementioned ones.
 
-You can get our dataset [here](https://github.com/GRAAL-Research/deepparse-address-data).
+The FastText and BPEmb results below come from the 2020 dataset described in the
+[deepparse-address-data](https://github.com/GRAAL-Research/deepparse-address-data) repository (data protocol and
+scripts). Its archive, formerly hosted on a GRAAL server, is no longer available for download. Our current address
+data is the [worldwide-addresses](https://huggingface.co/datasets/deepparse/worldwide-addresses) dataset on the
+HuggingFace Hub (one configuration per country), also built from the libpostal data; it has no `Orientation` nor
+`GeneralDelivery` tags.
 
 #### Clean Data
 
@@ -283,7 +288,11 @@ parsed_addresses = response.json()
 print(parsed_addresses)
 ```
 
+#### Client Libraries
 
+Community HTTP clients for the FastAPI parser:
+
+- [Go](https://github.com/adamdecaf/deepparse-go) (`github.com/adamdecaf/deepparse-go`)
 
 ### Retrain a Model
 
@@ -378,6 +387,12 @@ Deepparse handles model downloads when you use it, but you can also pre-download
 - [FastTextAttention](https://huggingface.co/deepparse/fasttext-attention),
 - [BPEmb](https://huggingface.co/deepparse/bpemb-base),
 - [BPEmbAttention](https://huggingface.co/deepparse/bpemb-attention),
+- [Model2Vec 8M](https://huggingface.co/deepparse/model2vec-8m-base) (alias `tiny`),
+  [Model2Vec 8M Attention](https://huggingface.co/deepparse/model2vec-8m-attention),
+- [Model2Vec 32M](https://huggingface.co/deepparse/model2vec-32m-base),
+  [Model2Vec 32M Attention](https://huggingface.co/deepparse/model2vec-32m-attention),
+- [Model2Vec Multilingual](https://huggingface.co/deepparse/model2vec-multilingual-base),
+  [Model2Vec Multilingual Attention](https://huggingface.co/deepparse/model2vec-multilingual-attention),
 - [FastText Light](https://huggingface.co/deepparse/fasttext-base/tree/light-embeddings) (
   using [Magnitude Light](https://github.com/davebulaval/magnitude-light)).
 
@@ -415,22 +430,16 @@ pip install deepparse[all]  # for bash terminal
 pip install 'deepparse[all]' # for ZSH terminal
 ```
 
-- **Install the stable version of Deepparse with native FastText support (requires Python 3.10–3.12):**
-
-```sh
-pip install deepparse[fasttext]  # for bash terminal
-pip install 'deepparse[fasttext]' # for ZSH terminal
-```
-
-> **Note:** On Python 3.13+, the `fasttext-wheel` package cannot be compiled. Deepparse automatically
-> uses Gensim as a fallback to load FastText embeddings, which uses slightly more RAM (~10 GO vs ~8 GO).
-> BPEmb and FastText Light (Magnitude) models are not affected.
-
 - **Install the latest development version of Deepparse:**
 
 ```sh
 pip install -U git+https://github.com/GRAAL-Research/deepparse.git@dev
 ```
+
+Deepparse follows [semantic versioning](https://semver.org/): deprecated APIs emit a `DeprecationWarning` and are
+kept at least until the next major version. See the
+[Versioning section](https://deepparse.org/install/installation.html#versioning) of the documentation for the APIs
+removed in 1.0.0.
 
 ------------------
 
@@ -482,7 +491,7 @@ pytest tests/architecture --override-ini addopts=""
 
 ## License
 
-Deepparse is LGPLv3 licensed, as found in
+Deepparse is MIT licensed, as found in
 the [LICENSE file](https://github.com/GRAAL-Research/deepparse/blob/main/LICENSE).
 
 ------------------

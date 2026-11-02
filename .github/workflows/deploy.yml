@@ -1,9 +1,20 @@
 name: Deployment
 
+# Publishes the stable documentation at the root of the gh-pages branch (https://deepparse.org/).
+# The dev documentation lives in the dev/ folder of the same branch (see deploy-dev.yml) and is preserved here.
+
 on:
   push:
     branches:
       - stable
+
+permissions:
+  contents: write
+
+# Shared with deploy-dev.yml so the two deployments never push to gh-pages at the same time.
+concurrency:
+  group: gh-pages-deploy
+  cancel-in-progress: false
 
 jobs:
   deploy:
@@ -19,14 +30,26 @@ jobs:
           python-version: "3.13"
       - name: Install dependencies
         run: |
-          pip install -e .[all]
+          pip install -e '.[all]' -r docs/requirements.txt
       - name: Building doc
         run: |
           cd docs
           ./rebuild_html_doc.sh
           cd ..
+      - name: Keep the published dev documentation
+        # The deployment below replaces the whole branch content (so removed stable pages do not linger), so we copy
+        # the current dev/ folder of gh-pages into the build to keep https://deepparse.org/dev/ online.
+        run: |
+          if git fetch --depth=1 origin gh-pages && git cat-file -e FETCH_HEAD:dev 2>/dev/null; then
+            rm -rf docs/_build/html/dev
+            git archive FETCH_HEAD dev | tar -x -C docs/_build/html
+            echo "Kept the dev documentation from gh-pages."
+          else
+            echo "No dev documentation on gh-pages yet."
+          fi
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs/_build/html/
+          cname: deepparse.org

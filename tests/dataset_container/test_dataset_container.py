@@ -10,7 +10,7 @@ from tempfile import TemporaryDirectory
 from typing import List
 from unittest import TestCase
 
-from deepparse import DataError
+from deepparse.validations import DataError
 from deepparse.dataset_container import (
     CSVDatasetContainer,
     DatasetContainer,

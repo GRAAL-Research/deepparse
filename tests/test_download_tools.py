@@ -7,7 +7,6 @@
 import gzip
 import os
 import unittest
-import warnings
 from tempfile import TemporaryDirectory
 from unittest import TestCase
 from unittest.mock import call, mock_open, patch
@@ -23,7 +22,6 @@ except ImportError:
     PYARROW_AVAILABLE = False
 
 from deepparse.dataset_container import ListDatasetContainer
-from deepparse.embeddings_models import FastTextBinReader
 from deepparse.download_tools import (
     _print_progress,
     download_fasttext_embeddings,
@@ -33,7 +31,6 @@ from deepparse.download_tools import (
     download_models,
     download_worldwide_addresses_sample,
     get_model2vec_model_type,
-    load_fasttext_embeddings,
 )
 from tests.base_capture_output import CaptureOutputTestCase
 from tests.fixtures.fasttext_bin_writer import create_tiny_fasttext_bin
@@ -242,22 +239,6 @@ class FastTextToolsTests(CaptureOutputTestCase):
 
         expected = "(100.00%) [==================================================>]"
         self.assertIn(expected, actual)
-
-    def test_givenAFasttextEmbeddingsToLoad_whenLoad_thenLoadWithTheBinReaderAndWarn(self):
-        with warnings.catch_warnings(record=True) as caught_warnings:
-            warnings.simplefilter("always")
-            embeddings = load_fasttext_embeddings(self.a_fake_embeddings_path)
-
-        self.assertIsInstance(embeddings, FastTextBinReader)
-        deprecation_warnings = [warning for warning in caught_warnings if warning.category is DeprecationWarning]
-        self.assertEqual(1, len(deprecation_warnings))
-        self.assertIn("1.0.0", str(deprecation_warnings[0].message))
-        self.assertIn("deepparse.embeddings_models.FastTextBinReader", str(deprecation_warnings[0].message))
-
-    def test_whenImportFasttextAvailable_thenStillExposedForBackwardCompatibility(self):
-        from deepparse import FASTTEXT_AVAILABLE  # pylint: disable=import-outside-toplevel
-
-        self.assertIsInstance(FASTTEXT_AVAILABLE, bool)
 
 
 class DownloadModelsTests(TestCase):

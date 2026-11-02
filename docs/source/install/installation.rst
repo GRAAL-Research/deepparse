@@ -56,18 +56,17 @@ The public API is made of the documented classes and functions and, for the ``de
 names listed in ``deepparse.__all__``. Deprecated APIs emit a ``DeprecationWarning`` and are kept at least until the
 next major version.
 
-The following APIs are deprecated and will be removed in 1.0.0:
+The following APIs were removed in 1.0.0:
 
-- ``deepparse.BPEmbBaseURLWrapperBugFix`` and the ``deepparse.bpemb_url_bug_fix`` module (deprecated in 0.12.0): use
+- ``deepparse.BPEmbBaseURLWrapperBugFix`` and the ``deepparse.bpemb_url_bug_fix`` module: use
   ``deepparse.BPEmbLoader`` (``deepparse.bpemb_loader`` module), which has the same arguments and behaviour.
-- ``deepparse.load_fasttext_embeddings`` (deprecated in 0.12.0): use
-  ``deepparse.embeddings_models.FastTextBinReader``, which it already returns.
-- ``deepparse.FASTTEXT_AVAILABLE`` (deprecated in 0.12.0): Deepparse no longer needs the ``fasttext`` package to load
-  the FastText embeddings, so this flag is no longer used.
-- The internal helpers and constants that are reachable as ``deepparse.<name>`` but are not in
-  ``deepparse.__all__`` (e.g. ``deepparse.weights_init`` or ``deepparse.MODEL_REPO_IDS``). They are not part of the
-  public API: import them from their own module instead.
+- ``deepparse.load_fasttext_embeddings``: use ``deepparse.embeddings_models.FastTextBinReader``.
+- ``deepparse.FASTTEXT_AVAILABLE``: Deepparse no longer needs the ``fasttext`` package to load the FastText
+  embeddings.
+- The internal helpers and constants that were reachable as ``deepparse.<name>`` but are not in
+  ``deepparse.__all__`` (e.g. ``deepparse.weights_init`` or ``deepparse.MODEL_REPO_IDS``): import them from their own
+  module instead (e.g. ``deepparse.weights_tools.weights_init`` or ``deepparse.download_tools.MODEL_REPO_IDS``).
 
-Since 0.12.0, the standard library and third-party modules that the wildcard imports of ``deepparse`` re-exported by
+Since 1.0.0, the standard library and third-party modules that the wildcard imports of ``deepparse`` re-exported by
 accident (e.g. ``deepparse.os``, ``deepparse.torch`` or ``deepparse.np``) are no longer reachable from ``deepparse``,
 and ``from deepparse import *`` only imports the names of ``deepparse.__all__``.

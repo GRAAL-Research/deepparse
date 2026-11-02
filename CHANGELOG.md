@@ -474,7 +474,7 @@
 - Update `sphinx-rtd-theme` requirement from >=3.0.0 to >=3.1.0.
 - Update `colorama` requirement from >=0.4.3 to >=0.4.6.
 
-## dev
+## 1.0.0
 
 - Relicense Deepparse from the LGPLv3 to the MIT license, with the agreement of its contributors (`LICENSE`,
   `setup.py` metadata and classifier, README, documentation and contributing guide). The pretrained models on the
@@ -594,3 +594,10 @@
   loop), and the pretrained BPEmb models give the same predictions. GPU inference by batches is about twice as fast
   (3,000 addresses in ~1.0-1.3 s instead of ~2.4-2.6 s, batches of 256), and the CPU inference time is unchanged; the
   Parser and Choose a Model pages say so.
+- Report the measured GPU memory and time per address of the released Model2Vec models in the model guide, and fix
+  the speed test, which reset the CUDA peak memory statistics before the CUDA context existed.
+- Remove the APIs deprecated before 1.0.0: `BPEmbBaseURLWrapperBugFix` and the `deepparse.bpemb_url_bug_fix` module
+  (use `deepparse.BPEmbLoader`), `load_fasttext_embeddings` (use `deepparse.embeddings_models.FastTextBinReader`) and
+  `FASTTEXT_AVAILABLE`, and the internal helpers and constants reachable as `deepparse.<name>` but not in
+  `deepparse.__all__` (e.g. `deepparse.weights_init`, `deepparse.MODEL_REPO_IDS`): import them from their own module
+  (e.g. `deepparse.weights_tools`, `deepparse.download_tools`).

@@ -474,7 +474,7 @@
 - Update `sphinx-rtd-theme` requirement from >=3.0.0 to >=3.1.0.
 - Update `colorama` requirement from >=0.4.3 to >=0.4.6.
 
-## dev
+## 1.0.0
 
 - Relicense Deepparse from the LGPLv3 to the MIT license, with the agreement of its contributors (`LICENSE`,
   `setup.py` metadata and classifier, README, documentation and contributing guide). The pretrained models on the

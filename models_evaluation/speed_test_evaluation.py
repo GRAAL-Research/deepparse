@@ -2,6 +2,7 @@ import argparse
 import os.path
 from statistics import mean
 
+import torch
 from memory_profiler import profile
 
 from deepparse.parser import AddressParser
@@ -37,11 +38,17 @@ def main(args):
                     "w",
                     encoding="utf-8",
                 ) as file:
+                    if device != "cpu":
+                        # The CUDA context must exist before resetting its statistics.
+                        torch.cuda.init()
+                        torch.cuda.reset_peak_memory_stats(device)
                     for batch_size in [1, 2, 4, 8, 16, 32, 64, 128, 256, 512]:
                         address_parser = AddressParser(
                             model_type=model,
                             device=device,
                             attention_mechanism=attention_mechanism,
+                            cache_dir=args.cache_dir,
+                            offline=args.offline,
                         )
                         timer = Timer()
                         with timer:
@@ -63,6 +70,12 @@ def main(args):
                         mean(times),
                         file=file,
                     )
+                    if device != "cpu":
+                        print(
+                            "Pic de mémoire GPU allouée (GB):",
+                            torch.cuda.max_memory_allocated(device) / 1024**3,
+                            file=file,
+                        )
 
 
 if __name__ == '__main__':
@@ -88,6 +101,13 @@ if __name__ == '__main__':
         default=[0, "cpu"],
         help="Devices to evaluate on, either a GPU index (e.g. 0) or 'cpu'.",
     )
+    parser.add_argument(
+        "--cache_dir",
+        type=str,
+        default=None,
+        help="The cache directory of the models (e.g. a fake Hub cache, to measure the models before a push).",
+    )
+    parser.add_argument("--offline", action="store_true", help="Only use the models already in the cache directory.")
     args_parser = parser.parse_args()
 
     main(args_parser)

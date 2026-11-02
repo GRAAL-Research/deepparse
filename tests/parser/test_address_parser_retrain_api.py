@@ -55,8 +55,15 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
         self.saving_template_path = os.path.join(self.a_logging_path, "retrained_{}_address_parser.ckpt")
 
         self.model_mock = MagicMock()
+        # The default architecture of the pretrained models (hidden sizes of 1024 and one layer).
+        self.set_model_mock_architecture(hidden_size=1024)
 
         self.a_model_version = "a_version"
+
+    def set_model_mock_architecture(self, hidden_size: int) -> None:
+        for lstm in (self.model_mock.encoder.lstm, self.model_mock.decoder.lstm):
+            lstm.hidden_size = hidden_size
+            lstm.num_layers = 1
 
     def populate_directory(self):
         create_file(
@@ -1753,6 +1760,47 @@ class AddressParserRetrainTest(AddressParserPredictTestCase):
                 device=self.a_device,
                 path_to_retrained_model=a_path_to_retrained_model_with_missing_metadata,
             )
+
+    @patch("deepparse.parser.address_parser.torch.save")
+    @patch("deepparse.parser.address_parser.DataLoader")
+    @patch("deepparse.parser.address_parser.Experiment")
+    @patch("deepparse.parser.address_parser.SGD")
+    @patch("deepparse.parser.address_parser.ModelFactory")
+    @patch("deepparse.parser.address_parser.EmbeddingsModelFactory")
+    @patch("deepparse.parser.address_parser.VectorizerFactory")
+    @patch("deepparse.parser.address_parser.DataProcessorFactory")
+    @patch("deepparse.parser.address_parser.DataPadder")
+    def test_givenAPretrainedModelWithANonDefaultArchitecture_whenRetrain_thenSaveItsSeq2SeqParams(
+        self,
+        data_padder_mock,
+        data_processor_factory_mock,
+        vectorizer_factory_mock,
+        embeddings_factory_mock,
+        model_factory_mock,
+        optimizer_mock,
+        experiment_mock,
+        data_loader_mock,
+        torch_save_mock,
+    ):
+        # E.g. a pretrained Model2Vec model with a hidden size of 512: without its seq2seq params, the retrained model
+        # would be reloaded with the default hidden size of 1024 and fail.
+        self.set_model_mock_architecture(hidden_size=512)
+        model_factory_mock().create.return_value = self.model_mock, self.a_model_version
+
+        self.address_parser = AddressParser(
+            model_type=self.a_fasttext_model_type,
+            device=self.a_device,
+            verbose=self.verbose,
+        )
+        self.address_parser_retrain_call()
+
+        saved_checkpoint = torch_save_mock.call_args[0][0]
+        self.assertEqual(
+            {"encoder_hidden_size": 512, "encoder_num_layers": 1, "decoder_hidden_size": 512, "decoder_num_layers": 1},
+            saved_checkpoint["seq2seq_params"],
+        )
+        # The name of the parser is not changed: only the user-given seq2seq params name a modified configuration.
+        self.assertEqual("FastText", saved_checkpoint["named_parser"])
 
 
 if __name__ == "__main__":

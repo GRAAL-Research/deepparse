@@ -5,7 +5,7 @@ from unittest.mock import MagicMock, call, patch
 
 from cloudpathlib import S3Path
 
-from deepparse import handle_weights_upload
+from deepparse.weights_tools import handle_weights_upload
 
 # Pylint error for TemporaryDirectory ask for with statement
 # pylint: disable=consider-using-with

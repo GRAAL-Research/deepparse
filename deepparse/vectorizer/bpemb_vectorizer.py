@@ -2,7 +2,7 @@ from typing import List, Tuple
 
 import numpy as np
 
-from .. import validate_data_to_parse
+from ..validations import validate_data_to_parse
 from ..embeddings_models.embeddings_model import EmbeddingsModel
 from .vectorizer import Vectorizer
 
